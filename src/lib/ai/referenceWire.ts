@@ -5,6 +5,8 @@ import type {AgentRequestMessage, AgentResponseItem} from "@/domain/agent";
 import type {AgentReferenceInput, AgentVisionCapability} from "@/domain/referenceInput";
 import {validateReferenceInput} from "@/lib/agent/referenceContext";
 import {requireVision, resolveVisionCapability} from "./visionCapability";
+import {withBinaryReadLease, verifyBinaryAvailable} from "@/lib/storage/binary";
+import type {BinaryContent} from "@/domain/binary";
 
 export interface ReferenceWireScope {
     projectId?: string;
@@ -31,20 +33,26 @@ async function pixels(inputs: Array<AgentReferenceInput | undefined>, scope: Ref
     if (images.length) requireVision(scope.visionCapability ?? await resolveVisionCapability(scope.model, scope.connectorDefinitionId));
     for (const input of active) await validateReferenceInput(input, scope.projectId, scope.runId);
     const encoded = new Map<string, string>();
+    const preparedBytes: BinaryContent[] = [];
     for (const image of images) {
         signal?.throwIfAborted();
         if (encoded.has(image.mediaId)) continue;
         const input = active.find(item => item.images?.some(row => row.mediaId === image.mediaId));
         const media = input?.material ? await resolveMaterialInput(input, scope.projectId, scope.runId) : await db.media.get(image.mediaId);
         if (!media) throw new Error("图片文件不可用");
-        const bytes = new Uint8Array(await media.blob.arrayBuffer());
-        let binary = "";
-        for (let at = 0; at < bytes.length; at += 0x8000) binary += String.fromCharCode(...bytes.subarray(at, at + 0x8000));
-        encoded.set(image.mediaId, `data:${image.mimeType};base64,${btoa(binary)}`);
+        const inputUrl = await withBinaryReadLease(media.blob, async lease => {
+            const bytes = new Uint8Array(await (await lease.readBlob(signal)).arrayBuffer());
+            let binary = "";
+            for (let at = 0; at < bytes.length; at += 0x8000) binary += String.fromCharCode(...bytes.subarray(at, at + 0x8000));
+            return `data:${image.mimeType};base64,${btoa(binary)}`;
+        }, signal);
+        encoded.set(image.mediaId, inputUrl);
+        preparedBytes.push(media.blob);
     }
     // Reading blobs is asynchronous; withdrawal during encoding must also block dispatch.
     for (const input of active) await validateReferenceInput(input, scope.projectId, scope.runId);
     await requireLiveScope();
+    for (const binary of preparedBytes) await verifyBinaryAvailable(binary, signal);
     signal?.throwIfAborted();
     return encoded;
 }

@@ -7,9 +7,10 @@ import {
     WorkspaceSelect
 } from "@/components/audioMusic/controls";
 import {type ReactNode, useEffect, useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {db} from "@/db/database";
 import {useMedia} from "@/lib/media";
+import {readBinaryBlob} from "@/lib/storage/binary";
 import {downloadBlob} from "@/lib/projectPackage";
 import {isPublishedSaveError} from "@/lib/runtimeSave";
 import {refreshAudioGeneration} from "@/lib/audioGeneration/runtime";
@@ -79,7 +80,7 @@ export function ConnectionSelect({value, onChange, usage = "music", disabled = f
     usage?: "music" | "speech";
     disabled?: boolean;
 }) {
-    const connections = useLiveQuery(() => db.connectors.toArray());
+    const connections = useProductQuery((db) => db.connectors.toArray());
     const choices = (connections ?? []).filter((item) => (item.definitionId === "apimart" || usage === "speech" && item.definitionId === "mimo") && item.apiKey.trim());
     return <Field label="生成连接"><WorkspaceSelect disabled={disabled} value={value}
                                                     onValueChange={(value) => onChange(value)}><SelectOption
@@ -103,12 +104,12 @@ export function AudioPlayer({mediaId, title, compact = false, autoplay = false, 
                 <strong>{title || "试听作品"}</strong><small>{mediaId ? "本地音频" : "选择一个版本或作品开始试听"}</small>
             </div>
         </div>}
-        {media ? <SourcePlayer key={mediaId} src={media.url} title={title} autoplay={autoplay} {...playback} /> :
+        {media ? <SourcePlayer key={mediaId} src={media.url} onError={media.onError} title={title} autoplay={autoplay} {...playback} /> :
             <span className="aw-muted">{mediaId ? "音频加载中或已不可用" : "尚未选择音频"}</span>}
         {mediaId && !compact && <Button variant="ghost" size="icon" aria-label="下载原始音频"
-                                        onClick={() => void db.media.get(mediaId).then((record) => {
+                                        onClick={() => void db.media.get(mediaId).then(async (record) => {
                                             if (!record) throw new Error("原始音频不可用");
-                                            return downloadBlob(record.blob, record.filename);
+                                            return downloadBlob(await readBinaryBlob(record.blob), record.filename);
                                         }).catch((error: unknown) => {
                                             if (isPublishedSaveError(error)) toast.warning(error.message);
                                             else toast.error(errorText(error));
@@ -120,7 +121,7 @@ const pausedJobIds = new Set<string>();
 
 /** Mounted by each project workspace, independent of collapsed or sheet-based panels. */
 export function useProjectAudioJobs(projectId: string) {
-    const jobs = useLiveQuery(() => db.audioGenerationJobs.where("projectId").equals(projectId).toArray(), [projectId]);
+    const jobs = useProductQuery((db) => db.audioGenerationJobs.where("projectId").equals(projectId).toArray(), [projectId]);
     const latest = useRef(jobs);
     latest.current = jobs;
     const polledAt = useRef(new Map<string, number>());
@@ -152,7 +153,7 @@ export function GenerationJobs({projectId, mode = "disclosure"}: {
     projectId: string;
     mode?: "disclosure" | "activity";
 }) {
-    const jobs = useLiveQuery(() => db.audioGenerationJobs.where("projectId").equals(projectId).reverse().sortBy("createdAt"), [projectId]);
+    const jobs = useProductQuery((db) => db.audioGenerationJobs.where("projectId").equals(projectId).reverse().sortBy("createdAt"), [projectId]);
     const [error, setError] = useState("");
     const [busy, setBusy] = useState<string>();
     if (!jobs?.length) return null;

@@ -1,7 +1,6 @@
 import {useBlocker} from "@tanstack/react-router";
 import {type ReactNode, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
-import {db} from "@/db/database";
+import {useProductQuery} from "@/lib/storage/hooks";
 import type {MaterialKind, MaterialScope} from "@/domain/materials";
 import {
     AlertDialog,
@@ -66,7 +65,7 @@ export function MaterialScopeSelect({value, onChange, filter = false, disabled =
     filter?: boolean;
     disabled?: boolean
 }) {
-    const data = useLiveQuery(async () => ({
+    const data = useProductQuery(async (db) => ({
         ips: await db.ipProfiles.toArray(),
         projects: await db.projects.toArray()
     }), []);

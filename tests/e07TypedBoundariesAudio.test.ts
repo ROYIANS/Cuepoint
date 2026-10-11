@@ -28,7 +28,7 @@ describe("E07 audio package owned shape and compatibility boundary", () => {
         const fetcher = vi.fn();
         vi.stubGlobal("fetch", fetcher);
         try {
-            await db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => { await insertAudioPackage(remapped); });
+            await db.transaction("rw", AUDIO_TRANSACTION_TABLES, async (tx) => { await insertAudioPackage(remapped, tx); });
             expect((await db.audioGenerationJobs.get(remapped.audioGenerationJobs[0].id))?.dormant).toBe(true);
             expect(fetcher).not.toHaveBeenCalled();
         } finally {vi.unstubAllGlobals();}
@@ -52,7 +52,7 @@ describe("E07 audio package owned shape and compatibility boundary", () => {
         const destination = await createAudioMusicProject("destination", "music");
         const remapped = remapAudioPackage(parseAudioPackage(snapshot, project.id, "music"), destination.id, new Map([["foreign-audio", "foreign-audio"]]))!;
         const beforeDrafts = await db.musicDrafts.toArray(), beforeJobs = await db.audioGenerationJobs.toArray();
-        await expect(db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => { await insertAudioPackage(remapped); })).rejects.toThrow("媒体归属无效");
+        await expect(db.transaction("rw", AUDIO_TRANSACTION_TABLES, async (tx) => { await insertAudioPackage(remapped, tx); })).rejects.toThrow("媒体归属无效");
         expect(await db.musicDrafts.toArray()).toEqual(beforeDrafts);
         expect(await db.audioGenerationJobs.toArray()).toEqual(beforeJobs);
         expect((await db.media.get("foreign-audio"))?.projectId).toBe(foreign.id);

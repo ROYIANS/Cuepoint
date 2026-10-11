@@ -1,6 +1,5 @@
 import {useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
-import {db} from "@/db/database";
+import {useProductQuery} from "@/lib/storage/hooks";
 import type {MediaKind, MediaRecord} from "@/domain/types";
 import {reusableMedia} from "@/lib/mediaPicker";
 import {MediaPreview} from "./MediaThumb";
@@ -17,7 +16,7 @@ export function MediaPicker({projectId, kinds, disabled, selectedIds, onSelect, 
     onClose: () => void;
 }) {
     const [query, setQuery] = useState("");
-    const records = useLiveQuery(() => db.media.where("projectId").equals(projectId).toArray(), [projectId]);
+    const records = useProductQuery((db) => db.media.where("projectId").equals(projectId).toArray(), [projectId]);
     const items = reusableMedia(records ?? [], projectId, kinds, query);
     return (
         <section aria-label="选择已有素材" className="space-y-3 rounded-xl border p-3">

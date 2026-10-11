@@ -1,11 +1,16 @@
+import {StorageError} from "@/lib/storage/errors";
+import {readBinaryBlob} from "@/lib/storage/binary";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore,StoreTx} from "@/lib/storage/types";
 import {readResponseBlob} from "@/lib/ai/boundedResponse";
 import {MAX_MEDIA_DOWNLOAD_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "@/lib/ai/safeError";
 import {ownedGenerationBatch} from "@/db/agentGenerationBatches";
 import {assertProjectToolScope} from "./projectScope";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {
     claimGenerationJob,
+    markUnacknowledgedGeneration,
     generationJobSummary,
     storeGenerationMedia,
     updateGenerationJob
@@ -72,9 +77,10 @@ function cleanError(error: unknown, config?: ConnectorConfig) {
     return redactCredentials(text, config?.apiKey ?? "").slice(0, 700);
 }
 
-export async function prepareAgentGeneration(raw: GenerationSubmitArgs, context: AgentToolContext): Promise<AgentToolPreview> {
-    await assertProjectToolScope(context, "submit_generation", {projectId: raw.target.projectId}, true);
-    const snapshot = await prepareGenerationSnapshot(raw, context.signal);
+export async function prepareAgentGeneration(raw: GenerationSubmitArgs, context: AgentToolContext, store?: ProductStore): Promise<AgentToolPreview> {
+    const db = store ?? context.store ?? productDb;
+    await assertProjectToolScope(context, "submit_generation", {projectId: raw.target.projectId}, true, db);
+    const snapshot = await prepareGenerationSnapshot(raw, context.signal, db);
     return {
         summary: `使用 ${snapshot.provider} / ${snapshot.args.model} 为「${snapshot.current.label}」生成${snapshot.request.kind === "image" ? "图片" : "视频"}`,
         changes: [`槽位：${snapshot.request.target.slot}`, `提示词：${snapshot.args.prompt.slice(0, 1500)}`, `参数：${JSON.stringify(snapshot.request.parameters).slice(0, 1800)}`, `参考素材：${snapshot.inputs.length} 项；此操作可能产生供应商费用，完成后需要单独写入目标。`],
@@ -83,23 +89,25 @@ export async function prepareAgentGeneration(raw: GenerationSubmitArgs, context:
     };
 }
 
-async function jobForContext(jobId: string, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>) {
+async function jobForContext(jobId: string, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     const job = await db.agentGenerationJobs.get(jobId);
     if (!job || job.threadId !== context.threadId || !await db.chatThreads.get(job.threadId) || !await db.agentRuns.get(job.runId)) throw new Error("生成任务不存在或不属于当前对话");
-    if (job.batchId) await ownedGenerationBatch(job.batchId, context.threadId);
-    if (context.runId && context.callId) await assertProjectToolScope(context as AgentToolContext, "generation_job", {projectId: job.projectId}, true);
+    if (job.batchId) await ownedGenerationBatch(job.batchId, context.threadId, undefined, db);
+    if (context.runId && context.callId) await assertProjectToolScope(context as AgentToolContext, "generation_job", {projectId: job.projectId}, true, db);
     return job;
 }
 
 async function dataUri(media: MediaRecord) {
-    const bytes = new Uint8Array(await media.blob.arrayBuffer());
+    const bytes = new Uint8Array(await (await readBinaryBlob(media.blob)).arrayBuffer());
     let binary = "";
     for (let offset = 0; offset < bytes.length; offset += 32768) binary += String.fromCharCode(...bytes.subarray(offset, offset + 32768));
     return `data:${media.mimeType};base64,${btoa(binary)}`;
 }
 
-async function nativeRequest(job: AgentGenerationJob, config: ConnectorConfig, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, options: GenerationRuntimeOptions): Promise<AIHubMixGenerationRequest> {
-    const records = await loadGenerationInputs(job);
+async function nativeRequest(job: AgentGenerationJob, config: ConnectorConfig, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, options: GenerationRuntimeOptions, store?: ProductStore): Promise<AIHubMixGenerationRequest> {
+    const db = store ?? context.store ?? productDb;
+    const records = await loadGenerationInputs(job, db);
     const input: AIHubMixGenerationRequest = {model: job.model, prompt: String(job.parameters.prompt)};
     for (const [key, value] of Object.entries(job.parameters)) if (!["mode", "quality"].includes(key)) input[key] = value;
     if (job.provider === "aihubmix" && job.parameters.quality) input.extra = {quality: job.parameters.quality};
@@ -108,7 +116,7 @@ async function nativeRequest(job: AgentGenerationJob, config: ConnectorConfig, c
     for (const media of records) {
         context.signal.throwIfAborted();
         if (job.provider === "apimart") {
-            const uploaded = await uploadApimartImage(config, new Blob([media.blob], {type: media.mimeType}), {
+            const uploaded = await uploadApimartImage(config, new Blob([await readBinaryBlob(media.blob)], {type: media.mimeType}), {
                 signal: context.signal,
                 fetchImpl: options.fetchImpl,
                 filename: media.filename
@@ -137,19 +145,21 @@ async function nativeRequest(job: AgentGenerationJob, config: ConnectorConfig, c
     return input;
 }
 
-export async function submitAgentGeneration(raw: GenerationSubmitArgs, context: AgentToolContext, options: GenerationRuntimeOptions = {}): Promise<AgentGenerationJob> {
+export async function submitAgentGeneration(raw: GenerationSubmitArgs, context: AgentToolContext, options: GenerationRuntimeOptions = {}, store?: ProductStore): Promise<AgentGenerationJob> {
+    const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
     const saved = await db.agentGenerationJobs.where("callId").equals(context.callId).first();
     if (saved) {
         if (saved.runId !== context.runId || saved.threadId !== context.threadId) throw new Error("生成记录归属不匹配");
-        return monitorAgentGeneration(saved.id, context, options);
+        return monitorAgentGeneration(saved.id, context, options, db);
     }
     let snapshot;
     try {
-        await assertProjectToolScope(context, "submit_generation", {projectId: raw.target.projectId}, true);
-        snapshot = await prepareGenerationSnapshot(raw, context.signal);
+        await assertProjectToolScope(context, "submit_generation", {projectId: raw.target.projectId}, true, db);
+        snapshot = await prepareGenerationSnapshot(raw, context.signal, db);
         if (context.preview?.revision && context.preview.revision !== snapshot.fingerprint) throw new Error("生成目标、输入或配置已变化，请重新确认，尚未付费提交");
     } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
         throw new AtomicToolRollbackError(cleanError(error));
     }
     const at = nowIso();
@@ -178,42 +188,44 @@ export async function submitAgentGeneration(raw: GenerationSubmitArgs, context: 
         status: "submitting",
         createdAt: at,
         updatedAt: at
-    }).catch((error: unknown) => {
+    }, db).catch((error: unknown) => {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
         throw new AtomicToolRollbackError(cleanError(error, snapshot.config));
     });
-    if (!claim.claimed) return monitorAgentGeneration(claim.job.id, context, options);
+    if (!claim.claimed) return monitorAgentGeneration(claim.job.id, context, options, db);
     const job = claim.job;
-    return submitClaimedGeneration(job, snapshot.config, context, options, async () => {
+    return submitClaimedGeneration(job, snapshot.config, context, options, async (db) => {
         // Reference uploads may take time; never submit paid work against a changed target.
-        const latest = await readGenerationTarget(job.target);
+        const latest = await readGenerationTarget(job.target, db);
         if (latest.revision !== job.baseRevision) throw new Error("生成目标已修改，尚未付费提交");
         context.signal.throwIfAborted();
         const active = await db.agentRuns.get(context.runId);
         const activeCall = await db.agentToolCalls.get(context.callId);
         if (!await db.agentGenerationJobs.get(job.id) || !active || active.status !== "running" || !activeCall || activeCall.status !== "running") throw new Error("生成记录或执行已停止，尚未付费提交");
-        await assertProjectToolScope(context, "submit_generation", {projectId: job.projectId}, true);
-    });
+        await assertProjectToolScope(context, "submit_generation", {projectId: job.projectId}, true, db);
+    }, db);
 }
 
 /** Shared paid transport. Caller must own the job and provide a final durable dispatch guard. */
 export async function submitClaimedGeneration(job: AgentGenerationJob, config: ConnectorConfig,
-                                              context: Pick<AgentToolContext, 'threadId' | 'signal'>, options: GenerationRuntimeOptions, beforePost: () => Promise<void>) {
+                                              context: Pick<AgentToolContext, 'threadId' | 'signal' | 'store'>, options: GenerationRuntimeOptions, beforePost: (store:StoreTx) => Promise<void>, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     let postStarted = false;
     try {
-        const request = await nativeRequest(job, config, context, options);
+        const request = await nativeRequest(job, config, context, options, db);
         // Hash inputs outside Dexie after uploads/encoding, then validate current records
         // and caller ownership together immediately before either provider's paid POST.
-        const inputs = await loadGenerationInputs(job);
-        await db.transaction("r", db.tables, async () => {
-            await beforePost();
-            const latest = await resolveConnector(config.id);
+        const inputs = await loadGenerationInputs(job, db);
+        await db.transaction("r", db.tables, async (db) => {
+            await beforePost(db);
+            const latest = await resolveConnector(config.id, db);
             if (!latest?.apiKey.trim() || latest.definitionId !== job.provider ||
                 latest.baseUrl !== job.baseUrl || latest.apiKey !== config.apiKey) {
                 throw new Error("供应商配置已变化，尚未付费提交");
             }
             for (const input of inputs) {
                 const current = await db.media.get(input.id);
-                if (!current || current.projectId !== input.projectId || current.mimeType !== input.mimeType || current.blob.size !== input.blob.size) {
+                if (!current || current.projectId !== input.projectId || current.mimeType !== input.mimeType || binaryByteLength(current.blob) !== binaryByteLength(input.blob)) {
                     throw new Error("生成输入素材已变化，尚未付费提交");
                 }
             }
@@ -230,20 +242,20 @@ export async function submitClaimedGeneration(job: AgentGenerationJob, config: C
                 await updateGenerationJob(job.id, {
                     status: result.kind === "validation" || result.kind === "http" && [400, 401, 402, 403, 404, 422, 429].includes(result.httpStatus ?? 0) ? "failed" : "unknown",
                     error: cleanError(new Error(result.message), config)
-                });
-                return monitorAgentGeneration(job.id, context, options);
+                }, db);
+                return monitorAgentGeneration(job.id, context, options, db);
             }
             // n=1 profiles create exactly one task. Preserve first received identity before further work.
             await updateGenerationJob(job.id, {
                 providerTaskId: safeTaskId(result.tasks[0].id, config),
                 status: "submitted"
-            });
+            }, db);
             if (result.tasks.length !== 1) {
                 await updateGenerationJob(job.id, {
                     status: "unknown",
                     providerTaskIds: result.tasks.map((task) => safeTaskId(task.id, config)),
                     error: "供应商返回多个任务，已保留任务标识，请核实账户记录，不能自动选择结果或重复提交"
-                });
+                }, db);
                 throw new GenerationPendingError(job.id, "供应商返回多个任务，需要人工核实，不能自动选择或重新提交");
             }
         } else {
@@ -256,29 +268,30 @@ export async function submitClaimedGeneration(job: AgentGenerationJob, config: C
                     ...(result.taskId ? {providerTaskId: safeTaskId(result.taskId, config)} : {}),
                     status: result.taskId ? "submitted" : result.kind === "validation" || result.kind === "http" && [400, 401, 402, 403, 404, 422, 429].includes(result.httpStatus ?? 0) ? "failed" : "unknown",
                     error: cleanError(new Error(result.message), config)
-                });
-                if (!result.taskId) return monitorAgentGeneration(job.id, context, options);
+                }, db);
+                if (!result.taskId) return monitorAgentGeneration(job.id, context, options, db);
             } else {
                 await updateGenerationJob(job.id, {
                     providerTaskId: safeTaskId(result.task.id, config),
                     status: "submitted"
-                });
+                }, db);
                 // Synchronous completion may carry the only copy of base64 output.
-                if (result.task.status === "completed") return await acceptHubTask(job.id, result.task, config, context, options);
+                if (result.task.status === "completed") return await acceptHubTask(job.id, result.task, config, context, options, db);
             }
         }
     } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
         const current = await db.agentGenerationJobs.get(job.id);
         if (!current) throw error;
         await updateGenerationJob(current.id, {
             status: current.providerTaskId ? current.status : postStarted ? "unknown" : "failed",
             error: cleanError(error, config)
-        });
+        }, db);
         if (!postStarted) throw new AtomicToolRollbackError(cleanError(error, config));
         if (context.signal.aborted) throw new GenerationPendingError(current.id, "已停止本地等待；远端提交结果需核实，不能当作远端取消");
         throw new GenerationPendingError(current.id, cleanError(error, config));
     }
-    return monitorAgentGeneration(job.id, context, options);
+    return monitorAgentGeneration(job.id, context, options, db);
 }
 
 async function validateBlob(blob: Blob, kind: "image" | "video") {
@@ -296,7 +309,8 @@ async function validateBlob(blob: Blob, kind: "image" | "video") {
     return new Blob([blob], {type: mime});
 }
 
-async function saveBlob(job: AgentGenerationJob, blob: Blob) {
+async function saveBlob(job: AgentGenerationJob, blob: Blob, store?: ProductStore) {
+    const db = store ?? productDb;
     const verified = await validateBlob(blob, job.kind);
     const ext = verified.type.split("/")[1];
     return storeGenerationMedia(job.id, {
@@ -305,28 +319,29 @@ async function saveBlob(job: AgentGenerationJob, blob: Blob) {
         mimeType: verified.type,
         filename: `${job.model}-${job.id}.${ext}`,
         blob: verified
-    });
+    }, db);
 }
 
-async function acceptHubTask(jobId: string, task: AIHubMixTask, config: ConnectorConfig, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, options: GenerationRuntimeOptions) {
-    let job = await jobForContext(jobId, context);
+async function acceptHubTask(jobId: string, task: AIHubMixTask, config: ConnectorConfig, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, options: GenerationRuntimeOptions, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    let job = await jobForContext(jobId, context, db);
     if (task.model !== job.model) throw new Error("供应商实际模型与已确认模型不同，保留任务但不应用结果");
     if (task.status === "failed" || task.status === "cancelled") return updateGenerationJob(jobId, {
         status: "failed",
         providerStatus: cleanError(new Error(task.providerStatus), config),
         error: cleanError(new Error(task.error?.message ?? "远端任务失败或已取消"), config)
-    });
+    }, db);
     if (task.status !== "completed") return updateGenerationJob(jobId, {
         status: task.status === "running" ? "running" : "submitted",
         providerStatus: cleanError(new Error(task.providerStatus), config),
         error: undefined
-    });
+    }, db);
     if (task.outputs.length !== 1) throw new Error("预期单个生成结果，供应商返回数量不匹配，请核实任务");
     job = await updateGenerationJob(jobId, {
         status: "downloading",
         providerStatus: cleanError(new Error(task.providerStatus), config),
         error: undefined
-    });
+    }, db);
     const output = task.outputs[0];
     let blob: Blob;
     if (output.b64Json) {
@@ -346,36 +361,35 @@ async function acceptHubTask(jobId: string, task: AIHubMixTask, config: Connecto
         blob = result.blob;
     }
     context.signal.throwIfAborted();
-    return saveBlob(job, blob);
+    return saveBlob(job, blob, db);
 }
 
-export async function checkAgentGeneration(jobId: string, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, options: GenerationRuntimeOptions = {}): Promise<AgentGenerationJob> {
+export async function checkAgentGeneration(jobId: string, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, options: GenerationRuntimeOptions = {}, store?: ProductStore): Promise<AgentGenerationJob> {
+    const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
     let job;
     try {
-        job = await jobForContext(jobId, context);
+        job = await jobForContext(jobId, context, db);
     } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
         throw new AtomicToolRollbackError(cleanError(error));
     }
     if (["downloaded", "applied", "conflict", "failed"].includes(job.status)) return job;
     if (job.status === "unknown") return job;
     if (!job.providerTaskId) {
-        if (job.status === "submitting") job = await updateGenerationJob(jobId, {
-            status: "unknown",
-            error: "付费提交结果尚未确认；无任务标识，不能自动再次提交。请到供应商后台核实。"
-        });
+        if (job.status === "submitting") job = await markUnacknowledgedGeneration(jobId,db);
         return job;
     }
     let config: ConnectorConfig | undefined;
     try {
-        config = await resolveGenerationConnector(job.connectorId, job);
+        config = await resolveGenerationConnector(job.connectorId, job, db);
         if (job.provider === "aihubmix") {
             const response = await (job.kind === "image" ? getAIHubMixImageTask : getAIHubMixVideoTask)(config, job.providerTaskId, {
                 signal: context.signal,
                 fetchImpl: options.fetchImpl
             });
             if (!response.ok) throw new Error(response.message);
-            return await acceptHubTask(jobId, response.task, config, context, options);
+            return await acceptHubTask(jobId, response.task, config, context, options, db);
         }
         const response = await getApimartTask(config, job.providerTaskId, {
             signal: context.signal,
@@ -387,13 +401,13 @@ export async function checkAgentGeneration(jobId: string, context: Pick<AgentToo
             status: "failed",
             providerStatus: cleanError(new Error(task.providerStatus), config),
             error: cleanError(new Error(task.error?.message ?? "远端任务失败或已取消"), config)
-        });
+        }, db);
         if (task.status !== "completed") return updateGenerationJob(jobId, {
             status: task.status === "processing" ? "running" : "submitted",
             providerStatus: cleanError(new Error(task.providerStatus), config),
             progress: task.progress,
             error: undefined
-        });
+        }, db);
         const urls = (job.kind === "image" ? task.images : task.videos).flatMap((item) => item.urls);
         if (urls.length !== 1) throw new Error("预期单个生成结果，供应商返回数量或类型不匹配");
         const url = new URL(urls[0]);
@@ -403,7 +417,7 @@ export async function checkAgentGeneration(jobId: string, context: Pick<AgentToo
             providerStatus: cleanError(new Error(task.providerStatus), config),
             progress: task.progress,
             error: undefined
-        });
+        }, db);
         // Public signed CDN result: never attach connector credentials or cookies.
         const download = await (options.fetchImpl ?? runtimeResultFetch)(url.href, {
             signal: context.signal,
@@ -413,9 +427,10 @@ export async function checkAgentGeneration(jobId: string, context: Pick<AgentToo
         if (!download.ok) throw new Error(`结果下载失败（${download.status}），请检查过期时间、网络和跨域限制`);
         const blob = await readResponseBlob(download, MAX_MEDIA_DOWNLOAD_BYTES, context.signal);
         context.signal.throwIfAborted();
-        return await saveBlob(job, blob);
+        return await saveBlob(job, blob, db);
     } catch (error) {
-        await updateGenerationJob(jobId, {error: cleanError(error, config)});
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
+        await updateGenerationJob(jobId, {error: cleanError(error, config)}, db);
         if (context.signal.aborted) throw new GenerationPendingError(jobId, "已停止本地查询或下载；远端任务仍可能继续，稍后可恢复查询");
         throw new GenerationPendingError(jobId, cleanError(error, config));
     }
@@ -437,9 +452,10 @@ function wait(ms: number, signal: AbortSignal) {
     });
 }
 
-export async function monitorAgentGeneration(jobId: string, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, options: GenerationRuntimeOptions = {}) {
+export async function monitorAgentGeneration(jobId: string, context: Pick<AgentToolContext, 'threadId' | 'signal'> & Partial<AgentToolContext>, options: GenerationRuntimeOptions = {}, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     for (let step = 0; step < (options.maxPolls ?? 40); step++) {
-        const job = await checkAgentGeneration(jobId, context, options);
+        const job = await checkAgentGeneration(jobId, context, options, db);
         if (job.status === "unknown") throw new GenerationPendingError(jobId, job.error ?? "提交结果未知，请核实供应商账户，不会自动重试");
         if (["downloaded", "applied", "conflict", "failed"].includes(job.status)) return job;
         try {
@@ -451,14 +467,15 @@ export async function monitorAgentGeneration(jobId: string, context: Pick<AgentT
     throw new GenerationPendingError(jobId, "本轮等待已暂停；任务仍在远端处理，继续执行可恢复查询，无需重新提交");
 }
 
-export async function prepareGenerationApply(jobId: string, context: AgentToolContext): Promise<AgentToolPreview> {
-    const job = await jobForContext(jobId, context);
+export async function prepareGenerationApply(jobId: string, context: AgentToolContext, store?: ProductStore): Promise<AgentToolPreview> {
+    const db = store ?? context.store ?? productDb;
+    const job = await jobForContext(jobId, context, db);
     if (job.batchId) throw new Error("批量候选需要由用户在批量结果中选择并写入");
     if (!job.result) throw new Error("生成结果尚未下载到本地，不能写入目标");
     await flushPendingDrafts(job.projectId);
     let label = "已删除或失效的目标";
     try {
-        label = (await readGenerationTarget(job.target)).label;
+        label = (await readGenerationTarget(job.target, db)).label;
     } catch { /* Apply records a visible conflict while preserving output. */
     }
     return {
@@ -469,70 +486,74 @@ export async function prepareGenerationApply(jobId: string, context: AgentToolCo
     };
 }
 
-export async function applyAgentGeneration(jobId: string, context: AgentToolContext) {
+export async function applyAgentGeneration(jobId: string, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     let original;
     try {
-        original = await jobForContext(jobId, context);
+        original = await jobForContext(jobId, context, db);
         await flushPendingDrafts(original.projectId);
     } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
         throw new AtomicToolRollbackError(cleanError(error));
     }
     if (original.batchId) throw new AtomicToolRollbackError("批量候选需要由用户在批量结果中选择并写入");
     if (!original.result || !["downloaded", "conflict", "applied"].includes(original.status)) throw new AtomicToolRollbackError("没有可写入的本地生成结果");
-    if (original.status === "applied") return executeAtomicTool(context, async () => generationJobSummary(await jobForContext(jobId, context)));
+    if (original.status === "applied") return executeAtomicTool(context, async (db) => { const boundContext = {...context, store:db}; return generationJobSummary(await jobForContext(jobId, boundContext, db)); }, db);
     // Hash Blob inputs outside Dexie; atomic callback rechecks immutable record metadata.
     let records: MediaRecord[];
     try {
-        records = await loadGenerationInputs(original);
+        records = await loadGenerationInputs(original, db);
     } catch (error) {
-        return executeAtomicTool(context, async () => generationJobSummary(await updateGenerationJob(original.id, {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
+        return executeAtomicTool(context, async (db) => generationJobSummary(await updateGenerationJob(original.id, {
             status: "conflict",
             error: cleanError(error)
-        })));
+        }, db)), db);
     }
-    return executeAtomicTool(context, async () => {
-        const job = await jobForContext(jobId, context);
+    return executeAtomicTool(context, async (db) => {
+        const boundContext = {...context, store:db};
+        const job = await jobForContext(jobId, boundContext, db);
         if (job.status === "applied") return generationJobSummary(job);
         if (!job.result || !["downloaded", "conflict"].includes(job.status)) throw new Error("没有可写入的本地生成结果");
         let current;
         try {
-            current = await readGenerationTarget(job.target);
+            current = await readGenerationTarget(job.target, db);
         } catch {
             return generationJobSummary(await updateGenerationJob(job.id, {
                 status: "conflict",
                 error: "目标已删除或归属变化；生成结果已保留，未写入目标"
-            }));
+            }, db));
         }
-        if (current.revision !== job.baseRevision || context.preview?.revision && context.preview.revision !== job.baseRevision) {
+        if (current.revision !== job.baseRevision || boundContext.preview?.revision && boundContext.preview.revision !== job.baseRevision) {
             return generationJobSummary(await updateGenerationJob(job.id, {
                 status: "conflict",
                 error: "目标已被修改；生成结果已保留，请手动确认后使用已有素材"
-            }));
+            }, db));
         }
         for (const record of records) {
             const saved = await db.media.get(record.id);
-            if (!saved || saved.projectId !== record.projectId || saved.mimeType !== record.mimeType || saved.blob.size !== record.blob.size) throw new Error("输入素材已变化，结果未应用");
+            if (!saved || saved.projectId !== record.projectId || saved.mimeType !== record.mimeType || binaryByteLength(saved.blob) !== binaryByteLength(record.blob)) throw new Error("输入素材已变化，结果未应用");
         }
         const result = await db.media.get(job.result.mediaId);
-        if (!result || result.projectId !== job.projectId || !result.blob.size || !result.mimeType.startsWith(`${job.kind}/`)) throw new Error("生成结果素材已删除或类型不匹配");
+        if (!result || result.projectId !== job.projectId || !binaryByteLength(result.blob) || !result.mimeType.startsWith(`${job.kind}/`)) throw new Error("生成结果素材已删除或类型不匹配");
         const slot = {...current.slot, result: job.result};
         switch (job.target.kind) {
             case "shot":
-                await setShotSlot(job.target.entityId, job.target.slot!, slot);
+                await setShotSlot(job.target.entityId, job.target.slot!, slot, undefined, db);
                 break;
             case "character":
-                await setCharacterSlot(job.target.entityId, job.target.slot, slot);
+                await setCharacterSlot(job.target.entityId, job.target.slot, slot, undefined, db);
                 break;
             case "scene":
-                await setSceneSlot(job.target.entityId, job.target.slot, slot);
+                await setSceneSlot(job.target.entityId, job.target.slot, slot, undefined, db);
                 break;
             case "prop":
-                await setPropSlot(job.target.entityId, job.target.slot, slot);
+                await setPropSlot(job.target.entityId, job.target.slot, slot, undefined, db);
                 break;
             case "style":
-                await setStyleSlot(job.target.entityId, job.target.slot, slot);
+                await setStyleSlot(job.target.entityId, job.target.slot, slot, undefined, db);
                 break;
         }
-        return generationJobSummary(await updateGenerationJob(job.id, {status: "applied", error: undefined}));
-    });
+        return generationJobSummary(await updateGenerationJob(job.id, {status: "applied", error: undefined}, db));
+    }, db);
 }

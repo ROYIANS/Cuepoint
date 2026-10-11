@@ -1,3 +1,4 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {
     type ChatMessage,
     type ChatMessageRole,
@@ -6,7 +7,7 @@ import {
     type Id,
     STUDIO_LIBRARY_ID
 } from "@/domain/types";
-import {db} from "./database";
+import {db as productDb} from "./database";
 import {createId, nowIso} from "@/lib/ids";
 import {normalizeContextPolicy} from "@/lib/agent/contextPolicy";
 import {getGeneralAgentConfig} from "./agentSettings";
@@ -18,10 +19,11 @@ export async function createChatThread(options?: {
     title?: string;
     connectorId?: Id;
     model?: string;
-}): Promise<ChatThread> {
+}, store?: ProductStore): Promise<ChatThread> {
+    const db = store ?? productDb;
     const at = nowIso();
     const thread: ChatThread = {
-        contextPolicy: normalizeContextPolicy((await getGeneralAgentConfig()).contextPolicy),
+        contextPolicy: normalizeContextPolicy((await getGeneralAgentConfig(db)).contextPolicy),
         id: createId("cth"),
         title: options?.title?.trim() || "新对话",
         taskMode: options?.taskMode === true,
@@ -31,7 +33,7 @@ export async function createChatThread(options?: {
         createdAt: at,
         updatedAt: at,
     };
-    await db.transaction("rw", [db.chatThreads, db.projects], async () => {
+    await db.transaction("rw", [db.chatThreads, db.projects], async (db) => {
         if (thread.projectId && (thread.projectId === STUDIO_LIBRARY_ID || !await db.projects.get(thread.projectId))) throw new Error("请选择可用项目");
         await db.chatThreads.add(thread);
     });
@@ -40,9 +42,10 @@ export async function createChatThread(options?: {
 
 export async function updateChatThread(
     id: Id,
-    patch: Partial<Pick<ChatThread, "title" | "connectorId" | "model" | "reasoningSelection" | "interactionMode">>,
+    patch: Partial<Pick<ChatThread, "title" | "connectorId" | "model" | "reasoningSelection" | "interactionMode">>, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", db.chatThreads, async () => {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.chatThreads].flat(), async (db) => {
         const existing = await db.chatThreads.get(id);
         if (!existing) return;
         const next: ChatThread = {
@@ -72,7 +75,8 @@ export async function appendChatMessage(input: {
     role: ChatMessageRole;
     content?: string;
     status?: ChatMessageStatus;
-}): Promise<ChatMessage> {
+}, store?: ProductStore): Promise<ChatMessage> {
+    const db = store ?? productDb;
     const at = nowIso();
     const message: ChatMessage = {
         id: createId("cmsg"),
@@ -82,7 +86,7 @@ export async function appendChatMessage(input: {
         createdAt: at,
         status: input.status,
     };
-    await db.transaction("rw", db.chatThreads, db.chatMessages, async () => {
+    await db.transaction("rw", [db.chatThreads, db.chatMessages].flat(), async (db) => {
         const thread = await db.chatThreads.get(input.threadId);
         if (!thread) throw new Error("对话不存在");
         await db.chatMessages.put(message);
@@ -93,8 +97,9 @@ export async function appendChatMessage(input: {
 
 
 /** Bind once before any conversation execution; changing projects starts a new thread. */
-export async function bindChatThreadProject(threadId: string, projectId: string, expectedProjectId?: string): Promise<void> {
-    await db.transaction("rw", [db.chatThreads, db.projects, db.agentRuns, db.chatMessages, db.agentTasks], async () => {
+export async function bindChatThreadProject(threadId: string, projectId: string, expectedProjectId?: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.chatThreads, db.projects, db.agentRuns, db.chatMessages, db.agentTasks], async (db) => {
         const thread = await db.chatThreads.get(threadId);
         if (!thread || thread.projectId !== expectedProjectId) throw new Error("对话项目已变化，请重新读取");
         if (projectId === STUDIO_LIBRARY_ID || !await db.projects.get(projectId)) throw new Error("请选择可用项目");

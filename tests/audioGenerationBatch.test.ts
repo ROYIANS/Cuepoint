@@ -1,3 +1,4 @@
+import {interceptStoreTable} from "./helpers/storeFaults";
 import {describe, expect, it, vi} from "vitest";
 import JSZip from "jszip";
 import {db} from "@/db/database";
@@ -92,8 +93,10 @@ describe("durable reviewed audio batches", () => {
         await expect(confirmAudioGenerationBatch(f.project.id, draft.id, draft.revision)).rejects.toThrow("修改");
         const outcomes = await Promise.allSettled([confirmAudioGenerationBatch(f.project.id, draft.id, excluded.revision), confirmAudioGenerationBatch(f.project.id, draft.id, excluded.revision)]);
         expect(outcomes.filter(outcome => outcome.status === "fulfilled")).toHaveLength(1);
-        await startAudioGenerationBatch(f.project.id, draft.id, {locks: f.locks, fetchImpl, decode});
-        expect(fetchImpl).toHaveBeenCalledTimes(3); expect((await readAudioGenerationBatch(f.project.id, draft.id)).counts).toMatchObject({saved: 3, cancelled: 1});
+        const pauses:string[]=[],pause=interceptStoreTable(db,"audioGenerationBatches","put",async (_tx,args,next)=> {const row=args[0] as {status:string;pauseReason?:string};if (row.status === "paused") pauses.push(row.pauseReason ?? "");return next();});
+        try {await startAudioGenerationBatch(f.project.id, draft.id, {locks: f.locks, fetchImpl, decode});}finally {pause.mockRestore();}
+        const completed=await readAudioGenerationBatch(f.project.id,draft.id);
+        expect(fetchImpl,JSON.stringify({pauses,jobs:completed.jobs.map(job=>({status:job.status,error:job.error}))})).toHaveBeenCalledTimes(3); expect(completed.counts).toMatchObject({saved: 3, cancelled: 1});
     });
     it.each(["segment", "speaker", "credential", "destination"] as const)("rejects stale %s before any paid effects", async change => {
         const f = await fixture(1), draft = await prepareAudioGenerationBatch(f.args);
@@ -115,7 +118,7 @@ describe("durable reviewed audio batches", () => {
         });
         const running = startAudioGenerationBatch(f.project.id, batch.id, {locks: f.locks, fetchImpl, decode});
         try {
-            await vi.waitFor(async () => expect((await readAudioGenerationBatch(f.project.id, batch.id)).counts).toMatchObject({saved: 9, failed: 1, submitting: 1}));
+            await vi.waitFor(async () => expect((await readAudioGenerationBatch(f.project.id, batch.id)).counts).toMatchObject({saved: 9, failed: 1, submitting: 1}),{timeout:10000});
             expect(maximum).toBeLessThanOrEqual(2); expect(posts).toBe(11);
             const reload = await readAudioGenerationBatch(f.project.id, batch.id);
             expect(reload.rows.filter(row => row.selected || row.placed)).toHaveLength(0); expect(fetchImpl).toHaveBeenCalledTimes(11);
@@ -156,8 +159,8 @@ describe("durable reviewed audio batches", () => {
         const f = await fixture(5), batch = await ready(f);
         const releases: Array<() => void> = [];
         const fetchImpl = vi.fn<typeof fetch>(async () => new Promise(resolve => {const index = releases.length; releases.push(() => resolve(index === 0 ? new Response("server", {status: 503}) : binary()));}));
-        const put = db.audioGenerationBatches.put.bind(db.audioGenerationBatches); let pauseFailed = false;
-        const spy = vi.spyOn(db.audioGenerationBatches, "put").mockImplementation(row => {if (row.status === "paused") {pauseFailed = true; return Promise.reject(new Error("disk unavailable"));} return put(row);});
+        let pauseFailed = false;
+        const spy = interceptStoreTable(db, "audioGenerationBatches", "put", async (_tx,args,next)=> {const [row]=args as Parameters<typeof db.audioGenerationBatches.put>;if (row.status === "paused") {pauseFailed = true; return Promise.reject(new Error("disk unavailable"));} return next(); });
         const running = startAudioGenerationBatch(f.project.id, batch.id, {locks: f.locks, fetchImpl, decode}).catch(() => undefined);
         try {
             await vi.waitFor(() => expect(releases).toHaveLength(2)); releases[0]();

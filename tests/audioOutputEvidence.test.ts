@@ -1,4 +1,5 @@
-import Dexie from "dexie";
+import {failStoreTableOnce} from "./helpers/storeFaults";
+import {StorageError} from "@/lib/storage/errors";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import {createAudioMusicProject} from "@/db/projects";
@@ -79,7 +80,7 @@ describe("current local sound output evidence", () => {
     const f = await fixture("audio"); const takeId = (await f.read()).results[0].takeId!;
     const track = (await db.audioTracks.where("projectId").equals(f.project.id).first())!;
     await addAudioClip(f.project.id, { chapterId: f.chapter!.id, trackId: track.id, takeId, startSec: 0, trimStartSec: 0, trimEndSec: 2, gain: 1, fadeInSec: 0, fadeOutSec: 0 });
-    const readTrack = vi.spyOn(db.audioTracks, "get").mockRejectedValue(new Dexie.InvalidStateError("storage unavailable"));
+    const readTrack = failStoreTableOnce(db,"audioTracks","get",new StorageError("unavailable","storage unavailable"));
     try { await expect(f.read()).rejects.toThrow("storage unavailable"); }
     finally { readTrack.mockRestore(); }
   });

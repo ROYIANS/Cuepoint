@@ -9,6 +9,8 @@ import {
 import {isStudioLibrary} from "@/domain/types";
 import {createId, nowIso} from "@/lib/ids";
 import {assertReferenceSignature, identifyReference, parseTextReference} from "./parse";
+import {binaryByteLength} from "@/domain/binary";
+import {readBinaryBlob, verifyBinaryAvailable} from "@/lib/storage/binary";
 
 export interface ReferenceImportOptions {
     signal?: AbortSignal;
@@ -70,7 +72,7 @@ async function finishImport(reference: ProjectReference, buffer: ArrayBuffer, op
     } catch (failure) {
         error = options.signal?.aborted ? "解析已取消，可以重试" : failure instanceof Error ? failure.message : "解析失败，请重试";
     }
-    return db.transaction("rw", [db.projects, db.projectReferences, db.referenceChunks], async () => {
+    return db.transaction("rw", [db.projects, db.projectReferences, db.referenceChunks], async (db) => {
         const current = await db.projectReferences.get(reference.id);
         if (!current || current.operationId !== reference.operationId || current.status !== "parsing" || !(await db.projects.get(reference.projectId))) throw new Error("资料已移除或本次解析已被替代");
         const next: ProjectReference = {
@@ -103,7 +105,7 @@ async function importSource(projectId: string, file: File, options: ReferenceImp
     const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", buffer))].map((byte) => byte.toString(16).padStart(2, "0")).join("");
     options.signal?.throwIfAborted();
     const operationId = createId("parse");
-    const reference = await db.transaction("rw", [db.projects, db.media, db.projectReferences], async () => {
+    const reference = await db.transaction("rw", [db.projects, db.media, db.projectReferences], async (db) => {
         options.signal?.throwIfAborted();
         if (!(await db.projects.get(projectId))) throw new Error("项目已删除");
         const duplicate = await db.projectReferences.where("[projectId+digest]").equals([projectId, digest]).filter((row) => row.status !== "unavailable").first();
@@ -111,7 +113,8 @@ async function importSource(projectId: string, file: File, options: ReferenceImp
         const mediaId = existingMediaId ?? createId("med");
         if (existingMediaId) {
             const media = await db.media.get(existingMediaId);
-            if (!media || media.projectId !== projectId || media.blob.size !== file.size) throw new Error("图片已不可用");
+            if (!media || media.projectId !== projectId || binaryByteLength(media.blob) !== file.size) throw new Error("图片已不可用");
+            await db.waitFor(verifyBinaryAvailable(media.blob, options.signal));
         } else await db.media.add({
             id: mediaId,
             projectId,
@@ -156,12 +159,12 @@ export async function registerProjectImage(projectId: string, mediaId: string, o
     const ext = extensions[media.mimeType];
     if (!ext) throw new Error("当前仅支持 PNG、JPEG 和 WebP 图片");
     const filename = /\.(png|jpe?g|webp)$/i.test(media.filename) ? media.filename : `${media.filename}.${ext}`;
-    return importSource(projectId, new File([media.blob], filename, {type: media.mimeType}), options, mediaId);
+    return importSource(projectId, new File([await readBinaryBlob(media.blob, options.signal)], filename, {type: media.mimeType}), options, mediaId);
 }
 
 /** Explicitly recover an interrupted local parse; no network or model request. */
 export async function retryReferenceImport(projectId: string, referenceId: string, options: ReferenceImportOptions = {}): Promise<ProjectReference> {
-    const source = await db.transaction("r", [db.projects, db.projectReferences, db.media], async () => {
+    const source = await db.transaction("r", [db.projects, db.projectReferences, db.media], async (db) => {
         const row = await db.projectReferences.get(referenceId);
         if (isStudioLibrary(projectId) || !(await db.projects.get(projectId)) || !row || row.projectId !== projectId || row.status === "unavailable") throw new Error("资料已不可用");
         const media = await db.media.get(row.mediaId);
@@ -169,9 +172,9 @@ export async function retryReferenceImport(projectId: string, referenceId: strin
         return {row, media};
     });
     if (source.row.status === "ready" || source.row.status === "partial") return source.row;
-    const buffer = await source.media.blob.arrayBuffer();
+    const buffer = await (await readBinaryBlob(source.media.blob, options.signal)).arrayBuffer();
     options.signal?.throwIfAborted();
-    const reference = await db.transaction("rw", [db.projects, db.projectReferences], async () => {
+    const reference = await db.transaction("rw", [db.projects, db.projectReferences], async (db) => {
         const row = await db.projectReferences.get(referenceId);
         if (!row || row.status === "unavailable" || row.operationId !== source.row.operationId || !(await db.projects.get(projectId))) throw new Error("资料状态已变化，请刷新后重试");
         const next: ProjectReference = {

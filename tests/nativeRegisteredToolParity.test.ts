@@ -1,6 +1,8 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import Dexie from "dexie";
-import {db} from "@/db/database";
+import {interceptStoreTable} from "./helpers/storeFaults";
+import type {ProductStore} from "@/lib/storage/types";
+import {readBinaryBlob} from "@/lib/storage/binary";
+import {db,db as productDb} from "@/db/database";
 import {beginAgentRun} from "@/db/agentRuns";
 import {resolveAgentToolApproval} from "@/db/agentTools";
 import {createChatThread} from "@/db/chat";
@@ -63,8 +65,9 @@ async function settle(run: AgentRun) {
 }
 
 const sorted = <T extends {id: string}>(rows: T[]) => rows.sort((a, b) => a.id.localeCompare(b.id));
-async function audioState(projectId: string) {
-    const snapshot = await getAudioProjectSnapshot(projectId);
+async function audioState(projectId: string, store:ProductStore = db) {
+    const db = store;
+    const snapshot = await getAudioProjectSnapshot(projectId, db);
     return {...snapshot, clips: sorted(snapshot.clips), proposals: sorted(await db.audioArrangementProposals.where("projectId").equals(projectId).toArray()), project: await db.projects.get(projectId)};
 }
 
@@ -89,7 +92,7 @@ async function assertSources(f: AudioFixture, selected?: string, chapterReplaced
     for (const [index, source] of f.sources.entries()) {
         expect(await db.audioSegments.get(source.segment.id)).toMatchObject({text: source.segment.text, notes: source.segment.notes, ...(index === 0 && selected ? {selectedTakeId: selected} : {})});
         if (!(index === 0 && selected)) expect((await db.audioSegments.get(source.segment.id))?.selectedTakeId).toBeUndefined();
-        expect(await (await db.media.get(source.take.mediaId))!.blob.text()).toBe(`source-bytes-${index}`);
+        expect(await (await readBinaryBlob((await db.media.get(source.take.mediaId))!.blob)).text()).toBe(`source-bytes-${index}`);
     }
     const manual = await db.audioClips.get(f.manual.id);
     if (chapterReplaced) {
@@ -103,7 +106,7 @@ async function assertSources(f: AudioFixture, selected?: string, chapterReplaced
 interface Scenario {
     projectId: string;
     args: Record<string, unknown>;
-    state: () => Promise<unknown>;
+    state: (store?:ProductStore) => Promise<unknown>;
     assertApplied: (result: unknown) => Promise<void>;
 }
 
@@ -117,7 +120,7 @@ async function ipScenario(archived = true): Promise<Scenario> {
     const originalProject = await db.projects.get(project.id), link = await db.projectIpLinks.get(project.id), version = await db.materialVersions.where("materialId").equals(material.id).first();
     return {
         projectId: project.id, args: {id: ip.id, expectedRevision: revision, archived},
-        state: async () => ({ip: await db.ipProfiles.get(ip.id), link: await db.projectIpLinks.get(project.id), project: await db.projects.get(project.id), material: await db.libraryMaterials.get(material.id), versions: await db.materialVersions.toArray()}),
+        state: async (db:ProductStore = productDb) => ({ip: await db.ipProfiles.get(ip.id), link: await db.projectIpLinks.get(project.id), project: await db.projects.get(project.id), material: await db.libraryMaterials.get(material.id), versions: await db.materialVersions.toArray()}),
         assertApplied: async result => {
             expect(result).toMatchObject({id: ip.id, archived, revision: revision + 1});
             expect(await db.ipProfiles.get(ip.id)).toMatchObject({archived, revision: revision + 1, positioning: ip.positioning});
@@ -126,7 +129,7 @@ async function ipScenario(archived = true): Promise<Scenario> {
             expect(await db.libraryMaterials.get(material.id)).toEqual(material);
             const currentVersion = await db.materialVersions.get(version!.id);
             expect(currentVersion).toEqual(version);
-            expect(currentVersion?.payload.type === "file" && await currentVersion.payload.blob.text()).toBe("retained-material-bytes");
+            expect(currentVersion?.payload.type === "file" && await (await readBinaryBlob(currentVersion.payload.blob)).text()).toBe("retained-material-bytes");
             expect(JSON.parse((await getProjectContext(project.id)).content).ip).toEqual(archived ? null : expect.objectContaining({id: ip.id}));
         }
     };
@@ -134,7 +137,7 @@ async function ipScenario(archived = true): Promise<Scenario> {
 
 async function scenario(name: ToolName): Promise<Scenario> {
     if (name === "ip_set_archived") return ipScenario();
-    const f = await audioFixture(), common = {projectId: f.project.id, state: () => audioState(f.project.id)};
+    const f = await audioFixture(), common = {projectId: f.project.id, state: (store?:ProductStore) => audioState(f.project.id, store)};
     const identity = {chapterId: f.chapter.id, trackId: f.track.id, takeId: f.sources[0].take.id};
     if (name === "audio_place_take") return {
         ...common, args: {...identity, startSec: 2, trimStartSec: 1, trimEndSec: 7},
@@ -257,17 +260,16 @@ describe("shared registered tools used by the full desktop product", () => {
         const f = await scenario(name), before = await f.state();
         const {run, call} = await paused(name, f.projectId, f.args);
         await resolveAgentToolApproval(run.id, call.id, "approve");
-        const original = db.agentToolCalls.update.bind(db.agentToolCalls);
         let failed = false, changedBeforeLedger = false;
-        const fault = vi.spyOn(db.agentToolCalls, "update").mockImplementation((...args) => Dexie.Promise.resolve().then(async () => {
-            const patch = args[1];
-            if (!failed && "status" in patch && patch.status === "completed") {
+        const fault = interceptStoreTable(db, "agentToolCalls", "update", async (tx,args,next) => {
+            const patch = args[1] as {status?:string};
+            if (!failed && patch.status === "completed") {
                 failed = true;
-                changedBeforeLedger = JSON.stringify(await f.state()) !== JSON.stringify(before);
+                changedBeforeLedger = JSON.stringify(await f.state(tx)) !== JSON.stringify(before);
                 throw new Error("fixture ledger unavailable after business mutation");
             }
-            return original(...args);
-        }));
+            return next();
+        });
         try { await settle(run); } finally { fault.mockRestore(); }
         expect(failed).toBe(true);
         expect(changedBeforeLedger).toBe(true);

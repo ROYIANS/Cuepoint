@@ -1,12 +1,14 @@
-import {db} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import type {Id} from "@/domain/types";
 
 /** Exact fallback-owner ranges share one readonly snapshot; cursor rows remain complete. */
-export async function readProjectCoverIds(projectIds: readonly Id[]): Promise<Map<Id, Id>> {
+export async function readProjectCoverIds(projectIds: readonly Id[], store?: ProductStore): Promise<Map<Id, Id>> {
+    const db = store ?? productDb;
     const candidates = new Map<Id, { order: number; mediaId: Id }>();
     const ids = [...new Set(projectIds)];
     if (ids.length) {
-        await db.transaction("r", db.shots, () => Promise.all(ids.map(projectId => db.shots.where("projectId").equals(projectId).each(shot => {
+        await db.transaction("r", [db.shots].flat(), (db) => Promise.all(ids.map(projectId => db.shots.where("projectId").equals(projectId).each(shot => {
             const mediaId = shot.firstFrame.result?.mediaId;
             if (!mediaId) return;
             const current = candidates.get(shot.projectId);

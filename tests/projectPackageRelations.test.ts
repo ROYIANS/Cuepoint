@@ -1,11 +1,13 @@
 import JSZip from "jszip";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import {addCharacter} from "@/db/assets";
 import {createProject} from "@/db/projects";
 import {putMedia} from "@/db/media";
 import { PACKAGE_FORMAT } from "@/domain/types";
 import { exportProjectZip, importProjectZip, PackageError } from "@/lib/projectPackage";
+import {interceptStoreTable} from "./helpers/storeFaults";
+import type {StoreTx} from "@/lib/storage/types";
 
 type Raw = Record<string, unknown>;
 function modernRecords(): { episodes: Raw[]; shots: Raw[] } {
@@ -112,12 +114,16 @@ describe("modern ZIP original episode and beat relationships", () => {
     const before = await seedAndSnapshot();
     const { episodes, shots } = modernRecords();
     const blob = await packageBlob(episodes, shots);
-    const fail = () => { throw new Error("injected imported shot failure"); };
-    db.shots.hook("creating", fail);
+    const fail = vi.fn(async (tx:StoreTx) => {
+      expect(await tx.projects.count()).toBe(2);
+      throw new Error("injected imported shot failure");
+    });
+    const injection = interceptStoreTable(db,"shots","bulkAdd",async tx => fail(tx));
     try {
-      await expect(importProjectZip(blob)).rejects.toThrow("injected imported shot failure");
+      await expect(importProjectZip(blob)).rejects.toThrow("导入失败：injected imported shot failure");
+      expect(fail).toHaveBeenCalledOnce();
     } finally {
-      db.shots.hook("creating").unsubscribe(fail);
+      injection.mockRestore();
     }
     expect(await snapshot()).toEqual(before);
   });

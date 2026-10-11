@@ -10,6 +10,7 @@ import {Button} from "@/components/ui/button";
 import {Disclosure, DisclosureTitle, SourcePlayer} from "@/components/audioMusic/controls";
 import {errorText, timeLabel} from "@/components/audioMusic/shared";
 import {useMedia} from "@/lib/media";
+import {readBinaryBlob} from "@/lib/storage/binary";
 
 export function AudioExports({snapshot}: { snapshot: AudioProjectSnapshot }) {
     const [playingId, setPlayingId] = useState<string>();
@@ -30,9 +31,9 @@ export function AudioExports({snapshot}: { snapshot: AudioProjectSnapshot }) {
                                                          onClick={() => setPlayingId(item.mediaId)}><Play/>试听成品</Button><Button
                     size="sm" variant="ghost" onClick={() => {
                     setError("");
-                    void db.media.get(item.mediaId).then((record) => {
+                    void db.media.get(item.mediaId).then(async (record) => {
                         if (!record) throw new Error("成品音频文件已不存在");
-                        return downloadBlob(record.blob, record.filename);
+                        return downloadBlob(await readBinaryBlob(record.blob), record.filename);
                     }).catch((reason: unknown) => {
                         if (isPublishedSaveError(reason)) toast.warning(reason.message);
                         else setError(errorText(reason));
@@ -40,7 +41,7 @@ export function AudioExports({snapshot}: { snapshot: AudioProjectSnapshot }) {
                 }}><Download/>下载</Button></div>
             </div>;
         })}</div>
-        {media && <SourcePlayer src={media.url} title="导出成品" autoplay/>}{error &&
+        {media && <SourcePlayer src={media.url} onError={media.onError} title="导出成品" autoplay/>}{error &&
             <p className="aw-error" role="alert">{error}</p>}
     </Disclosure>;
 }

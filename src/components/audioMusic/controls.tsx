@@ -74,6 +74,7 @@ export type AudioPlaybackActions = {
     onPrevious?: () => void;
     onNext?: () => void;
     onEnded?: () => void;
+    onError?: () => void;
     onPlayingChange?: (playing: boolean) => void;
     toggleRequest?: number;
 };
@@ -85,10 +86,13 @@ export function SourcePlayer({
                                  onPrevious,
                                  onNext,
                                  onEnded,
+                                 onError,
                                  onPlayingChange,
                                  toggleRequest
                              }: { src: string; title: string; autoplay?: boolean } & AudioPlaybackActions) {
     const audio = useRef<HTMLAudioElement>(null);
+    const currentSource = useRef(src);
+    currentSource.current = src;
     const [playing, setPlaying] = useState(false);
     const [position, setPosition] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -136,7 +140,11 @@ export function SourcePlayer({
             setPlaying(false);
             onPlayingChange?.(false);
             onEnded?.();
-        }} onError={() => setError("此音频无法播放，请检查文件格式或重新导入。")}/>
+        }} onError={() => {
+            if (currentSource.current !== src) return;
+            setError("此音频无法播放，请检查文件格式或重新导入。");
+            onError?.();
+        }}/>
         {(onPrevious || onNext) && <Button size="icon-sm" variant="ghost" aria-label="上一首" disabled={!onPrevious}
                                            onClick={onPrevious}><SkipBack size={16}/></Button>}
         <Button size="icon-sm" variant="ghost" aria-label={`${playing ? "暂停" : "播放"} ${title}`} onClick={() => {

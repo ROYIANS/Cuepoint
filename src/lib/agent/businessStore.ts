@@ -1,4 +1,6 @@
-import {db} from "@/db/database";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import {PRODUCTION_TABLES} from "@/db/productionShared";
 import {
     type Character,
@@ -61,11 +63,12 @@ function metadata(record: MediaRecord) {
         projectId: record.projectId,
         filename: record.filename,
         mimeType: record.mimeType,
-        size: record.blob.size
+        size: binaryByteLength(record.blob)
     };
 }
 
-export async function requireOwner(ownerId: string, allowStudio = true): Promise<void> {
+export async function requireOwner(ownerId: string, allowStudio = true, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (ownerId === STUDIO_LIBRARY_ID) {
         if (!allowStudio) throw new ToolRecoveryError("PROJECT_SCOPE_MISMATCH", "工作室不是项目，不能执行此操作");
         return;
@@ -73,8 +76,9 @@ export async function requireOwner(ownerId: string, allowStudio = true): Promise
     if (!(await db.projects.get(ownerId))) throw new ToolRecoveryError("PROJECT_NOT_FOUND", "项目不存在，请先查询并确认项目标识");
 }
 
-export async function requireEpisode(ownerId: string, episodeId: string) {
-    await requireOwner(ownerId, false);
+export async function requireEpisode(ownerId: string, episodeId: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    await requireOwner(ownerId, false, db);
     const episode = await db.episodes.get(episodeId);
     if (!episode) throw new ToolRecoveryError("TARGET_NOT_FOUND", "分集不存在或不属于当前项目");
     if (episode.projectId !== ownerId) throw new ToolRecoveryError("EPISODE_SCOPE_MISMATCH", "分集不存在或不属于当前项目");
@@ -82,7 +86,8 @@ export async function requireEpisode(ownerId: string, episodeId: string) {
 }
 
 /** Owned typed records are used by commands; dynamic views remain presentation only. */
-export async function readBusinessRecord(kind: BusinessKind, id: string, ownerId?: string, episodeId?: string): Promise<OwnedBusinessRecord> {
+export async function readBusinessRecord(kind: BusinessKind, id: string, ownerId?: string, episodeId?: string, store?: ProductStore): Promise<OwnedBusinessRecord> {
+    const db = store ?? productDb;
     if (kind === "project") {
         if (id === STUDIO_LIBRARY_ID) throw new ToolRecoveryError("PROJECT_SCOPE_MISMATCH", "工作室不是项目");
         const project = await db.projects.get(id);
@@ -91,10 +96,10 @@ export async function readBusinessRecord(kind: BusinessKind, id: string, ownerId
         return {kind, row: {...project}};
     }
     if (!ownerId) throw new ToolRecoveryError("PROJECT_REQUIRED", "必须明确提供 ownerId；工作室资产使用 studio");
-    await requireOwner(ownerId, !["episode", "shot", "beat"].includes(kind));
+    await requireOwner(ownerId, !["episode", "shot", "beat"].includes(kind), db);
     if (kind === "beat") {
         if (!episodeId) throw new ToolRecoveryError("EPISODE_REQUIRED", "场次需要分集标识");
-        const episode = await requireEpisode(ownerId, episodeId);
+        const episode = await requireEpisode(ownerId, episodeId, db);
         const beat = normalizeEpisodeStory(episode.story).beats.find(item => item.id === id);
         if (!beat) throw new ToolRecoveryError("TARGET_NOT_FOUND", "场次不存在或不属于当前分集");
         return {kind, row: {...beat, projectId: ownerId, episodeId}};
@@ -120,29 +125,30 @@ export async function readBusinessRecord(kind: BusinessKind, id: string, ownerId
         case "shot": {
             const row = owned(await db.shots.get(id));
             if (typeof row.episodeId !== "string") throw new ToolRecoveryError("EPISODE_REQUIRED", "镜头缺少有效分集");
-            await requireEpisode(ownerId, row.episodeId);
+            await requireEpisode(ownerId, row.episodeId, db);
             if (episodeId !== undefined && row.episodeId !== episodeId) throw new ToolRecoveryError("EPISODE_SCOPE_MISMATCH", "镜头不属于当前分集");
             return {kind, row};
         }
     }
 }
 
-export async function listBusinessRecords(kind: BusinessKind, ownerId?: string, episodeId?: string): Promise<OwnedBusinessRecord[]> {
+export async function listBusinessRecords(kind: BusinessKind, ownerId?: string, episodeId?: string, store?: ProductStore): Promise<OwnedBusinessRecord[]> {
+    const db = store ?? productDb;
     if (kind === "project") return (await db.projects.toArray()).filter(row => row.id !== STUDIO_LIBRARY_ID).map(row => ({
         kind,
         row: {...row}
     }));
     if (!ownerId) throw new ToolRecoveryError("PROJECT_REQUIRED", "必须明确提供 ownerId");
-    await requireOwner(ownerId, !["episode", "shot", "beat"].includes(kind));
+    await requireOwner(ownerId, !["episode", "shot", "beat"].includes(kind), db);
     if (kind === "beat") {
         if (!episodeId) throw new ToolRecoveryError("EPISODE_REQUIRED", "场次需要分集标识");
-        const episode = await requireEpisode(ownerId, episodeId);
+        const episode = await requireEpisode(ownerId, episodeId, db);
         return normalizeEpisodeStory(episode.story).beats.map((beat, order) => ({
             kind,
             row: {...beat, projectId: ownerId, episodeId, order}
         }));
     }
-    if (episodeId) await requireEpisode(ownerId, episodeId);
+    if (episodeId) await requireEpisode(ownerId, episodeId, db);
     switch (kind) {
         case "episode":
             return (await db.episodes.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
@@ -168,12 +174,14 @@ export async function listBusinessRecords(kind: BusinessKind, ownerId?: string, 
 }
 
 /** Compatibility projections preserve original row envelopes and hashes. */
-export async function getRow(kind: BusinessKind, id: string, ownerId?: string, episodeId?: string): Promise<BusinessRow> {
-    return {...(await readBusinessRecord(kind, id, ownerId, episodeId)).row};
+export async function getRow(kind: BusinessKind, id: string, ownerId?: string, episodeId?: string, store?: ProductStore): Promise<BusinessRow> {
+    const db = store ?? productDb;
+    return {...(await readBusinessRecord(kind, id, ownerId, episodeId, db)).row};
 }
 
-export async function listRows(kind: BusinessKind, ownerId?: string, episodeId?: string): Promise<BusinessRow[]> {
-    return (await listBusinessRecords(kind, ownerId, episodeId)).map(record => ({...record.row}));
+export async function listRows(kind: BusinessKind, ownerId?: string, episodeId?: string, store?: ProductStore): Promise<BusinessRow[]> {
+    const db = store ?? productDb;
+    return (await listBusinessRecords(kind, ownerId, episodeId, db)).map(record => ({...record.row}));
 }
 
 const visibleFields: Record<BusinessKind, readonly string[]> = {
@@ -333,13 +341,14 @@ export function relationsAt(kind: BusinessKind, row: BusinessRow, field: string)
 }
 
 /** Conservative owner-wide deletion snapshot includes all cascade/recycling participants. */
-export async function ownerSnapshot(ownerId: string): Promise<unknown> {
-    await requireOwner(ownerId);
+export async function ownerSnapshot(ownerId: string, store?: ProductStore): Promise<unknown> {
+    const db = store ?? productDb;
+    await requireOwner(ownerId, undefined, db);
     const kinds = ["episode", "shot", "character", "scene", "prop", "style", "media"] as const;
     const groups: Record<string, unknown> = {owner: ownerId === STUDIO_LIBRARY_ID ? {id: ownerId} : await db.projects.get(ownerId)};
     for (const kind of kinds) {
         if (ownerId === STUDIO_LIBRARY_ID && ["episode", "shot"].includes(kind)) continue;
-        groups[kind] = (await listRows(kind, ownerId)).sort((a, b) => a.id.localeCompare(b.id));
+        groups[kind] = (await listRows(kind, ownerId, undefined, db)).sort((a, b) => a.id.localeCompare(b.id));
     }
     groups.references = await db.projectReferences.where("projectId").equals(ownerId).sortBy("id");
     groups.proposals = await db.productionProposals.where("projectId").equals(ownerId).sortBy("id");
@@ -351,12 +360,13 @@ export async function ownerSnapshot(ownerId: string): Promise<unknown> {
     return groups;
 }
 
-export async function mediaUsage(ownerId: string, mediaId: string): Promise<Array<{
+export async function mediaUsage(ownerId: string, mediaId: string, store?: ProductStore): Promise<Array<{
     kind: string;
     id: string;
     label: string;
     slot?: string
 }>> {
+    const db = store ?? productDb;
     const usages: Array<{ kind: string; id: string; label: string; slot?: string }> = [];
     const project = ownerId === STUDIO_LIBRARY_ID ? undefined : await db.projects.get(ownerId);
     if (project?.coverMediaId === mediaId) usages.push({
@@ -367,7 +377,7 @@ export async function mediaUsage(ownerId: string, mediaId: string): Promise<Arra
     });
     for (const kind of ["character", "scene", "prop", "style", "shot"] as const) {
         if (kind === "shot" && ownerId === STUDIO_LIBRARY_ID) continue;
-        for (const row of await listRows(kind, ownerId)) {
+        for (const row of await listRows(kind, ownerId, undefined, db)) {
             const slots = kind === "shot" ? {
                 firstFrame: row.firstFrame,
                 lastFrame: row.lastFrame,
@@ -395,11 +405,12 @@ export async function mediaUsage(ownerId: string, mediaId: string): Promise<Arra
 }
 
 /** Sanitized retention counts expose why cleanup is blocked without execution internals. */
-export async function mediaRetention(ownerId: string, mediaId: string): Promise<{
+export async function mediaRetention(ownerId: string, mediaId: string, store?: ProductStore): Promise<{
     proposals: number;
     generationJobs: number;
     generationBatches: number
 }> {
+    const db = store ?? productDb;
     const proposals = (await db.productionProposals.where("projectId").equals(ownerId).toArray()).filter((proposal) =>
         proposal.before.result?.mediaId === mediaId || (proposal.change.kind === "slot-result" && proposal.change.result.mediaId === mediaId)).length;
     const generationJobs = (await db.agentGenerationJobs.where("projectId").equals(ownerId).toArray()).filter((job) =>
@@ -412,7 +423,8 @@ export async function mediaRetention(ownerId: string, mediaId: string): Promise<
 }
 
 /** Validate all referenced dependencies before preview; copying must never silently drop them. */
-export async function assetMediaDependencies(source: BusinessRow): Promise<unknown[]> {
+export async function assetMediaDependencies(source: BusinessRow, store?: ProductStore): Promise<unknown[]> {
+    const db = store ?? productDb;
     const records = new Map<string, unknown>();
     for (const value of Object.values(source.slots as Record<string, unknown> ?? {})) {
         const slot = parseGenerationSlot(value);
@@ -422,7 +434,7 @@ export async function assetMediaDependencies(source: BusinessRow): Promise<unkno
             ...(slot.result ? [{id: slot.result.mediaId, kind: slot.result.kind}] : []),
         ];
         for (const dependency of dependencies) {
-            const media = await getRow("media", dependency.id, String(source.projectId));
+            const media = await getRow("media", dependency.id, String(source.projectId), undefined, db);
             if (!media.size || !String(media.mimeType).startsWith(`${dependency.kind}/`)) throw new Error("来源素材已失效或类型不匹配");
             records.set(media.id, media);
         }

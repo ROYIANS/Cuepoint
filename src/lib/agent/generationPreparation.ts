@@ -1,4 +1,7 @@
-import {db} from "@/db/database";
+import {readBinaryBlob} from "@/lib/storage/binary";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import {readGenerationTarget} from "@/db/agentGenerationTarget";
 import {resolveConnector} from "@/db/connectors";
 import type {AgentGenerationJob} from "@/domain/agentGeneration";
@@ -9,10 +12,11 @@ import {targetRevision} from "@/lib/productionRevision";
 import {generationImageDimensions} from "./generationMedia";
 import {type GenerationSubmitArgs, generationSubmitSchema, profileRequest} from "./generationProfiles";
 
-const targetTables = () => [db.projects, db.episodes, db.shots, db.characters, db.scenes, db.props, db.styles];
+const targetTables = (store?: ProductStore) => (db => [db.projects, db.episodes, db.shots, db.characters, db.scenes, db.props, db.styles])(store ?? productDb);
 
-export async function resolveGenerationConnector(id: string, frozen?: Pick<AgentGenerationJob, "provider" | "baseUrl">) {
-    const item = await resolveConnector(id);
+export async function resolveGenerationConnector(id: string, frozen?: Pick<AgentGenerationJob, "provider" | "baseUrl">, store?: ProductStore) {
+    const db = store ?? productDb;
+    const item = await resolveConnector(id, db);
     if (!item || (item.definitionId !== "apimart" && item.definitionId !== "aihubmix") || !item.apiKey.trim()) throw new Error("生成供应商尚未配置有效密钥");
     const url = new URL(item.baseUrl);
     if (!/^https?:$/.test(url.protocol) || url.username || url.password || url.search || url.hash || !url.pathname.endsWith("/v1")) throw new Error("供应商 Base URL 无效");
@@ -21,37 +25,38 @@ export async function resolveGenerationConnector(id: string, frozen?: Pick<Agent
 }
 
 async function inputRevision(media: MediaRecord) {
-    const digest = await crypto.subtle.digest("SHA-256", await media.blob.arrayBuffer());
+    const digest = await crypto.subtle.digest("SHA-256", await (await readBinaryBlob(media.blob)).arrayBuffer());
     return targetRevision({
-        id: media.id, projectId: media.projectId, mimeType: media.mimeType, size: media.blob.size,
+        id: media.id, projectId: media.projectId, mimeType: media.mimeType, size: binaryByteLength(media.blob),
         hash: [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("")
     });
 }
 
 function validateGenerationMedia(media: MediaRecord | undefined, projectId: string, role: GenerationMediaInput["role"]): asserts media is MediaRecord {
     const kind = role === "reference-video" ? "video" : "image";
-    if (!media || media.projectId !== projectId || !media.blob.size || !media.mimeType.startsWith(`${kind}/`)) throw new Error("输入素材已删除、为空、类型错误或属于其他项目");
+    if (!media || media.projectId !== projectId || !binaryByteLength(media.blob) || !media.mimeType.startsWith(`${kind}/`)) throw new Error("输入素材已删除、为空、类型错误或属于其他项目");
     if (kind === "image" && !["image/png", "image/jpeg", "image/webp", "image/gif"].includes(media.mimeType)) throw new Error("参考图片格式尚未支持");
 }
 
 async function validateApimartReference(media: MediaRecord, model: string) {
-    if (media.blob.size > 20 * 1024 * 1024) throw new Error("APIMart 参考图不能超过20MiB");
+    if (binaryByteLength(media.blob) > 20 * 1024 * 1024) throw new Error("APIMart 参考图不能超过20MiB");
     if (model !== "MiniMax-H3") return;
     if (!["image/png", "image/jpeg", "image/webp"].includes(media.mimeType)) throw new Error("MiniMax H3 本地参考图仅支持 PNG、JPEG、WebP");
-    const {width, height} = await generationImageDimensions(media.blob);
+    const {width, height} = await generationImageDimensions(await readBinaryBlob(media.blob));
     if (width < 256 || height < 256 || width > 5760 || height > 5760 || width / height < 0.4 || width / height > 2.5) throw new Error("MiniMax H3 图片宽高须为256–5760px，比例0.4–2.5");
 }
 
 /** Flush and hash outside writes; only the target/media snapshot uses a read transaction. */
-export async function prepareGenerationSnapshot(raw: GenerationSubmitArgs, signal: AbortSignal) {
+export async function prepareGenerationSnapshot(raw: GenerationSubmitArgs, signal: AbortSignal, store?: ProductStore) {
+    const db = store ?? productDb;
     signal.throwIfAborted();
     const args = generationSubmitSchema.parse(raw);
     await flushPendingDrafts(args.target.projectId);
-    const config = await resolveGenerationConnector(args.connectorId);
+    const config = await resolveGenerationConnector(args.connectorId, undefined, db);
     const provider = config.definitionId as "apimart" | "aihubmix";
     const request = profileRequest(args, provider);
-    const snapshot = await db.transaction("r", [...targetTables(), db.media], async () => {
-        const current = await readGenerationTarget(request.target);
+    const snapshot = await db.transaction("r", [...targetTables(db), db.media], async (db) => {
+        const current = await readGenerationTarget(request.target, db);
         const records = await db.media.bulkGet(request.inputs.map((input) => input.mediaId));
         return {current, records};
     });
@@ -61,7 +66,7 @@ export async function prepareGenerationSnapshot(raw: GenerationSubmitArgs, signa
         const media = snapshot.records[index];
         validateGenerationMedia(media, request.target.projectId, input.role);
         if (provider === "apimart") await validateApimartReference(media, args.model);
-        bytes += Math.ceil(media.blob.size / 3) * 4;
+        bytes += Math.ceil(binaryByteLength(media.blob) / 3) * 4;
         inputs.push({...input, revision: await inputRevision(media)});
     }
     if (provider === "aihubmix" && bytes + new TextEncoder().encode(args.prompt).length + 8192 > 32 * 1024 * 1024) throw new Error("AIHubMix 内联素材请求超过32MiB限制");
@@ -80,7 +85,8 @@ export async function prepareGenerationSnapshot(raw: GenerationSubmitArgs, signa
 }
 
 /** Blob revision checks must finish before the caller enters its write transaction. */
-export async function loadGenerationInputs(job: AgentGenerationJob) {
+export async function loadGenerationInputs(job: AgentGenerationJob, store?: ProductStore) {
+    const db = store ?? productDb;
     const rows: MediaRecord[] = [];
     for (const input of job.inputs) {
         const media = await db.media.get(input.mediaId);

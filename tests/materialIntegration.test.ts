@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import Dexie from 'dexie';
 import { db } from '@/db/database';
+import {browserDatabase} from '@/lib/storage/browserDatabase';
+import {createBrowserProductStore} from '@/lib/storage/browser';
 import {createProject, patchProjectOutput} from "@/db/projects";
 import {deleteProject, setProjectArchived} from "@/db/cascadeCommands";
 import {collectMediaIds, deleteMediaIfOrphan} from "@/db/media";
@@ -13,9 +15,11 @@ const file = () => new File(['retained fixture audio'], 'intro.mp3', { type: 'au
 
 describe('IP and material integration with legacy projects', () => {
   it('upgrades v21 with no IP/material tables without changing existing projects', async () => {
-    const project = await createProject('legacy v21');
+    if (!browserDatabase) throw new Error('Historical comparator requires browser storage');
+    const rawDb=browserDatabase,db=createBrowserProductStore(rawDb);
+    const project = await createProject('legacy v21',undefined,undefined,undefined,db);
     const added = new Set(['ipProfiles', 'projectIpLinks', 'libraryMaterials', 'materialVersions', 'materialUses', 'materialEvents', 'audioGenerationBatches', 'audioGenerationBatchItems', 'audioArrangementProposals']);
-    const stores = Object.fromEntries(db.tables.filter((table) => !added.has(table.name))
+    const stores = Object.fromEntries(browserDatabase!.tables.filter((table) => !added.has(table.name))
       .map((table) => [table.name, [table.schema.primKey.src, ...table.schema.indexes.map((index) => index.src)].join(',')]));
     await db.delete();
     const legacy = new Dexie(db.name);

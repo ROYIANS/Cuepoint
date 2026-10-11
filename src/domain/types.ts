@@ -261,6 +261,7 @@ export interface Project {
     story: ProjectStory;
     setting: WorldSetting;
     extra?: Record<string, unknown>;
+    musicVariantLinks?: Record<string, Partial<Record<"suno-simple" | "suno-custom" | "flowmusic", string>>>;
 }
 
 export interface Character {
@@ -366,7 +367,7 @@ export interface MediaRecord {
     projectId: Id;
     mimeType: string;
     filename: string;
-    blob: Blob;
+    blob: import("./binary").BinaryContent;
 }
 
 export const CHARACTER_SLOTS: { id: CharacterImageSlot; label: string }[] = [

@@ -1,4 +1,4 @@
-import type {Table} from "dexie";
+import type {ProductStore, StoreTable} from "@/lib/storage/types";
 import {db} from "@/db/database";
 import {emptyCharacter, emptyScene, emptyProp, emptyStyle, emptyProject, emptyShot} from "@/db/productionRecords";
 import {emptySlot, SHOT_PICTURE_FIELDS} from "@/domain/slot";
@@ -30,12 +30,13 @@ export function item(id: string, projectId: string): GenerationBatchItem {
 }
 export interface RetentionSource {
     name: string; table: string; retains: boolean; history: boolean;
-    put(mediaId: string, projectId: string): Promise<() => Promise<void>>;
+    put(mediaId: string, projectId: string, store?: ProductStore): Promise<() => Promise<void>>;
 }
-function source<T extends {id: string}>(name: string, table: Table<T, string>, build: (mediaId: string, projectId: string) => NoInfer<T>, retains = true, history = false): RetentionSource {
-    return {name, table: table.name, retains, history, async put(mediaId, projectId) {
-        const row = build(mediaId, projectId); await table.put(row);
-        return async () => {await table.delete(row.id);};
+function source<T extends {id: string}>(name: string, table: StoreTable<T>, build: (mediaId: string, projectId: string) => NoInfer<T>, retains = true, history = false): RetentionSource {
+    return {name, table: table.name, retains, history, async put(mediaId, projectId, store = db) {
+        const scoped = store.table(table.name) as StoreTable<T>;
+        const row = build(mediaId, projectId); await scoped.put(row);
+        return async () => {await scoped.delete(row.id);};
     }};
 }
 const row = (id: string, projectId: string) => ({id: `source-${id}`, projectId, revision: 1, createdAt: at, updatedAt: at});
@@ -62,7 +63,7 @@ export const currentSources: RetentionSource[] = [
     }),
     ...(["parsing", "ready", "partial", "failed", "unavailable"] as const).map(status => source(`reference ${status}`, db.projectReferences, (id, owner) => ({...row(id, owner), mediaId: id, digest: "fixture", kind: "image" as const, filename: "local.png", mimeType: "image/png", size: 1, status, operationId: "fixture", coverage: {totalUnits: 1, processedUnits: 1, emptyUnits: [], characters: 0, truncated: false}, warnings: []}), status !== "unavailable")),
     source("superseded material use", db.materialUses, (id, owner) => ({...row(id, owner), materialId: "missing-material", targetKind: "media" as const, targetId: "irrelevant-target", mediaIds: [id], supersededBy: "later-use"})),
-    {name: "library retained only", table: "media", retains: true, history: false, async put(id) {await db.media.update(id, {libraryRetained: true}); return async () => {await db.media.update(id, {libraryRetained: false});};}},
+    {name: "library retained only", table: "media", retains: true, history: false, async put(id, _projectId, store = db) {await store.media.update(id, {libraryRetained: true}); return async () => {await store.media.update(id, {libraryRetained: false});};}},
     source("unplaced audio take", db.audioTakes, (id, owner) => ({...row(id, owner), mediaId: id, name: "unplaced", source: "upload" as const, durationSec: 1, sampleRate: 24000, channels: 1})),
     source("unselected music work", db.musicWorks, (id, owner) => ({...row(id, owner), mediaId: id, title: "unselected", notes: "", lyrics: "", favorite: false, durationSec: 1, sampleRate: 24000, channels: 1})),
     source("old audio export", db.audioExports, (id, owner) => ({...row(id, owner), mediaId: id, fingerprint: "stale", format: "wav" as const, durationSec: 1})),

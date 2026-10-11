@@ -1,4 +1,5 @@
-import {db} from "./database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
 import {createId, nowIso} from "@/lib/ids";
 import {
     type Character,
@@ -14,8 +15,9 @@ import {PRODUCTION_TABLES, touch} from "./productionShared";
 import {assertSlotMedia, deleteMediaIfOrphans} from "./media";
 
 /** Release only unused project copies. Failure rolls back both the binding and media. */
-export async function releaseMaterialUse(useId: string): Promise<void> {
-    await db.transaction("rw", [...PRODUCTION_TABLES, db.materialEvents], async () => {
+export async function releaseMaterialUse(useId: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [...PRODUCTION_TABLES, db.materialEvents], async (db) => {
         const use = await db.materialUses.get(useId);
         if (!use) throw new Error("这条使用记录已不存在，请刷新后重试");
         const settings = {character: db.characters, scene: db.scenes, prop: db.props, style: db.styles};
@@ -30,7 +32,7 @@ export async function releaseMaterialUse(useId: string): Promise<void> {
             throw new Error("此副本仍有其他素材使用记录，暂时不能移除");
         }
         for (const mediaId of mediaIds) await db.media.update(mediaId, {libraryRetained: false});
-        await deleteMediaIfOrphans(mediaIds);
+        await deleteMediaIfOrphans(mediaIds, db);
         if ((await db.media.bulkGet(mediaIds)).some((record) => record !== undefined)) {
             throw new Error("此副本仍被项目封面、创作设定、镜头或任务历史使用，暂时不能移除");
         }
@@ -55,13 +57,14 @@ const SNAPSHOT_PREFIX: Record<SnapshotKind, string> = {
 async function copyStudioSnapshot<T extends SnapshotAsset>(
     projectId: Id,
     kind: SnapshotKind,
-    sourceId: Id,
+    sourceId: Id, store?: ProductStore
 ): Promise<T> {
+    const db = store ?? productDb;
     if (isStudioLibrary(projectId)) throw new Error("目标必须是项目");
     return db.transaction(
         "rw",
         [db.projects, db.characters, db.scenes, db.props, db.styles, db.media],
-        async () => {
+        async (db) => {
             const project = await db.projects.get(projectId);
             if (!project) throw new Error("项目不存在");
 
@@ -93,7 +96,7 @@ async function copyStudioSnapshot<T extends SnapshotAsset>(
             const slots: Record<string, GenerationSlot> = {};
             for (const [slotKey, slot] of Object.entries(source.slots ?? {})) {
                 if (!slot) continue;
-                await assertSlotMedia(source.projectId, slot);
+                await assertSlotMedia(source.projectId, slot, undefined, db);
                 for (const oldMediaId of new Set(slotMediaIds(slot))) {
                     if (mediaMap.has(oldMediaId)) continue;
                     const media = await db.media.get(oldMediaId);
@@ -149,18 +152,22 @@ async function copyStudioSnapshot<T extends SnapshotAsset>(
     );
 }
 
-export function copyStudioCharacter(projectId: Id, sourceId: Id): Promise<Character> {
-    return copyStudioSnapshot<Character>(projectId, "character", sourceId);
+export function copyStudioCharacter(projectId: Id, sourceId: Id, store?: ProductStore): Promise<Character> {
+    const db = store ?? productDb;
+    return copyStudioSnapshot<Character>(projectId, "character", sourceId, db);
 }
 
-export function copyStudioScene(projectId: Id, sourceId: Id): Promise<Scene> {
-    return copyStudioSnapshot<Scene>(projectId, "scene", sourceId);
+export function copyStudioScene(projectId: Id, sourceId: Id, store?: ProductStore): Promise<Scene> {
+    const db = store ?? productDb;
+    return copyStudioSnapshot<Scene>(projectId, "scene", sourceId, db);
 }
 
-export function copyStudioProp(projectId: Id, sourceId: Id): Promise<Prop> {
-    return copyStudioSnapshot<Prop>(projectId, "prop", sourceId);
+export function copyStudioProp(projectId: Id, sourceId: Id, store?: ProductStore): Promise<Prop> {
+    const db = store ?? productDb;
+    return copyStudioSnapshot<Prop>(projectId, "prop", sourceId, db);
 }
 
-export function copyStudioStyle(projectId: Id, sourceId: Id): Promise<VisualStyle> {
-    return copyStudioSnapshot<VisualStyle>(projectId, "style", sourceId);
+export function copyStudioStyle(projectId: Id, sourceId: Id, store?: ProductStore): Promise<VisualStyle> {
+    const db = store ?? productDb;
+    return copyStudioSnapshot<VisualStyle>(projectId, "style", sourceId, db);
 }

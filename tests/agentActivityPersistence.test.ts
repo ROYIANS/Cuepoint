@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
@@ -16,7 +17,7 @@ describe("public tool-round activity persistence", () => {
   it("rolls back both the tool ledger and public snapshot if the run write fails", async () => {
     const thread = await createChatThread();
     const run = await beginAgentRun({ threadId: thread.id, connector, model: "test-model", content: "检查工作区" });
-    const failure = vi.spyOn(db.agentRuns, "update").mockRejectedValueOnce(new Error("activity storage failure"));
+    const failure = failStoreTableOnce(db, "agentRuns", "update", new Error("activity storage failure"));
     try {
       await expect(saveFixtureToolRound(run.id, "准备检查", [{ id: "call", type: "function", function: { name: "workspace_overview", arguments: "{}" } }], [{ title: "检查工作区", effect: "read", highRisk: false }], undefined, { reasoning: "公开思考" })).rejects.toThrow("activity storage failure");
     } finally { failure.mockRestore(); }

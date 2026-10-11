@@ -15,7 +15,8 @@
     "preview": "vite preview",
     "lint": "tsc -b --pretty false",
     "quality": "node scripts/quality-check.mjs",
-    "quality:self-test": "node scripts/quality/self-test.mjs"
+    "quality:self-test": "node scripts/quality/self-test.mjs",
+    "test:storage:native": "node scripts/native-storage-regression.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

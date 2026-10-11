@@ -1,4 +1,5 @@
-import {db} from '@/db/database';
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from '@/db/database';
 import {bindProjectIp, createIpProfile, setIpArchived, updateIpProfile} from '@/db/ipProfiles';
 import type {IpProfile, IpProfileInput} from '@/domain/materials';
 import type {AgentToolContext} from './tools';
@@ -39,8 +40,9 @@ function fieldChanges(patch: Partial<IpProfileInput>, before?: IpProfile) {
     return fields.filter(key => patch[key] !== undefined).map(key => `${labels[key]}：${before ? `${clip(before[key])} → ` : ''}${clip(patch[key]!)}`);
 }
 
-async function requireIp(id: string, context: AgentToolContext) {
-    const projectId = await frozenProjectScope(context);
+async function requireIp(id: string, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    const projectId = await frozenProjectScope(context, db);
     if (projectId && (await db.projectIpLinks.get(projectId))?.ipId !== id)
         throw new Error('绑定项目对话只能读取或修改当前所属 IP；请先明确关联，或在未绑定项目的对话管理其他 IP');
     const ip = await db.ipProfiles.get(id);
@@ -48,19 +50,22 @@ async function requireIp(id: string, context: AgentToolContext) {
     return ip;
 }
 
-async function affectedState(ip: IpProfile) {
+async function affectedState(ip: IpProfile, store?: ProductStore) {
+    const db = store ?? productDb;
     const links = await db.projectIpLinks.where('ipId').equals(ip.id).toArray();
     return {ip, links: links.sort((a, b) => a.projectId.localeCompare(b.projectId))};
 }
 
-async function editableIp(args: { id: string; expectedRevision: number }, context: AgentToolContext) {
-    const ip = await requireIp(args.id, context);
+async function editableIp(args: { id: string; expectedRevision: number }, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    const ip = await requireIp(args.id, context, db);
     if (ip.revision !== args.expectedRevision) throw new Error('IP 档案已更新，请重新读取当前版本后提出修改');
     return ip;
 }
 
-async function bindingProject(projectId: string, context: AgentToolContext) {
-    const bound = await frozenProjectScope(context);
+async function bindingProject(projectId: string, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    const bound = await frozenProjectScope(context, db);
     if (bound && bound !== projectId) throw new Error('此执行只能操作绑定项目');
     const project = await db.projects.get(projectId);
     if (!project || project.archivedAt) throw new Error('项目不存在或已归档');
@@ -73,7 +78,8 @@ export const IP_TOOLS = [
         title: '查找 IP',
         description: '按名称查找 IP，返回 ID、名称、版本和归档状态；最多50项。候选不代表授权，不可根据同名结果猜测操作对象。绑定项目对话也可查询名称目录以明确关联。',
         spec: s.object({query: s.optional(s.text(200)), includeArchived: s.optional(s.bool), ...s.page}),
-        async execute(args) {
+        async execute(args, context) {
+    const db = context.store ?? productDb;
             const query = args.query?.trim().toLocaleLowerCase() ?? '';
             const rows = (await db.ipProfiles.toArray()).filter(ip => (args.includeArchived || !ip.archived) && ip.name.toLocaleLowerCase().includes(query)).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || a.id.localeCompare(b.id));
             const offset = args.offset ?? 0, limit = args.limit ?? 20;
@@ -95,7 +101,8 @@ export const IP_TOOLS = [
             limit: s.optional(s.number(1, 12000, true))
         }),
         async execute(args, context) {
-            const ip = await requireIp(args.id, context);
+    const db = context.store ?? productDb;
+            const ip = await requireIp(args.id, context, db);
             if (args.field) {
                 const value = ip[args.field], offset = args.offset ?? 0, limit = args.limit ?? 4000;
                 return {
@@ -123,15 +130,17 @@ export const IP_TOOLS = [
         description: '将用户确认的定位保存为独立 IP。总是展示可读确认卡；确认后创建一次，不自动关联项目，也不把生成候选认定为正式 IP 素材。',
         spec: s.object({name: s.text(300, 1), ...optionalFields}),
         requiresConfirmation: true,
-        async prepare(args) {
+        async prepare(args, context) {
+    const db = context.store ?? productDb;
             const matching = (await db.ipProfiles.toArray()).filter(ip => ip.name.toLocaleLowerCase() === args.name.trim().toLocaleLowerCase()).map(brief);
             return {
                 state: {matching},
                 changes: [...fieldChanges(args), '创建独立 IP 档案；不会自动关联项目。', ...(matching.length ? [`已有 ${matching.length} 个同名 IP，请确认是否仍需创建新档案。`] : [])]
             };
         },
-        async execute(args) {
-            return brief(await createIpProfile(args));
+        async execute(args, context) {
+    const db = context.store ?? productDb;
+            return brief(await createIpProfile(args, db));
         },
     }),
     libraryWriteTool({
@@ -145,17 +154,19 @@ export const IP_TOOLS = [
         }),
         requiresConfirmation: true,
         async prepare(args, context) {
-            const ip = await editableIp(args, context);
+    const db = context.store ?? productDb;
+            const ip = await editableIp(args, context, db);
             if (ip.archived) throw new Error('请先恢复已归档的 IP');
-            const state = await affectedState(ip);
+            const state = await affectedState(ip, db);
             return {
                 state,
                 target: target(ip),
                 changes: [...fieldChanges(args.patch, ip), `共享档案，关联 ${state.links.length} 个项目；影响后续创作背景，已有作品内容不会自动修改。`]
             };
         },
-        async execute(args) {
-            await updateIpProfile(args.id, args.patch, args.expectedRevision);
+        async execute(args, context) {
+    const db = context.store ?? productDb;
+            await updateIpProfile(args.id, args.patch, args.expectedRevision, db);
             return brief((await db.ipProfiles.get(args.id))!);
         },
     }),
@@ -167,15 +178,17 @@ export const IP_TOOLS = [
         requiresConfirmation: true,
         highRisk: true,
         async prepare(args, context) {
-            const ip = await editableIp(args, context), state = await affectedState(ip);
+    const db = context.store ?? productDb;
+            const ip = await editableIp(args, context, db), state = await affectedState(ip, db);
             return {
                 state,
                 target: target(ip),
                 changes: [`${args.archived ? '归档' : '恢复'}「${ip.name}」。关联 ${state.links.length} 个项目，项目和素材完整保留。`, args.archived ? '后续创作不再使用此 IP 的背景偏好。' : '关联项目可重新使用此 IP 的背景偏好。']
             };
         },
-        async execute(args) {
-            await setIpArchived(args.id, args.archived);
+        async execute(args, context) {
+    const db = context.store ?? productDb;
+            await setIpArchived(args.id, args.archived, db);
             return brief((await db.ipProfiles.get(args.id))!);
         },
     }),
@@ -187,10 +200,12 @@ export const IP_TOOLS = [
         requiresConfirmation: true,
         owners: args => [args.projectId],
         async scope(args, context) {
-            await bindingProject(args.projectId, context);
+    const db = context.store ?? productDb;
+            await bindingProject(args.projectId, context, db);
         },
         async prepare(args, context) {
-            const project = await bindingProject(args.projectId, context);
+    const db = context.store ?? productDb;
+            const project = await bindingProject(args.projectId, context, db);
             const link = await db.projectIpLinks.get(project.id);
             const previous = link ? await db.ipProfiles.get(link.ipId) : undefined;
             const next = args.ipId ? await db.ipProfiles.get(args.ipId) : undefined;
@@ -201,8 +216,9 @@ export const IP_TOOLS = [
                 changes: [`项目「${project.name}」：${previous?.name ?? '独立创作'} → ${next?.name ?? '独立创作'}`, '后续创作背景会刷新；已有内容和素材副本不会自动变化。']
             };
         },
-        async execute(args) {
-            await bindProjectIp(args.projectId, args.ipId);
+        async execute(args, context) {
+    const db = context.store ?? productDb;
+            await bindProjectIp(args.projectId, args.ipId, db);
             return {
                 projectId: args.projectId,
                 ipId: args.ipId,

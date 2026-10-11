@@ -11,6 +11,15 @@ use std::{
 };
 
 type Reply = mpsc::Sender<Result<Outcome>>;
+type ProductReply = mpsc::Sender<Result<serde_json::Value>>;
+pub enum ProductJob {
+    Store(crate::full_product_store::protocol::Request),
+    Validate(crate::full_product_store::protocol::Session),
+    Binary {
+        session: crate::full_product_store::protocol::Session,
+        request: crate::product_binary::BinaryRequest,
+    },
+}
 enum Message {
     Run {
         id: String,
@@ -18,12 +27,36 @@ enum Message {
         cancel: Arc<AtomicBool>,
         reply: Reply,
     },
+    Product {
+        id: String,
+        job: Box<ProductJob>,
+        cancel: Arc<AtomicBool>,
+        reply: ProductReply,
+    },
+    Playback {
+        session: crate::full_product_store::protocol::Session,
+        reference: crate::product_binary::ManagedBinaryRef,
+        reply: mpsc::Sender<Result<crate::product_binary::PlaybackFile>>,
+    },
     Close(mpsc::Sender<Result<()>>),
 }
 enum StartMode {
     Create,
     Open,
     Restore(PathBuf),
+    Product(bool),
+}
+enum Owner {
+    Reference(Box<Workspace>),
+    Product(Box<crate::full_product_store::FullProductStore>),
+}
+impl Owner {
+    fn close(&mut self) -> Result<()> {
+        match self {
+            Self::Reference(w) => w.close(),
+            Self::Product(w) => w.close(),
+        }
+    }
 }
 struct Shared {
     tx: mpsc::Sender<Message>,
@@ -50,6 +83,9 @@ impl Operation {
 }
 
 impl StorageWorker {
+    pub fn product(root: impl AsRef<Path>, create: bool, hooks: Hooks) -> Result<Self> {
+        Self::start(root.as_ref().to_owned(), StartMode::Product(create), hooks)
+    }
     pub fn create(root: impl AsRef<Path>, hooks: Hooks) -> Result<Self> {
         Self::start(root.as_ref().to_owned(), StartMode::Create, hooks)
     }
@@ -78,10 +114,19 @@ impl StorageWorker {
             .name("cuepoint-storage".into())
             .spawn(move || {
                 let initialized = match mode {
-                    StartMode::Create => Workspace::open(root, true, hooks),
-                    StartMode::Open => Workspace::open(root, false, hooks),
+                    StartMode::Create => {
+                        Workspace::open(root, true, hooks).map(|w| Owner::Reference(Box::new(w)))
+                    }
+                    StartMode::Open => {
+                        Workspace::open(root, false, hooks).map(|w| Owner::Reference(Box::new(w)))
+                    }
                     StartMode::Restore(backup) => crate::backup::restore(&backup, &root, &hooks)
-                        .and_then(|restored| Workspace::open(restored, false, hooks)),
+                        .and_then(|restored| Workspace::open(restored, false, hooks))
+                        .map(|w| Owner::Reference(Box::new(w))),
+                    StartMode::Product(create) => {
+                        crate::full_product_store::FullProductStore::open(root, create, hooks)
+                            .map(|w| Owner::Product(Box::new(w)))
+                    }
                 };
                 let mut workspace = match initialized {
                     Ok(w) => {
@@ -110,10 +155,79 @@ impl StorageWorker {
                                 }
                                 Ok(())
                             };
-                            let result = check().and_then(|()| workspace.run(*job, check));
+                            let result = check().and_then(|()| match &mut workspace {
+                                Owner::Reference(w) => w.run(*job, check),
+                                Owner::Product(_) => Err(Error::new(
+                                    "invalid",
+                                    "Reference job cannot access full-product storage",
+                                )),
+                            });
                             if let Ok(mut ops) = worker_ops.lock() {
                                 ops.remove(&id);
                             }
+                            let _ = reply.send(result);
+                        }
+                        Message::Product {
+                            id,
+                            job,
+                            cancel,
+                            reply,
+                        } => {
+                            let check = || {
+                                if worker_closed.load(Ordering::SeqCst) {
+                                    return Err(Error::new("closed", "Workspace lifecycle ended"));
+                                }
+                                if cancel.load(Ordering::SeqCst) {
+                                    return Err(Error::new("canceled", "Operation canceled"));
+                                }
+                                Ok(())
+                            };
+                            let result = check().and_then(|()| match &mut workspace {
+                                Owner::Product(w) => match *job {
+                                    ProductJob::Store(request) => {
+                                        request.validate_wire().and_then(|()| w.run(request, check))
+                                    }
+                                    ProductJob::Validate(session) => {
+                                        w.validate_session(&session)?;
+                                        Ok(serde_json::json!({}))
+                                    }
+                                    ProductJob::Binary { session, request } => {
+                                        w.validate_session(&session)?;
+                                        Ok(serde_json::to_value(w.run_binary(request, check)?)?)
+                                    }
+                                },
+                                Owner::Reference(_) => Err(Error::new(
+                                    "invalid",
+                                    "Full-product job cannot access reference storage",
+                                )),
+                            });
+                            if let Ok(mut ops) = worker_ops.lock() {
+                                ops.remove(&id);
+                            }
+                            let _ = reply.send(result);
+                        }
+                        Message::Playback {
+                            session,
+                            reference,
+                            reply,
+                        } => {
+                            let check = || {
+                                if worker_closed.load(Ordering::SeqCst) {
+                                    Err(Error::new("closed", "Workspace lifecycle ended"))
+                                } else {
+                                    Ok(())
+                                }
+                            };
+                            let result = check().and_then(|()| match &mut workspace {
+                                Owner::Product(w) => {
+                                    w.validate_session(&session)?;
+                                    w.playback(&reference, check)
+                                }
+                                Owner::Reference(_) => Err(Error::new(
+                                    "invalid",
+                                    "Playback cannot access reference storage",
+                                )),
+                            });
                             let _ = reply.send(result);
                         }
                         Message::Close(reply) => {
@@ -175,7 +289,66 @@ impl StorageWorker {
     pub fn run(&self, job: Job) -> Result<Outcome> {
         self.submit(job)?.wait()
     }
+    pub fn run_product(&self, job: ProductJob) -> Result<serde_json::Value> {
+        let mut operations = self
+            .shared
+            .operations
+            .lock()
+            .map_err(|_| Error::new("worker", "Cancel registry poisoned"))?;
+        if self.shared.closed.load(Ordering::SeqCst) {
+            return Err(Error::new("closed", "Workspace is closed"));
+        }
+        let id = uuid::Uuid::new_v4().to_string();
+        let cancel = Arc::new(AtomicBool::new(false));
+        let (reply, receiver) = mpsc::channel();
+        operations.insert(id.clone(), Arc::clone(&cancel));
+        if self
+            .shared
+            .tx
+            .send(Message::Product {
+                id: id.clone(),
+                job: Box::new(job),
+                cancel,
+                reply,
+            })
+            .is_err()
+        {
+            operations.remove(&id);
+            return Err(Error::new("closed", "Worker ended"));
+        }
+        drop(operations);
+        receiver
+            .recv()
+            .map_err(|_| Error::new("closed", "Product worker ended"))?
+    }
     /// Signals atomically outside the storage queue, so a copying operation can observe it.
+    pub fn playback(
+        &self,
+        session: crate::full_product_store::protocol::Session,
+        reference: crate::product_binary::ManagedBinaryRef,
+    ) -> Result<crate::product_binary::PlaybackFile> {
+        let operations = self
+            .shared
+            .operations
+            .lock()
+            .map_err(|_| Error::new("worker", "Cancel registry poisoned"))?;
+        if self.shared.closed.load(Ordering::SeqCst) {
+            return Err(Error::new("closed", "Workspace is closed"));
+        }
+        let (reply, receiver) = mpsc::channel();
+        self.shared
+            .tx
+            .send(Message::Playback {
+                session,
+                reference,
+                reply,
+            })
+            .map_err(|_| Error::new("closed", "Worker ended"))?;
+        drop(operations);
+        receiver
+            .recv()
+            .map_err(|_| Error::new("closed", "Playback preparation interrupted"))?
+    }
     pub fn cancel(&self, operation_id: &str) -> Result<bool> {
         let ops = self
             .shared

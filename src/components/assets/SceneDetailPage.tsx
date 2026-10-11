@@ -1,8 +1,7 @@
 import {useRef, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {ChevronLeft} from "lucide-react";
-import {db} from "@/db/database";
 import {patchScene, setSceneSlot} from "@/db/assets";
 import {SCENE_SLOTS, STUDIO_LIBRARY_ID} from "@/domain/types";
 import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
@@ -24,7 +23,7 @@ function SceneDetailContent({
 }) {
     const navigate = useNavigate();
     const ownerId = back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID;
-    const result = useLiveQuery(async () => ({
+    const result = useProductQuery(async (db) => ({
         ownerId,
         id: sceneId,
         value: (await db.scenes.get(sceneId)) ?? null

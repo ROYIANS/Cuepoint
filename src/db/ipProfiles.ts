@@ -1,4 +1,5 @@
-import {db} from './database';
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from './database';
 import type {IpProfile, IpProfileInput} from '@/domain/materials';
 import {createId, nowIso} from '@/lib/ids';
 
@@ -15,7 +16,8 @@ function textPatch(input: Partial<IpProfileInput>): Partial<IpProfileInput> {
     return patch;
 }
 
-export async function createIpProfile(input: IpProfileInput): Promise<IpProfile> {
+export async function createIpProfile(input: IpProfileInput, store?: ProductStore): Promise<IpProfile> {
+    const db = store ?? productDb;
     const patch = textPatch(input);
     if (!patch.name) throw new Error('请填写 IP 名称');
     const at = nowIso();
@@ -37,9 +39,10 @@ export async function createIpProfile(input: IpProfileInput): Promise<IpProfile>
     return profile;
 }
 
-export async function updateIpProfile(id: string, input: Partial<IpProfileInput>, expectedRevision: number): Promise<void> {
+export async function updateIpProfile(id: string, input: Partial<IpProfileInput>, expectedRevision: number, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const patch = textPatch(input);
-    await db.transaction('rw', db.ipProfiles, async () => {
+    await db.transaction('rw', [db.ipProfiles].flat(), async (db) => {
         const profile = await db.ipProfiles.get(id);
         if (!profile) throw new Error('IP 不存在');
         if (profile.revision !== expectedRevision) throw new Error('IP 档案已更新，请重新加载后再保存');
@@ -48,8 +51,9 @@ export async function updateIpProfile(id: string, input: Partial<IpProfileInput>
     });
 }
 
-export async function setIpArchived(id: string, archived: boolean): Promise<void> {
-    await db.transaction('rw', db.ipProfiles, async () => {
+export async function setIpArchived(id: string, archived: boolean, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction('rw', [db.ipProfiles].flat(), async (db) => {
         const profile = await db.ipProfiles.get(id);
         if (!profile) throw new Error('IP 不存在');
         if (profile.archived === archived) return;
@@ -57,8 +61,9 @@ export async function setIpArchived(id: string, archived: boolean): Promise<void
     });
 }
 
-export async function bindProjectIp(projectId: string, ipId: string | null): Promise<void> {
-    await db.transaction('rw', [db.projects, db.ipProfiles, db.projectIpLinks], async () => {
+export async function bindProjectIp(projectId: string, ipId: string | null, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction('rw', [db.projects, db.ipProfiles, db.projectIpLinks], async (db) => {
         const project = await db.projects.get(projectId);
         if (!project || project.archivedAt) throw new Error('项目不存在或已归档');
         if (ipId === null) {

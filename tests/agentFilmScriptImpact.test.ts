@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {db} from "@/db/database";
 import {beginAgentRun} from "@/db/agentRuns";
@@ -187,7 +188,7 @@ describe("atomic film script source-range impact", () => {
         const {project, episode} = await fixture();
         const pending = await prepare(project.id, episode.id, {script: replacementScript});
         const currentEpisode = await db.episodes.get(episode.id), currentProject = await db.projects.get(project.id), shots = await shotSnapshot();
-        vi.spyOn(db.agentToolCalls, "update").mockRejectedValueOnce(new Error("Film ledger disk failure"));
+        failStoreTableOnce(db, "agentToolCalls", "update", new Error("Film ledger disk failure"));
         await expect(pending.execute()).rejects.toBeInstanceOf(AtomicToolRollbackError);
         expect(await db.episodes.get(episode.id)).toEqual(currentEpisode);
         expect(await db.projects.get(project.id)).toEqual(currentProject);

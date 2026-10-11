@@ -1,12 +1,11 @@
 import {useShotMedia} from "@/lib/useShotMedia";
 import {Link} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {ArrowLeft, Printer} from "lucide-react";
 import {toast} from "sonner";
 import {MediaPreview} from "@/components/media/MediaThumb";
 import {Button} from "@/components/ui/button";
 import {PageState} from "@/components/layout/PageLayout";
-import {db} from "@/db/database";
 import {episodeLabel, normalizeProjectMode} from "@/domain/types";
 import {deriveEpisodeDelivery} from "@/lib/episodeDelivery";
 import {formatDuration} from "@/lib/format";
@@ -23,19 +22,19 @@ function StoryboardPrintPageContent({
     projectId: string;
     episodeId: string;
 }) {
-    const projectResult = useLiveQuery(
-        async () => ({projectId, project: (await db.projects.get(projectId)) ?? null}),
+    const projectResult = useProductQuery(
+        async (db) => ({projectId, project: (await db.projects.get(projectId)) ?? null}),
         [projectId],
     );
-    const episodeResult = useLiveQuery(
-        async () => ({projectId, episodeId, episode: (await db.episodes.get(episodeId)) ?? null}),
+    const episodeResult = useProductQuery(
+        async (db) => ({projectId, episodeId, episode: (await db.episodes.get(episodeId)) ?? null}),
         [projectId, episodeId],
     );
-    const shotsResult = useLiveQuery(async () => ({
+    const shotsResult = useProductQuery(async (db) => ({
         projectId, episodeId,
         shots: await db.shots.where("episodeId").equals(episodeId).sortBy("order"),
     }), [projectId, episodeId]);
-    const assetsResult = useLiveQuery(async () => ({
+    const assetsResult = useProductQuery(async (db) => ({
         projectId,
         characters: await db.characters.where("projectId").equals(projectId).toArray(),
         scenes: await db.scenes.where("projectId").equals(projectId).toArray(),
@@ -51,7 +50,7 @@ function StoryboardPrintPageContent({
     const characters = loadedCharacters;
     const scenes = loadedScenes;
 
-    const relationAssets = useLiveQuery(async () => ({
+    const relationAssets = useProductQuery(async (db) => ({
         projectId,
         props: await db.props.where("projectId").equals(projectId).toArray(),
         styles: await db.styles.where("projectId").equals(projectId).toArray(),

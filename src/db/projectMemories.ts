@@ -1,4 +1,6 @@
-import {db} from "./database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
+const db = productDb;
 import {getTaskWrapupState} from "./agentTaskWrapups";
 import type {AgentTaskWrapup} from "@/domain/agentTaskWrapup";
 import type {
@@ -26,13 +28,15 @@ export class MemoryConflictError extends Error {
     }
 }
 
-async function project(projectId: string) {
+async function project(projectId: string, store?: ProductStore) {
+    const db = store ?? productDb;
     if (projectId === "studio" || !(await db.projects.get(projectId)))
         throw new Error("项目不存在，无法管理记忆");
 }
 
-async function owned(projectId: string, id: string) {
-    await project(projectId);
+async function owned(projectId: string, id: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    await project(projectId, db);
     const row = await db.projectMemories.get(id);
     if (!row || row.projectId !== projectId)
         throw new Error("记忆不存在或不属于当前项目");
@@ -44,7 +48,8 @@ function revision(row: ProjectMemory, expected: number) {
         throw new Error("记忆已更新，请保留当前编辑并重新核对");
 }
 
-async function persist(row: ProjectMemory, reason: string) {
+async function persist(row: ProjectMemory, reason: string, store?: ProductStore) {
+    const db = store ?? productDb;
     await db.projectMemories.put(row);
     await db.projectMemoryVersions.add({
         versionId: createId("pmv"),
@@ -69,8 +74,9 @@ async function duplicateOrConflicts(
     projectId: string,
     input: MemoryInput,
     source: MemorySource,
-    excludeId?: string,
+    excludeId?: string, store?: ProductStore
 ) {
+    const db = store ?? productDb;
     const rows = (
         await db.projectMemories.where("projectId").equals(projectId).toArray()
     ).filter((row) => row.id !== excludeId);
@@ -90,8 +96,9 @@ async function duplicateOrConflicts(
     };
 }
 
-async function sourceSummary(projectId: string, raw: MemorySourceRef) {
-    await project(projectId);
+async function sourceSummary(projectId: string, raw: MemorySourceRef, store?: ProductStore) {
+    const db = store ?? productDb;
+    await project(projectId, db);
     const ref = memorySourceRefSchema.parse(raw),
         task = await db.agentTasks.get(ref.taskId);
     if (!task || task.projectId !== projectId)
@@ -140,7 +147,7 @@ async function sourceSummary(projectId: string, raw: MemorySourceRef) {
         excerpt: item.text.slice(0, 3000),
         evidence,
     };
-    const state = await getTaskWrapupState(task.id);
+    const state = await getTaskWrapupState(task.id, db);
     const historical =
         state.stale ||
         state.confirmed?.id !== summary.id ||
@@ -153,10 +160,11 @@ async function sourceSummary(projectId: string, raw: MemorySourceRef) {
 }
 
 export async function listProjectMemories(
-    projectId: string,
+    projectId: string, store?: ProductStore
 ): Promise<ProjectMemory[]> {
-    return db.transaction("r", db.tables, async () => {
-        await project(projectId);
+    const db = store ?? productDb;
+    return db.transaction("r", db.tables, async (db) => {
+        await project(projectId, db);
         return (
             await db.projectMemories.where("projectId").equals(projectId).toArray()
         ).sort(
@@ -168,10 +176,11 @@ export async function listProjectMemories(
 
 export async function getProjectMemory(
     projectId: string,
-    id: string,
+    id: string, store?: ProductStore
 ): Promise<ProjectMemory | undefined> {
-    return db.transaction("r", db.tables, async () => {
-        await project(projectId);
+    const db = store ?? productDb;
+    return db.transaction("r", db.tables, async (db) => {
+        await project(projectId, db);
         const row = await db.projectMemories.get(id);
         if (row && row.projectId !== projectId)
             throw new Error("记忆不属于当前项目");
@@ -181,10 +190,11 @@ export async function getProjectMemory(
 
 export async function listProjectMemoryVersions(
     projectId: string,
-    id: string,
+    id: string, store?: ProductStore
 ): Promise<ProjectMemoryVersion[]> {
-    return db.transaction("r", db.tables, async () => {
-        await owned(projectId, id);
+    const db = store ?? productDb;
+    return db.transaction("r", db.tables, async (db) => {
+        await owned(projectId, id, db);
         return (
             await db.projectMemoryVersions.where("memoryId").equals(id).toArray()
         )
@@ -195,10 +205,11 @@ export async function listProjectMemoryVersions(
 
 export async function getMemorySourceState(
     projectId: string,
-    id: string,
+    id: string, store?: ProductStore
 ): Promise<MemorySourceState> {
-    return db.transaction("r", db.tables, async () => {
-        const row = await owned(projectId, id),
+    const db = store ?? productDb;
+    return db.transaction("r", db.tables, async (db) => {
+        const row = await owned(projectId, id, db),
             source = row.source;
         if (source.kind === "manual")
             return {
@@ -218,7 +229,7 @@ export async function getMemorySourceState(
                 itemKind: source.itemKind,
                 itemIndex: source.itemIndex,
                 itemText: source.itemText,
-            });
+            }, db);
             return {
                 state: current.state,
                 href: current.href,
@@ -240,10 +251,11 @@ export async function listMemoryCandidates(
     projectId: string,
     taskId: string,
     summaryId: string,
-    summaryRevision: number,
+    summaryRevision: number, store?: ProductStore
 ): Promise<MemoryCandidate[]> {
-    return db.transaction("r", db.tables, async () => {
-        await project(projectId);
+    const db = store ?? productDb;
+    return db.transaction("r", db.tables, async (db) => {
+        await project(projectId, db);
         const task = await db.agentTasks.get(taskId);
         if (!task || task.projectId !== projectId)
             throw new Error("来源任务不属于当前项目");
@@ -270,7 +282,7 @@ export async function listMemoryCandidates(
                     itemIndex,
                     itemText: item.text,
                 };
-                const source = await sourceSummary(projectId, ref);
+                const source = await sourceSummary(projectId, ref, db);
                 const title = item.text.slice(0, 100);
                 candidates.push({
                     ref,
@@ -293,14 +305,15 @@ async function create(
     projectId: string,
     input: MemoryInput,
     source: MemorySource,
-    options: MemorySaveOptions = {},
+    options: MemorySaveOptions = {}, store?: ProductStore
 ): Promise<MemorySaveResult> {
-    await project(projectId);
-    const check = await duplicateOrConflicts(projectId, input, source);
+    const db = store ?? productDb;
+    await project(projectId, db);
+    const check = await duplicateOrConflicts(projectId, input, source, undefined, db);
     // Repeated submissions never reactivate or overwrite the existing reviewed row.
     if (check.duplicate) return {memory: check.duplicate, duplicate: true};
     const replacing = options.replace
-        ? await owned(projectId, options.replace.id)
+        ? await owned(projectId, options.replace.id, db)
         : undefined;
     if (replacing) {
         revision(replacing, options.replace!.expectedRevision);
@@ -329,20 +342,21 @@ async function create(
                 revision: replacing.revision + 1,
                 updatedAt: at,
             },
-            "被明确替换",
+            "被明确替换", db
         );
-    await persist(row, replacing ? "明确替换后创建" : "用户确认创建");
+    await persist(row, replacing ? "明确替换后创建" : "用户确认创建", db);
     return {memory: row, duplicate: false};
 }
 
 export async function createProjectMemory(
     projectId: string,
     raw: MemoryInput,
-    options?: MemorySaveOptions,
+    options?: MemorySaveOptions, store?: ProductStore
 ) {
+    const db = store ?? productDb;
     const input = parseMemoryInput(raw);
-    return db.transaction("rw", MANUAL_MEMORY_TABLES, () =>
-        create(projectId, input, {kind: "manual"}, options),
+    return db.transaction("rw", [MANUAL_MEMORY_TABLES].flat(), (db) =>
+        create(projectId, input, {kind: "manual"}, options, db),
     );
 }
 
@@ -350,12 +364,13 @@ export async function promoteProjectMemory(
     projectId: string,
     ref: MemorySourceRef,
     raw: MemoryInput,
-    options?: MemorySaveOptions,
+    options?: MemorySaveOptions, store?: ProductStore
 ) {
+    const db = store ?? productDb;
     const input = parseMemoryInput(raw);
-    return db.transaction("rw", db.tables, async () => {
-        const {source} = await sourceSummary(projectId, ref);
-        return create(projectId, input, source, options);
+    return db.transaction("rw", db.tables, async (db) => {
+        const {source} = await sourceSummary(projectId, ref, db);
+        return create(projectId, input, source, options, db);
     });
 }
 
@@ -363,11 +378,12 @@ export async function updateProjectMemory(
     projectId: string,
     id: string,
     raw: MemoryInput,
-    expectedRevision: number,
+    expectedRevision: number, store?: ProductStore
 ): Promise<ProjectMemory> {
+    const db = store ?? productDb;
     const input = parseMemoryInput(raw);
-    return db.transaction("rw", MANUAL_MEMORY_TABLES, async () => {
-        const row = await owned(projectId, id);
+    return db.transaction("rw", [MANUAL_MEMORY_TABLES].flat(), async (db) => {
+        const row = await owned(projectId, id, db);
         revision(row, expectedRevision);
         if (row.status === "superseded")
             throw new Error("被替代的记忆只能查看历史或删除");
@@ -375,7 +391,7 @@ export async function updateProjectMemory(
             projectId,
             input,
             {kind: "manual"},
-            id,
+            id, db
         );
         if (check.duplicate || check.conflicts.length)
             throw new MemoryConflictError([
@@ -389,7 +405,7 @@ export async function updateProjectMemory(
             updatedAt: nowIso(),
             reviewedAt: nowIso(),
         };
-        await persist(next, "人工修订");
+        await persist(next, "人工修订", db);
         return next;
     });
 }
@@ -398,12 +414,13 @@ export async function setProjectMemoryStatus(
     projectId: string,
     id: string,
     status: "active" | "disabled",
-    expectedRevision: number,
+    expectedRevision: number, store?: ProductStore
 ): Promise<ProjectMemory> {
-    return db.transaction("rw", MANUAL_MEMORY_TABLES, async () => {
+    const db = store ?? productDb;
+    return db.transaction("rw", [MANUAL_MEMORY_TABLES].flat(), async (db) => {
         if (status !== "active" && status !== "disabled")
             throw new Error("记忆状态无效");
-        const row = await owned(projectId, id);
+        const row = await owned(projectId, id, db);
         revision(row, expectedRevision);
         if (row.status === "superseded")
             throw new Error("被替代的记忆不能直接重新启用");
@@ -427,7 +444,7 @@ export async function setProjectMemoryStatus(
             updatedAt: nowIso(),
             ...(status === "active" ? {reviewedAt: nowIso()} : {}),
         };
-        await persist(next, status === "active" ? "用户复核启用" : "停用");
+        await persist(next, status === "active" ? "用户复核启用" : "停用", db);
         return next;
     });
 }
@@ -436,12 +453,13 @@ export async function replaceProjectMemory(
     projectId: string,
     oldId: string,
     newId: string,
-    expected: { oldRevision: number; newRevision: number },
+    expected: { oldRevision: number; newRevision: number }, store?: ProductStore
 ): Promise<ProjectMemory> {
-    return db.transaction("rw", MANUAL_MEMORY_TABLES, async () => {
+    const db = store ?? productDb;
+    return db.transaction("rw", [MANUAL_MEMORY_TABLES].flat(), async (db) => {
         if (oldId === newId) throw new Error("不能替换自身");
-        const old = await owned(projectId, oldId),
-            next = await owned(projectId, newId);
+        const old = await owned(projectId, oldId, db),
+            next = await owned(projectId, newId, db);
         revision(old, expected.oldRevision);
         revision(next, expected.newRevision);
         if (old.status === "superseded" || next.status === "superseded")
@@ -450,7 +468,7 @@ export async function replaceProjectMemory(
             projectId,
             next,
             {kind: "manual"},
-            newId,
+            newId, db
         );
         if (conflicts.some((row) => row.id !== oldId))
             throw new MemoryConflictError(conflicts.map((r) => r.id));
@@ -463,7 +481,7 @@ export async function replaceProjectMemory(
                 revision: old.revision + 1,
                 updatedAt: at,
             },
-            "被明确替换",
+            "被明确替换", db
         );
         const active = {
             ...next,
@@ -473,7 +491,7 @@ export async function replaceProjectMemory(
             updatedAt: at,
             reviewedAt: at,
         };
-        await persist(active, "用户确认替换并启用");
+        await persist(active, "用户确认替换并启用", db);
         return active;
     });
 }
@@ -481,10 +499,11 @@ export async function replaceProjectMemory(
 export async function deleteProjectMemory(
     projectId: string,
     id: string,
-    expectedRevision: number,
+    expectedRevision: number, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", MANUAL_MEMORY_TABLES, async () => {
-        const row = await owned(projectId, id);
+    const db = store ?? productDb;
+    await db.transaction("rw", [MANUAL_MEMORY_TABLES].flat(), async (db) => {
+        const row = await owned(projectId, id, db);
         revision(row, expectedRevision);
         await db.projectMemories.delete(id);
         await db.projectMemoryVersions

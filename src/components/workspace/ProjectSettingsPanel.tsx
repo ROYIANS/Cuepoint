@@ -63,7 +63,7 @@ export function ProjectSettingsPanel({project, onOutputState, unavailable = fals
     onOutputState: (state: { dirty: boolean; saving: boolean }) => void
 }) {
     const repository = useVideoWorkspaceRepository();
-    const styles = useVideoWorkspaceQuery(() => repository.styles(project.id), [project.id]);
+    const styles = useVideoWorkspaceQuery((repository) => repository.styles(project.id), [project.id]);
     const [stylePending, setStylePending] = useState(false);
 
     async function setStyle(value: string) {

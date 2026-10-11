@@ -1,5 +1,7 @@
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
 import {defineTool} from './toolDefinition';
-import {db} from '@/db/database';
+import {db as productDb} from '@/db/database';
 import {
     adoptMaterialInProject,
     promoteLegacyMaterial,
@@ -42,7 +44,8 @@ const scoped = (value: {
 }): MaterialScope => value.kind === 'global' ? {kind: 'global'} : {kind: value.kind, id: value.id!};
 const sameScope = (a: MaterialScope, b: MaterialScope) => a.kind === b.kind && (a.kind === 'global' || b.kind !== 'global' && a.id === b.id);
 
-function settingTable(type: SettingMaterialKind) {
+function settingTable(type: SettingMaterialKind, store?: ProductStore) {
+    const db = store ?? productDb;
     return type === 'character' ? db.characters : type === 'scene' ? db.scenes : type === 'prop' ? db.props : db.styles;
 }
 
@@ -64,7 +67,7 @@ function versionSummary(version: MaterialVersion) {
     const payload = version.payload;
     return {
         revision: version.revision, createdAt: version.createdAt, ...(payload.type === 'file'
-            ? {filename: payload.filename, mimeType: payload.mimeType, size: payload.blob.size}
+            ? {filename: payload.filename, mimeType: payload.mimeType, size: binaryByteLength(payload.blob)}
             : {
                 kind: payload.kind,
                 entityId: payload.entity.id,
@@ -73,7 +76,7 @@ function versionSummary(version: MaterialVersion) {
                     mediaId: item.id,
                     filename: item.filename,
                     mimeType: item.mimeType,
-                    size: item.blob.size
+                    size: binaryByteLength(item.blob)
                 }))
             })
     };
@@ -95,22 +98,25 @@ function settingSummary(entity: MaterialEntity) {
     };
 }
 
-async function currentMaterial(materialId: string, context: AgentToolContext, expected?: number) {
+async function currentMaterial(materialId: string, context: AgentToolContext, expected?: number, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     const material = await db.libraryMaterials.get(materialId);
     if (!material) throw new Error('素材不存在，请先搜索取得准确 ID');
-    await assertMaterialAccess(material, context);
+    await assertMaterialAccess(material, context, db);
     if (expected !== undefined && material.revision !== expected) throw new Error(`素材已更新到 v${material.revision}，请重新读取后使用当前 revision 提出修改`);
     return material;
 }
 
-async function activeMaterial(materialId: string, expected: number, context: AgentToolContext) {
-    const material = await currentMaterial(materialId, context, expected);
+async function activeMaterial(materialId: string, expected: number, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    const material = await currentMaterial(materialId, context, expected, db);
     if (material.archived) throw new Error('素材已归档，请先恢复');
-    await assertActiveMaterialScope(material.scope);
+    await assertActiveMaterialScope(material.scope, db);
     return material;
 }
 
-async function scopeState(scope: MaterialScope) {
+async function scopeState(scope: MaterialScope, store?: ProductStore) {
+    const db = store ?? productDb;
     if (scope.kind === 'global') return scope;
     return scope.kind === 'ip' ? {scope, owner: await db.ipProfiles.get(scope.id)} : {
         scope,
@@ -119,35 +125,39 @@ async function scopeState(scope: MaterialScope) {
     };
 }
 
-async function destinationScope(scope: MaterialScope, context: AgentToolContext) {
-    await assertMaterialAccess({scope}, context);
-    await assertActiveMaterialScope(scope);
-    return scopeState(scope);
+async function destinationScope(scope: MaterialScope, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    await assertMaterialAccess({scope}, context, db);
+    await assertActiveMaterialScope(scope, db);
+    return scopeState(scope, db);
 }
 
-async function targetProject(projectId: string, context: AgentToolContext) {
-    const bound = await frozenProjectScope(context);
+async function targetProject(projectId: string, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    const bound = await frozenProjectScope(context, db);
     if (bound && bound !== projectId) throw new Error('项目绑定对话只能将素材加入或移除当前项目；请切换到目标项目对话');
     const project = await db.projects.get(projectId);
     if (!project || project.archivedAt) throw new Error('目标项目不存在或已归档');
     return {project, link: await db.projectIpLinks.get(projectId)};
 }
 
-async function usages(materialId: string, context: AgentToolContext) {
+async function usages(materialId: string, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     const all = await db.materialUses.where('materialId').equals(materialId).toArray();
-    const projectId = await frozenProjectScope(context);
+    const projectId = await frozenProjectScope(context, db);
     return {all, visible: projectId ? all.filter(use => use.projectId === projectId) : all};
 }
 
-async function sourceLegacy(type: 'media' | SettingMaterialKind, sourceId: string, context: AgentToolContext) {
-    const row = type === 'media' ? await db.media.get(sourceId) : await settingTable(type).get(sourceId);
+async function sourceLegacy(type: 'media' | SettingMaterialKind, sourceId: string, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    const row = type === 'media' ? await db.media.get(sourceId) : await settingTable(type, db).get(sourceId);
     if (!row) throw new Error('原始素材或设定不存在，请先搜索原始资料取得准确 ID');
     const scope: MaterialScope = row.projectId === STUDIO_LIBRARY_ID ? {kind: 'global'} : {
         kind: 'project',
         id: row.projectId
     };
-    await assertMaterialAccess({scope}, context);
-    await assertActiveMaterialScope(scope);
+    await assertMaterialAccess({scope}, context, db);
+    await assertActiveMaterialScope(scope, db);
     if ('blob' in row) return {
         row,
         state: {
@@ -155,7 +165,7 @@ async function sourceLegacy(type: 'media' | SettingMaterialKind, sourceId: strin
             projectId: row.projectId,
             filename: row.filename,
             mimeType: row.mimeType,
-            size: row.blob.size
+            size: binaryByteLength(row.blob)
         }
     };
     const ids = new Set(Object.values(row.slots).flatMap(slot => slot ? [...slot.referenceImageIds, ...slot.referenceVideoIds, ...(slot.result ? [slot.result.mediaId] : [])] : []));
@@ -169,7 +179,7 @@ async function sourceLegacy(type: 'media' | SettingMaterialKind, sourceId: strin
                 projectId: item.projectId,
                 filename: item.filename,
                 mimeType: item.mimeType,
-                size: item.blob.size
+                size: binaryByteLength(item.blob)
             } : null)
         }
     };
@@ -177,32 +187,35 @@ async function sourceLegacy(type: 'media' | SettingMaterialKind, sourceId: strin
 
 const materialTarget = (material: LibraryMaterial) => ({label: material.name, href: '/assets'});
 
-async function scopeLabel(scope: MaterialScope) {
+async function scopeLabel(scope: MaterialScope, store?: ProductStore) {
+    const db = store ?? productDb;
     if (scope.kind === 'global') return '通用素材（跨项目共享）';
     const owner = scope.kind === 'ip' ? await db.ipProfiles.get(scope.id) : await db.projects.get(scope.id);
     return `${scope.kind === 'ip' ? 'IP 专属' : '项目专属'}「${owner?.name ?? '已删除'}」(${scope.id})`;
 }
 
 /** The adopted copy belongs to its project even after access to its source is withdrawn. */
-async function projectUseState(useId: string, context: AgentToolContext) {
+async function projectUseState(useId: string, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     const use = await db.materialUses.get(useId);
     if (!use) throw new Error('使用记录不存在，请先读取素材用途');
-    const project = await targetProject(use.projectId, context);
-    const target = use.targetKind === 'media' ? await db.media.get(use.targetId) : await settingTable(use.targetKind).get(use.targetId);
+    const project = await targetProject(use.projectId, context, db);
+    const target = use.targetKind === 'media' ? await db.media.get(use.targetId) : await settingTable(use.targetKind, db).get(use.targetId);
     if (target && target.projectId !== use.projectId) throw new Error('素材副本归属已变化，请重新核对项目资料');
     const targetState = target && 'blob' in target ? {
         id: target.id,
         projectId: target.projectId,
         filename: target.filename,
-        size: target.blob.size,
+        size: binaryByteLength(target.blob),
         mimeType: target.mimeType
     } : target;
     return {use, project, target: targetState};
 }
 
-async function readMaterialUseState(useId: string, context: AgentToolContext) {
-    const state = await projectUseState(useId, context);
-    return {...state, material: await currentMaterial(state.use.materialId, context)};
+async function readMaterialUseState(useId: string, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    const state = await projectUseState(useId, context, db);
+    return {...state, material: await currentMaterial(state.use.materialId, context, undefined, db)};
 }
 
 function materialUseResult(use: MaterialUse) {
@@ -238,7 +251,8 @@ export const MATERIAL_TOOLS = [
         description: '搜索版本素材元信息，默认不含归档。scope 可选 global/ip/project；绑定对话只能读通用、关联 IP 和当前项目。source=legacy 时搜索已有原始 media/角色/场景/道具/风格，须给 legacyKind，默认当前项目或工作室。仅列标题、类型、版本等，不代表已读图片或文档。',
         spec: searchSpec,
         async execute(args, context) {
-            const bound = await frozenProjectScope(context), query = args.query.trim().toLocaleLowerCase(),
+    const db = context.store ?? productDb;
+            const bound = await frozenProjectScope(context, db), query = args.query.trim().toLocaleLowerCase(),
                 offset = args.offset ?? 0, limit = args.limit ?? 10;
             if (args.source === 'legacy') {
                 if (!args.legacyKind) throw new Error('搜索原始资料须提供 legacyKind：media/character/scene/prop/style');
@@ -250,8 +264,8 @@ export const MATERIAL_TOOLS = [
                         kind: 'project',
                         id: owner
                     }
-                }, context);
-                const rows = args.legacyKind === 'media' ? await db.media.where('projectId').equals(owner).toArray() : await settingTable(args.legacyKind).where('projectId').equals(owner).toArray();
+                }, context, db);
+                const rows = args.legacyKind === 'media' ? await db.media.where('projectId').equals(owner).toArray() : await settingTable(args.legacyKind, db).where('projectId').equals(owner).toArray();
                 const matches = rows.filter(row => ('filename' in row ? row.filename : row.name).toLocaleLowerCase().includes(query));
                 return {
                     source: 'legacy',
@@ -263,14 +277,14 @@ export const MATERIAL_TOOLS = [
                         projectId: owner,
                         filename: row.filename,
                         mimeType: row.mimeType,
-                        size: row.blob.size
+                        size: binaryByteLength(row.blob)
                     } : {sourceId: row.id, source: args.legacyKind, projectId: owner, name: row.name}),
                     note: '原始资料不是版本素材；material_promote 明确归属并确认后可保存独立快照。'
                 };
             }
             const ip = bound ? (await db.projectIpLinks.get(bound))?.ipId : undefined;
             const requested = args.scope ? scoped(args.scope) : undefined;
-            if (requested) await assertMaterialAccess({scope: requested}, context);
+            if (requested) await assertMaterialAccess({scope: requested}, context, db);
             const matches = await db.libraryMaterials.filter(row => (!row.archived || !!args.includeArchived) && (!args.kind || row.kind === args.kind) && (!requested || sameScope(row.scope, requested)) && (!bound || row.scope.kind === 'global' || row.scope.kind === 'project' && row.scope.id === bound || row.scope.kind === 'ip' && row.scope.id === ip) && `${row.name} ${row.tags.join(' ')} ${row.notes}`.toLocaleLowerCase().includes(query)).toArray();
             matches.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || a.id.localeCompare(b.id));
             return {
@@ -287,19 +301,20 @@ export const MATERIAL_TOOLS = [
         description: '读取精确素材 ID、指定历史 revision 的文件元信息/设定摘要；分页列出版本、项目使用记录。不会读取图片像素、音视频或文档正文。返回的是当前名称/标签/备注，旧版本保持独立内容。',
         spec: readSpec,
         async execute(args, context) {
-            const material = await currentMaterial(args.materialId, context);
+    const db = context.store ?? productDb;
+            const material = await currentMaterial(args.materialId, context, undefined, db);
             const version = await db.materialVersions.where('[materialId+revision]').equals([material.id, args.revision ?? material.revision]).first();
             if (!version) throw new Error('素材版本不存在');
             let contentAvailable = !material.archived;
             if (contentAvailable) {
                 try {
-                    await assertActiveMaterialScope(material.scope);
+                    await assertActiveMaterialScope(material.scope, db);
                 } catch {
                     contentAvailable = false;
                 }
             }
             const allVersions = await db.materialVersions.where('materialId').equals(material.id).reverse().sortBy('revision');
-            const uses = await usages(material.id, context), offset = args.offset ?? 0, limit = args.limit ?? 10;
+            const uses = await usages(material.id, context, db), offset = args.offset ?? 0, limit = args.limit ?? 10;
             return {
                 material: {
                     ...materialSummary(material),
@@ -328,7 +343,7 @@ export const MATERIAL_TOOLS = [
         description: '按 materialId/revision 读取 TXT、Markdown、文字型 PDF、DOCX。start 从 0 开始，每次最多 3 段/12000 字。提取范围、原始行/页/段和 citation 随结果返回；partial 或 hasMore 时不能声称已读全文。仅库内文件，无任意路径/URL读取。',
         effect: 'read',
         highRisk: () => false,
-        execute: (raw, context) => readMaterialText(textSpec.schema.parse(raw), context)
+        execute: (raw, context) => { const db=context.store ?? productDb; return readMaterialText(textSpec.schema.parse(raw), context, db); }
     }),
     defineTool({schema: imageSpec.schema, json: imageSpec.json}, {
         name: 'material_read_image',
@@ -337,8 +352,9 @@ export const MATERIAL_TOOLS = [
         effect: 'read',
         highRisk: () => false,
         execute: (raw, context) => {
+    const db=context.store ?? productDb;
             const args = imageSpec.schema.parse(raw);
-            return queueMaterialImage(args.materialId, args.revision, context, args.mediaId);
+            return queueMaterialImage(args.materialId, args.revision, context, args.mediaId, db);
         }
     }),
     libraryWriteTool({
@@ -355,16 +371,18 @@ export const MATERIAL_TOOLS = [
         }),
         requiresConfirmation: true,
         async prepare(args, context) {
-            const material = await activeMaterial(args.materialId, args.revision, context),
-                usage = await usages(material.id, context);
+    const db = context.store ?? productDb;
+            const material = await activeMaterial(args.materialId, args.revision, context, db),
+                usage = await usages(material.id, context, db);
             return {
-                state: {material, uses: usage.all, scope: await scopeState(material.scope)},
+                state: {material, uses: usage.all, scope: await scopeState(material.scope, db)},
                 target: materialTarget(material),
-                changes: [`${material.name} · ${await scopeLabel(material.scope)} · v${material.revision} → v${material.revision + 1}`, ...Object.entries(args.patch).map(([key, value]) => `${key === 'name' ? '名称' : key === 'tags' ? '标签' : '备注'}：${(Array.isArray(value) ? value.join('、') : value).slice(0, 1800)}${(Array.isArray(value) ? value.join('、') : value).length > 1800 ? '…（完整内容见参数）' : ''}`), `现有 ${usage.all.length} 条采用记录保持原版本；此修改只影响素材库及以后采用。`]
+                changes: [`${material.name} · ${await scopeLabel(material.scope, db)} · v${material.revision} → v${material.revision + 1}`, ...Object.entries(args.patch).map(([key, value]) => `${key === 'name' ? '名称' : key === 'tags' ? '标签' : '备注'}：${(Array.isArray(value) ? value.join('、') : value).slice(0, 1800)}${(Array.isArray(value) ? value.join('、') : value).length > 1800 ? '…（完整内容见参数）' : ''}`), `现有 ${usage.all.length} 条采用记录保持原版本；此修改只影响素材库及以后采用。`]
             };
         },
-        async execute(args) {
-            await updateMaterialMetadata(args.materialId, args.patch, args.revision);
+        async execute(args, context) {
+    const db = context.store ?? productDb;
+            await updateMaterialMetadata(args.materialId, args.patch, args.revision, db);
             return {material: materialSummary((await db.libraryMaterials.get(args.materialId))!)};
         },
     }),
@@ -375,27 +393,31 @@ export const MATERIAL_TOOLS = [
         spec: promoteSpec,
         requiresConfirmation: true,
         scope: async (args, context) => {
-            await destinationScope(scoped(args.scope), context);
-            if (args.source !== 'library') await sourceLegacy(args.source, args.sourceId, context); else await activeMaterial(args.sourceId, args.expectedRevision!, context);
+    const db=context.store ?? productDb;
+            await destinationScope(scoped(args.scope), context, db);
+            if (args.source !== 'library') await sourceLegacy(args.source, args.sourceId, context, db); else await activeMaterial(args.sourceId, args.expectedRevision!, context, db);
         },
-        owners: async args => {
+        owners: async (args,context) => {
+    const db=context.store ?? productDb;
             if (args.source === 'library') return [];
-            const row = args.source === 'media' ? await db.media.get(args.sourceId) : await settingTable(args.source).get(args.sourceId);
+            const row = args.source === 'media' ? await db.media.get(args.sourceId) : await settingTable(args.source, db).get(args.sourceId);
             return row ? [row.projectId] : [];
         },
         async prepare(args, context) {
-            const destination = scoped(args.scope), target = await destinationScope(destination, context);
-            const legacy = args.source === 'library' ? undefined : await sourceLegacy(args.source, args.sourceId, context);
-            const library = args.source === 'library' ? await activeMaterial(args.sourceId, args.expectedRevision!, context) : undefined;
+    const db = context.store ?? productDb;
+            const destination = scoped(args.scope), target = await destinationScope(destination, context, db);
+            const legacy = args.source === 'library' ? undefined : await sourceLegacy(args.source, args.sourceId, context, db);
+            const library = args.source === 'library' ? await activeMaterial(args.sourceId, args.expectedRevision!, context, db) : undefined;
             const source = library ?? legacy!.state;
             const name = library?.name ?? (legacy && ('name' in legacy.row ? legacy.row.name : legacy.row.filename));
             return {
                 state: {source, target},
-                changes: [`来源：「${name}」· ${args.source} · ${args.sourceId}${args.expectedRevision ? ` · v${args.expectedRevision}` : ''}`, `保存到：${await scopeLabel(destination)}`, '创建独立快照，保留来源；不会移动、改写原始内容，也不会更新已有项目。', ...(destination.kind === 'ip' ? ['请确认这份内容可以作为该 IP 的正式专属素材。'] : [])]
+                changes: [`来源：「${name}」· ${args.source} · ${args.sourceId}${args.expectedRevision ? ` · v${args.expectedRevision}` : ''}`, `保存到：${await scopeLabel(destination, db)}`, '创建独立快照，保留来源；不会移动、改写原始内容，也不会更新已有项目。', ...(destination.kind === 'ip' ? ['请确认这份内容可以作为该 IP 的正式专属素材。'] : [])]
             };
         },
-        async execute(args) {
-            const material = args.source === 'library' ? await promoteMaterial(args.sourceId, scoped(args.scope)) : await promoteLegacyMaterial(args.source, args.sourceId, scoped(args.scope));
+        async execute(args, context) {
+    const db = context.store ?? productDb;
+            const material = args.source === 'library' ? await promoteMaterial(args.sourceId, scoped(args.scope), db) : await promoteLegacyMaterial(args.source, args.sourceId, scoped(args.scope), db);
             return {material: materialSummary(material)};
         },
     }),
@@ -405,12 +427,14 @@ export const MATERIAL_TOOLS = [
         description: '按当前 revision 将素材独立副本加入明确 projectId，绑定对话只能当前项目。IP 素材须同一 IP；项目素材须同一项目。固定采用版本，不自动放入镜头、封面或生成槽位。',
         spec: object({...identity, projectId: id}),
         scope: async (args, context) => {
-            await targetProject(args.projectId, context);
+    const db=context.store ?? productDb;
+            await targetProject(args.projectId, context, db);
         },
         owners: args => [args.projectId],
         async prepare(args, context) {
-            const material = await activeMaterial(args.materialId, args.revision, context),
-                project = await targetProject(args.projectId, context);
+    const db = context.store ?? productDb;
+            const material = await activeMaterial(args.materialId, args.revision, context, db),
+                project = await targetProject(args.projectId, context, db);
             if (material.scope.kind === 'project' && material.scope.id !== args.projectId || material.scope.kind === 'ip' && material.scope.id !== project.link?.ipId) throw new Error('素材归属与目标项目不兼容；IP 素材需同一 IP，项目素材需同一项目。可先明确确认保存为通用素材');
             return {
                 state: {
@@ -422,8 +446,9 @@ export const MATERIAL_TOOLS = [
                 changes: [`${material.name} v${material.revision} → 项目「${project.project.name}」`, '创建或复用当前版本副本，保留来源；已有镜头、封面和设定引用不变。']
             };
         },
-        async execute(args) {
-            return materialUseResult(await adoptMaterialInProject(args.materialId, args.projectId));
+        async execute(args, context) {
+    const db = context.store ?? productDb;
+            return materialUseResult(await adoptMaterialInProject(args.materialId, args.projectId, db));
         },
     }),
     libraryWriteTool({
@@ -432,23 +457,27 @@ export const MATERIAL_TOOLS = [
         description: '给 useId 所属项目加入库中当前 revision 的新副本。旧副本和镜头引用保留；有本地修改的设定不能覆盖。此工具不替换原镜头或封面引用。',
         spec: object({useId: id, revision}),
         scope: async (args, context) => {
-            await readMaterialUseState(args.useId, context);
+    const db=context.store ?? productDb;
+            await readMaterialUseState(args.useId, context, db);
         },
-        owners: async args => {
+        owners: async (args,context) => {
+    const db=context.store ?? productDb;
             const use = await db.materialUses.get(args.useId);
             return use ? [use.projectId] : [];
         },
         async prepare(args, context) {
-            const state = await readMaterialUseState(args.useId, context);
-            await activeMaterial(state.material.id, args.revision, context);
+    const db = context.store ?? productDb;
+            const state = await readMaterialUseState(args.useId, context, db);
+            await activeMaterial(state.material.id, args.revision, context, db);
             return {
                 state,
                 target: materialTarget(state.material),
                 changes: [`${state.material.name}：项目 v${state.use.revision} → 新增 v${args.revision} 副本`, `目标项目：${state.project.project.name}`, '旧副本、镜头/封面引用保持不变；新副本需要明确选用。']
             };
         },
-        async execute(args) {
-            return materialUseResult(await updateMaterialUse(args.useId));
+        async execute(args, context) {
+    const db = context.store ?? productDb;
+            return materialUseResult(await updateMaterialUse(args.useId, db));
         },
     }),
     libraryWriteTool({
@@ -458,17 +487,19 @@ export const MATERIAL_TOOLS = [
         spec: object({...identity, archived: bool}),
         requiresConfirmation: true,
         async prepare(args, context) {
-            const material = await currentMaterial(args.materialId, context, args.revision);
-            if (!args.archived) await assertActiveMaterialScope(material.scope);
-            const usage = await usages(material.id, context);
+    const db = context.store ?? productDb;
+            const material = await currentMaterial(args.materialId, context, args.revision, db);
+            if (!args.archived) await assertActiveMaterialScope(material.scope, db);
+            const usage = await usages(material.id, context, db);
             return {
-                state: {material, uses: usage.all, scope: await scopeState(material.scope)},
+                state: {material, uses: usage.all, scope: await scopeState(material.scope, db)},
                 target: materialTarget(material),
-                changes: [`${args.archived ? '归档' : '恢复'}「${material.name}」· ${await scopeLabel(material.scope)}`, `${usage.all.length} 条项目采用记录及其固定版本副本保留。`, args.archived ? '后续不可再查看内容或加入项目，可以恢复。' : '恢复后可再次查看与采用。']
+                changes: [`${args.archived ? '归档' : '恢复'}「${material.name}」· ${await scopeLabel(material.scope, db)}`, `${usage.all.length} 条项目采用记录及其固定版本副本保留。`, args.archived ? '后续不可再查看内容或加入项目，可以恢复。' : '恢复后可再次查看与采用。']
             };
         },
-        async execute(args) {
-            await setMaterialArchived(args.materialId, args.archived);
+        async execute(args, context) {
+    const db = context.store ?? productDb;
+            await setMaterialArchived(args.materialId, args.archived, db);
             return {material: materialSummary((await db.libraryMaterials.get(args.materialId))!)};
         },
     }),
@@ -479,14 +510,17 @@ export const MATERIAL_TOOLS = [
         spec: object({useId: id}),
         highRisk: true,
         scope: async (args, context) => {
-            await projectUseState(args.useId, context);
+    const db=context.store ?? productDb;
+            await projectUseState(args.useId, context, db);
         },
-        owners: async args => {
+        owners: async (args,context) => {
+    const db=context.store ?? productDb;
             const use = await db.materialUses.get(args.useId);
             return use ? [use.projectId] : [];
         },
         async prepare(args, context) {
-            const state = await projectUseState(args.useId, context);
+    const db = context.store ?? productDb;
+            const state = await projectUseState(args.useId, context, db);
             const name = state.target ? ('filename' in state.target ? state.target.filename : state.target.name) : '素材副本';
             return {
                 state,
@@ -494,8 +528,9 @@ export const MATERIAL_TOOLS = [
                 changes: [`移除项目「${state.project.project.name}」中「${name}」v${state.use.revision} 的闲置副本`, `来源记录：${state.use.materialId}；只移除本项目副本，不重新读取来源素材。`, '保留素材库版本与其他项目；存在实际引用时将拒绝，不会强制移除。']
             };
         },
-        async execute(args) {
-            await releaseMaterialUse(args.useId);
+        async execute(args, context) {
+    const db = context.store ?? productDb;
+            await releaseMaterialUse(args.useId, db);
             return {released: true, useId: args.useId, note: '已移除闲置项目副本，素材库原版本保留。'};
         },
     }),

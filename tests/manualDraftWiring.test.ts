@@ -44,7 +44,10 @@ vi.mock("react", async importOriginal => {
         useCallback: (callback: unknown) => callback,
     };
 });
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: () => host.queries ? host.queries[host.queryIndex++] : host.row}));
+vi.mock("@/lib/storage/hooks", () => {
+    const read = () => host.queries ? host.queries[host.queryIndex++] : host.row;
+    return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
+});
 vi.mock("@dnd-kit/core", () => ({DndContext: () => null, PointerSensor: {}, KeyboardSensor: {}, closestCenter: {}, useSensor: vi.fn(), useSensors: () => []}));
 vi.mock("@dnd-kit/sortable", () => ({SortableContext: () => null, sortableKeyboardCoordinates: {}, verticalListSortingStrategy: {}, useSortable: () => ({setNodeRef: vi.fn()})}));
 vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
@@ -75,7 +78,7 @@ import {ShotEditorPage} from "@/components/shots/ShotEditorPage";
 import {DurationInput} from "@/components/shots/DurationInput";
 import {AssetTextField} from "@/components/assets/AssetTextField";
 
-vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn()});
+vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn()});
 import {pickMediaFile, uploadMediaFile} from "@/lib/media";
 
 type Node = ReactElement<Record<string, unknown>>;
@@ -158,7 +161,7 @@ describe("actual manual consumer wiring", () => {
             const draw = () => render(() => GenerationSlotEditor(props));
             let tree = draw();
             (button(tree, "上传素材").props.onClick as () => void)();
-            await settle(); await db.transaction("r", db.media, () => db.media.toArray()); await settle();
+            await settle(); await db.transaction("r", [db.media], tx => tx.media.toArray()); await settle();
             host.blocker.status = "blocked";
             tree = draw();
             (button(tree, "放弃并离开").props.onClick as () => void)();
@@ -181,7 +184,7 @@ describe("actual manual consumer wiring", () => {
             expect(tree.some(n => n.props.children === "放弃并离开")).toBe(false);
             expect(host.blocker.proceed).not.toHaveBeenCalled();
             cleanupGate.resolve();
-            await settle(); await db.transaction("r", db.media, () => db.media.toArray()); await settle();
+            await settle(); await db.transaction("r", [db.media], tx => tx.media.toArray()); await settle();
             expect(await db.media.get("navigation-owned")).toBeUndefined();
             expect(host.blocker.proceed).toHaveBeenCalledOnce();
             expect(props.onSave).not.toHaveBeenCalled();
@@ -216,7 +219,7 @@ describe("actual manual consumer wiring", () => {
             (button(tree, "保存").props.onClick as () => void)();
             await settle();
             // Drain the real IndexedDB transaction before checking component failure state.
-            await db.transaction("r", db.projects, () => db.projects.toArray());
+            await db.transaction("r", [db.projects], tx => tx.projects.toArray());
             await settle();
             tree = render(edit);
             expect(tree.some(n => n.props.value === "mine")).toBe(true);
@@ -267,7 +270,7 @@ describe("actual manual consumer wiring", () => {
         await repoProjects.patchProjectDetails(project.id, {defaultStyleId: a.id});
         const styleSelect = tree.find(n => n.props.label === "项目风格")!;
         (styleSelect.props.onChange as (value: string) => void)(b.id);
-        await db.transaction("r", db.projects, () => db.projects.toArray());
+        await db.transaction("r", [db.projects], tx => tx.projects.toArray());
         expect((await db.projects.get(project.id))?.defaultStyleId).toBe(a.id);
     });
 
@@ -344,13 +347,13 @@ describe("slot session target and owned media", () => {
         let tree = draw();
         (button(tree, "上传素材").props.onClick as () => void)();
         await settle();
-        await db.transaction("r", db.media, () => db.media.toArray());
+        await db.transaction("r", [db.media], tx => tx.media.toArray());
         await settle();
         tree = draw();
         await repoAssets.setCharacterSlot(asset.id, "front", {...emptySlot(), prompt: "theirs"});
         (button(tree, "保存").props.onClick as () => void)();
         await settle();
-        await db.transaction("r", db.characters, () => db.characters.toArray());
+        await db.transaction("r", [db.characters], tx => tx.characters.toArray());
         await settle();
         expect(await db.media.get("owned")).toBeDefined();
         expect(props.onClose).not.toHaveBeenCalled();
@@ -359,7 +362,7 @@ describe("slot session target and owned media", () => {
         expect(button(tree, "重试保存")).toBeDefined();
         (button(tree, "取消").props.onClick as () => void)();
         await settle();
-        await db.transaction("r", db.media, () => db.media.toArray());
+        await db.transaction("r", [db.media], tx => tx.media.toArray());
         await settle();
         expect(await db.media.get("owned")).toBeUndefined();
     });
@@ -387,14 +390,14 @@ describe("actual explicit output save", () => {
         const save = vi.spyOn(repoProjects, "patchProjectDetails").mockImplementation(async (...args) => {await original(...args); await pending.promise;});
         try {
             (button(tree, "保存输出配置").props.onClick as () => void)();
-            await settle(); await db.transaction("r", db.projects, () => db.projects.toArray());
+            await settle(); await db.transaction("r", [db.projects], tx => tx.projects.toArray());
             expect((await db.projects.get(project.id))?.aspectPreset).toBe("1:1");
             await original(project.id, {aspectPreset: latestRatio});
             project = (await db.projects.get(project.id))!;
             tree = draw();
             expect(tree.some(n => n.props.label === "项目目标画幅" && n.props.value === "1:1")).toBe(true);
             pending.resolve(); await settle();
-            await db.transaction("r", db.projects, () => db.projects.toArray()); await settle();
+            await db.transaction("r", [db.projects], tx => tx.projects.toArray()); await settle();
             draw(); tree = draw();
             expect(tree.some(n => n.props.label === "项目目标画幅" && n.props.value === latestRatio)).toBe(true);
             expect(onOutputState.mock.lastCall?.[0]).toEqual({dirty: false, saving: false});
@@ -446,7 +449,7 @@ describe("actual explicit output save", () => {
         try {
             (button(tree, "保存输出配置").props.onClick as () => void)();
             await settle();
-            await db.transaction("r", db.projects, () => db.projects.toArray());
+            await db.transaction("r", [db.projects], tx => tx.projects.toArray());
             // A new independent field arrives while the write is pending; no rebase yet.
             const newerImage = {...image, resolution: "2k"};
             project = {...project, generationDefaults: {image: newerImage}};
@@ -454,7 +457,7 @@ describe("actual explicit output save", () => {
             expect(tree.some(n => n.props.label === "图片清晰度" && n.props.value === image.resolution)).toBe(true);
             expect(save.mock.calls[0][1]).toEqual({aspectPreset: "1:1"});
             pending.resolve(); await settle();
-            await db.transaction("r", db.projects, () => db.projects.toArray()); await settle();
+            await db.transaction("r", [db.projects], tx => tx.projects.toArray()); await settle();
             tree = draw(); tree = draw();
             expect(tree.some(n => n.props.label === "项目目标画幅" && n.props.value === "1:1")).toBe(true);
             expect(tree.some(n => n.props.label === "图片清晰度" && n.props.value === newerImage.resolution)).toBe(true);
@@ -486,7 +489,7 @@ describe("actual explicit output save", () => {
         project = (await db.projects.get(project.id))!;
         draw(); tree = draw();
         (button(tree, "保存输出配置").props.onClick as () => void)();
-        await settle(); await db.transaction("r", db.projects, () => db.projects.toArray()); await settle();
+        await settle(); await db.transaction("r", [db.projects], tx => tx.projects.toArray()); await settle();
         tree = draw();
         expect(tree.some(n => n.props.label === "项目目标画幅" && n.props.value === "1:1")).toBe(true);
         (button(tree, "采用最新内容").props.onClick as () => void)();
@@ -494,7 +497,7 @@ describe("actual explicit output save", () => {
         expect(tree.some(n => n.props.label === "项目目标画幅" && n.props.value === "9:16")).toBe(true);
         (tree.find(n => n.props.label === "项目目标画幅")!.props.onChange as (value: string) => void)("1:1");
         tree = draw(); (button(tree, "保存输出配置").props.onClick as () => void)();
-        await settle(); await db.transaction("r", db.projects, () => db.projects.toArray()); await settle();
+        await settle(); await db.transaction("r", [db.projects], tx => tx.projects.toArray()); await settle();
         expect((await db.projects.get(project.id))?.aspectPreset).toBe("1:1");
     });
 });

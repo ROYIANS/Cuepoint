@@ -1,12 +1,14 @@
-import {db} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import {getMemorySelection} from "@/db/memoryRetrieval";
 import {toResponseInput} from "@/lib/ai/responsesStream";
 import {withMemoryContext} from "@/lib/memory/retrieval";
 import {frozenProjectScope} from "./projectScope";
 
 /** Update only the upcoming independent layer. Original request and prior step snapshots stay immutable. */
-export async function refreshRunMemoryContext(runId: string) {
-    return db.transaction("rw", db.tables, async () => {
+export async function refreshRunMemoryContext(runId: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    return db.transaction("rw", db.tables, async (db) => {
         const run = await db.agentRuns.get(runId);
         if (!run || run.status !== "running") throw new Error("执行已停止");
         const projectId = await frozenProjectScope({
@@ -14,7 +16,7 @@ export async function refreshRunMemoryContext(runId: string) {
             threadId: run.threadId,
             callId: "memory",
             signal: new AbortController().signal,
-        });
+        }, db);
         if (!projectId) return run;
         if (!run.context) throw new Error("执行缺少独立上下文，无法安全更新记忆");
         if (
@@ -34,7 +36,7 @@ export async function refreshRunMemoryContext(runId: string) {
             taskTitle: task?.title,
             taskGoal: task?.goal,
             capacity: run.context.capacity,
-        });
+        }, db);
         const oldBase = run.context.baseMessages,
             messages = run.continuationMessages ?? run.requestMessages;
         if (

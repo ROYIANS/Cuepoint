@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "@/lib/useManualDraftGuard";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {ArrowLeft, Check, Mic, Plus, Sparkles} from "lucide-react";
-import {db} from "@/db/database";
 import {addAudioSpeaker, patchAudioSpeaker} from "@/db/audio";
 import type {AudioSpeaker, AudioTake, MimoSpeechSettings} from "@/domain/audio";
 import {MIMO_VOICES} from "@/lib/ai/mimoSpeech";
@@ -196,7 +195,7 @@ function VoiceEditor({projectId, initial, takes, onBusyChange, onSaved, onDraftS
             mounted.current = false;
         };
     }, []);
-    const connections = useLiveQuery(() => db.connectors.toArray());
+    const connections = useProductQuery((db) => db.connectors.toArray());
     const connector = defaultMimoConnector(connections ?? []);
     const blocked = busy || referenceBusy;
     const settings: MimoSpeechSettings = {

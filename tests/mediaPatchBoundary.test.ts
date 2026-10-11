@@ -1,3 +1,4 @@
+import {failStoreTableOnce,interceptStoreTable} from "./helpers/storeFaults";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {db} from "@/db/database";
 import {addCharacter, addProp, addScene, addStyle, patchCharacter, patchProp, patchScene, patchStyle, setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "@/db/assets";
@@ -38,8 +39,9 @@ function resultSlot(mediaId: string, kind: MediaKind = "image"): GenerationSlot 
     return {...emptySlot(), result: {mediaId, kind}};
 }
 async function snapshot() {
-    return db.transaction("r", PRODUCTION_TABLES, async () => {
-        const tables = await Promise.all(PRODUCTION_TABLES.map(async table => {
+    return db.transaction("r", PRODUCTION_TABLES, async (tx) => {
+        const tables = await Promise.all(PRODUCTION_TABLES.map(async declared => {
+            const table=tx.table(declared.name);
             const rows = await table.toArray();
             return {name: table.name, rows: await Promise.all(rows.map(async row => {
                 if (!("blob" in row)) return row;
@@ -238,9 +240,8 @@ describe("project cover validation and recycling", () => {
         const {project} = await fixture(), first = await media(project.id, "first"), second = await media(project.id, "second");
         await patchProjectOutput(project.id, {coverMediaId: first});
         const before = await snapshot();
-        const originalDelete = db.media.delete.bind(db.media);
-        vi.spyOn(db.media, "delete").mockImplementationOnce(async id => {
-            await originalDelete(id);
+        interceptStoreTable(db,"media","delete", async (_tx,_args,next) => {
+            await next();
             throw new Error("cleanup failure");
         });
         await expect(patchProjectOutput(project.id, {aspectPreset: "9:16", coverMediaId: second})).rejects.toThrow("cleanup failure");
@@ -249,7 +250,7 @@ describe("project cover validation and recycling", () => {
     it("rolls back a slot write when the project touch fails", async () => {
         const {project, shot} = await fixture(), image = await media(project.id, "image");
         const before = await snapshot();
-        vi.spyOn(db.projects, "update").mockRejectedValueOnce(new Error("touch failure"));
+        failStoreTableOnce(db, "projects", "update", new Error("touch failure"));
         await expect(setShotSlot(shot.id, "firstFrame", resultSlot(image))).rejects.toThrow("touch failure");
         expect(await snapshot()).toEqual(before);
     });

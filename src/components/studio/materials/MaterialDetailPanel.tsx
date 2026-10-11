@@ -1,8 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import {Link} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Archive, ArrowUpRight, History, Trash2, Upload, X} from "lucide-react";
-import {db} from "@/db/database";
 import {releaseMaterialUse} from "@/db/assetReuse";
 import {
     addFileMaterialVersion,
@@ -48,7 +47,7 @@ export function MaterialDetailPanel({id, onClose, onSelect}: {
     // Parent selection changes are not router navigation. Keep the current
     // editor alive until its existing draft guard approves the switch.
     const [activeId, setActiveId] = useState(id);
-    const result = useLiveQuery(async () => ({
+    const result = useProductQuery(async (db) => ({
         id: activeId,
         material: await db.libraryMaterials.get(activeId) ?? null
     }), [activeId]);
@@ -114,7 +113,7 @@ function MaterialEditor({material, requestedId, unavailable, onEditingChange, on
             onSelect(material.id);
         });
     }, [requestedId, material.id, pending, requestClose, onSelect]);
-    const data = useLiveQuery(async () => ({
+    const data = useProductQuery(async (db) => ({
         versions: (await db.materialVersions.where("materialId").equals(material.id).toArray()).sort((a, b) => b.revision - a.revision),
         uses: await db.materialUses.where("materialId").equals(material.id).toArray(),
         events: (await db.materialEvents.where("materialId").equals(material.id).toArray()).sort((a, b) => b.createdAt.localeCompare(a.createdAt)),

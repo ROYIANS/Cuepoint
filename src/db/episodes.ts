@@ -1,3 +1,4 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {
     type Episode,
     type EpisodeStory,
@@ -9,7 +10,7 @@ import {
     type ShotFilters,
     type StoryBeat
 } from "@/domain/types";
-import {db} from "./database";
+import {db as productDb} from "./database";
 import {assertDraftBaseline} from "@/lib/draftConflict";
 import {slotMediaIds} from "@/domain/slot";
 import {createId, nowIso} from "@/lib/ids";
@@ -25,22 +26,25 @@ import {
 import {emptyEpisode} from "./productionRecords";
 import {deleteMediaIfOrphans} from "./media";
 
-export async function listEpisodes(projectId: Id): Promise<Episode[]> {
+export async function listEpisodes(projectId: Id, store?: ProductStore): Promise<Episode[]> {
+    const db = store ?? productDb;
     const rows = await db.episodes.where("projectId").equals(projectId).toArray();
     return rows.sort((a, b) => a.order - b.order);
 }
 
-export async function firstEpisode(projectId: Id): Promise<Episode | undefined> {
-    const episodes = await listEpisodes(projectId);
+export async function firstEpisode(projectId: Id, store?: ProductStore): Promise<Episode | undefined> {
+    const db = store ?? productDb;
+    const episodes = await listEpisodes(projectId, db);
     return episodes[0];
 }
 
-export async function ensureFirstEpisode(projectId: Id): Promise<Episode> {
-    return db.transaction("rw", db.projects, db.episodes, async () => {
-        await assertVideoProject(projectId);
+export async function ensureFirstEpisode(projectId: Id, store?: ProductStore): Promise<Episode> {
+    const db = store ?? productDb;
+    return db.transaction("rw", [db.projects, db.episodes].flat(), async (db) => {
+        await assertVideoProject(projectId, db);
         const project = await db.projects.get(projectId);
         if (!project) throw new Error("项目不存在");
-        const existing = await firstEpisode(projectId);
+        const existing = await firstEpisode(projectId, db);
         if (existing) return existing;
         const episode = emptyEpisode(projectId, 0);
         await db.episodes.add(episode);
@@ -49,42 +53,45 @@ export async function ensureFirstEpisode(projectId: Id): Promise<Episode> {
     });
 }
 
-export async function addEpisode(projectId: Id): Promise<Episode> {
-    return db.transaction("rw", db.projects, db.episodes, async () => {
-        await assertVideoProject(projectId);
+export async function addEpisode(projectId: Id, store?: ProductStore): Promise<Episode> {
+    const db = store ?? productDb;
+    return db.transaction("rw", [db.projects, db.episodes].flat(), async (db) => {
+        await assertVideoProject(projectId, db);
         const project = await db.projects.get(projectId);
         if (!project) throw new Error("项目不存在");
-        const existing = await listEpisodes(projectId);
+        const existing = await listEpisodes(projectId, db);
         const nextOrder = existing.reduce((max, episode) => Math.max(max, episode.order), -1) + 1;
         const episode = emptyEpisode(projectId, nextOrder);
         await db.episodes.add(episode);
-        await touchProject(projectId);
+        await touchProject(projectId, db);
         return episode;
     });
 }
 
 export async function updateEpisode(
     id: Id,
-    patch: Partial<Pick<Episode, "title" | "story" | "order">>,
+    patch: Partial<Pick<Episode, "title" | "story" | "order">>, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", db.projects, db.episodes, async () => {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.projects, db.episodes].flat(), async (db) => {
         const episode = await db.episodes.get(id);
         if (!episode) throw new Error("集不存在，无法保存");
-        await assertVideoProject(episode.projectId);
+        await assertVideoProject(episode.projectId, db);
         await db.episodes.put(touch({...episode, ...patch}));
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
     });
 }
 
 export async function updateEpisodeDraft(
     id: Id,
     patch: { title?: string; logline?: string; script?: string },
-    baseline?: { title?: string; logline?: string; script?: string },
+    baseline?: { title?: string; logline?: string; script?: string }, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", db.episodes, db.projects, async () => {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.episodes, db.projects].flat(), async (db) => {
         const episode = await db.episodes.get(id);
         if (!episode) throw new Error("集不存在，无法保存");
-        await assertVideoProject(episode.projectId);
+        await assertVideoProject(episode.projectId, db);
         const story = normalizeEpisodeStory(episode.story);
         assertDraftBaseline({title: episode.title, logline: story.logline, script: story.script}, patch, baseline);
         const storyPatch: Partial<Pick<EpisodeStory, "logline" | "script">> = {};
@@ -96,7 +103,7 @@ export async function updateEpisodeDraft(
             ...(patch.title === undefined ? {} : {title: patch.title}),
             story: nextStory,
         }));
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
     });
 }
 
@@ -106,11 +113,12 @@ export interface DeletedEpisodeSnapshot {
     media: MediaRecord[];
 }
 
-export async function deleteEpisode(id: Id): Promise<DeletedEpisodeSnapshot | undefined> {
-    return db.transaction("rw", PRODUCTION_TABLES, async () => {
+export async function deleteEpisode(id: Id, store?: ProductStore): Promise<DeletedEpisodeSnapshot | undefined> {
+    const db = store ?? productDb;
+    return db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const episode = await db.episodes.get(id);
         if (!episode) return undefined;
-        const siblings = await listEpisodes(episode.projectId);
+        const siblings = await listEpisodes(episode.projectId, db);
         if (siblings.length <= 1) throw new Error("不能删除最后一集");
         const shots = await db.shots.where("episodeId").equals(id).toArray();
         const mediaIds = [...new Set(shots.flatMap((shot) =>
@@ -121,23 +129,24 @@ export async function deleteEpisode(id: Id): Promise<DeletedEpisodeSnapshot | un
         );
         await db.shots.where("episodeId").equals(id).delete();
         await db.episodes.delete(id);
-        const remaining = await listEpisodes(episode.projectId);
+        const remaining = await listEpisodes(episode.projectId, db);
         await Promise.all(remaining.map((item, order) => db.episodes.update(item.id, {order})));
-        await touchProject(episode.projectId);
-        await deleteMediaIfOrphans(mediaIds);
+        await touchProject(episode.projectId, db);
+        await deleteMediaIfOrphans(mediaIds, db);
         return {episode, shots, media};
     });
 }
 
-export async function restoreEpisode(snapshot: DeletedEpisodeSnapshot): Promise<void> {
+export async function restoreEpisode(snapshot: DeletedEpisodeSnapshot, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const {episode, shots, media} = snapshot;
     await db.transaction(
         "rw",
         PRODUCTION_TABLES,
-        async () => {
+        async (db) => {
             if (await db.episodes.get(episode.id)) return;
             if (!(await db.projects.get(episode.projectId))) throw new Error("项目不存在");
-            for (const beat of normalizeEpisodeStory(episode.story).beats) await assertAssetReferences(episode.projectId, beat);
+            for (const beat of normalizeEpisodeStory(episode.story).beats) await assertAssetReferences(episode.projectId, beat, db);
             const siblings = await db.episodes.where("projectId").equals(episode.projectId).toArray();
             for (const sibling of siblings) {
                 if (sibling.order >= episode.order) {
@@ -147,19 +156,20 @@ export async function restoreEpisode(snapshot: DeletedEpisodeSnapshot): Promise<
             await db.episodes.add(episode);
             for (const shot of shots) {
                 if (shot.episodeId !== episode.id || shot.projectId !== episode.projectId) throw new Error("镜头与集不属于同一项目");
-                await assertShotReferences(shot);
+                await assertShotReferences(shot, db);
                 if (await db.shots.get(shot.id)) throw new Error("镜头已存在，无法恢复");
             }
             if (shots.length > 0) await db.shots.bulkPut(shots);
             if (media.length > 0) await db.media.bulkPut(media);
-            await touchProject(episode.projectId);
+            await touchProject(episode.projectId, db);
         },
     );
 }
 
-export async function reorderEpisodes(projectId: Id, orderedIds: Id[]): Promise<void> {
-    await db.transaction("rw", db.episodes, db.projects, async () => {
-        await assertVideoProject(projectId);
+export async function reorderEpisodes(projectId: Id, orderedIds: Id[], store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.episodes, db.projects].flat(), async (db) => {
+        await assertVideoProject(projectId, db);
         if (!(await db.projects.get(projectId))) throw new Error("项目不存在");
         const episodes = await db.episodes.where("projectId").equals(projectId).toArray();
         assertCompleteOrder(episodes.map((episode) => episode.id), orderedIds);
@@ -167,18 +177,19 @@ export async function reorderEpisodes(projectId: Id, orderedIds: Id[]): Promise<
         await Promise.all(
             orderedIds.map((id, order) => db.episodes.put(touch({...byId.get(id)!, order}))),
         );
-        await touchProject(projectId);
+        await touchProject(projectId, db);
     });
 }
 
 export async function addStoryBeat(
     episodeId: Id,
-    options?: { scriptRange?: StoryBeat["scriptRange"] },
+    options?: { scriptRange?: StoryBeat["scriptRange"] }, store?: ProductStore
 ): Promise<StoryBeat> {
-    return db.transaction("rw", db.episodes, db.projects, async () => {
+    const db = store ?? productDb;
+    return db.transaction("rw", [db.episodes, db.projects].flat(), async (db) => {
         const episode = await db.episodes.get(episodeId);
         if (!episode) throw new Error("集不存在");
-        await assertVideoProject(episode.projectId);
+        await assertVideoProject(episode.projectId, db);
         const story = normalizeEpisodeStory(episode.story);
         const requestedRange = options?.scriptRange;
         const validRange =
@@ -202,7 +213,7 @@ export async function addStoryBeat(
             ...episode,
             story: {...story, beats: [...story.beats, beat]},
         }));
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
         return beat;
     });
 }
@@ -216,9 +227,10 @@ export async function patchStoryBeat(
             "title" | "content" | "characterIds" | "sceneId" | "timeOfDay" | "scriptRange"
         >
     >,
-    baseline?: Partial<Pick<StoryBeat, "title" | "content" | "timeOfDay">>,
+    baseline?: Partial<Pick<StoryBeat, "title" | "content" | "timeOfDay">>, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const db = store ?? productDb;
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const episode = await db.episodes.get(episodeId);
         if (!episode) {
             if (baseline) throw new Error("集不存在，无法保存场次文字");
@@ -226,7 +238,7 @@ export async function patchStoryBeat(
         }
         const story = normalizeEpisodeStory(episode.story);
         if (baseline) {
-            await assertVideoProject(episode.projectId);
+            await assertVideoProject(episode.projectId, db);
             const beat = story.beats.find(item => item.id === beatId);
             if (!beat) throw new Error("场次不存在，无法保存文字");
             const textPatch = {
@@ -236,7 +248,7 @@ export async function patchStoryBeat(
             };
             assertDraftBaseline(beat, textPatch, baseline);
         }
-        await assertAssetReferences(episode.projectId, patch);
+        await assertAssetReferences(episode.projectId, patch, db);
         await db.episodes.put(touch({
             ...episode,
             story: {
@@ -244,15 +256,16 @@ export async function patchStoryBeat(
                 beats: story.beats.map((beat) => (beat.id === beatId ? {...beat, ...patch} : beat)),
             },
         }));
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
     });
 }
 
-export async function reorderBeats(episodeId: Id, orderedIds: Id[]): Promise<void> {
-    await db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
+export async function reorderBeats(episodeId: Id, orderedIds: Id[], store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.episodes, db.shots, db.projects].flat(), async (db) => {
         const episode = await db.episodes.get(episodeId);
         if (!episode) throw new Error("集不存在");
-        await assertVideoProject(episode.projectId);
+        await assertVideoProject(episode.projectId, db);
         const story = normalizeEpisodeStory(episode.story);
         assertCompleteOrder(story.beats.map((beat) => beat.id), orderedIds);
         const byId = new Map(story.beats.map((beat) => [beat.id, beat]));
@@ -274,19 +287,20 @@ export async function reorderBeats(episodeId: Id, orderedIds: Id[]): Promise<voi
         await Promise.all(
             shots.map((shot, index) => db.shots.put({...shot, order: index + 1})),
         );
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
     });
 }
 
 export async function duplicateBeat(
     episodeId: Id,
     beatId: Id,
-    options?: { includeShots?: boolean },
+    options?: { includeShots?: boolean }, store?: ProductStore
 ): Promise<{ beat: StoryBeat; shots: Shot[] }> {
-    return db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const db = store ?? productDb;
+    return db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const episode = await db.episodes.get(episodeId);
         if (!episode) throw new Error("集不存在");
-        await assertVideoProject(episode.projectId);
+        await assertVideoProject(episode.projectId, db);
         const story = normalizeEpisodeStory(episode.story);
         const sourceIndex = story.beats.findIndex((beat) => beat.id === beatId);
         if (sourceIndex < 0) throw new Error("场次不存在");
@@ -296,7 +310,7 @@ export async function duplicateBeat(
             id: createId("beat"),
             title: `${source.title} 副本`,
         });
-        await assertAssetReferences(episode.projectId, beat);
+        await assertAssetReferences(episode.projectId, beat, db);
         story.beats.splice(sourceIndex + 1, 0, beat);
 
         const created: Shot[] = [];
@@ -321,14 +335,14 @@ export async function duplicateBeat(
                     beatId: beat.id,
                     order: lastSourceOrder + index + 1,
                 });
-                await assertShotReferences(sourceShot);
+                await assertShotReferences(sourceShot, db);
                 await db.shots.add(copy);
                 created.push(copy);
             }
         }
 
         await db.episodes.put(touch({...episode, story}));
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
         return {beat, shots: created};
     });
 }
@@ -337,13 +351,14 @@ export async function restoreStoryBeat(
     episodeId: Id,
     beat: StoryBeat,
     index: number,
-    shotIds: Id[] = [],
+    shotIds: Id[] = [], store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const db = store ?? productDb;
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const episode = await db.episodes.get(episodeId);
         if (!episode) throw new Error("集不存在");
-        await assertVideoProject(episode.projectId);
-        await assertAssetReferences(episode.projectId, beat);
+        await assertVideoProject(episode.projectId, db);
+        await assertAssetReferences(episode.projectId, beat, db);
         const story = normalizeEpisodeStory(episode.story);
         if (story.beats.some((item) => item.id === beat.id)) return;
         const beats = [...story.beats];
@@ -356,12 +371,13 @@ export async function restoreStoryBeat(
                 beatId: beat.id
             });
         }
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
     });
 }
 
-export async function deleteStoryBeat(episodeId: Id, beatId: Id): Promise<void> {
-    await db.transaction("rw", db.episodes, db.shots, db.projects, async () => {
+export async function deleteStoryBeat(episodeId: Id, beatId: Id, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.episodes, db.shots, db.projects].flat(), async (db) => {
         const episode = await db.episodes.get(episodeId);
         if (!episode) return;
         const project = await db.projects.get(episode.projectId);
@@ -376,21 +392,22 @@ export async function deleteStoryBeat(episodeId: Id, beatId: Id): Promise<void> 
             .modify((shot) => {
                 delete shot.beatId;
             });
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
     });
 }
 
-export async function updateEpisodeShotFilters(episodeId: Id, patch: Partial<ShotFilters>): Promise<void> {
-    await db.transaction("rw", db.episodes, db.projects, async () => {
+export async function updateEpisodeShotFilters(episodeId: Id, patch: Partial<ShotFilters>, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.episodes, db.projects].flat(), async (db) => {
         const episode = await db.episodes.get(episodeId);
         if (!episode) throw new Error("集不存在");
-        await assertVideoProject(episode.projectId);
+        await assertVideoProject(episode.projectId, db);
         const project = await db.projects.get(episode.projectId);
         const definedPatch = Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined));
         const shotFilters = getEpisodeShotFilters({
             ...episode, shotFilters: {...getEpisodeShotFilters(episode, project), ...definedPatch},
         }, project);
         await db.episodes.update(episodeId, {shotFilters, updatedAt: nowIso()});
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
     });
 }

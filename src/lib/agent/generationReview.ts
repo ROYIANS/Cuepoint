@@ -1,3 +1,5 @@
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import {commitGenerationReview, type GenerationReviewExpected, readGenerationReviewCall} from "@/db/agentTools";
 import {generationSubmitSchema} from "./generationProfiles";
 import {prepareAgentGeneration} from "./generationRuntime";
@@ -5,9 +7,10 @@ import {targetRevision} from "@/lib/productionRevision";
 
 /** Purely local preparation and approval; never submits, queries, or uploads media. */
 export async function reviewAndApproveGeneration(
-    runId: string, callId: string, rawArgs: unknown, expected: GenerationReviewExpected,
+    runId: string, callId: string, rawArgs: unknown, expected: GenerationReviewExpected, store?: ProductStore
 ): Promise<void> {
-    const call = await readGenerationReviewCall(runId, callId, expected);
+    const db = store ?? productDb;
+    const call = await readGenerationReviewCall(runId, callId, expected, db);
     const original = generationSubmitSchema.parse(JSON.parse(call.arguments));
     const reviewed = generationSubmitSchema.parse(rawArgs);
     if (targetRevision({target: original.target, inputs: original.inputs}) !== targetRevision({
@@ -17,10 +20,10 @@ export async function reviewAndApproveGeneration(
     const context = {runId, threadId: call.threadId, callId, signal: new AbortController().signal};
     // Recompute the original preview as well: user parameter edits must not approve
     // an unseen target/input/configuration mutation that occurred while reviewing.
-    const before = await prepareAgentGeneration(original, context);
+    const before = await prepareAgentGeneration(original, context, db);
     if (before.revision !== expected.revision) throw new Error("生成目标、参考素材或原配置已变化，请重新准备请求");
-    const preview = await prepareAgentGeneration(reviewed, context);
-    const after = await prepareAgentGeneration(original, context);
+    const preview = await prepareAgentGeneration(reviewed, context, db);
+    const after = await prepareAgentGeneration(original, context, db);
     if (after.revision !== expected.revision) throw new Error("生成目标或参考素材在确认期间发生变化，请重新准备请求");
-    await commitGenerationReview(runId, callId, {arguments: JSON.stringify(reviewed), preview}, expected);
+    await commitGenerationReview(runId, callId, {arguments: JSON.stringify(reviewed), preview}, expected, db);
 }

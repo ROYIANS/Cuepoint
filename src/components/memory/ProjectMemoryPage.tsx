@@ -1,6 +1,6 @@
 import {useRef, useState} from "react";
 import {Link} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {ArrowLeft, ArrowUpRight, BookOpen, History, Pause, Pencil, Plus, Search, Trash2,} from "lucide-react";
 import {toast} from "sonner";
 import type {ProjectMemory} from "@/domain/projectMemory";
@@ -39,9 +39,9 @@ export function ProjectMemoryPage({
     projectId: string;
     initialMemoryId?: string;
 }) {
-    const result = useLiveQuery(async () => {
+    const result = useProductQuery(async (db) => {
         try {
-            return {records: await listProjectMemories(projectId), error: ""};
+            return {records: await listProjectMemories(projectId, db), error: ""};
         } catch (error) {
             return {
                 records: [],
@@ -197,23 +197,23 @@ function MemoryDetail({
 }) {
     const {projectId, id} = memory;
     const [readAttempt, setReadAttempt] = useState(0);
-    const sourceRead = useLiveQuery(
-        () => readMemory(() => getMemorySourceState(projectId, id)),
+    const sourceRead = useProductQuery(
+        (db) => readMemory(() => getMemorySourceState(projectId, id, db)),
         [projectId, id, memory.revision, readAttempt],
     );
     const source = sourceRead?.data;
-    const versionsRead = useLiveQuery(
-        () => readMemory(() => listProjectMemoryVersions(projectId, id)),
+    const versionsRead = useProductQuery(
+        (db) => readMemory(() => listProjectMemoryVersions(projectId, id, db)),
         [projectId, id, readAttempt],
     );
     const versions = versionsRead?.data;
     const [conflictIds, setConflictIds] = useState<string[]>([]);
-    const conflictsRead = useLiveQuery(
-        () =>
+    const conflictsRead = useProductQuery(
+        (db) =>
             readMemory(async () =>
                 (
                     await Promise.all(
-                        conflictIds.map((otherId) => getProjectMemory(projectId, otherId)),
+                        conflictIds.map((otherId) => getProjectMemory(projectId, otherId, db)),
                     )
                 ).filter((row): row is ProjectMemory => !!row),
             ),

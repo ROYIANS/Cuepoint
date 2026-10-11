@@ -1,3 +1,4 @@
+import {interceptStoreTable} from "./helpers/storeFaults";
 import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {createProject as createBoundTestProject} from "@/db/projects";
 import {createChatThread} from "@/db/chat";
@@ -204,11 +205,10 @@ describe("durable context compaction", () => {
   });
   it("rolls back activation if persistence fails and guards unresolved calls", async () => {
     const { run } = await begin();
-    const original = db.agentRuns.put.bind(db.agentRuns);
-    const failure = vi.spyOn(db.agentRuns, "put").mockImplementation(async (value, key) => {
+
+    const failure = interceptStoreTable(db, "agentRuns", "put", async (_tx,args,next)=> {const [value,key]=args as Parameters<typeof db.agentRuns.put>;
       if (value.context?.summaryId) throw new Error("disk full");
-      return original(value, key);
-    });
+      return next(); });
     try {
       await expect(prepareRunContext(run.id, [], connector.apiKey, new AbortController().signal, vi.fn(async () => json("summary")))).rejects.toThrow("disk full");
       expect((await db.agentRuns.get(run.id))?.context?.summaryId).toBeUndefined();

@@ -35,6 +35,9 @@ const loadedInputs = new Map();
 const loadedSources = new Map();
 const diagnostics = {
     name: "e04-library-observation-only", enforce: "pre",
+    resolveId(source, importer) {
+        if (source === "@/db/database" && importer?.includes("/sourceSnapshots/")) return resolve(root,"tests/fixtures/shared-storage/rawBrowserDatabase.ts");
+    },
     transform(input, id) {
         const path = relative(root, id.split("?")[0]);
         if (!path.startsWith("../") && !path.startsWith("node_modules/") && /\.(tsx?|css)$/.test(path)) {loadedInputs.set(path, digest(input)); loadedSources.set(path, input);}
@@ -44,7 +47,12 @@ const diagnostics = {
             source = source.replace('aria-label={title} className=', 'aria-label={title} data-e04-cover={mediaId ?? ""} className=');
         }
         if (id.endsWith("/ProjectGalleryPage.tsx")) {
-            source = source.replace('const projects = useLiveQuery(() => db.projects.toArray(), [])', 'const projects = useLiveQuery(() => {window.e04Library.metrics.projectQueryCallbacks++; return db.projects.toArray();}, [])');
+            if (!id.includes("/sourceSnapshots/")) {
+                const expression='const projects = useVideoWorkspaceQuery((repository) => repository.projects(), [])';
+                assert.ok(source.includes(expression), "Current gallery shared query instrumentation must match");
+                source=source.replace(expression,'const projects = useVideoWorkspaceQuery((repository) => {window.e04Library.metrics.projectQueryCallbacks++; return repository.projects();}, [])');
+            }
+
         }
         if (id.includes("/sourceSnapshots/e04-library/") && id.endsWith("/ProjectGalleryPage.tsx")) {
             source = source.replace('const shots = useLiveQuery(() => db.shots.toArray(), [])', 'const shots = useLiveQuery(async () => {const rows = await db.shots.toArray(); window.e04Library.output("before-gallery", rows); return rows;}, [])');
@@ -153,7 +161,7 @@ try {
         assert.equal(await cover("Explicit video").getAttribute("data-e04-cover"), "explicit-cover");
         assert.equal(await cover("Empty video").getAttribute("data-e04-cover"), "");
         assert.equal(await cover("Missing video").getAttribute("data-e04-cover"), "missing-media");
-        assert.equal(await cover("Missing video").getByText("素材加载中或已不可用").isVisible(), true);
+        assert.equal(await cover("Missing video").getByText("素材已丢失", {exact:true}).isVisible(), true);
     });
     await test("original independent owner reads use N native readonly transactions; final exact ranges share one", async () => {
         const owners = ["alpha", "empty", "missing", "alpha"];
@@ -175,9 +183,9 @@ try {
         await reset();
         await page.evaluate(async () => {
             const database = window.e04Library.db;
-            await database.transaction("rw", database.shots, async () => {
-                const row = await database.shots.get("b0");
-                await database.shots.add({...row, id: "beta-gap-added", notes: "unselected owner inside alpha/empty/missing bounds"});
+            await database.transaction("rw", [database.shots], async (tx) => {
+                const row = await tx.shots.get("b0");
+                await tx.shots.add({...row, id: "beta-gap-added", notes: "unselected owner inside alpha/empty/missing bounds"});
             });
         });
         await quiet(); observations.galleryGapInsert = await report();
@@ -311,7 +319,7 @@ try {
     await test("current-kind deletion removes its row; empty search remains a settled missing result", async () => {
         await page.evaluate(() => window.e04Library.db.scenes.delete("identitynever-29"));
         await cover("Scene 29").waitFor({state: "detached"}); assert.equal((await cards()).length, 29);
-        await search("Scene 29"); await page.getByText("没有匹配的资产，试试其他关键词。", {exact: true}).waitFor();
+        await search("Scene 29"); await page.getByText("没有匹配的设定", {exact: true}).waitFor();
         assert.equal((await cards()).length, 0); await search(""); await coverIs("Scene updated", "updated-cover");
     });
     await test("native selected media pixels and narrow page remain renderable", async () => {

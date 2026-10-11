@@ -1,3 +1,4 @@
+import {installStoreHook} from "./helpers/storeBackendFaults";
 import Dexie from "dexie";
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
@@ -384,13 +385,13 @@ describe("project memory packages", () => {
     const fail = () => {
       throw new Error("version storage failed");
     };
-    db.projectMemoryVersions.hook("creating", fail);
+    const storeHook_projectMemoryVersions_fail=await installStoreHook(db, "projectMemoryVersions", "creating", fail);
     try {
       await expect(importProjectZip(blob)).rejects.toThrow(
         "version storage failed",
       );
     } finally {
-      db.projectMemoryVersions.hook("creating").unsubscribe(fail);
+      storeHook_projectMemoryVersions_fail.mockRestore();
     }
     expect(await counts()).toEqual(before);
   });
@@ -402,19 +403,19 @@ describe("project memory packages", () => {
     const read = (value: typeof project) => {
       if (value?.id === project.id && !edit)
         edit = Dexie.ignoreTransaction(() =>
-          db.transaction("rw", db.tables, async () => {
+          db.transaction("rw", db.tables, async (db) => {
             await db.projects.update(project.id, { name: "after" });
-            await updateProjectMemory(project.id, row.id, input("after"), 1);
+            await updateProjectMemory(project.id, row.id, input("after"), 1,db);
           }),
         );
       return value;
     };
-    db.projects.hook("reading", read);
+    const storeHook_projects_read=await installStoreHook(db, "projects", "reading", read);
     let blob: Blob;
     try {
       blob = await exportProjectZip(project.id);
     } finally {
-      db.projects.hook("reading").unsubscribe(read);
+      storeHook_projects_read.mockRestore();
     }
     await edit;
     const data = await unpack(blob);

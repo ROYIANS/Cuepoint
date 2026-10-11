@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import {createChatThread} from "@/db/chat";
@@ -215,7 +216,7 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
     const controller = new AbortController(); controller.abort();
     await expect(saveAgentFinishingCheck(run.id, 2, candidate, undefined, controller.signal)).rejects.toThrow();
     const before = await db.agentRuns.get(run.id);
-    vi.spyOn(db.agentRuns, "update").mockRejectedValueOnce(new Error("storage failed"));
+    failStoreTableOnce(db, "agentRuns", "update", new Error("storage failed"));
     await expect(saveAgentFinishingCheck(run.id, 2, candidate)).rejects.toThrow("storage failed");
     expect(await db.agentRuns.get(run.id)).toEqual(before);
   });

@@ -1,6 +1,8 @@
+import {StorageError} from "@/lib/storage/errors";
+import type {ProductStore} from "@/lib/storage/types";
 import {defineTool} from './toolDefinition';
 import {z} from "zod";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {resolveConnector} from "@/db/connectors";
 import {assertAudioProject, assertAudioRevision, ownedAudioRow} from "@/db/audioShared";
 import {AtomicToolRollbackError} from "@/db/agentTools";
@@ -47,15 +49,17 @@ type Submission = {
     speakerRevision?: number
 };
 
-async function scope(projectId: string | undefined, context: AgentToolContext) {
+async function scope(projectId: string | undefined, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
-    const bound = await requireBoundProjectScope(context, projectId);
-    await assertAudioProject(bound);
+    const bound = await requireBoundProjectScope(context, projectId, db);
+    await assertAudioProject(bound, undefined, db);
     return bound;
 }
 
-async function inputState(args: Submission, context: AgentToolContext) {
-    await scope(args.projectId, context);
+async function inputState(args: Submission, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    await scope(args.projectId, context, db);
     validateGenerationInput(args.input);
     let speaker;
     if (args.speakerId) {
@@ -63,13 +67,13 @@ async function inputState(args: Submission, context: AgentToolContext) {
         if (args.speakerRevision === undefined) throw new Error("指定说话人时必须提供当前版本");
         assertAudioRevision(speaker, args.speakerRevision);
     }
-    const connector = await resolveConnector(args.connectorId);
+    const connector = await resolveConnector(args.connectorId, db);
     const provider = args.input.kind === "speech" && args.input.mimo ? "mimo" : "apimart";
     if (!connector || connector.definitionId !== provider || !connector.apiKey.trim()) throw new Error(`需要已配置的 ${provider === "mimo" ? "MiMo" : "APIMart"} 连接`);
-    const reference = args.input.kind === "speech" ? await validateSpeechReference(args.projectId, args.input) : undefined;
+    const reference = args.input.kind === "speech" ? await validateSpeechReference(args.projectId, args.input, db) : undefined;
     let target: unknown;
     if (args.input.kind === "speech") {
-        await assertAudioProject(args.projectId, "audio");
+        await assertAudioProject(args.projectId, "audio", db);
         if (args.input.segmentId) {
             const row = await ownedAudioRow(db.audioSegments, args.projectId, args.input.segmentId);
             if (args.input.segmentRevision === undefined) throw new Error("指定段落时必须提供当前版本");
@@ -77,7 +81,7 @@ async function inputState(args: Submission, context: AgentToolContext) {
             target = row;
         }
     } else {
-        await assertAudioProject(args.projectId, "music");
+        await assertAudioProject(args.projectId, "music", db);
         if (!args.input.draftId || args.input.draftRevision === undefined) throw new Error("请先准备音乐草稿");
         const row = await ownedAudioRow(db.musicDrafts, args.projectId, args.input.draftId);
         assertAudioRevision(row, args.input.draftRevision);
@@ -102,8 +106,9 @@ async function inputState(args: Submission, context: AgentToolContext) {
     };
 }
 
-async function preview(args: Submission, context: AgentToolContext): Promise<AgentToolPreview> {
-    const state = await inputState(args, context);
+async function preview(args: Submission, context: AgentToolContext, store?: ProductStore): Promise<AgentToolPreview> {
+    const db = store ?? context.store ?? productDb;
+    const state = await inputState(args, context, db);
     const changes = args.input.kind === "speech"
         ? [args.input.mimo ? `MiMo · ${MIMO_MODELS[args.input.mimo.mode]} · ${args.input.mimo.mode === "preset" ? args.input.voice : args.input.mimo.mode === "design" ? "设计音色" : "克隆音色"}` : `APIMart · gpt-4o-mini-tts · ${args.input.voice} · ${args.input.speed} 倍速`,
             ...(args.input.mimo ? [`音色与演绎指导：${args.input.mimo.instruction}`, ...(state.reference ? [`参考声音：${state.reference.filename}（${state.reference.mediaId}）`] : []), ...(args.input.mimo.optimizeTextPreview ? ["允许智能润色或自动生成播报文本；稿件原文保留。"] : [])] : []), `文字：${args.input.text.slice(0, 1600)}`, "生成一个新配音版本，保留当前选用和时间线。"]
@@ -126,50 +131,54 @@ async function preview(args: Submission, context: AgentToolContext): Promise<Age
     };
 }
 
-async function runSubmission(args: Submission, context: AgentToolContext, resolveCurrent?: () => Promise<Submission>) {
+async function runSubmission(args: Submission, context: AgentToolContext, resolveCurrent?: () => Promise<Submission>, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     const intentId = `agent-audio:${context.callId}`;
-    const validate = async () => {
+    const validate = async (store?: ProductStore) => {
+    const db = store ?? productDb;
         const call = await db.agentToolCalls.get(context.callId), run = await db.agentRuns.get(context.runId);
         if (!call || call.runId !== context.runId || call.threadId !== context.threadId || call.status !== "running" || call.decision !== "approve" || !call.requiresConfirmation || run?.status !== "running") throw new AtomicToolRollbackError("生成请求尚未得到有效确认或执行已停止");
-        if (!context.preview?.revision || context.preview.revision !== (await inputState(resolveCurrent ? await resolveCurrent() : args, context)).revision) {
+        if (!context.preview?.revision || context.preview.revision !== (await inputState(resolveCurrent ? await resolveCurrent() : args, context, db)).revision) {
             const cause = new ToolRecoveryError("STALE_TOOL_PREVIEW", "生成目标、参数或连接已变化，请重新准备并确认");
             throw new AtomicToolRollbackError(cause.message, {cause});
         }
     };
     try {
-        await scope(args.projectId, context);
+        await scope(args.projectId, context, db);
         const existing = await db.audioGenerationJobs.where("intentId").equals(intentId).first();
         if (existing) {
             if (existing.projectId !== args.projectId || existing.source.kind !== "agent" || existing.source.callId !== context.callId || existing.source.runId !== context.runId) throw new Error("生成任务归属不匹配");
             // A recovery repeats only local lookup / GET, never the paid submission.
             if (existing.status !== "prepared") {
-                await refreshAudioGeneration(args.projectId, existing.id, {signal: context.signal});
-                return readAudioJobSummary(args.projectId, existing.id);
+                await refreshAudioGeneration(args.projectId, existing.id, {signal: context.signal},db);
+                return readAudioJobSummary(args.projectId, existing.id, db);
             }
         }
-        await validate();
+        await validate(db);
         const job = existing ?? await prepareAudioGeneration({
             ...args,
             intentId,
             source: {kind: "agent", callId: context.callId, runId: context.runId}
-        });
-        await submitAudioGeneration(args.projectId, job.id, {signal: context.signal, beforeSubmit: validate});
-        return readAudioJobSummary(args.projectId, job.id);
+        }, db);
+        await submitAudioGeneration(args.projectId, job.id, {signal: context.signal, beforeSubmit: validate},db);
+        return readAudioJobSummary(args.projectId, job.id, db);
     } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
         if (error instanceof AtomicToolRollbackError) throw error;
         // The durable job describes uncertainty if a POST started; preflight errors have no effect.
         const job = await db.audioGenerationJobs.where("intentId").equals(intentId).first();
         if (job && job.status !== "prepared") return {
-            ...await readAudioJobSummary(args.projectId, job.id),
+            ...await readAudioJobSummary(args.projectId, job.id, db),
             error: job.error ?? (error instanceof Error ? error.message : "生成未完成")
         };
         throw new AtomicToolRollbackError(error instanceof Error ? error.message : "生成准备失败", {cause: error});
     }
 }
 
-async function speechArgs(raw: unknown, context: AgentToolContext, recover = false): Promise<Submission> {
+async function speechArgs(raw: unknown, context: AgentToolContext, recover = false, store?: ProductStore): Promise<Submission> {
+    const db = store ?? context.store ?? productDb;
     const parsed = speech.schema.parse(raw);
-    const args = {...parsed, projectId: await scope(parsed.projectId, context)};
+    const args = {...parsed, projectId: await scope(parsed.projectId, context, db)};
     if (recover) {
         const existing = await db.audioGenerationJobs.where("intentId").equals(`agent-audio:${context.callId}`).first();
         if (existing && existing.status !== "prepared" && existing.projectId === args.projectId && existing.source.kind === "agent" && existing.source.callId === context.callId && existing.source.runId === context.runId) {
@@ -212,9 +221,10 @@ async function speechArgs(raw: unknown, context: AgentToolContext, recover = fal
     };
 }
 
-async function musicArgs(raw: unknown, context: AgentToolContext, recover = false): Promise<Submission> {
+async function musicArgs(raw: unknown, context: AgentToolContext, recover = false, store?: ProductStore): Promise<Submission> {
+    const db = store ?? context.store ?? productDb;
     const parsed = music.schema.parse(raw);
-    const args = {...parsed, projectId: await scope(parsed.projectId, context)};
+    const args = {...parsed, projectId: await scope(parsed.projectId, context, db)};
     if (recover) {
         const existing = await db.audioGenerationJobs.where("intentId").equals(`agent-audio:${context.callId}`).first();
         if (existing && existing.status !== "prepared" && existing.projectId === args.projectId && existing.source.kind === "agent" && existing.source.callId === context.callId && existing.source.runId === context.runId) {
@@ -240,18 +250,20 @@ export const musicGenerateTool = defineTool({schema: music.schema, json: music.j
     requiresConfirmation: true,
     highRisk: () => false,
     prepare: async (raw, context) => {
-        return preview(await musicArgs(raw, context), context);
+        return preview(await musicArgs(raw, context, undefined, context.store), context, context.store);
     },
     async execute(raw, context) {
+    const db = context.store ?? productDb;
         let args: Submission;
         // Resolving local draft state has no network side effect. A stale draft
         // is a known rejection, not an uncertain paid submission.
         try {
-            args = await musicArgs(raw, context, true);
+            args = await musicArgs(raw, context, true, db);
         } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
             throw new AtomicToolRollbackError(error instanceof Error ? error.message : "音乐草稿准备失败", {cause: error});
         }
-        return runSubmission(args, context);
+        return runSubmission(args, context, undefined, db);
     }
 });
 
@@ -263,8 +275,9 @@ export const AUDIO_GENERATION_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(_args, context) {
-            const projectId = await requireBoundProjectScope(context);
-            await scope(projectId, context);
+    const db = context.store ?? productDb;
+            const projectId = await requireBoundProjectScope(context, undefined, db);
+            await scope(projectId, context, db);
             const connections = await db.connectors.where("definitionId").anyOf("apimart", "mimo").toArray();
             return {
                 defaultSpeech: {
@@ -310,17 +323,18 @@ export const AUDIO_GENERATION_TOOLS = [
         recovery: "repeatable",
         requiresConfirmation: true,
         highRisk: () => false,
-        prepare: async (raw, context) => preview(await speechArgs(raw, context), context),
+        prepare: async (raw, context) => preview(await speechArgs(raw, context, undefined, context.store), context, context.store),
         execute: async (raw, context) => {
             let args: Submission;
             try {
-                args = await speechArgs(raw, context, true);
+                args = await speechArgs(raw, context, true, context.store);
             } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
                 throw new AtomicToolRollbackError(error instanceof Error ? error.message : "配音准备失败", {cause: error});
             }
             // Only local argument preparation is proven not to have submitted.
             // Summary/recovery storage failures after a POST retain unknown effect.
-            return runSubmission(args, context, () => speechArgs(raw, context));
+            return runSubmission(args, context, () => speechArgs(raw, context, undefined, context.store), context.store);
         }
     }),
     musicGenerateTool,
@@ -332,16 +346,18 @@ export const AUDIO_GENERATION_TOOLS = [
         recovery: "repeatable",
         highRisk: () => false,
         async execute(raw, context) {
+    const db = context.store ?? productDb;
             const parsed = jobSpec.schema.parse(raw);
             let projectId: string;
             try {
-                projectId = await scope(parsed.projectId, context);
+                projectId = await scope(parsed.projectId, context, db);
             } catch (cause) {
+        if (cause instanceof StorageError && cause.certainty === "unknown") throw cause;
                 throw new AtomicToolRollbackError(cause instanceof Error ? cause.message : "任务查询尚未开始", {cause});
             }
             const args = {...parsed, projectId};
             await refreshAudioGeneration(args.projectId, args.jobId, {signal: context.signal});
-            return readAudioJobSummary(args.projectId, args.jobId);
+            return readAudioJobSummary(args.projectId, args.jobId, db);
         }
     }),
 ];

@@ -1,9 +1,10 @@
+import type {ProductStore} from "@/lib/storage/types";
 import type {TypedToolDefinition} from './toolDefinition';
 import {defineTool} from './toolDefinition';
 import {historicalToolSummary} from "./referenceEvidence";
 import {frozenProjectScope} from "./projectScope";
 import {formatTaskRequirements} from "./taskState";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {taskFields} from "@/db/agentTasks";
 import {
     listTaskGenerationSourceInventory,
@@ -27,9 +28,10 @@ function historicalTaskToolContent(call: { name: string; result?: string }, proj
     return summary ? JSON.stringify(summary) : call.result ?? "";
 }
 
-async function currentTaskToolContent(call: AgentToolCall, task?: AgentTask) {
+async function currentTaskToolContent(call: AgentToolCall, task?: AgentTask, store?: ProductStore) {
+    const db = store ?? productDb;
     if (task && (SOUND_GENERATION_TOOLS as readonly string[]).includes(call.name)) {
-        const current = await taskAudioToolSource(task, call);
+        const current = await taskAudioToolSource(task, call, db);
         return current?.body ?? "声音生成的原始工具记录仍保留，但当前任务归属或本地成果未获核实；不能据此声称已交付。";
     }
     return historicalTaskToolContent(call, task?.projectId ?? "");
@@ -57,9 +59,10 @@ const recordFields = {
     todoId: optional(text(80, 1))
 };
 
-async function owner(context: AgentToolContext, name: string) {
+async function owner(context: AgentToolContext, name: string, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
-    const projectId = await frozenProjectScope(context);
+    const projectId = await frozenProjectScope(context, db);
     if (!projectId) throw new Error("任务需要绑定项目");
     const run = await db.agentRuns.get(context.runId), call = await db.agentToolCalls.get(context.callId);
     const thread = await db.chatThreads.get(context.threadId);
@@ -91,10 +94,11 @@ function tool<T, const Name extends string>(name: Name, title: string, descripti
         effect: "bookkeeping",
         atomic: true,
         highRisk: () => false,
-        execute: (args, context) => executeAtomicTool(context, async () => {
-            const value = await execute(spec.schema.parse(args), context, await owner(context, name));
+        execute: (args, context) => executeAtomicTool(context, async (db) => {
+        const boundContext = {...context, store:db};
+            const value = await execute(spec.schema.parse(args), boundContext, await owner(boundContext, name, db));
             return name === "task_read" ? {...(value as Record<string, unknown>), sourceProjectionVersion: 1} : value;
-        })
+        }, context.store)
     });
 }
 
@@ -106,6 +110,7 @@ export const TASK_TOOLS = [
         contentOffset: optional(number(0, 10000000, true)),
         contentLimit: optional(number(1, 6000, true))
     }), async (args, _context, {task, thread}) => {
+    const db = _context.store ?? productDb;
         if (args.source?.resultKey !== undefined && args.source.type !== "generation") throw new Error("结果键只能用于声音生成来源");
         const offset = args.offset ?? 0, limit = args.limit ?? 5;
         const messages = (await db.chatMessages.where("threadId").equals(thread.id).sortBy("createdAt")).filter((m) => m.role === "user" && !!m.content.trim()).reverse();
@@ -113,7 +118,7 @@ export const TASK_TOOLS = [
         const calls = (await db.agentToolCalls.where("threadId").equals(thread.id).toArray()).filter((c) => c.status === "completed" && c.effect !== "bookkeeping" && !!c.result && taskRunIds.has(c.runId)).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
         if (args.source?.type === "generation") {
             if (!task) throw new Error("当前任务不存在");
-            const item = await taskGenerationSource(task, args.source.id, args.source.resultKey), contentOffset = args.contentOffset ?? 0,
+            const item = await taskGenerationSource(task, args.source.id, args.source.resultKey, db), contentOffset = args.contentOffset ?? 0,
                 contentLimit = args.contentLimit ?? 6000;
             return {
                 source: args.source,
@@ -125,7 +130,7 @@ export const TASK_TOOLS = [
         if (args.source) {
             const item = args.source.type === "message" ? messages.find((message) => message.id === args.source!.id) : calls.find((call) => call.id === args.source!.id);
             if (!item) throw new Error("来源不是当前任务可读取的用户消息或已完成业务工具结果");
-            const content = "content" in item ? item.content : await currentTaskToolContent(item, task);
+            const content = "content" in item ? item.content : await currentTaskToolContent(item, task, db);
             const contentOffset = args.contentOffset ?? 0, contentLimit = args.contentLimit ?? 6000;
             return {
                 source: args.source,
@@ -134,12 +139,12 @@ export const TASK_TOOLS = [
                 nextOffset: contentOffset + contentLimit < content.length ? contentOffset + contentLimit : null
             };
         }
-        const records = task ? await listTaskRecords(task.id) : [];
-        const inventory = task ? await listTaskGenerationSourceInventory(task, {offset, limit}) : undefined;
+        const records = task ? await listTaskRecords(task.id, db) : [];
+        const inventory = task ? await listTaskGenerationSourceInventory(task, {offset, limit}, db) : undefined;
         const generations = inventory?.sources ?? [];
         const tools = [];
         for (const call of calls.slice(offset, offset + limit)) {
-            const content = await Promise.resolve(currentTaskToolContent(call, task));
+            const content = await Promise.resolve(currentTaskToolContent(call, task, db));
             tools.push({
                 id: call.id,
                 name: call.name,
@@ -197,9 +202,10 @@ export const TASK_TOOLS = [
         ...taskFieldsSpec,
         sources: array(source, 12, 1)
     }), async (args, _context, {run, thread, task}) => {
+    const db = _context.store ?? productDb;
         if (task) return {task: taskResult(task), reused: true};
         if (!run.taskMode) throw new Error("只有任务模式可以创建任务");
-        await validateTaskSources({id: "", threadId: thread.id}, args.sources, "decision", "ai");
+        await validateTaskSources({id: "", threadId: thread.id}, args.sources, "decision", "ai", db);
         if (args.steps.some((step) => step.status === "completed")) throw new Error("新任务不能预先声称步骤完成");
         const at = nowIso();
         const created: AgentTask = {
@@ -223,7 +229,7 @@ export const TASK_TOOLS = [
             title: "任务目标与验收要求",
             body: formatTaskRequirements(created),
             sources: args.sources
-        }, {author: "ai", runId: run.id, requirementSnapshot: true});
+        }, {author: "ai", runId: run.id, requirementSnapshot: true}, db);
         return {task: taskResult(created), reused: false};
     }),
     tool("task_update", "更新任务要求", "修改当前任务名称、目标及验收要求，必须引用用户澄清消息并提供读取到的 revision。计划用 update_run_plan。保留变更历史。", object({
@@ -233,16 +239,17 @@ export const TASK_TOOLS = [
         expectedRevision: number(1, 1000000, true),
         sources: array(source, 12, 1)
     }), async (args, _context, {task, run}) => {
+    const db = _context.store ?? productDb;
         const current = requiredTask(task);
         if ((current.revision ?? 1) !== args.expectedRevision) throw new Error("任务已更新，请重新读取后修改");
-        await validateTaskSources(current, args.sources, "decision", "ai");
+        await validateTaskSources(current, args.sources, "decision", "ai", db);
         await writeTaskRecord(current, {
             kind: "approach",
             claim: "decision",
             title: "任务要求调整",
             body: `调整前\n${formatTaskRequirements(current)}\n\n调整后\n${formatTaskRequirements(args)}`,
             sources: args.sources
-        }, {author: "ai", runId: run.id, requirementSnapshot: true});
+        }, {author: "ai", runId: run.id, requirementSnapshot: true}, db);
         const updated = {
             ...current, ...taskFields({...args, plan: current.plan}),
             revision: (current.revision ?? 1) + 1,
@@ -263,7 +270,7 @@ export const TASK_TOOLS = [
                 expectedRevision,
                 author: "ai",
                 runId: run.id
-            })
+            }, _context.store)
         };
     }),
     tool("task_record_read", "读取任务记录", "读取当前任务记录及指定历史版本，按正文 offset/limit 分页。只有当前版本会进入后续任务上下文；旧版本用于追溯。", object({
@@ -272,9 +279,10 @@ export const TASK_TOOLS = [
         offset: optional(number(0, 120000, true)),
         limit: optional(number(1, 6000, true))
     }), async (args, _context, {task}) => {
+    const db = _context.store ?? productDb;
         const current = requiredTask(task), record = await db.agentTaskRecords.get(args.id);
         if (!record || record.taskId !== current.id) throw new Error("记录不属于当前任务");
-        const versions = await listTaskRecordVersions(current.id, record.id);
+        const versions = await listTaskRecordVersions(current.id, record.id, db);
         const selected = args.revision ? versions.find((v) => v.revision === args.revision) : record;
         if (!selected) throw new Error("记录版本不存在");
         const offset = args.offset ?? 0, limit = args.limit ?? 6000;

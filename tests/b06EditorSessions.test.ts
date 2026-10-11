@@ -45,9 +45,10 @@ vi.mock("react", async original => {
         },
     };
 });
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: () => {
-    const host = runtime.active!; return host.results[host.queryIndex++];
-}}));
+vi.mock("@/lib/storage/hooks", () => {
+    const read = () => {const host = runtime.active!; return host.results[host.queryIndex++];};
+    return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
+});
 vi.mock("@tanstack/react-router", () => ({useBlocker: () => ({status: "idle"})}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
@@ -136,8 +137,8 @@ function scriptFile(gate: ReturnType<typeof deferred<string>>, name = "script.tx
 }
 beforeEach(() => {
     hosts.length = 0;
-    vi.stubGlobal("document", {visibilityState: "visible", addEventListener: vi.fn(), removeEventListener: vi.fn()});
-    vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn()});
+    vi.stubGlobal("document", {visibilityState: "visible", addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn()});
+    vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn()});
 });
 afterEach(async () => {
     hosts.forEach(host => {if (host.mounted) unmount(host);}); await settle();

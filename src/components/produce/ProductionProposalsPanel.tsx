@@ -9,10 +9,9 @@ import {
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 import {useId, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {toast} from "sonner";
 import {Plus, Undo2} from "lucide-react";
-import {db} from "@/db/database";
 import {
     applyProductionProposal,
     cancelProductionProposal,
@@ -49,7 +48,7 @@ export function ProductionProposalsPanel({projectId, episodeId, shots}: {
     episodeId: string;
     shots: Shot[]
 }) {
-    const proposals = useLiveQuery(async () => ({
+    const proposals = useProductQuery(async (db) => ({
         projectId, episodeId, rows: (await db.productionProposals.where("episodeId").equals(episodeId).toArray())
             .filter((row) => row.projectId === projectId).sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     }), [projectId, episodeId]);

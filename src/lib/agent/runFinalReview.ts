@@ -1,3 +1,5 @@
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import type {AgentResponseItem, AgentRunOutput} from "@/domain/agent";
 import type {FinalReviewReason} from "@/domain/agentFinalReview";
 import {beginAgentFinalReview, finishAgentFinalReview} from "@/db/agentFinalReview";
@@ -10,8 +12,9 @@ const REVIEW_TIMEOUT_MS = 30_000;
 
 /** One fresh zero-tool request. Its answer never enters the public reply or business continuation. */
 export async function reviewFinalReply(runId: string, expectedStep: number, output: AgentRunOutput, apiKey: string,
-    signal: AbortSignal, fetchImpl?: typeof fetch, responseOutput?: AgentResponseItem[]): Promise<void> {
-    const run = await beginAgentFinalReview(runId, expectedStep, output, signal, responseOutput);
+    signal: AbortSignal, fetchImpl?: typeof fetch, responseOutput?: AgentResponseItem[], store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    const run = await beginAgentFinalReview(runId, expectedStep, output, signal, responseOutput, db);
     if (!run?.finalReview) return;
     const review = run.finalReview;
     const messages = finalReviewMessages(output.content, review.snapshot);
@@ -36,17 +39,17 @@ export async function reviewFinalReply(runId: string, expectedStep: number, outp
             signal: controller.signal, fetchImpl,
             onDelta: delta => { length += delta.length; if (length > 24_000) { reason = "invalid"; controller.abort(); } }
         })]);
-        if (result.metrics) await recordAgentModelMetrics(run.id, {...result.metrics, step: run.modelStep!, purpose: "final_review"});
+        if (result.metrics) await recordAgentModelMetrics(run.id, {...result.metrics, step: run.modelStep!, purpose: "final_review"}, db);
         if (!result.ok || result.toolCalls?.length || controller.signal.aborted) {
-            await finishAgentFinalReview(runId, review.candidateFingerprint, undefined, reason ?? "transport");
+            await finishAgentFinalReview(runId, review.candidateFingerprint, undefined, reason ?? "transport", db);
             return;
         }
         let claims;
         try { claims = parseFinalReview(result.content, output.content, review.snapshot); }
-        catch { await finishAgentFinalReview(runId, review.candidateFingerprint, undefined, "invalid"); return; }
-        await finishAgentFinalReview(runId, review.candidateFingerprint, claims);
+        catch { await finishAgentFinalReview(runId, review.candidateFingerprint, undefined, "invalid", db); return; }
+        await finishAgentFinalReview(runId, review.candidateFingerprint, claims, undefined, db);
     } catch {
-        await finishAgentFinalReview(runId, review.candidateFingerprint, undefined, reason ?? "transport");
+        await finishAgentFinalReview(runId, review.candidateFingerprint, undefined, reason ?? "transport", db);
     } finally {
         clearTimeout(timer);
         if (rejectAbort) controller.signal.removeEventListener("abort", rejectAbort);

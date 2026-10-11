@@ -1,7 +1,9 @@
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
 import {z} from "zod";
 import {resolveMaterialInput} from "./materialImageInput";
 import {validateDiscoveredInput} from "./imageDiscovery";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {getReferenceSource} from "@/db/references";
 import type {ReferenceAttachment} from "@/domain/references";
 import {referenceLocatorLabel} from "@/domain/references";
@@ -27,18 +29,19 @@ function parseReferenceAttachments(value: unknown): ReferenceAttachment[] {
 }
 
 export function imageReference(media: MediaRecord, reference?: ReferenceAttachment): AgentImageReference {
-    if (!["image/png", "image/jpeg", "image/webp"].includes(media.mimeType) || media.blob.size <= 0 || media.blob.size > 10 * 1024 * 1024) throw new Error("仅支持 10 MiB 以内的 PNG、JPEG 或 WebP 图片");
+    if (!["image/png", "image/jpeg", "image/webp"].includes(media.mimeType) || binaryByteLength(media.blob) <= 0 || binaryByteLength(media.blob) > 10 * 1024 * 1024) throw new Error("仅支持 10 MiB 以内的 PNG、JPEG 或 WebP 图片");
     return {
         projectId: media.projectId,
         mediaId: media.id,
         filename: media.filename,
         mimeType: media.mimeType,
-        size: media.blob.size, ...(reference ? {reference} : {})
+        size: binaryByteLength(media.blob), ...(reference ? {reference} : {})
     };
 }
 
 /** Bounded, frozen text selection. Only explicitly selected sources enter the initial request. */
-export async function selectReferenceContext(projectId: string | undefined, attachments: ReferenceAttachment[], maxChars = 12000): Promise<AgentSelectedReferences | undefined> {
+export async function selectReferenceContext(projectId: string | undefined, attachments: ReferenceAttachment[], maxChars = 12000, store?: ProductStore): Promise<AgentSelectedReferences | undefined> {
+    const db = store ?? productDb;
     parseReferenceAttachments(attachments);
     if (!attachments.length) return undefined;
     if (!projectId) throw new Error("请先绑定项目再附加参考资料");
@@ -46,7 +49,7 @@ export async function selectReferenceContext(projectId: string | undefined, atta
     const blocks: string[] = [];
     let remaining = Math.max(0, Math.min(12000, Math.floor(maxChars)));
     for (const attachment of attachments) {
-        const {reference, chunks, media} = await getReferenceSource(projectId, attachment);
+        const {reference, chunks, media} = await getReferenceSource(projectId, attachment, db);
         const included = [];
         let includedCharacters = 0;
         // Whole chunks preserve citation boundaries; later chunks remain available via read tool.
@@ -91,26 +94,27 @@ export async function selectReferenceContext(projectId: string | undefined, atta
     };
 }
 
-export async function validateReferenceInput(input: AgentReferenceInput, projectId: string | undefined, runId?: string): Promise<void> {
+export async function validateReferenceInput(input: AgentReferenceInput, projectId: string | undefined, runId?: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (input.material) {
-        await resolveMaterialInput(input, projectId, runId);
+        await resolveMaterialInput(input, projectId, runId, db);
         return;
     }
     if (input.discovery) {
         if (projectId && input.projectId !== projectId) throw new Error("图片不属于绑定项目");
-        await validateDiscoveredInput(input, runId);
+        await validateDiscoveredInput(input, runId, db);
         projectId = input.projectId;
     }
     if (!projectId || input.projectId !== projectId || !await db.projects.get(projectId)) throw new Error("参考资料项目归属已失效");
-    for (const attachment of input.references) await getReferenceSource(projectId, attachment);
+    for (const attachment of input.references) await getReferenceSource(projectId, attachment, db);
     if ((input.images?.length ?? 0) > 10) throw new Error("单次请求图片超过 10 张限制");
     for (const image of input.images ?? []) {
         if (image.projectId !== projectId) throw new Error("图片不属于当前项目");
         const media = await db.media.get(image.mediaId);
-        if (!media || media.projectId !== projectId || media.mimeType !== image.mimeType || media.blob.size !== image.size) throw new Error("图片已移除或内容已变化，请重新附加");
+        if (!media || media.projectId !== projectId || media.mimeType !== image.mimeType || binaryByteLength(media.blob) !== image.size) throw new Error("图片已移除或内容已变化，请重新附加");
         imageReference(media);
         if (image.reference) {
-            const source = await getReferenceSource(projectId, image.reference);
+            const source = await getReferenceSource(projectId, image.reference, db);
             if (source.reference.kind !== "image" || source.media.id !== image.mediaId) throw new Error("图片来源不匹配");
         }
         // A withdrawn source cannot be revived by passing its raw media ID.

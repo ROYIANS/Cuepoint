@@ -1,5 +1,6 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {resolveConnector} from "@/db/connectors";
-import {db} from '@/db/database';
+import {db as productDb} from '@/db/database';
 import {
     assertBatchDispatch,
     claimBatchItem,
@@ -67,9 +68,10 @@ export async function startGenerationBatch(id: string, threadId: string, options
         // Storage may be the reason execution stopped. Do not rely solely on a
         // successful pause write to prevent another paid request in this process.
         let dispatchPaused = false;
-        const pause = async (reason: string) => {
+        const pause = async (reason: string, store?: ProductStore) => {
+    const db = store ?? productDb;
             dispatchPaused = true;
-            await controlGenerationBatch(id, threadId, 'pause', reason);
+            await controlGenerationBatch(id, threadId, 'pause', reason, db);
         };
         const settleWorkers = async (execute: () => Promise<void>) => {
             const outcomes = await Promise.allSettled(Array.from({length: BATCH_CONCURRENCY}, execute));
@@ -81,21 +83,23 @@ export async function startGenerationBatch(id: string, threadId: string, options
             const saved = await readGenerationBatch(id, threadId);
             const recover = saved.jobs.filter(j => !['downloaded', 'applied', 'conflict', 'failed', 'unknown'].includes(j.status));
             let recoveryIndex = 0;
-            const retrieve = async () => {
+            const retrieve = async (store?: ProductStore) => {
+    const db = store ?? productDb;
                 while (!controller.signal.aborted) {
                     const job = recover[recoveryIndex++];
                     if (!job) return;
                     try {
-                        await monitorAgentGeneration(job.id, context, options);
+                        await monitorAgentGeneration(job.id, context, options, db);
                     } catch (error) {
-                        await pause(error instanceof Error ? error.message : '查询已暂停');
+                        await pause(error instanceof Error ? error.message : '查询已暂停', db);
                     }
                 }
             };
             await settleWorkers(retrieve);
             const items = (await readGenerationBatch(id, threadId)).items;
             let index = 0;
-            const dispatch = async () => {
+            const dispatch = async (store?: ProductStore) => {
+    const db = store ?? productDb;
                 while (!controller.signal.aborted && !dispatchPaused) {
                     const item = items[index++];
                     if (!item) return;
@@ -103,16 +107,16 @@ export async function startGenerationBatch(id: string, threadId: string, options
                     let job;
                     let transportEntered = false;
                     try {
-                        job = await claimBatchItem(id, threadId, item.id);
+                        job = await claimBatchItem(id, threadId, item.id, db);
                         if (!job) continue;
                         const claimedJob = job;
-                        const config = await resolveConnector(job.connectorId);
+                        const config = await resolveConnector(job.connectorId, db);
                         if (!config?.apiKey.trim() || config.definitionId !== job.provider || config.baseUrl !== job.baseUrl) throw new Error('供应商配置已变化，尚未付费提交');
                         transportEntered = true;
-                        await submitClaimedGeneration(job, config, context, options, async () => {
+                        await submitClaimedGeneration(job, config, context, options, async (db) => {
                             if (dispatchPaused) throw new Error('本地队列已暂停，尚未付费提交');
-                            await assertBatchDispatch(claimedJob);
-                        });
+                            await assertBatchDispatch(claimedJob, db);
+                        }, db);
                     } catch (error) {
                         try {
                             const latest = job ? await db.agentGenerationJobs.get(job.id) : undefined;
@@ -121,10 +125,10 @@ export async function startGenerationBatch(id: string, threadId: string, options
                                 await updateGenerationJob(latest.id, {
                                     status: 'failed',
                                     error: '本地配置校验失败，尚未付费提交'
-                                });
+                                }, db);
                             }
                             const current = job ? await db.agentGenerationJobs.get(job.id) : undefined;
-                            if (!current || current.status !== 'failed') await pause(error instanceof Error ? error.message : '生成等待已暂停');
+                            if (!current || current.status !== 'failed') await pause(error instanceof Error ? error.message : '生成等待已暂停', db);
                         } catch (storageError) {
                             dispatchPaused = true;
                             throw storageError;

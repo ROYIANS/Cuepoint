@@ -1,3 +1,4 @@
+import {installStoreHook} from "./helpers/storeBackendFaults";
 import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
@@ -37,9 +38,9 @@ describe("generation confirmation persistence", () => {
     const originalRun = await db.agentRuns.get(f.run.id);
     const network = vi.fn(); vi.stubGlobal("fetch", network);
     const fail = (changes: Record<string, unknown>) => { if (changes.status === "approved") throw new Error("approval storage failed"); };
-    db.agentToolCalls.hook("updating", fail);
+    const storeHook_agentToolCalls_fail=await installStoreHook(db, "agentToolCalls", "updating", fail);
     try { await expect(reviewAndApproveGeneration(f.run.id, f.call.id, f.reviewed, f.expected)).rejects.toThrow("approval storage failed"); }
-    finally { db.agentToolCalls.hook("updating").unsubscribe(fail); }
+    finally { storeHook_agentToolCalls_fail.mockRestore(); }
     expect(await db.agentToolCalls.get(f.call.id)).toEqual(f.call);
     expect(await db.agentRuns.get(f.run.id)).toEqual(originalRun);
     expect(await db.agentGenerationJobs.count()).toBe(0);

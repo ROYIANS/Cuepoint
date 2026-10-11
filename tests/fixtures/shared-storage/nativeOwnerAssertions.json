@@ -1,0 +1,486 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Current domain command/assertion anchors for all registered tables; postcommit coverage alone cannot prove business behavior. Run status remains in acceptance.json and raw suite output.",
+  "groups": [
+    {
+      "tables": [
+        "projects",
+        "characters",
+        "scenes",
+        "props",
+        "styles",
+        "episodes",
+        "shots"
+      ],
+      "file": "tests/agentBusiness.test.ts",
+      "case": "creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion",
+      "commands": [
+        "project_create",
+        "character/scene/prop/style_create",
+        "episode/story/shot commands"
+      ],
+      "assertions": [
+        "Saved owner IDs and field values agree with real business receipts.",
+        "Edits and reorder persist; deletions clean project relations."
+      ]
+    },
+    {
+      "tables": [
+        "media"
+      ],
+      "file": "tests/materialLibrary.test.ts",
+      "case": "promotes independent bytes that survive source media and project deletion",
+      "commands": [
+        "promoteLegacyMaterial",
+        "deleteProject",
+        "adoptMaterialInProject"
+      ],
+      "assertions": [
+        "Adopted media contains exact original bytes after source deletion.",
+        "Destination media has new independent ownership."
+      ]
+    },
+    {
+      "tables": [
+        "connectors",
+        "connectorAliases"
+      ],
+      "file": "tests/sharedConnectorAliases.test.ts",
+      "case": "rotates and revokes all retained identities atomically while preserving unrelated definitions",
+      "commands": [
+        "upsertConnector",
+        "resolveConnector",
+        "deleteConnector"
+      ],
+      "assertions": [
+        "Reopening retains rotated canonical and alias values.",
+        "Deleting through an alias removes the correct definition only; late alias failure rolls back canonical and aliases."
+      ]
+    },
+    {
+      "tables": [
+        "agents",
+        "agentRuns",
+        "chatThreads",
+        "chatMessages"
+      ],
+      "file": "tests/agentRuns.test.ts",
+      "case": "creates an agent, request snapshot and linked messages atomically without credentials",
+      "commands": [
+        "beginAgentRun"
+      ],
+      "assertions": [
+        "Stored run and linked message/thread identities are consistent.",
+        "Frozen request retains model scope and excludes credentials."
+      ]
+    },
+    {
+      "tables": [
+        "agentToolCalls"
+      ],
+      "file": "tests/agentToolTransactions.test.ts",
+      "case": "commits nested domain writes and the ledger together and replays only the saved result",
+      "commands": [
+        "executeAtomicTool"
+      ],
+      "assertions": [
+        "Real nested domain state and completed ledger commit together.",
+        "Replay returns the saved result without invoking a new mutation."
+      ]
+    },
+    {
+      "tables": [
+        "agentTasks"
+      ],
+      "file": "tests/agentTasks.test.ts",
+      "case": "creates manual tasks atomically without a connector and survives reopening the database",
+      "commands": [
+        "createAgentTask"
+      ],
+      "assertions": [
+        "Reopened task and linked thread retain their exact saved identities and values.",
+        "Creating another task for the same thread returns the existing task without a duplicate."
+      ]
+    },
+    {
+      "tables": [
+        "agentTaskRecords",
+        "agentTaskRecordVersions"
+      ],
+      "file": "tests/sharedRegisteredToolSuccess.test.ts",
+      "case": "task_record_read returns actual append-only history with bounded text and completes its ledger atomically",
+      "commands": [
+        "task_record_write",
+        "task_record_read"
+      ],
+      "assertions": [
+        "Current record and immutable history retain saved versions and bounded returned text.",
+        "Actual registered tool completes its ledger with the returned history."
+      ]
+    },
+    {
+      "tables": [
+        "agentTaskWrapups",
+        "agentTaskWrapupVersions"
+      ],
+      "file": "tests/agentTaskWrapup.test.ts",
+      "case": "CAS edits, append-only revisions, confirmed history and reopening invalidation",
+      "commands": [
+        "createManualWrapup",
+        "saveWrapup",
+        "confirmWrapup",
+        "setAgentTaskLifecycle"
+      ],
+      "assertions": [
+        "Stale CAS and editing confirmed history fail.",
+        "Versions remain append-only; reopening a task invalidates current summary while preserving confirmation history."
+      ]
+    },
+    {
+      "tables": [
+        "contextCompactions"
+      ],
+      "file": "tests/contextManagement.test.ts",
+      "case": "uses a separate request and metrics, activates a summary, retains originals and reuses it",
+      "commands": [
+        "prepareRunContext"
+      ],
+      "assertions": [
+        "Summary activation and metrics persist; original messages remain unchanged.",
+        "Later context preparation reuses the saved compaction."
+      ]
+    },
+    {
+      "tables": [
+        "projectMemories",
+        "projectMemoryVersions"
+      ],
+      "file": "tests/projectMemories.test.ts",
+      "case": "creates, revises, disables, reactivates and deletes offline with immutable CAS history",
+      "commands": [
+        "createProjectMemory",
+        "updateProjectMemory",
+        "setProjectMemoryStatus",
+        "deleteProjectMemory"
+      ],
+      "assertions": [
+        "Version bodies preserve exact ordered history.",
+        "Reopen retains active state; stale CAS fails and final deletion cascades versions."
+      ]
+    },
+    {
+      "tables": [
+        "searchConnections"
+      ],
+      "file": "tests/webResearchRuntime.test.ts",
+      "case": "retains ask approval over reopen, refuses changed config before HTTP and never silently re-prepares",
+      "commands": [
+        "saveSearchConnection",
+        "getSearchConnectionState",
+        "resumeChatRun"
+      ],
+      "assertions": [
+        "Changing the saved connection revision invalidates frozen approval.",
+        "Provider request does not occur after configuration mismatch."
+      ]
+    },
+    {
+      "tables": [
+        "agentGenerationJobs",
+        "agentGenerationBatches",
+        "agentGenerationBatchItems"
+      ],
+      "file": "tests/agentGenerationBatch.test.ts",
+      "case": "submits four intentional identical candidates with max two active and never replays after reopen",
+      "commands": [
+        "prepareGenerationBatch",
+        "confirmGenerationBatch",
+        "startGenerationBatch"
+      ],
+      "assertions": [
+        "Actual candidate/job/result mappings persist; deterministic HTTP boundary dispatch has at most two active calls.",
+        "Reopening retains accepted task identity and does not repeat submissions."
+      ]
+    },
+    {
+      "tables": [
+        "projectReferences",
+        "referenceChunks"
+      ],
+      "file": "tests/references.test.ts",
+      "case": "roundtrips source/chunks with fresh ownership and rejects tampered source bytes atomically",
+      "commands": [
+        "importReferenceFile",
+        "exportProjectZip",
+        "importProjectZip"
+      ],
+      "assertions": [
+        "Imported source/chunks preserve exact text and locators under new ownership.",
+        "Tampered source bytes reject import without partial project state."
+      ]
+    },
+    {
+      "tables": [
+        "ipProfiles"
+      ],
+      "file": "tests/agentIpTools.test.ts",
+      "case": "always confirms IP creation with readable fields, commits once and never replays after a failed next request",
+      "commands": [
+        "ip_create"
+      ],
+      "assertions": [
+        "Real confirmation gates the saved profile and completed ledger.",
+        "Retry after model failure does not create another profile."
+      ]
+    },
+    {
+      "tables": [
+        "projectIpLinks"
+      ],
+      "file": "tests/agentIpTools.test.ts",
+      "case": "confirms a new project association, refreshes IP facts and permits bounded field reads afterward",
+      "commands": [
+        "project_bind_ip",
+        "ip_read"
+      ],
+      "assertions": [
+        "Confirmed association is stored under the correct project and profile.",
+        "Subsequent facts and bounded fields reflect the linked owner."
+      ]
+    },
+    {
+      "tables": [
+        "libraryMaterials",
+        "materialVersions"
+      ],
+      "file": "tests/materialLibrary.test.ts",
+      "case": "keeps immutable version snapshots and serializes metadata/file conflicts",
+      "commands": [
+        "createFileMaterial",
+        "addFileMaterialVersion",
+        "updateMaterialMetadata"
+      ],
+      "assertions": [
+        "Only one competing revision succeeds.",
+        "Earlier version bytes remain exact and later versions append rather than overwrite."
+      ]
+    },
+    {
+      "tables": [
+        "materialUses"
+      ],
+      "file": "tests/materialLibrary.test.ts",
+      "case": "pins adopted media, is idempotent and updates through a new target without rewriting old content",
+      "commands": [
+        "adoptMaterialInProject",
+        "updateMaterialUse"
+      ],
+      "assertions": [
+        "Repeated adoption returns the same use; updates create a new target.",
+        "Original and updated targets retain exact independent version bytes."
+      ]
+    },
+    {
+      "tables": [
+        "materialEvents"
+      ],
+      "file": "tests/materialLibrary.test.ts",
+      "case": "requires archive and protects derivation provenance until the derived item is removed",
+      "commands": [
+        "promoteMaterial",
+        "setMaterialArchived",
+        "deleteMaterial"
+      ],
+      "assertions": [
+        "Derivation prevents unsafe deletion.",
+        "Material history events remain after material/version cleanup."
+      ]
+    },
+    {
+      "tables": [
+        "audioChapters",
+        "audioTracks"
+      ],
+      "file": "tests/agentBusiness.test.ts",
+      "case": "records actual %s project seeds and replays the exact saved receipt",
+      "commands": [
+        "project_create"
+      ],
+      "assertions": [
+        "Audio project receipt references the actual initial chapter/track rows.",
+        "Replay preserves the saved result and does not duplicate seeded domain rows."
+      ]
+    },
+    {
+      "tables": [
+        "audioSegments"
+      ],
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "case": "persists a receipt with real script changes and replays it without a second write",
+      "commands": [
+        "audio_create (segment)"
+      ],
+      "assertions": [
+        "Saved segments match the returned receipt.",
+        "Replay does not create another script or ledger result."
+      ]
+    },
+    {
+      "tables": [
+        "audioSpeakers"
+      ],
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "case": "creates and clears a reusable MiMo speaker profile through the tool ledger",
+      "commands": [
+        "audio_create (speaker)",
+        "audio_update (speaker)"
+      ],
+      "assertions": [
+        "Saved reusable speaker fields agree with actual tool output.",
+        "Clearing the profile removes its optional metadata."
+      ]
+    },
+    {
+      "tables": [
+        "audioTakes"
+      ],
+      "file": "tests/audioFoundation.test.ts",
+      "case": "round-trips all sources, codec MIME, selected references, provenance and dormant jobs",
+      "commands": [
+        "addAudioTake",
+        "patchAudioSegment",
+        "exportProjectZip",
+        "importProjectZip"
+      ],
+      "assertions": [
+        "Independent source rows, selected-take IDs, exact codec MIME and provenance remap correctly.",
+        "Imported jobs retain dormant state and cannot be paid-claimed."
+      ]
+    },
+    {
+      "tables": [
+        "audioClips"
+      ],
+      "file": "tests/audioEngineCommands.test.ts",
+      "case": "splits source offsets atomically, then undoes/redoes without touching original media",
+      "commands": [
+        "AudioClipHistory.split",
+        "AudioClipHistory.undo",
+        "AudioClipHistory.redo"
+      ],
+      "assertions": [
+        "Trim/source offsets and fades persist exactly.",
+        "Undo/redo restore clip count while preserving original take and media."
+      ]
+    },
+    {
+      "tables": [
+        "audioExports"
+      ],
+      "file": "tests/sharedAudioExportOwner.test.ts",
+      "case": "retains the actual %s mix, its source fingerprint and exact WAV bytes",
+      "commands": [
+        "exportAudioMix",
+        "getAudioProjectSnapshot"
+      ],
+      "assertions": [
+        "Chapter/project output scope, filename and current source fingerprint persist.",
+        "Verified retained WAV bytes equal actual PCM output; late association failure rolls back media and export together."
+      ]
+    },
+    {
+      "tables": [
+        "musicDrafts"
+      ],
+      "file": "tests/audioMusicAgentTools.test.ts",
+      "case": "saves a real music draft without generating work and protects engine scope",
+      "commands": [
+        "music_save_draft"
+      ],
+      "assertions": [
+        "Actual saved draft settings and engine scope match the tool result.",
+        "Draft creation does not invent a generated work."
+      ]
+    },
+    {
+      "tables": [
+        "musicWorks"
+      ],
+      "file": "tests/audioFoundation.test.ts",
+      "case": "round-trips music and copies it into audio without sharing mutable media",
+      "commands": [
+        "addMusicWork",
+        "adoptMusicWorkAsAudioTake",
+        "exportProjectZip",
+        "importProjectZip"
+      ],
+      "assertions": [
+        "Imported work retains provenance under fresh ownership.",
+        "Independent audio/media copy survives deleting the original music project."
+      ]
+    },
+    {
+      "tables": [
+        "audioGenerationJobs"
+      ],
+      "file": "tests/audioGenerationRuntime.test.ts",
+      "case": "claims one paid speech request across concurrent submits and retains a usable take",
+      "commands": [
+        "prepareAudioGeneration",
+        "submitAudioGeneration"
+      ],
+      "assertions": [
+        "Two concurrent submits resolve to the same saved job while the real transport boundary is called only once.",
+        "Exactly one take and original media persist; the stored job excludes credentials."
+      ]
+    },
+    {
+      "tables": [
+        "audioGenerationBatches",
+        "audioGenerationBatchItems"
+      ],
+      "file": "tests/audioGenerationBatch.test.ts",
+      "case": "confirms only a reviewed subset with CAS, and rejects double-confirm and draft dispatch",
+      "commands": [
+        "prepareAudioGenerationBatch",
+        "confirmAudioGenerationBatch",
+        "startAudioGenerationBatch"
+      ],
+      "assertions": [
+        "Only one concurrent confirmation succeeds.",
+        "Actual selected items dispatch and persist saved/cancelled counts; unconfirmed draft never dispatches."
+      ]
+    },
+    {
+      "tables": [
+        "audioArrangementProposals"
+      ],
+      "file": "tests/audioArrangementAgent.test.ts",
+      "case": "%s performs separately approved selection and arrangement with actual receipts",
+      "commands": [
+        "audio_select_takes",
+        "audio_arrange_selected",
+        "audio_read_arrangement"
+      ],
+      "assertions": [
+        "Selection and placement each require real approval.",
+        "Saved proposal, selected rows, timeline additions and completed receipts agree."
+      ]
+    },
+    {
+      "tables": [
+        "productionProposals"
+      ],
+      "file": "tests/sharedNativeUiCommands.test.ts",
+      "case": "restores shot and proposal when the final applied proposal persistence fails",
+      "commands": [
+        "createProductionProposal",
+        "applyProductionProposal"
+      ],
+      "assertions": [
+        "Late failure sees actual changed shot inside the UoW.",
+        "Reopen restores the original shot and pending proposal atomically."
+      ]
+    }
+  ]
+}

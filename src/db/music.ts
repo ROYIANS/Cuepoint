@@ -1,4 +1,5 @@
-import {db} from "./database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
 import type {AudioInput} from "@/domain/audio";
 import {MUSIC_DURATION_LIMITS, type MusicDraft, type MusicSettings, type MusicWork} from "@/domain/music";
 import type {MediaRecord} from "@/domain/types";
@@ -38,70 +39,78 @@ export function validateMusicSettings(settings: MusicSettings) {
     validateStoredMusicSettings(settings, false);
 }
 
-async function validateMusicDraft(row: MusicDraft) {
-    await assertAudioProject(row.projectId, "music");
+async function validateMusicDraft(row: MusicDraft, store?: ProductStore) {
+    const db = store ?? productDb;
+    await assertAudioProject(row.projectId, "music", db);
     validateMusicSettings(row.settings);
 }
 
 /** Package history keeps fractional parameters readable for an explicit draft repair. */
-export async function validateLegacyMusicDraft(row: MusicDraft) {
-    await assertAudioProject(row.projectId, "music");
+export async function validateLegacyMusicDraft(row: MusicDraft, store?: ProductStore) {
+    const db = store ?? productDb;
+    await assertAudioProject(row.projectId, "music", db);
     validateStoredMusicSettings(row.settings, true);
 }
 
-async function validateStoredMusicWork(row: MusicWork, allowLegacyFraction: boolean) {
-    await assertAudioProject(row.projectId, "music");
-    await assertOwnedAudioMedia(row.projectId, row.mediaId);
+async function validateStoredMusicWork(row: MusicWork, allowLegacyFraction: boolean, store?: ProductStore) {
+    const db = store ?? productDb;
+    await assertAudioProject(row.projectId, "music", db);
+    await assertOwnedAudioMedia(row.projectId, row.mediaId, db);
     validateAudioMetadata(row);
     if (row.settings) validateStoredMusicSettings(row.settings, allowLegacyFraction);
     if (typeof row.title !== "string" || typeof row.notes !== "string" || typeof row.lyrics !== "string" || typeof row.favorite !== "boolean") throw new Error("音乐作品信息无效");
 }
 
-async function validateMusicWork(row: MusicWork) {
-    await validateStoredMusicWork(row, false);
+async function validateMusicWork(row: MusicWork, store?: ProductStore) {
+    const db = store ?? productDb;
+    await validateStoredMusicWork(row, false, db);
 }
 
 /** Only imported history or metadata edits of existing immutable settings use this path. */
-export async function validateLegacyMusicWork(row: MusicWork) {
-    await validateStoredMusicWork(row, true);
+export async function validateLegacyMusicWork(row: MusicWork, store?: ProductStore) {
+    const db = store ?? productDb;
+    await validateStoredMusicWork(row, true, db);
 }
 
-export async function addMusicDraft(projectId: string, input: AudioInput<MusicDraft>): Promise<MusicDraft> {
-    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
+export async function addMusicDraft(projectId: string, input: AudioInput<MusicDraft>, store?: ProductStore): Promise<MusicDraft> {
+    const db = store ?? productDb;
+    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async (db) => {
         const row = newAudioRow<MusicDraft>(projectId, "mdr", input);
-        await validateMusicDraft(row);
+        await validateMusicDraft(row, db);
         await db.musicDrafts.add(row);
-        await touchAudioProject(projectId);
+        await touchAudioProject(projectId, db);
         return row;
     });
 }
 
-export const patchMusicDraft = (projectId: string, id: string, revision: number, patch: Partial<AudioInput<MusicDraft>>) => patchAudioRow(db.musicDrafts, projectId, id, revision, patch, ["settings"], validateMusicDraft);
+export const patchMusicDraft = (projectId: string, id: string, revision: number, patch: Partial<AudioInput<MusicDraft>>, store?: ProductStore) => (db => patchAudioRow(db.musicDrafts, projectId, id, revision, patch, ["settings"], validateMusicDraft, db))(store ?? productDb);
 
-export async function addMusicWork(projectId: string, input: AudioInput<MusicWork>, media?: MediaRecord): Promise<MusicWork> {
-    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
-        await assertAudioProject(projectId, "music");
+export async function addMusicWork(projectId: string, input: AudioInput<MusicWork>, media?: MediaRecord, store?: ProductStore): Promise<MusicWork> {
+    const db = store ?? productDb;
+    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async (db) => {
+        await assertAudioProject(projectId, "music", db);
         if (media) {
             if (media.projectId !== projectId) throw new Error("文件不属于当前项目");
             await db.media.add(media);
         }
         const row = newAudioRow<MusicWork>(projectId, "mwk", input);
-        await validateMusicWork(row);
+        await validateMusicWork(row, db);
         await db.musicWorks.add(row);
-        await touchAudioProject(projectId);
+        await touchAudioProject(projectId, db);
         return row;
     });
 }
 
-export const patchMusicWork = (projectId: string, id: string, revision: number, patch: Partial<Pick<MusicWork, "title" | "notes" | "favorite">>) => patchAudioRow(db.musicWorks, projectId, id, revision, patch, ["title", "notes", "favorite"], validateLegacyMusicWork);
+export const patchMusicWork = (projectId: string, id: string, revision: number, patch: Partial<Pick<MusicWork, "title" | "notes" | "favorite">>, store?: ProductStore) => (db => patchAudioRow(db.musicWorks, projectId, id, revision, patch, ["title", "notes", "favorite"], validateLegacyMusicWork, db))(store ?? productDb);
 
 
-export async function deleteMusicWork(projectId: string, id: string, revision: number) {
-    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
-        await assertAudioProject(projectId, "music");
+export async function deleteMusicWork(projectId: string, id: string, revision: number, store?: ProductStore) {
+    const db = store ?? productDb;
+    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async (db) => {
+        await assertAudioProject(projectId, "music", db);
         assertAudioRevision(await ownedAudioRow(db.musicWorks, projectId, id), revision);
-        await detachAudioGenerationResult(projectId, "workId", id);
+        await detachAudioGenerationResult(projectId, "workId", id, db);
         await db.musicWorks.delete(id);
-        await touchAudioProject(projectId);
+        await touchAudioProject(projectId, db);
     });
 }

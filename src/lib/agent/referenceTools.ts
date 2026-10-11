@@ -1,7 +1,8 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {defineTool} from './toolDefinition';
 import {z} from "zod";
 import {discoverProjectImages, imageDigest, imageDiscoverySchema, resolveDiscoveredImage} from "./imageDiscovery";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {getReferenceSource, readProjectReference, searchProjectReferences} from "@/db/references";
 import type {AgentToolContext} from "./tools";
 import type {AgentReferenceInput} from "@/domain/referenceInput";
@@ -22,9 +23,10 @@ const image = z.union([z.object({mediaId: z.string().min(1).max(200)}).strict(),
     candidateId: z.string().min(1).max(200)
 }).strict()]);
 
-async function scope(context: AgentToolContext) {
+async function scope(context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
-    const id = await frozenProjectScope(context);
+    const id = await frozenProjectScope(context, db);
     if (!id) throw new Error("参考资料工具需要绑定项目");
     return id;
 }
@@ -69,8 +71,9 @@ export const REFERENCE_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(raw, context) {
-            const projectId = await scope(context), args = search.parse(raw);
-            const found = await searchProjectReferences(projectId, args.query, args.limit ?? 10);
+    const db = context.store ?? productDb;
+            const projectId = await scope(context, db), args = search.parse(raw);
+            const found = await searchProjectReferences(projectId, args.query, args.limit ?? 10, db);
             const results = found.map(({reference, excerpt, chunkIndex}) => ({
                 referenceId: reference.id,
                 revision: reference.revision,
@@ -107,12 +110,13 @@ export const REFERENCE_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(raw, context) {
-            const projectId = await scope(context), args = read.parse(raw);
+    const db = context.store ?? productDb;
+            const projectId = await scope(context, db), args = read.parse(raw);
             const result = await readProjectReference(projectId, args, {
                 start: args.start,
                 limit: args.limit ?? 8,
                 maxChars: 12000
-            });
+            }, db);
             if (result.reference.kind === "image") throw new Error(`图片需要用 read_project_image 查看，mediaId: ${result.reference.mediaId}`);
             const attachment = {referenceId: args.referenceId, revision: args.revision};
             const referenceInput: AgentReferenceInput = {
@@ -166,14 +170,15 @@ export const REFERENCE_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(raw, context) {
+    const db = context.store ?? productDb;
             context.signal.throwIfAborted();
-            const args = image.parse(raw), bound = await frozenProjectScope(context),
+            const args = image.parse(raw), bound = await frozenProjectScope(context, db),
                 run = await db.agentRuns.get(context.runId);
-            const discovered = 'discoveryCallId' in args ? await resolveDiscoveredImage(context.runId, args.discoveryCallId, args.candidateId) : undefined;
+            const discovered = 'discoveryCallId' in args ? await resolveDiscoveredImage(context.runId, args.discoveryCallId, args.candidateId, db) : undefined;
             const projectId = discovered?.candidate.projectId ?? bound;
             if (!projectId) throw new Error("未绑定对话请先用 discover_project_images 查找，再用 discoveryCallId 和 candidateId 读取");
             if (!run) throw new Error("执行不存在");
-            await assertImageQueueCapacity(context);
+            await assertImageQueueCapacity(context, undefined, db);
             const media = discovered?.media ?? await db.media.get('mediaId' in args ? args.mediaId : '');
             if (!media || media.projectId !== projectId) throw new Error("图片不存在或不属于当前项目");
             const sources = (await db.projectReferences.where("mediaId").equals(media.id).toArray()).filter((row) => row.projectId === projectId);
@@ -184,13 +189,13 @@ export const REFERENCE_TOOLS = [
                 referenceId: source.id,
                 revision: source.revision
             } : undefined);
-            if (attachment) await getReferenceSource(projectId, attachment);
+            if (attachment) await getReferenceSource(projectId, attachment, db);
             const referenceInput: AgentReferenceInput = {
                 projectId,
                 references: attachment ? [attachment] : [],
                 images: [imageReference(media, attachment)]
             };
-            await validateReferenceInput(referenceInput, projectId);
+            await validateReferenceInput(referenceInput, projectId, undefined, db);
             if (discovered && 'discoveryCallId' in args) {
                 referenceInput.discovery = {
                     discoveryCallId: args.discoveryCallId,
@@ -198,7 +203,7 @@ export const REFERENCE_TOOLS = [
                     readCallId: context.callId,
                     mediaDigest: await imageDigest(media)
                 };
-                await resolveDiscoveredImage(context.runId, args.discoveryCallId, args.candidateId);
+                await resolveDiscoveredImage(context.runId, args.discoveryCallId, args.candidateId, db);
             }
             context.signal.throwIfAborted();
             return {

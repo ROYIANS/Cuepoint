@@ -1,5 +1,9 @@
-import Dexie from "dexie";
-import {db} from "@/db/database";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
+import {StorageError} from "@/lib/storage/errors";
+import {binaryAvailability} from "@/lib/storage/binary";
+import {isBinaryReference} from "@/lib/storage/codec";
+import {db as productDb} from "@/db/database";
 import {validateAudioClip} from "@/db/audio";
 import {validateAudioMetadata} from "@/db/audioShared";
 import type {AudioGenerationJob, AudioGenerationResult} from "@/domain/audioGeneration";
@@ -53,7 +57,8 @@ export interface AudioOutputEvidence {
 /** Local evidence only. Callers supply a current job inside a consistent read transaction. */
 export async function inspectAudioGenerationOutputs(job: AudioGenerationJob, options: {
     resultKey?: string; offset?: number; limit?: number
-} = {}): Promise<AudioOutputEvidence> {
+} = {}, store?: ProductStore): Promise<AudioOutputEvidence> {
+    const db = store ?? productDb;
     const project = await db.projects.get(job.projectId);
     const projectMatches = !!project && getProjectKind(project) === (job.input.kind === "speech" ? "audio" : "music");
     const results: AudioOutputEvidenceItem[] = [];
@@ -93,10 +98,12 @@ export async function inspectAudioGenerationOutputs(job: AudioGenerationJob, opt
             continue;
         }
         if (media.projectId !== job.projectId) continue;
-        if (!(media.blob instanceof Blob) || media.blob.size === 0 || !media.mimeType.toLowerCase().startsWith("audio/")) {
+        if (!(media.blob instanceof Blob) && !isBinaryReference(media.blob) || binaryByteLength(media.blob) === 0 || !media.mimeType.toLowerCase().startsWith("audio/")) {
             item.availability = "invalid-media";
             continue;
         }
+        const availability=await db.waitFor(binaryAvailability(media.blob));
+        if (availability !== "ready") {item.availability=availability === "missing" ? "missing-media" : "invalid-media";continue;}
         try {
             validateAudioMetadata(output);
         } catch {
@@ -106,7 +113,7 @@ export async function inspectAudioGenerationOutputs(job: AudioGenerationJob, opt
         item.available = true;
         item.availability = "available";
         item.media = {
-            size: media.blob.size,
+            size: binaryByteLength(media.blob),
             mimeType: media.mimeType,
             durationSec: output.durationSec,
             sampleRate: output.sampleRate,
@@ -122,11 +129,11 @@ export async function inspectAudioGenerationOutputs(job: AudioGenerationJob, opt
         for (const clip of clips) {
             if (clip.projectId !== job.projectId || (await db.audioChapters.get(clip.chapterId))?.projectId !== job.projectId) continue;
             try {
-                await validateAudioClip(clip);
+                await validateAudioClip(clip, db);
             } catch (error) {
                 // Invalid references/trim ranges are unavailable placements; failed reads
                 // cannot be silently reported as if a consistent inventory was inspected.
-                if (error instanceof Dexie.DexieError || error instanceof DOMException) throw error;
+                if (error instanceof StorageError || error instanceof DOMException) throw error;
                 continue;
             }
             placementState.push({clip, track: await db.audioTracks.get(clip.trackId)});

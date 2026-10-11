@@ -1,16 +1,16 @@
 import {useEffect, useRef, useState} from "react";
 import {InputNumber, Switch} from "antd";
 import {ArrowLeft, RotateCcw} from "lucide-react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {toast} from "sonner";
-import {db} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
 import {GENERAL_AGENT_ID} from "@/domain/agent";
 import type {ContextPolicy} from "@/domain/context";
 import {normalizeContextPolicy} from "@/lib/agent/contextPolicy";
 import {resetThreadContextPolicy, saveContextPolicyAsDefault, updateContextPolicy} from "@/db/contextSettings";
 import "./contextParameters.css";
 
-async function readPolicySource(threadId: string | undefined, scopeKey: string) {
+async function readPolicySource(threadId: string | undefined, scopeKey: string, db:ProductStore) {
     try {
         return {
             scopeKey,
@@ -31,7 +31,7 @@ function policyReadStatus(state: Awaited<ReturnType<typeof readPolicySource>> | 
 
 export function ContextParameters({threadId, onBack}: { threadId?: string; onBack: () => void }) {
     const scopeKey = threadId ?? GENERAL_AGENT_ID;
-    const loaded = useLiveQuery(() => readPolicySource(threadId, scopeKey), [scopeKey, threadId]);
+    const loaded = useProductQuery((db) => readPolicySource(threadId, scopeKey, db), [scopeKey, threadId]);
     const state = loaded?.scopeKey === scopeKey ? loaded : undefined;
     const policy = normalizeContextPolicy(state?.source?.contextPolicy);
     const [saving, setSaving] = useState(false);

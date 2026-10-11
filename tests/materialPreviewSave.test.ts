@@ -23,6 +23,7 @@ vi.mock("react", async original => {
     };
 });
 vi.mock("@/lib/runtimeSave", async original => ({...await original<typeof import("@/lib/runtimeSave")>(), downloadBlob: host.save}));
+vi.mock("@/lib/media", async original => ({...await original<typeof import("@/lib/media")>(), useBinaryPreview: (_binary: unknown, enabled: boolean) => enabled ? {status: "ready", url: "blob:original-preview", onError: vi.fn()} : {status: "empty"}}));
 vi.mock("sonner", () => ({toast: {success: host.success, info: host.info, error: host.error, warning: host.warning}}));
 
 import {MaterialPreview} from "@/components/studio/materials/MaterialPreview";
@@ -63,7 +64,7 @@ describe("material original-file save caller", () => {
         const firstAction = action(render(file));
         click(firstAction);
         click(firstAction);
-        expect(host.save).toHaveBeenCalledExactlyOnceWith(file.blob, file.filename);
+        await vi.waitFor(() => expect(host.save).toHaveBeenCalledExactlyOnceWith(file.blob, file.filename));
         expect(action(render(file)).props).toMatchObject({disabled: true, children: "正在保存原文件…"});
         expect(host.success).not.toHaveBeenCalled();
         pending.resolve("saved");
@@ -102,7 +103,6 @@ describe("material original-file save caller", () => {
 
     it("preserves browser anchor download and does not add a download action to a collection preview", () => {
         vi.stubGlobal("window", {});
-        host.cells = ["blob:original-preview"];
         const file = payload();
         const tree = render(file);
         expect(tree.find(node => node.type === "a")?.props).toMatchObject({href: "blob:original-preview", download: file.filename, children: "下载原文件"});

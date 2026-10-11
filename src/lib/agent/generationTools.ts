@@ -5,7 +5,7 @@ import {assertProjectToolScope, frozenProjectScope} from "./projectScope";
 import {z} from "zod";
 import {getGenerationPreferenceState} from "@/db/generationPreferences";
 import {recommendGenerationSelection} from "./generationSelection";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {generationJobSummary} from "@/db/agentGeneration";
 import {
     GENERATION_PROFILES,
@@ -52,7 +52,7 @@ export const GENERATION_TOOLS = [
         highRisk: () => false,
         execute: (args, context) => {
             const parsed = batchSchema.parse(args);
-            return prepareGenerationBatch(parsed.title, parsed.candidates, context);
+            return prepareGenerationBatch(parsed.title, parsed.candidates, context, context.store);
         }
     }),
     defineTool({
@@ -65,9 +65,10 @@ export const GENERATION_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(args, context) {
-            await frozenProjectScope(context);
-            const state = await readGenerationBatch(args.batchId, context.threadId);
-            await assertProjectToolScope(context, "read_generation_batch", {projectId: state.batch.projectId}, false);
+    const db = context.store ?? productDb;
+            await frozenProjectScope(context, db);
+            const state = await readGenerationBatch(args.batchId, context.threadId, db);
+            await assertProjectToolScope(context, "read_generation_batch", {projectId: state.batch.projectId}, false, db);
             return {
                 batchId: state.batch.id,
                 title: state.batch.title,
@@ -103,15 +104,16 @@ export const GENERATION_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(args, context) {
+    const db = context.store ?? productDb;
             const {signal} = context;
-            const boundProject = await frozenProjectScope(context);
+            const boundProject = await frozenProjectScope(context, db);
             signal.throwIfAborted();
             const projectId = args.projectId ?? boundProject;
-            if (projectId) await assertProjectToolScope(context, "generation_capabilities", {projectId}, false);
+            if (projectId) await assertProjectToolScope(context, "generation_capabilities", {projectId}, false, db);
             const project = projectId && projectId !== "studio" ? await db.projects.get(projectId) : undefined;
             if (projectId && projectId !== "studio" && !project) throw new Error("项目不存在，请重新选择生成目标");
             const connectors = (await db.connectors.toArray()).filter((item) => ["apimart", "aihubmix"].includes(item.definitionId));
-            const state = await getGenerationPreferenceState();
+            const state = await getGenerationPreferenceState(db);
             const recommendations = Object.fromEntries((["image", "video"] as const).map((kind) => [kind, recommendGenerationSelection({
                 kind,
                 connectors,
@@ -142,9 +144,10 @@ export const GENERATION_TOOLS = [
         recovery: "generation",
         requiresConfirmation: true,
         highRisk: () => false,
-        prepare: (args, context) => prepareAgentGeneration(args, context),
+        prepare: (args, context) => prepareAgentGeneration(args, context, context.store),
         async execute(args, context) {
-            const job = await submitAgentGeneration(args, context);
+    const db = context.store ?? productDb;
+            const job = await submitAgentGeneration(args, context, undefined, db);
             return {
                 ...generationJobSummary(job),
                 parameters: job.parameters,
@@ -160,7 +163,8 @@ export const GENERATION_TOOLS = [
         recovery: "repeatable",
         highRisk: () => false,
         async execute(args, context) {
-            return generationJobSummary(await monitorAgentGeneration(args.jobId, context));
+    const db = context.store ?? productDb;
+            return generationJobSummary(await monitorAgentGeneration(args.jobId, context, undefined, db));
         }
     }),
     defineTool(generationJobSpec, {
@@ -170,8 +174,8 @@ export const GENERATION_TOOLS = [
         effect: "write",
         atomic: true,
         highRisk: () => false,
-        prepare: (args, context) => prepareGenerationApply(args.jobId, context),
-        execute: (args, context) => applyAgentGeneration(args.jobId, context)
+        prepare: (args, context) => prepareGenerationApply(args.jobId, context, context.store),
+        execute: (args, context) => applyAgentGeneration(args.jobId, context, context.store)
     }),
     defineTool({schema: z.object({}).strict(), json: {type: "object", properties: {}, additionalProperties: false}}, {
         name: "list_generation_jobs",
@@ -180,8 +184,9 @@ export const GENERATION_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(_args, context) {
+    const db = context.store ?? productDb;
             context.signal.throwIfAborted();
-            await frozenProjectScope(context);
+            await frozenProjectScope(context, db);
             return (await db.agentGenerationJobs.where("threadId").equals(context.threadId).toArray()).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)).slice(0, 30).map(generationJobSummary);
         }
     }),

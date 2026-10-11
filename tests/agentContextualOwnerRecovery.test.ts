@@ -158,7 +158,7 @@ describe("sound editing defaults and effect certainty", () => {
     it("preserves typed causes across atomic rollback and never classifies arbitrary prose or unknown effects as safe", async () => {
         const project = await createProject("当前项目"), run = await begin(project.id), pending = await prepare(run, "character_create", {});
         const cause = new ToolRecoveryError("STALE_TOOL_PREVIEW", "目标已变化");
-        const error = await executeAtomicTool(pending.ctx, async () => {await addCharacter(project.id); throw cause;}).catch(failure => failure);
+        const error = await executeAtomicTool(pending.ctx, async tx => {await addCharacter(project.id,tx); throw cause;}).catch(failure => failure);
         expect(error).toBeInstanceOf(AtomicToolRollbackError);
         expect(error.cause).toBe(cause);
         expect(toolFailureResult(error, "rolled_back")).toMatchObject({code: "STALE_TOOL_PREVIEW", executed: false, effectCertainty: "rolled_back"});

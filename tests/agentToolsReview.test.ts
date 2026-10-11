@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun, checkpointAgentRun, interruptThreadRuns } from "@/db/agentRuns";
@@ -73,7 +74,7 @@ describe("independent tool lifecycle review regressions", () => {
   it("keeps saved approvals actionable after parking fails without concealing the failure", async () => {
     const run = await begin();
     const tool = writeTool();
-    const messageWrite = vi.spyOn(db.chatMessages, "update").mockRejectedValueOnce(new Error("temporary storage failure"));
+    const messageWrite = failStoreTableOnce(db, "chatMessages", "update", new Error("temporary storage failure"));
     try {
       // Empty content avoids a stream checkpoint, so the failing write belongs
       // to pauseForApproval after the immutable pending call has been saved.

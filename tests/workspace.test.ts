@@ -1,3 +1,4 @@
+import {installStoreHook} from "./helpers/storeBackendFaults";
 import {describe, expect, it, vi} from "vitest";
 import {db} from "@/db/database";
 import {createProject} from "@/db/projects";
@@ -213,11 +214,11 @@ describe("existing media importer integration", () => {
         const before = await db.projects.get(project.id);
         const failure = new Error("project touch failed");
         const fail = () => {throw failure;};
-        db.projects.hook("updating", fail);
+        const storeHook_projects_fail=await installStoreHook(db, "projects", "updating", fail);
         try {
             await expect(uploadMediaFile(project.id, new File(["source"], "source.png", {type: "image/png"}))).rejects.toBe(failure);
         } finally {
-            db.projects.hook("updating").unsubscribe(fail);
+            storeHook_projects_fail.mockRestore();
         }
         expect(await db.media.count()).toBe(0);
         expect(await db.projects.get(project.id)).toEqual(before);

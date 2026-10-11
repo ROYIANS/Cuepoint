@@ -4,6 +4,8 @@ import {REFERENCE_LIMITS as LIMITS} from "@/domain/references";
 import type {MediaRecord} from "@/domain/types";
 import {createId} from "@/lib/ids";
 import {assertReferenceSignature, identifyReference} from "./parse";
+import {binaryByteLength} from "@/domain/binary";
+import {withBinaryReadLease} from "@/lib/storage/binary";
 
 const integer = z.number().int().nonnegative();
 const coverage = z.object({
@@ -81,10 +83,10 @@ export async function remapReferencePackage(input: ReturnType<typeof parseRefere
         const mediaId = mediaMap.get(row.mediaId);
         if (row.status !== "unavailable") {
             const record = media.find((entry) => entry.id === mediaId);
-            if (!record || record.blob.size !== row.size) throw new Error("参考资料缺少原始文件或大小不符");
+            if (!record || binaryByteLength(record.blob) !== row.size) throw new Error("参考资料缺少原始文件或大小不符");
             const format = identifyReference({name: row.filename, size: row.size});
             if (format.kind !== row.kind || format.mimeType !== row.mimeType) throw new Error("参考资料文件类型不一致");
-            const bytes = await record.blob.arrayBuffer();
+            const bytes = await withBinaryReadLease(record.blob, async lease => (await lease.readBlob()).arrayBuffer());
             assertReferenceSignature(new Uint8Array(bytes), row.kind, row.mimeType);
             const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map((byte) => byte.toString(16).padStart(2, "0")).join("");
             if (digest !== row.digest) throw new Error("参考资料原始文件校验失败");

@@ -1,5 +1,7 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {AUDIO_TABLES} from "./audioShared";
-import {db} from "./database";
+import {db as productDb} from "./database";
+const db = productDb;
 import {nowIso} from "@/lib/ids";
 import {getProjectKind, type Id, isStudioLibrary, normalizeEpisodeStory, type Project, type Shot} from "@/domain/types";
 
@@ -24,12 +26,14 @@ export function touch<T extends { updatedAt: string }>(record: T): T {
     return {...record, updatedAt: nowIso()};
 }
 
-export async function touchProject(projectId: Id): Promise<void> {
+export async function touchProject(projectId: Id, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (isStudioLibrary(projectId)) return;
     await db.projects.update(projectId, {updatedAt: nowIso()});
 }
 
-export async function assertProjectOwner(projectId: Id): Promise<void> {
+export async function assertProjectOwner(projectId: Id, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (isStudioLibrary(projectId)) return;
     if (!await db.projects.get(projectId)) throw new Error("项目不存在，无法保存");
 }
@@ -46,8 +50,9 @@ export function assertCompleteOrder(actualIds: Id[], orderedIds: Id[]): void {
 
 export async function assertAssetReferences(
     projectId: Id,
-    fields: { characterIds?: Id[]; sceneId?: Id; propIds?: Id[]; styleId?: Id | null },
+    fields: { characterIds?: Id[]; sceneId?: Id; propIds?: Id[]; styleId?: Id | null }, store?: ProductStore
 ): Promise<void> {
+    const db = store ?? productDb;
     for (const [ids, table, label] of [
         [fields.characterIds, db.characters, "角色"],
         [fields.propIds, db.props, "道具"],
@@ -62,15 +67,17 @@ export async function assertAssetReferences(
     if (fields.styleId !== undefined && fields.styleId !== null && (await db.styles.get(fields.styleId))?.projectId !== projectId) throw new Error("风格不属于当前项目");
 }
 
-export async function assertShotReferences(shot: Shot): Promise<void> {
-    await assertVideoProject(shot.projectId);
+export async function assertShotReferences(shot: Shot, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await assertVideoProject(shot.projectId, db);
     const episode = await db.episodes.get(shot.episodeId);
     if (!episode || episode.projectId !== shot.projectId) throw new Error("镜头与集不属于同一项目");
     if (shot.beatId !== undefined && !normalizeEpisodeStory(episode.story).beats.some((beat) => beat.id === shot.beatId)) throw new Error("场次不属于当前集");
-    await assertAssetReferences(shot.projectId, shot);
+    await assertAssetReferences(shot.projectId, shot, db);
 }
 
-export async function assertVideoProject(projectId: Id): Promise<Project> {
+export async function assertVideoProject(projectId: Id, store?: ProductStore): Promise<Project> {
+    const db = store ?? productDb;
     const project = await db.projects.get(projectId);
     if (!project) throw new Error("项目不存在");
     if (getProjectKind(project) !== "video") throw new Error("此操作仅适用于视频项目");

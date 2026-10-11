@@ -1,3 +1,5 @@
+import {readBinaryBlob} from "@/lib/storage/binary";
+import {interceptStoreTable} from "./helpers/storeFaults";
 import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { taskGenerationSource, saveTaskRecord, validateTaskSources } from '@/db/agentTaskRecords';
@@ -77,12 +79,11 @@ describe('batch fault boundaries', () => {
     const mock = apimartMock(index => new Promise(resolve => {
       releases.push(() => resolve(index === 1 ? new Response('gateway unavailable', { status: 503 }) : Response.json({ code: 200, data: [{ task_id: 'still-in-flight' }] })));
     }));
-    const putBatch = db.agentGenerationBatches.put.bind(db.agentGenerationBatches);
+
     let pauseFailed = false;
-    const batches = vi.spyOn(db.agentGenerationBatches, 'put').mockImplementation(batch => {
+    const batches = interceptStoreTable(db, "agentGenerationBatches", 'put', async (_tx,args,next)=> {const [batch]=args as Parameters<typeof db.agentGenerationBatches.put>;
       if (batch.status === 'paused') { pauseFailed = true; return Promise.reject(new Error('pause disk failure')); }
-      return putBatch(batch);
-    });
+      return next(); });
     const running = startGenerationBatch(f.id, f.thread.id, { locks: f.locks, fetchImpl: mock.fetchImpl, pollIntervalMs: 0 }).catch(() => undefined);
     try {
       await vi.waitFor(() => expect(releases).toHaveLength(2));
@@ -99,16 +100,14 @@ describe('batch fault boundaries', () => {
 
   it('stops new paid dispatch even when both acceptance and pause persistence fail', async () => {
     const f = await fixture(); await confirm(f);
-    const putJob = db.agentGenerationJobs.put.bind(db.agentGenerationJobs);
-    const putBatch = db.agentGenerationBatches.put.bind(db.agentGenerationBatches);
-    const jobs = vi.spyOn(db.agentGenerationJobs, 'put').mockImplementation((job) => {
+
+
+    const jobs = interceptStoreTable(db, "agentGenerationJobs", 'put', async (_tx,args,next)=> {const [job]=args as Parameters<typeof db.agentGenerationJobs.put>;
       if (['submitted', 'unknown'].includes(job.status)) return Promise.reject(new Error('acceptance storage unavailable'));
-      return putJob(job);
-    });
-    const batches = vi.spyOn(db.agentGenerationBatches, 'put').mockImplementation((batch) => {
+      return next(); });
+    const batches = interceptStoreTable(db, "agentGenerationBatches", 'put', async (_tx,args,next)=> {const [batch]=args as Parameters<typeof db.agentGenerationBatches.put>;
       if (batch.status === 'paused') return Promise.reject(new Error('pause storage unavailable'));
-      return putBatch(batch);
-    });
+      return next(); });
     const mock = apimartMock();
     try {
       await run(f, mock.fetchImpl).catch(() => undefined);
@@ -165,7 +164,7 @@ describe('batch fault boundaries', () => {
     expect(posts).toBe(2); expect(state.jobs.map(job => ({ status: job.status, error: job.error, kind: job.result?.kind }))).toEqual([{ status: 'downloaded', error: undefined, kind: 'video' }, { status: 'downloaded', error: undefined, kind: 'video' }]);
     for (const job of state.jobs) {
       const media = (await db.media.get(job.result!.mediaId))!;
-      expect(media.mimeType).toBe('video/mp4'); expect(new Uint8Array(await media.blob.arrayBuffer())).toEqual(mp4);
+      expect(media.mimeType).toBe('video/mp4'); expect(new Uint8Array(await (await readBinaryBlob(media.blob)).arrayBuffer())).toEqual(mp4);
     }
     await selectBatchCandidate(f.id, f.thread.id, state.items[0].id);
     expect((await applyBatchSelections(f.id, f.thread.id))[0].applied).toBe(true);

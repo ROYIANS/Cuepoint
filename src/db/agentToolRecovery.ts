@@ -1,4 +1,5 @@
-import {db} from "./database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
 import type {AgentToolCall} from "@/domain/agent";
 import {nowIso} from "@/lib/ids";
 
@@ -12,9 +13,9 @@ export function isUnknownBatchPreparation(call: AgentToolCall): boolean {
 /** Reconcile old misclassified preflight failures without executing tools or HTTP.
  * Caller holds the thread lock. Inconsistent evidence remains unknown.
  */
-export async function recoverBatchPreparationCalls(runId: string): Promise<void> {
-    await db.transaction("rw", db.agentRuns, db.agentToolCalls, db.agentGenerationBatches,
-        db.agentGenerationBatchItems, db.agentGenerationJobs, async () => {
+export async function recoverBatchPreparationCalls(runId: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.agentRuns, db.agentToolCalls, db.agentGenerationBatches, db.agentGenerationBatchItems, db.agentGenerationJobs].flat(), async (db) => {
             const run = await db.agentRuns.get(runId);
             if (!run || !["running", "interrupted", "failed", "waiting_approval"].includes(run.status)) return;
             const calls = await db.agentToolCalls.where("runId").equals(runId).filter(isUnknownBatchPreparation).toArray();
@@ -66,8 +67,9 @@ export function isLegacyAtomicPlanCall(call: AgentToolCall): boolean {
         call.result === undefined && ["pending", "approved", "running", "unknown"].includes(call.status);
 }
 
-export async function upgradeLegacyPlanCalls(runId: string): Promise<void> {
-    await db.transaction("rw", db.agentToolCalls, async () => {
+export async function upgradeLegacyPlanCalls(runId: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.agentToolCalls].flat(), async (db) => {
         const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
         for (const call of calls) {
             if (!isLegacyAtomicPlanCall(call)) continue;
@@ -84,7 +86,8 @@ export async function upgradeLegacyPlanCalls(runId: string): Promise<void> {
 }
 
 /** Caller holds the thread Web Lock and includes generation jobs in its transaction. */
-export async function interruptedToolState(call: AgentToolCall): Promise<Pick<AgentToolCall, "status" | "error" | "updatedAt">> {
+export async function interruptedToolState(call: AgentToolCall, store?: ProductStore): Promise<Pick<AgentToolCall, "status" | "error" | "updatedAt">> {
+    const db = store ?? productDb;
     let resumable = Boolean(call.atomic) || call.recovery === "repeatable";
     if (call.recovery === "generation") {
         const job = await db.agentGenerationJobs.where("callId").equals(call.id).first();

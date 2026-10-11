@@ -45,7 +45,7 @@ export async function checkTavilyNative(evidence:Evidence,endpoint:string) {
         },value=>value);
         assert(stale,'配置门检查失败');
     } finally {
-        await db.transaction('rw',db.searchConnections,async()=>{
+        await db.transaction('rw',[db.searchConnections],async(db)=>{
             const current=await db.searchConnections.get('tavily');
             assert(current?.revision===revision,'探针配置被更改，不删除其他 owner');
             await db.searchConnections.delete('tavily');

@@ -25,9 +25,10 @@ vi.mock("react", async original => {
         useMemo: (compute: () => unknown) => compute(), useCallback: (callback: unknown) => callback,
     };
 });
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: () => {
-    const host = runtime.active!; return host.results[host.queryIndex++];
-}}));
+vi.mock("@/lib/storage/hooks", () => {
+    const read = () => {const host = runtime.active!; return host.results[host.queryIndex++];};
+    return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
+});
 vi.mock("antd", () => ({Switch: () => null, InputNumber: () => null}));
 vi.mock("@tanstack/react-router", () => ({Link: () => null, useBlocker: () => ({status: "idle"})}));
 vi.mock("@dnd-kit/core", () => ({DndContext: () => null, PointerSensor: {}, KeyboardSensor: {}, closestCenter: {}, useSensor: vi.fn(), useSensors: () => []}));

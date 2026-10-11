@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {registeredTools} from "./helpers/registeredTools";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -74,7 +75,7 @@ describe("one-time Agent project creation continuity", () => {
       await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetchImpl));
       const saved = (await db.agentRuns.get(run.id))!;
       expect(saved.status, saved.error).toBe("completed");
-      expect(fetchImpl).toHaveBeenCalledTimes(5);
+      expect(fetchImpl,JSON.stringify({kind,modelStep:saved.modelStep,finishingCheck:saved.finishingCheck,calls:await db.agentToolCalls.where("runId").equals(run.id).toArray()})).toHaveBeenCalledTimes(5);
       expect(saved.finalReview?.status).toBe("checked");
       expect(saved.requestMessages).toEqual(original);
       expect(saved.enabledToolNames).toEqual(run.enabledToolNames);
@@ -123,7 +124,7 @@ describe("one-time Agent project creation continuity", () => {
 
   it("rolls back project, seeds, binding and provenance when result persistence fails", async () => {
     const f = await direct();
-    vi.spyOn(db.agentToolCalls, "update").mockRejectedValueOnce(new Error("ledger failure"));
+    failStoreTableOnce(db, "agentToolCalls", "update", new Error("ledger failure"));
     await expect(f.execute()).rejects.toThrow("ledger failure");
     expect(await db.projects.count()).toBe(0); expect(await db.audioChapters.count()).toBe(0); expect(await db.audioTracks.count()).toBe(0);
     expect((await db.agentRuns.get(f.run.id))?.createdProjectBinding).toBeUndefined();

@@ -15,11 +15,296 @@ use std::{
         atomic::{AtomicBool, Ordering},
     },
 };
-use tauri::{Manager, WebviewWindow};
+use tauri::{Emitter, Manager, WebviewWindow};
 use tauri_plugin_dialog::DialogExt;
 
 const UI_BYTES: usize = 32 * 1024 * 1024;
 const MAX_READS: usize = 4;
+
+#[derive(Default)]
+pub struct ProductBridge {
+    worker: Mutex<Option<Arc<StorageWorker>>>,
+    previews: Arc<crate::product_media::MediaPreviews>,
+    media_server: Mutex<Option<crate::product_media::MediaServer>>,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub struct BinaryEnvelope {
+    version: u32,
+    session: String,
+    workspace_id: String,
+    generation: u64,
+    action: crate::product_binary::BinaryRequest,
+}
+impl BinaryEnvelope {
+    fn session(&self) -> crate::full_product_store::protocol::Session {
+        crate::full_product_store::protocol::Session {
+            version: self.version,
+            session: self.session.clone(),
+            workspace_id: self.workspace_id.clone(),
+            generation: self.generation,
+        }
+    }
+}
+fn full_product_worker(
+    window: &WebviewWindow,
+    bridge: &ProductBridge,
+    opening: bool,
+) -> Result<Arc<StorageWorker>> {
+    let mut current = bridge
+        .worker
+        .lock()
+        .map_err(|_| Error::new("worker", "Product worker lifecycle poisoned"))?;
+    if let Some(worker) = current.as_ref() {
+        return Ok(Arc::clone(worker));
+    }
+    if !opening {
+        return Err(Error::new("closed", "Full-product store is not open"));
+    }
+    let root = window
+        .app_handle()
+        .path()
+        .app_data_dir()
+        .map_err(|_| Error::new("unavailable", "Application data directory unavailable"))?;
+    fs::create_dir_all(&root)?;
+    let root = root.join("product-workspace-v1");
+    let create = match fs::symlink_metadata(&root) {
+        Ok(_) => false,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => true,
+        Err(e) => return Err(e.into()),
+    };
+    let worker = Arc::new(StorageWorker::product(root, create, Hooks::default())?);
+    *current = Some(Arc::clone(&worker));
+    Ok(worker)
+}
+fn close_product(bridge: &ProductBridge) {
+    bridge.previews.clear();
+    if let Ok(mut server) = bridge.media_server.lock() {
+        server.take();
+    }
+    if let Ok(mut slot) = bridge.worker.lock()
+        && let Some(worker) = slot.take()
+    {
+        let _ = worker.close();
+    }
+}
+#[tauri::command]
+async fn product_store_request(
+    window: WebviewWindow,
+    bridge: tauri::State<'_, Arc<ProductBridge>>,
+    request: crate::full_product_store::protocol::Request,
+) -> Result<serde_json::Value> {
+    trusted(&window)?;
+    let opening = matches!(
+        request,
+        crate::full_product_store::protocol::Request::Open(_)
+    );
+    let bridge = Arc::clone(bridge.inner());
+    if opening {
+        bridge.previews.clear();
+    }
+    let event_window = window.clone();
+    let result = tauri::async_runtime::spawn_blocking(move || {
+        let worker = full_product_worker(&window, &bridge, opening)?;
+        worker.run_product(crate::ProductJob::Store(request))
+    })
+    .await
+    .map_err(|_| Error::new("unavailable", "Product storage request interrupted"))??;
+    Ok(deliver_product_result(result, |change| {
+        event_window.emit("product-store-changed", change)
+    }))
+}
+
+// Durable storage acknowledgement is authoritative. Notification delivery may
+// fail after COMMIT (including during a status lookup) without changing it.
+fn deliver_product_result<E>(
+    result: serde_json::Value,
+    notify: impl FnOnce(serde_json::Value) -> std::result::Result<(), E>,
+) -> serde_json::Value {
+    if result["status"] == "committed" {
+        let _ = notify(serde_json::json!({"changeSequence":result["changeSequence"]}));
+    }
+    result
+}
+#[tauri::command]
+async fn product_binary_request(
+    window: WebviewWindow,
+    bridge: tauri::State<'_, Arc<ProductBridge>>,
+    request: BinaryEnvelope,
+) -> Result<serde_json::Value> {
+    trusted(&window)?;
+    let bridge = Arc::clone(bridge.inner());
+    tauri::async_runtime::spawn_blocking(move || {
+        let worker = full_product_worker(&window, &bridge, false)?;
+        worker.run_product(crate::ProductJob::Binary {
+            session: request.session(),
+            request: request.action,
+        })
+    })
+    .await
+    .map_err(|_| Error::new("unavailable", "Managed binary request interrupted"))?
+}
+#[tauri::command]
+async fn product_binary_read(
+    window: WebviewWindow,
+    bridge: tauri::State<'_, Arc<ProductBridge>>,
+    request: BinaryEnvelope,
+) -> Result<tauri::ipc::Response> {
+    if !matches!(
+        request.action,
+        crate::product_binary::BinaryRequest::ReadChunk { .. }
+    ) {
+        return Err(Error::new(
+            "invalid",
+            "Raw managed reader only accepts readChunk",
+        ));
+    }
+    let result = product_binary_request(window, bridge, request).await?;
+    let bytes = result
+        .get("bytes")
+        .and_then(serde_json::Value::as_array)
+        .ok_or_else(|| Error::new("invalid", "Invalid managed byte reply"))?
+        .iter()
+        .map(|n| {
+            n.as_u64()
+                .filter(|n| *n <= 255)
+                .map(|n| n as u8)
+                .ok_or_else(|| Error::new("invalid", "Invalid byte"))
+        })
+        .collect::<Result<Vec<_>>>()?;
+    Ok(tauri::ipc::Response::new(bytes))
+}
+#[tauri::command]
+async fn product_binary_write(
+    window: WebviewWindow,
+    bridge: tauri::State<'_, Arc<ProductBridge>>,
+    request: tauri::ipc::Request<'_>,
+) -> Result<serde_json::Value> {
+    trusted(&window)?;
+    let metadata = request
+        .headers()
+        .get("x-cuepoint-binary")
+        .and_then(|v| v.to_str().ok())
+        .ok_or_else(|| Error::new("invalid", "Missing managed byte metadata"))?;
+    if metadata.len() > 2048 {
+        return Err(Error::new(
+            "invalid",
+            "Managed byte metadata exceeds boundary",
+        ));
+    }
+    #[derive(Deserialize)]
+    #[serde(deny_unknown_fields, rename_all = "camelCase")]
+    struct Metadata {
+        version: u32,
+        session: String,
+        workspace_id: String,
+        generation: u64,
+        stage_id: String,
+        offset: u64,
+    }
+    let meta: Metadata = serde_json::from_str(metadata)?;
+    let bytes = match request.body() {
+        tauri::ipc::InvokeBody::Raw(bytes) if !bytes.is_empty() && bytes.len() <= 262144 => {
+            bytes.clone()
+        }
+        _ => {
+            return Err(Error::new(
+                "invalid",
+                "Managed byte write needs a bounded raw chunk",
+            ));
+        }
+    };
+    let session = crate::full_product_store::protocol::Session {
+        version: meta.version,
+        session: meta.session,
+        workspace_id: meta.workspace_id,
+        generation: meta.generation,
+    };
+    let bridge = Arc::clone(bridge.inner());
+    tauri::async_runtime::spawn_blocking(move || {
+        let worker = full_product_worker(&window, &bridge, false)?;
+        worker.run_product(crate::ProductJob::Binary {
+            session,
+            request: crate::product_binary::BinaryRequest::Write {
+                stage_id: meta.stage_id,
+                offset: meta.offset,
+                bytes,
+            },
+        })
+    })
+    .await
+    .map_err(|_| Error::new("unavailable", "Managed byte write interrupted"))?
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+struct MediaPreviewRequest {
+    version: u32,
+    session: String,
+    workspace_id: String,
+    generation: u64,
+    reference: crate::product_binary::ManagedBinaryRef,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+struct MediaReleaseRequest {
+    version: u32,
+    session: String,
+    workspace_id: String,
+    generation: u64,
+    preview_id: String,
+}
+#[tauri::command]
+async fn product_media_preview(
+    window: WebviewWindow,
+    bridge: tauri::State<'_, Arc<ProductBridge>>,
+    request: MediaPreviewRequest,
+) -> Result<serde_json::Value> {
+    trusted(&window)?;
+    let bridge = Arc::clone(bridge.inner());
+    tauri::async_runtime::spawn_blocking(move || {
+        let worker=full_product_worker(&window,&bridge,false)?;
+        let session=crate::full_product_store::protocol::Session {version:request.version,session:request.session,workspace_id:request.workspace_id,generation:request.generation};
+        let file=worker.playback(session.clone(),request.reference.clone())?;
+        // Opening another store session during hash verification cannot publish an old lease.
+        worker.run_product(crate::ProductJob::Validate(session.clone()))?;
+        let id=bridge.previews.insert(session, file)?;
+        let mut server=bridge.media_server.lock().map_err(|_|Error::new("worker","Media transport lifecycle poisoned"))?;
+        if server.is_none() {
+            let validator_worker=Arc::clone(&worker);
+            let validator_window=window.clone();
+            #[cfg(target_os="windows")]
+            let origin="http://tauri.localhost";
+            #[cfg(not(target_os="windows"))]
+            let origin="tauri://localhost";
+            *server=Some(crate::product_media::MediaServer::start(
+                Arc::clone(&bridge.previews),origin.into(),
+                Arc::new(move|session|{
+                    trusted(&validator_window)?;
+                    validator_worker.run_product(crate::ProductJob::Validate(session.clone()))?;
+                    Ok(())
+                }),
+            )?);
+        }
+        let url=server.as_ref().ok_or_else(||Error::new("closed","Media transport stopped"))?.url(&id)?;
+        Ok(serde_json::json!({"previewId":id,"url":url,"byteLength":request.reference.byte_length,"mimeType":request.reference.mime_type}))
+    }).await.map_err(|_| Error::new("unavailable","Media preview preparation interrupted"))?
+}
+#[tauri::command]
+async fn product_media_release(
+    window: WebviewWindow,
+    bridge: tauri::State<'_, Arc<ProductBridge>>,
+    request: MediaReleaseRequest,
+) -> Result<serde_json::Value> {
+    trusted(&window)?;
+    let session = crate::full_product_store::protocol::Session {
+        version: request.version,
+        session: request.session,
+        workspace_id: request.workspace_id,
+        generation: request.generation,
+    };
+    Ok(serde_json::json!({"released":bridge.previews.release(&session,&request.preview_id)?}))
+}
 
 #[derive(Default)]
 pub struct Bridge {
@@ -1324,9 +1609,13 @@ pub fn run() {
                 .build(),
         )
         .manage(Arc::new(Bridge::default()))
+        .manage(Arc::new(ProductBridge::default()))
         .manage(services.clone())
         .setup(|app| {
-            let (script, store) = profile(&app.config().identifier, cfg!(feature = "acceptance"))?;
+            let (script, store) = profile(
+                &app.config().identifier,
+                cfg!(feature = "acceptance") || cfg!(feature = "product-sqlite"),
+            )?;
             let weak = Arc::downgrade(app.state::<Arc<RuntimeServices>>().inner());
             std::thread::spawn(move || {
                 loop {
@@ -1355,6 +1644,7 @@ pub fn run() {
         .on_window_event(|window, event| {
             if window.label() == "main" && matches!(event, tauri::WindowEvent::Destroyed) {
                 window.state::<Arc<RuntimeServices>>().saves.close();
+                close_product(window.state::<Arc<ProductBridge>>().inner());
             }
         })
         .on_page_load(|webview, payload| {
@@ -1362,6 +1652,7 @@ pub fn run() {
                 && matches!(payload.event(), tauri::webview::PageLoadEvent::Started)
             {
                 webview.state::<Arc<RuntimeServices>>().saves.close();
+                webview.state::<Arc<ProductBridge>>().previews.clear();
             }
         })
         .on_permission_request(|window, kind| {
@@ -1375,6 +1666,12 @@ pub fn run() {
     #[cfg(feature = "acceptance")]
     let builder = builder.invoke_handler(tauri::generate_handler![
         workspace_request,
+        product_store_request,
+        product_binary_request,
+        product_binary_read,
+        product_binary_write,
+        product_media_preview,
+        product_media_release,
         workspace_cancel,
         authorize_http_origin,
         product_save_begin,
@@ -1388,6 +1685,12 @@ pub fn run() {
     #[cfg(not(feature = "acceptance"))]
     let builder = builder.invoke_handler(tauri::generate_handler![
         workspace_request,
+        product_store_request,
+        product_binary_request,
+        product_binary_read,
+        product_binary_write,
+        product_media_preview,
+        product_media_release,
         workspace_cancel,
         authorize_http_origin,
         product_save_begin,
@@ -1405,6 +1708,28 @@ pub fn run() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn notification_failure_preserves_confirmed_commit_and_status_acknowledgements() {
+        let acknowledged = serde_json::json!({
+            "status": "committed", "operationId": "durable-operation",
+            "changeSequence": 19, "fingerprint": "confirmed-fingerprint",
+            "changes": [{"table": "projects", "key": "project"}]
+        });
+        for _ in 0..2 {
+            let result = deliver_product_result(acknowledged.clone(), |event| {
+                assert_eq!(event, serde_json::json!({"changeSequence": 19}));
+                Err::<(), _>("window closed")
+            });
+            assert_eq!(result, acknowledged);
+        }
+        let aborted = serde_json::json!({"status": "aborted"});
+        assert_eq!(
+            deliver_product_result(aborted.clone(), |_| -> std::result::Result<(), ()> {
+                panic!("An aborted operation must not emit a success notification")
+            }),
+            aborted
+        );
+    }
     #[test]
     fn typed_baseline_diagnostic_contains_live_expected_requested_without_writing() {
         let root = std::env::temp_dir().join(format!("cuepoint-conflict-{}", uuid::Uuid::new_v4()));

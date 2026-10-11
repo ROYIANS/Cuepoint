@@ -1,5 +1,5 @@
-import Dexie from "dexie";
-import {db} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import {canResumeAgentRun, resolveAgentToolApproval} from "@/db/agentTools";
 import type {AgentToolCall} from "@/domain/agent";
 import {targetRevision} from "@/lib/productionRevision";
@@ -22,7 +22,8 @@ const unavailable = (message = "音乐确认已处理或当前执行不可继续
     message
 });
 
-async function inspect(expected: AgentToolCall): Promise<MusicGenerationReviewState> {
+async function inspect(expected: AgentToolCall, store?: ProductStore): Promise<MusicGenerationReviewState> {
+    const db = store ?? productDb;
     const snapshot = parseMusicGenerationReview(expected.preview?.music);
     if (!snapshot || !expected.preview?.revision) return unavailable("旧请求缺少完整音乐确认内容，请取消后重新准备，才能确认提交。");
     const call = await db.agentToolCalls.get(expected.id), run = await db.agentRuns.get(expected.runId);
@@ -48,7 +49,8 @@ async function inspect(expected: AgentToolCall): Promise<MusicGenerationReviewSt
             threadId: run.threadId,
             callId: call.id,
             projectId: run.projectId,
-            signal: new AbortController().signal
+            signal: new AbortController().signal,
+            store:db
         });
         const current = parseMusicGenerationReview(fresh.music);
         if (!current || fresh.revision !== expected.preview.revision || targetRevision(current) !== targetRevision(snapshot)) return stale();
@@ -59,15 +61,17 @@ async function inspect(expected: AgentToolCall): Promise<MusicGenerationReviewSt
 }
 
 /** Local consistent snapshot only; never refreshes/changes the frozen draft or contacts the provider. */
-export async function readMusicGenerationReview(call: AgentToolCall): Promise<MusicGenerationReviewState> {
-    return db.transaction("r", db.tables, () => Dexie.waitFor(inspect(call)));
+export async function readMusicGenerationReview(call: AgentToolCall, store?: ProductStore): Promise<MusicGenerationReviewState> {
+    const db = store ?? productDb;
+    return db.transaction("r", db.tables, (db) => db.waitFor(inspect(call, db)));
 }
 
 /** Revalidation and the existing durable approval CAS share one transaction. Submission still rechecks. */
-export async function approveMusicGenerationReview(call: AgentToolCall): Promise<void> {
-    await db.transaction("rw", db.tables, async () => {
-        const state = await Dexie.waitFor(inspect(call));
+export async function approveMusicGenerationReview(call: AgentToolCall, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", db.tables, async (db) => {
+        const state = await db.waitFor(inspect(call, db));
         if (state.status !== "ready") throw new Error(state.message);
-        await resolveAgentToolApproval(call.runId, call.id, "approve");
+        await resolveAgentToolApproval(call.runId, call.id, "approve", db);
     });
 }

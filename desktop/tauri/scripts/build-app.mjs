@@ -7,10 +7,12 @@ import {resolve} from 'node:path';
 const base=fileURLToPath(new URL('../',import.meta.url));
 const acceptance=process.argv.includes('--acceptance');
 const isolated=process.argv.includes('--isolated-product');
+const productSqlite=process.argv.includes('--sqlite-product');
+if(productSqlite && (!isolated || acceptance))throw new Error('Full-product SQLite is gated behind an isolated product build');
 if(acceptance && isolated)throw new Error('Fixture and normal-product isolation are separate build lanes');
 const identifier=isolated ? process.env.CUEPOINT_PRODUCT_IDENTIFIER : acceptance?'dev.cuepoint.prototype.acceptance':'dev.cuepoint.prototype.offline';
 if(!identifier || !/^dev\.cuepoint\.review\.[a-z0-9][a-z0-9.-]{0,100}$/.test(identifier) && isolated)throw new Error('Isolated product requires a dedicated dev.cuepoint.review.* identifier');
-const profile=acceptance?'acceptance':isolated?'isolated-product':'normal';
+const profile=acceptance?'acceptance':isolated?(productSqlite?'isolated-sqlite-product':'isolated-product'):'normal';
 const appName=acceptance?'Cuepoint Acceptance':isolated?'Cuepoint Product Review':'Cuepoint Prototype';
 const evidence=resolve(base,'.acceptance/builds',`${Date.now()}-${profile}`);
 await mkdir(evidence,{recursive:true});
@@ -21,7 +23,7 @@ async function run(name,args) {
     if(result.code!==0)throw new Error(`${name} failed; raw first diagnostics retained`);
 }
 await run('frontend',[resolve(base,'scripts/build-frontend.mjs'),...(acceptance?['--acceptance']:[])]);
-const args=[resolve(base,'scripts/tools.mjs'),'pnpm','exec','tauri','build','--bundles','app','--features',acceptance?'acceptance':'desktop'];
+const args=[resolve(base,'scripts/tools.mjs'),'pnpm','exec','tauri','build','--bundles','app','--features',acceptance?'acceptance':productSqlite?'product-sqlite':'desktop'];
 if(acceptance) {
     const endpoint=process.env.CUEPOINT_STREAM_ENDPOINT;
     if(!endpoint)throw new Error('Reserved loopback endpoint missing');
@@ -43,7 +45,7 @@ await run('native-bundle',args);
 const app=resolve(base,'.tools/target/release/bundle/macos',`${appName}.app`);
 const archived=resolve(evidence,`${appName}.app`);
 await cp(app,archived,{recursive:true,errorOnExist:true,force:false});
-const storage=acceptance?'sqlite':'indexeddb';
+const storage=acceptance || productSqlite?'sqlite':'indexeddb';
 const webkitStoreId=createHash('sha256').update(`cuepoint-product-profile-v1:${identifier}:${storage}`).digest('hex').slice(0,32);
 await writeFile(resolve(base,'.acceptance',`${profile}-bundle.json`),JSON.stringify({profile,identifier,storage,webkitStoreId,app:archived,evidence},null,2)+'\n');
 console.log(`Actual ${profile} app: ${archived}`);

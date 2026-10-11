@@ -9,6 +9,7 @@ import {DEFAULT_SHOT_SETTINGS,emptyEpisodeStory,emptySeriesStory,emptySetting,ty
 import {emptySlot} from '@/domain/slot';
 import {deriveEpisodeDelivery,episodeDeliveryCsv} from '@/lib/episodeDelivery';
 import {exportProjectZip} from '@/lib/projectPackage';
+import {readBinaryBlob} from '@/lib/storage/binary';
 import {sha256} from './bridge';
 import {assert,delay,message,type Evidence} from './acceptanceEvidence';
 import {fixture,type FixtureBlobs} from './acceptanceMedia';
@@ -38,7 +39,7 @@ export async function seedDelivery(blobs:FixtureBlobs,evidence:Evidence):Promise
             content:`第${index+1}集镜${order+1}：他说，"你好"\n`+Array.from({length:10},(_,line)=>`完整长段落 ${line+1}：雨伞、台词和人物动作都应完整打印；换行与中文需要保留。`).join('\n')+`\n${order===(index===0?7:5)?endMarker(index):`【第${index+1}集镜${order+1}结束】`}`,
             notes:'长备注第一行，含逗号和"引号"\n长备注第二行；不得被截断。',sceneCloseup:'雨夜窗边',sound:'工作区录音引用：tauri-print-audio',emotion:'克制',cameraAngle:'平视',cameraGear:'固定',focalLength:'50 mm',characterIds:[]})));
         // Explicit compatibility-only projection, after actual native byte verification; never a production write owner.
-        await db.transaction('rw',[db.projects,db.episodes,db.shots,db.media],async()=>{
+        await db.transaction('rw',[db.projects,db.episodes,db.shots,db.media],async(db)=>{
             await db.projects.put(project);await db.episodes.bulkPut(episodes);await db.shots.bulkPut(shots);await db.media.bulkPut(media);
         });
         const delivery=deriveEpisodeDelivery({project,episode:episodes[0],shots,characters:[],scenes:[],props:[],styles:[],media:new Map(media.map(row=>[row.id,row]))});
@@ -47,7 +48,7 @@ export async function seedDelivery(blobs:FixtureBlobs,evidence:Evidence):Promise
         const csv=new Blob([csvText],{type:'text/csv;charset=utf-8'});const zip=await exportProjectZip(projectId);const archive=await JSZip.loadAsync(zip);
         const jsonEntries=Object.keys(archive.files).filter(path=>path.endsWith('.json'));assert(jsonEntries.length>0,'真实项目 ZIP 缺少 JSON');
         const binaries=Object.values(archive.files).filter(entry=>!entry.dir&&!entry.name.endsWith('.json'));
-        const imageHash=await sha256(await media[0].blob.arrayBuffer());let imageFound=false;
+        const imageHash=await sha256(await (await readBinaryBlob(media[0].blob)).arrayBuffer());let imageFound=false;
         for(const entry of binaries)if(await sha256(await entry.async('uint8array'))===imageHash)imageFound=true;
         assert(imageFound,'真实 ZIP 缺少实际 PNG 素材副本');
         return {project,episodes,shots,media,csv,zip,csvHash:await sha256(await csv.arrayBuffer()),zipHash:await sha256(await zip.arrayBuffer()),jsonEntries};

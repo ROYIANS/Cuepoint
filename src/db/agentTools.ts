@@ -1,3 +1,6 @@
+import type {ProductStore} from "@/lib/storage/types";
+import type {StoreTx} from "@/lib/storage/types";
+import {StorageError} from "@/lib/storage/errors";
 import {MUSIC_REVIEW_MAX_BYTES, parseMusicGenerationReview} from "@/lib/agent/musicGenerationReviewSnapshot";
 import {getOfferedToolNames, toolNamesForCall} from "@/domain/agentToolSelection";
 import type {AgentReferenceInput} from "@/domain/referenceInput";
@@ -7,7 +10,7 @@ import {generationSubmitSchema} from "@/lib/agent/generationProfiles";
 import {targetRevision} from "@/lib/productionRevision";
 import {interruptedToolState, recoverBatchPreparationCalls, upgradeLegacyPlanCalls} from "./agentToolRecovery";
 import {formatTaskPlan, validateTaskPlan} from "@/lib/agent/taskState";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import type {
     AgentPlanItem,
     AgentResponseItem,
@@ -25,7 +28,8 @@ export function canResumeAgentRun(run: AgentRun): boolean {
     return !!run.hasToolCalls && ["waiting_approval", "interrupted", "failed"].includes(run.status);
 }
 
-async function requireRun(runId: string): Promise<AgentRun> {
+async function requireRun(runId: string, store?: ProductStore): Promise<AgentRun> {
+    const db = store ?? productDb;
     const run = await db.agentRuns.get(runId);
     if (!run || !(await db.chatThreads.get(run.threadId))) throw new Error("执行已删除");
     const message = await db.chatMessages.get(run.assistantMessageId);
@@ -33,23 +37,26 @@ async function requireRun(runId: string): Promise<AgentRun> {
     return run;
 }
 
-async function requireProject(run: AgentRun) {
+async function requireProject(run: AgentRun, store?: ProductStore) {
+    const db = store ?? productDb;
     const thread = await db.chatThreads.get(run.threadId);
     if (thread?.projectId !== run.projectId || run.projectId && !await db.projects.get(run.projectId)) throw new Error("关联项目已不存在或归属不匹配");
 }
 
-const tables = () => [db.projects, db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentGenerationBatches, db.agentGenerationBatchItems];
+const tables = (store?: ProductStore) => (db => [db.projects, db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentGenerationBatches, db.agentGenerationBatchItems])(store ?? productDb);
 
-async function requireLatestRun(run: AgentRun): Promise<void> {
+async function requireLatestRun(run: AgentRun, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const siblings = await db.agentRuns.where("threadId").equals(run.threadId).toArray();
     const history = await db.chatMessages.where("threadId").equals(run.threadId).toArray();
     if (siblings.some((other) => other.id !== run.id && other.createdAt >= run.createdAt) || history.some((message) => message.role === "user" && message.createdAt > run.createdAt)) throw new Error("只能继续当前最后一次执行");
 }
 
 /** Park at a model boundary, before context preparation can issue another request. */
-export async function pauseAtModelStepLimit(runId: string): Promise<boolean> {
-    return db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
+export async function pauseAtModelStepLimit(runId: string, store?: ProductStore): Promise<boolean> {
+    const db = store ?? productDb;
+    return db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
         if (run.status !== "running") throw new Error("执行已停止");
         if ((run.modelStep ?? 0) - (run.modelStepSegmentStart ?? 0) < MODEL_STEPS_PER_SEGMENT) return false;
         const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
@@ -68,10 +75,11 @@ export async function pauseAtModelStepLimit(runId: string): Promise<boolean> {
     });
 }
 
-export async function startModelStep(runId: string, limit: number): Promise<AgentRun> {
-    return db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
-        await requireProject(run);
+export async function startModelStep(runId: string, limit: number, store?: ProductStore): Promise<AgentRun> {
+    const db = store ?? productDb;
+    return db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
+        await requireProject(run, db);
         if (run.status !== "running") throw new Error("执行已停止");
         if ((run.modelStep ?? 0) - (run.modelStepSegmentStart ?? 0) >= limit) throw new Error("本段模型请求额度已用完，请继续下一段执行");
         if (run.projectId && !run.memorySelection) throw new Error("项目记忆尚未准备，不能提交请求");
@@ -102,9 +110,10 @@ export async function startModelStep(runId: string, limit: number): Promise<Agen
     });
 }
 
-export async function saveToolRound(runId: string, content: string, wireCalls: AgentWireToolCall[], details: Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation">[], responseOutput?: AgentResponseItem[], publicOutput?: Pick<AgentRunOutput, "reasoning" | "reasoningDurationMs">): Promise<void> {
-    await db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
+export async function saveToolRound(runId: string, content: string, wireCalls: AgentWireToolCall[], details: Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation">[], responseOutput?: AgentResponseItem[], publicOutput?: Pick<AgentRunOutput, "reasoning" | "reasoningDurationMs">, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
         if (run.status !== "running") throw new Error("执行已停止");
         if (run.toolLoading && wireCalls.some((call) => !toolNamesForCall(run, run.modelStep ?? 1).includes(call.function.name))) throw new Error("模型请求了本轮未提供的工具，已阻止执行");
         if (wireCalls.length === 0 || wireCalls.length !== details.length) throw new Error("工具轮次格式无效");
@@ -150,9 +159,10 @@ export async function saveToolRound(runId: string, content: string, wireCalls: A
 export async function transitionToolCall(runId: string, callId: string, from: AgentToolCall["status"][], to: AgentToolCall["status"], extra: {
     result?: string;
     error?: string
-} = {}): Promise<boolean> {
-    return db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
+} = {}, store?: ProductStore): Promise<boolean> {
+    const db = store ?? productDb;
+    return db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
         const call = await db.agentToolCalls.get(callId);
         if (run.status !== "running" || !call || call.runId !== runId || call.threadId !== run.threadId) throw new Error("工具调用归属或执行状态不匹配");
         if (!from.includes(call.status)) return false;
@@ -161,22 +171,24 @@ export async function transitionToolCall(runId: string, callId: string, from: Ag
     });
 }
 
-export async function pauseForApproval(runId: string): Promise<void> {
-    await db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
+export async function pauseForApproval(runId: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
         if (run.status !== "running") throw new Error("执行已停止");
         await db.agentRuns.update(run.id, {status: "waiting_approval", updatedAt: nowIso()});
         await db.chatMessages.update(run.assistantMessageId, {status: "pending"});
     });
 }
 
-export async function resolveAgentToolApproval(runId: string, callId: string, decision: "approve" | "reject"): Promise<void> {
+export async function resolveAgentToolApproval(runId: string, callId: string, decision: "approve" | "reject", store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (decision !== "approve" && decision !== "reject") throw new Error("批准决定无效");
-    await db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
+    await db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
         const call = await db.agentToolCalls.get(callId);
         if (!canResumeAgentRun(run) || !call || call.runId !== runId || call.threadId !== run.threadId || call.status !== "awaiting_approval") throw new Error("批准请求已处理或归属不匹配");
-        await requireLatestRun(run);
+        await requireLatestRun(run, db);
         const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
         if (calls.some((item) => item.status === "unknown" || item.status === "running")) throw new Error("有操作结果尚不确定，请先核实，不能批准后继续执行");
         const at = nowIso();
@@ -187,14 +199,15 @@ export async function resolveAgentToolApproval(runId: string, callId: string, de
     });
 }
 
-export async function resumeAgentRun(runId: string): Promise<AgentRun> {
-    return db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
-        await requireProject(run);
+export async function resumeAgentRun(runId: string, store?: ProductStore): Promise<AgentRun> {
+    const db = store ?? productDb;
+    return db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
+        await requireProject(run, db);
         if (!canResumeAgentRun(run)) throw new Error("此执行不能继续");
-        await requireLatestRun(run);
-        await upgradeLegacyPlanCalls(runId);
-        await recoverBatchPreparationCalls(runId);
+        await requireLatestRun(run, db);
+        await upgradeLegacyPlanCalls(runId, db);
+        await recoverBatchPreparationCalls(runId, db);
         const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
         if (calls.some((call) => call.status === "running" || call.status === "unknown")) throw new Error("有操作结果尚不确定，请先核实，不能自动继续或重跑");
         if (calls.some((call) => call.status === "awaiting_approval")) throw new Error("请先批准或拒绝待处理的操作");
@@ -212,9 +225,10 @@ export async function resumeAgentRun(runId: string): Promise<AgentRun> {
     });
 }
 
-export async function appendToolResults(runId: string): Promise<void> {
-    await db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
+export async function appendToolResults(runId: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
         if (run.status !== "running") throw new Error("执行已停止");
         const messages = [...(run.continuationMessages ?? run.requestMessages)];
         const responseItems = run.protocol === "responses" ? [...(run.responseItems ?? [])] : undefined;
@@ -257,10 +271,11 @@ export async function appendToolResults(runId: string): Promise<void> {
 }
 
 /** Plan changes and the successful ledger result commit together. */
-export async function updateRunPlanAndComplete(runId: string, callId: string, plan: AgentPlanItem[], reason?: string): Promise<string> {
-    return db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
-        await requireProject(run);
+export async function updateRunPlanAndComplete(runId: string, callId: string, plan: AgentPlanItem[], reason?: string, store?: ProductStore): Promise<string> {
+    const db = store ?? productDb;
+    return db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
+        await requireProject(run, db);
         const call = await db.agentToolCalls.get(callId);
         if (run.status !== "running" || !call || call.runId !== runId || call.threadId !== run.threadId || call.status !== "running" || call.name !== "update_run_plan") throw new Error("计划操作归属不匹配");
         plan = validateTaskPlan(plan);
@@ -273,7 +288,7 @@ export async function updateRunPlanAndComplete(runId: string, callId: string, pl
                 title: "Todo 更新",
                 body: `${reason?.trim() || "按当前任务进展调整执行计划；勾选状态不是业务完成证据"}\n\n调整前\n${formatTaskPlan(task.plan)}\n\n调整后\n${formatTaskPlan(plan)}`,
                 sources: []
-            }, {author: "ai", runId, requirementSnapshot: true});
+            }, {author: "ai", runId, requirementSnapshot: true}, db);
             await db.agentTasks.update(task.id, {plan, revision: (task.revision ?? 1) + 1, updatedAt: nowIso()});
         }
         const result = JSON.stringify({plan});
@@ -281,13 +296,15 @@ export async function updateRunPlanAndComplete(runId: string, callId: string, pl
         await db.agentToolCalls.update(callId, {status: "completed", result, updatedAt: nowIso()});
         return result;
     }).catch((error: unknown) => {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
         throw new AtomicToolRollbackError(error instanceof Error ? error.message : "计划更新已回滚", {cause: error});
     });
 }
 
-export async function cancelAgentRun(runId: string): Promise<void> {
-    await db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
+export async function cancelAgentRun(runId: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
         if (run.status === "completed" || run.status === "cancelled") return;
         if (run.status === "running") throw new Error("请先停止正在运行的执行");
         const at = nowIso();
@@ -310,11 +327,14 @@ export async function cancelAgentRun(runId: string): Promise<void> {
     });
 }
 
-export async function markRunningToolsUnknown(runId: string): Promise<void> {
-    await db.transaction("rw", tables(), async () => {
+export async function markRunningToolsUnknown(runId: string, store?: ProductStore, unresolvedOutcome=false): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", tables(db), async (db) => {
         if (!(await db.agentRuns.get(runId))) return;
         const running = await db.agentToolCalls.where("runId").equals(runId).filter((call) => call.status === "running").toArray();
-        for (const call of running) await db.agentToolCalls.update(call.id, await interruptedToolState(call));
+        for (const call of running) await db.agentToolCalls.update(call.id, unresolvedOutcome ? {
+            status:"unknown",error:"操作结果尚不确定，不能自动重跑。",updatedAt:nowIso()
+        } : await interruptedToolState(call, db));
     });
 }
 
@@ -323,12 +343,13 @@ export async function markRunningToolsUnknown(runId: string): Promise<void> {
 export class AtomicToolRollbackError extends Error {
 }
 
-export async function saveToolPreview(runId: string, callId: string, preview: AgentToolPreview): Promise<void> {
+export async function saveToolPreview(runId: string, callId: string, preview: AgentToolPreview, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const {music, ...generic} = preview;
     if (!preview.summary.trim() || preview.summary.length > 1000 || preview.changes.length > 100 || preview.changes.some((item) => item.length > 2000) || JSON.stringify(generic).length > 32768 ||
         (music !== undefined && (!parseMusicGenerationReview(music) || new TextEncoder().encode(JSON.stringify(preview)).byteLength > MUSIC_REVIEW_MAX_BYTES))) throw new Error("操作预览超出限制或音乐确认内容无效");
-    await db.transaction("rw", tables(), async () => {
-        const run = await requireRun(runId);
+    await db.transaction("rw", tables(db), async (db) => {
+        const run = await requireRun(runId, db);
         const call = await db.agentToolCalls.get(callId);
         if (run.status !== "running" || !call || call.runId !== runId || call.threadId !== run.threadId || call.status !== "pending") throw new Error("操作预览状态已变化");
         if ((call.name === "music_generate") !== (music !== undefined)) throw new Error("音乐确认快照与工具不匹配，请重新准备请求");
@@ -341,14 +362,15 @@ export async function saveToolPreview(runId: string, callId: string, preview: Ag
  * Callbacks must only perform local database work, never fetch or other external effects.
  */
 export async function executeAtomicTool(
-    context: { runId: string; threadId: string; callId: string; signal: AbortSignal },
-    execute: () => Promise<unknown>,
+    context: { runId: string; threadId: string; callId: string; signal: AbortSignal; store?:ProductStore },
+    execute: (db:StoreTx) => Promise<unknown>, store?: ProductStore
 ): Promise<unknown> {
+    const db = store ?? context.store ?? productDb;
     try {
-        return await db.transaction("rw", db.tables, async () => {
+        return await db.transaction("rw", db.tables, async (db) => {
             context.signal.throwIfAborted();
-            const run = await requireRun(context.runId);
-            await requireProject(run);
+            const run = await requireRun(context.runId, db);
+            await requireProject(run, db);
             const call = await db.agentToolCalls.get(context.callId);
             if (run.status !== "running" || run.threadId !== context.threadId || !call || call.runId !== run.id || call.threadId !== run.threadId) throw new Error("操作归属或执行状态不匹配");
             if (call.status === "completed" && call.result) {
@@ -356,7 +378,7 @@ export async function executeAtomicTool(
                 return result;
             }
             if (call.status !== "running") throw new Error("工具尚未开始执行");
-            const value = await execute();
+            const value = await execute(db);
             context.signal.throwIfAborted();
             const result = JSON.stringify(value);
             if (result === undefined || result.length > 65536) throw new Error("工具结果超过大小限制");
@@ -364,6 +386,7 @@ export async function executeAtomicTool(
             return value;
         });
     } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
         throw new AtomicToolRollbackError(error instanceof Error ? error.message : "本地操作已回滚", {cause: error});
     }
 }
@@ -373,23 +396,25 @@ export interface GenerationReviewExpected {
     revision: string
 }
 
-async function requireGenerationReviewCall(runId: string, callId: string, expected: GenerationReviewExpected): Promise<AgentToolCall> {
-    const run = await requireRun(runId);
-    await requireProject(run);
+async function requireGenerationReviewCall(runId: string, callId: string, expected: GenerationReviewExpected, store?: ProductStore): Promise<AgentToolCall> {
+    const db = store ?? productDb;
+    const run = await requireRun(runId, db);
+    await requireProject(run, db);
     const call = await db.agentToolCalls.get(callId);
     if (!canResumeAgentRun(run) || !call || call.runId !== runId || call.threadId !== run.threadId || call.name !== "submit_generation" ||
         call.status !== "awaiting_approval" || !call.requiresConfirmation || call.decision || call.generationOverride) throw new Error("生成确认已处理或执行归属不匹配");
     if (run.interactionMode === "conversation" || !run.enabledToolNames?.includes("submit_generation")) throw new Error("当前执行未启用生成工具");
     if (!expected.revision || expected.arguments !== call.arguments || expected.revision !== call.preview?.revision) throw new Error("生成预览已经变化，请重新查看后确认");
-    await requireLatestRun(run);
+    await requireLatestRun(run, db);
     const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
     if (calls.some((item) => item.status === "unknown" || item.status === "running")) throw new Error("有操作结果尚不确定，不能确认新的生成请求");
     if (await db.agentGenerationJobs.where("callId").equals(callId).first()) throw new Error("此生成请求已有任务记录，不能修改或重复提交");
     return call;
 }
 
-export async function readGenerationReviewCall(runId: string, callId: string, expected: GenerationReviewExpected): Promise<AgentToolCall> {
-    return db.transaction("r", tables(), () => requireGenerationReviewCall(runId, callId, expected));
+export async function readGenerationReviewCall(runId: string, callId: string, expected: GenerationReviewExpected, store?: ProductStore): Promise<AgentToolCall> {
+    const db = store ?? productDb;
+    return db.transaction("r", tables(db), (db) => requireGenerationReviewCall(runId, callId, expected, db));
 }
 
 /** Final CAS commits the reviewed request, preview and approval together. */
@@ -397,12 +422,13 @@ export async function commitGenerationReview(
     runId: string, callId: string, override: {
         arguments: string;
         preview: AgentToolPreview
-    }, expected: GenerationReviewExpected,
+    }, expected: GenerationReviewExpected, store?: ProductStore
 ): Promise<void> {
+    const db = store ?? productDb;
     if (override.arguments.length > 32768 || !override.preview.revision || !override.preview.summary.trim() || override.preview.summary.length > 1000 ||
         override.preview.changes.length > 100 || override.preview.changes.some((item) => item.length > 2000) || JSON.stringify(override.preview).length > 32768) throw new Error("生成确认参数或预览超出限制");
-    await db.transaction("rw", tables(), async () => {
-        const call = await requireGenerationReviewCall(runId, callId, expected);
+    await db.transaction("rw", tables(db), async (db) => {
+        const call = await requireGenerationReviewCall(runId, callId, expected, db);
         const original = generationSubmitSchema.parse(JSON.parse(call.arguments));
         const reviewed = generationSubmitSchema.parse(JSON.parse(override.arguments));
         if (targetRevision({

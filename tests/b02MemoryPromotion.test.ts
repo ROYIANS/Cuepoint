@@ -39,10 +39,13 @@ vi.mock("react", async original => {
         },
     };
 });
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: (querier: () => Promise<unknown>) => {
-    const host = runtime.active!; host.queriers.push(querier);
-    return host.results[host.queryIndex++];
-}}));
+vi.mock("@/lib/storage/hooks", () => {
+    const read = (querier: (tx: typeof db) => Promise<unknown>) => {
+        const host = runtime.active!; host.queriers.push(() => querier(db));
+        return host.results[host.queryIndex++];
+    };
+    return {useProductQuery: read, useProductQueryState: (querier: (tx: typeof db) => Promise<unknown>) => ({value: read(querier), error: null})};
+});
 vi.mock("@tanstack/react-router", () => ({Link: () => null, useBlocker: (options: Host["blocker"]) => {
     runtime.active!.blocker = options; return {status: "idle", reset: vi.fn()};
 }}));

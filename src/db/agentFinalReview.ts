@@ -1,4 +1,5 @@
-import {db} from "./database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
 import type {AgentResponseItem, AgentRun, AgentRunOutput} from "@/domain/agent";
 import {MODEL_STEPS_PER_SEGMENT} from "@/domain/agent";
 import type {AgentFinalReview, FinalReviewClaim, FinalReviewReason} from "@/domain/agentFinalReview";
@@ -9,7 +10,8 @@ import {targetRevision} from "@/lib/productionRevision";
 import {nowIso} from "@/lib/ids";
 import {decodeResponseOutput, toResponseInput} from "@/lib/ai/responsesStream";
 
-async function currentOwner(run: AgentRun): Promise<boolean> {
+async function currentOwner(run: AgentRun, store?: ProductStore): Promise<boolean> {
+    const db = store ?? productDb;
     const thread = await db.chatThreads.get(run.threadId), message = await db.chatMessages.get(run.assistantMessageId);
     if (!thread || thread.projectId !== run.projectId || !message || message.threadId !== run.threadId || message.runId !== run.id ||
         run.projectId && !await db.projects.get(run.projectId)) return false;
@@ -24,8 +26,9 @@ async function currentOwner(run: AgentRun): Promise<boolean> {
 }
 
 /** Atomic one-use claim and request budget reservation. No reload path dispatches this record. */
-export async function beginAgentFinalReview(runId: string, expectedStep: number, output: AgentRunOutput, signal: AbortSignal, responseOutput?: AgentResponseItem[]): Promise<AgentRun | undefined> {
-    return db.transaction("rw", finalReviewTables(), async () => {
+export async function beginAgentFinalReview(runId: string, expectedStep: number, output: AgentRunOutput, signal: AbortSignal, responseOutput?: AgentResponseItem[], store?: ProductStore): Promise<AgentRun | undefined> {
+    const db = store ?? productDb;
+    return db.transaction("rw", finalReviewTables(db), async (db) => {
         signal.throwIfAborted();
         const run = await db.agentRuns.get(runId);
         if (!run || run.status !== "running" || run.modelStep !== expectedStep) return;
@@ -43,10 +46,10 @@ export async function beginAgentFinalReview(runId: string, expectedStep: number,
             if (responseOutput && run.finalResponseStep !== expectedStep) await db.agentRuns.update(run.id, responseCheckpoint);
             return;
         }
-        const snapshot = await Promise.resolve(collectFinalReviewSnapshot(run));
+        const snapshot = await Promise.resolve(collectFinalReviewSnapshot(run, db));
         const message = await db.chatMessages.get(run.assistantMessageId);
         let reason: FinalReviewReason | undefined;
-        if (!await currentOwner(run) || snapshot.unresolvedCalls || run.interactionMode === "conversation" || !run.enabledToolNames?.length || !output.content.trim()) reason = "ineligible";
+        if (!await currentOwner(run, db) || snapshot.unresolvedCalls || run.interactionMode === "conversation" || !run.enabledToolNames?.length || !output.content.trim()) reason = "ineligible";
         else if (output.content.length > MAX_REVIEW_CONTENT) reason = "content_limit";
         else if (expectedStep - (run.modelStepSegmentStart ?? 0) >= MODEL_STEPS_PER_SEGMENT) reason = "budget";
         else if (message?.content !== output.content || message.reasoning !== output.reasoning) reason = "stale";
@@ -69,14 +72,15 @@ export async function beginAgentFinalReview(runId: string, expectedStep: number,
     });
 }
 
-export async function finishAgentFinalReview(runId: string, candidateFingerprint: string, claims?: FinalReviewClaim[], reason?: FinalReviewReason): Promise<void> {
-    await db.transaction("rw", finalReviewTables(), async () => {
+export async function finishAgentFinalReview(runId: string, candidateFingerprint: string, claims?: FinalReviewClaim[], reason?: FinalReviewReason, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", finalReviewTables(db), async (db) => {
         const run = await db.agentRuns.get(runId), review = run?.finalReview;
         if (!run || !review || review.status !== "pending" || review.candidateFingerprint !== candidateFingerprint) return;
         const message = await db.chatMessages.get(run.assistantMessageId);
-        const unchanged = run.status === "running" && run.modelStep === review.step && await currentOwner(run) && !!message &&
+        const unchanged = run.status === "running" && run.modelStep === review.step && await currentOwner(run, db) && !!message &&
             targetRevision({content: message.content, reasoning: message.reasoning, reasoningDurationMs: message.reasoningDurationMs}) === candidateFingerprint &&
-            (await Promise.resolve(collectFinalReviewSnapshot(run))).fingerprint === review.snapshot.fingerprint;
+            (await Promise.resolve(collectFinalReviewSnapshot(run, db))).fingerprint === review.snapshot.fingerprint;
         const finalReason = unchanged ? reason : "stale";
         await db.agentRuns.update(runId, {finalReview: {...review, status: finalReason || !claims ? "unverified" : "checked",
             reason: finalReason ?? (!claims ? "invalid" : undefined), claims: finalReason ? undefined : claims, endedAt: nowIso()}});

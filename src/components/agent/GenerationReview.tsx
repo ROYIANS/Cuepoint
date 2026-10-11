@@ -1,10 +1,9 @@
 import {useId, useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Input, Select} from "antd";
 import {Link} from "@tanstack/react-router";
 import {ArrowUpRight, Image, LoaderCircle, RotateCcw, Video} from "lucide-react";
 import {toast} from "sonner";
-import {db} from "@/db/database";
 import {getGenerationPreferenceState, saveGenerationPreference} from "@/db/generationPreferences";
 import type {AgentToolCall} from "@/domain/agent";
 import {
@@ -78,9 +77,9 @@ function GenerationReviewForm({call, initial, busy, onAction}: {
     const [error, setError] = useState<string>();
     const [notice, setNotice] = useState<string>();
     const savingRef = useRef(false);
-    const connectors = useLiveQuery(() => db.connectors.toArray(), []);
-    const preferenceState = useLiveQuery(getGenerationPreferenceState, []);
-    const project = useLiveQuery(async () => (await db.projects.get(initial.target.projectId)) ?? null, [initial.target.projectId]);
+    const connectors = useProductQuery((db) => db.connectors.toArray(), []);
+    const preferenceState = useProductQuery(getGenerationPreferenceState, []);
+    const project = useProductQuery(async (db) => (await db.projects.get(initial.target.projectId)) ?? null, [initial.target.projectId]);
     const kind = initial.target.kind === "shot" && initial.target.slot === "clip" ? "video" : "image";
     const title = kind === "image" ? "图片" : "视频";
     const Icon = kind === "image" ? Image : Video;
@@ -194,7 +193,7 @@ export function GenerationConfigurationFields({draft, onChange, disabled}: {
     disabled: boolean
 }) {
     const promptId = useId();
-    const connectors = useLiveQuery(() => db.connectors.toArray(), []);
+    const connectors = useProductQuery((db) => db.connectors.toArray(), []);
     const kind = draft.target.kind === 'shot' && draft.target.slot === 'clip' ? 'video' : 'image';
     const selected = connectors?.find(item => item.id === draft.connectorId);
     const provider = selected?.definitionId;

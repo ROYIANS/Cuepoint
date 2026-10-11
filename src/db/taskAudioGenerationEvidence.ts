@@ -1,20 +1,22 @@
+import type {ProductStore} from "@/lib/storage/types";
 import type {AgentTask, AgentToolCall} from "@/domain/agent";
 import type {AudioGenerationJob} from "@/domain/audioGeneration";
 import {type AudioOutputEvidence, inspectAudioGenerationOutputs} from "@/lib/audioGeneration/outputEvidence";
 import {describeAudioGeneration} from "@/lib/audioGeneration/presentation";
-import {db} from "./database";
+import {db as productDb} from "./database";
 import {ownedAgentAudioBatchJob} from "@/lib/audioGeneration/batchEvidence";
 
 type TaskOwner = Pick<AgentTask, "id" | "threadId">;
 export const SOUND_GENERATION_TOOLS = ["audio_generate_speech", "music_generate", "audio_generation_check"] as const;
 
 /** Origin belongs to the submitting task, never to a later status-reading call. */
-export async function ownedTaskAudioGenerationJob(task: TaskOwner, job: AudioGenerationJob): Promise<boolean> {
+export async function ownedTaskAudioGenerationJob(task: TaskOwner, job: AudioGenerationJob, store?: ProductStore): Promise<boolean> {
+    const db = store ?? productDb;
     if (job.dormant || job.source.kind === "manual") return false;
     if (job.source.kind === "batch") {
         const source = job.source;
         if (source.owner.kind !== "agent") return false;
-        return ownedAgentAudioBatchJob(job, {runId: source.owner.runId, threadId: task.threadId, projectId: job.projectId, taskId: task.id});
+        return ownedAgentAudioBatchJob(job, {runId: source.owner.runId, threadId: task.threadId, projectId: job.projectId, taskId: task.id}, db);
     }
     const current = await db.agentTasks.get(task.id);
     const run = await db.agentRuns.get(job.source.runId);
@@ -82,21 +84,23 @@ function describeSource(job: AudioGenerationJob, outputs: AudioOutputEvidence, r
     };
 }
 
-export async function taskAudioGenerationSource(task: TaskOwner, job: AudioGenerationJob, resultKey?: string) {
-    if (!await Promise.resolve(ownedTaskAudioGenerationJob(task, job))) throw new Error("声音生成来源不属于当前任务或项目");
+export async function taskAudioGenerationSource(task: TaskOwner, job: AudioGenerationJob, resultKey?: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    if (!await Promise.resolve(ownedTaskAudioGenerationJob(task, job, db))) throw new Error("声音生成来源不属于当前任务或项目");
     if (resultKey !== undefined && (!resultKey.trim() || resultKey.length > 512 || job.results.filter(result => result.key === resultKey).length !== 1)) throw new Error("声音结果键无效、不存在或不唯一，请重新读取来源");
-    const outputs = await Promise.resolve(inspectAudioGenerationOutputs(job, {resultKey}));
+    const outputs = await Promise.resolve(inspectAudioGenerationOutputs(job, {resultKey}, db));
     return describeSource(job, outputs, resultKey);
 }
 
 /** All individual identities enter wrap-up fingerprints, including results beyond UI coverage. */
-export async function taskAudioGenerationOutputSources(task: TaskOwner, job: AudioGenerationJob) {
-    if (!await Promise.resolve(ownedTaskAudioGenerationJob(task, job))) throw new Error("声音生成来源不属于当前任务或项目");
+export async function taskAudioGenerationOutputSources(task: TaskOwner, job: AudioGenerationJob, store?: ProductStore) {
+    const db = store ?? productDb;
+    if (!await Promise.resolve(ownedTaskAudioGenerationJob(task, job, db))) throw new Error("声音生成来源不属于当前任务或项目");
     const sources: ReturnType<typeof describeSource>[] = [];
     const counts = new Map<string, number>();
     for (const result of job.results) counts.set(result.key, (counts.get(result.key) ?? 0) + 1);
     for (let offset = 0; offset < job.results.length; offset += 100) {
-        const page = await Promise.resolve(inspectAudioGenerationOutputs(job, {offset}));
+        const page = await Promise.resolve(inspectAudioGenerationOutputs(job, {offset}, db));
         for (const result of page.results) {
             if (counts.get(result.key) !== 1 || !result.key.trim() || result.key.length > 512) continue;
             sources.push(describeSource(job, {
@@ -110,7 +114,8 @@ export async function taskAudioGenerationOutputSources(task: TaskOwner, job: Aud
 }
 
 /** Read-only validation of a saved sound tool result against its current durable job. */
-export async function taskAudioToolSource(task: TaskOwner, call: AgentToolCall) {
+export async function taskAudioToolSource(task: TaskOwner, call: AgentToolCall, store?: ProductStore) {
+    const db = store ?? productDb;
     if (!(SOUND_GENERATION_TOOLS as readonly string[]).includes(call.name)) return undefined;
     let value: unknown;
     try {
@@ -120,7 +125,7 @@ export async function taskAudioToolSource(task: TaskOwner, call: AgentToolCall) 
     }
     if (!value || typeof value !== "object" || !("id" in value) || typeof value.id !== "string") return undefined;
     const job = await db.audioGenerationJobs.get(value.id);
-    if (!job || !await ownedTaskAudioGenerationJob(task, job)) return undefined;
+    if (!job || !await ownedTaskAudioGenerationJob(task, job, db)) return undefined;
     if (call.name !== "audio_generation_check" && (job.source.kind !== "agent" || job.source.callId !== call.id)) return undefined;
     if (call.name === "audio_generation_check") {
         let args: unknown;
@@ -131,5 +136,5 @@ export async function taskAudioToolSource(task: TaskOwner, call: AgentToolCall) 
         }
         if (!args || typeof args !== "object" || Array.isArray(args) || !("jobId" in args) || args.jobId !== job.id || "projectId" in args && args.projectId !== job.projectId) return undefined;
     }
-    return taskAudioGenerationSource(task, job);
+    return taskAudioGenerationSource(task, job, undefined, db);
 }

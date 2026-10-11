@@ -1,15 +1,18 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {type ConnectorConfig, type ConnectorDefinitionId, type ConnectorProtocol, type Id} from "@/domain/types";
-import {db} from "./database";
+import {db as productDb} from "./database";
 import {normalizeBaseUrl} from "@/lib/ai/openaiCompatible";
 import {createId, nowIso} from "@/lib/ids";
 
-export async function listConnectors(): Promise<ConnectorConfig[]> {
+export async function listConnectors(store?: ProductStore): Promise<ConnectorConfig[]> {
+    const db = store ?? productDb;
     return db.connectors.orderBy("updatedAt").reverse().toArray();
 }
 
 async function getConnectorByDefinition(
-    definitionId: ConnectorDefinitionId,
+    definitionId: ConnectorDefinitionId, store?: ProductStore
 ): Promise<ConnectorConfig | undefined> {
+    const db = store ?? productDb;
     return db.connectors.where("definitionId").equals(definitionId).first();
 }
 
@@ -22,14 +25,15 @@ export type UpsertConnectorInput = {
 };
 
 /** One saved config per catalog definitionId. */
-export async function upsertConnector(input: UpsertConnectorInput): Promise<ConnectorConfig> {
+export async function upsertConnector(input: UpsertConnectorInput, store?: ProductStore): Promise<ConnectorConfig> {
+    const db = store ?? productDb;
     const baseUrl = normalizeBaseUrl(input.baseUrl);
     const apiKey = input.apiKey.trim();
     if (!baseUrl) throw new Error("请填写 Base URL");
     if (!apiKey) throw new Error("请填写 API Key");
 
-    return db.transaction("rw", db.connectors, db.connectorAliases, async () => {
-        const existing = await getConnectorByDefinition(input.definitionId);
+    return db.transaction("rw", [db.connectors, db.connectorAliases].flat(), async (db) => {
+        const existing = await getConnectorByDefinition(input.definitionId, db);
         const record: ConnectorConfig = {
             id: existing?.id ?? createId("conn"),
             definitionId: input.definitionId,
@@ -49,13 +53,15 @@ export async function upsertConnector(input: UpsertConnectorInput): Promise<Conn
 }
 
 /** Resolve a frozen historical ID without exposing retired duplicates in pickers. */
-export async function resolveConnector(id: Id): Promise<ConnectorConfig | undefined> {
+export async function resolveConnector(id: Id, store?: ProductStore): Promise<ConnectorConfig | undefined> {
+    const db = store ?? productDb;
     return (await db.connectors.get(id)) ?? db.connectorAliases.get(id);
 }
 
-export async function deleteConnector(id: Id): Promise<void> {
-    await db.transaction("rw", db.connectors, db.connectorAliases, async () => {
-        const config = await resolveConnector(id);
+export async function deleteConnector(id: Id, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.connectors, db.connectorAliases].flat(), async (db) => {
+        const config = await resolveConnector(id, db);
         if (!config) return;
         await db.connectors.where("definitionId").equals(config.definitionId).delete();
         await db.connectorAliases.where("definitionId").equals(config.definitionId).delete();

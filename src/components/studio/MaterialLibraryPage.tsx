@@ -1,8 +1,7 @@
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Archive, ArrowUpRight, Image, Layers, Search, Upload} from "lucide-react";
-import {db} from "@/db/database";
 import type {LibraryMaterial} from "@/domain/materials";
 import {Button} from "@/components/ui/button";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
@@ -14,8 +13,6 @@ import {LegacyMaterialSources} from "./materials/LegacyMaterialSources";
 import {KIND_LABELS, MaterialScopeSelect, MaterialSelect, SETTINGS_KINDS} from "./materials/MaterialControls";
 import {PageContent, PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import "./materials/materialLibrary.css";
-import {usesSqliteProductStorage} from "@/lib/productStorage";
-import {NativeAssetLibraryPage} from "./NativeAssetLibraryPage";
 
 export type MaterialLibrarySearch = {
     ip?: string;
@@ -25,11 +22,10 @@ export type MaterialLibrarySearch = {
 };
 
 export function MaterialLibraryPage({search: routeSearch}: { search: MaterialLibrarySearch }) {
-    if (usesSqliteProductStorage()) return NativeAssetLibraryPage({search: routeSearch});
-    return IndexedDbMaterialLibraryPage({routeSearch});
+    return SharedMaterialLibraryPage({routeSearch});
 }
 
-function IndexedDbMaterialLibraryPage({routeSearch}: {routeSearch: MaterialLibrarySearch}) {
+function SharedMaterialLibraryPage({routeSearch}: {routeSearch: MaterialLibrarySearch}) {
     const navigate = useNavigate();
     const [view, setView] = useState<"media" | "settings">(routeSearch.view ?? "media");
     const scope = routeSearch.project ? `project:${routeSearch.project}` : routeSearch.ip ? `ip:${routeSearch.ip}` : routeSearch.scope ?? "shared";
@@ -42,7 +38,7 @@ function IndexedDbMaterialLibraryPage({routeSearch}: {routeSearch: MaterialLibra
         setView(routeSearch.view ?? "media");
         setKind("all");
     }, [routeSearch.view]);
-    const data = useLiveQuery(async () => ({
+    const data = useProductQuery(async (db) => ({
         materials: (await (scope === "all" ? db.libraryMaterials.toArray() : scope === "shared" ? db.libraryMaterials.where("scope.kind").anyOf("global", "ip").toArray() : scope === "global" ? db.libraryMaterials.where("scope.kind").equals("global").toArray() : db.libraryMaterials.where("scope.id").equals(scope.slice(scope.indexOf(":") + 1)).toArray())).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
         ips: await db.ipProfiles.toArray(),
         projects: await db.projects.toArray()
@@ -130,7 +126,7 @@ function MaterialCard({material, scopeLabel, onOpen}: {
     scopeLabel: string;
     onOpen: () => void
 }) {
-    const version = useLiveQuery(async () => db.materialVersions.where("[materialId+revision]").equals([material.id, material.revision]).first(), [material.id, material.revision]);
+    const version = useProductQuery(async (db) => db.materialVersions.where("[materialId+revision]").equals([material.id, material.revision]).first(), [material.id, material.revision]);
     return <Button variant="ghost" className="material-card" onClick={onOpen} aria-label={material.name}><MaterialPreview
         payload={version?.payload}/>
         <div className="material-card-caption">

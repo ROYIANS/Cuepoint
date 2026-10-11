@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {describe,expect,it,vi} from "vitest";
 import {db} from "@/db/database";
 import {createAudioMusicProject} from "@/db/projects";
@@ -124,7 +125,7 @@ describe("reviewed audio selection and arrangement",()=>{
     });
     it("rolls back insertions if final proposal persistence fails",async()=>{
         const f=await fixture(),proposal=await saved(await previewAudioArrangement(f.project.id,f.chapter.id,{segmentIds:f.segments.map(row=>row.id),trackId:f.track.id}));
-        const fault=vi.spyOn(db.audioArrangementProposals,"put").mockRejectedValueOnce(new Error("disk full"));
+        const fault=failStoreTableOnce(db, "audioArrangementProposals", "put", new Error("disk full"));
         try {await expect(applyAudioArrangementProposal(f.project.id,proposal.id,1)).rejects.toThrow("disk full");} finally {fault.mockRestore();}
         expect(await db.audioClips.count()).toBe(0);expect((await db.audioArrangementProposals.get(proposal.id))?.state).toBe("prepared");
     });

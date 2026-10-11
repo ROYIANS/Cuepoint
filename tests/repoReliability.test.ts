@@ -1,3 +1,6 @@
+import {createBrowserProductStore} from "@/lib/storage/browser";
+import {browserDatabase} from "@/lib/storage/browserDatabase";
+import {installStoreHook} from "./helpers/storeBackendFaults";
 import Dexie from "dexie";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
@@ -103,11 +106,11 @@ describe("atomic production persistence", () => {
     const original = { ...slot("keep"), result: { mediaId, kind: "image" as const } };
     await setCharacterSlot(character.id, "front", original);
     const fail = () => { throw new Error("simulated storage failure"); };
-    db.media.hook("deleting", fail);
+    const storeHook_media_fail=await installStoreHook(db, "media", "deleting", fail);
     try {
       await expect(setCharacterSlot(character.id, "front", slot("replacement"))).rejects.toThrow("simulated storage failure");
     } finally {
-      db.media.hook("deleting").unsubscribe(fail);
+      storeHook_media_fail.mockRestore();
     }
     expect((await db.characters.get(character.id))?.slots.front).toEqual(original);
     expect(await db.media.get(mediaId)).toBeDefined();
@@ -139,15 +142,17 @@ describe("episode filter ownership", () => {
   });
 
   it("migrates version-5 legacy filters within each episode without stale IDs", async () => {
-    const project = await createProject("legacy", "series");
+    if (!browserDatabase) throw new Error("Historical comparator requires browser storage");
+    const rawDb=browserDatabase,db=createBrowserProductStore(rawDb);
+    const project = await createProject("legacy", "series",undefined,undefined,db);
     const first = (await db.episodes.where("projectId").equals(project.id).first())!;
-    const second = await addEpisode(project.id);
-    const firstBeat = await addStoryBeat(first.id);
-    const secondBeat = await addStoryBeat(second.id);
+    const second = await addEpisode(project.id,db);
+    const firstBeat = await addStoryBeat(first.id,undefined,db);
+    const secondBeat = await addStoryBeat(second.id,undefined,db);
     const episodes = await db.episodes.toArray();
     episodes.forEach((episode) => { delete episode.shotFilters; });
     project.shotSettings.filters = { statuses: ["ready"], gaps: ["missingClip"], beatIds: [firstBeat.id, secondBeat.id, "missing", "none"] };
-    const stores = Object.fromEntries(db.tables.map((table) => [table.name, [table.schema.primKey.src, ...table.schema.indexes.map((index) => index.src)].join(", ")]));
+    const stores = Object.fromEntries(browserDatabase!.tables.map((table) => [table.name, [table.schema.primKey.src, ...table.schema.indexes.map((index) => index.src)].join(", ")]));
     await db.delete();
     const legacy = new Dexie(db.name);
     legacy.version(5).stores(stores);

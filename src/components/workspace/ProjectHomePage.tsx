@@ -5,7 +5,6 @@ import {Navigate} from "@tanstack/react-router";
 import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
 import {useEffect, useState} from "react";
 import {EpisodeListPage} from "@/components/workspace/EpisodeListPage";
-import {WorkspaceCapabilityState} from "@/components/workspace/WorkspaceCapabilityState";
 import {Button} from "@/components/ui/button";
 import {normalizeProjectMode} from "@/domain/types";
 
@@ -13,10 +12,10 @@ export function ProjectHomePage({projectId}: { projectId: string }) {
     const repository = useVideoWorkspaceRepository();
     const readStatus = useVideoWorkspaceReadStatus();
     const projectResult = useVideoWorkspaceQuery(
-        async () => ({projectId, project: await repository.project(projectId)}),
+        async (repository) => ({projectId, project: await repository.project(projectId)}),
         [projectId],
     );
-    const episodeResult = useVideoWorkspaceQuery(async () => {
+    const episodeResult = useVideoWorkspaceQuery(async (repository) => {
         const rows = await repository.episodes(projectId);
         return {projectId, episode: rows[0] ?? null};
     }, [projectId]);
@@ -50,9 +49,6 @@ export function ProjectHomePage({projectId}: { projectId: string }) {
         className="text-muted-foreground p-8 text-sm">加载项目…</div>;
     if (project === null) return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
 
-    if (repository.storage === "sqlite" && project.kind !== undefined && project.kind !== "video") {
-        return <WorkspaceCapabilityState title="此项目类型尚未接入原生工作区"/>;
-    }
     if (project?.kind === "audio") return <AudioWorkspacePage key={projectId} projectId={projectId}/>;
     if (project?.kind === "music") return <MusicWorkspacePage key={projectId} projectId={projectId}/>;
     if (project?.kind !== undefined && project.kind !== "video") return <div role="alert"

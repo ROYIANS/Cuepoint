@@ -1,6 +1,8 @@
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
 import {REFERENCE_TOOL_NAMES} from "./referenceToolNames";
 import {projectImageSources} from "@/domain/imageDiscovery";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import type {ReferenceAttachment} from "@/domain/references";
 import type {WrapupEvidence} from "@/domain/agentTaskWrapup";
 
@@ -23,7 +25,8 @@ export function toolReferenceAttachments(result: string | undefined, projectId: 
 }
 
 /** Caller supplies a consistent transaction; blob reads and parsing never run here. */
-export async function collectReferenceEvidence(projectId: string, attachments: readonly ReferenceAttachment[]) {
+export async function collectReferenceEvidence(projectId: string, attachments: readonly ReferenceAttachment[], store?: ProductStore) {
+    const db = store ?? productDb;
     const unique = [...new Map(attachments.map(item => [`${item.referenceId}:${item.revision}`, item])).values()];
     const rows = await db.projectReferences.bulkGet(unique.map(item => item.referenceId));
     const media = await db.media.bulkGet(rows.map(row => row?.projectId === projectId ? row.mediaId : ""));
@@ -49,7 +52,7 @@ export async function collectReferenceEvidence(projectId: string, attachments: r
             fingerprint: {
                 attachment,
                 source: row ?? null,
-                media: bytes ? {id: bytes.id, mimeType: bytes.mimeType, size: bytes.blob.size} : null
+                media: bytes ? {id: bytes.id, mimeType: bytes.mimeType, size: binaryByteLength(bytes.blob)} : null
             }
         };
     });

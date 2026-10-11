@@ -1,10 +1,12 @@
-import {db} from '@/db/database';
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from '@/db/database';
 import type {AgentToolContext} from './tools';
 import {getProjectKind} from '@/domain/types';
 import {ToolRecoveryError} from './toolErrors';
 
 /** Scope is read from durable execution, never from the model or mutable UI. */
-export async function frozenProjectScope(context: AgentToolContext): Promise<string | undefined> {
+export async function frozenProjectScope(context: AgentToolContext, store?: ProductStore): Promise<string | undefined> {
+    const db = store ?? context.store ?? productDb;
     const run = await db.agentRuns.get(context.runId), thread = await db.chatThreads.get(context.threadId);
     if (!run || !thread || run.threadId !== context.threadId || thread.projectId !== run.projectId || context.projectId !== undefined && context.projectId !== run.projectId) throw new ToolRecoveryError('PROJECT_SCOPE_MISMATCH', '执行项目归属不匹配');
     if (run.projectId && !(await db.projects.get(run.projectId))) throw new ToolRecoveryError('PROJECT_NOT_FOUND', '关联项目已不存在，无法继续执行');
@@ -12,9 +14,10 @@ export async function frozenProjectScope(context: AgentToolContext): Promise<str
 }
 
 /** A missing read target means the current project, never an inferred or foreign owner. */
-export async function requireBoundProjectScope(context: AgentToolContext, requestedProjectId?: string): Promise<string> {
+export async function requireBoundProjectScope(context: AgentToolContext, requestedProjectId?: string, store?: ProductStore): Promise<string> {
+    const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
-    const projectId = await frozenProjectScope(context);
+    const projectId = await frozenProjectScope(context, db);
     if (!projectId) throw new ToolRecoveryError('PROJECT_REQUIRED', '当前对话尚未绑定项目，请从目标项目的“在此项目继续创作”入口开启对话。此次操作未执行。');
     if (requestedProjectId !== undefined && requestedProjectId !== projectId) {
         throw new ToolRecoveryError('PROJECT_SCOPE_MISMATCH', `当前对话已绑定项目，调用参数 projectId 与绑定项目不一致。当前 projectId：${projectId}。此次操作未执行；若要操作当前项目，请使用此 ID 重新读取，再根据读取结果继续。无需重新打开当前项目对话；不要重复原来的错误参数，也不要将其他项目的修改目标改到此项目。`);
@@ -23,14 +26,16 @@ export async function requireBoundProjectScope(context: AgentToolContext, reques
 }
 
 /** Resolve an omitted owner only from durable scope; retain every explicitly supplied ID. */
-export async function resolveBusinessOwner<T extends { ownerId?: string }>(args: T, context: AgentToolContext): Promise<T> {
+export async function resolveBusinessOwner<T extends { ownerId?: string }>(args: T, context: AgentToolContext, store?: ProductStore): Promise<T> {
+    const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
-    const projectId = await frozenProjectScope(context);
+    const projectId = await frozenProjectScope(context, db);
     return args.ownerId === undefined && projectId ? {...args, ownerId: projectId} : args;
 }
 
-export async function assertProjectToolScope(context: AgentToolContext, name: string, raw: unknown, write: boolean) {
-    const projectId = await frozenProjectScope(context);
+export async function assertProjectToolScope(context: AgentToolContext, name: string, raw: unknown, write: boolean, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    const projectId = await frozenProjectScope(context, db);
     if (!projectId) return;
     const args = raw as Record<string, unknown>;
     if (write) {

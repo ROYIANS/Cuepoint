@@ -1,11 +1,13 @@
-import {db} from "./database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
 import {nowIso} from "@/lib/ids";
 import {MAX_LOADED_TOOLS, toolNamesForCall} from "@/domain/agentToolSelection";
 import type {AgentToolContext} from "@/lib/agent/tools";
 import {getProjectKind} from "@/domain/types";
 
 /** Narrow exception for a project created by this run; never changes an existing binding. Caller owns transaction. */
-export async function assertAgentProjectCreation(context: AgentToolContext, continuing: boolean, executing = false) {
+export async function assertAgentProjectCreation(context: AgentToolContext, continuing: boolean, executing = false, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
     const run = await db.agentRuns.get(context.runId), thread = await db.chatThreads.get(context.threadId);
     if (!run || !thread || run.threadId !== thread.id || run.status !== "running") throw new Error("执行已停止或归属不匹配");
@@ -51,8 +53,9 @@ export async function assertAgentProjectCreation(context: AgentToolContext, cont
     return run;
 }
 
-export async function bindCreatedAgentProject(context: AgentToolContext, projectId: string): Promise<void> {
-    const run = await assertAgentProjectCreation(context, true, true);
+export async function bindCreatedAgentProject(context: AgentToolContext, projectId: string, store?: ProductStore): Promise<void> {
+    const db = store ?? context.store ?? productDb;
+    const run = await assertAgentProjectCreation(context, true, true, db);
     const project = await db.projects.get(projectId);
     if (!project) throw new Error("刚创建的项目不存在");
     const preferred = getProjectKind(project) === "audio" ? "audio-production" : getProjectKind(project) === "music" ? "music-creation" : undefined;

@@ -41,7 +41,7 @@ it.each(['project', 'episode', 'beat', 'media'] as const)('retains the execution
     const owned = vi.spyOn(store, 'readBusinessRecord').mockResolvedValue(record);
     const error = await fixture.tool.execute(fixture.args, fixture.context).catch(error => error);
     expect(error).toBeInstanceOf(AtomicToolRollbackError); expect(error.message).toBe('素材槽位不属于此实体类型');
-    expect(owned).toHaveBeenCalledWith('character', fixture.character.id, fixture.project.id, undefined);
+    expect(owned).toHaveBeenCalledWith('character', fixture.character.id, fixture.project.id, undefined, expect.objectContaining({transactionId:expect.any(String)}));
     expect(await db.characters.get(fixture.character.id)).toEqual(original);
     expect(await db.agentToolCalls.get(fixture.context.callId)).toEqual(ledger);
 });

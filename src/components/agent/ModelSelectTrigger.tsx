@@ -1,7 +1,7 @@
 import type {ChatModelMetadata} from "@/lib/ai/modelMetadata";
 import {resolveModelMetadata} from "@/lib/ai/modelMetadata";
 import {resolveVisionCapability} from "@/lib/ai/visionCapability";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {formatTokenCount} from "@/lib/agent/contextUsage";
 import {ModelIcon, ProviderIcon} from "./ModelIcons";
 import {ActionIcon} from "@lobehub/ui/base-ui";
@@ -28,7 +28,7 @@ function ModelDetail({modelId, metadata, providerId}: {
     const vendor = lookupVendor(modelId);
     const hints = inferModelHints(modelId);
     const visionKey = `${providerId ?? ""}:${modelId}:${metadata?.vision ?? "unknown"}`;
-    const visionResult = useLiveQuery(async () => ({
+    const visionResult = useProductQuery(async () => ({
         key: visionKey,
         capability: await resolveVisionCapability(modelId, providerId, metadata)
     }), [visionKey]);

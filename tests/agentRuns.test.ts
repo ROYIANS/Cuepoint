@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import Dexie from "dexie";
+import {browserDatabase} from "@/lib/storage/browserDatabase";
+import {createBrowserProductStore} from "@/lib/storage/browser";
 import { db } from "@/db/database";
 import { beginAgentRun, checkpointAgentRun, finishAgentRun, canRetryRun, assertRetryConnector } from "@/db/agentRuns";
 import {createChatThread} from "@/db/chat";
@@ -133,6 +135,8 @@ describe("durable Agent runs", () => {
     expect((await db.chatMessages.get(abandoned.assistantMessageId))?.content).toBe("saved partial");
   });
   it("upgrades v7 without losing history and marks orphan streams interrupted", async () => {
+    if (!browserDatabase) throw new Error("Historical migration comparator requires browser storage");
+    const db=createBrowserProductStore(browserDatabase);
     await db.delete();
     const old = new Dexie("aifenjing");
     old.version(7).stores({ projects: "id, updatedAt", characters: "id, projectId, updatedAt", scenes: "id, projectId, updatedAt", props: "id, projectId, updatedAt", styles: "id, projectId, updatedAt", episodes: "id, projectId, order, updatedAt", shots: "id, projectId, episodeId, order", media: "id, projectId", connectors: "id, definitionId, updatedAt", chatThreads: "id, updatedAt", chatMessages: "id, threadId, createdAt", productionProposals: "id, projectId, episodeId, status, createdAt" });

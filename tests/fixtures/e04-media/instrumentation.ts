@@ -1,4 +1,4 @@
-import {db} from "@/db/database";
+import {browserDatabase} from "@/lib/storage/browserDatabase";
 import type {DBCore} from "dexie";
 
 export interface Scan {
@@ -7,7 +7,7 @@ export interface Scan {
 }
 let active: Scan[] | undefined;
 // Highest layer: observe the actual repository requests, including filtering cursor steps.
-db.use({stack: "dbcore", name: "e04-media-work-count", level: 20, create(core: DBCore): DBCore {
+browserDatabase!.use({stack: "dbcore", name: "e04-media-work-count", level: 20, create(core: DBCore): DBCore {
     return {...core, table(name) {
         const table = core.table(name);
         const capture = (method: string, trans: unknown, extra: Partial<Scan> = {}) => {

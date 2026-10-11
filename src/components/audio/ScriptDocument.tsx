@@ -249,7 +249,7 @@ function ScriptParagraph({
         }} placeholder="写下正文…" rows={1}/>{status === "error" &&
             <DraftStatus status={status} error={error} onRetry={() => void retry()}
                          onUseLatest={useLatest}/>}{preview &&
-            <div className="as-inline-audition"><SourcePlayer src={preview.url} title={`第 ${index + 1} 行`} autoplay/>
+            <div className="as-inline-audition"><SourcePlayer src={preview.url} onError={preview.onError} title={`第 ${index + 1} 行`} autoplay/>
             </div>}</div>
     </article>;
 }

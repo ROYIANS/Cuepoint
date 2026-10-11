@@ -34,10 +34,13 @@ vi.mock("react", async original => {
         useCallback: (callback: unknown) => callback,
     };
 });
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: (querier: () => Promise<unknown>) => {
-    host.queriers.push(querier);
-    return host.results[host.queryIndex++];
-}}));
+vi.mock("@/lib/storage/hooks", () => {
+    const read = (querier: (tx: typeof db) => Promise<unknown>) => {
+        host.queriers.push(() => querier(db));
+        return host.results[host.queryIndex++];
+    };
+    return {useProductQuery: read, useProductQueryState: (querier: (tx: typeof db) => Promise<unknown>) => ({value: read(querier), error: null})};
+});
 vi.mock("@tanstack/react-router", () => ({
     Link: () => null, Navigate: () => null, Outlet: () => null,
     useNavigate: () => vi.fn(), useBlocker: () => ({status: "idle"}),
@@ -106,7 +109,7 @@ function expectLoading(tree: Node[]) {
 }
 function name(node: Node) {return typeof node.type === "function" ? node.type.name : node.type;}
 beforeEach(reset);
-vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn()});
+vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn()});
 
 const assetCases = [
     {kind: "character", add: repoAssets.addCharacter, page: (id: string, owner: string) => CharacterDetailPage({characterId: id, back: {kind: "project", projectId: owner}})},

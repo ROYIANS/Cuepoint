@@ -10,6 +10,12 @@ fn main() {
         #[cfg(feature = "acceptance")]
         let commands: &'static [&'static str] = &[
             "workspace_request",
+            "product_store_request",
+            "product_binary_request",
+            "product_binary_read",
+            "product_binary_write",
+            "product_media_preview",
+            "product_media_release",
             "workspace_cancel",
             "authorize_http_origin",
             "product_save_begin",
@@ -23,6 +29,12 @@ fn main() {
         #[cfg(not(feature = "acceptance"))]
         let commands: &'static [&'static str] = &[
             "workspace_request",
+            "product_store_request",
+            "product_binary_request",
+            "product_binary_read",
+            "product_binary_write",
+            "product_media_preview",
+            "product_media_release",
             "workspace_cancel",
             "authorize_http_origin",
             "product_save_begin",

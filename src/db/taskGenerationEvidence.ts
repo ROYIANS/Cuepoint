@@ -1,3 +1,7 @@
+import {binaryByteLength} from "@/domain/binary";
+import {binaryAvailability} from "@/lib/storage/binary";
+import {isBinaryReference} from "@/lib/storage/codec";
+import type {ProductStore} from "@/lib/storage/types";
 import type {AgentRun, AgentTask, AgentToolCall} from "@/domain/agent";
 import type {AgentGenerationJob} from "@/domain/agentGeneration";
 import type {ProductionTarget} from "@/domain/production";
@@ -11,7 +15,7 @@ import {
     STUDIO_LIBRARY_ID,
     STYLE_SLOTS
 } from "@/domain/types";
-import {db} from "./database";
+import {db as productDb} from "./database";
 
 type TaskOwner = Pick<AgentTask, "id" | "threadId">;
 export const PICTURE_GENERATION_TOOLS = ["submit_generation", "check_generation", "apply_generation"] as const;
@@ -46,7 +50,8 @@ function ownsGenerationRun(task: TaskOwner, job: AgentGenerationJob, run: AgentR
     return !!run && run.taskId === task.id && run.threadId === task.threadId && run.projectId === job.projectId;
 }
 
-export async function ownedTaskGenerationJob(task: TaskOwner, job: AgentGenerationJob): Promise<boolean> {
+export async function ownedTaskGenerationJob(task: TaskOwner, job: AgentGenerationJob, store?: ProductStore): Promise<boolean> {
+    const db = store ?? productDb;
     const current = await db.agentTasks.get(task.id);
     if (!current || current.threadId !== task.threadId || current.projectId !== job.projectId || job.threadId !== task.threadId) return false;
     if (!ownsGenerationRun(task, job, await db.agentRuns.get(job.runId))) return false;
@@ -63,13 +68,14 @@ function hasDownloadedGenerationResult(job: AgentGenerationJob): boolean {
 
 function hasAvailableGenerationMedia(job: AgentGenerationJob, media: MediaRecord | undefined): media is MediaRecord {
     if (!media || media.projectId !== job.projectId) return false;
-    if (!(media.blob instanceof Blob) || media.blob.size === 0) return false;
+    if (!(media.blob instanceof Blob) && !isBinaryReference(media.blob) || binaryByteLength(media.blob) === 0) return false;
     if (typeof media.mimeType !== "string") return false;
     const prefix = `${job.kind}/`;
     return media.mimeType.startsWith(prefix) && media.mimeType.length > prefix.length;
 }
 
-async function readCurrentShotSlot(job: AgentGenerationJob, target: Extract<ProductionTarget, { kind: "shot" }>) {
+async function readCurrentShotSlot(job: AgentGenerationJob, target: Extract<ProductionTarget, { kind: "shot" }>, store?: ProductStore) {
+    const db = store ?? productDb;
     if (!target.slot || !["firstFrame", "lastFrame", "clip"].includes(target.slot)) return undefined;
     const expectedKind = target.slot === "clip" ? "video" : "image";
     if (job.kind !== expectedKind) return undefined;
@@ -90,13 +96,14 @@ function currentAssetSlot(job: AgentGenerationJob, entity: {
     return (entity.slots as Record<string, unknown>)[job.target.slot!];
 }
 
-async function readCurrentGenerationSlot(job: AgentGenerationJob): Promise<unknown> {
+async function readCurrentGenerationSlot(job: AgentGenerationJob, store?: ProductStore): Promise<unknown> {
+    const db = store ?? productDb;
     const target = job.target;
     if (!target.slot || target.projectId !== job.projectId) return undefined;
     if (target.projectId !== STUDIO_LIBRARY_ID && !await db.projects.get(target.projectId)) return undefined;
     switch (target.kind) {
         case "shot":
-            return Promise.resolve(readCurrentShotSlot(job, target));
+            return Promise.resolve(readCurrentShotSlot(job, target, db));
         case "character":
             return currentAssetSlot(job, await db.characters.get(target.entityId), CHARACTER_SLOTS);
         case "scene":
@@ -111,13 +118,14 @@ async function readCurrentGenerationSlot(job: AgentGenerationJob): Promise<unkno
 }
 
 /** File availability survives target deletion; application requires a currently legal slot. */
-export async function inspectTaskGenerationOutput(job: AgentGenerationJob) {
+export async function inspectTaskGenerationOutput(job: AgentGenerationJob, store?: ProductStore) {
+    const db = store ?? productDb;
     let media: MediaRecord | undefined;
     if (isGenerationResult(job.result)) media = await db.media.get(job.result.mediaId);
-    const available = hasDownloadedGenerationResult(job) && hasAvailableGenerationMedia(job, media);
+    const available = hasDownloadedGenerationResult(job) && hasAvailableGenerationMedia(job, media) && await db.waitFor(binaryAvailability(media.blob)) === "ready";
     let applied = false;
     if (available) {
-        const result = parseGenerationSlot(await Promise.resolve(readCurrentGenerationSlot(job))).result;
+        const result = parseGenerationSlot(await Promise.resolve(readCurrentGenerationSlot(job, db))).result;
         applied = !!result && result.mediaId === media?.id && result.kind === job.kind;
     }
     return {media, available, applied, supportsResult: available};
@@ -125,17 +133,18 @@ export async function inspectTaskGenerationOutput(job: AgentGenerationJob) {
 
 /** Callers adopt native helper promises with Promise.resolve inside Dexie transactions.
  * A successful call must identify the same owned job and output it actually returned. */
-export async function taskGenerationToolSource(task: TaskOwner, call: AgentToolCall) {
+export async function taskGenerationToolSource(task: TaskOwner, call: AgentToolCall, store?: ProductStore) {
+    const db = store ?? productDb;
     if (!provesCompletedGeneration(call)) return undefined;
     const value = objectJson(call.result), args = objectJson(call.arguments);
     if (typeof value.jobId !== "string" || !isGenerationResult(value.result)) return undefined;
     const job = await db.agentGenerationJobs.get(value.jobId);
-    if (!job || !await Promise.resolve(ownedTaskGenerationJob(task, job)) || call.threadId !== task.threadId) return undefined;
+    if (!job || !await Promise.resolve(ownedTaskGenerationJob(task, job, db)) || call.threadId !== task.threadId) return undefined;
     if (!ownsGenerationRun(task, job, await db.agentRuns.get(call.runId))) return undefined;
     if (call.name === "submit_generation") {
         if (job.callId !== call.id || job.runId !== call.runId) return undefined;
     } else if (args.jobId !== job.id) return undefined;
     if (call.name === "apply_generation" && job.batchId) return undefined;
     if (value.result.mediaId !== job.result?.mediaId || value.result.kind !== job.kind) return undefined;
-    return {jobId: job.id, ...await Promise.resolve(inspectTaskGenerationOutput(job))};
+    return {jobId: job.id, ...await Promise.resolve(inspectTaskGenerationOutput(job, db))};
 }

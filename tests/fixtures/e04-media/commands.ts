@@ -1,5 +1,7 @@
 import Dexie from "dexie";
 import {db} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
+import {interceptStoreTable} from "../../helpers/storeFaults";
 import {createProject, patchProjectOutput} from "@/db/projects";
 import {addShot, deleteShots, deleteEpisodeShots, restoreShots, setShotSlot} from "@/db/shots";
 import {addEpisode, deleteEpisode, restoreEpisode, addStoryBeat} from "@/db/episodes";
@@ -37,14 +39,14 @@ export async function prepareCommand(name: CommandName, size = 3) {
     await db.media.bulkPut(ids.map(id => media(id, project.id)));
     const shot = await addShot(project.id, episode.id), sibling = await addShot(project.id, episode.id);
     await db.shots.update(shot.id, {firstFrame: slot([...ids, ...ids])});
-    let execute: () => Promise<unknown>, undo: ((value: unknown) => Promise<void>) | undefined;
+    let execute: (store?: ProductStore) => Promise<unknown>, undo: ((value: unknown) => Promise<void>) | undefined;
     let releaseUseId: string | undefined;
-    if (name === "deleteShots") execute = () => deleteShots([shot.id, shot.id, "missing"]);
+    if (name === "deleteShots") execute = (store = db) => deleteShots([shot.id, shot.id, "missing"], store);
     else if (name === "deleteEpisodeShots") {
-        execute = () => deleteEpisodeShots(episode.id, [shot.id]);
+        execute = (store = db) => deleteEpisodeShots(episode.id, [shot.id], store);
         undo = value => {const saved = value as Awaited<ReturnType<typeof deleteEpisodeShots>>; check(saved?.media.length === size, "committed shot snapshot"); return restoreShots(saved.shots, saved.media);};
     } else if (name === "deleteEpisode") {
-        await addEpisode(project.id); execute = () => deleteEpisode(episode.id);
+        await addEpisode(project.id); execute = (store = db) => deleteEpisode(episode.id, store);
         undo = value => {const saved = value as Awaited<ReturnType<typeof deleteEpisode>>; check(saved?.media.length === size, "committed episode snapshot"); return restoreEpisode(saved);};
     } else if (name === "deleteChatThread") {
         await db.shots.update(shot.id, {firstFrame: emptySlot()});
@@ -53,15 +55,15 @@ export async function prepareCommand(name: CommandName, size = 3) {
         await db.agentGenerationBatches.put({...batch("removed-batch", project.id), threadId: thread.id, applications: [{itemId: "removed-item", jobId: `job-${ids[0]}`, targetKey: "missing", baseline: "old", beforeRevision: "old", afterRevision: "old", at, result: {mediaId: ids[0], kind: "image"}}]});
         await db.agentGenerationBatchItems.put({...item("removed-item", project.id), threadId: thread.id, draft: {...item("removed-item", project.id).draft, inputs: [{mediaId: ids[0], role: "reference-image"}]}});
         await db.chatMessages.put({id: "removed-message", threadId: thread.id, role: "user", content: "keep on rollback", createdAt: at});
-        execute = () => deleteChatThread(thread.id);
-    } else if (name === "setShotSlot") execute = () => setShotSlot(shot.id, "firstFrame", emptySlot());
+        execute = (store = db) => deleteChatThread(thread.id, store);
+    } else if (name === "setShotSlot") execute = (store = db) => setShotSlot(shot.id, "firstFrame", emptySlot(), undefined, store);
     else if (name === "patchProjectOutput" || name === "removeProjectReference") {
         check(size === 1, "single-candidate command"); await db.shots.update(shot.id, {firstFrame: emptySlot()});
-        if (name === "patchProjectOutput") {await patchProjectOutput(project.id, {coverMediaId: ids[0]}); execute = () => patchProjectOutput(project.id, {coverMediaId: null, aspectPreset: "9:16"});}
+        if (name === "patchProjectOutput") {await patchProjectOutput(project.id, {coverMediaId: ids[0]}); execute = (store = db) => patchProjectOutput(project.id, {coverMediaId: null, aspectPreset: "9:16"}, store);}
         else {
             await currentSources.find(source => source.name === "reference ready")!.put(ids[0], project.id);
             await db.referenceChunks.put({id: "removed-chunk", projectId: project.id, referenceId: `source-${ids[0]}`, revision: 1, index: 0, text: "parsed local bytes", locator: {kind: "lines", start: 1, end: 1}});
-            execute = () => removeProjectReference(project.id, `source-${ids[0]}`);
+            execute = (store = db) => removeProjectReference(project.id, `source-${ids[0]}`, store);
         }
     } else {
         await db.shots.update(shot.id, {firstFrame: emptySlot()});
@@ -69,26 +71,26 @@ export async function prepareCommand(name: CommandName, size = 3) {
         if (name.includes("Character") || name === "releaseMaterialUse") {
             const asset = await addCharacter(project.id); await db.characters.update(asset.id, {slots: {front: slot(ids), side: slot(ids)}});
             await db.shots.update(sibling.id, {characterIds: [asset.id]}); await db.episodes.update(episode.id, {story: {...(await db.episodes.get(episode.id))!.story, beats: [{...beat, characterIds: [asset.id]}]}});
-            if (name === "deleteCharacter") execute = () => deleteCharacter(asset.id);
-            else if (name === "setCharacterSlot") {await db.characters.update(asset.id, {slots: {front: slot(ids)}}); execute = () => setCharacterSlot(asset.id, "front", emptySlot());}
+            if (name === "deleteCharacter") execute = (store = db) => deleteCharacter(asset.id, store);
+            else if (name === "setCharacterSlot") {await db.characters.update(asset.id, {slots: {front: slot(ids)}}); execute = (store = db) => setCharacterSlot(asset.id, "front", emptySlot(), undefined, store);}
             else {
                 const material = await promoteLegacyMaterial("character", asset.id, {kind: "global"});
                 const destination = await createProject("adopted setting"); const use = await adoptMaterialInProject(material.id, destination.id);
                 // Remove the adopted owner first. Flags/use retain every immutable copied Blob.
                 await deleteCharacter(use.targetId); await db.media.bulkDelete(ids);
                 ids.splice(0, ids.length, ...use.mediaIds); releaseUseId = use.id;
-                execute = () => releaseMaterialUse(use.id);
+                execute = (store = db) => releaseMaterialUse(use.id, store);
             }
         } else if (name.includes("Scene")) {
             const asset = await addScene(project.id); await db.scenes.update(asset.id, {slots: {wide: slot(ids)}});
             await db.shots.update(sibling.id, {sceneId: asset.id}); await db.episodes.update(episode.id, {story: {...(await db.episodes.get(episode.id))!.story, beats: [{...beat, sceneId: asset.id}]}});
-            execute = name === "deleteScene" ? () => deleteScene(asset.id) : () => setSceneSlot(asset.id, "wide", emptySlot());
+            execute = (store = db) => name === "deleteScene" ? deleteScene(asset.id, store) : setSceneSlot(asset.id, "wide", emptySlot(), undefined, store);
         } else if (name.includes("Prop")) {
             const asset = await addProp(project.id); await db.props.update(asset.id, {slots: {hero: slot(ids)}}); await db.shots.update(sibling.id, {propIds: [asset.id]});
-            execute = name === "deleteProp" ? () => deleteProp(asset.id) : () => setPropSlot(asset.id, "hero", emptySlot());
+            execute = (store = db) => name === "deleteProp" ? deleteProp(asset.id, store) : setPropSlot(asset.id, "hero", emptySlot(), undefined, store);
         } else {
             const asset = await addStyle(project.id); await db.styles.update(asset.id, {slots: {look: slot(ids)}}); await db.projects.update(project.id, {defaultStyleId: asset.id}); await db.shots.update(sibling.id, {styleId: asset.id});
-            execute = name === "deleteStyle" ? () => deleteStyle(asset.id) : () => setStyleSlot(asset.id, "look", emptySlot());
+            execute = (store = db) => name === "deleteStyle" ? deleteStyle(asset.id, store) : setStyleSlot(asset.id, "look", emptySlot(), undefined, store);
         }
     }
     return {ids, execute: execute!, undo, projectId: project.id, releaseUseId};
@@ -96,16 +98,16 @@ export async function prepareCommand(name: CommandName, size = 3) {
 export async function commandRollback(name: CommandName) {
     const prepared = await prepareCommand(name, ["patchProjectOutput", "removeProjectReference"].includes(name) ? 1 : 3), before = await snapshot();
     let deletes = 0, failureReached = false, escapedSnapshot = false;
-    const originalDelete = db.media.delete;
-    db.media.delete = function(id) {return Dexie.Promise.resolve().then(async () => {
-        await originalDelete.call(db.media, id);
+    const fault = interceptStoreTable(db, "media", "delete", async (tx, args, next) => {
+        await next();
+        const id = String(args[0]);
         if (prepared.ids.includes(id)) {
-            deletes++; check(!await db.media.get(id), "fault must follow actual Blob deletion");
+            deletes++; check(!await tx.media.get(id), "fault must follow actual Blob deletion");
             if (deletes === Math.min(2, prepared.ids.length)) {failureReached = true; throw new Error("E04 later actual media mutation fault");}
         }
-    });};
+    });
     try {await rejects(async () => {await prepared.execute(); escapedSnapshot = true;}, "E04 later actual media mutation fault");}
-    finally {db.media.delete = originalDelete;}
+    finally {fault.mockRestore();}
     check(failureReached && !escapedSnapshot && await snapshot() === before, `${name}: whole state/Blobs rollback`);
     const value = await prepared.execute();
     check((await db.media.bulkGet(prepared.ids)).every(row => row === undefined), `${name}: retry orphan collection`);
@@ -134,26 +136,28 @@ export async function commandWork(name: CommandName, size: number) {
 }
 export async function releaseEventRollback() {
     const prepared = await prepareCommand("releaseMaterialUse"), before = await snapshot();
-    const originalAdd = db.materialEvents.add; let failed = false, copiesGone = false;
-    db.materialEvents.add = function(row, key) {return Dexie.Promise.resolve().then(async () => {
+    let failed = false, copiesGone = false;
+    const fault = interceptStoreTable(db, "materialEvents", "add", async (tx, args, next) => {
+        const row = args[0] as {action: string};
         if (row.action === "release") {
-            copiesGone = (await db.media.bulkGet(prepared.ids)).every(record => record === undefined);
-            check(copiesGone && !await db.materialUses.get(prepared.releaseUseId!), "event fault follows ALL copy/binding deletions");
+            copiesGone = (await tx.media.bulkGet(prepared.ids)).every(record => record === undefined);
+            check(copiesGone && !await tx.materialUses.get(prepared.releaseUseId!), "event fault follows ALL copy/binding deletions");
             failed = true; throw new Error("E04 final release event fault");
         }
-        return originalAdd.call(db.materialEvents, row, key);
-    });};
-    try {await rejects(prepared.execute, "E04 final release event fault");} finally {db.materialEvents.add = originalAdd;}
+        return next();
+    });
+    try {await rejects(prepared.execute, "E04 final release event fault");} finally {fault.mockRestore();}
     check(failed && copiesGone && await snapshot() === before, "release event restores flags/copies/library/event bytes");
-    const originalBulk = db.media.bulkGet; let clearedBeforeSnapshot = false;
-    db.media.bulkGet = function(keys) {
+    let clearedBeforeSnapshot = false;
+    const capture = interceptStoreTable(db, "media", "bulkGet", async (_tx, args, next) => {
+        const keys = args[0] as string[];
+        const records = await next() as Array<{libraryRetained?: boolean} | undefined>;
         if (keys.length === prepared.ids.length && keys.every(id => prepared.ids.includes(id))) {
-            const captured = originalBulk.call(db.media, keys);
-            return captured.then(records => {if (records.every(row => row && row.libraryRetained === false)) clearedBeforeSnapshot = true; return records;});
+            if (records.every(row => row && row.libraryRetained === false)) clearedBeforeSnapshot = true;
         }
-        return originalBulk.call(db.media, keys);
-    };
-    try {await prepared.execute();} finally {db.media.bulkGet = originalBulk;}
+        return records;
+    });
+    try {await prepared.execute();} finally {capture.mockRestore();}
     check(clearedBeforeSnapshot, "all retained flags false before batch bulk read/snapshot");
     check(await db.materialEvents.filter(row => row.action === "release").count() === 1, "release event once");
     return {copies: prepared.ids.length, copiesGone, clearedBeforeSnapshot, rollback: true, oneEventOnRetry: true};
@@ -161,18 +165,17 @@ export async function releaseEventRollback() {
 export async function retainedReleaseRollback(source: RetentionSource) {
     const prepared = await prepareCommand("releaseMaterialUse"), records = await db.media.bulkGet(prepared.ids), last = records.at(-1)!;
     await source.put(last.id, last.projectId); const before = await snapshot(); let actualDeletes = 0;
-    const original = db.media.delete;
-    db.media.delete = function(id) {return Dexie.Promise.resolve().then(async () => {await original.call(db.media, id); actualDeletes++;});};
-    try {await rejects(prepared.execute, "暂时不能移除");} finally {db.media.delete = original;}
+    const capture = interceptStoreTable(db, "media", "delete", async (_tx, _args, next) => {await next(); actualDeletes++;});
+    try {await rejects(prepared.execute, "暂时不能移除");} finally {capture.mockRestore();}
     check(await snapshot() === before, `${source.name}: release restores all copies/use/flags/events`);
     check(source.table === "materialUses" || actualDeletes >= 2, `${source.name}: later retained candidate rolls back earlier actual deletes`);
     return {source: source.name, actualDeletes, rollback: true};
 }
 export async function outerTransactionRollback(name: "deleteShots" | "deleteEpisodeShots" = "deleteShots") {
     const prepared = await prepareCommand(name), before = await snapshot(); let innerDeleted = false;
-    await rejects(() => db.transaction("rw", db.tables, async () => {
+    await rejects(() => db.transaction("rw", db.tables, async (db) => {
         const native = Dexie.currentTransaction!.idbtrans;
-        await prepared.execute(); innerDeleted = !await db.media.get(prepared.ids[0]);
+        await prepared.execute(db); innerDeleted = !await db.media.get(prepared.ids[0]);
         check(innerDeleted && Dexie.currentTransaction!.idbtrans === native, "nested command returned in same root after real delete");
         throw new Error("E04 outer receipt failure");
     }), "E04 outer receipt failure");

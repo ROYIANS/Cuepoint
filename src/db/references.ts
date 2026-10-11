@@ -1,19 +1,22 @@
-import {db} from "./database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
 import {deleteMediaIfOrphan} from "./media";
 import {PRODUCTION_TABLES} from "./productionShared";
 import type {ProjectReference, ReferenceAttachment, ReferenceChunk} from "@/domain/references";
 import {isStudioLibrary} from "@/domain/types";
 import {nowIso} from "@/lib/ids";
 
-export async function listProjectReferences(projectId: string): Promise<ProjectReference[]> {
+export async function listProjectReferences(projectId: string, store?: ProductStore): Promise<ProjectReference[]> {
+    const db = store ?? productDb;
     if (isStudioLibrary(projectId) || !(await db.projects.get(projectId))) return [];
     return (await db.projectReferences.where("projectId").equals(projectId).toArray())
         .filter((row) => row.status !== "unavailable").sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 /** Single read snapshot: no foreign bytes, withdrawn sources or changing revisions. */
-export async function getReferenceSource(projectId: string, attachment: ReferenceAttachment) {
-    return db.transaction("r", [db.projects, db.projectReferences, db.referenceChunks, db.media], async () => {
+export async function getReferenceSource(projectId: string, attachment: ReferenceAttachment, store?: ProductStore) {
+    const db = store ?? productDb;
+    return db.transaction("r", [db.projects, db.projectReferences, db.referenceChunks, db.media], async (db) => {
         if (isStudioLibrary(projectId) || !(await db.projects.get(projectId))) throw new Error("项目不存在");
         const reference = await db.projectReferences.get(attachment.referenceId);
         if (!reference || reference.projectId !== projectId || reference.status === "unavailable") throw new Error("参考资料已移除或不属于当前项目");
@@ -32,8 +35,9 @@ export async function readProjectReference(projectId: string, attachment: Refere
     start?: number;
     limit?: number;
     maxChars?: number
-} = {}) {
-    const source = await getReferenceSource(projectId, attachment);
+} = {}, store?: ProductStore) {
+    const db = store ?? productDb;
+    const source = await getReferenceSource(projectId, attachment, db);
     const {start = 0, limit = 8, maxChars = 16_000} = options;
     if (!Number.isSafeInteger(start) || start < 0 || !Number.isSafeInteger(limit) || limit < 1 || limit > 20 || !Number.isSafeInteger(maxChars) || maxChars < 1 || maxChars > 32_000) throw new Error("资料读取范围无效");
     const chunks: ReferenceChunk[] = [];
@@ -52,9 +56,10 @@ export async function readProjectReference(projectId: string, attachment: Refere
     };
 }
 
-export async function searchProjectReferences(projectId: string, query: string, limit = 10) {
+export async function searchProjectReferences(projectId: string, query: string, limit = 10, store?: ProductStore) {
+    const db = store ?? productDb;
     if (!Number.isSafeInteger(limit) || limit < 1 || limit > 30 || query.length > 500) throw new Error("搜索参数无效");
-    return db.transaction("r", [db.projects, db.projectReferences, db.referenceChunks], async () => {
+    return db.transaction("r", [db.projects, db.projectReferences, db.referenceChunks], async (db) => {
         if (isStudioLibrary(projectId) || !(await db.projects.get(projectId))) throw new Error("项目不存在");
         const references = (await db.projectReferences.where("projectId").equals(projectId).toArray()).filter((row) => row.status === "ready" || row.status === "partial");
         const needle = query.trim().toLocaleLowerCase();
@@ -75,8 +80,9 @@ export async function searchProjectReferences(projectId: string, query: string, 
     });
 }
 
-export async function removeProjectReference(projectId: string, referenceId: string): Promise<void> {
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+export async function removeProjectReference(projectId: string, referenceId: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const reference = await db.projectReferences.get(referenceId);
         if (!reference || reference.projectId !== projectId) throw new Error("参考资料不属于当前项目");
         if (reference.status === "unavailable") return;
@@ -87,6 +93,6 @@ export async function removeProjectReference(projectId: string, referenceId: str
             updatedAt: nowIso()
         });
         await db.referenceChunks.where("referenceId").equals(referenceId).delete();
-        await deleteMediaIfOrphan(reference.mediaId);
+        await deleteMediaIfOrphan(reference.mediaId, db);
     });
 }

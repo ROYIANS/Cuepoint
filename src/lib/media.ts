@@ -1,11 +1,12 @@
-import {useEffect, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
-import {usesSqliteProductStorage} from "@/lib/productStorage";
-import {db} from "@/db/database";
+import {useEffect, useRef, useState} from "react";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {putMedia} from "@/db/media";
 import {kindFromMime} from "@/domain/slot";
-import type {Id, MediaKind, MediaRecord} from "@/domain/types";
+import type {Id, MediaKind} from "@/domain/types";
 import {BROWSER_WORKSPACE_ID, copyIntoManagedWorkspace, type ManagedCopy} from "@/lib/workspace";
+import {binaryAvailability, createBinaryObjectUrl} from "@/lib/storage/binary";
+import type {BinaryContent} from "@/domain/binary";
+import {BinaryUnavailableError} from "@/lib/storage/nativeBinary";
 
 export const IMAGE_ACCEPT = "image/png,image/jpeg,image/webp,image/gif";
 export const VIDEO_ACCEPT = "video/mp4,video/webm,video/quicktime";
@@ -15,38 +16,103 @@ export interface MediaView {
     url: string;
     mimeType: string;
     kind: MediaKind;
+    onError: () => void;
 }
+export type MediaState = {status: "ready";media: MediaView}
+    | {status: "empty" | "loading" | "missing" | "corrupt" | "error"};
 
 export function useMedia(mediaId: Id | undefined): MediaView | undefined {
-    const [view, setView] = useState<{ id: Id; record: MediaRecord; media: MediaView }>();
-    const record = useLiveQuery(async () => usesSqliteProductStorage() ? null : mediaId ? (await db.media.get(mediaId)) ?? null : null, [mediaId]);
+    const state = useMediaState(mediaId);
+    return state.status === "ready" ? state.media : undefined;
+}
 
+export type BinaryPreviewState = {status: "ready"; url: string; onError: () => void}
+    | {status: "empty" | "loading" | "missing" | "corrupt" | "error"};
+
+/** One lifecycle for project files and immutable material snapshots. */
+export function useBinaryPreview(binary: BinaryContent | undefined, enabled = true): BinaryPreviewState {
+    const [view, setView] = useState<{binary: BinaryContent; state: BinaryPreviewState}>();
+    const [revision, setRevision] = useState(0);
+    const wanted = useRef({binary, enabled});
+    wanted.current = {binary, enabled};
+    const current = useRef<object | undefined>(undefined);
     useEffect(() => {
-        if (!mediaId || !record || record.id !== mediaId) {
+        if (!binary || !enabled) {setView(undefined);return;}
+        const owner = {};
+        current.current = owner;
+        const controller = new AbortController();
+        let release: (() => void) | undefined;
+        let failed = false;
+        const isCurrent = () => current.current === owner && wanted.current.binary === binary && wanted.current.enabled && !controller.signal.aborted;
+        const releaseOwned = () => {const owned = release;release = undefined;owned?.();};
+        const onError = () => {
+            if (!isCurrent() || failed) return;
+            failed = true;
+            releaseOwned();
+            setView({binary, state: {status: "loading"}});
+            void binaryAvailability(binary, controller.signal).then(availability => {
+                if (isCurrent()) setView({binary, state: {status: availability === "ready" ? "error" : availability}});
+            }).catch(() => {
+                if (isCurrent()) setView({binary, state: {status: "error"}});
+            });
+        };
+        if (binary instanceof Blob) {
+            const url = URL.createObjectURL(binary);
+            release = () => URL.revokeObjectURL(url);
+            setView({binary, state: {status: "ready", url, onError}});
+        } else {
             setView(undefined);
-            return;
+            void createBinaryObjectUrl(binary, controller.signal).then(preview => {
+                if (!isCurrent()) {preview.release();return;}
+                release = () => preview.release();
+                setView({binary, state: {status: "ready", url: preview.url, onError}});
+            }).catch((error: unknown) => {
+                if (isCurrent()) setView({binary, state: {status: error instanceof BinaryUnavailableError ? error.availability : "error"}});
+            });
         }
-        const url = URL.createObjectURL(record.blob);
-        setView({
-            id: mediaId,
-            record,
-            media: {
-                url,
-                mimeType: record.mimeType,
-                kind: kindFromMime(record.mimeType),
-            },
-        });
-        return () => URL.revokeObjectURL(url);
-    }, [mediaId, record]);
+        return () => {
+            if (current.current === owner) current.current = undefined;
+            controller.abort();
+            releaseOwned();
+        };
+    }, [binary, enabled, revision]);
+    useEffect(() => {
+        const refresh = () => setRevision(value => value + 1);
+        window.addEventListener("focus", refresh);
+        if (typeof document !== "undefined") document.addEventListener("visibilitychange", refresh);
+        return () => {
+            window.removeEventListener("focus", refresh);
+            if (typeof document !== "undefined") document.removeEventListener("visibilitychange", refresh);
+        };
+    }, []);
+    if (!binary || !enabled) return {status: "empty"};
+    return view?.binary === binary ? view.state : {status: "loading"};
+}
 
-    return view && view.id === mediaId && view.record === record ? view.media : undefined;
+export function binaryPreviewMessage(state: BinaryPreviewState): string {
+    switch (state.status) {
+        case "missing": return "素材已丢失，请重新导入";
+        case "corrupt": return "素材内容已损坏，无法预览";
+        case "error": return "读取素材失败，请重新打开后重试";
+        case "empty": return "没有素材";
+        case "loading": return "正在读取素材…";
+        case "ready": return "素材已就绪";
+    }
+}
+
+export function useMediaState(mediaId: Id | undefined): MediaState {
+    const record = useProductQuery(async (db) => mediaId ? (await db.media.get(mediaId)) ?? null : null, [mediaId]);
+    const view = useBinaryPreview(record && record.id === mediaId ? record.blob : undefined);
+    if (!mediaId) return {status: "empty"};
+    if (record === null) return {status: "missing"};
+    if (!record || record.id !== mediaId) return {status: "loading"};
+    return view.status === "ready" ? {status: "ready", media: {url: view.url, mimeType: record.mimeType, kind: kindFromMime(record.mimeType), onError: view.onError}} : view;
 }
 
 export async function uploadMediaFile(projectId: Id, file: File, signal?: AbortSignal): Promise<{
     id: Id;
     kind: MediaKind;
 }> {
-    if (usesSqliteProductStorage()) throw new Error("原生媒体槽尚未支持上传");
     if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
         throw new Error("请选择图片或视频文件");
     }

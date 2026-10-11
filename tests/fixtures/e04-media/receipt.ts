@@ -1,5 +1,6 @@
 import Dexie from "dexie";
 import {db} from "@/db/database";
+import {interceptStoreTable} from "../../helpers/storeFaults";
 import {addShot} from "@/db/shots";
 import {createProject} from "@/db/projects";
 import {createChatThread} from "@/db/chat";
@@ -26,25 +27,26 @@ async function toolDeletionLedgerRollback(name: "media_delete_orphan" | "shot_de
     context.preview = await definition.prepare?.(args, context);
     const call: AgentToolCall = {id: context.callId, runId: initial.id, threadId: thread.id, providerCallId: context.callId, step: 1, order: 0, name: definition.name, title: definition.title, arguments: JSON.stringify(raw), effect: definition.effect, highRisk: definition.highRisk(args), atomic: definition.atomic, preview: context.preview, status: "running", createdAt: at, updatedAt: at};
     await db.agentToolCalls.add(call); const before = await snapshot();
-    const original = db.agentToolCalls.update; let deleted = false, receiptCreated = false;
+    let deleted = false, receiptCreated = false;
     const mutationRoots: IDBTransaction[] = [];
-    const originalDelete = db.media.delete;
-    db.media.delete = function(key) { if (Dexie.currentTransaction) mutationRoots.push(Dexie.currentTransaction.idbtrans); return originalDelete.call(db.media, key); };
-    db.agentToolCalls.update = function(key, changes) {
-        return Dexie.Promise.resolve().then(async () => {
-            if (key === context.callId && typeof changes !== "function" && changes.status === "completed") {
-                check(Dexie.currentTransaction && mutationRoots.every(root => root === Dexie.currentTransaction!.idbtrans), `ledger and media must share native root: ${JSON.stringify({hasLedger: !!Dexie.currentTransaction, ledgerStores: Dexie.currentTransaction?.storeNames, mutationStores: mutationRoots.map(root => Array.from(root.objectStoreNames))})}`);
-                deleted = (await db.media.bulkGet(ids)).every(row => row === undefined);
-                const result = typeof changes.result === "string" ? JSON.parse(changes.result) : undefined;
-                receiptCreated = !!readWriteReceipt(result?.writeReceipt);
-                check(deleted && result?.deletedId === raw.id && (name === "shot_delete" ? receiptCreated : !receiptCreated), "ledger fault follows actual deletion and contracted tool outcome");
-                throw new Error("E04 receipt ledger fault");
-            }
-            return original.call(db.agentToolCalls, key, changes);
-        });
-    };
+    const capture = interceptStoreTable(db, "media", "delete", async (_tx, _args, next) => {
+        if (Dexie.currentTransaction) mutationRoots.push(Dexie.currentTransaction.idbtrans);
+        return next();
+    });
+    const fault = interceptStoreTable(db, "agentToolCalls", "update", async (tx, args, next) => {
+        const [key, changes] = args as [string, Partial<AgentToolCall>];
+        if (key === context.callId && changes.status === "completed") {
+            check(mutationRoots.length > 0 && Dexie.currentTransaction && mutationRoots.every(root => root === Dexie.currentTransaction!.idbtrans), `ledger and media must share native root: ${JSON.stringify({hasLedger: !!Dexie.currentTransaction, ledgerStores: Dexie.currentTransaction?.storeNames, mutationStores: mutationRoots.map(root => Array.from(root.objectStoreNames))})}`);
+            deleted = (await tx.media.bulkGet(ids)).every(row => row === undefined);
+            const result = typeof changes.result === "string" ? JSON.parse(changes.result) : undefined;
+            receiptCreated = !!readWriteReceipt(result?.writeReceipt);
+            check(deleted && result?.deletedId === raw.id && (name === "shot_delete" ? receiptCreated : !receiptCreated), "ledger fault follows actual deletion and contracted tool outcome");
+            throw new Error("E04 receipt ledger fault");
+        }
+        return next();
+    });
     try {await rejects(() => definition.execute(args, context), "E04 receipt ledger fault");}
-    finally {db.agentToolCalls.update = original; db.media.delete = originalDelete;}
+    finally {fault.mockRestore(); capture.mockRestore();}
     const after = await snapshot();
     const beforeRows = JSON.parse(before), afterRows = JSON.parse(after);
     const differences = Object.keys(beforeRows).filter(table => JSON.stringify(beforeRows[table]) !== JSON.stringify(afterRows[table])).map(table => ({table, before: beforeRows[table], after: afterRows[table]}));

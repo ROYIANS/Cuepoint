@@ -13,20 +13,24 @@ vi.mock("react", async original => {
             if (!(index in host.cells)) host.cells[index] = typeof initial === "function" ? initial() : initial;
             return [host.cells[index], (next: unknown) => {host.cells[index] = typeof next === "function" ? next(host.cells[index]) : next;}];
         },
-        useRef: (initial: unknown) => ({current: initial}),
+        useRef: (initial: unknown) => {
+            const index = host.cursor++;
+            if (!(index in host.cells)) host.cells[index] = {current: initial};
+            return host.cells[index];
+        },
         useEffect: (effect: () => unknown) => {host.effects.push(effect);},
     };
 });
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: host.liveQuery}));
+vi.mock("@/lib/storage/hooks", () => ({useProductQuery: host.liveQuery, useProductQueryState: (...args: unknown[]) => ({value: host.liveQuery(...args), error: null})}));
 
-import * as productStorage from "@/lib/productStorage";
 import {isNativeWorkspaceRuntime} from "@/lib/nativeWorkspace";
 import {db} from "@/db/database";
 import {createProject} from "@/db/projects";
 import {addShot} from "@/db/shots";
-import {useVideoWorkspaceQuery} from "@/lib/videoWorkspaceRepository";
+import {useVideoWorkspaceQuery, useVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
 import {useMedia} from "@/lib/media";
 import {useShotMedia} from "@/lib/useShotMedia";
+import {readBinaryBlob} from "@/lib/storage/binary";
 
 beforeEach(() => {
     host.cells = []; host.cursor = 0; host.effects = []; host.liveQuery.mockReset();
@@ -35,35 +39,29 @@ beforeEach(() => {
 afterEach(() => {vi.unstubAllGlobals(); vi.restoreAllMocks();});
 function render<T>(run: () => T): T {host.cursor = 0; host.effects = []; return run();}
 
-describe("runtime-independent IndexedDB live queries and media", () => {
-    it("runs the existing live query in genuine Tauri when IndexedDB owns the product", async () => {
+describe("runtime-independent shared queries and media", () => {
+    it("passes the shared bound store to repository queries in genuine Tauri", async () => {
         expect(isNativeWorkspaceRuntime()).toBe(true);
-        const project = await createProject("Desktop live query");
-        const query = vi.fn(async () => db.projects.get(project.id));
+        const project = await createProject("Desktop shared query");
+        const query = vi.fn(async (repository: ReturnType<typeof useVideoWorkspaceRepository>) => repository.project(project.id));
         expect(render(() => useVideoWorkspaceQuery(query, [project.id]))).toBeUndefined();
-        const liveRead = host.liveQuery.mock.calls.at(-1)![0] as typeof query;
-        expect(liveRead).toBe(query);
-        host.liveQuery.mockReturnValue(await liveRead());
-        expect(render(() => useVideoWorkspaceQuery(query, [project.id]))?.name).toBe("Desktop live query");
-        for (const effect of host.effects) effect();
+        const sharedRead = host.liveQuery.mock.calls.at(-1)![0] as (store: typeof db) => Promise<typeof project>;
+        host.liveQuery.mockReturnValue(await sharedRead(db));
+        expect(render(() => useVideoWorkspaceQuery(query, [project.id]))?.name).toBe("Desktop shared query");
+        expect(query).toHaveBeenCalledOnce();
         expect(window.__TAURI_INTERNALS__?.invoke).not.toHaveBeenCalled();
     });
 
-    it("keeps explicit SQLite queries outside Dexie and releases their native subscription", async () => {
-        vi.spyOn(productStorage, "usesSqliteProductStorage").mockReturnValue(true);
-        const query = vi.fn(async () => "native snapshot");
-        const nativeAdd = vi.spyOn(window, "addEventListener");
-        const nativeRemove = vi.spyOn(window, "removeEventListener");
+    it("delegates loading and retained results to one shared query hook with its dependency key", async () => {
+        const query = vi.fn(async () => "shared snapshot");
         expect(render(() => useVideoWorkspaceQuery(query, ["owner"]))).toBeUndefined();
-        const disabledLiveRead = host.liveQuery.mock.calls.at(-1)![0] as () => unknown;
-        expect(disabledLiveRead()).toBeUndefined();
+        const [boundRead, dependencies] = host.liveQuery.mock.calls.at(-1)!;
+        expect(dependencies).toEqual(["owner", 0]);
         expect(query).not.toHaveBeenCalled();
-        const cleanups = host.effects.map(effect => effect()).filter((cleanup): cleanup is () => void => typeof cleanup === "function");
-        await vi.waitFor(() => expect(host.cells[0]).toEqual({key: '["owner"]', value: "native snapshot"}));
+        host.liveQuery.mockReturnValue(await boundRead(db));
+        expect(render(() => useVideoWorkspaceQuery(query, ["owner"]))).toBe("shared snapshot");
         expect(query).toHaveBeenCalledOnce();
-        expect(nativeAdd).toHaveBeenCalledWith("cuepoint:video-workspace-changed", expect.any(Function));
-        cleanups.forEach(cleanup => cleanup());
-        expect(nativeRemove).toHaveBeenCalledWith("cuepoint:video-workspace-changed", expect.any(Function));
+        expect(window.__TAURI_INTERNALS__?.invoke).not.toHaveBeenCalled();
     });
 
     it("resolves existing internal Blob previews in Tauri and revokes the same URL on cleanup", async () => {
@@ -72,12 +70,16 @@ describe("runtime-independent IndexedDB live queries and media", () => {
         const createUrl = vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:owned-preview");
         const revokeUrl = vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => undefined);
         render(() => useMedia(record.id));
-        const query = host.liveQuery.mock.calls.at(-1)![0] as () => Promise<MediaRecord>;
-        host.liveQuery.mockReturnValue(await query());
+        const query = host.liveQuery.mock.calls.at(-1)![0] as (store: typeof db) => Promise<MediaRecord>;
+        host.liveQuery.mockReturnValue(await query(db));
         render(() => useMedia(record.id));
         const cleanup = host.effects[0]() as () => void;
-        expect(render(() => useMedia(record.id))).toEqual({url: "blob:owned-preview", mimeType: "image/png", kind: "image"});
-        expect(createUrl.mock.calls[0][0]).toMatchObject({size: 6, type: "image/png"});
+        await vi.waitFor(() => {
+            expect(render(() => useMedia(record.id))).toEqual({url: "blob:owned-preview", mimeType: "image/png", kind: "image", onError: expect.any(Function)});
+        });
+        const loadedBlob = createUrl.mock.calls[0][0] as Blob;
+        expect(loadedBlob).toMatchObject({size: 6, type: "image/png"});
+        expect(await loadedBlob.text()).toBe("pixels");
         cleanup();
         expect(revokeUrl).toHaveBeenCalledWith("blob:owned-preview");
         host.liveQuery.mockReturnValue(null);
@@ -93,13 +95,20 @@ describe("runtime-independent IndexedDB live queries and media", () => {
         await db.media.bulkAdd([used, {...used, id: "unused-result"}]);
         shot.firstFrame.result = {mediaId: used.id, kind: "image"};
         const bulkGet = vi.spyOn(db.media, "bulkGet");
-        useShotMedia([shot]);
-        const query = host.liveQuery.mock.calls.at(-1)![0] as () => Promise<unknown>;
-        host.liveQuery.mockReturnValue(await query());
-        expect(useShotMedia([shot])?.get(used.id)?.blob.size).toBe(4);
-        expect(useShotMedia([shot])?.has("unused-result")).toBe(false);
-        expect(useShotMedia([])).toBeUndefined();
+        render(() => useShotMedia([shot]));
+        const query = host.liveQuery.mock.calls.at(-1)![0] as (store: typeof db) => Promise<unknown>;
+        host.liveQuery.mockReturnValue(await query(db));
+        expect(render(() => useShotMedia([shot]))).toBeUndefined();
+        const cleanups = host.effects.map(effect => effect()).filter((cleanup): cleanup is () => void => typeof cleanup === "function");
+        await vi.waitFor(() => {expect(render(() => useShotMedia([shot]))?.get(used.id)).toBeDefined();});
+        const loaded = render(() => useShotMedia([shot]));
+        const loadedBlob = await readBinaryBlob(loaded!.get(used.id)!.blob);
+        expect(loadedBlob.size).toBe(4);
+        expect(await loadedBlob.text()).toBe("used");
+        expect(loaded?.has("unused-result")).toBe(false);
+        expect(render(() => useShotMedia([]))).toBeUndefined();
         expect(bulkGet).toHaveBeenCalledWith([used.id]);
+        cleanups.forEach(cleanup => cleanup());
         expect(window.__TAURI_INTERNALS__?.invoke).not.toHaveBeenCalled();
     });
 });

@@ -1,3 +1,6 @@
+import {createAudioMusicProject} from "@/db/projects";
+import {addMusicDraft} from "@/db/music";
+import {defaultMusicSettings} from "@/domain/music";
 import Dexie from "dexie";
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
@@ -13,6 +16,8 @@ import {upsertConnector} from "@/db/connectors";
 import { emptySlot } from "@/domain/slot";
 import { PACKAGE_FORMAT, STUDIO_LIBRARY_ID } from "@/domain/types";
 import { exportProjectZip, importProjectZip, PackageError } from "@/lib/projectPackage";
+import {installStoreHook} from "./helpers/storeBackendFaults";
+import {readBinaryBlob} from "@/lib/storage/binary";
 
 describe("project packages", () => {
   it.each([false, true])("remaps episode filter beats from %s legacy project preferences", async (legacy) => {
@@ -65,7 +70,7 @@ describe("project packages", () => {
     let edit: Promise<unknown> | undefined;
     const afterProjectRead = (value: typeof project) => {
       if (value?.id === project.id && !edit) {
-        edit = Dexie.ignoreTransaction(() => db.transaction("rw", db.projects, db.shots, db.media, async () => {
+        edit = Dexie.ignoreTransaction(() => db.transaction("rw", [db.projects, db.shots, db.media], async db => {
           await db.projects.update(project.id, { name: "after" });
           await db.shots.update(shot.id, { content: "after", firstFrame: emptySlot() });
           await db.media.delete("snapshot-media");
@@ -73,13 +78,14 @@ describe("project packages", () => {
       }
       return value;
     };
-    db.projects.hook("reading", afterProjectRead);
+    const readHook = await installStoreHook(db,"projects","reading",afterProjectRead);
     let backup: Blob;
     try {
       backup = await exportProjectZip(project.id);
     } finally {
-      db.projects.hook("reading").unsubscribe(afterProjectRead);
+      readHook.mockRestore();
     }
+    expect(edit).toBeDefined();
     await edit;
     const zip = await JSZip.loadAsync(backup);
     expect(JSON.parse(await zip.file("project.json")!.async("string")).name).toBe("before");
@@ -199,7 +205,8 @@ describe("project packages", () => {
     const cover = await db.media.get(imported.coverMediaId!);
     expect(cover?.projectId).toBe(imported.id);
     expect(cover?.mimeType).toBe("image/png");
-    expect(await cover?.blob.text()).toBe("cover-bytes");
+    expect(cover).toBeDefined();
+    expect(await (await readBinaryBlob(cover!.blob)).text()).toBe("cover-bytes");
   });
 
   it("round-trips the shot workspace preference", async () => {
@@ -345,4 +352,28 @@ describe("project packages", () => {
     expect(await db.chatThreads.count()).toBe(1);
     expect(await db.chatMessages.count()).toBe(1);
   });
+});
+
+
+it("round-trips durable music variant groups with new actual draft IDs and rejects dangling associations", async () => {
+  const project = await createAudioMusicProject("variants", "music");
+  const simple = (await db.musicDrafts.where("projectId").equals(project.id).first())!;
+  const custom = await addMusicDraft(project.id, {settings: {...defaultMusicSettings("suno"), custom: true}});
+  const group = {"suno-simple": simple.id, "suno-custom": custom.id};
+  await db.projects.update(project.id, {musicVariantLinks: {[simple.id]: group, [custom.id]: group}});
+  const backup = await exportProjectZip(project.id);
+  const imported = await importProjectZip(backup);
+  const rows = await db.musicDrafts.where("projectId").equals(imported.id).toArray();
+  const ids = new Set(rows.map(row => row.id));
+  expect(ids.size).toBe(2);
+  expect(ids.has(simple.id)).toBe(false);
+  expect(ids.has(custom.id)).toBe(false);
+  expect(new Set(Object.keys(imported.musicVariantLinks!))).toEqual(ids);
+  for (const [id, links] of Object.entries(imported.musicVariantLinks!)) {
+    expect(Object.values(links)).toContain(id);
+    expect(new Set(Object.values(links))).toEqual(ids);
+  }
+  const zip = await JSZip.loadAsync(backup);
+  zip.file("project.json", JSON.stringify({...project, musicVariantLinks: {[simple.id]: {"suno-simple": "missing-draft"}}}));
+  await expect(importProjectZip(await zip.generateAsync({type: "blob"}))).rejects.toThrow("音乐草稿关联");
 });

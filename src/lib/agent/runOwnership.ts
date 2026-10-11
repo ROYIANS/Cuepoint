@@ -1,6 +1,7 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {isLegacyAtomicPlanCall, isUnknownBatchPreparation} from "@/db/agentToolRecovery";
 import {recoverAbandonedGenerationBatches} from "@/db/agentGenerationBatches";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {interruptThreadRuns} from "@/db/agentRuns";
 
 export interface ThreadLockManager {
@@ -25,7 +26,8 @@ export async function withThreadRunLock<T>(threadId: string, execute: () => Prom
     });
 }
 
-export async function recoverAbandonedRuns(locks: ThreadLockManager = browserLocks()): Promise<void> {
+export async function recoverAbandonedRuns(locks: ThreadLockManager = browserLocks(), store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const active = await db.agentRuns.where("status").equals("running").toArray();
     const batches = await db.agentGenerationBatches.where("status").equals("running").toArray();
     // Repair known local-only history under the same lock, without running tools.
@@ -33,8 +35,8 @@ export async function recoverAbandonedRuns(locks: ThreadLockManager = browserLoc
     for (const threadId of new Set([...active, ...batches, ...repairableCalls].map((run) => run.threadId))) {
         await locks.request(`cuepoint:agent:${threadId}`, {ifAvailable: true}, async (lock) => {
             if (lock) {
-                await recoverAbandonedGenerationBatches(threadId);
-                await interruptThreadRuns(threadId);
+                await recoverAbandonedGenerationBatches(threadId, db);
+                await interruptThreadRuns(threadId, db);
             }
         });
     }

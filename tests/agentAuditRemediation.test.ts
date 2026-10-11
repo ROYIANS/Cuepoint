@@ -1,3 +1,4 @@
+import {interceptStoreTable} from "./helpers/storeFaults";
 import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
@@ -174,11 +175,10 @@ it.each(["pending", "running", "unknown", "completed"] as const)("legacy plan %s
 it("plan ledger failure rolls back plan and task records before safe recovery", async () => {
   const {run,call,task,thread} = await oldPlanFixture();
   await db.agentToolCalls.update(call.id,{status:"running",atomic:true});
-  const update = db.agentToolCalls.update.bind(db.agentToolCalls);
-  const failure = vi.spyOn(db.agentToolCalls,"update").mockImplementation((id,changes)=>{
+
+  const failure = interceptStoreTable(db, "agentToolCalls", "update", async (_tx,args,next)=> {const [id,changes]=args as Parameters<typeof db.agentToolCalls.update>;
     if (typeof changes === "object" && changes.status === "completed") return Promise.reject(new Error("ledger disk failure")) as ReturnType<typeof update>;
-    return update(id,changes);
-  });
+    return next(); });
   try { await expect(updateRunPlanAndComplete(run.id,call.id,planArgs.steps)).rejects.toBeInstanceOf(AtomicToolRollbackError); }
   finally { failure.mockRestore(); }
   expect((await db.agentRuns.get(run.id))?.plan).toEqual([]);

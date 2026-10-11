@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
@@ -57,7 +58,7 @@ describe("AI owned task orchestration",()=>{
  });
  it("rolls back task, binding and initial record if ledger persistence fails",async()=>{
   const run=await start(),op=await pending(run,"task_create",createArgs(run));
-  const spy=vi.spyOn(db.agentToolCalls,"update").mockRejectedValueOnce(new Error("ledger down"));
+  const spy=failStoreTableOnce(db, "agentToolCalls", "update", new Error("ledger down"));
   try{await expect(op.execute()).rejects.toThrow("ledger down");}finally{spy.mockRestore();}
   expect(await db.agentTasks.count()).toBe(0);expect(await db.agentTaskRecords.count()).toBe(0);expect((await db.agentRuns.get(run.id))?.taskId).toBeUndefined();
  });
@@ -127,7 +128,7 @@ describe("AI owned task orchestration",()=>{
   const {run,task}=await create();await expect(invoke(run,"task_record_write",{...recordInput,body:"x".repeat(12001)})).rejects.toThrow();
   await expect(invoke(run,"task_record_write",{...recordInput,todoId:"missing"})).rejects.toThrow("Todo");
   const op=await pending(run,"task_record_write",recordInput),count=await db.agentTaskRecords.count();
-  const spy=vi.spyOn(db.agentTaskRecordVersions,"add").mockRejectedValueOnce(new Error("version failure"));try{await expect(op.execute()).rejects.toThrow("version failure");}finally{spy.mockRestore();}
+  const spy=failStoreTableOnce(db, "agentTaskRecordVersions", "add", new Error("version failure"));try{await expect(op.execute()).rejects.toThrow("version failure");}finally{spy.mockRestore();}
   expect(await db.agentTaskRecords.count()).toBe(count);expect((await db.agentToolCalls.get(op.call.id))?.status).toBe("running");
   await finishAgentRun(run.id,"completed");const record=await saveTaskRecord(task.id,recordInput);await expect(saveTaskRecord(task.id,recordInput,{id:record.id})).rejects.toThrow("已更新");
  });

@@ -17,7 +17,7 @@ import type {AgentRun} from "@/domain/agent";
 import {ContextUsageTrigger} from "./ContextUsagePanel";
 import type {RunAction} from "./AgentRunDetails";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Button, Empty, Flexbox} from "@lobehub/ui";
 import {useCallback, useEffect, useMemo, useRef, useState,} from "react";
 import {toast} from "sonner";
@@ -37,7 +37,6 @@ import {
 import {Button as UiButton} from "@/components/ui/button";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
-import {db} from "@/db/database";
 import {type ChatThread, type Id, STUDIO_LIBRARY_ID} from "@/domain/types";
 import {canRetryRun} from "@/db/agentRuns";
 import {recoverAbandonedRuns} from "@/lib/agent/runOwnership";
@@ -57,9 +56,9 @@ export function AgentChatPage({threadId, view}: { threadId?: Id; view?: "tasks" 
 
 function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const navigate = useNavigate();
-    const threads = useLiveQuery(() => db.chatThreads.orderBy("updatedAt").reverse().toArray(), []);
-    const tasks = useLiveQuery(() => db.agentTasks.orderBy("updatedAt").reverse().toArray(), []);
-    const boardRuns = useLiveQuery(() => view === "tasks" ? db.agentRuns.toArray() : Promise.resolve([] as AgentRun[]), [view]);
+    const threads = useProductQuery((db) => db.chatThreads.orderBy("updatedAt").reverse().toArray(), []);
+    const tasks = useProductQuery((db) => db.agentTasks.orderBy("updatedAt").reverse().toArray(), []);
+    const boardRuns = useProductQuery((db) => view === "tasks" ? db.agentRuns.toArray() : Promise.resolve([] as AgentRun[]), [view]);
     const activeTask = tasks?.find((task) => task.threadId === threadId);
     const [taskInspectorOpen, setTaskInspectorOpen] = useState(false);
     const taskDeparture = useRef<ManualDraftDeparture | undefined>(undefined);
@@ -73,8 +72,8 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const openBoard = () => leaveTask(() => {
         void navigate({to: "/agent/tasks"});
     });
-    const connectors = useLiveQuery(() => db.connectors.toArray(), []);
-    const projects = useLiveQuery(() => db.projects.orderBy("updatedAt").reverse().filter((project) => project.id !== STUDIO_LIBRARY_ID).toArray(), []);
+    const connectors = useProductQuery((db) => db.connectors.toArray(), []);
+    const projects = useProductQuery((db) => db.projects.orderBy("updatedAt").reverse().filter((project) => project.id !== STUDIO_LIBRARY_ID).toArray(), []);
     const activeThreadId = threadId;
     const [contextOpen, setContextOpen] = useState(false);
     const [modelCatalog, setModelCatalog] = useState<ChatModelCatalog>();
@@ -126,8 +125,8 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         [abortRef, executionThreadRef, navigate, leaveTask, activeThreadId],
     );
 
-    const routedThread = useLiveQuery(
-        async () => {
+    const routedThread = useProductQuery(
+        async (db) => {
             if (!activeThreadId) {
                 return {forId: null as Id | null, thread: null as ChatThread | null};
             }
@@ -161,16 +160,16 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         return undefined;
     }, [threadList, activeThreadId, routedThread]);
 
-    const messages = useLiveQuery(
-        async () => {
+    const messages = useProductQuery(
+        async (db) => {
             if (!activeThreadId) return [];
             return db.chatMessages.where("threadId").equals(activeThreadId).sortBy("createdAt");
         },
         [activeThreadId],
     );
 
-    const compactions = useLiveQuery(() => activeThreadId ? db.contextCompactions.where("threadId").equals(activeThreadId).sortBy("createdAt") : [], [activeThreadId]);
-    const runs = useLiveQuery(async () => {
+    const compactions = useProductQuery((db) => activeThreadId ? db.contextCompactions.where("threadId").equals(activeThreadId).sortBy("createdAt") : [], [activeThreadId]);
+    const runs = useProductQuery(async (db) => {
         if (!activeThreadId) return [];
         return db.agentRuns.where("threadId").equals(activeThreadId).sortBy("createdAt");
     }, [activeThreadId]);

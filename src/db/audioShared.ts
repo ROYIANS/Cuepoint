@@ -1,5 +1,8 @@
-import type {Table} from "dexie";
-import {db} from "./database";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
+import type {StoreTable} from "@/lib/storage/types";
+import {db as productDb} from "./database";
+const db = productDb;
 import {getProjectKind, type ProjectKind} from "@/domain/types";
 import type {AudioInput, AudioPatch, AudioRow, AudioSourceMetadata} from "@/domain/audio";
 import {createId, nowIso} from "@/lib/ids";
@@ -7,7 +10,8 @@ import {createId, nowIso} from "@/lib/ids";
 export const AUDIO_TABLES = [db.audioChapters, db.audioSpeakers, db.audioSegments, db.audioTakes, db.audioTracks, db.audioClips, db.audioExports, db.musicDrafts, db.musicWorks, db.audioGenerationJobs, db.audioGenerationBatches, db.audioGenerationBatchItems, db.audioArrangementProposals];
 export const AUDIO_TRANSACTION_TABLES = [db.projects, db.media, ...AUDIO_TABLES];
 
-export async function assertAudioProject(projectId: string, kind?: ProjectKind) {
+export async function assertAudioProject(projectId: string, kind?: ProjectKind, store?: ProductStore) {
+    const db = store ?? productDb;
     const project = await db.projects.get(projectId);
     if (!project) throw new Error("项目不存在或已删除");
     const actual = getProjectKind(project);
@@ -28,7 +32,7 @@ export function validateAudioMetadata(source: AudioSourceMetadata) {
 
 export async function ownedAudioRow<T extends {
     projectId: string
-}>(table: Table<T, string>, projectId: string, id: string): Promise<T> {
+}>(table: StoreTable<T>, projectId: string, id: string): Promise<T> {
     const row = await table.get(id);
     if (!row || row.projectId !== projectId) throw new Error("记录不存在或不属于当前项目");
     return row;
@@ -43,32 +47,37 @@ export function newAudioRow<T extends AudioRow>(projectId: string, prefix: strin
     return {...input, id: createId(prefix), projectId, revision: 1, createdAt: at, updatedAt: at} as T;
 }
 
-export async function touchAudioProject(projectId: string) {
+export async function touchAudioProject(projectId: string, store?: ProductStore) {
+    const db = store ?? productDb;
     await db.projects.update(projectId, {updatedAt: nowIso()});
 }
 
 /** Shared compare-and-swap boundary used by manual controls and Agent tools. */
-export async function patchAudioRow<T extends AudioRow>(table: Table<T, string>, projectId: string, id: string, revision: number, patch: AudioPatch<T>, keys: readonly (keyof AudioInput<T>)[], validate: (row: T) => Promise<void>): Promise<T> {
-    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
-        const current = await ownedAudioRow(table, projectId, id);
+export async function patchAudioRow<T extends AudioRow>(table: StoreTable<T>, projectId: string, id: string, revision: number, patch: AudioPatch<T>, keys: readonly (keyof AudioInput<T>)[], validate: (row: T, store: ProductStore) => Promise<void>, store?: ProductStore): Promise<T> {
+    const db = store ?? productDb;
+    return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async (db) => {
+        const boundTable = db.table(table.name) as unknown as StoreTable<T>;
+        const current = await ownedAudioRow(boundTable, projectId, id);
         assertAudioRevision(current, revision);
         if (Object.keys(patch).some((key) => !keys.includes(key as keyof AudioInput<T>))) throw new Error("包含不支持的编辑字段");
         const accepted = Object.fromEntries(keys.filter((key) => Object.hasOwn(patch, key)).map((key) => [key, patch[key]]));
         const next = {...current, ...accepted, revision: current.revision + 1, updatedAt: nowIso()};
-        await validate(next);
-        await table.put(next);
-        await touchAudioProject(projectId);
+        await validate(next, db);
+        await boundTable.put(next);
+        await touchAudioProject(projectId, db);
         return next;
     });
 }
 
-export async function assertOwnedAudioMedia(projectId: string, mediaId: string) {
+export async function assertOwnedAudioMedia(projectId: string, mediaId: string, store?: ProductStore) {
+    const db = store ?? productDb;
     const media = await ownedAudioRow(db.media, projectId, mediaId);
-    if (!media.blob.size || !media.mimeType.startsWith("audio/")) throw new Error("需要有效的音频文件");
+    if (!binaryByteLength(media.blob) || !media.mimeType.startsWith("audio/")) throw new Error("需要有效的音频文件");
 }
 
 /** Called inside the owning delete transaction; keeps generation history without stale FKs. */
-export async function detachAudioGenerationResult(projectId: string, kind: "takeId" | "workId", id: string): Promise<void> {
+export async function detachAudioGenerationResult(projectId: string, kind: "takeId" | "workId", id: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     await db.audioGenerationJobs.where("projectId").equals(projectId)
         .filter((job) => job.results.some((result) => result[kind] === id))
         .modify((job) => {

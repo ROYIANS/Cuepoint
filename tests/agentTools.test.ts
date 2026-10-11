@@ -1,4 +1,5 @@
 import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import { beginAgentRun, canRetryRun, interruptThreadRuns } from "@/db/agentRuns";
@@ -277,8 +278,7 @@ describe("durable bounded tool loop", () => {
 
   it("reports checkpoint persistence failure distinctly from user Stop", async () => {
     const run = await begin();
-    const persist = vi.spyOn(db.chatMessages, "update");
-    persist.mockRejectedValueOnce(new Error("quota"));
+    const persist = failStoreTableOnce(db,"chatMessages","update",new Error("quota"));
     try {
       await expect(executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())))).rejects.toThrow("本地保存失败");
       expect((await db.agentRuns.get(run.id))?.status).toBe("failed");

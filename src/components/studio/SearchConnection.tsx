@@ -1,5 +1,5 @@
 import {useId, useState} from 'react';
-import {useLiveQuery} from 'dexie-react-hooks';
+import {useProductQuery} from '@/lib/storage/hooks';
 import {toast} from 'sonner';
 import {getSearchConnectionState, removeSearchConnection, saveSearchConnection} from '@/db/searchConnections';
 import {testSearchConnection} from '@/lib/ai/tavily';
@@ -18,9 +18,9 @@ import {
 
 export function SearchConnection() {
     const enabledId = useId();
-    const view = useLiveQuery(async () => {
+    const view = useProductQuery(async (db) => {
         try {
-            return {state: await getSearchConnectionState()};
+            return {state: await getSearchConnectionState(db)};
         } catch {
             return {error: '读取失败，请刷新后重试。'};
         }

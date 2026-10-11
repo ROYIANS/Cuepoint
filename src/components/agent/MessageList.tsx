@@ -4,8 +4,7 @@ import {Coins, Gauge} from "lucide-react";
 import {formatTokenCount} from "@/lib/agent/contextUsage";
 import {AgentRunDetails, type RunAction} from "./AgentRunDetails";
 import type {AgentRun, AgentToolCall} from "@/domain/agent";
-import {useLiveQuery} from "dexie-react-hooks";
-import {db} from "@/db/database";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {isPersistedToolRound} from "@/lib/agent/runPresentation";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import {Button} from "@/components/ui/button";
@@ -170,7 +169,7 @@ const AgentChatMessageItem = memo(
         onRetryRun: (id: string) => void;
         userMeta: { avatar: ReactNode; backgroundColor: string; title: string };
     }) {
-        const calls = useLiveQuery(() => run ? db.agentToolCalls.where("runId").equals(run.id).toArray() : Promise.resolve(EMPTY_CALLS), [run?.id]) ?? EMPTY_CALLS;
+        const calls = useProductQuery((db) => run ? db.agentToolCalls.where("runId").equals(run.id).toArray() : Promise.resolve(EMPTY_CALLS), [run?.id]) ?? EMPTY_CALLS;
         const isUser = message.role === "user";
         const processOwnsContent = !isUser && !!run && (run.status === "running" || isPersistedToolRound(run, message, calls));
         const reasoningText = message.reasoning?.trim() ?? "";

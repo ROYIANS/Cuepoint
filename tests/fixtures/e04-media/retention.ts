@@ -5,6 +5,7 @@ import {PRODUCTION_TABLES} from "@/db/productionShared";
 import {deleteMediaIfOrphan as originalDelete} from "../sourceSnapshots/e04-media/src/db/media";
 import {check, media, retentionSources, historySources, currentSources, type RetentionSource} from "./seeds";
 import {observe} from "./instrumentation";
+import {interceptStoreTable} from "../../helpers/storeFaults";
 
 export async function isolatedSource(source: RetentionSource) {
     const id = `candidate-${source.name}`, owner = "media-owner";
@@ -43,11 +44,11 @@ export async function mixedOwnerParity() {
 export async function snapshotFreshness(source: RetentionSource) {
     const owner = "fresh-owner", first = "first-orphan", second = "second-later-retained";
     await db.media.bulkPut([media(first, owner), media(second, owner)]);
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
-        await deleteMediaIfOrphans([first]); check(!await db.media.get(first), "first mutation must happen");
-        const remove = await source.put(second, owner);
-        await deleteMediaIfOrphans([second]); check(await db.media.get(second), `${source.name}: later addition visible`);
-        await remove(); await deleteMediaIfOrphans([second]); check(!await db.media.get(second), `${source.name}: later removal visible`);
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
+        await deleteMediaIfOrphans([first], db); check(!await db.media.get(first), "first mutation must happen");
+        const remove = await source.put(second, owner, db);
+        await deleteMediaIfOrphans([second], db); check(await db.media.get(second), `${source.name}: later addition visible`);
+        await remove(); await deleteMediaIfOrphans([second], db); check(!await db.media.get(second), `${source.name}: later removal visible`);
     });
     return {source: source.name, freshAdditionAndRemoval: true};
 }
@@ -79,24 +80,25 @@ export async function nativeScheduling() {
     await db.media.bulkPut(ids.map(id => media(id, "schedule-owner")));
     const events: string[] = [];
     let competing: Promise<void> | undefined, originalRoot: IDBTransaction | undefined;
-    const firstDelete = db.media.delete;
-    db.media.delete = function(id) {return Dexie.Promise.resolve().then(async () => {
+    const fault = interceptStoreTable(db, "media", "delete", async (tx, args, next) => {
         if (!competing) {
             originalRoot = Dexie.currentTransaction!.idbtrans;
-            await firstDelete.call(db.media, id); events.push("first-real-delete");
-            // Explicitly leave the parent context to enqueue an overlapping native writer.
-            competing = Dexie.ignoreTransaction(() => db.transaction("rw", PRODUCTION_TABLES, async () => {
+            await next(); events.push("first-real-delete");
+            // Explicitly leave the raw browser context to enqueue an overlapping
+            // writer. Each business read still receives its own explicit store.
+            competing = Dexie.ignoreTransaction(() => db.transaction("rw", PRODUCTION_TABLES, async (db) => {
                 events.push("competing-start");
                 check(!await db.media.get(ids[0]), "overlapping writer ran before cleanup commit");
                 check((await db.media.bulkGet(ids)).every(row => row === undefined), "partial batch escaped");
             }));
+            check(!await tx.media.get(String(args[0])), "first delete is visible in its explicit transaction");
             return;
         }
         check(Dexie.currentTransaction!.idbtrans === originalRoot, "batch escaped original native transaction");
-        return firstDelete.call(db.media, id);
-    });};
+        return next();
+    });
     try {await deleteMediaIfOrphans(ids); events.push("cleanup-resolved"); await competing;}
-    finally {db.media.delete = firstDelete;}
+    finally {fault.mockRestore();}
     check(events[0] === "first-real-delete" && events.includes("competing-start"), "scheduling seam reached");
     return {events, candidates: ids.length, sameNativeTransaction: true, overlappingWriterSawWholeCommit: true};
 }

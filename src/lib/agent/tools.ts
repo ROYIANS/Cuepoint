@@ -17,7 +17,7 @@ import {GENERATION_TOOLS} from "./generationTools";
 import {BUSINESS_TOOLS} from "./businessTools";
 import {z} from "zod";
 import {toolArgumentError, ToolValidationError} from "./toolErrors";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {updateRunPlanAndComplete} from "@/db/agentTools";
 import type {AgentPermissionMode, AgentToolCall, AgentToolSchema} from "@/domain/agent";
 
@@ -47,9 +47,10 @@ const definitions = [
         effect: "read",
         highRisk: () => false,
         async execute(_args, context) {
+    const db = context.store ?? productDb;
             const {signal} = context;
             signal.throwIfAborted();
-            const projectId = await frozenProjectScope(context);
+            const projectId = await frozenProjectScope(context, db);
             if (projectId) {
                 const project = await db.projects.get(projectId);
                 return {
@@ -62,7 +63,7 @@ const definitions = [
                     }
                 };
             }
-            return db.transaction("r", [db.projects, db.characters, db.scenes, db.props, db.styles], async () => ({
+            return db.transaction("r", [db.projects, db.characters, db.scenes, db.props, db.styles], async (db) => ({
                 counts: {
                     projects: await db.projects.count(),
                     characters: await db.characters.count(),
@@ -107,9 +108,11 @@ const definitions = [
         effect: "bookkeeping",
         atomic: true,
         highRisk: () => false,
-        async execute(args, {runId, callId, signal}) {
+        async execute(args, context) {
+            const {runId,callId,signal}=context;
+    const db = context.store ?? productDb;
             signal.throwIfAborted();
-            const result: unknown = JSON.parse(await updateRunPlanAndComplete(runId, callId, args.steps, args.reason));
+            const result: unknown = JSON.parse(await updateRunPlanAndComplete(runId, callId, args.steps, args.reason, db));
             return result;
         }
     }),

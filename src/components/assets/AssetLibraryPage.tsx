@@ -2,11 +2,10 @@ import {matchesAssetSearch, type WorldTab} from "@/lib/assetLibrary";
 import {Input} from "@/components/ui/input";
 import {copySelection} from "@/lib/copySelection";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Library, Plus, Trash2} from "lucide-react";
 import {useState} from "react";
 import {toast} from "sonner";
-import {db} from "@/db/database";
 import {
     addCharacter,
     addProp,
@@ -107,26 +106,26 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
     const [query, setQuery] = useState("");
     const [pickerOpen, setPickerOpen] = useState(false);
     const charactersResult =
-        useLiveQuery(
-            () => db.characters.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
+        useProductQuery(
+            (db) => db.characters.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
         );
     const characters = charactersResult ?? [];
     const scenesResult =
-        useLiveQuery(
-            () => db.scenes.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
+        useProductQuery(
+            (db) => db.scenes.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
         );
     const scenes = scenesResult ?? [];
     const propsResult =
-        useLiveQuery(
-            () => db.props.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
+        useProductQuery(
+            (db) => db.props.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
         );
     const props = propsResult ?? [];
     const stylesResult =
-        useLiveQuery(
-            () => db.styles.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
+        useProductQuery(
+            (db) => db.styles.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
         );
     const styles = stylesResult ?? [];
@@ -358,7 +357,7 @@ function StudioAssetPicker({
     const [copying, setCopying] = useState(false);
     const [query, setQuery] = useState("");
     const studioAssetsResult =
-        useLiveQuery(async () => {
+        useProductQuery(async (db) => {
             const table =
                 tab === "characters"
                     ? db.characters

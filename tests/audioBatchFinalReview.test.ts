@@ -40,7 +40,7 @@ async function fixture(withTask = true, fail = false) {
     const result = await tool.execute(tool.parseArguments(args), context) as {batchId: string};
     await finishAgentRun(run.id, "completed");
     const currentRun = (await db.agentRuns.get(run.id))!;
-    const snapshot = () => db.transaction("r", finalReviewTables(), () => collectFinalReviewSnapshot(currentRun));
+    const snapshot = () => db.transaction("r", finalReviewTables(), (tx) => collectFinalReviewSnapshot(currentRun, tx));
     const prepared = await snapshot();
     const draft = (await readAudioGenerationBatch(project.id, result.batchId)).batch;
     await confirmAudioGenerationBatch(project.id, draft.id, draft.revision);

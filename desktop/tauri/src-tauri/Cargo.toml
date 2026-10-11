@@ -13,11 +13,17 @@ name = "workspace_probe"
 path = "src/bin/workspace_probe.rs"
 required-features = ["test-hooks"]
 
+[[bin]]
+name = "product_store_probe"
+path = "src/bin/product_store_probe.rs"
+required-features = ["test-hooks"]
+
 [features]
 default = []
 test-hooks = []
 desktop = ["dep:tauri", "dep:tauri-build", "dep:tauri-plugin-dialog", "dep:tauri-plugin-http", "dep:tauri-plugin-opener", "dep:objc2", "dep:objc2-foundation", "dep:objc2-app-kit", "dep:objc2-web-kit"]
 acceptance = ["desktop"]
+product-sqlite = ["desktop"]
 
 [[bin]]
 name = "cuepoint-prototype"

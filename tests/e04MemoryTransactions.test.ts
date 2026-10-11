@@ -1,12 +1,13 @@
-import Dexie from "dexie";
-import { describe, expect, it, vi } from "vitest";
+import {actualStoreScope,interceptStoreBackend} from "./helpers/storeBackendFaults";
+import {interceptStoreTable} from "./helpers/storeFaults";
+import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
 import { createProject } from "@/db/projects";
 import {
   createProjectMemory, deleteProjectMemory, MemoryConflictError,
   replaceProjectMemory, setProjectMemoryStatus, updateProjectMemory,
 } from "@/db/projectMemories";
-import type { Project } from "@/domain/types";
+import type {ProjectMemory,ProjectMemoryVersion} from "@/domain/projectMemory";
 import type { MemoryInput } from "@/domain/projectMemory";
 
 const input: MemoryInput = {
@@ -41,15 +42,10 @@ async function run(name: typeof commands[number], s: Awaited<ReturnType<typeof s
 describe("E04 manual memory transaction closure", () => {
   it.each(commands)("%s uses exactly three actual IndexedDB stores", async name => {
     const s = await seed(), seen: string[][] = [];
-    const observe = (row: Project) => {
-      const tx = Dexie.currentTransaction;
-      expect(tx?.mode).toBe("readwrite");
-      seen.push(Array.from(tx!.idbtrans.objectStoreNames).sort());
-      return row;
-    };
-    db.projects.hook("reading", observe);
-    try { await run(name, s); }
-    finally { db.projects.hook("reading").unsubscribe(observe); }
+    const spy=await interceptStoreBackend(db,"projects","get",async (backend,_args,next)=> {
+      const actual=await actualStoreScope(db,backend);expect(actual.mode).toBe("readwrite");seen.push(actual.names);return next();
+    });
+    try { await run(name,s); } finally {spy.mockRestore();}
     expect(seen.length).toBeGreaterThan(0);
     expect(seen.every(names => JSON.stringify(names) === JSON.stringify(stores))).toBe(true);
     if (name === "delete") {
@@ -86,15 +82,15 @@ describe("E04 manual memory transaction closure", () => {
 
   it.each(["create", "update", "status"] as const)("%s rolls back after a real history insertion", async name => {
     const s = await seed(), before = await snapshot();
-    const original = db.projectMemoryVersions.add.bind(db.projectMemoryVersions);
     let observed = false;
-    const spy = vi.spyOn(db.projectMemoryVersions, "add").mockImplementation(row => Dexie.Promise.resolve().then(async () => {
-      const key = await original(row);
+    const spy=interceptStoreTable(db,"projectMemoryVersions","add",async (tx,args,next)=> {
+      const [row]=args as [ProjectMemoryVersion];
+      const key = await next() as string;
       observed = true;
-      expect(await db.projectMemories.get(row.memoryId)).toEqual(row.snapshot);
-      expect(await db.projectMemoryVersions.get(key)).toEqual({...row, versionId: key});
+      expect(await tx.projectMemories.get(row.memoryId)).toEqual(row.snapshot);
+      expect(await tx.projectMemoryVersions.get(key)).toEqual({...row, versionId: key});
       throw new Error("fault after actual history insertion");
-    }));
+    });
     try { await expect(run(name, s)).rejects.toThrow("fault after actual history"); }
     finally { spy.mockRestore(); }
     expect(observed).toBe(true);
@@ -103,21 +99,21 @@ describe("E04 manual memory transaction closure", () => {
 
   it.each(["create", "replace"] as const)("%s rolls back the superseded row/history when later replacement persistence fails", async name => {
     const s = await seed(), before = await snapshot();
-    const original = db.projectMemories.put.bind(db.projectMemories);
     let observed = false;
-    const spy = vi.spyOn(db.projectMemories, "put").mockImplementation(row => Dexie.Promise.resolve().then(async () => {
+    const spy=interceptStoreTable(db,"projectMemories","put",async (tx,args,next)=> {
+      const [row]=args as [ProjectMemory];
       if (row.id !== s.old.id) {
-        const old = await db.projectMemories.get(s.old.id);
+        const old = await tx.projectMemories.get(s.old.id);
         expect(old?.status).toBe("superseded");
         expect(old?.supersededBy).toBe(row.id);
-        const history = await db.projectMemoryVersions.where("memoryId").equals(s.old.id).toArray();
+        const history = await tx.projectMemoryVersions.where("memoryId").equals(s.old.id).toArray();
         expect(history).toHaveLength(2);
         expect(history.find(version => version.revision === 2)?.snapshot).toEqual(old);
         observed = true;
         throw new Error("fault at later replacement put");
       }
-      return original(row);
-    }));
+      return next();
+    });
     try { await expect(run(name, s)).rejects.toThrow("fault at later replacement"); }
     finally { spy.mockRestore(); }
     expect(observed).toBe(true);
@@ -127,19 +123,14 @@ describe("E04 manual memory transaction closure", () => {
   it("delete rolls back the actual current-row deletion on a later history delete fault", async () => {
     const s = await seed(), before = await snapshot();
     let observed = false;
-    const fail = () => {
-      observed = true;
-      throw new Error("history deletion fault");
-    };
-    // Current-row deletion precedes the history Collection.delete in the real command.
-    const original = db.projectMemories.delete.bind(db.projectMemories);
-    const spy = vi.spyOn(db.projectMemories, "delete").mockImplementation(id => Dexie.Promise.resolve().then(async () => {
-      await original(id);
-      expect(await db.projectMemories.get(id)).toBeUndefined();
-      db.projectMemoryVersions.hook("deleting", fail);
-    }));
-    try { await expect(run("delete", s)).rejects.toThrow("history deletion fault"); }
-    finally { spy.mockRestore(); db.projectMemoryVersions.hook("deleting").unsubscribe(fail); }
+    const current=interceptStoreTable(db,"projectMemories","delete",async (tx,args,next)=> {
+      await next();expect(await tx.projectMemories.get(args[0] as string)).toBeUndefined();observed=true;
+    });
+    const history=await interceptStoreBackend(db,"projectMemoryVersions","mutate",async (_backend,args,next)=> {
+      if ((args[0] as {kind:string}).kind === "delete") {expect(observed).toBe(true);throw new Error("history deletion fault");}return next();
+    });
+    try { await expect(run("delete",s)).rejects.toThrow("history deletion fault"); }
+    finally {current.mockRestore();history.mockRestore();}
     expect(observed).toBe(true);
     expect(await snapshot()).toEqual(before);
   });
@@ -183,9 +174,9 @@ describe("E04 manual memory transaction closure", () => {
 
   it("manual child commands still join a broad outer atomic transaction and roll back", async () => {
     const s = await seed(), before = await snapshot();
-    await expect(db.transaction("rw", db.tables, async () => {
-      await updateProjectMemory(s.project.id, s.old.id, {...input, body: "Nested write"}, 1);
-      await setProjectMemoryStatus(s.project.id, s.next.id, "disabled", 1);
+    await expect(db.transaction("rw", db.tables, async db => {
+      await updateProjectMemory(s.project.id, s.old.id, {...input, body: "Nested write"}, 1, db);
+      await setProjectMemoryStatus(s.project.id, s.next.id, "disabled", 1, db);
       expect((await db.projectMemories.get(s.old.id))?.body).toBe("Nested write");
       throw new Error("outer evidence failure");
     })).rejects.toThrow("outer evidence failure");

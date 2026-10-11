@@ -1,7 +1,7 @@
 import {type AudioSelectionIntent, deriveAudioSelection} from "./audioSelection";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {
     Check,
     ChevronDown,
@@ -61,11 +61,11 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
         window.addEventListener("pagehide", pause);
         return () => {window.removeEventListener("pagehide", pause); pause();};
     }, [projectId]);
-    const data = useLiveQuery(async () => {
+    const data = useProductQuery(async (db) => {
         const project = await db.projects.get(projectId) ?? null;
         return {
             project,
-            snapshot: project?.kind === "audio" ? await getAudioProjectSnapshot(projectId) : null,
+            snapshot: project?.kind === "audio" ? await getAudioProjectSnapshot(projectId, db) : null,
             projectId
         };
     }, [projectId]);
@@ -188,11 +188,11 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
                                                                               className="mt-2 w-full justify-start"
                                                                               disabled={busy}
                                                                               onClick={() => void action(async () => {
-                                                                                  const row = await db.transaction("rw", AUDIO_TRANSACTION_TABLES, async () => {
+                                                                                  const row = await db.transaction("rw", AUDIO_TRANSACTION_TABLES, async (db) => {
                                                                                       const created = await addAudioChapter(projectId, {
                                                                                           title: `章节 ${snapshot.chapters.length + 1}`,
                                                                                           order: Math.max(0, ...snapshot.chapters.map((item) => item.order)) + 1
-                                                                                      });
+                                                                                      }, db);
                                                                                       await addAudioTrack(projectId, {
                                                                                           chapterId: created.id,
                                                                                           role: "voice",
@@ -201,7 +201,7 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
                                                                                           gain: 1,
                                                                                           muted: false,
                                                                                           solo: false
-                                                                                      });
+                                                                                      }, db);
                                                                                       return created;
                                                                                   });
                                                                                   setChapterId(row.id);

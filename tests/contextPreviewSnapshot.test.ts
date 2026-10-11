@@ -8,13 +8,17 @@ const host = vi.hoisted(() => ({result: undefined as unknown, queries: [] as Arr
 vi.mock("react", async () => ({...await vi.importActual<typeof import("react")>("react"),
     useMemo: (compute: () => unknown) => compute(), useState: (initial: unknown) => [initial, vi.fn()],
 }));
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: (query: () => Promise<unknown>) => {host.queries.push(query); return host.result;}}));
+vi.mock("@/lib/storage/hooks", () => ({useProductQuery: (query: (tx: typeof db) => Promise<unknown>) => {
+    host.queries.push(() => query(db)); return host.result;
+}}));
 function nodes(tree: unknown): unknown[] {
     if (Array.isArray(tree)) return tree.flatMap(nodes);
     if (!isValidElement<{children?: unknown}>(tree)) return [];
     return [tree, ...nodes(tree.props.children)];
 }
 import {db} from "@/db/database";
+import {browserDatabase} from "@/lib/storage/browserDatabase";
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {createProject} from "@/db/projects";
 import {createChatThread, appendChatMessage} from "@/db/chat";
 import {beginAgentRun} from "@/db/agentRuns";
@@ -71,8 +75,8 @@ describe("coherent production context preview", () => {
         const {request, project} = await fixture(kind);
         const transactions = new Set<import("dexie").Transaction>();
         const observe = <T>(row: T): T => {const tx = Dexie.currentTransaction; if (tx) transactions.add(tx); return row;};
-        db.projects.hook("reading", observe); db.chatThreads.hook("reading", observe);
-        db.projectMemories.hook("reading", observe);
+        browserDatabase!.projects.hook("reading", observe); browserDatabase!.chatThreads.hook("reading", observe);
+        browserDatabase!.projectMemories.hook("reading", observe);
         try {
             const facts = ready(await readAgentContextPreview(request));
             expect(facts.taskContext?.projectContext?.projectId).toBe(project.id);
@@ -87,8 +91,8 @@ describe("coherent production context preview", () => {
                 expect([...tx.storeNames].sort()).toEqual(contextPreviewTables().map(table => table.name).sort());
             }
         } finally {
-            db.projects.hook("reading").unsubscribe(observe); db.chatThreads.hook("reading").unsubscribe(observe);
-            db.projectMemories.hook("reading").unsubscribe(observe);
+            browserDatabase!.projects.hook("reading").unsubscribe(observe); browserDatabase!.chatThreads.hook("reading").unsubscribe(observe);
+            browserDatabase!.projectMemories.hook("reading").unsubscribe(observe);
         }
     });
 
@@ -121,7 +125,7 @@ describe("coherent production context preview", () => {
     });
 
     it("reports DB failures without default/empty facts, and identities cover every actual request input", async () => {
-        vi.spyOn(db.agents, "get").mockRejectedValueOnce(new Error("fixture read failure"));
+        failStoreTableOnce(db, "agents", "get", new Error("fixture read failure"));
         expect(await readAgentContextPreview(input)).toEqual({identity: contextPreviewIdentity(input), status: "error", message: "fixture read failure"});
         const identity = contextPreviewIdentity(input);
         for (const changed of [{threadId: "B"}, {projectId: "B"}, {draft: "changed"}, {model: "changed"}, {metadata: {source: "provider" as const, vision: false}}, {attachments: [{referenceId: "ref", revision: 2}]}, {interactionMode: "conversation" as const}, {providerId: "changed"}]) {

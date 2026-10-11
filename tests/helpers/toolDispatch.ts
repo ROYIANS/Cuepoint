@@ -4,13 +4,17 @@ import type { AgentRun } from "@/domain/agent";
 
 /** Lower-layer ledger fixtures simulate a prior model dispatch, without bypassing production validation. */
 export async function saveFixtureToolRound(...args: Parameters<typeof saveToolRound>) {
-  const run = await db.agentRuns.get(args[0]);
-  if (run?.toolLoading) {
-    const step = run.modelStep ?? 1;
-    const offeredTools = [...(run.offeredTools ?? []).filter((offer) => offer.step !== step), { step, names: args[2].map((call) => call.function.name) }];
-    await db.agentRuns.update(run.id, { offeredTools });
-  }
-  return saveToolRound(...args);
+  const [runId,content,calls,details,output,publicOutput,store]=args;
+  const owner=store ?? db;
+  return owner.transaction("rw",owner.tables,async tx=> {
+    const run = await tx.agentRuns.get(runId);
+    if (run?.toolLoading) {
+      const step = run.modelStep ?? 1;
+      const offeredTools = [...(run.offeredTools ?? []).filter((offer) => offer.step !== step), { step, names: calls.map((call) => call.function.name) }];
+      await tx.agentRuns.update(run.id, { offeredTools });
+    }
+    return saveToolRound(runId,content,calls,details,output,publicOutput,tx);
+  });
 }
 /** Focused tool lifecycle tests start after discovery; full discovery transport is tested separately. */
 export async function preloadFixtureGroups(run: AgentRun, groupIds: string[]): Promise<AgentRun> {

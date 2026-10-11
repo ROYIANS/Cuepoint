@@ -1,5 +1,5 @@
 import {useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Upload} from "lucide-react";
 import {db} from "@/db/database";
 import type {AudioTake} from "@/domain/audio";
@@ -11,6 +11,7 @@ import {Button} from "@/components/ui/button";
 import {AudioPlayer, errorText} from "@/components/audioMusic/shared";
 import {SelectOption, WorkspaceSelect} from "@/components/audioMusic/controls";
 import {keepAudioSource} from "./AudioSources";
+import {withBinaryReadLease} from "@/lib/storage/binary";
 
 export function VoiceReferencePicker({projectId, takes, value, onChange, disabled, onBusyChange}: {
     projectId: string;
@@ -24,7 +25,7 @@ export function VoiceReferencePicker({projectId, takes, value, onChange, disable
     const pending = useRef(false);
     const [busy, setBusy] = useState(false), [error, setError] = useState("");
     const refs = [...new Map(takes.map(row => [row.mediaId, row])).values()];
-    const selected = useLiveQuery(async () => value ? (await db.media.get(value)) ?? null : null, [value]);
+    const selected = useProductQuery(async (db) => value ? (await db.media.get(value)) ?? null : null, [value]);
 
     async function perform(action: () => Promise<void>) {
         if (pending.current) return;
@@ -47,16 +48,22 @@ export function VoiceReferencePicker({projectId, takes, value, onChange, disable
                                                        value={value} onValueChange={(id) => void perform(async () => {
         const media = await db.media.get(id);
         if (!media || media.projectId !== projectId) throw new Error("参考声音不属于当前项目");
-        const mime = await detectAudioMime(media.blob);
-        if (["audio/wav", "audio/mpeg", "audio/mp3", "audio/x-wav", "audio/wave"].includes(mime)) {
-            await validateMimoReferenceBlob(media.blob);
-            onChange(id);
-        } else {
-            const {blob} = encodePcm16Wav(await decodeAudioBlob(media.blob));
-            await validateMimoReferenceBlob(blob);
-            const take = await keepAudioSource(projectId, blob, `${media.filename} · 参考.wav`, "upload");
+        const converted = await withBinaryReadLease(media.blob, async lease => {
+            const original = await lease.readBlob();
+            const mime = await detectAudioMime(original);
+            if (["audio/wav", "audio/mpeg", "audio/mp3", "audio/x-wav", "audio/wave"].includes(mime)) {
+                await validateMimoReferenceBlob(original);
+                return undefined;
+            } else {
+                const {blob} = encodePcm16Wav(await decodeAudioBlob(original));
+                await validateMimoReferenceBlob(blob);
+                return blob;
+            }
+        });
+        if (converted) {
+            const take = await keepAudioSource(projectId, converted, `${media.filename} · 参考.wav`, "upload");
             onChange(take.mediaId);
-        }
+        } else onChange(id);
     })}><SelectOption value="">选择项目录音或配音版本</SelectOption>{refs.map(row => <SelectOption key={row.mediaId}
                                                                                                    value={row.mediaId}>{row.name}</SelectOption>)}{value && !refs.some(row => row.mediaId === value) &&
         <SelectOption

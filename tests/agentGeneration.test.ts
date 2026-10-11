@@ -1,3 +1,5 @@
+import {readBinaryBlob} from "@/lib/storage/binary";
+import {installStoreHook} from "./helpers/storeBackendFaults";
 import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
@@ -74,7 +76,7 @@ describe("durable agent generation",()=>{
     expect(job.providerTaskId).toBeTruthy();
     expect((await db.shots.get(f.shot.id))?.firstFrame.result).toBeUndefined();
     const stored=(await db.media.get(job.result!.mediaId))!;
-    expect(new Uint8Array(await stored.blob.arrayBuffer())).toEqual(png);
+    expect(new Uint8Array(await (await readBinaryBlob(stored.blob)).arrayBuffer())).toEqual(png);
     expect(JSON.stringify(job)).not.toContain(f.config.apiKey);
     expect(JSON.stringify(job)).not.toContain("https://cdn");
     const apply=await toolContext(f.run.id,f.thread.id,"apply_generation",{jobId:job.id});
@@ -257,7 +259,7 @@ describe("generation interruption and storage failures",()=>{
   it("same-call concurrent execution makes at most one paid submission",async()=>{
     const f=await setup();const fetchImpl=apimartFetch();
     const results=await Promise.allSettled([submitAgentGeneration(f.args,f.context,{fetchImpl,pollIntervalMs:0}),submitAgentGeneration(f.args,f.context,{fetchImpl,pollIntervalMs:0})]);
-    expect(results.some((result)=>result.status === "fulfilled")).toBe(true);
+    expect(results.some((result)=>result.status === "fulfilled"),results.map(result=>result.status === "rejected" ? String(result.reason) : "fulfilled").join("; ")).toBe(true);
     expect(fetchImpl.mock.calls.filter(([,init])=>init?.method === "POST")).toHaveLength(1);
     expect(await db.agentGenerationJobs.count()).toBe(1);
   });
@@ -296,9 +298,9 @@ describe("generation interruption and storage failures",()=>{
   });
   it("local output write failure rolls back media and recovers by downloading known task",async()=>{
     const f=await setup();const fetchImpl=apimartFetch();
-    const fail=()=>{throw new Error("storage full");};db.media.hook("creating",fail);
+    const fail=()=>{throw new Error("storage full");};const storeHook_media_fail=await installStoreHook(db, "media", "creating", fail);
     try {await expect(submitAgentGeneration(f.args,f.context,{fetchImpl})).rejects.toThrow("storage full");}
-    finally {db.media.hook("creating").unsubscribe(fail);}
+    finally {storeHook_media_fail.mockRestore();}
     expect(await db.media.count()).toBe(0);let job=(await db.agentGenerationJobs.toArray())[0];expect(job.result).toBeUndefined();expect(job.providerTaskId).toBe("task-1");
     job=await monitorAgentGeneration(job.id,f.context,{fetchImpl});expect(job.status).toBe("downloaded");
     expect(fetchImpl.mock.calls.filter(([,init])=>init?.method === "POST")).toHaveLength(1);
@@ -307,9 +309,9 @@ describe("generation interruption and storage failures",()=>{
     const f=await setup();const job=await submitAgentGeneration(f.args,f.context,{fetchImpl:apimartFetch()});
     const context=await toolContext(f.run.id,f.thread.id,"apply_generation",{jobId:job.id});
     const fail=(changes:Record<string,unknown>)=>{if(changes.status === "completed")throw new Error("ledger storage failed");};
-    db.agentToolCalls.hook("updating",fail);
+    const storeHook_agentToolCalls_fail=await installStoreHook(db, "agentToolCalls", "updating", fail);
     try {await expect(applyAgentGeneration(job.id,context)).rejects.toThrow("ledger storage failed");}
-    finally {db.agentToolCalls.hook("updating").unsubscribe(fail);}
+    finally {storeHook_agentToolCalls_fail.mockRestore();}
     expect((await db.shots.get(f.shot.id))?.firstFrame.result).toBeUndefined();
     expect((await db.agentGenerationJobs.get(job.id))?.status).toBe("downloaded");
     expect((await db.agentToolCalls.get(context.callId))?.status).toBe("running");

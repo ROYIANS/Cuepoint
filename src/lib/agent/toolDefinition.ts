@@ -1,7 +1,10 @@
 import type {AgentToolCall, AgentToolEffect, AgentToolPreview} from '@/domain/agent';
 import type {Spec} from './businessSchemas';
+import type {ProductStore} from "@/lib/storage/types";
 
 export interface AgentToolContext {
+    /** Explicit local storage context; copied for each root, never global ambient state. */
+    store?: ProductStore;
     projectId?: string;
     runId: string;
     threadId: string;

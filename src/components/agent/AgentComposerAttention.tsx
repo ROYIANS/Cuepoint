@@ -1,6 +1,5 @@
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {ArrowUpRight, CircleAlert} from "lucide-react";
-import {db} from "@/db/database";
 import type {AgentRun, AgentTask} from "@/domain/agent";
 import type {ChatMessage} from "@/domain/types";
 import {selectActivityAttention} from "@/lib/agent/activityAttention";
@@ -17,7 +16,7 @@ export function AgentComposerAttention({threadId, runs, messages, task, projectU
     onOpenTask: () => void;
 }) {
     const {reveal} = useAgentActivityNavigation();
-    const state = useLiveQuery(async () => {
+    const state = useProductQuery(async (db) => {
         try {
             const [calls, batches, items, jobs, tasks] = await Promise.all([
                 db.agentToolCalls.where("threadId").equals(threadId).toArray(),

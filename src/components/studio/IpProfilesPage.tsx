@@ -1,6 +1,6 @@
 import {useMemo, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {
     Archive,
     ArrowLeft,
@@ -16,7 +16,6 @@ import {
     Smile,
     Undo2
 } from "lucide-react";
-import {db} from "@/db/database";
 import {setIpArchived} from "@/db/ipProfiles";
 import type {IpProfile} from "@/domain/materials";
 import {Button} from "@/components/ui/button";
@@ -52,7 +51,7 @@ export function IpProfilesPage() {
     const [createOpen, setCreateOpen] = useState(false);
     const [search, setSearch] = useState("");
     const [archived, setArchived] = useState(false);
-    const view = useLiveQuery(async () => {
+    const view = useProductQuery(async (db) => {
         try {
             const [profiles, links, materials, projects] = await Promise.all([db.ipProfiles.orderBy("updatedAt").reverse().toArray(), db.projectIpLinks.toArray(), db.libraryMaterials.toArray(), db.projects.toArray()]);
             return {profiles, links, materials, projects};
@@ -112,7 +111,7 @@ export function IpProfilesPage() {
 export function IpProfilePage({ipId}: { ipId: string }) {
     const [editing, setEditing] = useState<IpProfile | null>(null);
     const [tab, setTab] = useState<"profile" | "projects" | "materials">("profile");
-    const view = useLiveQuery(async () => {
+    const view = useProductQuery(async (db) => {
         try {
             const profile = await db.ipProfiles.get(ipId) ?? null;
             const links = await db.projectIpLinks.where("ipId").equals(ipId).toArray();

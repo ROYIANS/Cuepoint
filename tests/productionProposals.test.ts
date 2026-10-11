@@ -1,5 +1,7 @@
 import Dexie from "dexie";
-import { describe, expect, it, vi } from "vitest";
+import {browserDatabase} from "@/lib/storage/browserDatabase";
+import {failStoreTableOnce} from "./helpers/storeFaults";
+import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
 import {addCharacter, addProp, addScene, addStyle} from "@/db/assets";
 import {addShot, patchShot, setShotSlot} from "@/db/shots";
@@ -28,7 +30,7 @@ describe("reviewed production proposals", () => {
     await media(project.id,"legacy-media");
     const storedMedia = await db.media.get("legacy-media");
     const newlyAdded = new Set(["productionProposals", "audioGenerationBatches", "audioGenerationBatchItems", "audioArrangementProposals"]);
-    const stores = Object.fromEntries(db.tables.filter((table) => !newlyAdded.has(table.name))
+    const stores = Object.fromEntries(browserDatabase!.tables.filter((table) => !newlyAdded.has(table.name))
       .map((table) => [table.name,[table.schema.primKey.src,...table.schema.indexes.map((index) => index.src)].join(", ")]));
     await db.delete();
     const legacy = new Dexie(db.name);
@@ -150,7 +152,7 @@ describe("reviewed production proposals", () => {
   it("rolls back entity write if proposal persistence fails", async () => {
     const {project,shot,target} = await fixture();
     const proposal = await createProductionProposal({target,source:{kind:"manual"},change:{kind:"shot-text",patch:{content:"new"}}});
-    const spy = vi.spyOn(db.productionProposals,"put").mockRejectedValueOnce(new Error("disk"));
+    const spy = failStoreTableOnce(db,"productionProposals","put",new Error("disk"));
     await expect(applyProductionProposal(proposal.id,project.id)).rejects.toThrow("disk");
     spy.mockRestore();
     expect(await db.shots.get(shot.id)).toEqual(shot);

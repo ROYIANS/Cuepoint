@@ -1,5 +1,6 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {projection} from './businessStore';
-import {db} from '@/db/database';
+import {db as productDb} from '@/db/database';
 import {targetRevision} from '@/lib/productionRevision';
 import type {ProjectContextSnapshot} from '@/domain/projectContext';
 import {getProjectKind, normalizeEpisodeStory} from '@/domain/types';
@@ -7,13 +8,14 @@ import {getAudioMusicProjectContext} from './audioProjectContext';
 import {AUDIO_TABLES} from '@/db/audioShared';
 import {toResponseInput} from '@/lib/ai/responsesStream';
 
-export const projectContextTables = () => [db.projects, db.episodes, db.characters, db.scenes, db.props, db.styles, db.shots, db.ipProfiles, db.projectIpLinks, ...AUDIO_TABLES];
+export const projectContextTables = (store?: ProductStore) => (db => [db.projects, db.episodes, db.characters, db.scenes, db.props, db.styles, db.shots, db.ipProfiles, db.projectIpLinks, ...AUDIO_TABLES])(store ?? productDb);
 
-export async function getProjectContext(projectId: string): Promise<ProjectContextSnapshot> {
-    return db.transaction('r', projectContextTables(), async () => {
+export async function getProjectContext(projectId: string, store?: ProductStore): Promise<ProjectContextSnapshot> {
+    const db = store ?? productDb;
+    return db.transaction('r', projectContextTables(db), async (db) => {
         const project = await db.projects.get(projectId);
         if (!project || projectId === 'studio') throw new Error('关联项目已不存在，请在其他项目开启新对话');
-        if (getProjectKind(project) !== 'video') return getAudioMusicProjectContext(project);
+        if (getProjectKind(project) !== 'video') return getAudioMusicProjectContext(project, db);
         const episodes = (await db.episodes.where('projectId').equals(projectId).sortBy('order'));
         const assets = (await Promise.all(([['character', db.characters], ['scene', db.scenes], ['prop', db.props], ['style', db.styles]] as const).map(async ([kind, table]) => (await table.where('projectId').equals(projectId).toArray()).map(row => ({
             kind,
@@ -118,14 +120,15 @@ function projectFactChanges(previous: ProjectContextSnapshot, current: ProjectCo
 }
 
 /** Append a fresh fact message at a settled request boundary, preserving all dispatched input. */
-export async function refreshRunProjectContext(runId: string) {
-    return db.transaction('rw', [db.agentRuns, db.chatThreads, db.agentToolCalls, ...projectContextTables()], async () => {
+export async function refreshRunProjectContext(runId: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    return db.transaction('rw', [db.agentRuns, db.chatThreads, db.agentToolCalls, ...projectContextTables(db)], async (db) => {
         const run = await db.agentRuns.get(runId);
         if (!run || run.status !== 'running') throw new Error('执行已停止');
         const thread = await db.chatThreads.get(run.threadId);
         if (!thread || thread.projectId !== run.projectId) throw new Error('对话项目绑定已变化');
         if (!run.projectId) return run;
-        const current = await getProjectContext(run.projectId);
+        const current = await getProjectContext(run.projectId, db);
         if (current.fingerprint === run.projectContext?.fingerprint) return run;
         if ((await db.agentToolCalls.where('runId').equals(run.id).toArray()).some(c => !['completed', 'failed', 'rejected'].includes(c.status))) throw new Error('请先处理工具步骤，再更新项目上下文');
         if (run.projectContext?.content === current.content && JSON.stringify(run.projectContext.coverage) === JSON.stringify(current.coverage)) {

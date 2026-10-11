@@ -2,7 +2,7 @@ import {switchMusicVariant} from "./switchMusicVariant";
 import {Disclosure, DisclosureTitle, SelectOption, WorkspaceSelect} from "@/components/audioMusic/controls";
 import {useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Copy, Download, Heart, Library, Pause, Play, Plus, Search, X} from "lucide-react";
 import {db} from "@/db/database";
 import {addMusicDraft, patchMusicWork} from "@/db/music";
@@ -13,6 +13,7 @@ import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {DraftConflictError} from "@/lib/draftConflict";
 import {downloadBlob} from "@/lib/projectPackage";
 import {isPublishedSaveError} from "@/lib/runtimeSave";
+import {readBinaryBlob} from "@/lib/storage/binary";
 import {Button} from "@/components/ui/button";
 import {PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import {Input} from "@/components/ui/input";
@@ -29,7 +30,7 @@ import {
     useProjectAudioJobs
 } from "@/components/audioMusic/shared";
 import {MusicCreation} from "./MusicCreation";
-import {musicVariant, type MusicVariant, parseVariantLinks, type VariantLinks} from "./draftVariants";
+import {musicVariant, type MusicVariant} from "./draftVariants";
 import "./music-workspace.css";
 
 export function MusicWorkspacePage({projectId}: { projectId: string }) {
@@ -38,7 +39,7 @@ export function MusicWorkspacePage({projectId}: { projectId: string }) {
 
 function MusicWorkspace({projectId}: { projectId: string }) {
     useProjectAudioJobs(projectId);
-    const data = useLiveQuery(async () => ({
+    const data = useProductQuery(async (db) => ({
         project: await db.projects.get(projectId) ?? null,
         drafts: await db.musicDrafts.where("projectId").equals(projectId).sortBy("createdAt"),
         works: await db.musicWorks.where("projectId").equals(projectId).reverse().sortBy("createdAt"),
@@ -61,14 +62,6 @@ function MusicWorkspace({projectId}: { projectId: string }) {
     const submissionPending = useRef(false);
     const busy = actionBusy || submitting;
     const actionPending = useRef(false);
-    const storageKey = `cuepoint.music.variants.${projectId}`;
-    const variantLinks = useRef<VariantLinks>((() => {
-        try {
-            return parseVariantLinks(localStorage.getItem(storageKey));
-        } catch {
-            return {};
-        }
-    })());
     useEffect(() => {
         const media = window.matchMedia("(min-width: 1280px)");
         const update = () => setWide(media.matches);
@@ -110,12 +103,7 @@ function MusicWorkspace({projectId}: { projectId: string }) {
 
     async function switchVariant(target: MusicVariant) {
         if (!draft || target === musicVariant(draft.settings)) return;
-        const result = await switchMusicVariant({projectId, draftId: draft.id, target, links: variantLinks.current});
-        variantLinks.current = result.links;
-        try {
-            localStorage.setItem(storageKey, JSON.stringify(variantLinks.current));
-        } catch { /* Draft contents are still durable in Dexie. */
-        }
+        const result = await switchMusicVariant({projectId, draftId: draft.id, target});
         setDraftId(result.draftId);
     }
 
@@ -226,7 +214,7 @@ function MusicDetails({work, busy, action, reuse}: {
     action: (fn: () => Promise<unknown>) => Promise<void>;
     reuse: () => void;
 }) {
-    const audioProjects = useLiveQuery(() => db.projects.filter((row) => row.kind === "audio" && !row.archivedAt).toArray());
+    const audioProjects = useProductQuery((db) => db.projects.filter((row) => row.kind === "audio" && !row.archivedAt).toArray());
     const [targetProjectId, setTargetProjectId] = useState("");
     const [adopted, setAdopted] = useState(false);
     const save = (field: "title" | "notes") => async (text: string, baseline: string) => {
@@ -245,7 +233,7 @@ function MusicDetails({work, busy, action, reuse}: {
                                                                                                            const media = await db.media.get(work.mediaId);
                                                                                                            if (!media) throw new Error("原始音频不可用");
                                                                                                            try {
-                                                                                                               await downloadBlob(media.blob, media.filename);
+                                                                                                               await downloadBlob(await readBinaryBlob(media.blob), media.filename);
                                                                                                            } catch (error) {
                                                                                                                if (isPublishedSaveError(error)) toast.warning(error.message);
                                                                                                                else throw error;

@@ -1,8 +1,7 @@
 import {useRef, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {ChevronLeft} from "lucide-react";
-import {db} from "@/db/database";
 import {patchCharacter, setCharacterSlot} from "@/db/assets";
 import {CHARACTER_SLOTS, STUDIO_LIBRARY_ID} from "@/domain/types";
 import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
@@ -24,8 +23,8 @@ function CharacterDetailContent({
 }) {
     const navigate = useNavigate();
     const ownerId = back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID;
-    const result = useLiveQuery(
-        async () => ({ownerId, id: characterId, value: (await db.characters.get(characterId)) ?? null}),
+    const result = useProductQuery(
+        async (db) => ({ownerId, id: characterId, value: (await db.characters.get(characterId)) ?? null}),
         [ownerId, characterId],
     );
 

@@ -128,13 +128,16 @@ describe("frozen music review and local approval", () => {
     const paid = vi.fn<typeof fetch>(); vi.stubGlobal("fetch", paid);
     const prepare = musicTool.prepare!;
     let mutation: Promise<unknown> | undefined;
+    let releaseEdit!:()=>void;
+    const approvalCommitted=new Promise<void>(resolve=>releaseEdit=resolve);
     vi.spyOn(musicTool, "prepare").mockImplementation(async (args, context) => {
       const fresh = await prepare(args, context);
-      // Ignore the ambient approval transaction to model another tab's write.
-      mutation = db.transaction("rw!", db.musicDrafts, () => db.musicDrafts.update(draft.id, { settings: { ...settings, lyrics: "后来修改" }, revision: draft.revision + 1 }));
+      // A separately scheduled editor writes after the approval commit on either owner.
+      mutation = approvalCommitted.then(()=>db.transaction("rw", ["musicDrafts"], tx => tx.musicDrafts.update(draft.id, { settings: { ...settings, lyrics: "后来修改" }, revision: draft.revision + 1 })));
       return fresh;
     });
     await approveMusicGenerationReview(call);
+    releaseEdit();
     await mutation;
     expect((await db.agentToolCalls.get(call.id))?.status).toBe("approved");
     expect((await db.musicDrafts.get(draft.id))?.settings).toMatchObject({ lyrics: "后来修改" });

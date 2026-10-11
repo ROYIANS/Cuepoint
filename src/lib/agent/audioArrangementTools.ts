@@ -1,4 +1,5 @@
-import {db} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import {applyAudioArrangementProposal, previewAudioArrangement, previewAudioSelection, readAudioArrangementProposal, revertAudioArrangementProposal, saveAudioArrangementProposal} from "@/db/audioArrangement";
 import {assertAudioClipDocument} from "@/db/audio";
 import type {AudioArrangementProposal, AudioArrangementReceipt} from "@/domain/audioArrangement";
@@ -14,7 +15,8 @@ const selectionSpec = s.object({...base, choices: s.array(s.object({segmentId: s
 const arrangementSpec = s.object({...base, segmentIds: s.array(s.id,20,1), trackId: s.id, gapSec: s.optional(s.number(0,300)), startSec: s.optional(s.number(0,86400)), trims: s.optional(s.array(s.object({segmentId: s.id, startSec: s.number(0,86400), endSec: s.number(0,86400)}),20))});
 const owner = (context: AgentToolContext) => ({type: "agent" as const, threadId: context.threadId, runId: context.runId, callId: context.callId});
 const proposalId = (context: AgentToolContext) => `aap_${targetRevision([context.threadId,context.runId,context.callId]).slice(10)}`;
-const scope = async (args: {projectId: string}, context: AgentToolContext) => {await assertAudioMusicToolScope(args.projectId,context,"audio");};
+const scope = async (args: {projectId: string}, context: AgentToolContext, store?: ProductStore) => {
+    const db = store ?? context.store ?? productDb;await assertAudioMusicToolScope(args.projectId,context,"audio", db);};
 
 function preview(proposal: AudioArrangementProposal) {
     return {state: {fingerprint: proposal.fingerprint, kind: proposal.kind, choices: proposal.choices, request: proposal.request}, target: audioMusicTarget(proposal.projectId), changes: proposal.kind === "selection" ? proposal.selections.map(item => `${item.segment.text.slice(0,80)}：选用 ${item.take.name.slice(0,300)}（${item.take.id}），${item.take.durationSec.toFixed(3)} 秒${item.textMismatch ? "；来源文字与当前脚本不同" : ""}。只选用，不放入时间线。`) : proposal.items.map(item => {
@@ -35,8 +37,9 @@ export const AUDIO_ARRANGEMENT_TOOLS = [
     libraryReadTool({
         name: "audio_read_arrangement", title: "读取选用与排列记录", description: "读取当前项目的真实预览/历史和最新 revision、当前仍存在的新增片段。历史 applied 不代表当前仍放置；导入记录是休眠历史。", spec: s.object({projectId: s.optional(s.id), proposalId: s.id}),
         async execute(args,context) {
-            const projectId = await assertAudioMusicToolScope(args.projectId,context,"audio");
-            const row = await readAudioArrangementProposal(projectId,args.proposalId);
+    const db = context.store ?? productDb;
+            const projectId = await assertAudioMusicToolScope(args.projectId,context,"audio", db);
+            const row = await readAudioArrangementProposal(projectId,args.proposalId, db);
             const clips = await db.audioClips.bulkGet(row.receipt?.added.map(clip => clip.id) ?? []);
             const segments = await db.audioSegments.bulkGet(row.receipt?.selected.map(segment => segment.id) ?? []);
             const currentSelections = (row.receipt?.selected ?? []).map((historical,index) => ({segmentId:historical.id,takeId:historical.selectedTakeId,selected:segments[index]?.projectId === projectId && segments[index]?.selectedTakeId === historical.selectedTakeId}));
@@ -45,35 +48,39 @@ export const AUDIO_ARRANGEMENT_TOOLS = [
     }),
     libraryWriteTool({
         name: "audio_select_takes", title: "批量选用配音版本", description: "按真实读取到的 segment/take ID 与 revision 选用 1–20 段声音；必须逐项明确版本。整组预览确认后原子保存，不放入时间线，不生成或听取声音。",
-        spec: selectionSpec, scope, resolve: (args,context) => resolveAudioMusicArgs(args,context,"audio"), owners: args => [args.projectId], requiresConfirmation: true,
-        prepare: async (args,context) => preview(await previewAudioSelection(args.projectId,args.chapterId,args.choices,owner(context),proposalId(context))),
+        spec: selectionSpec, scope, resolve: (args,context) => resolveAudioMusicArgs(args,context,"audio", context.store), owners: args => [args.projectId], requiresConfirmation: true,
+        prepare: async (args,context) => preview(await previewAudioSelection(args.projectId,args.chapterId,args.choices,owner(context),proposalId(context), context.store)),
         async execute(args,context) {
-            const proposal = await previewAudioSelection(args.projectId,args.chapterId,args.choices,owner(context),proposalId(context));
-            await saveAudioArrangementProposal(proposal);
-            return result(await applyAudioArrangementProposal(args.projectId,proposal.id,proposal.revision,owner(context),context.signal));
+    const db = context.store ?? productDb;
+            const proposal = await previewAudioSelection(args.projectId,args.chapterId,args.choices,owner(context),proposalId(context), db);
+            await saveAudioArrangementProposal(proposal, db);
+            return result(await applyAudioArrangementProposal(args.projectId,proposal.id,proposal.revision,owner(context),context.signal, db));
         }
     }),
     libraryWriteTool({
         name: "audio_arrange_selected", title: "排列已选声音", description: "预览并确认后，按稿件顺序和真实裁剪时长，将 1–20 段已选声音追加到明确的人声音轨。已有任意版本剪辑均保留并跳过；不移动手动剪辑，不改变选用，不生成或听取声音。可用 proposalId 明确撤销本次新增。",
-        spec: arrangementSpec, scope, resolve: (args,context) => resolveAudioMusicArgs(args,context,"audio"), owners: args => [args.projectId], requiresConfirmation: true,
-        prepare: async (args,context) => preview(await previewAudioArrangement(args.projectId,args.chapterId,args,owner(context),proposalId(context))),
+        spec: arrangementSpec, scope, resolve: (args,context) => resolveAudioMusicArgs(args,context,"audio", context.store), owners: args => [args.projectId], requiresConfirmation: true,
+        prepare: async (args,context) => preview(await previewAudioArrangement(args.projectId,args.chapterId,args,owner(context),proposalId(context), context.store)),
         async execute(args,context) {
-            const proposal = await previewAudioArrangement(args.projectId,args.chapterId,args,owner(context),proposalId(context));
-            await saveAudioArrangementProposal(proposal);
-            return result(await applyAudioArrangementProposal(args.projectId,proposal.id,proposal.revision,owner(context),context.signal));
+    const db = context.store ?? productDb;
+            const proposal = await previewAudioArrangement(args.projectId,args.chapterId,args,owner(context),proposalId(context), db);
+            await saveAudioArrangementProposal(proposal, db);
+            return result(await applyAudioArrangementProposal(args.projectId,proposal.id,proposal.revision,owner(context),context.signal, db));
         }
     }),
     libraryWriteTool({
         name: "audio_revert_arrangement", title: "撤销一次声音排列", description: "明确撤销该 proposalId 的新增片段，保留选用、源音频及所有原有手动剪辑。时间线任何后续改动都会拒绝撤销，需先重新检查。导入历史不能应用或撤销。",
-        spec: s.object({projectId: s.optional(s.id), proposalId: s.id, revision: audioMusicRevision}), scope, resolve: (args,context) => resolveAudioMusicArgs(args,context,"audio"), owners: args => [args.projectId], requiresConfirmation: true,
-        async prepare(args) {
-            const proposal = await readAudioArrangementProposal(args.projectId,args.proposalId);
+        spec: s.object({projectId: s.optional(s.id), proposalId: s.id, revision: audioMusicRevision}), scope, resolve: (args,context) => resolveAudioMusicArgs(args,context,"audio", context.store), owners: args => [args.projectId], requiresConfirmation: true,
+        async prepare(args, context) {
+    const db = context.store ?? productDb;
+            const proposal = await readAudioArrangementProposal(args.projectId,args.proposalId, db);
             if (proposal.kind !== "arrangement" || !proposal.receipt || proposal.dormant || proposal.reverted || proposal.revision !== args.revision) throw new Error("此排列不能撤销，请先读取最新内容");
-            await assertAudioClipDocument(args.projectId,proposal.chapterId,proposal.receipt.after);
+            await assertAudioClipDocument(args.projectId,proposal.chapterId,proposal.receipt.after, db);
             return {state: proposal, target: audioMusicTarget(args.projectId), changes: [`移除本次新增的 ${proposal.receipt.added.length} 个片段；保留原有剪辑、声音版本和选用。`, ...proposal.receipt.added.map(row => `${row.id}：位置 ${row.startSec.toFixed(3)} 秒，来源 ${row.takeId}`)]};
         },
         async execute(args,context) {
-            const removed = await revertAudioArrangementProposal(args.projectId,args.proposalId,args.revision,context.signal);
+    const db = context.store ?? productDb;
+            const removed = await revertAudioArrangementProposal(args.projectId,args.proposalId,args.revision,context.signal, db);
             return {proposalId: args.proposalId, projectId: args.projectId, removedClipIds: removed, ...(removed.length ? {writeReceipt: createWriteReceipt(removed.map(id => ({kind: "audio_clip", operation: "deleted", id, ownerId: args.projectId, label: "撤销本次排列"})))} : {}), note: "声音版本与选用保持不变。"};
         }
     }),

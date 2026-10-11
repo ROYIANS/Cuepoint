@@ -1,7 +1,8 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {defineTool} from './toolDefinition';
 import {DISCOVERY_TOOL_NAME, MAX_LOADED_TOOLS, toolNamesForCall} from "@/domain/agentToolSelection";
 import {z} from "zod";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {executeAtomicTool} from "@/db/agentTools";
 import type {AgentRun, AgentToolCall, AgentToolLoading} from "@/domain/agent";
 import {toResponseInput} from "@/lib/ai/responsesStream";
@@ -69,11 +70,13 @@ export const DISCOVERY_TOOLS = [defineTool({
     atomic: true,
     highRisk: () => false,
     async execute(raw, context) {
+    const db = context.store ?? productDb;
         const args = loadingSchema.parse(raw);
-        return executeAtomicTool(context, async () => {
-            const run = await db.agentRuns.get(context.runId);
+        return executeAtomicTool(context, async (db) => {
+        const boundContext = {...context, store:db};
+            const run = await db.agentRuns.get(boundContext.runId);
             const state = run?.toolLoading;
-            const call = await db.agentToolCalls.get(context.callId);
+            const call = await db.agentToolCalls.get(boundContext.callId);
             if (!run || !state || !call || call.name !== DISCOVERY_TOOL_NAME || !toolNamesForCall(run, call.step).includes(DISCOVERY_TOOL_NAME)) throw new Error("本轮未提供工具加载入口");
             if (args.groupIds.some((id) => !state.groups.some((group) => group.id === id))) throw new Error("请求的能力不存在或未启用，请使用可用能力目录中的分组 ID");
             const selected = state.groups.filter((group) => args.groupIds.includes(group.id));
@@ -109,13 +112,14 @@ export const DISCOVERY_TOOLS = [defineTool({
                 effectiveFromStep: (run.modelStep ?? 0) + 1,
                 note: "工具已准备好，系统会在同一次执行的下一次模型请求提供完整参数；请接着调用所需业务工具，无需用户再发送开始或继续。此操作只加载能力，没有执行任何业务。"
             };
-        });
+        }, db);
     }
 })];
 
 /** Replace only the upcoming skill layer; preserve request history and paired tool envelopes. */
-export async function refreshRunToolLoading(runId: string): Promise<AgentRun> {
-    return db.transaction("rw", [db.agentRuns, db.agentToolCalls], async () => {
+export async function refreshRunToolLoading(runId: string, store?: ProductStore): Promise<AgentRun> {
+    const db = store ?? productDb;
+    return db.transaction("rw", [db.agentRuns, db.agentToolCalls], async (db) => {
         const run = await db.agentRuns.get(runId);
         if (!run || run.status !== "running") throw new Error("执行已停止");
         if (!run.toolLoading && !run.createdProjectBinding) return run;

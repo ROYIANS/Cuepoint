@@ -1,3 +1,5 @@
+import type {ProductStore} from "@/lib/storage/types";
+import {StorageError} from "@/lib/storage/errors";
 import {toolMetadataMatches} from './toolDefinition';
 import {getOfferedToolNames, refreshRunToolLoading, toolNamesForCall} from "./toolLoading";
 import {saveAgentFinishingCheck} from "@/db/agentFinishingCheck";
@@ -10,7 +12,7 @@ import {refreshRunProjectContext} from "./projectContext";
 import {frozenProjectScope} from "./projectScope";
 import {ToolPendingError, toolFailureResult} from "./toolErrors";
 import {type ResponsesResult, streamResponses} from "@/lib/ai/responsesStream";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {
     appendToolResults,
     AtomicToolRollbackError,
@@ -83,6 +85,9 @@ export function createRunWriter(persist: (sequence: number, output: AgentRunOutp
 
 const MAX_MODEL_STEPS = MODEL_STEPS_PER_SEGMENT;
 
+/** A failed completion lookup cannot certify that an atomic operation rolled back. */
+class UnresolvedToolOutcomeError extends Error {}
+
 /** Only user review may supply an execution override; wire arguments remain untouched. */
 function effectiveToolInput(call: AgentToolCall) {
     if (!call.generationOverride) return {arguments: call.arguments, preview: call.preview};
@@ -91,8 +96,9 @@ function effectiveToolInput(call: AgentToolCall) {
 }
 
 /** Pending calls are immutable. Only code-owned definitions decide their effect and risk. */
-async function executePendingTools(run: AgentRun, controller: AbortController, registry: readonly AgentToolDefinition[]): Promise<boolean> {
-    await upgradeLegacyPlanCalls(run.id);
+async function executePendingTools(run: AgentRun, controller: AbortController, registry: readonly AgentToolDefinition[], store?: ProductStore): Promise<boolean> {
+    const db = store ?? productDb;
+    await upgradeLegacyPlanCalls(run.id, db);
     const calls = (await db.agentToolCalls.where("runId").equals(run.id).toArray()).sort((a, b) => a.step - b.step || a.order - b.order);
     if (run.protocol === "responses") {
         const savedCalls = run.responseItems?.filter((item) => item.type === "function_call");
@@ -115,14 +121,14 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
                 callId: call.id,
                 signal: controller.signal,
                 projectId: run.projectId
-            });
+            }, db);
             validated = validateToolCall(call.name, effectiveToolInput(call).arguments, toolNamesForCall(run, call.step), registry);
         } catch (error) {
             const message = error instanceof Error ? error.message : "工具参数无效";
             await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", {
                 error: message,
                 result: JSON.stringify(toolFailureResult(error, "not_started") ?? {error: message})
-            });
+            }, db);
             continue;
         }
         const {tool, args} = validated;
@@ -135,26 +141,27 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
                     runId: run.id,
                     threadId: run.threadId,
                     callId: call.id,
-                    signal: controller.signal
+                    signal: controller.signal,
+                    store: db
                 });
-                await saveToolPreview(run.id, call.id, preview);
+                await saveToolPreview(run.id, call.id, preview, db);
             } catch (error) {
                 controller.signal.throwIfAborted();
                 const message = error instanceof Error ? error.message : "无法准备操作预览";
                 await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", {
                     error: message,
                     result: JSON.stringify(toolFailureResult(error, "not_started") ?? {error: message})
-                });
+                }, db);
                 continue;
             }
         }
         if (call.status !== "approved" && requiresToolApproval(run.permissionMode ?? "ask", tool, args)) {
-            await transitionToolCall(run.id, call.id, ["pending"], "awaiting_approval");
+            await transitionToolCall(run.id, call.id, ["pending"], "awaiting_approval", undefined, db);
             waiting = true;
         }
     }
     if (waiting) {
-        await pauseForApproval(run.id);
+        await pauseForApproval(run.id, db);
         return false;
     }
     for (const saved of calls) {
@@ -170,7 +177,7 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
         if (!toolMetadataMatches(tool, args, call)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
         // Recheck permission immediately before the claim. A global setting cannot change this run's mode.
         if (requiresToolApproval(run.permissionMode ?? "ask", tool, args) && call.status !== "approved") throw new Error("工具尚未获得批准");
-        if (!await transitionToolCall(run.id, call.id, ["pending", "approved"], "running")) throw new Error("工具已被其他执行领取");
+        if (!await transitionToolCall(run.id, call.id, ["pending", "approved"], "running", undefined, db)) throw new Error("工具已被其他执行领取");
         controller.signal.throwIfAborted();
         try {
             const value = await tool.execute(args, {
@@ -179,44 +186,56 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
                 threadId: run.threadId,
                 callId: call.id,
                 signal: controller.signal,
-                preview: effectiveToolInput(call).preview
+                preview: effectiveToolInput(call).preview,
+                store: db
             });
             const result = JSON.stringify(value);
             if (result === undefined || result.length > 65_536) throw new Error("工具结果无效或超过大小限制");
             // Save a known completed result even if Stop was clicked while the operation settled.
-            await transitionToolCall(run.id, call.id, ["running"], "completed", {result});
+            await transitionToolCall(run.id, call.id, ["running"], "completed", {result}, db);
         } catch (cause) {
             // An atomic tool may already have committed its result before a later failure.
-            const persisted = await db.agentToolCalls.get(call.id);
+            let persisted:AgentToolCall|undefined;
+            try {persisted=await db.agentToolCalls.get(call.id);} catch (lookupError) {
+                if (tool.effect !== "read") throw new UnresolvedToolOutcomeError("无法核实已保存的工具结果，不能自动重跑。",{cause:lookupError});
+                throw lookupError;
+            }
             if (persisted?.status === "completed") continue;
             if (cause instanceof ToolPendingError || controller.signal.aborted && call.recovery) {
-                await markRunningToolsUnknown(run.id);
+                await markRunningToolsUnknown(run.id, db);
                 throw cause instanceof ToolPendingError ? cause : new ToolPendingError("生成任务已保存，请继续查询已有任务。");
             }
             // Exceptions from side effects cannot certify that nothing happened.
             const ambiguous = !(cause instanceof AtomicToolRollbackError) && (tool.effect === "write" || tool.effect === "network" || tool.effect === "bookkeeping");
             const error = ambiguous ? "操作结果尚不确定，请先核实，不能自动重跑。" : cause instanceof Error ? cause.message : "工具执行失败。";
             const certainty = cause instanceof AtomicToolRollbackError ? "rolled_back" : tool.effect === "read" ? "not_started" : "unknown";
-            await transitionToolCall(run.id, call.id, ["running"], ambiguous ? "unknown" : "failed", {
-                error,
-                ...(!ambiguous ? {result: JSON.stringify(toolFailureResult(cause, certainty) ?? {error})} : {})
-            });
-            if (ambiguous) throw new Error(error);
+            try {
+                await transitionToolCall(run.id, call.id, ["running"], ambiguous ? "unknown" : "failed", {
+                    error,
+                    ...(!ambiguous ? {result: JSON.stringify(toolFailureResult(cause, certainty) ?? {error})} : {})
+                }, db);
+            } catch (saveError) {
+                if (ambiguous) throw new UnresolvedToolOutcomeError(error,{cause:saveError});
+                throw saveError;
+            }
+            if (ambiguous) throw new UnresolvedToolOutcomeError(error,{cause});
         }
         controller.signal.throwIfAborted();
     }
-    await appendToolResults(run.id);
+    await appendToolResults(run.id, db);
     return true;
 }
 
 /** Caller holds withThreadRunLock across resume, all requests, tools, and final persistence. */
-export async function resumeChatRun(runId: string, apiKey: string, controller: AbortController, fetchImpl?: typeof fetch, registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS): Promise<void> {
+export async function resumeChatRun(runId: string, apiKey: string, controller: AbortController, fetchImpl?: typeof fetch, registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     controller.signal.throwIfAborted();
-    const run = await resumeAgentRun(runId);
-    await executeChatRun(run, apiKey, controller, fetchImpl, registry);
+    const run = await resumeAgentRun(runId, db);
+    await executeChatRun(run, apiKey, controller, fetchImpl, registry, db);
 }
 
-export async function executeChatRun(initialRun: AgentRun, apiKey: string, controller: AbortController, fetchImpl?: typeof fetch, registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS): Promise<void> {
+export async function executeChatRun(initialRun: AgentRun, apiKey: string, controller: AbortController, fetchImpl?: typeof fetch, registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     let run = initialRun;
     const savedOutput = await db.chatMessages.get(run.assistantMessageId);
     let accum: ReasoningAccum = {
@@ -238,26 +257,26 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
     });
     let writer = createRunWriter((seq, next) => {
         sequence = seq;
-        return checkpointAgentRun(run.id, seq, next);
+        return checkpointAgentRun(run.id, seq, next, db);
     }, onWriteFailure, sequence);
     try {
-        if (run.hasToolCalls && !await executePendingTools(run, controller, registry)) return;
+        if (run.hasToolCalls && !await executePendingTools(run, controller, registry, db)) return;
         while (true) {
             controller.signal.throwIfAborted();
-            if (await pauseAtModelStepLimit(run.id)) return;
-            run = await refreshRunToolLoading(run.id);
-            run = await refreshRunProjectContext(run.id);
-            run = await refreshRunMemoryContext(run.id);
-            run = await prepareRunContext(run.id, toolSchemas(getOfferedToolNames(run), registry), apiKey, controller.signal, fetchImpl);
+            if (await pauseAtModelStepLimit(run.id, db)) return;
+            run = await refreshRunToolLoading(run.id, db);
+            run = await refreshRunProjectContext(run.id, db);
+            run = await refreshRunMemoryContext(run.id, db);
+            run = await prepareRunContext(run.id, toolSchemas(getOfferedToolNames(run), registry), apiKey, controller.signal, fetchImpl, db);
             // Compaction may await network; re-read memory once more at the final dispatch boundary.
-            run = await refreshRunMemoryContext(run.id);
+            run = await refreshRunMemoryContext(run.id, db);
             if (budgetContext(run.continuationMessages ?? run.requestMessages, toolSchemas(getOfferedToolNames(run), registry), run.context?.capacity, !!run.context?.summaryId, continuationExtraTokens(run)).overBudget) throw new Error("记忆更新后上下文超出安全预算，请减少历史或调整输入后继续");
-            run = await startModelStep(run.id, MAX_MODEL_STEPS);
+            run = await startModelStep(run.id, MAX_MODEL_STEPS, db);
             controller.signal.throwIfAborted();
             accum = createReasoningAccum();
             writer = createRunWriter((seq, next) => {
                 sequence = seq;
-                return checkpointAgentRun(run.id, seq, next);
+                return checkpointAgentRun(run.id, seq, next, db);
             }, onWriteFailure, sequence);
             const onDelta = (delta: StreamDelta) => {
                 if (controller.signal.aborted) return;
@@ -283,20 +302,20 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
             });
             accum = finalizeReasoningAccum(accum, Date.now());
             await writer.flush();
-            if (result.metrics) await recordAgentModelMetrics(run.id, {...result.metrics, step: run.modelStep!});
+            if (result.metrics) await recordAgentModelMetrics(run.id, {...result.metrics, step: run.modelStep!}, db);
             if (controller.signal.aborted || (!result.ok && result.aborted)) {
-                await finishAgentRun(run.id, run.hasToolCalls ? "interrupted" : "cancelled", output(), "已停止，已收到的内容与完成的步骤保留。");
+                await finishAgentRun(run.id, run.hasToolCalls ? "interrupted" : "cancelled", output(), "已停止，已收到的内容与完成的步骤保留。", undefined, db);
                 return;
             }
             if (!result.ok) {
-                await finishAgentRun(run.id, "failed", output(), result.message, result.finishReason);
+                await finishAgentRun(run.id, "failed", output(), result.message, result.finishReason, db);
                 return;
             }
             if (!result.toolCalls?.length) {
-                if (await saveAgentFinishingCheck(run.id, run.modelStep!, output(), result.responseOutput, controller.signal)) continue;
-                await reviewFinalReply(run.id, run.modelStep!, output(), apiKey, controller.signal, fetchImpl, result.responseOutput);
+                if (await saveAgentFinishingCheck(run.id, run.modelStep!, output(), result.responseOutput, controller.signal, db)) continue;
+                await reviewFinalReply(run.id, run.modelStep!, output(), apiKey, controller.signal, fetchImpl, result.responseOutput, db);
                 controller.signal.throwIfAborted();
-                await finishAgentRun(run.id, "completed", output(), undefined, result.finishReason);
+                await finishAgentRun(run.id, "completed", output(), undefined, result.finishReason, db);
                 return;
             }
             const details = result.toolCalls.map((call) => {
@@ -313,20 +332,20 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
                     highRisk, ...(tool.atomic ? {atomic: true} : {}), ...(tool.recovery ? {recovery: tool.recovery} : {}), ...(tool.requiresConfirmation ? {requiresConfirmation: true} : {})
                 };
             });
-            await saveToolRound(run.id, result.content, result.toolCalls, details, result.responseOutput, output());
+            await saveToolRound(run.id, result.content, result.toolCalls, details, result.responseOutput, output(), db);
             run = (await db.agentRuns.get(run.id))!;
             controller.signal.throwIfAborted();
-            if (!await executePendingTools(run, controller, registry)) return;
+            if (!await executePendingTools(run, controller, registry, db)) return;
         }
     } catch (error) {
         await writer.flush().catch(() => undefined);
         const aborted = controller.signal.aborted;
         controller.abort();
         // Close claimed calls conservatively on unexpected interruption. Completed calls remain immutable.
-        await markRunningToolsUnknown(run.id);
+        await markRunningToolsUnknown(run.id, db,error instanceof UnresolvedToolOutcomeError || error instanceof StorageError && error.certainty === "unknown");
         const message = error instanceof Error ? error.message.split(apiKey).join("[已隐藏]").slice(0, 300) : "执行或本地保存失败";
         const latest = await db.agentRuns.get(run.id);
-        await finishAgentRun(run.id, saveFailed ? "failed" : error instanceof ToolPendingError ? "interrupted" : aborted ? (latest?.hasToolCalls ? "interrupted" : "cancelled") : "failed", output(), saveFailed ? "执行或本地保存失败，最后一段内容可能尚未保存。" : aborted ? "已停止，已完成的步骤保留。" : message);
+        await finishAgentRun(run.id, saveFailed ? "failed" : error instanceof ToolPendingError ? "interrupted" : aborted ? (latest?.hasToolCalls ? "interrupted" : "cancelled") : "failed", output(), saveFailed ? "执行或本地保存失败，最后一段内容可能尚未保存。" : aborted ? "已停止，已完成的步骤保留。" : message, undefined, db);
         if (saveFailed) throw new Error("执行或本地保存失败，最后一段内容可能尚未保存");
     }
 }

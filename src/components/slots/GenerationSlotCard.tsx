@@ -1,3 +1,5 @@
+import {binaryByteLength} from "@/domain/binary";
+import {verifyBinaryAvailable} from "@/lib/storage/binary";
 import {useWorkspaceUnavailable} from "@/lib/workspaceAvailability";
 import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
 import {Library, Plus, Trash2, Type} from "lucide-react";
@@ -272,7 +274,7 @@ export function GenerationSlotEditor({
         if (busy.current || cancelled || targetChanged || unavailable || workspaceUnavailable || !pickerTarget || record.projectId !== editSession.projectId) return;
         const kind: MediaKind = record.mimeType.startsWith("video/") ? "video" : "image";
         const allowedKinds = pickerTarget === "result" ? editSession.resultKinds : [pickerTarget];
-        if (!allowedKinds.includes(kind) || record.blob.size === 0) return;
+        if (!allowedKinds.includes(kind) || binaryByteLength(record.blob) === 0) return;
         const next = pickerTarget === "result"
             ? {...draft, result: {mediaId: record.id, kind}}
             : pickerTarget === "video"
@@ -281,10 +283,12 @@ export function GenerationSlotEditor({
         busy.current = true;
         setPending("upload");
         setError(undefined);
-        setDraft(next);
-        setPickerTarget(null);
-        failedUpload.current = null;
         try {
+            await verifyBinaryAvailable(record.blob);
+            if (!mounted.current || cancelled || targetChanged || unavailable || workspaceUnavailable) return;
+            setDraft(next);
+            setPickerTarget(null);
+            failedUpload.current = null;
             await session.discardExcept(mediaIds(next));
         } catch (reason) {
             fail(reason);

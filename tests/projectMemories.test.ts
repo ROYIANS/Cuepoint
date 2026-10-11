@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import {createProject} from "@/db/projects";
@@ -174,9 +175,7 @@ describe("project memory repository", () => {
         newRevision: 2,
       }),
     ).rejects.toThrow("已更新");
-    const spy = vi
-      .spyOn(db.projectMemoryVersions, "add")
-      .mockRejectedValueOnce(new Error("disk full"));
+    const spy = failStoreTableOnce(db, "projectMemoryVersions", "add", new Error("disk full"));
     await expect(
       replaceProjectMemory(project.id, old.id, newer.id, {
         oldRevision: 1,

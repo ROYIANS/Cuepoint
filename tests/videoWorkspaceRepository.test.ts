@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import * as productStorage from "@/lib/productStorage";
-import { getVideoWorkspaceRepository } from "@/lib/videoWorkspaceRepository";
+import { getVideoWorkspaceRepository, getReferenceVideoWorkspaceRepository } from "@/lib/videoWorkspaceRepository";
 import { DraftConflictError } from "@/lib/draftConflict";
 import { nativeProductReplySchema } from "@/lib/nativeWorkspaceContract";
 
@@ -96,7 +96,7 @@ function native(invoke: ReturnType<typeof vi.fn>) {
     __TAURI_INTERNALS__: { invoke },
     dispatchEvent: vi.fn(),
   });
-  return getVideoWorkspaceRepository();
+  return getReferenceVideoWorkspaceRepository();
 }
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -189,6 +189,8 @@ describe("shared video repository runtime boundary", () => {
   it("preserves browser commands and field conflicts without invoking Tauri", async () => {
     const repository = getVideoWorkspaceRepository();
     expect(repository.storage).toBe("indexeddb");
+    expect(repository.capability("sync")).toMatchObject({status: "unavailable", reason: "同步插件尚未配置"});
+    expect(repository.capabilities().filter(item => item.id !== "sync").every(item => item.status === "available")).toBe(true);
     const created = await repository.createProject(
       "Browser parity",
       "series",

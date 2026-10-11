@@ -23,7 +23,7 @@ vi.mock("@/lib/videoWorkspaceRepository", () => ({
     getVideoWorkspaceRepository: () => host.repository,
     useVideoWorkspaceRepository: () => host.repository,
     useVideoWorkspaceReadStatus: () => ({error: host.readError, retry: host.retry}),
-    useVideoWorkspaceQuery: (query: () => Promise<unknown>) => {host.queries.push(query); return host.results[host.queryIndex++];},
+    useVideoWorkspaceQuery: (query: (repository: unknown) => Promise<unknown>) => {host.queries.push(() => query(host.repository)); return host.results[host.queryIndex++];},
 }));
 vi.mock("@tanstack/react-router", () => ({
     Link: () => null, Navigate: () => null, Outlet: () => null, useNavigate: () => host.navigate,
@@ -34,7 +34,9 @@ vi.mock("@tanstack/react-router", () => ({
 vi.mock("@dnd-kit/core", () => ({DndContext: () => null, PointerSensor: {}, KeyboardSensor: {}, closestCenter: {}, useSensor: vi.fn(), useSensors: () => []}));
 vi.mock("@dnd-kit/sortable", () => ({SortableContext: () => null, sortableKeyboardCoordinates: {}, verticalListSortingStrategy: {}, useSortable: () => ({setNodeRef: vi.fn()})}));
 vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: host.registerUndo})}));
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: (query: () => Promise<unknown>) => {host.liveQueries.push(query); return undefined;}}));
+vi.mock("@/lib/storage/hooks", () => ({useProductQuery: (query: (tx: typeof db) => Promise<unknown>) => {
+    host.liveQueries.push(() => query(db)); return undefined;
+}}));
 vi.mock("@/lib/useShotMedia", () => ({useShotMedia: () => new Map()}));
 vi.mock("@/components/shots/ShotRowViewport", () => ({ShotScrollViewport: () => null, useShotRowViewport: () => ({rowRef: vi.fn(), nearViewport: true})}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
@@ -83,7 +85,7 @@ function fixture(storage: "indexeddb" | "sqlite") {
     episode.story.script = "正文";
     episode.story.beats = [{id: "beat", title: "开场", content: "正文", characterIds: [], timeOfDay: "日"}];
     const shot = emptyShot(project.id, episode.id, 0, "1", 3, "beat");
-    const capabilities = ["world", "generation", "relations", "mediaSlots", "sync"].map(id => ({id, status: storage === "sqlite" ? "unavailable" : "available", reason: "此能力尚未接入"}));
+    const capabilities = ["world", "generation", "relations", "mediaSlots", "sync"].map(id => ({id, status: id === "sync" ? "unavailable" : "available"}));
     const repository = {
         storage, capabilities: () => capabilities, capability: (id: string) => capabilities.find(item => item.id === id),
         project: vi.fn(async () => project), episode: vi.fn(async () => episode), episodes: vi.fn(async () => [episode]), shots: vi.fn(async () => [shot]),
@@ -99,7 +101,7 @@ beforeEach(() => {host.cells = []; host.storage = "indexeddb"; host.liveQueries 
 describe("shared video product page consumers", () => {
     it.each([
         {runtime: "tauri", storage: "sqlite", pathname: "/assets", available: true},
-        {runtime: "tauri", storage: "sqlite", pathname: "/characters", available: false},
+        {runtime: "tauri", storage: "sqlite", pathname: "/characters", available: true},
         {runtime: "browser", storage: "indexeddb", pathname: "/assets", available: true},
         {runtime: "tauri", storage: "indexeddb", pathname: "/characters", available: true},
         {runtime: "tauri", storage: "indexeddb", pathname: "/agent", available: true},
@@ -114,7 +116,7 @@ describe("shared video product page consumers", () => {
         expect(tree.some(node => node.type === StudioShell)).toBe(true);
         expect(tree.some(node => node.type === Outlet)).toBe(available);
         expect(tree.some(node => node.type === WorkspaceCapabilityState)).toBe(!available);
-        expect(tree.find(node => node.type === StudioShell)?.props.onImport === undefined).toBe(storage === "sqlite");
+        expect(tree.find(node => node.type === StudioShell)?.props.onImport).toBeTypeOf("function");
     });
     it.each(["indexeddb", "sqlite"] as const)("%s uses the same AppFrame, workspace header and nested Outlet", storage => {
         const {project, episode} = fixture(storage); host.pathname = `/p/${project.id}/e/${episode.id}/shots`;
@@ -128,7 +130,7 @@ describe("shared video product page consumers", () => {
         host.storage = storage;
         let redirect: unknown;
         try {(StudioIndexRoute.options.beforeLoad as () => void)();} catch (cause) {redirect = cause;}
-        expect(redirect).toEqual({to: storage === "sqlite" ? "/projects" : "/agent"});
+        expect(redirect).toEqual({to: "/agent"});
     });
     it("desktop IndexedDB renders the complete shared material library and its existing query", async () => {
         host.storage = "indexeddb";
@@ -140,12 +142,13 @@ describe("shared video product page consumers", () => {
         await expect(host.liveQueries[0]()).resolves.toEqual({materials: [], ips: [], projects: []});
         expect(invoke).not.toHaveBeenCalled();
     });
-    it("an explicit SQLite fixture retains the isolated managed-file library", () => {
+    it("SQLite renders the same complete material library and query", async () => {
         host.storage = "sqlite";
         vi.stubGlobal("window", {__TAURI_INTERNALS__: {invoke: vi.fn()}, addEventListener: vi.fn(), removeEventListener: vi.fn()});
         const tree = render(() => MaterialLibraryPage({search: {}}));
-        expect(tree.find(node => node.type === PageHeader)?.props.description).toBe("管理应用工作区中的素材与文件副本。");
-        expect(host.liveQueries).toHaveLength(0);
+        expect(tree.find(node => node.type === PageHeader)?.props.description).toBe("管理媒体、资料和创作设定的版本。");
+        expect(host.liveQueries).toHaveLength(1);
+        await expect(host.liveQueries[0]()).resolves.toEqual({materials: [], ips: [], projects: []});
     });
     it("desktop IndexedDB keeps gallery IP/backup and available audio/music creation controls", () => {
         const {project} = fixture("indexeddb");
@@ -182,19 +185,19 @@ describe("shared video product page consumers", () => {
         expect(tree.some(node => node.type === (kind === "audio" ? AudioWorkspacePage : MusicWorkspacePage))).toBe(true);
         expect(tree.some(node => node.type === WorkspaceCapabilityState)).toBe(false);
     });
-    it("native unsupported routes keep the shared shell and do not mount their data owners", () => {
+    it("SQLite world routes mount the shared workspace beneath the same shell", () => {
         const {project, episode} = fixture("sqlite"); host.pathname = `/p/${project.id}/world`;
         const tree = render(() => WorkspaceChrome({projectId: project.id}), [{projectId: project.id, project}, {projectId: project.id, episodeId: undefined, episode: null}, {projectId: project.id, episode}]);
         expect(tree.some(node => node.type === AppFrame)).toBe(true);
-        expect(tree.some(node => node.type === WorkspaceCapabilityState)).toBe(true);
-        expect(tree.some(node => node.type === Outlet)).toBe(false);
+        expect(tree.some(node => node.type === WorkspaceCapabilityState)).toBe(false);
+        expect(tree.some(node => node.type === Outlet)).toBe(true);
     });
-    it.each(["audio", "music"] as const)("native %s metadata cannot mount the browser-only workspace", kind => {
+    it.each(["audio", "music"] as const)("SQLite mounts the existing shared %s workspace", kind => {
         const {project} = fixture("sqlite");
         project.kind = kind;
         const tree = render(() => ProjectHomePage({projectId: project.id}), [{projectId: project.id, project}, {projectId: project.id, episode: null}]);
-        expect(tree.some(node => node.type === WorkspaceCapabilityState)).toBe(true);
-        expect(tree.some(node => node.type === AudioWorkspacePage || node.type === MusicWorkspacePage)).toBe(false);
+        expect(tree.some(node => node.type === WorkspaceCapabilityState)).toBe(false);
+        expect(tree.some(node => node.type === (kind === "audio" ? AudioWorkspacePage : MusicWorkspacePage))).toBe(true);
     });
     it("native story and shot workbench query only the selected repository", async () => {
         const {project, episode, shot, repository} = fixture("sqlite");
@@ -219,12 +222,12 @@ describe("shared video product page consumers", () => {
         expect(repository.patchStoryBeat).toHaveBeenCalledWith(episode.id, "beat", {title: "修改后"}, {title: "开场"});
         expect(repository.patchShot).toHaveBeenCalledWith(shot.id, {content: "新镜头"}, {content: "旧镜头"});
     });
-    it("native media columns keep the shared row while generation data owners stay unmounted", () => {
+    it("SQLite media columns retain the shared row and all existing generation controls", () => {
         const {project, episode, shot} = fixture("sqlite");
         const tree = render(() => ShotRow({shot, projectId: project.id, episodeId: episode.id, striped: false, initiallyVisible: true, selecting: false, selected: false, onSelectedChange: vi.fn(), onActivate: vi.fn(), workspaceView: "media", visibleDefs: [], characters: [], scenes: [], canMoveUp: false, canMoveDown: false, onMove: vi.fn(), onDuplicate: vi.fn(), onEditRelations: vi.fn(), onSlotOpenChange: vi.fn(), unavailable: false}));
         expect(tree.some(node => node.props["data-shot-mounted"] === "true")).toBe(true);
-        expect(tree.filter(node => typeof node.type === "function" && node.type.name === "MediaSlotCapability")).toHaveLength(3);
-        expect(tree.some(node => node.type === EditableGenerationSlot)).toBe(false);
+        expect(tree.filter(node => typeof node.type === "function" && node.type.name === "MediaSlotCapability")).toHaveLength(0);
+        expect(tree.filter(node => node.type === EditableGenerationSlot)).toHaveLength(3);
         expect(tree.some(node => node.type === ShotTextField && node.props.field === "content")).toBe(true);
     });
     it("initial native read failure exposes recovery and later errors retain the shared workbench", () => {

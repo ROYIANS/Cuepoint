@@ -1,3 +1,4 @@
+import {interceptStoreTable} from "./helpers/storeFaults";
 import {registeredTools} from "./helpers/registeredTools";
 import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
@@ -120,8 +121,8 @@ describe('IP tools with approval, scope and current facts', () => {
     const run = await begin(), def = tool('ip_create'), ctx = context(run), args = { name: 'Rollback IP' };
     ctx.preview = await def.prepare!(args, ctx);
     await db.agentToolCalls.add({ id: ctx.callId, runId: run.id, threadId: run.threadId, providerCallId: ctx.callId, step: 1, order: 0, name: def.name, title: def.title, arguments: JSON.stringify(args), effect: 'write', highRisk: false, atomic: true, status: 'running', createdAt: '2026-09-21', updatedAt: '2026-09-21' });
-    const original = db.agentToolCalls.update.bind(db.agentToolCalls);
-    const spy = vi.spyOn(db.agentToolCalls, 'update').mockImplementation((...params) => { if ((params[1] as { status?: string }).status === 'completed') throw new Error('ledger persistence failed'); return original(...params); });
+
+    const spy = interceptStoreTable(db, "agentToolCalls", 'update', async (_tx,args,next)=> {const params=args; if ((params[1] as { status?: string }).status === 'completed') throw new Error('ledger persistence failed'); return next(); });
     try { await expect(def.execute(args, ctx)).rejects.toThrow('ledger persistence failed'); } finally { spy.mockRestore(); }
     expect(await db.ipProfiles.count()).toBe(0); expect((await db.agentToolCalls.get(ctx.callId))?.status).toBe('running');
   });

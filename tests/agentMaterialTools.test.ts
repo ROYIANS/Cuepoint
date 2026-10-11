@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {registeredTools} from "./helpers/registeredTools";
 import { describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/database';
@@ -138,7 +139,7 @@ describe('Agent material writes preserve immutable approval and project copies',
   it('business write and ledger roll back together on persistence failure', async () => {
     const material = await createFileMaterial(file(), { kind: 'global' });
     const pending = await prepared(await runFor(), 'material_update_metadata', { materialId: material.id, revision: 1, patch: { tags: ['美食'] } });
-    const spy = vi.spyOn(db.agentToolCalls, 'update').mockRejectedValueOnce(new Error('fixture save failed'));
+    const spy = failStoreTableOnce(db, "agentToolCalls", "update", new Error('fixture save failed'));
     await expect(pending.execute()).rejects.toThrow('fixture save failed');
     spy.mockRestore();
     expect((await db.libraryMaterials.get(material.id))?.revision).toBe(1);

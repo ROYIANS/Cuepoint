@@ -1,7 +1,7 @@
 import {useNavigate} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {useEffect, useRef, useState} from "react";
-import type {Table} from "dexie";
+import type {ProductStore, StoreTable} from "@/lib/storage/types";
 import {toast} from "sonner";
 import {Plus} from "lucide-react";
 import {CoverCard, LibraryGrid} from "@/components/studio/CoverCard";
@@ -18,7 +18,6 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {db} from "@/db/database";
 import {
     addCharacter,
     addProp,
@@ -66,7 +65,7 @@ type LibraryKind = "character" | "scene" | "prop" | "style";
 type LibraryAsset = Pick<Character, "id" | "name" | "projectId" | "createdAt" | "updatedAt">;
 type LibraryRow = LibraryAsset & { source: object; mediaId?: string };
 
-async function readLibraryRows<T extends LibraryAsset>(table: Table<T, string>, cover: (asset: T) => string | undefined): Promise<LibraryRow[]> {
+async function readLibraryRows<T extends LibraryAsset>(table: StoreTable<T>, cover: (asset: T) => string | undefined): Promise<LibraryRow[]> {
     const assets = await table.where("projectId").equals(STUDIO_LIBRARY_ID).toArray();
     return assets.map(asset => ({
         id: asset.id, name: asset.name, projectId: asset.projectId,
@@ -76,7 +75,7 @@ async function readLibraryRows<T extends LibraryAsset>(table: Table<T, string>, 
     }));
 }
 
-function readStudioLibrary(kind: LibraryKind): Promise<LibraryRow[]> {
+function readStudioLibrary(kind: LibraryKind, db:ProductStore): Promise<LibraryRow[]> {
     switch (kind) {
         case "character":
             return readLibraryRows(db.characters, characterCover);
@@ -150,9 +149,9 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
     const [deleting, setDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState("");
     const copy = COPY[kind];
-    const view = useLiveQuery(async () => {
+    const view = useProductQuery(async (db) => {
         try {
-            return {kind, rows: await readStudioLibrary(kind)};
+            return {kind, rows: await readStudioLibrary(kind, db)};
         } catch (cause) {
             return {kind, error: cause instanceof Error ? cause.message : "读取失败，请刷新后重试。"};
         }
@@ -239,12 +238,11 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
             <LibraryHeader title={copy.title} description={copy.hint} query={query} onQuery={setQuery} sort={sort} onSort={setSort}
                            extra={<Button disabled={creating || deleting} onClick={() => void handleCreate()}><Plus aria-hidden/>{creating ? "创建中…" : copy.create}</Button>}/>
             <div>
-                {!view || view.kind !== kind ? <PageState kind="loading" title="正在读取设定…"/> : view.error ?
-                    <PageState kind="error" title="暂时无法读取设定" description={view.error}/> : !items.length ?
-                    <PageState title={query.trim() ? "没有匹配的设定" : `暂无${copy.title}`}
-                               description={query.trim() ? "试试其他关键词。" : "创建后可在工作室编辑，添加到项目时使用独立副本。"}/>
-                    :
-                <LibraryGrid>
+                {(!view || view.kind !== kind) && <PageState kind="loading" title="正在读取设定…"/>}
+                {view?.kind === kind && view.error && <PageState kind="error" title="暂时无法读取设定" description={view.error}/>}
+                {view?.kind === kind && !view.error && !items.length && <PageState title={query.trim() ? "没有匹配的设定" : `暂无${copy.title}`}
+                               description={query.trim() ? "试试其他关键词。" : "创建后可在工作室编辑，添加到项目时使用独立副本。"}/>}
+                {view?.kind === kind && !view.error && items.length > 0 && <LibraryGrid>
                     {items.map((item) => (
                         <CoverCard
                             key={item.id}

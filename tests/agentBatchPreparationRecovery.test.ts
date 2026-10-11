@@ -1,3 +1,4 @@
+import {interceptStoreTable} from "./helpers/storeFaults";
 import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
@@ -87,11 +88,10 @@ describe("local batch preparation recovery", () => {
 
   it("rolls back candidate writes when persisting the completed tool result fails", async () => {
     const f = await fixture(), { call, context } = await savedCall(f);
-    const original = db.agentToolCalls.update.bind(db.agentToolCalls);
-    const failure = vi.spyOn(db.agentToolCalls, "update").mockImplementation(async (key, changes) => {
+
+    const failure = interceptStoreTable(db, "agentToolCalls", "update", async (_tx,args,next)=> {const [key,changes]=args as Parameters<typeof db.agentToolCalls.update>;
       if (typeof changes === "object" && changes.status === "completed") throw new Error("ledger write failed");
-      return original(key, changes);
-    });
+      return next(); });
     try {
       await expect(prepareGenerationBatch("参考", [f.candidate], context)).rejects.toBeInstanceOf(AtomicToolRollbackError);
     } finally { failure.mockRestore(); }

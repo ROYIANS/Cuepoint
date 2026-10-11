@@ -59,7 +59,7 @@ describe("current image/video evidence at record and wrapup boundaries", () => {
         expect(draft.snapshot.evidence.find(e => e.id === `tool:${call.id}`)).toMatchObject({available: true, outcome: "applied", supportsResult: true});
         const saved = await publishTaskWrapup(draft.id, {...draft.content, results: [{text: "文件已生成", sourceIds: ["generation:job", "tool:check"]}]}, new AbortController().signal);
         expect(saved.content.results).toHaveLength(1);
-        await db.transaction("rw", db.tables, () => writeTaskRecord(task, {kind: "verification", claim: "result", title: "交付", body: "文件可用", sources: [{type: "tool", id: call.id}]}, {author: "ai"}));
+        await db.transaction("rw", db.tables, (tx) => writeTaskRecord(task, {kind: "verification", claim: "result", title: "交付", body: "文件可用", sources: [{type: "tool", id: call.id}]}, {author: "ai"}, tx));
     });
 
     it.each((["image", "video"] as const).flatMap(kind => invalidOutputs.map(fault => ({kind, fault}))))("rejects $kind $fault outputs, preserving historical ledger", async ({kind, fault}) => {
@@ -84,7 +84,7 @@ describe("current image/video evidence at record and wrapup boundaries", () => {
             await expect(publishTaskWrapup(draft.id, content, new AbortController().signal)).rejects.toThrow("真实来源");
         }
         for (const source of [{type: "generation" as const, id: job.id}, {type: "tool" as const, id: call.id}]) {
-            await expect(db.transaction("rw", db.tables, () => writeTaskRecord(task, {kind: "verification", claim: "result", title: "成果", body: "交付", sources: [source]}, {author: "ai"}))).rejects.toThrow("完成结果");
+            await expect(db.transaction("rw", db.tables, (tx) => writeTaskRecord(task, {kind: "verification", claim: "result", title: "成果", body: "交付", sources: [source]}, {author: "ai"}, tx))).rejects.toThrow("完成结果");
         }
         await cancelTaskWrapup(task.id, draft.id);
         // User notes can still describe historical outputs without claiming AI verification.
@@ -152,7 +152,7 @@ describe("generation tool history eligibility", () => {
         const draft = await startTaskWrapup(task.id, "ai");
         expect(draft.snapshot.evidence.find(e => e.id === "tool:check")?.supportsResult).toBe(false);
         await expect(publishTaskWrapup(draft.id, {...draft.content, results: [{text: "此调用交付成果", sourceIds: ["tool:check"]}]}, new AbortController().signal)).rejects.toThrow("真实来源");
-        await expect(db.transaction("rw", db.tables, () => writeTaskRecord(task, {kind: "verification", claim: "result", title: "成果", body: "交付", sources: [{type: "tool", id: call.id}]}, {author: "ai"}))).rejects.toThrow(/完成结果|已完成的业务工具结果/);
+        await expect(db.transaction("rw", db.tables, (tx) => writeTaskRecord(task, {kind: "verification", claim: "result", title: "成果", body: "交付", sources: [{type: "tool", id: call.id}]}, {author: "ai"}, tx))).rejects.toThrow(/完成结果|已完成的业务工具结果/);
         expect(await db.agentToolCalls.get(call.id)).toEqual(ledger);
     });
 
@@ -160,7 +160,7 @@ describe("generation tool history eligibility", () => {
         const {task, call} = await fixture(kind, false);
         await db.agentToolCalls.update(call.id, {name: "apply_generation", effect: "write"});
         expect((await getTaskWrapupState(task.id)).currentEvidence.find(e => e.id === "tool:check")).toMatchObject({available: true, supportsResult: true, outcome: "applied"});
-        await db.transaction("rw", db.tables, () => writeTaskRecord(task, {kind: "verification", claim: "result", title: "应用", body: "已写入原槽位", sources: [{type: "tool", id: call.id}]}, {author: "ai"}));
+        await db.transaction("rw", db.tables, (tx) => writeTaskRecord(task, {kind: "verification", claim: "result", title: "应用", body: "已写入原槽位", sources: [{type: "tool", id: call.id}]}, {author: "ai"}, tx));
     });
 
     it.each(["submit_generation", "check_generation"] as const)("checks %s provenance across two owned runs", async name => {
@@ -177,7 +177,7 @@ describe("generation tool history eligibility", () => {
         expect(draft.snapshot.evidence.find(e => e.id === `tool:${call.id}`)?.supportsResult).toBe(name === "check_generation");
         expect(draft.snapshot.evidence.find(e => e.id === "generation:job")?.supportsResult).toBe(true);
         const content = {...draft.content, results: [{text: "此调用生成或核实文件", sourceIds: [`tool:${call.id}`]}]};
-        const write = () => db.transaction("rw", db.tables, () => writeTaskRecord(task, {kind: "verification", claim: "result", title: "核实", body: "文件可用", sources: [{type: "tool", id: call.id}]}, {author: "ai"}));
+        const write = () => db.transaction("rw", db.tables, (tx) => writeTaskRecord(task, {kind: "verification", claim: "result", title: "核实", body: "文件可用", sources: [{type: "tool", id: call.id}]}, {author: "ai"}, tx));
         if (name === "submit_generation") {
             const wrapupVersions = await db.agentTaskWrapupVersions.count();
             await expect(publishTaskWrapup(draft.id, content, new AbortController().signal)).rejects.toThrow("真实来源");
@@ -200,7 +200,7 @@ describe("generation tool history eligibility", () => {
         await db.agentToolCalls.add(write);
         await db.media.delete("output");
         expect((await getTaskWrapupState(task.id)).currentEvidence.find(e => e.id === "tool:submit")).toMatchObject({available: true, supportsResult: true, outcome: "fact"});
-        await db.transaction("rw", db.tables, () => writeTaskRecord(task, {kind: "verification", claim: "result", title: "元数据", body: "历史写操作", sources: [{type: "tool", id: write.id}]}, {author: "ai"}));
+        await db.transaction("rw", db.tables, (tx) => writeTaskRecord(task, {kind: "verification", claim: "result", title: "元数据", body: "历史写操作", sources: [{type: "tool", id: write.id}]}, {author: "ai"}, tx));
         expect(await db.agentToolCalls.get(write.id)).toEqual(write);
     });
 

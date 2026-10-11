@@ -1,5 +1,5 @@
 import {useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Plus, Sparkles} from "lucide-react";
 import {db} from "@/db/database";
 import {patchAudioSegment} from "@/db/audio";
@@ -18,7 +18,7 @@ import {voiceLabel} from "./VoiceLibrary";
 export function SpeechControls({segment, speaker, speakers, onVoices}: {
     segment: AudioSegment; speaker?: AudioSpeaker; speakers: AudioSpeaker[]; onVoices: () => void;
 }) {
-    const connections = useLiveQuery(() => db.connectors.toArray());
+    const connections = useProductQuery((db) => db.connectors.toArray());
     const profile = speakerSpeechProfile(speaker);
     const connector = profile.mimo ? defaultMimoConnector(connections ?? []) : connections?.find(row => row.definitionId === "apimart" && row.apiKey.trim());
     const [direction, setDirection] = useState("");

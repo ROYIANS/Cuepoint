@@ -1,5 +1,4 @@
-import {useLiveQuery} from "dexie-react-hooks";
-import {db} from "@/db/database";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 /** Selection only; the caller commits the validated project binding with its own save action. */
@@ -8,7 +7,7 @@ export function ProjectIpPicker({value, onChange, disabled = false}: {
     onChange: (id: string | null) => void;
     disabled?: boolean;
 }) {
-    const view = useLiveQuery(async () => {
+    const view = useProductQuery(async (db) => {
         try {
             return {profiles: await db.ipProfiles.orderBy("updatedAt").reverse().toArray()};
         } catch {

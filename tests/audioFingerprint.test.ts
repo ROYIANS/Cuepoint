@@ -1,3 +1,4 @@
+import {readBinaryBlob} from "@/lib/storage/binary";
 import {describe, expect, it} from "vitest";
 import JSZip from "jszip";
 import {db} from "@/db/database";
@@ -53,7 +54,7 @@ async function findExport(snapshot: AudioProjectSnapshot, label: string): Promis
         const media = await db.media.get(item.mediaId);
         if (media?.filename === `${label}.wav`) {
             expect(media.mimeType).toBe("audio/wav");
-            expect(await media.blob.text()).toBe(`bytes:${label}`);
+            expect(await (await readBinaryBlob(media.blob)).text()).toBe(`bytes:${label}`);
             return item;
         }
     }
@@ -95,7 +96,7 @@ describe("C04 full-row audio export fingerprints", () => {
                 expect(getAudioExportFreshness(item, snapshot), `${label}, pass ${pass}`).toBe(label.startsWith("current") ? "current" : "stale");
             }
             const source = snapshot.takes[0];
-            expect(await (await db.media.get(source.mediaId))!.blob.text()).toBe("source-bytes");
+            expect(await (await readBinaryBlob((await db.media.get(source.mediaId))!.blob)).text()).toBe("source-bytes");
             expect(source.durationSec).toBe(5.5);
             if (pass === 0) continue;
             expect(source.id).not.toBe(take.id);

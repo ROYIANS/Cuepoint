@@ -6,11 +6,15 @@ pub mod desktop;
 mod error;
 #[cfg(any(feature = "desktop", test))]
 mod file_transfer;
+pub mod full_product_store;
 mod hooks;
 mod import;
 #[cfg(any(feature = "desktop", test))]
 mod native_print;
 mod paths;
+pub mod product_binary;
+#[cfg(any(feature = "desktop", test))]
+mod product_media;
 #[cfg(feature = "desktop")]
 mod runtime_services;
 mod worker;
@@ -20,4 +24,4 @@ pub use contracts::*;
 pub use error::{Error, Result};
 pub use hooks::Hooks;
 pub use paths::{derive_ref, validate_ref};
-pub use worker::{Operation, StorageWorker};
+pub use worker::{Operation, ProductJob, StorageWorker};

@@ -1,3 +1,4 @@
+import {readBinaryBlob} from "@/lib/storage/binary";
 import { describe, expect, it } from "vitest";
 import JSZip from "jszip";
 import { db } from "@/db/database";
@@ -132,7 +133,7 @@ describe("audio project foundation", () => {
     await deleteProject(audio.id);
     const version = await db.materialVersions.where("materialId").equals(retained.id).first();
     expect(version?.payload.type).toBe("file");
-    if (version?.payload.type === "file") expect(version.payload.blob.size).toBe(4);
+    if (version?.payload.type === "file") expect((await readBinaryBlob(version.payload.blob)).size).toBe(4);
   });
   it("keeps deleted generated take history detached from the removed record", async () => {
     const project = await createAudioMusicProject("声音", "audio");

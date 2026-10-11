@@ -1,13 +1,15 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {type Id} from "@/domain/types";
-import {db} from "./database";
+import {db as productDb} from "./database";
 import {createId, nowIso} from "@/lib/ids";
 import {AUDIO_TABLES} from "./audioShared";
 import {PRODUCTION_TABLES} from "./productionShared";
 import {deleteMediaIfOrphans} from "./media";
 
 /** Archiving hides a project and its owned library snapshots without altering shared sources. */
-export async function setProjectArchived(id: Id, archived: boolean): Promise<void> {
-    await db.transaction("rw", [db.projects, db.libraryMaterials, db.materialEvents], async () => {
+export async function setProjectArchived(id: Id, archived: boolean, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.projects, db.libraryMaterials, db.materialEvents], async (db) => {
         const project = await db.projects.get(id);
         if (!project) throw new Error("项目不存在");
         await db.projects.update(id, {archivedAt: archived ? nowIso() : undefined, updatedAt: nowIso()});
@@ -28,7 +30,8 @@ export async function setProjectArchived(id: Id, archived: boolean): Promise<voi
     });
 }
 
-export async function deleteProject(id: Id): Promise<void> {
+export async function deleteProject(id: Id, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     await db.transaction(
         "rw",
         [
@@ -49,8 +52,8 @@ export async function deleteProject(id: Id): Promise<void> {
             db.productionProposals,
             db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems,
         ],
-        async () => {
-            for (const table of AUDIO_TABLES) await table.where("projectId").equals(id).delete();
+        async (db) => {
+            for (const table of AUDIO_TABLES) await db.table(table.name).where("projectId").equals(id).delete();
             await db.projectIpLinks.delete(id);
             await db.materialUses.where("projectId").equals(id).delete();
             for (const row of await db.libraryMaterials.toArray()) {
@@ -85,8 +88,9 @@ export async function deleteProject(id: Id): Promise<void> {
     );
 }
 
-export async function deleteChatThread(id: Id): Promise<void> {
-    await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.agentTaskWrapupVersions], async () => {
+export async function deleteChatThread(id: Id, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.agentTaskWrapupVersions], async (db) => {
         const jobs = await db.agentGenerationJobs.where("threadId").equals(id).toArray();
         const batches = await db.agentGenerationBatches.where("threadId").equals(id).toArray();
         const items = await db.agentGenerationBatchItems.where("threadId").equals(id).toArray();
@@ -114,6 +118,6 @@ export async function deleteChatThread(id: Id): Promise<void> {
         await db.agentRuns.where("threadId").equals(id).delete();
         await db.chatMessages.where("threadId").equals(id).delete();
         await db.chatThreads.delete(id);
-        await deleteMediaIfOrphans([...jobMedia]);
+        await deleteMediaIfOrphans([...jobMedia], db);
     });
 }

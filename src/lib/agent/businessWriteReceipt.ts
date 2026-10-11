@@ -1,4 +1,5 @@
-import {db} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import {bounded, type BusinessRow, businessRowText, getRow, projection, targetRevision} from "./businessStore";
 import {createWriteReceipt, type WriteReceiptEntry} from "./writeReceipt";
 
@@ -38,14 +39,16 @@ function entry(kind: WriteReceiptEntry["kind"], operation: Operation, row: Busin
 }
 
 /** Capture only the explicit target before deletion; cascades are deliberately not claimed. */
-export async function captureBusinessDeletion(name: string, raw: unknown): Promise<BusinessRow | undefined> {
+export async function captureBusinessDeletion(name: string, raw: unknown, store?: ProductStore): Promise<BusinessRow | undefined> {
+    const db = store ?? productDb;
     const tool = supported(name);
     if (tool?.operation !== "deleted") return;
     const args = object(raw);
-    return getRow(tool.kind, id(args.id), tool.kind === "project" ? id(args.id) : id(args.ownerId), typeof args.episodeId === "string" ? args.episodeId : undefined);
+    return getRow(tool.kind, id(args.id), tool.kind === "project" ? id(args.id) : id(args.ownerId), typeof args.episodeId === "string" ? args.episodeId : undefined, db);
 }
 
-async function normalized(kind: Kind, row: BusinessRow) {
+async function normalized(kind: Kind, row: BusinessRow, store?: ProductStore) {
+    const db = store ?? productDb;
     const record = projection(kind, row);
     if (kind === "project") record.kind = row.kind ?? "video";
     if (kind === "shot") {
@@ -93,7 +96,8 @@ function boundRecords(records: Record<string, unknown>[], budget: number) {
 }
 
 /** Called within executeAtomicTool, so failure here rolls back both rows and receipt. */
-export async function withBusinessWriteReceipt(name: string, raw: unknown, value: unknown, deleted?: BusinessRow): Promise<unknown> {
+export async function withBusinessWriteReceipt(name: string, raw: unknown, value: unknown, deleted?: BusinessRow, store?: ProductStore): Promise<unknown> {
+    const db = store ?? productDb;
     const tool = supported(name);
     if (!tool) return value;
     const args = object(raw), result = object(value);
@@ -105,11 +109,11 @@ export async function withBusinessWriteReceipt(name: string, raw: unknown, value
     const targets = name === "shot_create" ? items.map(object) : [result];
     if (!targets.length) throw new Error("业务写入结果缺少目标");
     const rows = await Promise.all(targets.map((target) => getRow(tool.kind, id(target.id),
-        tool.kind === "project" ? id(target.id) : id(args.ownerId), typeof args.episodeId === "string" ? args.episodeId : undefined)));
+        tool.kind === "project" ? id(target.id) : id(args.ownerId), typeof args.episodeId === "string" ? args.episodeId : undefined, db)));
     const entries = rows.map((row) => entry(tool.kind, tool.operation, row));
     if (name === "project_create") {
         const ownerId = rows[0].id;
-        if (result.firstEpisodeId) entries.push(entry("episode", "created", await getRow("episode", id(result.firstEpisodeId), ownerId)));
+        if (result.firstEpisodeId) entries.push(entry("episode", "created", await getRow("episode", id(result.firstEpisodeId), ownerId, undefined, db)));
         for (const [key, kind, table] of [
             ["firstChapterId", "audio_chapter", db.audioChapters], ["firstTrackId", "audio_track", db.audioTracks], ["firstDraftId", "music_draft", db.musicDrafts],
         ] as const) {
@@ -122,7 +126,7 @@ export async function withBusinessWriteReceipt(name: string, raw: unknown, value
     const writeReceipt = createWriteReceipt(entries);
     const base = {...result, writeReceipt};
     const budget = Math.min(30000, 60000 - JSON.stringify(base).length);
-    const details = boundRecords(await Promise.all(rows.map((row) => normalized(tool.kind, row))), budget);
+    const details = boundRecords(await Promise.all(rows.map((row) => normalized(tool.kind, row, db))), budget);
     const enriched = targets.map((target, index) => ({
         ...target,
         record: details.records[index],

@@ -1,3 +1,4 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {
     type AspectPresetId,
     emptySetting,
@@ -11,7 +12,7 @@ import {
     type ShotSettings,
     type WorldSetting
 } from "@/domain/types";
-import {db} from "./database";
+import {db as productDb} from "./database";
 import {nowIso} from "@/lib/ids";
 import {assertDraftBaseline, DraftConflictError, sameDraftStructure} from "@/lib/draftConflict";
 import {validateGenerationDefaults} from "@/domain/output";
@@ -28,11 +29,12 @@ export async function createProject(
     name: string,
     mode: ProjectMode = "film",
     aspectPreset: AspectPresetId = "16:9",
-    ipId?: Id | null,
+    ipId?: Id | null, store?: ProductStore
 ): Promise<Project> {
+    const db = store ?? productDb;
     const project = emptyProject(name, mode, aspectPreset);
     const episode = emptyEpisode(project.id, 0);
-    await db.transaction("rw", [db.projects, db.episodes, ...(ipId ? [db.ipProfiles, db.projectIpLinks] : [])], async () => {
+    await db.transaction("rw", [db.projects, db.episodes, ...(ipId ? [db.ipProfiles, db.projectIpLinks] : [])], async (db) => {
         if (ipId) {
             const profile = await db.ipProfiles.get(ipId);
             if (!profile || profile.archived) throw new Error("请选择未归档的 IP");
@@ -44,8 +46,9 @@ export async function createProject(
     return project;
 }
 
-export async function renameProject(id: Id, name: string): Promise<void> {
-    await db.transaction("rw", db.projects, async () => {
+export async function renameProject(id: Id, name: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.projects].flat(), async (db) => {
         const project = await db.projects.get(id);
         if (!project) throw new Error("项目不存在，无法保存");
         await db.projects.put(touch({...project, name: name.trim() || project.name}));
@@ -71,9 +74,10 @@ function assertProjectDetailsBaseline(project: Project, next: Project, patch: Pr
 export async function patchProjectDetails(
     id: Id,
     patch: ProjectDetailsPatch,
-    baseline?: Partial<Project>,
+    baseline?: Partial<Project>, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", db.projects, db.styles, async () => {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.projects, db.styles].flat(), async (db) => {
         const project = await db.projects.get(id);
         if (!project) throw new Error("项目不存在，无法保存");
         const next = {...project};
@@ -117,9 +121,10 @@ export async function updateProject(
             | "story"
             | "setting"
         >
-    >,
+    >, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", db.projects, async () => {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.projects].flat(), async (db) => {
         const project = await db.projects.get(id);
         if (!project) throw new Error("项目不存在，无法保存");
         const next = {...project, ...patch};
@@ -136,13 +141,14 @@ export async function patchProjectOutput(
         aspectPreset?: AspectPresetId;
         /** Pass `null` to clear the cover. */
         coverMediaId?: Id | null;
-    },
+    }, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const db = store ?? productDb;
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const project = await db.projects.get(id);
         if (!project) throw new Error("项目不存在，无法保存");
         if (patch.coverMediaId !== undefined && patch.coverMediaId !== null) {
-            await assertSlotMedia(id, {...emptySlot(), result: {mediaId: patch.coverMediaId, kind: "image"}});
+            await assertSlotMedia(id, {...emptySlot(), result: {mediaId: patch.coverMediaId, kind: "image"}}, undefined, db);
         }
         const previousCover = project.coverMediaId;
         const next: Project = {
@@ -159,17 +165,18 @@ export async function patchProjectOutput(
         }
         await db.projects.put(touch(next));
         if (previousCover && previousCover !== next.coverMediaId) {
-            await deleteMediaIfOrphan(previousCover);
+            await deleteMediaIfOrphan(previousCover, db);
         }
     });
 }
 
 export async function updateShotSettings(
     id: Id,
-    patch: Partial<ShotSettings>,
+    patch: Partial<ShotSettings>, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", db.projects, async () => {
-        await assertVideoProject(id);
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.projects].flat(), async (db) => {
+        await assertVideoProject(id, db);
         const project = await db.projects.get(id);
         if (!project) throw new Error("项目不存在，无法保存");
         const definedPatch = Object.fromEntries(
@@ -182,9 +189,10 @@ export async function updateShotSettings(
     });
 }
 
-export async function updateSeriesLogline(id: Id, logline: string, baseline?: string): Promise<void> {
-    await db.transaction("rw", db.projects, async () => {
-        await assertVideoProject(id);
+export async function updateSeriesLogline(id: Id, logline: string, baseline?: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.projects].flat(), async (db) => {
+        await assertVideoProject(id, db);
         const project = await db.projects.get(id);
         if (!project) throw new Error("项目不存在，无法保存");
         assertDraftBaseline(normalizeSeriesStory(project.story), {logline}, baseline === undefined ? undefined : {logline: baseline});
@@ -198,10 +206,11 @@ export async function updateSeriesLogline(id: Id, logline: string, baseline?: st
 export async function updateWorldSetting(
     id: Id,
     patch: Partial<WorldSetting>,
-    baseline?: Partial<WorldSetting>,
+    baseline?: Partial<WorldSetting>, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", db.projects, async () => {
-        await assertVideoProject(id);
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.projects].flat(), async (db) => {
+        await assertVideoProject(id, db);
         const project = await db.projects.get(id);
         if (!project) throw new Error("项目不存在，无法保存");
         assertDraftBaseline({...emptySetting(), ...project.setting}, patch, baseline);
@@ -214,15 +223,17 @@ export async function updateWorldSetting(
 
 export async function setVisibleColumns(
     projectId: Id,
-    visible: ShotColumnId[],
+    visible: ShotColumnId[], store?: ProductStore
 ): Promise<void> {
-    await updateProject(projectId, {columnSettings: {visible}});
+    const db = store ?? productDb;
+    await updateProject(projectId, {columnSettings: {visible}}, db);
 }
 
-export async function createAudioMusicProject(name: string, kind: "audio" | "music", ipId?: Id | null): Promise<Project> {
+export async function createAudioMusicProject(name: string, kind: "audio" | "music", ipId?: Id | null, store?: ProductStore): Promise<Project> {
+    const db = store ?? productDb;
     if (kind !== "audio" && kind !== "music") throw new Error("不支持的项目类型");
     const project = {...emptyProject(name), kind};
-    await db.transaction("rw", [db.projects, ...AUDIO_TABLES, db.ipProfiles, db.projectIpLinks], async () => {
+    await db.transaction("rw", [db.projects, ...AUDIO_TABLES, db.ipProfiles, db.projectIpLinks], async (db) => {
         if (ipId) {
             const profile = await db.ipProfiles.get(ipId);
             if (!profile || profile.archived) throw new Error("请选择未归档的 IP");

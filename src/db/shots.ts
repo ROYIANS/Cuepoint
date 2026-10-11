@@ -1,3 +1,4 @@
+import type {ProductStore} from "@/lib/storage/types";
 import {
     type GenerationSlot,
     type Id,
@@ -9,7 +10,7 @@ import {
     type ShotPictureField,
     type StoryBeat
 } from "@/domain/types";
-import {db} from "./database";
+import {db as productDb} from "./database";
 import {sameSlotValue, SHOT_PICTURE_FIELDS, slotMediaIds} from "@/domain/slot";
 import {DraftConflictError, sameDraftStructure} from "@/lib/draftConflict";
 import {createId} from "@/lib/ids";
@@ -26,7 +27,8 @@ import {
 import {emptyShot} from "./productionRecords";
 import {assertSlotMedia, deleteMediaIfOrphans, recycleSlotMedia} from "./media";
 
-async function nextShotNumber(episodeId: Id): Promise<string> {
+async function nextShotNumber(episodeId: Id, store?: ProductStore): Promise<string> {
+    const db = store ?? productDb;
     const shots = await db.shots.where("episodeId").equals(episodeId).toArray();
     const max = shots.reduce((current, shot) => {
         const value = Number.parseInt(shot.shotNumber, 10);
@@ -35,7 +37,8 @@ async function nextShotNumber(episodeId: Id): Promise<string> {
     return String(max + 1);
 }
 
-async function reindexShots(episodeId: Id): Promise<void> {
+async function reindexShots(episodeId: Id, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const shots = (await db.shots.where("episodeId").equals(episodeId).toArray()).sort(
         (a, b) => a.order - b.order,
     );
@@ -66,11 +69,12 @@ export async function addShots(
     projectId: Id,
     episodeId: Id,
     count: number,
-    options?: { atOrder?: number; beatId?: Id },
+    options?: { atOrder?: number; beatId?: Id }, store?: ProductStore
 ): Promise<Shot[]> {
+    const db = store ?? productDb;
     if (count <= 0) return [];
-    return db.transaction("rw", PRODUCTION_TABLES, async () => {
-        await assertVideoProject(projectId);
+    return db.transaction("rw", PRODUCTION_TABLES, async (db) => {
+        await assertVideoProject(projectId, db);
         const episode = await db.episodes.get(episodeId);
         if (!episode || episode.projectId !== projectId) return [];
         const project = await db.projects.get(projectId);
@@ -78,7 +82,7 @@ export async function addShots(
         const beats = normalizeEpisodeStory(episode.story).beats;
         const beat = options?.beatId === undefined ? undefined : beats.find((item) => item.id === options.beatId);
         if (options?.beatId !== undefined && !beat) throw new Error("场次不属于当前集");
-        if (beat) await assertAssetReferences(projectId, beat);
+        if (beat) await assertAssetReferences(projectId, beat, db);
         const shots = (await db.shots.where("episodeId").equals(episodeId).toArray()).sort(
             (a, b) => a.order - b.order,
         );
@@ -91,7 +95,7 @@ export async function addShots(
         const created: Shot[] = [];
         const shotSettings = normalizeShotSettings(project.shotSettings);
         const nextNumber = shotSettings.autoIncrementShotNumber
-            ? Number.parseInt(await nextShotNumber(episodeId), 10) || shots.length + 1
+            ? Number.parseInt(await nextShotNumber(episodeId, db), 10) || shots.length + 1
             : insertAt;
         for (let index = 0; index < count; index += 1) {
             const shotNumber = shotSettings.autoIncrementShotNumber
@@ -112,7 +116,7 @@ export async function addShots(
             await db.shots.add(shot);
             created.push(shot);
         }
-        await touchProject(projectId);
+        await touchProject(projectId, db);
         return created;
     });
 }
@@ -120,9 +124,10 @@ export async function addShots(
 export async function addShot(
     projectId: Id,
     episodeId: Id,
-    options?: { atOrder?: number; beatId?: Id },
+    options?: { atOrder?: number; beatId?: Id }, store?: ProductStore
 ): Promise<Shot> {
-    const [shot] = await addShots(projectId, episodeId, 1, options);
+    const db = store ?? productDb;
+    const [shot] = await addShots(projectId, episodeId, 1, options, db);
     if (!shot) throw new Error("项目或集不存在");
     return shot;
 }
@@ -130,10 +135,11 @@ export async function addShot(
 export async function patchShot(
     id: Id,
     patch: Partial<Omit<Shot, "id" | "projectId" | "episodeId" | ShotPictureField>>,
-    baseline?: Partial<Shot>,
+    baseline?: Partial<Shot>, store?: ProductStore
 ): Promise<void> {
+    const db = store ?? productDb;
     assertTextPatch(patch, SHOT_PICTURE_FIELDS);
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const shot = await db.shots.get(id);
         if (!shot) throw new Error("镜头不存在，无法保存");
         patch = pickPatch(patch, ["order", "shotNumber", "status", "category", "durationSec", "content", "notes", "sceneCloseup", "sound", "emotion", "cameraAngle", "cameraGear", "focalLength", "characterIds", "sceneId", "beatId", "propIds", "styleId", "extra"]);
@@ -145,15 +151,16 @@ export async function patchShot(
                 if (!sameDraftStructure(current, original) && !sameDraftStructure(current, final)) throw new DraftConflictError();
             }
         }
-        await assertShotReferences({...shot, ...patch});
+        await assertShotReferences({...shot, ...patch}, db);
         await db.shots.put({...shot, ...patch});
-        await touchProject(shot.projectId);
+        await touchProject(shot.projectId, db);
     });
 }
 
 /** Apply one checkbox intention to the latest membership, preserving other edits. */
-export async function setShotCharacterSelected(id: Id, characterId: Id, selected: boolean): Promise<void> {
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+export async function setShotCharacterSelected(id: Id, characterId: Id, selected: boolean, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const shot = await db.shots.get(id);
         if (!shot) throw new Error("镜头不存在，无法保存");
         const character = await db.characters.get(characterId);
@@ -169,9 +176,9 @@ export async function setShotCharacterSelected(id: Id, characterId: Id, selected
             characterIds = characterIds.filter((item) => item !== characterId);
         }
         const next = {...shot, characterIds};
-        await assertShotReferences(next);
+        await assertShotReferences(next, db);
         await db.shots.put(next);
-        await touchProject(shot.projectId);
+        await touchProject(shot.projectId, db);
     });
 }
 
@@ -208,15 +215,16 @@ function sameShotBulkValue(left: EpisodeShotBulkPatch[ShotBulkField], right: Epi
 export async function patchEpisodeShots(
     episodeId: Id,
     ids: Id[],
-    patch: EpisodeShotBulkPatch,
+    patch: EpisodeShotBulkPatch, store?: ProductStore
 ): Promise<EpisodeShotBulkUndo | undefined> {
+    const db = store ?? productDb;
     if (ids.length === 0) return;
     ids = [...ids];
     patch = structuredClone(pickPatch(patch, SHOT_BULK_FIELDS));
-    return db.transaction("rw", PRODUCTION_TABLES, async () => {
+    return db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const episode = await db.episodes.get(episodeId);
         if (!episode) throw new Error("集不存在");
-        await assertVideoProject(episode.projectId);
+        await assertVideoProject(episode.projectId, db);
         if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
         const rows = await db.shots.bulkGet(ids);
         const shots: Shot[] = [];
@@ -234,7 +242,7 @@ export async function patchEpisodeShots(
             nextPatch.characterIds = Array.isArray(patch.characterIds) ? [...patch.characterIds] : [];
         }
         const updated = shots.map((shot) => ({...shot, ...nextPatch}));
-        for (const shot of updated) await assertShotReferences(shot);
+        for (const shot of updated) await assertShotReferences(shot, db);
         const undo: EpisodeShotBulkUndo = {
             projectId: episode.projectId, episodeId,
             shots: shots.map((shot, index) => ({
@@ -244,18 +252,19 @@ export async function patchEpisodeShots(
             })),
         };
         await db.shots.bulkPut(updated);
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
         return undo;
     });
 }
 
-export async function undoEpisodeShotBulkPatch(undo: EpisodeShotBulkUndo): Promise<void> {
+export async function undoEpisodeShotBulkPatch(undo: EpisodeShotBulkUndo, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (undo.shots.length === 0) return;
     undo = structuredClone(undo);
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const episode = await db.episodes.get(undo.episodeId);
         if (!episode || episode.projectId !== undo.projectId) throw new Error("撤销的集不属于当前项目");
-        await assertVideoProject(undo.projectId);
+        await assertVideoProject(undo.projectId, db);
         const ids = undo.shots.map((entry) => entry.id);
         if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
         const shots = await db.shots.bulkGet(ids);
@@ -277,21 +286,22 @@ export async function undoEpisodeShotBulkPatch(undo: EpisodeShotBulkUndo): Promi
                 }
             }
             const next = {...shot, ...entry.before};
-            await assertShotReferences(shot);
-            await assertShotReferences(next);
+            await assertShotReferences(shot, db);
+            await assertShotReferences(next, db);
             restored.push(next);
         }
         // Validate every target and relationship before the first write, then commit as one group.
         await db.shots.bulkPut(restored);
-        await touchProject(undo.projectId);
+        await touchProject(undo.projectId, db);
     });
 }
 
-export async function reorderShots(episodeId: Id, orderedIds: Id[]): Promise<void> {
-    await db.transaction("rw", db.shots, db.episodes, db.projects, async () => {
+export async function reorderShots(episodeId: Id, orderedIds: Id[], store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", [db.shots, db.episodes, db.projects].flat(), async (db) => {
         const episode = await db.episodes.get(episodeId);
         if (!episode) throw new Error("集不存在");
-        await assertVideoProject(episode.projectId);
+        await assertVideoProject(episode.projectId, db);
         const shots = await db.shots.where("episodeId").equals(episodeId).toArray();
         if (shots.some((shot) => shot.projectId !== episode.projectId)) {
             throw new Error("镜头与集不属于同一项目");
@@ -301,12 +311,13 @@ export async function reorderShots(episodeId: Id, orderedIds: Id[]): Promise<voi
         await Promise.all(
             orderedIds.map((id, index) => db.shots.put({...byId.get(id)!, order: index + 1})),
         );
-        await touchProject(episode.projectId);
+        await touchProject(episode.projectId, db);
     });
 }
 
-export async function duplicateShot(id: Id): Promise<Shot> {
-    return db.transaction("rw", PRODUCTION_TABLES, async () => {
+export async function duplicateShot(id: Id, store?: ProductStore): Promise<Shot> {
+    const db = store ?? productDb;
+    return db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const source = await db.shots.get(id);
         if (!source) throw new Error("镜头不存在");
         const episode = await db.episodes.get(source.episodeId);
@@ -327,22 +338,23 @@ export async function duplicateShot(id: Id): Promise<Shot> {
             id: createId("sht"),
             order: source.order + 1,
         });
-        await assertShotReferences(copy);
+        await assertShotReferences(copy, db);
         await db.shots.add(copy);
-        await touchProject(source.projectId);
+        await touchProject(source.projectId, db);
         return copy;
     });
 }
 
-export async function restoreShots(shots: Shot[], media: MediaRecord[] = []): Promise<void> {
+export async function restoreShots(shots: Shot[], media: MediaRecord[] = [], store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (shots.length === 0) return;
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         if (media.length > 0) await db.media.bulkPut(media);
         const episodeIds = new Set(shots.map((shot) => shot.episodeId));
         for (const episodeId of episodeIds) {
             const episode = await db.episodes.get(episodeId);
             if (!episode) throw new Error("集不存在");
-            await assertVideoProject(episode.projectId);
+            await assertVideoProject(episode.projectId, db);
             const scoped = shots
                 .filter((shot) => shot.episodeId === episodeId)
                 .sort((left, right) => left.order - right.order);
@@ -353,7 +365,7 @@ export async function restoreShots(shots: Shot[], media: MediaRecord[] = []): Pr
                 (left, right) => left.order - right.order,
             );
             for (const shot of scoped) {
-                await assertShotReferences(shot);
+                await assertShotReferences(shot, db);
                 const existing = await db.shots.get(shot.id);
                 if (existing) throw new Error("镜头已存在，无法恢复");
                 all.splice(Math.max(0, Math.min(shot.order - 1, all.length)), 0, shot);
@@ -361,7 +373,7 @@ export async function restoreShots(shots: Shot[], media: MediaRecord[] = []): Pr
             await Promise.all(
                 all.map((shot, index) => db.shots.put({...shot, order: index + 1})),
             );
-            await touchProject(episode.projectId);
+            await touchProject(episode.projectId, db);
         }
     });
 }
@@ -370,22 +382,24 @@ export async function setShotSlot(
     id: Id,
     field: ShotPictureField,
     slot: GenerationSlot,
-    baseline?: GenerationSlot,
+    baseline?: GenerationSlot, store?: ProductStore
 ): Promise<void> {
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    const db = store ?? productDb;
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const shot = await db.shots.get(id);
         if (!shot) throw new Error("镜头不存在，无法保存");
         if (baseline && !sameSlotValue(shot[field], baseline) && !sameSlotValue(shot[field], slot)) throw new DraftConflictError();
-        await assertSlotMedia(shot.projectId, slot, field === "clip");
+        await assertSlotMedia(shot.projectId, slot, field === "clip", db);
         const previous = shot[field];
         await db.shots.put({...shot, [field]: slot});
-        await touchProject(shot.projectId);
-        await recycleSlotMedia(previous, slot);
+        await touchProject(shot.projectId, db);
+        await recycleSlotMedia(previous, slot, db);
     });
 }
 
-export async function deleteShots(ids: Id[]): Promise<void> {
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+export async function deleteShots(ids: Id[], store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         if (ids.length === 0) return;
         const affected = new Map<Id, Id>();
         const mediaIds: Id[] = [];
@@ -401,10 +415,10 @@ export async function deleteShots(ids: Id[]): Promise<void> {
             await db.shots.delete(id);
         }
         for (const [episodeId, projectId] of affected) {
-            await reindexShots(episodeId);
-            await touchProject(projectId);
+            await reindexShots(episodeId, db);
+            await touchProject(projectId, db);
         }
-        await deleteMediaIfOrphans(mediaIds);
+        await deleteMediaIfOrphans(mediaIds, db);
     });
 }
 
@@ -415,12 +429,13 @@ export interface DeletedShotsSnapshot {
     media: MediaRecord[];
 }
 
-export async function deleteEpisodeShots(episodeId: Id, ids: Id[]): Promise<DeletedShotsSnapshot | undefined> {
-    return db.transaction("rw", PRODUCTION_TABLES, async () => {
+export async function deleteEpisodeShots(episodeId: Id, ids: Id[], store?: ProductStore): Promise<DeletedShotsSnapshot | undefined> {
+    const db = store ?? productDb;
+    return db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         if (ids.length === 0) return;
         const episode = await db.episodes.get(episodeId);
         if (!episode) throw new Error("集不存在");
-        await assertVideoProject(episode.projectId);
+        await assertVideoProject(episode.projectId, db);
         if (new Set(ids).size !== ids.length) throw new Error("镜头列表包含重复记录");
         const rows = await db.shots.bulkGet(ids);
         const shots: Shot[] = [];
@@ -437,7 +452,7 @@ export async function deleteEpisodeShots(episodeId: Id, ids: Id[]): Promise<Dele
             (record): record is MediaRecord => record !== undefined,
         );
         // Snapshot and nested deletion share the production lock through cleanup and commit.
-        await deleteShots(ids);
+        await deleteShots(ids, db);
         return {projectId: episode.projectId, episodeId, shots, media};
     });
 }

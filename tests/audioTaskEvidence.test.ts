@@ -71,9 +71,9 @@ describe("sound task generation evidence", () => {
     expect(one).toMatchObject({available: true, supportsResult: true, resultKey: "result"});
     expect(JSON.parse(one.body)).toMatchObject({status, outputs: {total: 2, included: 1, omitted: 1, allAvailable: false}});
     await expect(validateTaskSources(f.task, [{type: "generation", id: f.job.id}], "result", "ai")).rejects.toThrow("实际业务操作");
-    const record = await db.transaction("rw", db.tables, () => writeTaskRecord(f.task, {
+    const record = await db.transaction("rw", db.tables, (tx) => writeTaskRecord(f.task, {
       kind: "verification", claim: "result", title: "单个文件已保存", body: "只确认这个音频文件；未试听。", sources: [reference]
-    }, {author: "ai", runId: f.run.id}));
+    }, {author: "ai", runId: f.run.id}, tx));
     expect((await db.agentTaskRecords.get(record.id))?.sources).toEqual([reference]);
     expect((await db.agentTaskRecordVersions.get(`${record.id}:1`))?.sources).toEqual([reference]);
     const draft = await createManualWrapup(f.task.id);
@@ -112,9 +112,9 @@ describe("sound task generation evidence", () => {
     if (reason === "replaced-media") await db.audioGenerationJobs.update(f.job.id, {results: f.job.results.map(result => ({...result, mediaId: "replaced-media"}))});
     if (reason === "tombstone") await db.audioGenerationJobs.update(f.job.id, {results: f.job.results.map(result => ({...result, deleted: true}))});
     if (reason === "invalid-decoder") await db.musicWorks.update(f.output.id, {sampleRate: 0});
-    await expect(db.transaction("rw", db.tables, () => writeTaskRecord(f.task, {
+    await expect(db.transaction("rw", db.tables, (tx) => writeTaskRecord(f.task, {
       kind: "verification", claim: "result", title: "不可核实的文件", body: "不能通过", sources: [reference]
-    }, {author: "ai", runId: f.run.id}))).rejects.toThrow();
+    }, {author: "ai", runId: f.run.id}, tx))).rejects.toThrow();
     expect(await db.agentTaskRecords.count()).toBe(0);
     expect(await db.agentTaskRecordVersions.count()).toBe(0);
     if (reason !== "wrong-key") expect((await getTaskWrapupState(f.task.id)).stale).toBe(true);
@@ -161,7 +161,7 @@ describe("sound task generation evidence", () => {
     expect(last.coverage).toEqual({total: 102, included: 2, omitted: 100, offset: 100, nextOffset: null});
     expect(last.sources.find(item => item.resultKey === "saved:last")).toMatchObject({available: true, supportsResult: true});
     const ref = {type: "generation" as const, id: f.job.id, resultKey: "saved:last"};
-    await db.transaction("rw", db.tables, () => writeTaskRecord(f.task, {kind: "verification", claim: "result", title: "最后一个文件", body: "已保存且未试听", sources: [ref]}, {author: "ai", runId: f.run.id}));
+    await db.transaction("rw", db.tables, (tx) => writeTaskRecord(f.task, {kind: "verification", claim: "result", title: "最后一个文件", body: "已保存且未试听", sources: [ref]}, {author: "ai", runId: f.run.id}, tx));
     const draft = await createManualWrapup(f.task.id);
     expect(draft.snapshot.coverage.omitted).toBeGreaterThan(0);
     const all = await getTaskWrapupState(f.task.id);

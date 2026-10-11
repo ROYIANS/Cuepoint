@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {registeredTools} from "./helpers/registeredTools";
 import { describeRunWrites } from "@/lib/agent/runWriteOutcomes";
 import { describe, expect, it, vi } from "vitest";
@@ -206,7 +207,7 @@ describe("audio/music Agent local tools", () => {
   it("rolls back domain changes when tool ledger persistence fails", async () => {
     const project = await createAudioMusicProject("配音", "audio"), run = await begin(project.id);
     const call = await prepareCall(run, "audio_create", { projectId: project.id, kind: "speaker", name: "旁白" });
-    const failure = vi.spyOn(db.agentToolCalls, "update").mockRejectedValueOnce(new Error("disk full"));
+    const failure = failStoreTableOnce(db, "agentToolCalls", "update", new Error("disk full"));
     try { await expect(call.definition.execute(call.args, call.ctx)).rejects.toThrow("disk full"); }
     finally { failure.mockRestore(); }
     expect(await db.audioSpeakers.count()).toBe(0);

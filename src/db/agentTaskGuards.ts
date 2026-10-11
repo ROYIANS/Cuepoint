@@ -1,8 +1,10 @@
-import {db} from "./database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
 import {isTaskBusy} from "@/lib/agent/taskState";
 
 /** Read-only edit guard; command owners supply the transaction and perform writes. */
-export async function editableAgentTask(id: string) {
+export async function editableAgentTask(id: string, store?: ProductStore) {
+    const db = store ?? productDb;
     const task = await db.agentTasks.get(id);
     if (!task || !(await db.chatThreads.get(task.threadId))) throw new Error("任务或关联对话不存在");
     if (!task.projectId || !await db.projects.get(task.projectId)) throw new Error("关联项目已不存在，任务仅供查看");

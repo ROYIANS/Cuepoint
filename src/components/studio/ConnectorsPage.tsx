@@ -1,5 +1,5 @@
 import {SearchConnection} from "./SearchConnection";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Check, Plug} from "lucide-react";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import {Field} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
-import {db} from "@/db/database";
 import {deleteConnector, upsertConnector} from "@/db/connectors";
 import type {ConnectorConfig, ConnectorDefinitionId} from "@/domain/types";
 import {CONNECTOR_CATALOG, type ConnectorDefinition} from "@/lib/ai/catalog";
@@ -33,7 +32,7 @@ type EditorSession = EditorState & { baseUrl: string; apiKey: string };
 type EditorOperation = { session: EditorSession; kind: "probe" | "test" | "save" | "disconnect" };
 
 export function ConnectorsPage() {
-    const view = useLiveQuery(async () => {
+    const view = useProductQuery(async (db) => {
         try {
             return {connectors: await db.connectors.toArray()};
         } catch {

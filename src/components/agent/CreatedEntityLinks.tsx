@@ -2,7 +2,7 @@ import {Link, useNavigate} from "@tanstack/react-router";
 import type {AgentToolCall} from "@/domain/agent";
 
 import {useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {toast} from "sonner";
 import {Button} from "@/components/ui/button";
 import {createChatThread} from "@/db/chat";
@@ -42,7 +42,7 @@ function ProjectConversationButton({projectId, sourceThreadId}: { projectId: str
 }
 
 function CreatedProjectContinuation({projectId, call}: { projectId: string; call: AgentToolCall }) {
-    const state = useLiveQuery(async () => {
+    const state = useProductQuery(async (db) => {
         const [run, thread, project] = await Promise.all([
             db.agentRuns.get(call.runId), db.chatThreads.get(call.threadId), db.projects.get(projectId),
         ]);

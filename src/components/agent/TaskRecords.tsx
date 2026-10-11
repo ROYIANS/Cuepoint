@@ -8,7 +8,7 @@ import {ReferenceSourceLink} from "./ReferenceAttachments";
 import {toolReferenceAttachments} from "@/lib/agent/referenceEvidence";
 import {useEffect, useRef, useState} from "react";
 import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "@/lib/useManualDraftGuard";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {BookOpen, ChevronDown, History, Pencil, Plus, Search} from "lucide-react";
 import {toast} from "sonner";
 import type {AgentTask} from "@/domain/agent";
@@ -20,7 +20,6 @@ import {
     taskRecordSourceIdentity,
     type TaskRecordInput
 } from "@/domain/agentTaskRecords";
-import {db} from "@/db/database";
 import {CreatedEntityLinks} from "./CreatedEntityLinks";
 import {Button} from "@/components/ui/button";
 import {
@@ -53,8 +52,8 @@ type Props = {
 };
 
 export function TaskRecords({task, messages, editable, onDraftStateChange, requestDeparture}: Props) {
-    const records = useLiveQuery(() => listTaskRecords(task.id), [task.id]);
-    const calls = useLiveQuery(async () => {
+    const records = useProductQuery((db) => listTaskRecords(task.id, db), [task.id]);
+    const calls = useProductQuery(async (db) => {
         const runs = await db.agentRuns.where("taskId").equals(task.id).toArray();
         const owned = new Set(runs.filter((run) => run.threadId === task.threadId).map((run) => run.id));
         return (await db.agentToolCalls.where("threadId").equals(task.threadId).toArray()).filter((call) => owned.has(call.runId));
@@ -62,7 +61,7 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
     const [generationPage, setGenerationPage] = useState({taskId: task.id, offset: 0});
     const generationOffset = generationPage.taskId === task.id ? generationPage.offset : 0;
     const setGenerationOffset = (offset: number) => setGenerationPage({taskId: task.id, offset});
-    const generationEvidence = useLiveQuery(() => listTaskGenerationSourceInventory(task, {offset: generationOffset}), [task.id, task.threadId, task.projectId, generationOffset]);
+    const generationEvidence = useProductQuery((db) => listTaskGenerationSourceInventory(task, {offset: generationOffset}, db), [task.id, task.threadId, task.projectId, generationOffset]);
     const [filter, setFilter] = useState<TaskRecordInput["kind"] | "all">("all");
     const [query, setQuery] = useState("");
     type Session = {
@@ -87,7 +86,7 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
     const [pending, setPending] = useState(false);
     const [error, setError] = useState("");
     const saving = useRef(false);
-    const history = useLiveQuery(() => historyId ? listTaskRecordVersions(task.id, historyId) : [], [task.id, historyId]);
+    const history = useProductQuery((db) => historyId ? listTaskRecordVersions(task.id, historyId, db) : [], [task.id, historyId]);
     const evidence = [
         ...(generationEvidence?.sources ?? []).map(item => ({
             type: "generation" as const,

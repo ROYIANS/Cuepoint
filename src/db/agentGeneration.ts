@@ -1,13 +1,16 @@
-import {db} from "./database";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
 import type {AgentGenerationJob} from "@/domain/agentGeneration";
 import type {MediaRecord} from "@/domain/types";
 import {nowIso} from "@/lib/ids";
 
-export async function claimGenerationJob(job: AgentGenerationJob): Promise<{
+export async function claimGenerationJob(job: AgentGenerationJob, store?: ProductStore): Promise<{
     job: AgentGenerationJob;
     claimed: boolean
 }> {
-    return db.transaction("rw", [db.agentGenerationJobs, db.projects, db.agentRuns, db.agentToolCalls, db.chatThreads], async () => {
+    const db = store ?? productDb;
+    return db.transaction("rw", [db.agentGenerationJobs, db.projects, db.agentRuns, db.agentToolCalls, db.chatThreads], async (db) => {
         if (!job.callId) throw new Error("批量任务必须通过批量队列认领");
         const existing = await db.agentGenerationJobs.where("callId").equals(job.callId).first();
         if (existing) return {job: existing, claimed: false};
@@ -28,8 +31,9 @@ export async function claimGenerationJob(job: AgentGenerationJob): Promise<{
 
 /** Updates never reinsert a removed job/project; late network responses cannot resurrect work. */
 export async function updateGenerationJob(id: string, patch: Partial<Pick<AgentGenerationJob,
-    "status" | "providerTaskId" | "providerTaskIds" | "providerStatus" | "progress" | "error" | "result">>): Promise<AgentGenerationJob> {
-    return db.transaction("rw", [db.agentGenerationJobs, db.agentGenerationBatches, db.projects, db.agentRuns, db.chatThreads], async () => {
+    "status" | "providerTaskId" | "providerTaskIds" | "providerStatus" | "progress" | "error" | "result">>, store?: ProductStore): Promise<AgentGenerationJob> {
+    const db = store ?? productDb;
+    return db.transaction("rw", [db.agentGenerationJobs, db.agentGenerationBatches, db.projects, db.agentRuns, db.chatThreads], async (db) => {
         const job = await db.agentGenerationJobs.get(id);
         if (!job || !await db.agentRuns.get(job.runId) || !await db.chatThreads.get(job.threadId) || job.projectId !== "studio" && !await db.projects.get(job.projectId)) throw new Error("生成记录或项目已删除");
         if (job.result && patch.status === undefined && patch.error !== undefined) return job;
@@ -50,12 +54,24 @@ export async function updateGenerationJob(id: string, patch: Partial<Pick<AgentG
     });
 }
 
-export async function storeGenerationMedia(jobId: string, media: MediaRecord): Promise<AgentGenerationJob> {
-    return db.transaction("rw", [db.agentGenerationJobs, db.projects, db.media, db.agentRuns, db.chatThreads], async () => {
+/** A stale parallel observation cannot overwrite an acknowledgement received meanwhile. */
+export async function markUnacknowledgedGeneration(id:string,store?:ProductStore):Promise<AgentGenerationJob> {
+    const db=store ?? productDb;
+    return db.transaction("rw",["agentGenerationJobs","agentGenerationBatches","projects","agentRuns","chatThreads"],async tx=> {
+        const current=await tx.agentGenerationJobs.get(id);
+        if (!current) throw new Error("生成记录已删除");
+        if (current.status !== "submitting" || current.providerTaskId) return current;
+        return updateGenerationJob(id,{status:"unknown",error:"付费提交结果尚未确认；无任务标识，不能自动再次提交。请到供应商后台核实。"},tx);
+    });
+}
+
+export async function storeGenerationMedia(jobId: string, media: MediaRecord, store?: ProductStore): Promise<AgentGenerationJob> {
+    const db = store ?? productDb;
+    return db.transaction("rw", [db.agentGenerationJobs, db.projects, db.media, db.agentRuns, db.chatThreads], async (db) => {
         const job = await db.agentGenerationJobs.get(jobId);
         if (!job || !await db.agentRuns.get(job.runId) || !await db.chatThreads.get(job.threadId) || job.projectId !== "studio" && !await db.projects.get(job.projectId)) throw new Error("生成记录或项目已删除，结果未写入");
         if (job.result) return job;
-        if (job.status !== "downloading" || media.projectId !== job.projectId || !media.blob.size || !media.mimeType.startsWith(`${job.kind}/`)) throw new Error("生成结果与目标类型不匹配");
+        if (job.status !== "downloading" || media.projectId !== job.projectId || !binaryByteLength(media.blob) || !media.mimeType.startsWith(`${job.kind}/`)) throw new Error("生成结果与目标类型不匹配");
         await db.media.add(media);
         const next: AgentGenerationJob = {
             ...job,

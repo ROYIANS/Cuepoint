@@ -131,6 +131,9 @@ describe("C02 actual Simple legacy repair callbacks", () => {
         click(repair(tree));
         expect(save).not.toHaveBeenCalled();
         await vi.advanceTimersByTimeAsync(400);
+        // The timer has fired; drain the actual storage read used by CAS before
+        // asserting the producer call rather than assuming one microtask layer.
+        await db.transaction("r", [db.musicDrafts], tx => tx.musicDrafts.get(row.id));
         expect(save).toHaveBeenCalledOnce();
         await flushPendingDrafts(row.projectId);
         const repaired = (await db.musicDrafts.get(row.id))!;

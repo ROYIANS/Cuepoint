@@ -1,4 +1,4 @@
-import {useMedia} from "@/lib/media";
+import {useMediaState} from "@/lib/media";
 import {cn} from "@/lib/utils";
 import type {Id} from "@/domain/types";
 
@@ -16,8 +16,8 @@ export function MediaPreview({
     inspect?: boolean;
     label?: string;
 }) {
-    const view = useMedia(mediaId);
-    if (!view) {
+    const state = useMediaState(mediaId);
+    if (state.status !== "ready") {
         return (
             <div
                 className={cn(
@@ -25,15 +25,16 @@ export function MediaPreview({
                     className,
                 )}
             >
-                {mediaId ? "素材加载中或已不可用" : empty}
+                {state.status === "empty" ? empty : state.status === "loading" ? "素材加载中…" : state.status === "missing" ? "素材已丢失" : state.status === "corrupt" ? "素材已损坏" : "素材读取失败"}
             </div>
         );
     }
+    const view = state.media;
     if (view.kind === "video") {
-        return <video src={view.url} aria-label={label}
+        return <video src={view.url} onError={view.onError} aria-label={label}
                       className={cn(inspect ? "object-contain" : "object-cover", className)} controls={inspect}
                       muted={!inspect} playsInline preload="metadata"/>;
     }
-    return <img src={view.url} alt={inspect ? label : ""}
+    return <img src={view.url} onError={view.onError} alt={inspect ? label : ""}
                 className={cn(inspect ? "object-contain" : "object-cover", className)}/>;
 }

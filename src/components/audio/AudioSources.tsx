@@ -1,6 +1,7 @@
 import {SelectOption, SourcePlayer, WorkspaceSelect} from "@/components/audioMusic/controls";
 import {useEffect, useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
+import {withBinaryReadLease} from "@/lib/storage/binary";
 import {Check, ChevronDown, Library, Mic, Plus, Square, Upload, X} from "lucide-react";
 import {db} from "@/db/database";
 import {addAudioTake} from "@/db/audio";
@@ -223,7 +224,7 @@ function AudioLibrary({projectId, segmentId, onSaved}: {
     segmentId?: string;
     onSaved: (take: AudioTake) => void;
 }) {
-    const materials = useLiveQuery(async () => {
+    const materials = useProductQuery(async (db) => {
         const link = await db.projectIpLinks.get(projectId);
         return db.libraryMaterials.filter((row) => row.kind === "audio" && !row.archived && (row.scope.kind === "global" || row.scope.kind === "project" && row.scope.id === projectId || row.scope.kind === "ip" && row.scope.id === link?.ipId)).toArray();
     }, [projectId]);
@@ -243,7 +244,7 @@ function AudioLibrary({projectId, segmentId, onSaved}: {
                         const media = await db.media.get(use.targetId);
                         if (!media)
                             throw new Error("素材文件已不存在");
-                        const buffer = await decodeAudioBlob(media.blob);
+                        const buffer = await withBinaryReadLease(media.blob, async lease => decodeAudioBlob(await lease.readBlob()));
                         const take = await addAudioTake(projectId, {
                             ...audioBufferMetadata(buffer),
                             mediaId: media.id,

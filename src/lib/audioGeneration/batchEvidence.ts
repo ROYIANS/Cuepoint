@@ -1,13 +1,16 @@
-import {db} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import type {AudioGenerationJob} from "@/domain/audioGeneration";
 import type {AudioGenerationBatch} from "@/domain/audioGenerationBatch";
 import {targetRevision} from "@/lib/productionRevision";
 
 /** Retries retain their real preparation root; a retry marker alone is no origin proof. */
-function hasPreparationOrigin(batch: AudioGenerationBatch, call: {id: string; result?: string}): boolean | Promise<boolean> {
+function hasPreparationOrigin(batch: AudioGenerationBatch, call: {id: string; result?: string}, store?: ProductStore): boolean | Promise<boolean> {
+    const db = store ?? productDb;
     const visited = new Set<string>();
     // Bound read work. Excessively long/cyclic/missing history remains unverified.
-    function inspect(current: AudioGenerationBatch | undefined, depth: number): boolean | Promise<boolean> {
+    function inspect(current: AudioGenerationBatch | undefined, depth: number, store?: ProductStore): boolean | Promise<boolean> {
+    const db = store ?? productDb;
         if (!current || depth >= 100 || visited.has(current.id) || current.projectId !== batch.projectId || current.chapterId !== batch.chapterId || current.dormant ||
             targetRevision(current.owner) !== targetRevision(batch.owner)) return false;
         visited.add(current.id);
@@ -22,13 +25,14 @@ function hasPreparationOrigin(batch: AudioGenerationBatch, call: {id: string; re
         if (!current.retrySourceBatchId) return false;
         // Return the Dexie chain itself: an extra resolved native async hop can
         // complete an owning read transaction on the no-task/root-only path.
-        return db.audioGenerationBatches.get(current.retrySourceBatchId).then(next => inspect(next, depth + 1));
+        return db.audioGenerationBatches.get(current.retrySourceBatchId).then(next => inspect(next, depth + 1, db));
     }
-    return inspect(batch, 0);
+    return inspect(batch, 0, db);
 }
 
 /** Read-only origin proof shared by task sources and final review. It does not prove an output exists. */
-export async function ownedAgentAudioBatchJob(job: AudioGenerationJob, expected: {runId: string; threadId: string; projectId: string; taskId?: string}): Promise<boolean> {
+export async function ownedAgentAudioBatchJob(job: AudioGenerationJob, expected: {runId: string; threadId: string; projectId: string; taskId?: string}, store?: ProductStore): Promise<boolean> {
+    const db = store ?? productDb;
     if (job.dormant || job.source.kind !== "batch" || job.source.owner.kind !== "agent" || job.input.kind !== "speech") return false;
     const source = job.source, owner = source.owner;
     if (owner.kind !== "agent" || owner.runId !== expected.runId || owner.threadId !== expected.threadId || owner.taskId !== expected.taskId || job.projectId !== expected.projectId) return false;
@@ -42,7 +46,7 @@ export async function ownedAgentAudioBatchJob(job: AudioGenerationJob, expected:
         !item || item.projectId !== job.projectId || item.batchId !== batch.id || item.chapterId !== batch.chapterId || !item.included || item.state !== "linked" ||
         item.segmentId !== job.input.segmentId || item.jobId !== job.id || item.intentId !== job.intentId ||
         targetRevision(item.snapshot.input) !== targetRevision(job.input) || targetRevision(item.snapshot.connector) !== targetRevision(job.connector)) return false;
-    const origin = hasPreparationOrigin(batch, call);
+    const origin = hasPreparationOrigin(batch, call, db);
     if (!(typeof origin === "boolean" ? origin : await origin)) return false;
     if (owner.taskId) {
         const task = await db.agentTasks.get(owner.taskId);

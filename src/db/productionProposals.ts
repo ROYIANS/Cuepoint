@@ -1,4 +1,6 @@
-import {db} from "./database";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
 import {patchShot, setShotSlot} from "./shots";
 import {PRODUCTION_TABLES} from "./productionShared";
 import {setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "./assets";
@@ -9,7 +11,8 @@ import {createId, nowIso} from "@/lib/ids";
 import {targetRevision, validateProductionTarget} from "@/lib/productionRevision";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 
-async function readTarget(target: ProductionTarget) {
+async function readTarget(target: ProductionTarget, store?: ProductStore) {
+    const db = store ?? productDb;
     if (!(await db.projects.get(target.projectId))) throw new Error("项目不存在");
     const entity = target.kind === "shot" ? await db.shots.get(target.entityId)
         : target.kind === "character" ? await db.characters.get(target.entityId)
@@ -58,10 +61,11 @@ function normalizeChange(target: ProductionTarget, change: ProductionChange): Pr
     return {kind: "slot-result", result: {mediaId: change.result.mediaId, kind: change.result.kind}};
 }
 
-async function validateResult(projectId: string, result: GenerationResult | undefined) {
+async function validateResult(projectId: string, result: GenerationResult | undefined, store?: ProductStore) {
+    const db = store ?? productDb;
     if (!result) return;
     const media = await db.media.get(result.mediaId);
-    if (!media || media.projectId !== projectId || media.blob.size === 0 || !media.mimeType.startsWith(`${result.kind}/`)) {
+    if (!media || media.projectId !== projectId || binaryByteLength(media.blob) === 0 || !media.mimeType.startsWith(`${result.kind}/`)) {
         throw new Error("素材不存在、类型不匹配或不属于当前项目，请重新选择");
     }
 }
@@ -87,7 +91,8 @@ function normalizeSource(source: ProposalSource): ProposalSource {
 
 export async function createProductionProposal(input: {
     target: ProductionTarget; change: ProductionChange; source: ProposalSource; expectedRevision?: string;
-}): Promise<ProductionProposal> {
+}, store?: ProductStore): Promise<ProductionProposal> {
+    const db = store ?? productDb;
     const target = validateProductionTarget(input.target);
     const change = normalizeChange(target, input.change);
     const source = normalizeSource(input.source);
@@ -96,8 +101,8 @@ export async function createProductionProposal(input: {
         throw new Error("生成提案必须提供匹配目标的原始版本");
     }
     await flushPendingDrafts(target.projectId);
-    return db.transaction("rw", PRODUCTION_TABLES, async () => {
-        const current = await readTarget(target);
+    return db.transaction("rw", PRODUCTION_TABLES, async (db) => {
+        const current = await readTarget(target, db);
         if (input.expectedRevision !== undefined && current.revision !== input.expectedRevision) throw new Error("目标已被修改，请重新查看后创建提案");
         const before: ProductionProposal["before"] = {};
         if (change.kind === "shot-text" && "content" in current.entity) {
@@ -105,7 +110,7 @@ export async function createProductionProposal(input: {
                 if (Object.hasOwn(change.patch, key)) Object.assign(before, {[key]: current.entity[key]});
             }
         } else if (change.kind === "slot-result") {
-            await validateResult(target.projectId, change.result);
+            await validateResult(target.projectId, change.result, db);
             before.result = current.slot?.result;
         }
         const at = nowIso();
@@ -119,25 +124,27 @@ export async function createProductionProposal(input: {
     });
 }
 
-async function writeResult(target: ProductionTarget, slot: GenerationSlot) {
+async function writeResult(target: ProductionTarget, slot: GenerationSlot, store?: ProductStore) {
+    const db = store ?? productDb;
     switch (target.kind) {
         case "shot":
             if (!target.slot) throw new Error("缺少素材槽位");
-            return setShotSlot(target.entityId, target.slot, slot);
+            return setShotSlot(target.entityId, target.slot, slot, undefined, db);
         case "character":
-            return setCharacterSlot(target.entityId, target.slot, slot);
+            return setCharacterSlot(target.entityId, target.slot, slot, undefined, db);
         case "scene":
-            return setSceneSlot(target.entityId, target.slot, slot);
+            return setSceneSlot(target.entityId, target.slot, slot, undefined, db);
         case "prop":
-            return setPropSlot(target.entityId, target.slot, slot);
+            return setPropSlot(target.entityId, target.slot, slot, undefined, db);
         case "style":
-            return setStyleSlot(target.entityId, target.slot, slot);
+            return setStyleSlot(target.entityId, target.slot, slot, undefined, db);
     }
 }
 
-async function mutateProposal(id: string, projectId: string, action: "apply" | "cancel" | "undo") {
+async function mutateProposal(id: string, projectId: string, action: "apply" | "cancel" | "undo", store?: ProductStore) {
+    const db = store ?? productDb;
     await flushPendingDrafts(projectId);
-    return db.transaction("rw", PRODUCTION_TABLES, async () => {
+    return db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const proposal = await db.productionProposals.get(id);
         if (!proposal || proposal.projectId !== projectId) throw new Error("提案不存在或不属于当前项目");
         const completed = action === "apply" ? "applied" : action === "cancel" ? "cancelled" : "undone";
@@ -146,7 +153,7 @@ async function mutateProposal(id: string, projectId: string, action: "apply" | "
         if (action !== "cancel") {
             const target = validateProductionTarget(proposal.target);
             if (target.projectId !== projectId) throw new Error("提案目标与项目不匹配");
-            const current = await readTarget(target);
+            const current = await readTarget(target, db);
             const expected = action === "undo" ? proposal.appliedRevision : proposal.baseRevision;
             if (current.revision !== expected) throw new Error(action === "undo"
                 ? "目标已有新的修改，无法撤销；你的当前内容已保留"
@@ -155,13 +162,13 @@ async function mutateProposal(id: string, projectId: string, action: "apply" | "
             if (change.kind === "shot-text") {
                 const patch = action === "undo" ? {...proposal.before} : change.patch;
                 delete (patch as ProductionProposal["before"]).result;
-                await patchShot(target.entityId, patch);
+                await patchShot(target.entityId, patch, undefined, db);
             } else {
                 const result = action === "undo" ? proposal.before.result : change.result;
-                await validateResult(projectId, result);
-                await writeResult(target, {...(current.slot ?? emptySlot()), result});
+                await validateResult(projectId, result, db);
+                await writeResult(target, {...(current.slot ?? emptySlot()), result}, db);
             }
-            if (action === "apply") proposal.appliedRevision = (await readTarget(target)).revision;
+            if (action === "apply") proposal.appliedRevision = (await readTarget(target, db)).revision;
         }
         const updated: ProductionProposal = {...proposal, status: completed, updatedAt: nowIso()};
         await db.productionProposals.put(updated);
@@ -169,6 +176,6 @@ async function mutateProposal(id: string, projectId: string, action: "apply" | "
     });
 }
 
-export const applyProductionProposal = (id: string, projectId: string) => mutateProposal(id, projectId, "apply");
-export const cancelProductionProposal = (id: string, projectId: string) => mutateProposal(id, projectId, "cancel");
-export const undoProductionProposal = (id: string, projectId: string) => mutateProposal(id, projectId, "undo");
+export const applyProductionProposal = (id: string, projectId: string, store?: ProductStore) => (db => mutateProposal(id, projectId, "apply", db))(store ?? productDb);
+export const cancelProductionProposal = (id: string, projectId: string, store?: ProductStore) => (db => mutateProposal(id, projectId, "cancel", db))(store ?? productDb);
+export const undoProductionProposal = (id: string, projectId: string, store?: ProductStore) => (db => mutateProposal(id, projectId, "undo", db))(store ?? productDb);

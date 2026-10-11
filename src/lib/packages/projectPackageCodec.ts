@@ -136,6 +136,7 @@ function optionalIds(
 
 const PROJECT_KEYS = [
     "kind",
+    "musicVariantLinks",
     "archivedAt",
     "brief",
     "genre",
@@ -187,6 +188,7 @@ function parseProject(
         tone: optionalText(raw, "tone"),
         defaultStyleId: optionalText(raw, "defaultStyleId"),
         generationDefaults: parseGenerationDefaults(raw.generationDefaults),
+        musicVariantLinks: raw.musicVariantLinks === undefined ? undefined : z.record(z.object({"suno-simple": z.string().min(1).optional(), "suno-custom": z.string().min(1).optional(), flowmusic: z.string().min(1).optional()}).strict()).parse(raw.musicVariantLinks),
         mode: normalizeProjectMode(raw.mode),
         aspectPreset: normalizeAspectPreset(raw.aspectPreset),
         createdAt: String(raw.createdAt ?? at),
@@ -789,6 +791,22 @@ export function parseProjectPackageRows(raw: ProjectPackageJson) {
 
     const project = parseProject(projectRaw, "导入的项目");
     const audioPackage = parseAudioPackage(raw.audioPackage, projectRaw.id, getProjectKind(project));
+    if (project.musicVariantLinks !== undefined) {
+        if (getProjectKind(project) !== "music" || !audioPackage) throw new PackageError("音乐草稿关联缺少所属音乐项目");
+        const drafts = new Map(audioPackage.musicDrafts.map(row => [row.id, row]));
+        if (drafts.size !== audioPackage.musicDrafts.length) throw new PackageError("音乐草稿 ID 重复");
+        for (const [sourceId, group] of Object.entries(project.musicVariantLinks)) {
+            const entries = Object.entries(group);
+            if (!drafts.has(sourceId) || !entries.some(([, id]) => id === sourceId) || new Set(entries.map(([, id]) => id)).size !== entries.length) throw new PackageError("音乐草稿关联缺少真实归属");
+            for (const [variant, id] of entries) {
+                const draft = drafts.get(id);
+                const actual = draft?.settings.engine === "flowmusic" ? "flowmusic" : draft?.settings.custom ? "suno-custom" : "suno-simple";
+                if (!draft || actual !== variant) throw new PackageError("音乐草稿关联的类型或记录无效");
+                const other = project.musicVariantLinks[id];
+                if (!other || ["suno-simple", "suno-custom", "flowmusic"].some(key => other[key as keyof typeof other] !== group[key as keyof typeof group])) throw new PackageError("音乐草稿关联不一致");
+            }
+        }
+    }
     if (getProjectKind(project) !== "video" && (episodesRaw.length || shotsRaw.length || charactersRaw.length || scenesRaw.length || propsRaw.length || stylesRaw.length)) throw new PackageError("音频或音乐项目不能包含视频记录");
     return {
         projectRaw, charactersRaw, scenesRaw, propsRaw, stylesRaw, episodesRaw, shotsRaw,
@@ -833,6 +851,16 @@ export function remapProjectPackageRows(parsed: ReturnType<typeof parseProjectPa
     const shotMap = new Map<string, string>();
 
     const remappedAudioPackage = remapAudioPackage(audioPackage, projectId, mediaMap);
+    if (project.musicVariantLinks && audioPackage && remappedAudioPackage) {
+        // The codec preserves array order while remapping immutable row IDs.
+        const drafts = new Map(audioPackage.musicDrafts.map((row, index) => [row.id, remappedAudioPackage.musicDrafts[index]?.id]));
+        const target = (id: string): string => {
+            const next = drafts.get(id);
+            if (!next) throw new PackageError("音乐草稿关联的记录缺失");
+            return next;
+        };
+        project.musicVariantLinks = Object.fromEntries(Object.entries(project.musicVariantLinks).map(([id, group]) => [target(id), Object.fromEntries(Object.entries(group).map(([variant, member]) => [variant, target(member)]))]));
+    }
     const mapMedia = (id?: string) => (id ? mediaMap.get(id) : undefined);
 
     if (project.coverMediaId) {

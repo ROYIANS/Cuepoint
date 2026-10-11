@@ -1,5 +1,5 @@
 import {useId, useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Link} from "@tanstack/react-router";
 import {ChevronDown, LoaderCircle, Music2} from "lucide-react";
 import type {AgentToolCall} from "@/domain/agent";
@@ -38,10 +38,10 @@ export function MusicGenerationReview({call, busy, active, onAction}: {
     const [retry, setRetry] = useState(0);
     const savingRef = useRef(false);
     const detailsId = useId();
-    const readiness = useLiveQuery(async () => {
+    const readiness = useProductQuery(async (db) => {
         if (!active) return null;
         try {
-            return await readMusicGenerationReview(call);
+            return await readMusicGenerationReview(call, db);
         } catch {
             return {status: "unavailable" as const, message: "暂时无法核对当前版本，请重试。"};
         }

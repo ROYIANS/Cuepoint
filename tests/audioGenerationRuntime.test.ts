@@ -1,3 +1,4 @@
+import {installStoreHook} from "./helpers/storeBackendFaults";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
 import {createAudioMusicProject} from "@/db/projects";
@@ -204,12 +205,12 @@ describe("truthful music task observations", () => {
       const rows = changes.taskObservations as AudioTaskObservation[] | undefined;
       if (rows?.some(row => row.taskId === "first" && row.status === "completed")) controller.abort();
     };
-    db.audioGenerationJobs.hook("updating", stopAfterObservation);
+    const storeHook_audioGenerationJobs_stopAfterObservation=await installStoreHook(db, "audioGenerationJobs", "updating", stopAfterObservation);
     let stopped;
     try {
       stopped = await refreshAudioGeneration(project.id, job.id, { fetchImpl, signal: controller.signal });
     } finally {
-      db.audioGenerationJobs.hook("updating").unsubscribe(stopAfterObservation);
+      storeHook_audioGenerationJobs_stopAfterObservation.mockRestore();
     }
     expect(stopped.status).toBe("submitted");
     expect(stopped.taskObservations?.map(row => row.status)).toEqual(["completed", "query-failed"]);

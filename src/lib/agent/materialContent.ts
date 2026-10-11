@@ -1,4 +1,7 @@
-import {db} from '@/db/database';
+import {readBinaryBlob} from "@/lib/storage/binary";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from '@/db/database';
 import type {LibraryMaterial, MaterialScope} from '@/domain/materials';
 import type {AgentToolContext} from './tools';
 import type {AgentReferenceInput} from '@/domain/referenceInput';
@@ -7,16 +10,18 @@ import {assertReferenceSignature, identifyReference} from '@/lib/references/pars
 import {parseReferenceFile} from '@/lib/references/import';
 
 /** Read access follows the durable run, never a model-supplied owner or current UI selection. */
-export async function assertMaterialAccess(material: Pick<LibraryMaterial, 'scope'>, context: AgentToolContext): Promise<void> {
+export async function assertMaterialAccess(material: Pick<LibraryMaterial, 'scope'>, context: AgentToolContext, store?: ProductStore): Promise<void> {
+    const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
-    const projectId = await frozenProjectScope(context);
+    const projectId = await frozenProjectScope(context, db);
     if (!projectId || material.scope.kind === 'global') return;
     if (material.scope.kind === 'project' && material.scope.id === projectId) return;
     if (material.scope.kind === 'ip' && (await db.projectIpLinks.get(projectId))?.ipId === material.scope.id) return;
     throw new Error('此素材不属于当前项目、关联 IP 或通用素材；请在所属项目或未绑定项目的对话中操作');
 }
 
-export async function assertActiveMaterialScope(scope: MaterialScope): Promise<void> {
+export async function assertActiveMaterialScope(scope: MaterialScope, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (scope.kind === 'ip') {
         const owner = await db.ipProfiles.get(scope.id);
         if (!owner || owner.archived) throw new Error('所属 IP 已归档或不存在，请先恢复 IP');
@@ -27,12 +32,13 @@ export async function assertActiveMaterialScope(scope: MaterialScope): Promise<v
     }
 }
 
-export async function assertMaterialVersion(materialId: string, revision: number, context: AgentToolContext) {
+export async function assertMaterialVersion(materialId: string, revision: number, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     const material = await db.libraryMaterials.get(materialId);
     if (!material) throw new Error('素材不存在，请先搜索素材库取得准确 ID');
-    await assertMaterialAccess(material, context);
+    await assertMaterialAccess(material, context, db);
     if (material.archived) throw new Error('素材已归档，请先明确恢复，再读取内容');
-    await assertActiveMaterialScope(material.scope);
+    await assertActiveMaterialScope(material.scope, db);
     const version = await db.materialVersions.where('[materialId+revision]').equals([materialId, revision]).first();
     if (!version) throw new Error('指定素材版本不存在，请读取素材详情查看可用版本');
     return {material, version};
@@ -43,19 +49,20 @@ export async function readMaterialText(args: {
     revision: number;
     start?: number;
     limit?: number
-}, context: AgentToolContext) {
-    const source = await assertMaterialVersion(args.materialId, args.revision, context);
+}, context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
+    const source = await assertMaterialVersion(args.materialId, args.revision, context, db);
     const payload = source.version.payload;
     if (source.material.kind !== 'document' || payload.type !== 'file') throw new Error('此素材不是文档；图片请使用 material_read_image，音频/视频目前只支持元信息，不能声称已听取或观看');
-    const format = identifyReference({name: payload.filename, size: payload.blob.size});
+    const format = identifyReference({name: payload.filename, size: binaryByteLength(payload.blob)});
     if (format.kind === 'image') throw new Error('文档文件格式不匹配');
-    const buffer = await payload.blob.arrayBuffer();
+    const buffer = await (await readBinaryBlob(payload.blob)).arrayBuffer();
     context.signal.throwIfAborted();
     assertReferenceSignature(new Uint8Array(buffer), format.kind, format.mimeType);
     const digest = [...new Uint8Array(await crypto.subtle.digest('SHA-256', buffer))].map(byte => byte.toString(16).padStart(2, '0')).join('');
     const parsed = await parseReferenceFile(buffer, format.kind, format.mimeType, context.signal);
     // Parsing may yield to workers. Recheck authorization and source availability before returning text.
-    const current = await assertMaterialVersion(args.materialId, args.revision, context);
+    const current = await assertMaterialVersion(args.materialId, args.revision, context, db);
     if (current.version.id !== source.version.id) throw new Error('素材版本已变化，请重新读取');
     const start = args.start ?? 0, limit = args.limit ?? 3;
     if (start > parsed.chunks.length) throw new Error(`片段起点超出范围；当前共有 ${parsed.chunks.length} 段，从 0 开始读取`);
@@ -65,7 +72,7 @@ export async function readMaterialText(args: {
     }));
     const next = start + chunks.length;
     const referenceInput: AgentReferenceInput = {
-        projectId: await frozenProjectScope(context) ?? 'studio',
+        projectId: await frozenProjectScope(context, db) ?? 'studio',
         references: [],
         material: {
             materialId: args.materialId,

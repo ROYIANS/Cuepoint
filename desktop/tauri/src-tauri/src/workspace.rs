@@ -703,9 +703,22 @@ pub(crate) struct Boundary {
     root_inode: (u64, u64),
     database_inode: (u64, u64),
     writer_inode: (u64, u64),
+    database_path: PathBuf,
+    writer_path: PathBuf,
 }
 impl Boundary {
     fn capture(root: &std::path::Path) -> Result<Self> {
+        Self::capture_paths(
+            root,
+            &root.join("metadata.sqlite"),
+            &root.join("writer.sqlite"),
+        )
+    }
+    pub(crate) fn capture_paths(
+        root: &std::path::Path,
+        database: &std::path::Path,
+        writer: &std::path::Path,
+    ) -> Result<Self> {
         let identity = |metadata: fs::Metadata| -> Result<(u64, u64)> {
             let (dev, ino, _) = paths::inode(&metadata)?;
             Ok((dev, ino))
@@ -713,24 +726,23 @@ impl Boundary {
         Ok(Self {
             root: root.to_path_buf(),
             root_inode: identity(fs::symlink_metadata(root)?)?,
-            database_inode: identity(paths::ordinary(&root.join("metadata.sqlite"), 1)?)?,
-            writer_inode: identity(paths::ordinary(&root.join("writer.sqlite"), 1)?)?,
+            database_inode: identity(paths::ordinary(database, 1)?)?,
+            writer_inode: identity(paths::ordinary(writer, 1)?)?,
+            database_path: database.to_owned(),
+            writer_path: writer.to_owned(),
         })
     }
     pub fn validate(&self) -> Result<()> {
         paths::canonical_root(&self.root)?;
-        database::check_files(&self.root.join("metadata.sqlite"))?;
-        database::check_files(&self.root.join("writer.sqlite"))?;
+        database::check_files(&self.database_path)?;
+        database::check_files(&self.writer_path)?;
         for (metadata, expected) in [
             (fs::symlink_metadata(&self.root)?, self.root_inode),
             (
-                paths::ordinary(&self.root.join("metadata.sqlite"), 1)?,
+                paths::ordinary(&self.database_path, 1)?,
                 self.database_inode,
             ),
-            (
-                paths::ordinary(&self.root.join("writer.sqlite"), 1)?,
-                self.writer_inode,
-            ),
+            (paths::ordinary(&self.writer_path, 1)?, self.writer_inode),
         ] {
             let (dev, ino, _) = paths::inode(&metadata)?;
             if (dev, ino) != expected {

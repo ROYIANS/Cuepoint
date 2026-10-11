@@ -22,7 +22,7 @@ import type {ChatModelMetadata} from "@/lib/ai/modelMetadata";
 import type {ConnectorConfig} from "@/domain/types";
 import {useMemo, useState} from "react";
 import {contextPreviewIdentity, readAgentContextPreview} from "@/db/agentContextPreview";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import * as Popover from "@radix-ui/react-popover";
 import {X} from "lucide-react";
 import {assembleSkills, DEFAULT_SKILL_IDS} from "@/lib/agent/skills";
@@ -60,7 +60,7 @@ function useContextUsage(props: ContextProps) {
         }),
         [threadId, projectId, interactionMode, requestDraft, attachments, model, connector?.definitionId, modelMetadata]);
     const identity = contextPreviewIdentity(input);
-    const loaded = useLiveQuery(() => readAgentContextPreview(input), [input]);
+    const loaded = useProductQuery((db) => readAgentContextPreview(input, db), [input]);
     const snapshot = loaded?.identity === identity ? loaded : undefined;
     return useMemo(() => {
         if (!snapshot || snapshot.status !== "ready") {

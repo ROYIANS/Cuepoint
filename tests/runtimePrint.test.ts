@@ -7,7 +7,14 @@ import {emptyEpisode, emptyProject} from "@/db/productionRecords";
 
 const native = vi.hoisted(() => ({invoke: vi.fn(), error: vi.fn(), success: vi.fn(), queryIndex: 0, rows: [] as unknown[]}));
 vi.mock("@tauri-apps/api/core", () => ({invoke: native.invoke}));
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: () => native.rows[native.queryIndex++]}));
+vi.mock("react", async original => ({...await original<typeof import("react")>(),
+    useState: (initial: unknown) => [typeof initial === "function" ? initial() : initial, vi.fn()],
+    useRef: (initial: unknown) => ({current: initial}), useEffect: () => undefined,
+}));
+vi.mock("@/lib/storage/hooks", () => {
+    const read = () => native.rows[native.queryIndex++];
+    return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
+});
 vi.mock("@/lib/useShotMedia", () => ({useShotMedia: () => new Map()}));
 vi.mock("sonner", () => ({toast: {error: native.error, success: native.success}}));
 

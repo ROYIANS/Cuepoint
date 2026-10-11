@@ -1,6 +1,5 @@
 import {changedDraftFields} from "@/lib/draftConflict";
-import {useLiveQuery} from "dexie-react-hooks";
-import {db} from "@/db/database";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {updateWorldSetting} from "@/db/projects";
 import {emptySetting, normalizeSetting, type WorldSetting} from "@/domain/types";
 import {DraftStatus} from "@/components/ui/draft-status";
@@ -31,8 +30,8 @@ const FIELDS: { key: keyof WorldSetting; label: string; hint: string; placeholde
 ];
 
 export function WorldSettingPanel({projectId}: { projectId: string }) {
-    const project = useLiveQuery(
-        async () => (await db.projects.get(projectId)) ?? null,
+    const project = useProductQuery(
+        async (db) => (await db.projects.get(projectId)) ?? null,
         [projectId],
     );
 

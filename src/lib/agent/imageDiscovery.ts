@@ -1,5 +1,9 @@
+import type {StoreTable} from "@/lib/storage/types";
+import {readBinaryBlob} from "@/lib/storage/binary";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
 import {z} from 'zod';
-import {db} from '@/db/database';
+import {db as productDb} from '@/db/database';
 import {getReferenceSource} from '@/db/references';
 import {
     CHARACTER_SLOTS,
@@ -66,10 +70,11 @@ function target(projectId: string, kind: ImageEntityKind, entity: Entity) {
     };
 }
 
-async function sourceState(projectId: string, locator: ImageSourceLocator) {
+async function sourceState(projectId: string, locator: ImageSourceLocator, store?: ProductStore) {
+    const db = store ?? productDb;
     let identity: unknown, mediaId: string | undefined, currentlyApplied: boolean | undefined;
     if (locator.kind === 'slot') {
-        const entity = await db.table<Entity, string>(tables[locator.entityKind]).get(locator.entityId);
+        const entity = await (db.table(tables[locator.entityKind]) as unknown as StoreTable<Entity>).get(locator.entityId);
         if (!entity || entity.projectId !== projectId) throw new Error('图片所属目标已删除，请重新查找');
         if (entity.episodeId) {
             const episode = await db.episodes.get(entity.episodeId);
@@ -100,7 +105,7 @@ async function sourceState(projectId: string, locator: ImageSourceLocator) {
     } else {
         const job = await db.agentGenerationJobs.get(locator.jobId);
         if (!job || job.projectId !== projectId || job.kind !== 'image' || !['downloaded', 'applied', 'conflict'].includes(job.status)) throw new Error('候选图片已不可用');
-        const owner = await db.table<Entity, string>(tables[job.target.kind]).get(job.target.entityId);
+        const owner = await (db.table(tables[job.target.kind]) as unknown as StoreTable<Entity>).get(job.target.entityId);
         if (!owner || owner.projectId !== projectId || job.target.kind === 'shot' && owner.episodeId !== job.target.episodeId) throw new Error('候选目标已不存在');
         mediaId = job.result?.mediaId;
         currentlyApplied = !!mediaId && slots(job.target.kind, owner)[job.target.slot ?? 'firstFrame']?.result?.mediaId === mediaId;
@@ -110,7 +115,7 @@ async function sourceState(projectId: string, locator: ImageSourceLocator) {
     const references = mediaId ? (await db.projectReferences.where('mediaId').equals(mediaId).toArray()).filter((row) => row.projectId === projectId) : [];
     const active = references.filter((row) => row.status === 'ready' || row.status === 'partial').sort((a, b) => b.createdAt.localeCompare(a.createdAt) || a.id.localeCompare(b.id))[0];
     const attachment = locator.kind === 'reference' ? references.find((row) => row.id === locator.referenceId) : active;
-    let unavailableReason = !mediaId ? '当前目标没有此类图片' : !media || media.projectId !== projectId ? '图片文件已移除或归属不匹配' : !['image/png', 'image/jpeg', 'image/webp'].includes(media.mimeType) ? '仅支持 PNG、JPEG 或 WebP 图片' : media.blob.size <= 0 || media.blob.size > 10 * 1024 * 1024 ? '图片为空或超过 10 MiB' : undefined;
+    let unavailableReason = !mediaId ? '当前目标没有此类图片' : !media || media.projectId !== projectId ? '图片文件已移除或归属不匹配' : !['image/png', 'image/jpeg', 'image/webp'].includes(media.mimeType) ? '仅支持 PNG、JPEG 或 WebP 图片' : binaryByteLength(media.blob) <= 0 || binaryByteLength(media.blob) > 10 * 1024 * 1024 ? '图片为空或超过 10 MiB' : undefined;
     if (attachment && !['ready', 'partial'].includes(attachment.status) || !attachment && references.length) unavailableReason = '图片参考资料已撤下或尚未准备完成';
     const reference = attachment ? {referenceId: attachment.id, revision: attachment.revision} : undefined;
     const revision = targetRevision({
@@ -119,7 +124,7 @@ async function sourceState(projectId: string, locator: ImageSourceLocator) {
             id: media.id,
             projectId: media.projectId,
             mimeType: media.mimeType,
-            size: media.blob.size,
+            size: binaryByteLength(media.blob),
             filename: media.filename
         } : null,
         reference,
@@ -128,9 +133,10 @@ async function sourceState(projectId: string, locator: ImageSourceLocator) {
     return {media, mediaId, revision, reference, unavailableReason, currentlyApplied};
 }
 
-export async function discoverProjectImages(raw: unknown, context: AgentToolContext): Promise<ImageDiscoveryResult> {
+export async function discoverProjectImages(raw: unknown, context: AgentToolContext, store?: ProductStore): Promise<ImageDiscoveryResult> {
+    const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
-    const args = imageDiscoverySchema.parse(raw), bound = await frozenProjectScope(context);
+    const args = imageDiscoverySchema.parse(raw), bound = await frozenProjectScope(context, db);
     if (!bound && !args.projectId && !args.projectQuery) throw new Error('请提供用户指定的项目名称或已确认的项目 ID');
     if (bound && args.projectId && bound !== args.projectId) throw new Error('此对话只能查看绑定项目的图片');
     let projects = bound ? [await db.projects.get(bound)] : args.projectId ? [await db.projects.get(args.projectId)] : await db.projects.toArray();
@@ -163,7 +169,7 @@ export async function discoverProjectImages(raw: unknown, context: AgentToolCont
     const kinds: ImageEntityKind[] = args.entityKind ? [args.entityKind] : ['shot', 'character', 'scene', 'prop', 'style'];
     const jobs = args.source === 'candidate' ? await db.agentGenerationJobs.where('projectId').equals(project.id).toArray() : [];
     for (const kind of kinds) {
-        let entities = await db.table<Entity, string>(tables[kind]).where('projectId').equals(project.id).toArray();
+        let entities = await (db.table(tables[kind]) as unknown as StoreTable<Entity>).where('projectId').equals(project.id).toArray();
         if (kind === 'shot') entities = entities.filter((row) => episodeMap.has(row.episodeId!));
         else if (args.episodeQuery) continue;
         if (args.query) {
@@ -227,7 +233,7 @@ export async function discoverProjectImages(raw: unknown, context: AgentToolCont
     }
     const candidates: DiscoveredImage[] = [];
     for (const row of rows.slice(args.offset, args.offset + args.limit)) {
-        const state = await sourceState(project.id, row.locator);
+        const state = await sourceState(project.id, row.locator, db);
         candidates.push({
             ...row,
             id: targetRevision({projectId: project.id, locator: row.locator}),
@@ -239,7 +245,7 @@ export async function discoverProjectImages(raw: unknown, context: AgentToolCont
         });
     }
     context.signal.throwIfAborted();
-    await frozenProjectScope(context);
+    await frozenProjectScope(context, db);
     const result: ImageDiscoveryResult = {
         ...base,
         status: 'resolved',
@@ -254,24 +260,26 @@ export async function discoverProjectImages(raw: unknown, context: AgentToolCont
 }
 
 /** Resolve a grant only from a completed discovery ledger belonging to this run. */
-export async function resolveDiscoveredImage(runId: string, discoveryCallId: string, candidateId: string) {
+export async function resolveDiscoveredImage(runId: string, discoveryCallId: string, candidateId: string, store?: ProductStore) {
+    const db = store ?? productDb;
     const run = await db.agentRuns.get(runId), call = await db.agentToolCalls.get(discoveryCallId);
     const thread = run && await db.chatThreads.get(run.threadId);
     if (!run || !thread || run.projectId !== thread.projectId || !call || call.runId !== runId || call.threadId !== run.threadId || call.name !== 'discover_project_images' || call.status !== 'completed' || !call.result) throw new Error('图片查找来源无效，请在当前执行重新查找');
     const result = JSON.parse(call.result) as ImageDiscoveryResult;
     const candidate = result.discoveryCallId === discoveryCallId && result.status === 'resolved' ? result.candidates.find((row) => row.id === candidateId) : undefined;
     if (!candidate || !candidate.available || !candidate.mediaId || candidate.projectId === STUDIO_LIBRARY_ID || run.projectId && candidate.projectId !== run.projectId || !await db.projects.get(candidate.projectId)) throw new Error('图片候选不可读取或项目归属不匹配，请重新查找');
-    const state = await sourceState(candidate.projectId, candidate.locator);
+    const state = await sourceState(candidate.projectId, candidate.locator, db);
     if (state.unavailableReason || state.revision !== candidate.revision || state.mediaId !== candidate.mediaId) throw new Error('图片来源已变化，请重新查找后读取');
-    if (state.reference) await getReferenceSource(candidate.projectId, state.reference);
+    if (state.reference) await getReferenceSource(candidate.projectId, state.reference, db);
     return {candidate, media: state.media!, reference: state.reference};
 }
 
 export async function imageDigest(media: MediaRecord): Promise<string> {
-    return [...new Uint8Array(await crypto.subtle.digest('SHA-256', await media.blob.arrayBuffer()))].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    return [...new Uint8Array(await crypto.subtle.digest('SHA-256', await (await readBinaryBlob(media.blob)).arrayBuffer()))].map((byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
-export async function validateDiscoveredInput(input: AgentReferenceInput, runId: string | undefined): Promise<void> {
+export async function validateDiscoveredInput(input: AgentReferenceInput, runId: string | undefined, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const provenance = input.discovery;
     if (!runId || !provenance || input.images?.length !== 1 || input.coverage?.length) throw new Error('图片查找来源缺失');
     const read = await db.agentToolCalls.get(provenance.readCallId), run = await db.agentRuns.get(runId);
@@ -279,10 +287,10 @@ export async function validateDiscoveredInput(input: AgentReferenceInput, runId:
     const args = JSON.parse(read.arguments) as { discoveryCallId?: string; candidateId?: string };
     const saved = (JSON.parse(read.result) as { referenceInput?: AgentReferenceInput }).referenceInput;
     if (args.discoveryCallId !== provenance.discoveryCallId || args.candidateId !== provenance.candidateId || targetRevision(saved) !== targetRevision(input)) throw new Error('图片读取身份与执行记录不匹配');
-    const resolved = await resolveDiscoveredImage(runId, provenance.discoveryCallId, provenance.candidateId);
+    const resolved = await resolveDiscoveredImage(runId, provenance.discoveryCallId, provenance.candidateId, db);
     if (input.projectId !== resolved.candidate.projectId || input.images[0].mediaId !== resolved.media.id || JSON.stringify(input.references) !== JSON.stringify(resolved.reference ? [resolved.reference] : [])) throw new Error('图片读取范围与来源不匹配');
     if (await imageDigest(resolved.media) !== provenance.mediaDigest) throw new Error('图片内容已变化，请重新查找后读取');
     // Hashing awaits Blob reads; the source association can change while it runs,
     // including during the final post-encoding validation before dispatch.
-    await resolveDiscoveredImage(runId, provenance.discoveryCallId, provenance.candidateId);
+    await resolveDiscoveredImage(runId, provenance.discoveryCallId, provenance.candidateId, db);
 }

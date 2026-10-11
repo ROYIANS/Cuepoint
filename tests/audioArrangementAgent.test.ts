@@ -1,3 +1,4 @@
+import {interceptStoreTable} from "./helpers/storeFaults";
 import {afterEach,describe,expect,it,vi} from "vitest";
 import {db} from "@/db/database";
 import {createAudioMusicProject} from "@/db/projects";
@@ -94,12 +95,11 @@ describe("reviewed arrangement Agent adapters",()=>{
         const f=await fixture(),fetcher=vi.fn<typeof fetch>(async()=>reply(f.run.protocol,[call("audio_select_takes",{chapterId:f.chapter.id,choices:f.choices},"atomic")]));
         await executeChatRun(f.run,connector.apiKey,new AbortController(),fetcher);const item=await pending(f.run);
         await resolveAgentToolApproval(f.run.id,item.id,"approve");
-        const original=db.agentToolCalls.update.bind(db.agentToolCalls);let failed=false;
-        const fault=vi.spyOn(db.agentToolCalls,"update").mockImplementation(async(...args)=>{
+        let failed=false;
+        const fault=interceptStoreTable(db, "agentToolCalls", "update", async (_tx,args,next)=> {
             const patch=args[1];
             if(!failed && "status" in patch && patch.status === "completed") {failed=true;throw new Error("ledger unavailable");}
-            return original(...args);
-        });
+            return next(); });
         try {await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),withFinalReviewFixture(async()=>reply(f.run.protocol)));} finally {fault.mockRestore();}
         expect(failed).toBe(true);expect((await db.audioSegments.toArray()).every(row=>!row.selectedTakeId)).toBe(true);expect(await db.audioArrangementProposals.count()).toBe(0);expect((await db.agentToolCalls.get(item.id))?.status).toBe("failed");
     });

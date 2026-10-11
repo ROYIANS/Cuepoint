@@ -46,9 +46,10 @@ vi.mock("react", async original => {
         },
     };
 });
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: () => {
-    const host = runtime.active!; return host.results[host.queryIndex++];
-}}));
+vi.mock("@/lib/storage/hooks", () => {
+    const read = () => {const host = runtime.active!; return host.results[host.queryIndex++];};
+    return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
+});
 
 const io = vi.hoisted(() => ({navigate: vi.fn(), create: vi.fn(), begin: vi.fn(), execute: vi.fn(),
     update: vi.fn(), importFile: vi.fn(), retryImport: vi.fn(), compatible: vi.fn(), lock: vi.fn()}));
@@ -141,7 +142,7 @@ function reference(id: string, status: ProjectReference["status"] = "ready"): Pr
 }
 beforeEach(() => {
     hosts.length = 0; vi.clearAllMocks(); Object.values(io).forEach(mock => mock.mockReset());
-    vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn()});
+    vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn()});
     io.update.mockResolvedValue(undefined); io.execute.mockResolvedValue(undefined);
     io.begin.mockResolvedValue({id: "run"});
     io.compatible.mockImplementation(async (_connector, _model, operation, options) => {

@@ -79,9 +79,9 @@ describe("E07 owned tool result boundaries", () => {
         const context: AgentToolContext = {projectId: project.id, runId: run.id, threadId: thread.id, callId: "corrupt-batch", signal: new AbortController().signal};
         const ledger = {...call, id: context.callId, runId: run.id, threadId: thread.id, atomic: true, status: "running" as const};
         await db.agentToolCalls.add(ledger);
-        await expect(executeAtomicTool(context, async () => {
-            await addShot(project.id, episode.id);
-            return withBusinessWriteReceipt("shot_create", {ownerId: project.id, episodeId: episode.id}, {items});
+        await expect(executeAtomicTool(context, async tx => {
+            await addShot(project.id, episode.id,undefined,tx);
+            return withBusinessWriteReceipt("shot_create", {ownerId: project.id, episodeId: episode.id}, {items},undefined,tx);
         })).rejects.toThrow("业务写入结果缺少");
         expect(await db.shots.count()).toBe(0);
         expect(await db.agentToolCalls.get(context.callId)).toEqual(ledger);

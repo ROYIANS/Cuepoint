@@ -5,7 +5,7 @@ import {listMemoryCandidates} from "@/db/projectMemories";
 import {MemoryPromotion} from "@/components/memory/MemoryPromotion";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "@/lib/useManualDraftGuard";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Link} from "@tanstack/react-router";
 import {
     ArrowUpRight,
@@ -138,9 +138,9 @@ export function TaskWrapup({
                            }: Props) {
     const [readAttempt, setReadAttempt] = useState(0);
     const [lastRead, setLastRead] = useState<{ taskId: string; data: TaskWrapupState }>();
-    const read = useLiveQuery(async () => {
+    const read = useProductQuery(async (db) => {
         try {
-            return {taskId: task.id, data: await getTaskWrapupState(task.id), error: undefined};
+            return {taskId: task.id, data: await getTaskWrapupState(task.id, db), error: undefined};
         } catch (failure) {
             return {
                 taskId: task.id,

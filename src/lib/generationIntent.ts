@@ -1,5 +1,7 @@
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
 /** Historical local read/preflight contract. Durable Agent generation uses agent/generationRuntime and generationBatchRuntime. */
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import type {
     GenerationIntent,
     GenerationMediaInput,
@@ -127,8 +129,9 @@ export function validateGenerationIntent(raw: unknown): GenerationIntent {
     };
 }
 
-async function preflight(intent: GenerationIntent, checkResult = false) {
-    await db.transaction("r", [db.projects, db.episodes, db.shots, db.characters, db.scenes, db.props, db.styles, db.media], async () => {
+async function preflight(intent: GenerationIntent, checkResult = false, store?: ProductStore) {
+    const db = store ?? productDb;
+    await db.transaction("r", [db.projects, db.episodes, db.shots, db.characters, db.scenes, db.props, db.styles, db.media], async (db) => {
         const target = intent.target;
         if (!await db.projects.get(target.projectId)) throw new Error("生成目标项目已删除");
         const entity = target.kind === "shot" ? await db.shots.get(target.entityId) : target.kind === "character" ? await db.characters.get(target.entityId) : target.kind === "scene" ? await db.scenes.get(target.entityId) : target.kind === "prop" ? await db.props.get(target.entityId) : await db.styles.get(target.entityId);
@@ -145,7 +148,7 @@ async function preflight(intent: GenerationIntent, checkResult = false) {
         if (checkResult && intent.result) requested.push(intent.result);
         const media = await db.media.bulkGet(requested.map((item) => item.mediaId));
         for (const [index, item] of media.entries()) {
-            if (!item || item.projectId !== target.projectId || !item.blob?.size || !item.mimeType.startsWith(`${requested[index].kind}/`)) throw new Error("生成素材不存在、归属或类型不匹配");
+            if (!item || item.projectId !== target.projectId || !binaryByteLength(item.blob) || !item.mimeType.startsWith(`${requested[index].kind}/`)) throw new Error("生成素材不存在、归属或类型不匹配");
         }
     });
 }
@@ -153,7 +156,8 @@ async function preflight(intent: GenerationIntent, checkResult = false) {
 export async function prepareGenerationIntent(input: {
     context: ProductionContext; target: ProductionTarget; prompt: string;
     config?: ProjectGenerationDefaults; inputs?: GenerationMediaInput[];
-}): Promise<GenerationIntent> {
+}, store?: ProductStore): Promise<GenerationIntent> {
+    const db = store ?? productDb;
     const target = validateProductionTarget(input.target);
     if (input.context.project.id !== target.projectId || target.kind === "shot" && (input.context.episode.id !== target.episodeId || input.context.shot.id !== target.entityId)) throw new Error("生成目标与上下文不匹配");
     const source = input.context.sourceRevisions.find((item) => item.kind === target.kind && item.id === target.entityId);
@@ -179,7 +183,7 @@ export async function prepareGenerationIntent(input: {
         inputs: input.inputs ?? [],
         status: "prepared"
     });
-    await preflight(intent);
+    await preflight(intent, undefined, db);
     return intent;
 }
 
@@ -203,12 +207,13 @@ export function transitionGenerationIntent(raw: GenerationIntent, status: Genera
 }
 
 /** Read-only preparation; caller must create a reviewed proposal and recheck atomically on apply. */
-export async function generationIntentToProposalInput(raw: GenerationIntent): Promise<{
+export async function generationIntentToProposalInput(raw: GenerationIntent, store?: ProductStore): Promise<{
     target: ProductionTarget; change: ProductionChange; source: ProposalSource; expectedRevision: string;
 }> {
+    const db = store ?? productDb;
     const intent = validateGenerationIntent(raw);
     if (intent.status !== "succeeded" || !intent.result) throw new Error("只有完整成功的生成结果可以形成提案");
-    await preflight(intent, true);
+    await preflight(intent, true, db);
     return {
         target: intent.target,
         change: {kind: "slot-result", result: intent.result},

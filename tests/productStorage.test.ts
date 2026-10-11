@@ -1,3 +1,4 @@
+import {interceptStoreTable} from "./helpers/storeFaults";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {db as browserDb} from "@/db/database";
 import {emptySlot} from "@/domain/slot";
@@ -78,9 +79,11 @@ describe("fixed shared product storage ownership", () => {
             expect((await repository.project(project.id))?.name).toBe("Full desktop owner");
             expect((await db.media.get(imported.id))?.blob.size).toBe("internal-image".length);
             const failure = new Error("IndexedDB episode write failed");
-            const lateWrite = vi.spyOn(db.episodes, "add").mockRejectedValueOnce(failure);
+            let lateWriteReached = false;
+            const lateWrite = interceptStoreTable(db, "episodes", "add", async () => {lateWriteReached = true; throw failure;});
             await expect(repository.createProject("Must roll back")).rejects.toBe(failure);
-            expect(lateWrite).toHaveBeenCalled();
+            expect(lateWriteReached).toBe(true);
+            lateWrite.mockRestore();
             expect((await repository.projects()).map(row => row.name)).toEqual(["Full desktop owner"]);
             expect(browserRead).not.toHaveBeenCalled();
             expect(invoke).not.toHaveBeenCalled();

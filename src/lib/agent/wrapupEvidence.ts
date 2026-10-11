@@ -1,3 +1,5 @@
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
 import {collectReferenceEvidence, historicalToolSummary, toolReferenceAttachments} from "./referenceEvidence";
 import {provesCompletedEffect, taskGenerationEvidenceId} from "@/db/agentTaskRecords";
 import {
@@ -7,7 +9,7 @@ import {
     taskAudioGenerationOutputSources,
     taskAudioToolSource
 } from "@/db/taskAudioGenerationEvidence";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import type {AgentTask} from "@/domain/agent";
 import type {WrapupEvidence, WrapupSnapshot} from "@/domain/agentTaskWrapup";
 import {targetRevision} from "@/lib/productionRevision";
@@ -31,7 +33,8 @@ function json(value: unknown): Record<string, unknown> {
 }
 
 /** Caller opens a consistent read transaction; full fingerprints include omitted history. */
-export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence = false): Promise<WrapupSnapshot> {
+export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence = false, store?: ProductStore): Promise<WrapupSnapshot> {
+    const db = store ?? productDb;
     const runs = (await db.agentRuns.where("threadId").equals(task.threadId).toArray()).filter(r => r.taskId === task.id);
     const runIds = new Set(runs.map(r => r.id));
     const messages = (await db.chatMessages.where("threadId").equals(task.threadId).sortBy("createdAt")).filter(m => m.role === "user" || !!m.runId && runIds.has(m.runId));
@@ -51,12 +54,13 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     // Cache hits and invalid locators can settle without any IndexedDB request.
     // Callers adopt this native promise through the transaction-zone Promise; a long
     // loop of bare awaits otherwise exhausts Dexie's zone tracking in real browsers.
-    async function entity(kind: BusinessKind, id: string, ownerId?: string, episodeId?: string, label?: string) {
+    async function entity(kind: BusinessKind, id: string, ownerId?: string, episodeId?: string, label?: string, store?: ProductStore) {
+    const db = store ?? productDb;
         const key = `entity:${kind}:${id}`;
         if (entityIds.has(key)) return;
         entityIds.add(key);
         try {
-            const row = await getRow(kind, id, ownerId, episodeId);
+            const row = await getRow(kind, id, ownerId, episodeId, db);
             const link = navigation(kind, row);
             add({
                 id: key,
@@ -100,7 +104,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
             supportsResult: call.status === "completed" && provesCompletedEffect(call)
         }, call);
         if (generation) {
-            const current = await Promise.resolve(taskGenerationToolSource(task, call));
+            const current = await Promise.resolve(taskGenerationToolSource(task, call, db));
             const source = evidence.at(-1)!;
             source.supportsResult = current?.supportsResult === true;
             source.outcome = "unresolved";
@@ -116,7 +120,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
             }]);
         }
         if ((SOUND_GENERATION_TOOLS as readonly string[]).includes(call.name)) {
-            const current = call.status === "completed" ? await Promise.resolve(taskAudioToolSource(task, call)) : undefined;
+            const current = call.status === "completed" ? await Promise.resolve(taskAudioToolSource(task, call, db)) : undefined;
             const source = evidence.at(-1)!;
             source.supportsResult = current?.supportsResult === true;
             source.outcome = current?.supportsResult ? current.applied ? "applied" : "downloaded" : "unresolved";
@@ -131,7 +135,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
             const kind = typeof row.kind === 'string' && kinds.includes(row.kind) ? row.kind : typeof args.kind === 'string' && kinds.includes(args.kind) ? args.kind : call.name.split('_')[0];
             const id = typeof row.id === 'string' ? row.id : typeof args.id === 'string' ? args.id : undefined;
             if (id && kinds.includes(kind)) {
-                await Promise.resolve(entity(kind as BusinessKind, id, typeof row.ownerId === 'string' ? row.ownerId : typeof args.ownerId === 'string' ? args.ownerId : undefined, typeof row.episodeId === 'string' ? row.episodeId : typeof args.episodeId === 'string' ? args.episodeId : undefined, typeof row.label === 'string' ? row.label : undefined));
+                await Promise.resolve(entity(kind as BusinessKind, id, typeof row.ownerId === 'string' ? row.ownerId : typeof args.ownerId === 'string' ? args.ownerId : undefined, typeof row.episodeId === 'string' ? row.episodeId : typeof args.episodeId === 'string' ? args.episodeId : undefined, typeof row.label === 'string' ? row.label : undefined, db));
                 // Keep successful deletion as a historical effect. Creation/update/copy
                 // evidence cannot certify a currently delivered object after its removal.
                 if (call.effect === 'write' && !call.name.includes('_delete') && !evidence.find(e => e.id === `entity:${kind}:${id}`)?.available) {
@@ -167,14 +171,14 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     }
     for (const job of jobs) {
         const target = job.target;
-        await Promise.resolve(entity(target.kind, target.entityId, target.projectId, 'episodeId' in target ? target.episodeId : undefined));
-        const owned = await Promise.resolve(ownedTaskGenerationJob(task, job));
-        const output = await Promise.resolve(inspectTaskGenerationOutput(job));
+        await Promise.resolve(entity(target.kind, target.entityId, target.projectId, 'episodeId' in target ? target.episodeId : undefined, undefined, db));
+        const owned = await Promise.resolve(ownedTaskGenerationJob(task, job, db));
+        const output = await Promise.resolve(inspectTaskGenerationOutput(job, db));
         const {media} = output;
         const available = owned && output.available, applied = available && output.applied;
         let href: string | undefined;
         try {
-            const row = await getRow(target.kind, target.entityId, target.projectId, 'episodeId' in target ? target.episodeId : undefined);
+            const row = await getRow(target.kind, target.entityId, target.projectId, 'episodeId' in target ? target.episodeId : undefined, db);
             href = navigation(target.kind, row).href;
         } catch {/* Missing targets remain historical evidence. */
         }
@@ -202,22 +206,22 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
                 id: media.id,
                 projectId: media.projectId,
                 mimeType: media.mimeType,
-                size: media.blob instanceof Blob ? media.blob.size : null
+                size: binaryByteLength(media.blob)
             } : null,
             currentAvailable: available,
             currentApplied: applied
         });
     }
     for (const job of await db.audioGenerationJobs.where("projectId").equals(task.projectId).toArray()) {
-        if (!await Promise.resolve(ownedTaskAudioGenerationJob(task, job))) continue;
-        const source = await Promise.resolve(taskAudioGenerationSource(task, job));
+        if (!await Promise.resolve(ownedTaskAudioGenerationJob(task, job, db))) continue;
+        const source = await Promise.resolve(taskAudioGenerationSource(task, job, undefined, db));
         add({
             id: `generation:${job.id}`, kind: "generation", label: source.label, body: source.body,
             outcome: source.supportsResult ? source.applied ? "applied" : "downloaded" : "unresolved",
             available: source.available, supportsResult: source.supportsResult,
             href: source.available ? `/p/${encodeURIComponent(job.projectId)}` : undefined
         }, {jobRevision: job.revision, jobFingerprint: targetRevision(job), source: source.body});
-        for (const output of await Promise.resolve(taskAudioGenerationOutputSources(task, job))) add({
+        for (const output of await Promise.resolve(taskAudioGenerationOutputSources(task, job, db))) add({
             id: taskGenerationEvidenceId(job.id, output.resultKey), kind: "generation", label: output.label, body: output.body,
             outcome: output.supportsResult ? output.applied ? "applied" : "downloaded" : "unresolved",
             available: output.available, supportsResult: output.supportsResult,
@@ -251,7 +255,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
             ...messages.flatMap(message => message.attachments ?? []),
             ...calls.filter(call => call.status === "completed").flatMap(call => toolReferenceAttachments(call.result, task.projectId)),
         ];
-        for (const source of await collectReferenceEvidence(task.projectId, attachments)) add(source.evidence, source.fingerprint);
+        for (const source of await collectReferenceEvidence(task.projectId, attachments, db)) add(source.evidence, source.fingerprint);
     }
     // Prioritize unresolved outcomes and the latest user corrections. Record all omissions.
     const ordered = [...evidence].reverse(), selected: WrapupEvidence[] = [];

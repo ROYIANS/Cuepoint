@@ -1,9 +1,9 @@
 import type {AgentRun} from "@/domain/agent";
 import type {AgentImageReference, AgentSelectedReferences} from "@/domain/referenceInput";
 import {useEffect, useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {FileText, ImageIcon, Paperclip, X} from "lucide-react";
-import {db} from "@/db/database";
+import {binaryPreviewMessage, useBinaryPreview} from "@/lib/media";
 import {getReferenceSource} from "@/db/references";
 import {type ProjectReference, type ReferenceAttachment, referenceLocatorLabel} from "@/domain/references";
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog";
@@ -28,23 +28,16 @@ function SourcePreview({projectId, attachment, chunkIndex}: {
 }) {
     const [attempt, setAttempt] = useState(0);
     const key = `${projectId}/${attachment.referenceId}/${attachment.revision}`;
-    const loaded = useLiveQuery(async () => {
+    const loaded = useProductQuery(async (db) => {
         try {
-            return {key, data: await getReferenceSource(projectId, attachment), error: undefined};
+            return {key, data: await getReferenceSource(projectId, attachment, db), error: undefined};
         } catch (error) {
             return {key, data: undefined, error: error instanceof Error ? error.message : "读取资料失败"};
         }
     }, [key, attempt]);
     const result = loaded?.key === key ? loaded : undefined;
     const source = result?.data;
-    const [image, setImage] = useState<{ blob: Blob; url: string }>();
-    const imageBlob = source?.reference.kind === "image" ? source.media.blob : undefined;
-    useEffect(() => {
-        if (!imageBlob) return;
-        const url = URL.createObjectURL(imageBlob);
-        setImage({blob: imageBlob, url});
-        return () => URL.revokeObjectURL(url);
-    }, [imageBlob]);
+    const image = useBinaryPreview(source?.reference.kind === "image" ? source.media.blob : undefined);
     const [visible, setVisible] = useState(Math.max(20, (chunkIndex ?? 0) + 1));
     const targetRef = useRef<HTMLElement>(null);
     useEffect(() => {
@@ -64,8 +57,7 @@ function SourcePreview({projectId, attachment, chunkIndex}: {
         {reference.coverage.emptyUnits.length > 0 &&
             <p className="reference-warning">没有可提取文字的单元：{reference.coverage.emptyUnits.join("、")}</p>}
         <div className="reference-preview">
-            {reference.kind === "image" ? image?.blob === source.media.blob && <img src={image.url}
-                                                                                    alt={reference.filename}/> : chunks.length ? <>{chunks.slice(0, visible).map((chunk) =>
+            {reference.kind === "image" ? image.status === "ready" ? <img src={image.url} onError={image.onError} alt={reference.filename}/> : <p role="status">{binaryPreviewMessage(image)}</p> : chunks.length ? <>{chunks.slice(0, visible).map((chunk) =>
                     <section key={chunk.id} ref={chunk.index === chunkIndex ? targetRef : undefined}
                              className={chunk.index === chunkIndex ? "reference-cited-chunk" : undefined}><span
                         className="reference-locator">{referenceLocatorLabel(chunk.locator)} · 片段 {chunk.index + 1}</span>
@@ -84,7 +76,7 @@ export function ReferenceSourceLink({projectId, attachment, label, chunkIndex}: 
     chunkIndex?: number
 }) {
     const [open, setOpen] = useState(false);
-    const loaded = useLiveQuery(async () => {
+    const loaded = useProductQuery(async (db) => {
         try {
             return {
                 projectId,
@@ -157,7 +149,7 @@ export function ReferenceMessageSources({context, run, content}: {
 function ProjectImageSource({image}: { image: AgentImageReference }) {
     const [open, setOpen] = useState(false);
     const key = `${image.projectId}/${image.mediaId}`;
-    const loaded = useLiveQuery(async () => {
+    const loaded = useProductQuery(async (db) => {
         try {
             const media = open && await db.projects.get(image.projectId) ? await db.media.get(image.mediaId) : undefined;
             return {
@@ -169,14 +161,7 @@ function ProjectImageSource({image}: { image: AgentImageReference }) {
         }
     }, [key, open]);
     const media = loaded?.key === key ? loaded.media : undefined;
-    const [preview, setPreview] = useState<{ blob: Blob; url: string }>();
-    const mediaBlob = media?.blob;
-    useEffect(() => {
-        if (!mediaBlob) return;
-        const url = URL.createObjectURL(mediaBlob);
-        setPreview({blob: mediaBlob, url});
-        return () => URL.revokeObjectURL(url);
-    }, [mediaBlob]);
+    const preview = useBinaryPreview(media?.blob);
     return <>
         <button className="reference-source-link" type="button" onClick={() => setOpen(true)}><ImageIcon
             size={14}/><span>{image.filename} · 本轮图片输入</span></button>
@@ -184,7 +169,6 @@ function ProjectImageSource({image}: { image: AgentImageReference }) {
             className="reference-dialog"><DialogHeader><DialogTitle>{image.filename}</DialogTitle><DialogDescription>为本次请求准备的项目图片；不代表请求已经发出。图像
             token 用量为估算。</DialogDescription></DialogHeader>
             <div className="reference-preview">{media === undefined ? <p>加载中…</p> : !media ?
-                <p>原始图片已不可用，历史引用记录仍保留。</p> : preview?.blob === media.blob &&
-                <img src={preview.url} alt={image.filename}/>}</div>
+                <p>原始图片已不可用，历史引用记录仍保留。</p> : preview.status === "ready" ? <img src={preview.url} onError={preview.onError} alt={image.filename}/> : <p role="status">{binaryPreviewMessage(preview)}</p>}</div>
         </DialogContent></Dialog></>;
 }

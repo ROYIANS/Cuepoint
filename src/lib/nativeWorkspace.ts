@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useState } from "react";
 import { isTauriRuntime } from "@/lib/runtimeIdentity";
 import { DraftConflictError } from "@/lib/draftConflict";
 import type { Shot, StoryBeat, ShotFilters } from "@/domain/types";
@@ -489,37 +488,3 @@ export function createNativeWorkspaceAdapter(): NativeWorkspaceAdapter {
 }
 
 export const nativeWorkspace = createNativeWorkspaceAdapter();
-
-export function useNativeWorkspaceState(): {
-  state: NativeWorkspaceState | null | undefined;
-  availability: NativeAvailability[];
-  error: string | undefined;
-  busy: boolean;
-  refresh: () => Promise<void>;
-} {
-  const native = isNativeWorkspaceRuntime();
-  const [state, setState] = useState<NativeWorkspaceState | null | undefined>(
-    undefined,
-  );
-  const [availability, setAvailability] = useState<NativeAvailability[]>([]);
-  const [error, setError] = useState<string>();
-  const [busy, setBusy] = useState(false);
-  const refresh = useCallback(async () => {
-    if (!native) return;
-    setBusy(true);
-    try {
-      const nextState = await nativeWorkspace.ensure();
-      setState(nextState);
-      setAvailability(await nativeWorkspace.availability());
-      setError(undefined);
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "原生工作区初始化失败");
-    } finally {
-      setBusy(false);
-    }
-  }, [native]);
-  useEffect(() => {
-    void refresh();
-  }, [refresh]);
-  return { state, availability, error, busy, refresh };
-}

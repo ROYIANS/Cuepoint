@@ -1,5 +1,6 @@
 import {validateAudioTaskObservations} from "./audioGeneration/observations";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
 import {AUDIO_TABLES} from "@/db/audioShared";
 import {
     validateAudioChapter,
@@ -20,8 +21,9 @@ import {type AudioPackage, parseAudioPackageData} from "./packages/audioPackageC
 export {parseAudioPackage, remapAudioPackage} from "./packages/audioPackageCodec";
 export type {AudioPackage} from "./packages/audioPackageCodec";
 
-export async function snapshotAudioPackage(projectId: string): Promise<AudioPackage> {
-    const entries = await Promise.all(AUDIO_TABLES.map(async (table): Promise<[string, unknown]> => [table.name, await table.where("projectId").equals(projectId).toArray()]));
+export async function snapshotAudioPackage(projectId: string, store?: ProductStore): Promise<AudioPackage> {
+    const db = store ?? productDb;
+    const entries = await Promise.all(AUDIO_TABLES.map(async (table): Promise<[string, unknown]> => [table.name, await db.table(table.name).where("projectId").equals(projectId).toArray()]));
     const raw: Record<string, unknown> = Object.fromEntries(entries);
     const batches = await db.audioGenerationBatches.where("projectId").equals(projectId).toArray();
     const batchIds = new Set(batches.map(batch => batch.id));
@@ -45,8 +47,9 @@ export async function snapshotAudioPackage(projectId: string): Promise<AudioPack
 }
 
 /** Called within the package transaction, after project/media insertion. */
-export async function insertAudioPackage(value: AudioPackage | undefined): Promise<void> {
+export async function insertAudioPackage(value: AudioPackage | undefined, store?: ProductStore): Promise<void> {
     if (!value) return;
+    const db = store ?? productDb;
     await db.audioChapters.bulkAdd(value.audioChapters);
     await db.audioSpeakers.bulkAdd(value.audioSpeakers);
     await db.audioSegments.bulkAdd(value.audioSegments);
@@ -60,15 +63,15 @@ export async function insertAudioPackage(value: AudioPackage | undefined): Promi
     await db.audioGenerationBatches.bulkAdd(value.audioGenerationBatches);
     await db.audioGenerationBatchItems.bulkAdd(value.audioGenerationBatchItems);
     await db.audioArrangementProposals.bulkAdd(value.audioArrangementProposals);
-    for (const row of value.audioChapters) await validateAudioChapter(row);
-    for (const row of value.audioSpeakers) await validateAudioSpeaker(row);
-    for (const row of value.audioSegments) await validateAudioSegment(row);
-    for (const row of value.audioTakes) await validateAudioTake(row);
-    for (const row of value.audioTracks) await validateAudioTrack(row);
-    for (const row of value.audioClips) await validateAudioClip(row);
-    for (const row of value.audioExports) await validateAudioExport(row);
-    for (const row of value.musicDrafts) await validateLegacyMusicDraft(row);
-    for (const row of value.musicWorks) await validateLegacyMusicWork(row);
+    for (const row of value.audioChapters) await validateAudioChapter(row, db);
+    for (const row of value.audioSpeakers) await validateAudioSpeaker(row, db);
+    for (const row of value.audioSegments) await validateAudioSegment(row, db);
+    for (const row of value.audioTakes) await validateAudioTake(row, db);
+    for (const row of value.audioTracks) await validateAudioTrack(row, db);
+    for (const row of value.audioClips) await validateAudioClip(row, db);
+    for (const row of value.audioExports) await validateAudioExport(row, db);
+    for (const row of value.musicDrafts) await validateLegacyMusicDraft(row, db);
+    for (const row of value.musicWorks) await validateLegacyMusicWork(row, db);
     for (const job of value.audioGenerationJobs) {
         if (job.source.kind === "batch") {
             const source = job.source;
@@ -79,7 +82,7 @@ export async function insertAudioPackage(value: AudioPackage | undefined): Promi
         if (job.input.kind === "speech") {
             if (Boolean(job.input.mimo) !== (job.connector.provider === "mimo")) throw new Error("配音设置与服务商不匹配");
             if (job.input.mimo) validateGenerationInput(job.input);
-            await validateSpeechReference(job.projectId, job.input);
+            await validateSpeechReference(job.projectId, job.input, db);
         } else if (job.connector.provider !== "apimart") throw new Error("音乐生成服务商无效");
         for (const result of job.results) {
             if (result.mediaId && (await db.media.get(result.mediaId))?.projectId !== job.projectId) throw new Error("生成结果媒体归属无效");

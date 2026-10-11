@@ -1,3 +1,5 @@
+import {readBinaryBlob, verifyBinaryAvailable} from "@/lib/storage/binary";
+import {StorageError} from "@/lib/storage/errors";
 import {AUDIO_TABLES} from "@/db/audioShared";
 import {insertAudioPackage, snapshotAudioPackage} from "./audioProjectPackage";
 import {getProjectKind, type Id, type MediaRecord, PACKAGE_FORMAT, type Project} from "@/domain/types";
@@ -104,7 +106,7 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
             db.projectReferences,
             db.referenceChunks,
         ],
-        async () => {
+        async (db) => {
             const project = await db.projects.get(projectId);
             if (!project) throw new PackageError("项目不存在");
             const [
@@ -130,14 +132,14 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
                 db.projectReferences.where("projectId").equals(projectId).toArray(),
                 db.referenceChunks.where("projectId").equals(projectId).toArray(),
             ]);
-            const mediaIds = await collectMediaIds(projectId);
+            const mediaIds = await collectMediaIds(projectId, db);
             const mediaRecords = (await db.media.bulkGet([...mediaIds])).filter(
                 (media): media is MediaRecord =>
                     media !== undefined && media.projectId === projectId,
             );
             if (getProjectKind(project) !== "video" && mediaRecords.length !== mediaIds.size) throw new PackageError("音频项目存在缺失或归属错误的文件，请恢复文件后再备份");
             return {
-                audioPackage: await snapshotAudioPackage(projectId),
+                audioPackage: await snapshotAudioPackage(projectId, db),
                 project,
                 characters,
                 scenes,
@@ -187,9 +189,11 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
     }))));
     for (const media of mediaRecords) {
         const filename = `media/${media.id}.${extFor(media.mimeType, media.filename)}`;
-        zip.file(filename, media.blob);
+        zip.file(filename, await readBinaryBlob(media.blob));
     }
-    return zip.generateAsync({type: "blob"});
+    const blob = await zip.generateAsync({type: "blob"});
+    for (const media of mediaRecords) await verifyBinaryAvailable(media.blob);
+    return blob;
 }
 
 export async function importProjectZip(file: Blob): Promise<Project> {
@@ -316,7 +320,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
                 db.projectReferences,
                 db.referenceChunks,
             ],
-            async () => {
+            async (db) => {
                 await db.projects.add(project);
                 if (characters.length) await db.characters.bulkAdd(characters);
                 if (scenes.length) await db.scenes.bulkAdd(scenes);
@@ -325,7 +329,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
                 if (episodes.length) await db.episodes.bulkAdd(episodes);
                 if (shots.length) await db.shots.bulkAdd(shots);
                 if (mediaRecords.length) await db.media.bulkAdd(mediaRecords);
-                await insertAudioPackage(remappedAudioPackage);
+                await insertAudioPackage(remappedAudioPackage, db);
                 if (references.length) await db.projectReferences.bulkAdd(references);
                 if (referenceChunks.length) await db.referenceChunks.bulkAdd(referenceChunks);
                 if (memories.length) await db.projectMemories.bulkAdd(memories);
@@ -334,6 +338,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
             },
         );
     } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
         throw new PackageError(
             error instanceof Error ? `导入失败：${error.message}` : "导入失败",
         );

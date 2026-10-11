@@ -3,7 +3,7 @@ import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
 import {BeatTextField} from "./BeatTextField";
 import {type TextDraftStatusChange, useTextDraftRetention} from "@/lib/useTextDraftRetention";
 import {changedDraftFields} from "@/lib/draftConflict";
-import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
+import {useVideoWorkspaceQuery, useVideoWorkspaceReadStatus, useVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
 import {ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2} from "lucide-react";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {type Episode, normalizeEpisodeStory, type StoryBeat} from "@/domain/types";
@@ -31,20 +31,19 @@ export function StoryPage(props: { projectId: string; episodeId: string }) {
 }
 
 function StoryScope({projectId, episodeId}: { projectId: string; episodeId: string }) {
-    const repository = useVideoWorkspaceRepository();
     const readStatus = useVideoWorkspaceReadStatus();
-    const loadedProject = useVideoWorkspaceQuery(async () => await repository.project(projectId), [projectId]);
+    const loadedProject = useVideoWorkspaceQuery(async (repository) => await repository.project(projectId), [projectId]);
     const loadedEpisode = useVideoWorkspaceQuery(
-        async () => await repository.episode(episodeId),
+        async (repository) => await repository.episode(episodeId),
         [episodeId],
     );
     const characters =
         useVideoWorkspaceQuery(
-            () => repository.characters(projectId),
+            (repository) => repository.characters(projectId),
             [projectId],
         ) ?? [];
     const scenes =
-        useVideoWorkspaceQuery(() => repository.scenes(projectId), [projectId]) ?? [];
+        useVideoWorkspaceQuery((repository) => repository.scenes(projectId), [projectId]) ?? [];
     const loadedBeats = useMemo(() => loadedEpisode?.projectId === projectId
         ? normalizeEpisodeStory(loadedEpisode.story).beats : undefined, [loadedEpisode, projectId]);
     const beatText = useTextDraftRetention(loadedBeats);

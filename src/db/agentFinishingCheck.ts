@@ -1,4 +1,5 @@
-import {db} from "./database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "./database";
 import {type AgentPlanItem, type AgentResponseItem, type AgentRunOutput, MODEL_STEPS_PER_SEGMENT} from "@/domain/agent";
 import {decodeResponseOutput, toResponseInput} from "@/lib/ai/responsesStream";
 import {validateTaskPlan} from "@/lib/agent/taskState";
@@ -37,9 +38,10 @@ function planFromEnvelope(raw: string, field: "plan" | "steps"): AgentPlanItem[]
  * Does not complete the run, force tools, change permissions or perform network work.
  */
 export async function saveAgentFinishingCheck(
-    runId: string, expectedStep: number, output: AgentRunOutput, responseOutput?: AgentResponseItem[], signal?: AbortSignal,
+    runId: string, expectedStep: number, output: AgentRunOutput, responseOutput?: AgentResponseItem[], signal?: AbortSignal, store?: ProductStore
 ): Promise<boolean> {
-    return db.transaction("rw", [db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.projects, db.agentTasks], async () => {
+    const db = store ?? productDb;
+    return db.transaction("rw", [db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.projects, db.agentTasks], async (db) => {
         signal?.throwIfAborted();
         const run = await db.agentRuns.get(runId);
         if (!run || run.status !== "running" || run.finishingCheck || run.interactionMode === "conversation" || !run.enabledToolNames?.length ||

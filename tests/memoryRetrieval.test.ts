@@ -1,3 +1,5 @@
+import {interceptStoreTable} from "./helpers/storeFaults";
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {serializeMemoryEntries as originalSerializeMemoryEntries, planMemorySelection as originalPlanMemorySelection} from "./fixtures/sourceSnapshots/d05/src/lib/memory/retrieval";
 import { describe, it, expect, vi } from "vitest";
@@ -287,9 +289,7 @@ describe("thread policy and request layers", () => {
     );
     const next = await begin(thread.id),
       blocked = vi.fn(async () => json("bad"));
-    const spy = vi
-      .spyOn(db.agentRuns, "put")
-      .mockRejectedValueOnce(new Error("storage fail"));
+    const spy = failStoreTableOnce(db, "agentRuns", "put", new Error("storage fail"));
     await executeChatRun(
       next,
       connector.apiKey,
@@ -381,13 +381,10 @@ describe("thread policy and request layers", () => {
     await memory(project.id, "雨夜", "project");
     const run = await begin(thread.id),
       fetcher = vi.fn(async () => json("bad"));
-    const original = db.agentRuns.put.bind(db.agentRuns);
-    const spy = vi
-      .spyOn(db.agentRuns, "put")
-      .mockImplementation(((value: typeof run) =>
-        value.modelStep === 1
+
+    const spy = interceptStoreTable(db, "agentRuns", "put", async (_tx,args,next)=> { const [value]=args as Parameters<typeof db.agentRuns.put>;return value.modelStep === 1
           ? Promise.reject(new Error("audit storage failed"))
-          : original(value)) as typeof db.agentRuns.put);
+          : next(); });
     await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
     spy.mockRestore();
     expect(fetcher).not.toHaveBeenCalled();

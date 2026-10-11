@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {toast} from "sonner";
-import {db} from "@/db/database";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
@@ -23,7 +22,7 @@ const LABELS: Record<AudioBatchItemState, string> = {
 const message = (error: unknown) => error instanceof Error ? error.message : "操作未完成，请重试";
 
 function AudioBatchPanel({projectId, batchId}: {projectId: string; batchId: string}) {
-    const view = useLiveQuery(async () => await db.audioGenerationBatches.get(batchId) ? await readAudioGenerationBatch(projectId, batchId) : null, [projectId, batchId]);
+    const view = useProductQuery(async (db) => await db.audioGenerationBatches.get(batchId) ? await readAudioGenerationBatch(projectId, batchId, db) : null, [projectId, batchId]);
     const [reviewOpen, setReviewOpen] = useState(false);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
@@ -118,11 +117,11 @@ export function AudioBatchActions({projectId, chapterId, snapshot}: {projectId: 
 }
 
 export function AudioChapterBatches({projectId, chapterId}: {projectId: string; chapterId: string}) {
-    const batches = useLiveQuery(() => db.audioGenerationBatches.where("chapterId").equals(chapterId).filter(batch => batch.projectId === projectId).reverse().sortBy("createdAt"), [projectId, chapterId]);
+    const batches = useProductQuery((db) => db.audioGenerationBatches.where("chapterId").equals(chapterId).filter(batch => batch.projectId === projectId).reverse().sortBy("createdAt"), [projectId, chapterId]);
     return <div className="space-y-2">{batches?.slice(0, 20).map(batch => <AudioBatchPanel key={batch.id} projectId={projectId} batchId={batch.id}/>)}{batches && batches.length > 20 && <p className="text-xs text-muted-foreground">显示最近 20 批，另有 {batches.length - 20} 批历史记录。</p>}</div>;
 }
 
 export function AgentAudioBatches({runId}: {runId: string}) {
-    const batches = useLiveQuery(() => db.audioGenerationBatches.where("owner.runId").equals(runId).sortBy("createdAt"), [runId]);
+    const batches = useProductQuery((db) => db.audioGenerationBatches.where("owner.runId").equals(runId).sortBy("createdAt"), [runId]);
     return <div className="space-y-2">{batches?.slice(0, 20).map(batch => <AudioBatchPanel key={batch.id} projectId={batch.projectId} batchId={batch.id}/>)}{batches && batches.length > 20 && <p className="text-xs text-muted-foreground">显示 20 批，另有 {batches.length - 20} 批历史记录。</p>}</div>;
 }

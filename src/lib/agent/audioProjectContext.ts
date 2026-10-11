@@ -1,11 +1,13 @@
-import {db} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import type {Project} from "@/domain/types";
 import {getProjectKind} from "@/domain/types";
 import {targetRevision} from "@/lib/productionRevision";
 import type {ProjectContextSnapshot} from "@/domain/projectContext";
 
 /** Bounded current facts; audio bytes, arbitrary provider payloads and secrets never enter context. */
-export async function getAudioMusicProjectContext(project: Project): Promise<ProjectContextSnapshot> {
+export async function getAudioMusicProjectContext(project: Project, store?: ProductStore): Promise<ProjectContextSnapshot> {
+    const db = store ?? productDb;
     const projectId = project.id, kind = getProjectKind(project);
     const [chapters, speakers, segments, tracks, takes, clips, drafts, works, jobs, ipLink] = await Promise.all([
         db.audioChapters.where("projectId").equals(projectId).sortBy("order"), db.audioSpeakers.where("projectId").equals(projectId).toArray(),

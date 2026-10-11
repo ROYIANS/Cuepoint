@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {Link, useBlocker} from "@tanstack/react-router";
 import {
@@ -16,7 +16,6 @@ import {
     Trash2,
     X
 } from "lucide-react";
-import {db} from "@/db/database";
 import {resolveConnector} from "@/db/connectors";
 import {
     applyBatchSelections,
@@ -109,7 +108,7 @@ function itemStatus(item: GenerationBatchItem, job?: AgentGenerationJob) {
 export function AgentGenerationBatches({runId}: { runId: string }) {
     const last = useRef<{ runId: string; batches: GenerationBatch[] } | null>(null);
     const [readAttempt, setReadAttempt] = useState(0);
-    const view = useLiveQuery(async () => {
+    const view = useProductQuery(async (db) => {
         try {
             const batches = await db.agentGenerationBatches.where("runId").equals(runId).sortBy("createdAt");
             last.current = {runId, batches};
@@ -145,9 +144,9 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
     const [notice, setNotice] = useState<string>();
     const [outcomes, setOutcomes] = useState<Array<{ targetKey: string; applied: boolean; error?: string }>>([]);
     const triggerRef = useRef<HTMLButtonElement>(null);
-    const view = useLiveQuery(async () => {
+    const view = useProductQuery(async (db) => {
         try {
-            const detail = await readGenerationBatch(batch.id, batch.threadId);
+            const detail = await readGenerationBatch(batch.id, batch.threadId, db);
             const task = batch.taskId ? await db.agentTasks.get(batch.taskId) : undefined;
             last.current = detail;
             return {
@@ -551,7 +550,7 @@ function CandidateMedia({mediaId, label, portalRoot, onInspectChange}: {
 
 function BatchReferences({inputs}: { inputs: GenerationSubmitArgs["inputs"] }) {
     const identity = inputs.map(input => `${input.role}:${input.mediaId}`).join("|");
-    const names = useLiveQuery(async () => {
+    const names = useProductQuery(async (db) => {
         try {
             const media = await db.media.bulkGet(inputs.map(input => input.mediaId));
             return {identity, labels: media.map((item, index) => item?.filename || inputs[index].mediaId)};
@@ -572,9 +571,9 @@ function BatchReferences({inputs}: { inputs: GenerationSubmitArgs["inputs"] }) {
 }
 
 function BatchConfigurationSummary({draft}: { draft: GenerationSubmitArgs }) {
-    const connector = useLiveQuery(async () => {
+    const connector = useProductQuery(async (db) => {
         try {
-            const row = await resolveConnector(draft.connectorId);
+            const row = await resolveConnector(draft.connectorId, db);
             return {
                 id: draft.connectorId,
                 label: row ? `${row.definitionId === "apimart" ? "APIMart" : row.definitionId === "aihubmix" ? "AIHubMix" : row.definitionId}${row.label ? ` · ${row.label}` : ""}` : "连接已不可用"
@@ -594,10 +593,10 @@ function BatchConfigurationFields({draft, onChange, disabled}: {
     onChange: (draft: GenerationSubmitArgs) => void;
     disabled: boolean
 }) {
-    const state = useLiveQuery(async () => {
+    const state = useProductQuery(async (db) => {
         try {
             const connectors = await db.connectors.toArray();
-            const preferences = await getGenerationPreferenceState();
+            const preferences = await getGenerationPreferenceState(db);
             const project = await db.projects.get(draft.target.projectId);
             return {
                 projectId: draft.target.projectId,

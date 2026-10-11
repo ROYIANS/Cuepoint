@@ -9,6 +9,7 @@ import type {EpisodeShotBulkPatch, EpisodeShotBulkUndo} from "@/db/shots";
 
 import type { Shot } from "@/domain/types";
 import { emptySlot } from "@/domain/slot";
+import {installStoreHook} from "./helpers/storeBackendFaults";
 
 async function seed(count = 2) {
   const project = await createProject("bulk undo");
@@ -100,11 +101,11 @@ describe("episode bulk undo", () => {
     const projectBefore = await db.projects.get(project.id);
     let writes = 0;
     const count = () => { writes++; };
-    db.shots.hook("updating", count);
+    const hook=await installStoreHook(db,"shots","updating",count);
     try {
       await expect(undoEpisodeShotBulkPatch(undo)).rejects.toThrow("再次修改");
     } finally {
-      db.shots.hook("updating").unsubscribe(count);
+      hook.mockRestore();
     }
     expect(writes).toBe(0);
     expect(await db.shots.bulkGet(shots.map((shot) => shot.id))).toEqual(beforeAttempt);
@@ -226,11 +227,11 @@ describe("episode bulk undo", () => {
       const rowsBefore = await db.shots.bulkGet(shots.map((shot) => shot.id));
       let writes = 0;
       const count = () => { writes++; };
-      db.shots.hook("updating", count);
+      const hook=await installStoreHook(db,"shots","updating",count);
       try {
         await expect(undoEpisodeShotBulkPatch(undo)).rejects.toThrow();
       } finally {
-        db.shots.hook("updating").unsubscribe(count);
+        hook.mockRestore();
       }
       expect(writes).toBe(0);
       expect(await db.shots.bulkGet(shots.map((shot) => shot.id))).toEqual(rowsBefore);
@@ -273,13 +274,11 @@ describe("episode bulk undo", () => {
     let hookReached = false;
     const failShot = (_changes: unknown, key: unknown) => { if (key === shots[1].id) {hookReached = true; throw new Error("storage failure");} };
     const failProject = () => { hookReached = true; throw new Error("storage failure"); };
-    if (failure === "shot write") db.shots.hook("updating", failShot);
-    else db.projects.hook("updating", failProject);
+    const hook=failure === "shot write" ? await installStoreHook(db,"shots","updating",failShot) : await installStoreHook(db,"projects","updating",failProject);
     try {
       await expect(undoEpisodeShotBulkPatch(undo)).rejects.toThrow("storage failure");
     } finally {
-      db.shots.hook("updating").unsubscribe(failShot);
-      db.projects.hook("updating").unsubscribe(failProject);
+      hook.mockRestore();
     }
     expect(hookReached).toBe(true);
     expect(await db.shots.bulkGet(shots.map((shot) => shot.id))).toEqual(rowsBefore);
@@ -292,11 +291,11 @@ describe("episode bulk undo", () => {
     const { project, episode, shots } = await seed();
     const projectBefore = await db.projects.get(project.id);
     const fail = (_changes: unknown, key: unknown) => { if (key === shots[1].id) throw new Error("forward storage failure"); };
-    db.shots.hook("updating", fail);
+    const hook=await installStoreHook(db,"shots","updating",fail);
     try {
       await expect(patchEpisodeShots(episode.id, shots.map((shot) => shot.id), { notes: "bulk" })).rejects.toThrow("forward storage failure");
     } finally {
-      db.shots.hook("updating").unsubscribe(fail);
+      hook.mockRestore();
     }
     expect(await db.shots.bulkGet(shots.map((shot) => shot.id))).toEqual(shots);
     expect(await db.projects.get(project.id)).toEqual(projectBefore);

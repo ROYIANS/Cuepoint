@@ -1,8 +1,7 @@
 import {useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Link} from "@tanstack/react-router";
 import {ArrowUpRight, Layers} from "lucide-react";
-import {db} from "@/db/database";
 import {promoteLegacyMaterial} from "@/db/materials";
 import {type MediaRecord, STUDIO_LIBRARY_ID} from "@/domain/types";
 import {slotMediaIds} from "@/domain/slot";
@@ -38,7 +37,7 @@ export function LegacyMaterialSources({view, scope, search, kind, onCreated}: {
     const pendingRef = useRef(false);
     const [error, setError] = useState("");
     const {requestClose, dialog} = useMaterialDraftGuard(false, pending);
-    const data = useLiveQuery(async () => {
+    const data = useProductQuery(async (db) => {
         if (scope.startsWith("ip:")) return {rows: [] as LegacyRow[], projects: [], media: [] as MediaRecord[]};
         const ownerId = scope.startsWith("project:") ? scope.slice(8) : STUDIO_LIBRARY_ID;
         const [media, characters, scenes, props, styles, projects] = await Promise.all([

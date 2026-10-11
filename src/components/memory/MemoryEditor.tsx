@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import {useBlocker} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {toast} from "sonner";
 import type {MemoryInput, MemorySourceRef, ProjectMemory,} from "@/domain/projectMemory";
 import {
@@ -86,11 +86,11 @@ export function MemoryEditor({
     const [tagsText, setTagsText] = useState(baseline.tags.join("，"));
     const [expectedRevision, setExpectedRevision] = useState(memory?.revision);
     const [readAttempt, setReadAttempt] = useState(0);
-    const currentRead = useLiveQuery(
-        () =>
+    const currentRead = useProductQuery(
+        (db) =>
             readMemory(async () =>
                 memory
-                    ? ((await getProjectMemory(projectId, memory.id)) ?? null)
+                    ? ((await getProjectMemory(projectId, memory.id, db)) ?? null)
                     : null,
             ),
         [projectId, memory?.id, readAttempt],
@@ -115,12 +115,12 @@ export function MemoryEditor({
         onPendingChange?.(pending);
         return () => onPendingChange?.(false);
     }, [pending, onPendingChange]);
-    const conflictsRead = useLiveQuery(
-        () =>
+    const conflictsRead = useProductQuery(
+        (db) =>
             readMemory(async () =>
                 (
                     await Promise.all(
-                        conflictIds.map((id) => getProjectMemory(projectId, id)),
+                        conflictIds.map((id) => getProjectMemory(projectId, id, db)),
                     )
                 ).filter((item): item is ProjectMemory => !!item),
             ),

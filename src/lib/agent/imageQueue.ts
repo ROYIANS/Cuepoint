@@ -1,4 +1,5 @@
-import {db} from '@/db/database';
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from '@/db/database';
 import type {AgentToolCall} from '@/domain/agent';
 import type {AgentReferenceInput} from '@/domain/referenceInput';
 import type {AgentToolContext} from './tools';
@@ -19,7 +20,8 @@ const settledImageResult = (call: AgentToolCall): AgentReferenceInput | undefine
  * It deliberately runs before the current tool is marked completed, so `additional`
  * reserves the image that this tool is about to return.
  */
-export async function assertImageQueueCapacity(context: AgentToolContext, additional = 1): Promise<void> {
+export async function assertImageQueueCapacity(context: AgentToolContext, additional = 1, store?: ProductStore): Promise<void> {
+    const db = store ?? context.store ?? productDb;
     const run = await db.agentRuns.get(context.runId);
     if (!run || run.threadId !== context.threadId) throw new Error('执行不存在或归属已变化');
     requireVision(run.visionCapability ?? await resolveVisionCapability(run.model, run.connector.definitionId));

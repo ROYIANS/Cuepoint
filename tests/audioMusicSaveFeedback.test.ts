@@ -28,7 +28,7 @@ vi.mock("react", async original => {
         useEffect: () => undefined,
     };
 });
-vi.mock("dexie-react-hooks", () => ({useLiveQuery: (query: () => unknown) =>
+vi.mock("@/lib/storage/hooks", () => ({useProductQuery: (query: () => unknown) =>
     query.toString().includes("musicDrafts") ? host.musicData : []}));
 vi.mock("@/lib/media", async original => ({...await original<typeof import("@/lib/media")>(), useMedia: () => undefined}));
 vi.mock("@/lib/audio/exportMix", () => ({exportAudioMix: host.mix}));

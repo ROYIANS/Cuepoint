@@ -1,4 +1,5 @@
-import {describe, expect, it, vi} from "vitest";
+import {failStoreTableOnce} from "./helpers/storeFaults";
+import {describe, expect, it} from "vitest";
 import {db} from "@/db/database";
 import {addCharacter, addScene, addProp, addStyle, patchCharacter, setCharacterSlot, setSceneSlot, setPropSlot, setStyleSlot} from "@/db/assets";
 import {addShot, patchShot, setShotSlot} from "@/db/shots";
@@ -84,7 +85,7 @@ describe.each(slotCases)("%s slot CAS", kind => {
         await db.media.delete("b");
         await expect(f.write({...current, prompt: "mine"}, current)).rejects.toThrow("素材");
         await putMedia({id: "b", projectId: f.project.id, mimeType: "image/png", filename: "b", blob: new Blob(["b"])});
-        const remove = vi.spyOn(db.media, "delete").mockRejectedValueOnce(new Error("cleanup failed"));
+        const remove = failStoreTableOnce(db, "media", "delete", new Error("cleanup failed"));
         try { await expect(f.write(emptySlot(), current)).rejects.toThrow("cleanup failed"); } finally { remove.mockRestore(); }
         expect(await f.read()).toEqual(current);
         expect(await db.media.get("a")).toBeDefined();

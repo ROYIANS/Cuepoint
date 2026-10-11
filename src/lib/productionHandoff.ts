@@ -1,3 +1,7 @@
+import {binaryByteLength} from "@/domain/binary";
+import {readBinaryBlob, verifyBinaryAvailable} from "@/lib/storage/binary";
+import {BinaryUnavailableError} from "@/lib/storage/nativeBinary";
+import {verifiedShotMediaIndex, type ShotBinaryState} from "@/lib/shotMedia";
 import JSZip from "jszip";
 import {db} from "@/db/database";
 import {SHOT_COLUMNS} from "@/domain/columns";
@@ -9,7 +13,7 @@ import {deriveEpisodeDelivery, episodeDeliveryCsv} from "@/lib/episodeDelivery";
 
 export const HANDOFF_FORMAT = "cuepoint-handoff-v1" as const;
 
-type SlotState = "empty" | "exported" | "placeholder" | "missing" | "foreign" | "wrong-kind" | "empty-file";
+type SlotState = "empty" | "exported" | "placeholder" | "missing" | "foreign" | "wrong-kind" | "empty-file" | "corrupt";
 
 interface HandoffSlot {
     prompt: string;
@@ -45,6 +49,7 @@ function inspectSlot(
     media: MediaRecord | undefined,
     projectId: Id,
     folder: string,
+    availability?: ShotBinaryState,
 ): HandoffSlot {
     const slot: HandoffSlot = {
         prompt, state: "empty", required: field !== "lastFrame",
@@ -57,12 +62,13 @@ function inspectSlot(
         (field !== "clip" && result.kind !== "image") || !media.mimeType.startsWith(`${result.kind}/`)) {
         return {...slot, state: "wrong-kind"};
     }
-    if (media.blob.size === 0) return {...slot, state: "empty-file"};
+    if (binaryByteLength(media.blob) === 0) return {...slot, state: "empty-file"};
+    if (availability === "missing" || availability === "corrupt") return {...slot, state: availability};
     return {
         ...slot,
         state: field === "clip" && result.kind === "image" ? "placeholder" : "exported",
         path: `${folder}/${field}-${safeMediaFilename(media.filename, result.kind === "image" ? "image" : "video")}`,
-        originalFilename: media.filename, mimeType: media.mimeType, byteSize: media.blob.size,
+        originalFilename: media.filename, mimeType: media.mimeType, byteSize: binaryByteLength(media.blob),
     };
 }
 
@@ -80,6 +86,8 @@ function slotWarning(field: ShotPictureField, slot: HandoffSlot): string | undef
             return "成片为图片占位，仍缺少完成的视频";
         case "missing":
             return `${label}引用的素材不存在`;
+        case "corrupt":
+            return `${label}素材内容已损坏，未导出`;
         case "foreign":
             return `${label}引用了其他项目的素材，未导出`;
         case "wrong-kind":
@@ -100,7 +108,7 @@ export async function exportProductionHandoff(
     onProgress?.(0);
     await flushPendingDrafts(projectId);
     const snapshot = await db.transaction("r",
-        [db.projects, db.episodes, db.shots, db.characters, db.scenes, db.props, db.styles, db.media], async () => {
+        [db.projects, db.episodes, db.shots, db.characters, db.scenes, db.props, db.styles, db.media], async (db) => {
             const project = await db.projects.get(projectId);
             const episode = await db.episodes.get(episodeId);
             if (!project || !episode || episode.projectId !== projectId) throw new Error("找不到当前项目或分集");
@@ -135,9 +143,21 @@ export async function exportProductionHandoff(
         });
     onProgress?.(10);
     const {project, episode} = snapshot;
+    const files = new Map<string, Blob>();
+    const states = new Map<string, ShotBinaryState>();
+    for (const record of snapshot.media.values()) {
+        if (record.projectId !== projectId || binaryByteLength(record.blob) === 0) continue;
+        try {
+            files.set(record.id, await readBinaryBlob(record.blob));
+            states.set(record.id, "ready");
+        } catch (error) {
+            if (!(error instanceof BinaryUnavailableError)) throw error;
+            states.set(record.id, error.availability);
+        }
+    }
     // All authored camera/sound fields belong in the handoff, even when hidden in the editor.
     const delivery = deriveEpisodeDelivery({
-        ...snapshot, project: {
+        ...snapshot, media: verifiedShotMediaIndex(snapshot.media, states), project: {
             ...project, columnSettings: {visible: SHOT_COLUMNS.map((column) => column.id)},
         }
     });
@@ -151,8 +171,8 @@ export async function exportProductionHandoff(
         const media = Object.fromEntries(slots.map((field) => {
             const result = shot[field].result;
             const record = result ? snapshot.media.get(result.mediaId) : undefined;
-            const slot = inspectSlot(field, shot[field].prompt, result, record, projectId, folder);
-            if (slot.path && record) zip.file(slot.path, record.blob);
+            const slot = inspectSlot(field, shot[field].prompt, result, record, projectId, folder, record ? states.get(record.id) : undefined);
+            if (slot.path && record) zip.file(slot.path, files.get(record.id)!);
             return [field, slot];
         })) as Record<ShotPictureField, HandoffSlot>;
         const warnings: string[] = [];
@@ -249,5 +269,6 @@ export async function exportProductionHandoff(
         type: "blob",
         compression: "STORE"
     }, (event) => onProgress?.(20 + event.percent * 0.8));
+    for (const id of files.keys()) await verifyBinaryAvailable(snapshot.media.get(id)!.blob);
     return {blob, filename: `${safeComponent(title, "素材交付")}-素材交付.zip`, shotCount: rows.length, missingCount};
 }

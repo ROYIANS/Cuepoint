@@ -1,6 +1,7 @@
 import {describe, expect, it, vi} from "vitest";
-import {Dexie, liveQuery} from "dexie";
 import {db} from "@/db/database";
+import {actualStoreScope, installStoreHook, interceptStoreBackend} from "./helpers/storeBackendFaults";
+import type {NativeQuery} from "@/lib/storage/protocol";
 import {emptyShot} from "@/db/productionRecords";
 import {readProjectCoverIds} from "@/lib/studioLibraryQueries";
 import type {Shot} from "@/domain/types";
@@ -60,31 +61,39 @@ describe("scoped gallery fallback query", () => {
         await db.shots.bulkPut(rows);
         const seen: Shot[] = [];
         const reading = (row: Shot) => {seen.push(row); return row;};
-        db.shots.hook("reading", reading);
+        const hook = await installStoreHook(db, "shots", "reading", reading);
         try {
             const result = await readProjectCoverIds(["visible", "visible"]);
             expect(seen).toHaveLength(100);
             expect(seen.every(row => row.projectId === "visible")).toBe(true);
             expect(result).toEqual(new Map([["visible", "media-1"]]));
             expect(JSON.stringify([...result]).length).toBeLessThan(JSON.stringify(seen).length / 1000);
-        } finally {db.shots.hook("reading").unsubscribe(reading);}
+        } finally {hook.mockRestore();}
     });
 
     it("deduplicates owners and opens exact ranges in one shared readonly transaction", async () => {
         await db.shots.bulkPut([shot("a", "owner-a", 1, "cover-a"), shot("b", "owner-b", 1, "cover-b"), shot("c", "owner-c", 1, "cover-c")]);
-        const read = vi.spyOn(db.shots, "where");
-        const transactions = new Set<unknown>();
-        const reading = (row: Shot) => {transactions.add(Dexie.currentTransaction); return row;};
-        db.shots.hook("reading", reading);
+        const transactions = new Set<string>();
+        const ranges: NativeQuery[] = [];
+        const scopes: Array<{mode: string; names: string[]}> = [];
+        const read = await interceptStoreBackend(db, "shots", "query", async (backend, args, next) => {
+            transactions.add(backend.transactionId);
+            ranges.push(args[0] as NativeQuery);
+            scopes.push(await actualStoreScope(db, backend));
+            return next();
+        });
         try {
             expect(await readProjectCoverIds(["owner-a", "owner-c", "owner-a", "owner-b"])).toEqual(new Map([
                 ["owner-a", "cover-a"], ["owner-b", "cover-b"], ["owner-c", "cover-c"],
             ]));
-            expect(read).toHaveBeenCalledTimes(3);
-            expect(read).toHaveBeenCalledWith("projectId");
+            expect(ranges).toHaveLength(3);
+            expect(ranges.every(query => query.index === "projectId" && query.selector.kind === "equals")).toBe(true);
+            expect(ranges.map(query => query.selector.kind === "equals" ? query.selector.keys[0] : undefined)).toEqual([
+                {kind: "string", value: "owner-a"}, {kind: "string", value: "owner-c"}, {kind: "string", value: "owner-b"},
+            ]);
             expect(transactions.size).toBe(1);
-            expect([...transactions][0]).toMatchObject({mode: "readonly", storeNames: ["shots"]});
-        } finally {read.mockRestore(); db.shots.hook("reading").unsubscribe(reading);}
+            expect(scopes).toEqual(Array.from({length: 3}, () => ({mode: "readonly", names: ["shots"]})));
+        } finally {read.mockRestore();}
     });
 
     it("matches original covers for a varied multi-owner, multi-episode data set", async () => {
@@ -102,7 +111,7 @@ describe("scoped gallery fallback query", () => {
         await db.shots.bulkPut([shot("a", "owner", 1, "initial"), shot("b", "owner", 2, "fallback")]);
         const values: Array<Map<string, string>> = [];
         let notify: (() => void) | undefined;
-        const subscription = liveQuery(() => readProjectCoverIds(["owner"])).subscribe(value => {values.push(value); notify?.();});
+        const stop = db.observe(tx => readProjectCoverIds(["owner"], tx), {next:value => {values.push(value); notify?.();}, error:error => {throw error;}});
         async function until(expected: string) {
             if (values.at(-1)?.get("owner") === expected) return;
             await new Promise<void>((resolve, reject) => {
@@ -116,6 +125,6 @@ describe("scoped gallery fallback query", () => {
             await until("updated");
             await db.shots.delete("a");
             await until("fallback");
-        } finally {subscription.unsubscribe();}
+        } finally {stop();}
     });
 });

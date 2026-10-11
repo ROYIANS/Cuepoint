@@ -1,4 +1,5 @@
-import {db} from "@/db/database";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from "@/db/database";
 import {type AgentConfig, type AgentPermissionMode, GENERAL_AGENT_ID} from "@/domain/agent";
 import {assembleSkills, DEFAULT_SKILL_IDS} from "@/lib/agent/skills";
 import {nowIso} from "@/lib/ids";
@@ -6,8 +7,9 @@ import {nowIso} from "@/lib/ids";
 const SKILL_DEFAULTS_VERSION = 3;
 
 /** May also run in the transaction that creates a run. */
-export async function getGeneralAgentConfig(): Promise<AgentConfig> {
-    return db.transaction("rw", db.agents, async () => {
+export async function getGeneralAgentConfig(store?: ProductStore): Promise<AgentConfig> {
+    const db = store ?? productDb;
+    return db.transaction("rw", [db.agents].flat(), async (db) => {
         const existing = await db.agents.get(GENERAL_AGENT_ID);
         if (existing) {
             // Enable the foundational creative skills once for existing installations.
@@ -53,11 +55,12 @@ export async function getGeneralAgentConfig(): Promise<AgentConfig> {
 export async function updateGeneralAgentConfig(patch: {
     permissionMode?: AgentPermissionMode;
     enabledSkillIds?: string[]
-}): Promise<void> {
+}, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (patch.permissionMode !== undefined && !["ask", "assist", "full"].includes(patch.permissionMode)) throw new Error("未知授权模式");
     if (patch.enabledSkillIds) assembleSkills(patch.enabledSkillIds);
-    await db.transaction("rw", db.agents, async () => {
-        const agent = await getGeneralAgentConfig();
+    await db.transaction("rw", [db.agents].flat(), async (db) => {
+        const agent = await getGeneralAgentConfig(db);
         await db.agents.update(agent.id, {...patch, updatedAt: nowIso()});
     });
 }

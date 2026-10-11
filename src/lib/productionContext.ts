@@ -1,5 +1,7 @@
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
 /** Historical local read/preflight contract. Durable Agent generation uses agent/generationRuntime and generationBatchRuntime. */
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import type {SourceRevision} from "@/domain/production";
 import type {GenerationSlot, Id, MediaKind} from "@/domain/types";
 import {
@@ -25,9 +27,10 @@ interface ProductionMediaMetadata {
     kind: MediaKind
 }
 
-export async function buildProductionContext(projectId: Id, episodeId: Id, shotId: Id) {
+export async function buildProductionContext(projectId: Id, episodeId: Id, shotId: Id, store?: ProductStore) {
+    const db = store ?? productDb;
     await flushPendingDrafts(projectId);
-    return db.transaction("r", [db.projects, db.episodes, db.shots, db.characters, db.scenes, db.props, db.styles, db.media], async () => {
+    return db.transaction("r", [db.projects, db.episodes, db.shots, db.characters, db.scenes, db.props, db.styles, db.media], async (db) => {
         const project = await db.projects.get(projectId);
         const episode = await db.episodes.get(episodeId);
         const shot = await db.shots.get(shotId);
@@ -135,7 +138,7 @@ export async function buildProductionContext(projectId: Id, episodeId: Id, shotI
         for (const [index, record] of records.entries()) {
             const expected = requests.filter(({id}) => id === mediaIds[index]);
             const kind = record?.mimeType.startsWith("image/") ? "image" : record?.mimeType.startsWith("video/") ? "video" : undefined;
-            if (!record || record.projectId !== projectId || !kind || !record.blob?.size) {
+            if (!record || record.projectId !== projectId || !kind || !binaryByteLength(record.blob)) {
                 warnings.push(`素材不存在、为空、类型无效或不属于当前项目：${mediaIds[index]}`);
                 continue;
             }
@@ -144,7 +147,7 @@ export async function buildProductionContext(projectId: Id, episodeId: Id, shotI
                 id: record.id,
                 filename: record.filename,
                 mimeType: record.mimeType,
-                size: record.blob.size,
+                size: binaryByteLength(record.blob),
                 kind
             });
         }

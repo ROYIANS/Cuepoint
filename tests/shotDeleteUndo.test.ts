@@ -1,4 +1,3 @@
-import Dexie, { type Transaction } from "dexie";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
 import {PRODUCTION_TABLES} from "@/db/productionShared";
@@ -8,6 +7,9 @@ import {createProject} from "@/db/projects";
 import {putMedia} from "@/db/media";
 import { emptySlot } from "@/domain/slot";
 import type { MediaRecord, Shot } from "@/domain/types";
+import {actualStoreScope,installStoreHook,interceptStoreBackend} from "./helpers/storeBackendFaults";
+import {readBinaryBlob} from "@/lib/storage/binary";
+import type {ProductStore} from "@/lib/storage/types";
 
 async function seed(count = 2) {
   const project = await createProject("delete undo");
@@ -18,16 +20,11 @@ async function seed(count = 2) {
   return { project, episode, shots };
 }
 
-async function addMedia(projectId: string, id: string, kind: "image" | "video" = "image") {
+async function addMedia(projectId: string, id: string, kind: "image" | "video" = "image", store:ProductStore=db) {
   const mimeType = kind === "image" ? "image/png" : "video/mp4";
   const media: MediaRecord = { id, projectId, mimeType, filename: id, blob: new Blob([id], { type: mimeType }) };
-  await putMedia(media);
+  await putMedia(media,store);
   return media;
-}
-
-function rootTransaction(transaction: Transaction | undefined) {
-  while (transaction?.parent) transaction = transaction.parent;
-  return transaction;
 }
 
 async function databaseState() {
@@ -45,10 +42,11 @@ describe("episode shot deletion snapshots", () => {
     const old = await addMedia(project.id, "old result");
     await setShotSlot(shots[0].id, "firstFrame", { ...emptySlot(), result: { mediaId: old.id, kind: "image" } });
     const rendered = (await db.shots.get(shots[0].id))!;
-    const media = await Promise.all([
-      addMedia(project.id, "image reference"), addMedia(project.id, "video reference", "video"),
-      addMedia(project.id, "new first"), addMedia(project.id, "new last"), addMedia(project.id, "new clip", "video"),
-    ]);
+    const media = await db.transaction("rw",PRODUCTION_TABLES,async tx=> {
+      const rows:MediaRecord[]=[];
+      for (const [id,kind] of [["image reference","image"],["video reference","video"],["new first","image"],["new last","image"],["new clip","video"]] as const) rows.push(await addMedia(project.id,id,kind,tx));
+      return rows;
+    });
     await patchShot(rendered.id, { content: "latest content", notes: "latest notes" });
     await setShotSlot(rendered.id, "firstFrame", {
       prompt: "latest first", referenceImageIds: [media[0].id], referenceVideoIds: [media[1].id],
@@ -69,8 +67,7 @@ describe("episode shot deletion snapshots", () => {
     if (!snapshot) throw new Error("missing deletion snapshot");
     expect(snapshot.media.map((record) => record.id).sort()).toEqual(media.map((record) => record.id).sort());
     for (const record of snapshot.media) {
-      expect(record.blob).toBeInstanceOf(Blob);
-      expect(await record.blob.text()).toBe(record.id);
+      expect(await (await readBinaryBlob(record.blob)).text()).toBe(record.id);
     }
     expect(await db.shots.get(rendered.id)).toBeUndefined();
     expect(await db.media.toArray()).toEqual([]);
@@ -79,7 +76,7 @@ describe("episode shot deletion snapshots", () => {
     for (const record of media) {
       const restored = (await db.media.get(record.id))!;
       expect(restored).toMatchObject({ projectId: project.id, filename: record.filename, mimeType: record.mimeType });
-      expect(await restored.blob.text()).toBe(record.id);
+      expect(await (await readBinaryBlob(restored.blob)).text()).toBe(record.id);
     }
     expect(await db.media.get(old.id)).toBeUndefined();
   });
@@ -88,25 +85,25 @@ describe("episode shot deletion snapshots", () => {
     const { project, episode, shots } = await seed(1);
     const media = await addMedia(project.id, "transaction result");
     await setShotSlot(shots[0].id, "firstFrame", { ...emptySlot(), result: { mediaId: media.id, kind: "image" } });
-    const readTransactions: Array<Transaction | undefined> = [];
-    let deleteTransaction: Transaction | undefined;
-    const onRead = (record: MediaRecord | undefined) => {
-      if (record?.id === media.id) readTransactions.push(rootTransaction(Dexie.currentTransaction));
-      return record;
-    };
-    const onDelete = () => { deleteTransaction = rootTransaction(Dexie.currentTransaction); };
-    db.media.hook("reading", onRead);
-    db.shots.hook("deleting", onDelete);
+    const readTransactions:string[]=[],scopes:Array<{mode:string;names:string[]}>=[];
+    let deleteTransaction:string|undefined;
+    const read=await interceptStoreBackend(db,"media","get",async (backend,_args,next)=> {
+      const rows=await next() as Array<MediaRecord|undefined>;
+      if (rows.some(row=>row?.id === media.id)) {readTransactions.push(backend.transactionId);scopes.push(await actualStoreScope(db,backend));}
+      return rows;
+    });
+    const remove=await interceptStoreBackend(db,"shots","mutate",async (backend,args,next)=> {
+      if ((args[0] as {kind:string}).kind === "delete") {deleteTransaction=backend.transactionId;scopes.push(await actualStoreScope(db,backend));}
+      return next();
+    });
     try {
       const snapshot = await deleteEpisodeShots(episode.id, [shots[0].id]);
       expect(snapshot?.media.map((record) => record.id)).toEqual([media.id]);
     } finally {
-      db.media.hook("reading").unsubscribe(onRead);
-      db.shots.hook("deleting").unsubscribe(onDelete);
+      read.mockRestore();remove.mockRestore();
     }
     expect(deleteTransaction).toBeDefined();
-    expect(deleteTransaction?.mode).toBe("readwrite");
-    expect(deleteTransaction?.storeNames).toEqual(expect.arrayContaining(PRODUCTION_TABLES.map((table) => table.name)));
+    for (const scope of scopes) {expect(scope.mode).toBe("readwrite");expect(scope.names).toEqual(expect.arrayContaining(PRODUCTION_TABLES.map((table) => table.name)));}
     expect(readTransactions.length).toBeGreaterThan(0);
     for (const transaction of readTransactions) expect(transaction).toBe(deleteTransaction);
   });
@@ -127,8 +124,7 @@ describe("episode shot deletion snapshots", () => {
     expect(both.media.map((record) => record.id)).toEqual([media.id]);
     expect(await db.media.get(media.id)).toBeUndefined();
     await restoreShots(both.shots, both.media);
-    expect((await db.media.get(media.id))?.blob).toBeInstanceOf(Blob);
-    expect(await (await db.media.get(media.id))!.blob.text()).toBe(media.id);
+    expect(await (await readBinaryBlob((await db.media.get(media.id))!.blob)).text()).toBe(media.id);
     for (const shot of shots) expect((await db.shots.get(shot.id))?.firstFrame).toEqual(shared);
   });
 
@@ -188,10 +184,7 @@ describe("episode shot deletion snapshots", () => {
       const before = await databaseState();
       const failDelete = (key: unknown) => { if (key === shots[1].id) throw new Error("delete storage failure"); };
       const failWrite = () => { throw new Error("delete storage failure"); };
-      if (failure === "second delete") db.shots.hook("deleting", failDelete);
-      if (failure === "reindex") db.shots.hook("updating", failWrite);
-      if (failure === "project touch") db.projects.hook("updating", failWrite);
-      if (failure === "media cleanup") db.media.hook("deleting", failWrite);
+      const hook=failure === "second delete" ? await installStoreHook(db,"shots","deleting",failDelete) : failure === "reindex" ? await installStoreHook(db,"shots","updating",failWrite) : failure === "project touch" ? await installStoreHook(db,"projects","updating",failWrite) : await installStoreHook(db,"media","deleting",failWrite);
       let resolved = false;
       try {
         await expect(deleteEpisodeShots(episode.id, [shots[0].id, shots[1].id]).then((snapshot) => {
@@ -199,10 +192,7 @@ describe("episode shot deletion snapshots", () => {
           return snapshot;
         })).rejects.toThrow("delete storage failure");
       } finally {
-        db.shots.hook("deleting").unsubscribe(failDelete);
-        db.shots.hook("updating").unsubscribe(failWrite);
-        db.projects.hook("updating").unsubscribe(failWrite);
-        db.media.hook("deleting").unsubscribe(failWrite);
+        hook.mockRestore();
       }
       expect(resolved).toBe(false);
       expect(await databaseState()).toEqual(before);

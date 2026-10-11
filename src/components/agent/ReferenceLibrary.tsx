@@ -1,7 +1,7 @@
-import {db} from "@/db/database";
+import {binaryPreviewMessage, useBinaryPreview} from "@/lib/media";
 import type {MediaRecord} from "@/domain/types";
-import {useEffect, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useState} from "react";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Check, Plus, RotateCcw, Search, Trash2, Upload} from "lucide-react";
 import {toast} from "sonner";
 import {listProjectReferences, removeProjectReference} from "@/db/references";
@@ -33,14 +33,14 @@ export function ReferenceLibrary({projectId, open, onOpenChange, selected, onSel
     const [attempt, setAttempt] = useState(0);
     const [busy, setBusy] = useState<string>();
     const [remove, setRemove] = useState<ProjectReference>();
-    const loaded = useLiveQuery(async () => {
+    const loaded = useProductQuery(async (db) => {
         try {
-            return {projectId, rows: open ? await listProjectReferences(projectId) : [], error: undefined};
+            return {projectId, rows: open ? await listProjectReferences(projectId, db) : [], error: undefined};
         } catch (error) {
             return {projectId, rows: [], error: error instanceof Error ? error.message : "读取资料库失败"};
         }
     }, [projectId, open, attempt]);
-    const loadedImages = useLiveQuery(async () => {
+    const loadedImages = useProductQuery(async (db) => {
         try {
             return {
                 projectId,
@@ -153,14 +153,8 @@ export function ReferenceLibrary({projectId, open, onOpenChange, selected, onSel
 }
 
 function ProjectImage({media, disabled, onSelect}: { media: MediaRecord; disabled: boolean; onSelect: () => void }) {
-    const [image, setImage] = useState<{ blob: Blob; url: string }>();
-    useEffect(() => {
-        const url = URL.createObjectURL(media.blob);
-        setImage({blob: media.blob, url});
-        return () => URL.revokeObjectURL(url);
-    }, [media.blob]);
-    return <button type="button" className="reference-project-image" disabled={disabled} onClick={onSelect}
-                   title={`附加 ${media.filename}`}>{image?.blob === media.blob &&
-        <img src={image.url} alt={media.filename} loading="lazy"/>}<span>{media.filename}</span><small>附加图片</small>
+    const image = useBinaryPreview(media.blob);
+    return <button type="button" className="reference-project-image" disabled={disabled || image.status !== "ready"} onClick={onSelect}
+                   title={`附加 ${media.filename}`}>{image.status === "ready" ? <img src={image.url} onError={image.onError} alt={media.filename} loading="lazy"/> : <small>{binaryPreviewMessage(image)}</small>}<span>{media.filename}</span><small>附加图片</small>
     </button>;
 }

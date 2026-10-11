@@ -1,9 +1,12 @@
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
 import {type GenerationSlot, type Id, type MediaRecord} from "@/domain/types";
-import {db} from "./database";
+import {db as productDb} from "./database";
 import {collectSlotsMedia, SHOT_PICTURE_FIELDS, slotMediaIds} from "@/domain/slot";
 import {assertProjectOwner, PRODUCTION_TABLES, touchProject} from "./productionShared";
 
-export async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {
+export async function collectMediaIds(projectId?: Id, store?: ProductStore): Promise<Set<Id>> {
+    const db = store ?? productDb;
     const [projects, characters, scenes, props, styles, shots, references, materialUses, retainedMedia] = await Promise.all([
         projectId === undefined ? db.projects.toArray() : db.projects.where("id").equals(projectId).toArray(),
         (projectId === undefined ? db.characters : db.characters.where("projectId").equals(projectId)).toArray(),
@@ -47,24 +50,27 @@ export async function collectMediaIds(projectId?: Id): Promise<Set<Id>> {
 
 export async function recycleSlotMedia(
     previous: GenerationSlot | undefined,
-    next: GenerationSlot | undefined,
+    next: GenerationSlot | undefined, store?: ProductStore
 ): Promise<void> {
+    const db = store ?? productDb;
     const kept = new Set(slotMediaIds(next));
-    await deleteMediaIfOrphans(slotMediaIds(previous).filter((mediaId) => !kept.has(mediaId)));
+    await deleteMediaIfOrphans(slotMediaIds(previous).filter((mediaId) => !kept.has(mediaId)), db);
 }
 
-export async function putMedia(record: MediaRecord): Promise<Id> {
-    return db.transaction("rw", db.media, db.projects, async () => {
-        await assertProjectOwner(record.projectId);
+export async function putMedia(record: MediaRecord, store?: ProductStore): Promise<Id> {
+    const db = store ?? productDb;
+    return db.transaction("rw", [db.media, db.projects].flat(), async (db) => {
+        await assertProjectOwner(record.projectId, db);
         // Physical replacement is a new record; immutable IDs keep pending previews valid.
         await db.media.add(record);
-        await touchProject(record.projectId);
+        await touchProject(record.projectId, db);
         return record.id;
     });
 }
 
 /** Fresh history snapshot for one candidate owner, including cancelled/undone outcomes. */
-async function collectHistoryMediaIds(projectId: Id): Promise<Set<Id>> {
+async function collectHistoryMediaIds(projectId: Id, store?: ProductStore): Promise<Set<Id>> {
+    const db = store ?? productDb;
     const [proposals, jobs, batches, items] = await Promise.all([
         db.productionProposals.where("projectId").equals(projectId).toArray(),
         db.agentGenerationJobs.where("projectId").equals(projectId).toArray(),
@@ -89,17 +95,18 @@ async function collectHistoryMediaIds(projectId: Id): Promise<Set<Id>> {
 }
 
 /** Call after all owner/history/flag changes; never reuse this snapshot across operations. */
-export async function deleteMediaIfOrphans(mediaIds: readonly (Id | undefined)[]): Promise<void> {
+export async function deleteMediaIfOrphans(mediaIds: readonly (Id | undefined)[], store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const candidates = [...new Set(mediaIds.filter((id): id is Id => !!id))];
     if (!candidates.length) return;
-    await db.transaction("rw", PRODUCTION_TABLES, async () => {
+    await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
         const records = (await db.media.bulkGet(candidates)).filter((record): record is MediaRecord => record !== undefined);
         if (!records.length) return;
-        const used = await collectMediaIds();
+        const used = await collectMediaIds(undefined, db);
         // History belongs to each candidate record's owner; current references remain global.
         const histories = new Map<Id, Set<Id>>();
         for (const projectId of new Set(records.map((record) => record.projectId))) {
-            histories.set(projectId, await collectHistoryMediaIds(projectId));
+            histories.set(projectId, await collectHistoryMediaIds(projectId, db));
         }
         for (const record of records) {
             if (!used.has(record.id) && !histories.get(record.projectId)?.has(record.id)) {
@@ -109,11 +116,13 @@ export async function deleteMediaIfOrphans(mediaIds: readonly (Id | undefined)[]
     });
 }
 
-export async function deleteMediaIfOrphan(mediaId: Id | undefined): Promise<void> {
-    await deleteMediaIfOrphans([mediaId]);
+export async function deleteMediaIfOrphan(mediaId: Id | undefined, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await deleteMediaIfOrphans([mediaId], db);
 }
 
-export async function assertSlotMedia(projectId: Id, slot: GenerationSlot, allowVideoResult = false): Promise<void> {
+export async function assertSlotMedia(projectId: Id, slot: GenerationSlot, allowVideoResult = false, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (slot.result && slot.result.kind !== "image" && !(allowVideoResult && slot.result.kind === "video")) {
         throw new Error("素材结果类型不适用于当前槽位");
     }
@@ -124,7 +133,7 @@ export async function assertSlotMedia(projectId: Id, slot: GenerationSlot, allow
     ];
     for (const {id, kind} of expected) {
         const media = await db.media.get(id);
-        if (!media || media.projectId !== projectId || media.blob.size === 0 || !media.mimeType.startsWith(`${kind}/`)) {
+        if (!media || media.projectId !== projectId || binaryByteLength(media.blob) === 0 || !media.mimeType.startsWith(`${kind}/`)) {
             throw new Error("素材已失效、类型不符或不属于当前项目，请重新选择");
         }
     }

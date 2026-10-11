@@ -1,5 +1,6 @@
+import type {ProductStore} from "@/lib/storage/types";
 export {cancelTaskWrapup} from "@/db/agentTaskWrapups";
-import {db} from "@/db/database";
+import {db as productDb} from "@/db/database";
 import {publishTaskWrapup, startTaskWrapup, stopTaskWrapup} from "@/db/agentTaskWrapups";
 import {type ThreadLockManager, withThreadRunLock} from "./runOwnership";
 import {connectorRunIdentity} from "@/db/agentRuns";
@@ -19,7 +20,8 @@ function redact(text: string, key: string) {
 }
 
 /** Explicit, one request, no tools. The persisted preparing row also protects direct repository callers. */
-export async function prepareTaskWrapup(taskId: string, connector: ConnectorConfig, model: string, controller: AbortController, fetchImpl?: typeof fetch, reasoningEffort?: AgentReasoningEffort, modelMetadata?: ChatModelMetadata, locks?: ThreadLockManager) {
+export async function prepareTaskWrapup(taskId: string, connector: ConnectorConfig, model: string, controller: AbortController, fetchImpl?: typeof fetch, reasoningEffort?: AgentReasoningEffort, modelMetadata?: ChatModelMetadata, locks?: ThreadLockManager, store?: ProductStore) {
+    const db = store ?? productDb;
     const identity = connectorRunIdentity(connector);
     if (!connector.apiKey.trim() || !model.trim()) throw new Error('请选择模型并配置连接');
     assertReasoningEffort(identity, model, reasoningEffort);
@@ -27,7 +29,7 @@ export async function prepareTaskWrapup(taskId: string, connector: ConnectorConf
     if (!task) throw new Error('任务不存在');
     return withThreadRunLock(task.threadId, async () => {
         controller.signal.throwIfAborted();
-        const record = await startTaskWrapup(taskId, 'ai');
+        const record = await startTaskWrapup(taskId, 'ai', db);
         try {
             const currentTask = await db.agentTasks.get(taskId);
             if (!currentTask) throw new Error("任务不存在");
@@ -64,21 +66,22 @@ export async function prepareTaskWrapup(taskId: string, connector: ConnectorConf
             if (!result.ok) throw new Error(result.message);
             if (result.toolCalls?.length || result.content.length > 100000) throw new Error('总结响应无效');
             const raw = result.content.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
-            return await publishTaskWrapup(record.id, JSON.parse(redact(raw, connector.apiKey)), controller.signal);
+            return await publishTaskWrapup(record.id, JSON.parse(redact(raw, connector.apiKey)), controller.signal, db);
         } catch (error) {
             const message = controller.signal.aborted ? '整理已停止，原有总结保留。' : redact(error instanceof Error ? error.message : '总结整理失败', connector.apiKey).slice(0, 300);
-            await stopTaskWrapup(taskId, record.id, controller.signal.aborted ? 'interrupted' : 'failed', message);
+            await stopTaskWrapup(taskId, record.id, controller.signal.aborted ? 'interrupted' : 'failed', message, db);
             throw new Error(message);
         }
     }, locks);
 }
 
 /** Recovery probes ownership, never sends another request or cancels a live tab. */
-export async function recoverTaskWrapups(threadId: string, locks?: ThreadLockManager) {
+export async function recoverTaskWrapups(threadId: string, locks?: ThreadLockManager,store?:ProductStore) {
+    const db=store ?? productDb;
     const manager: ThreadLockManager | undefined = locks ?? (typeof navigator !== 'undefined' ? navigator.locks : undefined);
     if (!manager) return;
     await manager.request(`cuepoint:agent:${threadId}`, {ifAvailable: true}, async (lock) => {
         if (!lock) return;
-        for (const record of await db.agentTaskWrapups.where('threadId').equals(threadId).filter(r => r.status === 'preparing').toArray()) await stopTaskWrapup(record.taskId, record.id, 'interrupted', '上次整理已中断，原有总结仍保留。需要重新整理时请明确操作。');
+        for (const record of await db.agentTaskWrapups.where('threadId').equals(threadId).filter(r => r.status === 'preparing').toArray()) await stopTaskWrapup(record.taskId, record.id, 'interrupted', '上次整理已中断，原有总结仍保留。需要重新整理时请明确操作。', db);
     });
 }

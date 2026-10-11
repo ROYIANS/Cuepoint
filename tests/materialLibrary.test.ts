@@ -1,4 +1,6 @@
+import {readBinaryBlob} from "@/lib/storage/binary";
 import { describe, expect, it, vi } from 'vitest';
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import { db } from '@/db/database';
 import {createProject} from "@/db/projects";
 import {addCharacter, patchCharacter} from "@/db/assets";
@@ -52,7 +54,7 @@ describe('material snapshots and references', () => {
     const results = await Promise.allSettled([addFileMaterialVersion(material.id, png('v2'), 1), updateMaterialMetadata(material.id, { name: 'changed' }, 1)]);
     expect(results.filter(result => result.status === 'fulfilled')).toHaveLength(1);
     const first = await db.materialVersions.where('[materialId+revision]').equals([material.id, 1]).first();
-    expect(first?.payload.type === 'file' && await first.payload.blob.text()).toBe('v1');
+    expect(first?.payload.type === 'file' && await (await readBinaryBlob(first.payload.blob)).text()).toBe('v1');
     expect(await db.materialVersions.count()).toBe(2);
     await updateMaterialMetadata(material.id, { notes: 'note' }, 2);
     expect(await db.materialVersions.count()).toBe(3);
@@ -65,7 +67,7 @@ describe('material snapshots and references', () => {
     expect(await db.media.get('original')).toBeUndefined();
     const target = await createProject('Target');
     const use = await adoptMaterialInProject(material.id, target.id);
-    expect(await (await db.media.get(use.targetId))!.blob.text()).toBe('original');
+    expect(await (await readBinaryBlob((await db.media.get(use.targetId))!.blob)).text()).toBe('original');
   });
   it('pins adopted media, is idempotent and updates through a new target without rewriting old content', async () => {
     const project = await createProject('Target');
@@ -73,11 +75,11 @@ describe('material snapshots and references', () => {
     const [use, same] = await Promise.all([adoptMaterialInProject(material.id, project.id), adoptMaterialInProject(material.id, project.id)]);
     expect(same.id).toBe(use.id);
     await addFileMaterialVersion(material.id, png('v2'), 1);
-    expect(await (await db.media.get(use.targetId))!.blob.text()).toBe('v1');
+    expect(await (await readBinaryBlob((await db.media.get(use.targetId))!.blob)).text()).toBe('v1');
     const next = await updateMaterialUse(use.id);
     expect(next.revision).toBe(2);
     expect(next.targetId).not.toBe(use.targetId);
-    expect(await (await db.media.get(next.targetId))!.blob.text()).toBe('v2');
+    expect(await (await readBinaryBlob((await db.media.get(next.targetId))!.blob)).text()).toBe('v2');
     expect(await db.materialUses.get(use.id)).toMatchObject({ supersededBy: next.id });
     await expect(updateMaterialUse(use.id)).rejects.toThrow('已有更新');
     await setMaterialArchived(material.id, true);
@@ -133,7 +135,7 @@ describe('material snapshots and references', () => {
   it('rolls back cloned media and project changes when adoption persistence fails', async () => {
     const material = await createFileMaterial(png(), globalScope);
     const project = await createProject('Target');
-    const failure = vi.spyOn(db.materialUses, 'add').mockRejectedValueOnce(new Error('quota'));
+    const failure = failStoreTableOnce(db,"materialUses","add",new Error("quota"));
     try { await expect(adoptMaterialInProject(material.id, project.id)).rejects.toThrow('quota'); } finally { failure.mockRestore(); }
     expect(await db.media.count()).toBe(0);
     expect(await db.materialUses.count()).toBe(0);

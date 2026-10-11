@@ -1,7 +1,7 @@
 import {useNavigate} from "@tanstack/react-router";
 import {ContextParameters} from "./ContextParameters";
 import {useEffect, useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Dropdown, Input, Switch, Tooltip} from "antd";
 import {
     ArrowLeft,
@@ -20,7 +20,6 @@ import {
     Upload
 } from "lucide-react";
 import {toast} from "sonner";
-import {db} from "@/db/database";
 import {type AgentPermissionMode, GENERAL_AGENT_ID} from "@/domain/agent";
 import {getGeneralAgentConfig, updateGeneralAgentConfig} from "@/db/agentSettings";
 import {AGENT_SKILLS} from "@/lib/agent/skills";
@@ -36,7 +35,7 @@ function popupRoot(): HTMLElement {
 }
 
 function useAgentSettings() {
-    const config = useLiveQuery(() => db.agents.get(GENERAL_AGENT_ID), []);
+    const config = useProductQuery((db) => db.agents.get(GENERAL_AGENT_ID), []);
     const [saving, setSaving] = useState(false);
     const saveLock = useRef(false);
     useEffect(() => {
@@ -130,7 +129,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
     onLibrary?: () => void
 }) {
     const navigate = useNavigate();
-    const project = useLiveQuery(async () => projectId ? (await db.projects.get(projectId)) ?? null : null, [projectId]);
+    const project = useProductQuery(async (db) => projectId ? (await db.projects.get(projectId)) ?? null : null, [projectId]);
     const openMemory = () => {
         if (projectId && project) {
             setOpen(false);

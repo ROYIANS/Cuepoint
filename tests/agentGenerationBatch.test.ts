@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { taskGenerationSource, saveTaskRecord, validateTaskSources } from '@/db/agentTaskRecords';
@@ -84,7 +85,7 @@ describe('durable generation batch review', () => {
     const valid = await saveGenerationBatchDraft(f.id, f.thread.id, saved.revision, edits.map(e => ({ ...e, draft: { ...e.draft, prompt: '修订描述' } })));
     db.close(); await db.open();
     expect((await readGenerationBatch(f.id, f.thread.id)).items[0].draft.prompt).toBe('修订描述');
-    const spy = vi.spyOn(db.agentGenerationBatches, 'put').mockRejectedValueOnce(new Error('storage full'));
+    const spy = failStoreTableOnce(db, "agentGenerationBatches", "put", new Error('storage full'));
     await expect(confirmGenerationBatch(f.id, f.thread.id, valid.revision, new AbortController().signal)).rejects.toThrow('storage full'); spy.mockRestore();
     expect((await readGenerationBatch(f.id, f.thread.id)).items.every(i => !i.snapshot)).toBe(true);
     const outcomes = await Promise.allSettled([confirm(f), confirm(f)]);
@@ -183,7 +184,7 @@ describe('explicit selection, revisions and lifecycle', () => {
   it('rolls back whole entity group and audit on application storage failure', async () => {
     const f = await fixture(5); await confirm(f); const state = await run(f, apimartMock().fetchImpl);
     await selectBatchCandidate(f.id, f.thread.id, state.items[0].id); await selectBatchCandidate(f.id, f.thread.id, state.items[4].id);
-    const spy = vi.spyOn(db.agentGenerationBatches, 'put').mockRejectedValueOnce(new Error('audit full'));
+    const spy = failStoreTableOnce(db, "agentGenerationBatches", "put", new Error('audit full'));
     const outcomes = await applyBatchSelections(f.id, f.thread.id); spy.mockRestore();
     expect(outcomes.every(o => !o.applied)).toBe(true); expect((await db.shots.get(f.shot.id))?.firstFrame.result).toBeUndefined(); expect((await readGenerationBatch(f.id, f.thread.id)).batch.applications).toHaveLength(0);
   });

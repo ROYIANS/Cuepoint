@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import {createProject as createBoundTestProject} from "@/db/projects";
 import {createChatThread} from "@/db/chat";
@@ -63,7 +64,7 @@ describe("unified task workspace", () => {
   });
   it("rolls back task creation if its first execution message cannot be saved", async () => {
     const thread = await createChatThread({projectId:(await createBoundTestProject("对话项目")).id});
-    const failure = vi.spyOn(db.chatMessages, "add").mockRejectedValueOnce(new Error("storage unavailable"));
+    const failure = failStoreTableOnce(db, "chatMessages", "add", new Error("storage unavailable"));
     try {
       await expect(beginAgentRun({ threadId: thread.id, connector, model: "model", content: "任务目标", createTask: true })).rejects.toThrow("storage unavailable");
     } finally { failure.mockRestore(); }
@@ -109,7 +110,7 @@ describe("unified task workspace", () => {
     await transitionToolCall(run.id, call.id, ["pending"], "running");
     if (failureKind === "missing-task") await db.agentTasks.delete(task.id);
     const failure = failureKind === "ledger-write-failure"
-      ? vi.spyOn(db.agentToolCalls, "update").mockRejectedValueOnce(new Error("ledger unavailable"))
+      ? failStoreTableOnce(db, "agentToolCalls", "update", new Error("ledger unavailable"))
       : undefined;
     try {
       await expect(updateRunPlanAndComplete(run.id, call.id, nextPlan)).rejects.toThrow(

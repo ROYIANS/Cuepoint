@@ -261,16 +261,16 @@ describe("safe current output observations", () => {
         await db.agentToolCalls.add({id: "submission", runId: run.id, threadId: run.threadId, providerCallId: "wire", step: 1, order: 0, name: "music_generate", title: "private-tool",
             arguments: JSON.stringify({projectId: project.id, privateText: "private-arguments"}), effect: "network", highRisk: false, status: "completed", decision: "approve", requiresConfirmation: true,
             result: JSON.stringify({id: job.id, privatePayload: "private-result-json"}), createdAt: run.createdAt, updatedAt: run.createdAt});
-        const snapshot = await db.transaction("r", finalReviewTables(), () => collectFinalReviewSnapshot(run));
+        const snapshot = await db.transaction("r", finalReviewTables(), (tx) => collectFinalReviewSnapshot(run, tx));
         expect(snapshot.evidence).toContainEqual(expect.objectContaining({kind: "output", resultKey: "good", available: true, selected: false, placed: false, callId: "submission"}));
         expect(snapshot.evidence).toContainEqual(expect.objectContaining({resultKey: "pending", available: false}));
         expect(JSON.stringify(snapshot)).not.toContain("private-");
         await db.media.delete(media.id);
-        const changed = await db.transaction("r", finalReviewTables(), () => collectFinalReviewSnapshot(run));
+        const changed = await db.transaction("r", finalReviewTables(), (tx) => collectFinalReviewSnapshot(run, tx));
         expect(changed.fingerprint).not.toBe(snapshot.fingerprint);
         expect(changed.evidence).toContainEqual(expect.objectContaining({resultKey: "good", available: false}));
         await db.audioGenerationJobs.update(job.id, {source: {kind: "agent", runId: "old-run", callId: "submission"}});
-        expect((await db.transaction("r", finalReviewTables(), () => collectFinalReviewSnapshot(run))).evidence).toEqual([]);
+        expect((await db.transaction("r", finalReviewTables(), (tx) => collectFinalReviewSnapshot(run, tx))).evidence).toEqual([]);
         expect(targetRevision(snapshot)).not.toBe(targetRevision(changed));
     });
 });

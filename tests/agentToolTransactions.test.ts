@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
@@ -11,6 +12,7 @@ import type { AgentPermissionMode, AgentRun, AgentToolPreview } from "@/domain/a
 import type { ConnectorConfig } from "@/domain/types";
 import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
 import type { AgentToolDefinition } from "@/lib/agent/tools";
+import type {StoreTx} from "@/lib/storage/types";
 
 const connector: ConnectorConfig = { id: "transaction-fixture", name: "fixture", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture-key", updatedAt: "2026-09-19" };
 const toolName = "fixture_create_project";
@@ -22,8 +24,8 @@ function fixtureTool(overrides: Partial<AgentToolDefinition> = {}): AgentToolDef
     parameters: { type: "object", properties: {}, additionalProperties: false },
     parseArguments: (raw) => z.object({}).strict().parse(raw), highRisk: () => false,
     prepare: vi.fn(async () => structuredClone(preview)),
-    execute: vi.fn(async (_args, context) => executeAtomicTool(context, async () => {
-      const project = await createProject("事务项目");
+    execute: vi.fn(async (_args, context) => executeAtomicTool(context, async tx => {
+      const project = await createProject("事务项目",undefined,undefined,undefined,tx);
       return { projectId: project.id };
     })),
     ...overrides,
@@ -56,7 +58,7 @@ describe("atomic business tool transactions", () => {
     const call = await pendingCall(run);
     await transitionToolCall(run.id, call.id, ["pending"], "running");
     const context = { runId: run.id, threadId: run.threadId, callId: call.id, signal: new AbortController().signal };
-    const mutate = vi.fn(async () => ({ projectId: (await createProject("一次创建")).id }));
+    const mutate = vi.fn(async (tx:StoreTx) => ({ projectId: (await createProject("一次创建",undefined,undefined,undefined,tx)).id }));
     const result = await executeAtomicTool(context, mutate);
     db.close(); await db.open();
     expect(await executeAtomicTool(context, mutate)).toEqual(result);
@@ -69,9 +71,9 @@ describe("atomic business tool transactions", () => {
   it("rolls back project and episode creation when the final ledger write fails", async () => {
     const run = await begin(); const call = await pendingCall(run);
     await transitionToolCall(run.id, call.id, ["pending"], "running");
-    const failure = vi.spyOn(db.agentToolCalls, "update").mockRejectedValueOnce(new Error("ledger disk failure"));
+    const failure = failStoreTableOnce(db, "agentToolCalls", "update", new Error("ledger disk failure"));
     try {
-      await expect(executeAtomicTool({ runId: run.id, threadId: run.threadId, callId: call.id, signal: new AbortController().signal }, async () => ({ id: (await createProject("必须回滚")).id }))).rejects.toBeInstanceOf(AtomicToolRollbackError);
+      await expect(executeAtomicTool({ runId: run.id, threadId: run.threadId, callId: call.id, signal: new AbortController().signal }, async tx => ({ id: (await createProject("必须回滚",undefined,undefined,undefined,tx)).id }))).rejects.toBeInstanceOf(AtomicToolRollbackError);
     } finally { failure.mockRestore(); }
     expect(await db.projects.count()).toBe(0);
     expect(await db.episodes.count()).toBe(0);
@@ -83,8 +85,8 @@ describe("atomic business tool transactions", () => {
     const run = await begin(); const call = await pendingCall(run);
     await transitionToolCall(run.id, call.id, ["pending"], "running");
     const controller = new AbortController();
-    await expect(executeAtomicTool({ runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal }, async () => {
-      await createProject("停止后不保存"); controller.abort(); return { success: true };
+    await expect(executeAtomicTool({ runId: run.id, threadId: run.threadId, callId: call.id, signal: controller.signal }, async tx => {
+      await createProject("停止后不保存",undefined,undefined,undefined,tx); controller.abort(); return { success: true };
     })).rejects.toBeInstanceOf(AtomicToolRollbackError);
     expect(await db.projects.count()).toBe(0);
     expect(await db.episodes.count()).toBe(0);
@@ -94,8 +96,8 @@ describe("atomic business tool transactions", () => {
   it("rolls back local mutations when their result cannot fit the durable ledger", async () => {
     const run = await begin(); const call = await pendingCall(run);
     await transitionToolCall(run.id, call.id, ["pending"], "running");
-    await expect(executeAtomicTool({ runId: run.id, threadId: run.threadId, callId: call.id, signal: new AbortController().signal }, async () => {
-      await createProject("超限结果不保存"); return { content: "x".repeat(65_536) };
+    await expect(executeAtomicTool({ runId: run.id, threadId: run.threadId, callId: call.id, signal: new AbortController().signal }, async tx => {
+      await createProject("超限结果不保存",undefined,undefined,undefined,tx); return { content: "x".repeat(65_536) };
     })).rejects.toThrow("大小限制");
     expect(await db.projects.count()).toBe(0);
     expect(await db.episodes.count()).toBe(0);
@@ -218,8 +220,8 @@ describe("prepared approvals and known rollback continuation", () => {
   });
 
   it("continues after a known atomic rollback without marking the mutation unknown", async () => {
-    const tool = fixtureTool({ execute: vi.fn(async (_args, context) => executeAtomicTool(context, async () => {
-      await createProject("必须回滚"); throw new Error("stale revision");
+    const tool = fixtureTool({ execute: vi.fn(async (_args, context) => executeAtomicTool(context, async tx => {
+      await createProject("必须回滚",undefined,undefined,undefined,tx); throw new Error("stale revision");
     })) });
     const run = await begin(); let requests = 0;
     await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => ++requests === 1 ? responseWithTool() : answer())), [tool]);

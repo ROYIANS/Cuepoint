@@ -1,3 +1,5 @@
+import {registerBinaryReference} from "@/lib/storage/codec";
+import {verifiedShotMediaIndex, shotBinaryState} from "@/lib/shotMedia";
 import { describe, expect, it } from "vitest";
 import { emptySlot } from "@/domain/slot";
 import {
@@ -144,4 +146,22 @@ describe("shot filter predicates", () => {
       shotMatchesFilters(legacy, { ...base, statuses: ["draft"] }),
     ).toBe(true);
   });
+});
+
+
+it("keeps native logical result rows while gap filters require a verified availability snapshot", () => {
+  const binary = registerBinaryReference({version: 1, workspaceId: "11111111-1111-4111-8111-111111111111", binaryId: "22222222-2222-4222-8222-222222222222", byteLength: 10, mimeType: "image/png", contentHash: "a".repeat(64)});
+  const row: MediaRecord = {id: "native", projectId: "project", filename: "frame.png", mimeType: "image/png", blob: binary};
+  const current = shot({id: "with-native-result", firstFrame: {...emptySlot(), result: {mediaId: row.id, kind: "image"}}});
+  const filters: ShotFilters = {statuses: [], beatIds: [], gaps: ["missingFirstFrame"]};
+  const pending = new Map([[row.id, row]]);
+  expect(shotBinaryState(pending, row.id)).toBe("pending");
+  expect(shotMatchesFilters(current, filters, pending)).toBe(true);
+  for (const state of ["missing", "corrupt", "error"] as const) {
+    const index = verifiedShotMediaIndex(pending, new Map([[row.id, state]]));
+    expect(index.get(row.id)).toBe(row);
+    expect(shotMatchesFilters(current, filters, index)).toBe(true);
+  }
+  const ready = verifiedShotMediaIndex(pending, new Map([[row.id, "ready"]]));
+  expect(shotMatchesFilters(current, filters, ready)).toBe(false);
 });

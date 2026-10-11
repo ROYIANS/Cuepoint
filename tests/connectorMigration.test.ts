@@ -1,10 +1,14 @@
 import Dexie from "dexie";
 import { expect, it } from "vitest";
-import { db } from "@/db/database";
+import {browserDatabase} from "@/lib/storage/browserDatabase";
+import {createBrowserProductStore} from "@/lib/storage/browser";
+if (!browserDatabase) throw new Error("Historical migration comparator requires browser storage");
+const rawDb=browserDatabase;
+const db=createBrowserProductStore(rawDb);
 import {deleteConnector, resolveConnector, upsertConnector} from "@/db/connectors";
 
 it("deduplicates legacy connections without changing historical IDs, and rotates/revokes every alias", async () => {
-  const schema = Object.fromEntries(db.tables.filter(table => table.name !== "connectorAliases")
+  const schema = Object.fromEntries(rawDb.tables.filter(table => table.name !== "connectorAliases")
     .map(table => [table.name, [table.schema.primKey.src, ...table.schema.indexes.map(index => index.src)].join(",")]));
   schema.connectors = "id, definitionId, updatedAt";
   await db.delete();
@@ -17,13 +21,13 @@ it("deduplicates legacy connections without changing historical IDs, and rotates
   legacy.close();
   await db.open();
   expect(await db.connectors.toArray()).toEqual([current]);
-  expect(await resolveConnector(old.id)).toEqual(old);
-  expect(await resolveConnector(current.id)).toEqual(current);
+  expect(await resolveConnector(old.id,db)).toEqual(old);
+  expect(await resolveConnector(current.id,db)).toEqual(current);
   await expect(db.connectors.add({ ...current, id: "duplicate", definitionId: "apimart", protocol: "openai-compatible" })).rejects.toThrow();
-  const updated = await upsertConnector({ definitionId: "apimart", protocol: "openai-compatible", baseUrl: "https://rotated.invalid/v1", apiKey: "rotated-key" });
+  const updated = await upsertConnector({ definitionId: "apimart", protocol: "openai-compatible", baseUrl: "https://rotated.invalid/v1", apiKey: "rotated-key" },db);
   expect(updated.id).toBe(current.id);
-  expect(await resolveConnector(old.id)).toMatchObject({ id: old.id, apiKey: "rotated-key", baseUrl: "https://rotated.invalid/v1" });
-  await deleteConnector(updated.id);
-  expect(await resolveConnector(old.id)).toBeUndefined();
-  expect(await resolveConnector(current.id)).toBeUndefined();
+  expect(await resolveConnector(old.id,db)).toMatchObject({ id: old.id, apiKey: "rotated-key", baseUrl: "https://rotated.invalid/v1" });
+  await deleteConnector(updated.id,db);
+  expect(await resolveConnector(old.id,db)).toBeUndefined();
+  expect(await resolveConnector(current.id,db)).toBeUndefined();
 });

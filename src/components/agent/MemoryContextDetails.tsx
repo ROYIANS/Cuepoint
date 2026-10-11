@@ -1,12 +1,11 @@
 import {useEffect, useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useProductQuery} from "@/lib/storage/hooks";
 import {Link} from "@tanstack/react-router";
 import {BookOpen, Check, Minus, RotateCcw} from "lucide-react";
 import type {AgentRun} from "@/domain/agent";
 import type {MemorySelection} from "@/domain/memoryRetrieval";
 import {getThreadMemoryExclusions, setThreadMemoryExcluded,} from "@/db/memoryRetrieval";
 import {listProjectMemories} from "@/db/projectMemories";
-import {db} from "@/db/database";
 import {readMemory} from "@/components/memory/readMemory";
 import {CATEGORY_LABELS, STATUS_LABELS,} from "@/components/memory/memoryLabels";
 import {Button} from "@/components/ui/button";
@@ -62,14 +61,14 @@ function MemoryContextContent({
     const projectId = shown?.projectId ?? selection?.projectId;
     const [attempt, setAttempt] = useState(0);
     const scopeKey = JSON.stringify([threadId, projectId]);
-    const loaded = useLiveQuery(
-        async () => ({
+    const loaded = useProductQuery(
+        async (db) => ({
             scopeKey, ...await readMemory(async () => {
                 if (!projectId) return {memories: [], exclusions: [], available: false};
                 const project = await db.projects.get(projectId);
                 if (!project) return {memories: [], exclusions: [], available: false};
-                const exclusions = threadId ? await getThreadMemoryExclusions(threadId, projectId) : [];
-                return {available: true, memories: await listProjectMemories(projectId), exclusions};
+                const exclusions = threadId ? await getThreadMemoryExclusions(threadId, projectId, db) : [];
+                return {available: true, memories: await listProjectMemories(projectId, db), exclusions};
             })
         }),
         [scopeKey, projectId, threadId, attempt],

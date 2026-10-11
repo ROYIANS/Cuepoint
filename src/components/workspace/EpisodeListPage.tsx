@@ -51,17 +51,17 @@ function EpisodeList({projectId}: { projectId: string }) {
     const [pending, setPending] = useState<"add" | "move" | "delete">();
     const [deleteError, setDeleteError] = useState("");
     const project = useVideoWorkspaceQuery(
-        async () => await repository.project(projectId),
+        async (repository) => await repository.project(projectId),
         [projectId],
     );
     const loadedEpisodes =
         useVideoWorkspaceQuery(
-            () => repository.episodes(projectId),
+            (repository) => repository.episodes(projectId),
             [projectId],
         );
     const episodes = loadedEpisodes ?? [];
     const shots =
-        useVideoWorkspaceQuery(() => repository.projectShots(projectId), [projectId]) ?? [];
+        useVideoWorkspaceQuery((repository) => repository.projectShots(projectId), [projectId]) ?? [];
     const [deleteId, setDeleteId] = useState<string>();
     const {registerUndo} = useUndo();
 

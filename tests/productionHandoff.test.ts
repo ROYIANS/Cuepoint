@@ -1,3 +1,5 @@
+// Raw browser hooks are test-only fault/scheduling injection; product commands use the shared adapter.
+import {browserDatabase} from "@/lib/storage/browserDatabase";
 import Dexie from "dexie";
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
@@ -148,17 +150,17 @@ describe("production handoff", () => {
     await db.shots.update(shot.id, { firstFrame: await media(project.id, "snapshot-media", "image") });
     let edit: Promise<unknown> | undefined;
     const onRead = (value: typeof project) => {
-      if (value?.id === project.id && !edit) edit = Dexie.ignoreTransaction(() => db.transaction("rw", db.projects, db.shots, db.media, async () => {
+      if (value?.id === project.id && !edit) edit = Dexie.ignoreTransaction(() => db.transaction("rw", [db.projects, db.shots, db.media], async db => {
         await db.projects.update(project.id, { name: "AFTER" });
         await db.shots.update(shot.id, { content: "AFTER", firstFrame: emptySlot() });
         await db.media.delete("snapshot-media");
       }));
       return value;
     };
-    db.projects.hook("reading", onRead);
+    browserDatabase!.projects.hook("reading", onRead);
     let blob: Blob;
     try { blob = (await exportProductionHandoff(project.id, episode.id)).blob; }
-    finally { db.projects.hook("reading").unsubscribe(onRead); }
+    finally { browserDatabase!.projects.hook("reading").unsubscribe(onRead); }
     await edit;
     const { zip, manifest } = await unpack(blob);
     expect(manifest.project.name).toBe("雨夜送信");

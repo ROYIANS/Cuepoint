@@ -1,4 +1,7 @@
-import {db} from './database';
+import {StorageError} from "@/lib/storage/errors";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from './database';
 import {AtomicToolRollbackError, executeAtomicTool} from './agentTools';
 import {resolveConnector} from "./connectors";
 import {setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "./assets";
@@ -41,18 +44,20 @@ export function frozenGeneration(prepared: Prepared): GenerationSnapshot {
     };
 }
 
-async function recheck(prepared: Prepared) {
-    const current = await readGenerationTarget(prepared.request.target);
-    const config = await resolveConnector(prepared.config.id);
+async function recheck(prepared: Prepared, store?: ProductStore) {
+    const db = store ?? productDb;
+    const current = await readGenerationTarget(prepared.request.target, db);
+    const config = await resolveConnector(prepared.config.id, db);
     if (current.revision !== prepared.current.revision || !config?.apiKey.trim() || config.baseUrl !== prepared.config.baseUrl || config.definitionId !== prepared.provider) throw new Error('目标或连接配置已变化，请重新检查');
     for (const record of prepared.records) {
         if (!record) throw new Error('输入素材已删除');
         const currentMedia = await db.media.get(record.id);
-        if (!currentMedia || currentMedia.projectId !== record.projectId || currentMedia.mimeType !== record.mimeType || currentMedia.blob.size !== record.blob.size) throw new Error('输入素材已变化');
+        if (!currentMedia || currentMedia.projectId !== record.projectId || currentMedia.mimeType !== record.mimeType || binaryByteLength(currentMedia.blob) !== binaryByteLength(record.blob)) throw new Error('输入素材已变化');
     }
 }
 
-export async function ownedGenerationBatch(id: string, threadId: string, mutate = true) {
+export async function ownedGenerationBatch(id: string, threadId: string, mutate = true, store?: ProductStore) {
+    const db = store ?? productDb;
     const batch = await db.agentGenerationBatches.get(id);
     if (!batch || batch.threadId !== threadId) throw new Error('批次不存在或不属于当前对话');
     const thread = await db.chatThreads.get(threadId), run = await db.agentRuns.get(batch.runId),
@@ -67,16 +72,17 @@ export async function ownedGenerationBatch(id: string, threadId: string, mutate 
     return batch;
 }
 
-const itemsFor = (batchId: string) => db.agentGenerationBatchItems.where('batchId').equals(batchId).sortBy('order');
+const itemsFor = (batchId: string, store?: ProductStore) => (db => db.agentGenerationBatchItems.where('batchId').equals(batchId).sortBy('order'))(store ?? productDb);
 
-export async function readGenerationBatch(id: string, threadId: string) {
-    return db.transaction('r', db.tables, async () => {
-        const batch = await ownedGenerationBatch(id, threadId, false);
-        const items = await itemsFor(id), jobs = await db.agentGenerationJobs.where('batchId').equals(id).toArray();
+export async function readGenerationBatch(id: string, threadId: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    return db.transaction('r', db.tables, async (db) => {
+        const batch = await ownedGenerationBatch(id, threadId, false, db);
+        const items = await itemsFor(id, db), jobs = await db.agentGenerationJobs.where('batchId').equals(id).toArray();
         const currentMedia: Record<string, string | undefined> = {};
         for (const item of items) {
             try {
-                currentMedia[item.targetKey] = (await readGenerationTarget(item.baseline.target)).slot.result?.mediaId;
+                currentMedia[item.targetKey] = (await readGenerationTarget(item.baseline.target, db)).slot.result?.mediaId;
             } catch {
                 currentMedia[item.targetKey] = undefined;
             }
@@ -85,35 +91,39 @@ export async function readGenerationBatch(id: string, threadId: string) {
     });
 }
 
-export async function prepareGenerationBatch(title: string, candidates: GenerationSubmitArgs[], context: AgentToolContext) {
+export async function prepareGenerationBatch(title: string, candidates: GenerationSubmitArgs[], context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     try {
-        return await prepareGenerationBatchDraft(title, candidates, context);
+        return await prepareGenerationBatchDraft(title, candidates, context, db);
     } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
         // Preparation never submits a remote request. Preflight failures happen before
         // the atomic batch/items/result write, and transaction failures roll it back.
-        throw new AtomicToolRollbackError(error instanceof Error ? error.message : '批量草稿准备失败，未提交生成');
+        throw new AtomicToolRollbackError(error instanceof Error ? error.message : '批量草稿准备失败，未提交生成',{cause:error});
     }
 }
 
-async function prepareGenerationBatchDraft(title: string, candidates: GenerationSubmitArgs[], context: AgentToolContext) {
+async function prepareGenerationBatchDraft(title: string, candidates: GenerationSubmitArgs[], context: AgentToolContext, store?: ProductStore) {
+    const db = store ?? context.store ?? productDb;
     const existing = await db.agentGenerationBatches.where('sourceCallId').equals(context.callId).first();
     if (existing) {
-        await ownedGenerationBatch(existing.id, context.threadId, false);
-        return batchDraftSummary(existing, await itemsFor(existing.id));
+        await ownedGenerationBatch(existing.id, context.threadId, false, db);
+        return batchDraftSummary(existing, await itemsFor(existing.id, db));
     }
     validateBatchLimits(candidates.map(draft => ({draft})));
-    await assertProjectToolScope(context, 'prepare_generation_batch', {projectId: candidates[0].target.projectId}, true);
+    await assertProjectToolScope(context, 'prepare_generation_batch', {projectId: candidates[0].target.projectId}, true, db);
     const prepared: Prepared[] = [];
-    for (const candidate of candidates) prepared.push(await prepareGenerationSnapshot(candidate, context.signal));
-    return executeAtomicTool(context, async () => {
-        for (const item of prepared) await recheck(item);
-        const run = (await db.agentRuns.get(context.runId))!;
+    for (const candidate of candidates) prepared.push(await prepareGenerationSnapshot(candidate, context.signal, db));
+    return executeAtomicTool(context, async (db) => {
+        const boundContext = {...context, store:db};
+        for (const item of prepared) await recheck(item, db);
+        const run = (await db.agentRuns.get(boundContext.runId))!;
         const at = nowIso(), id = createId('genbatch');
         const items: GenerationBatchItem[] = prepared.map((value, order) => ({
             id: createId('candidate'),
             batchId: id,
             projectId: value.request.target.projectId,
-            threadId: context.threadId,
+            threadId: boundContext.threadId,
             order,
             targetKey: generationTargetKey(value.request.target),
             label: value.current.label,
@@ -129,10 +139,10 @@ async function prepareGenerationBatchDraft(title: string, candidates: Generation
             version: 1,
             id,
             projectId: items[0].projectId,
-            threadId: context.threadId,
-            runId: context.runId,
-            sourceCallId: context.callId,
-            originCallId: context.callId,
+            threadId: boundContext.threadId,
+            runId: boundContext.runId,
+            sourceCallId: boundContext.callId,
+            originCallId: boundContext.callId,
             taskId: run.taskId,
             title: title.trim().slice(0, 160) || '批量生成',
             revision: 1,
@@ -148,7 +158,7 @@ async function prepareGenerationBatchDraft(title: string, candidates: Generation
         await db.agentGenerationBatches.add(batch);
         await db.agentGenerationBatchItems.bulkAdd(items);
         return batchDraftSummary(batch, items);
-    });
+    }, db);
 }
 
 function batchDraftSummary(batch: GenerationBatch, items: GenerationBatchItem[]) {
@@ -172,7 +182,8 @@ function immutableContext(draft: GenerationSubmitArgs, proposal: GenerationSubmi
     })) throw new Error('目标和输入素材不能修改，请建立新提案');
 }
 
-async function writeBatch(batch: GenerationBatch, patch: Partial<GenerationBatch>) {
+async function writeBatch(batch: GenerationBatch, patch: Partial<GenerationBatch>, store?: ProductStore) {
+    const db = store ?? productDb;
     const next = {...batch, ...patch, revision: batch.revision + 1, updatedAt: nowIso()};
     await db.agentGenerationBatches.put(next);
     return next;
@@ -183,12 +194,13 @@ export async function saveGenerationBatchDraft(id: string, threadId: string, rev
     id: string;
     draft: GenerationSubmitArgs;
     included: boolean
-}>) {
-    return db.transaction('rw', db.tables, async () => {
-        const batch = await ownedGenerationBatch(id, threadId);
+}>, store?: ProductStore) {
+    const db = store ?? productDb;
+    return db.transaction('rw', db.tables, async (db) => {
+        const batch = await ownedGenerationBatch(id, threadId, undefined, db);
         requireRevision(batch, revision);
         if (batch.status !== 'draft') throw new Error('已确认的配置不能修改');
-        const items = await itemsFor(id);
+        const items = await itemsFor(id, db);
         if (edits.length !== items.length || new Set(edits.map(e => e.id)).size !== items.length) throw new Error('候选列表已变化');
         for (const item of items) {
             const edit = edits.find(e => e.id === item.id);
@@ -207,21 +219,22 @@ export async function saveGenerationBatchDraft(id: string, threadId: string, rev
                 updatedAt: nowIso()
             });
         }
-        return writeBatch(batch, {});
+        return writeBatch(batch, {}, db);
     });
 }
 
-export async function changeGenerationBatchItems(id: string, threadId: string, revision: number, itemId: string, action: 'clone' | 'remove') {
-    return db.transaction('rw', db.tables, async () => {
-        const batch = await ownedGenerationBatch(id, threadId);
+export async function changeGenerationBatchItems(id: string, threadId: string, revision: number, itemId: string, action: 'clone' | 'remove', store?: ProductStore) {
+    const db = store ?? productDb;
+    return db.transaction('rw', db.tables, async (db) => {
+        const batch = await ownedGenerationBatch(id, threadId, undefined, db);
         requireRevision(batch, revision);
         if (batch.status !== 'draft') throw new Error('只能编辑草稿候选');
-        const items = await itemsFor(id), item = items.find(i => i.id === itemId);
+        const items = await itemsFor(id, db), item = items.find(i => i.id === itemId);
         if (!item) throw new Error('候选不存在');
         if (action === 'remove') {
             if (items.length === 1) throw new Error('最后一份候选请使用放弃批次');
             await db.agentGenerationBatchItems.delete(item.id);
-            return writeBatch(batch, {itemIds: batch.itemIds.filter(value => value !== item.id)});
+            return writeBatch(batch, {itemIds: batch.itemIds.filter(value => value !== item.id)}, db);
         }
         validateBatchLimits([...items, item]);
         const clone = {
@@ -232,30 +245,31 @@ export async function changeGenerationBatchItems(id: string, threadId: string, r
             updatedAt: nowIso()
         };
         await db.agentGenerationBatchItems.add(clone);
-        return writeBatch(batch, {itemIds: [...batch.itemIds, clone.id]});
+        return writeBatch(batch, {itemIds: [...batch.itemIds, clone.id]}, db);
     });
 }
 
-export async function confirmGenerationBatch(id: string, threadId: string, revision: number, signal: AbortSignal) {
-    const before = await readGenerationBatch(id, threadId);
+export async function confirmGenerationBatch(id: string, threadId: string, revision: number, signal: AbortSignal, store?: ProductStore) {
+    const db = store ?? productDb;
+    const before = await readGenerationBatch(id, threadId, db);
     requireRevision(before.batch, revision);
     if (before.batch.status !== 'draft') throw new Error('批次已确认或放弃');
     const included = before.items.filter(i => i.included);
     validateBatchLimits(included);
     const prepared: Prepared[] = [];
     for (const item of included) {
-        const value = await prepareGenerationSnapshot(item.draft, signal);
+        const value = await prepareGenerationSnapshot(item.draft, signal, db);
         if (value.current.revision !== item.baseline.baseRevision || targetRevision(value.inputs) !== targetRevision(item.baseline.inputs)) throw new Error('原目标或输入已变化，请重新准备批次');
         prepared.push(value);
     }
-    return db.transaction('rw', db.tables, async () => {
+    return db.transaction('rw', db.tables, async (db) => {
         signal.throwIfAborted();
-        const batch = await ownedGenerationBatch(id, threadId);
+        const batch = await ownedGenerationBatch(id, threadId, undefined, db);
         requireRevision(batch, revision);
         if (batch.status !== 'draft') throw new Error('批次已确认或放弃');
         const revisions: Record<string, string> = {};
         for (const [index, item] of included.entries()) {
-            await recheck(prepared[index]);
+            await recheck(prepared[index], db);
             const snapshot = frozenGeneration(prepared[index]);
             revisions[generationEntityKey(snapshot.target)] = snapshot.baseRevision;
             await db.agentGenerationBatchItems.put({...item, snapshot, state: 'queued', updatedAt: nowIso()});
@@ -266,47 +280,50 @@ export async function confirmGenerationBatch(id: string, threadId: string, revis
             confirmedAt: nowIso(),
             confirmedItemIds: included.map(i => i.id),
             entityRevisions: revisions
-        });
+        }, db);
     });
 }
 
-export async function controlGenerationBatch(id: string, threadId: string, action: 'pause' | 'cancel' | 'run', reason?: string) {
-    return db.transaction('rw', db.tables, async () => {
-        const batch = await ownedGenerationBatch(id, threadId);
+export async function controlGenerationBatch(id: string, threadId: string, action: 'pause' | 'cancel' | 'run', reason?: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    return db.transaction('rw', db.tables, async (db) => {
+        const batch = await ownedGenerationBatch(id, threadId, undefined, db);
         if (action === 'run' && (!batch.confirmedAt || batch.status === 'draft')) throw new Error('请先确认生成请求');
         if (action === 'run' && (await db.agentGenerationJobs.where('batchId').equals(id).toArray()).some(j => j.status === 'unknown')) {
             return writeBatch(batch, {
                 status: 'paused',
                 pauseReason: '提交结果未知；仅可继续查询其他已受理任务，请核实供应商记录'
-            });
+            }, db);
         }
-        if (action === 'cancel') for (const item of await itemsFor(id)) if (!item.jobId) await db.agentGenerationBatchItems.update(item.id, {
+        if (action === 'cancel') for (const item of await itemsFor(id, db)) if (!item.jobId) await db.agentGenerationBatchItems.update(item.id, {
             state: 'cancelled',
             updatedAt: nowIso()
         });
         return writeBatch(batch, {
             status: action === 'run' ? (batch.status === 'cancelled' ? 'cancelled' : 'running') : action === 'cancel' ? 'cancelled' : 'paused',
             pauseReason: reason
-        });
+        }, db);
     });
 }
 
-export async function assertBatchDispatch(job: AgentGenerationJob) {
+export async function assertBatchDispatch(job: AgentGenerationJob, store?: ProductStore) {
+    const db = store ?? productDb;
     if (!job.batchId || !job.batchItemId) throw new Error('不是批次任务');
-    const batch = await ownedGenerationBatch(job.batchId, job.threadId);
+    const batch = await ownedGenerationBatch(job.batchId, job.threadId, undefined, db);
     const item = await db.agentGenerationBatchItems.get(job.batchItemId);
     if (batch.status !== 'running' || !item || item.jobId !== job.id || item.state !== 'claimed' || !batch.confirmedItemIds.includes(item.id) || !await db.agentGenerationJobs.get(job.id)) throw new Error('批次已暂停或取消，未再次提交');
     if ((await db.agentGenerationJobs.where('batchId').equals(batch.id).toArray()).some(j => j.status === 'unknown')) throw new Error('本批有未知提交，已暂停后续发送');
-    if ((await readGenerationTarget(job.target)).revision !== batch.entityRevisions[generationEntityKey(job.target)]) throw new Error('目标已被修改，尚未付费提交');
+    if ((await readGenerationTarget(job.target, db)).revision !== batch.entityRevisions[generationEntityKey(job.target)]) throw new Error('目标已被修改，尚未付费提交');
 }
 
-export async function claimBatchItem(id: string, threadId: string, itemId: string): Promise<AgentGenerationJob | undefined> {
-    return db.transaction('rw', db.tables, async () => {
-        const batch = await ownedGenerationBatch(id, threadId);
+export async function claimBatchItem(id: string, threadId: string, itemId: string, store?: ProductStore): Promise<AgentGenerationJob | undefined> {
+    const db = store ?? productDb;
+    return db.transaction('rw', db.tables, async (db) => {
+        const batch = await ownedGenerationBatch(id, threadId, undefined, db);
         if (batch.status !== 'running') return;
         const jobs = await db.agentGenerationJobs.where('batchId').equals(id).toArray();
         if (jobs.some(j => j.status === 'unknown')) {
-            await writeBatch(batch, {status: 'paused', pauseReason: '提交结果未知，请核实供应商记录'});
+            await writeBatch(batch, {status: 'paused', pauseReason: '提交结果未知，请核实供应商记录'}, db);
             return;
         }
         const item = await db.agentGenerationBatchItems.get(itemId);
@@ -329,38 +346,41 @@ export async function claimBatchItem(id: string, threadId: string, itemId: strin
         };
         await db.agentGenerationJobs.add(job);
         await db.agentGenerationBatchItems.put({...item, jobId: job.id, state: 'claimed', updatedAt: at});
-        await assertBatchDispatch(job);
+        await assertBatchDispatch(job, db);
         return job;
     });
 }
 
-export async function settleGenerationBatch(id: string, threadId: string) {
-    return db.transaction('rw', db.tables, async () => {
-        const batch = await ownedGenerationBatch(id, threadId), items = await itemsFor(id),
+export async function settleGenerationBatch(id: string, threadId: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    return db.transaction('rw', db.tables, async (db) => {
+        const batch = await ownedGenerationBatch(id, threadId, undefined, db), items = await itemsFor(id, db),
             jobs = await db.agentGenerationJobs.where('batchId').equals(id).toArray();
         if (batch.status === 'cancelled') return batch;
         const pending = items.some(i => i.state === 'queued') || jobs.some(j => !terminal(j));
         return writeBatch(batch, {
             status: pending ? 'paused' : 'settled',
             pauseReason: pending ? batch.pauseReason ?? '本地等待已暂停；继续时只恢复已有任务和未发送候选' : undefined
-        });
+        }, db);
     });
 }
 
-export async function selectBatchCandidate(id: string, threadId: string, itemId: string) {
-    return db.transaction('rw', db.tables, async () => {
-        const batch = await ownedGenerationBatch(id, threadId), item = await db.agentGenerationBatchItems.get(itemId);
+export async function selectBatchCandidate(id: string, threadId: string, itemId: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    return db.transaction('rw', db.tables, async (db) => {
+        const batch = await ownedGenerationBatch(id, threadId, undefined, db), item = await db.agentGenerationBatchItems.get(itemId);
         const job = item?.jobId ? await db.agentGenerationJobs.get(item.jobId) : undefined;
         if (!item || item.batchId !== id || !job?.result || !terminal(job)) throw new Error('候选尚无本地结果');
         const media = await db.media.get(job.result.mediaId);
-        if (!media || media.projectId !== batch.projectId || !media.blob.size || !media.mimeType.startsWith(`${job.kind}/`)) throw new Error('候选素材不可用');
-        return writeBatch(batch, {selections: {...batch.selections, [item.targetKey]: item.id}});
+        if (!media || media.projectId !== batch.projectId || !binaryByteLength(media.blob) || !media.mimeType.startsWith(`${job.kind}/`)) throw new Error('候选素材不可用');
+        return writeBatch(batch, {selections: {...batch.selections, [item.targetKey]: item.id}}, db);
     });
 }
 
 /** Explicit user selection writes are grouped by entity. Other entities can succeed independently. */
-export async function applyBatchSelections(id: string, threadId: string) {
-    const before = await readGenerationBatch(id, threadId);
+export async function applyBatchSelections(id: string, threadId: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    const before = await readGenerationBatch(id, threadId, db);
     await flushPendingDrafts(before.batch.projectId);
     const chosen = before.items.filter(i => before.batch.selections[i.targetKey] === i.id);
     const groups = new Map<string, GenerationBatchItem[]>();
@@ -375,43 +395,43 @@ export async function applyBatchSelections(id: string, threadId: string) {
             for (const item of items) {
                 const job = await db.agentGenerationJobs.get(item.jobId!);
                 if (!job?.result) throw new Error('候选结果不可用');
-                inputRecords.push(...await loadGenerationInputs(job));
+                inputRecords.push(...await loadGenerationInputs(job, db));
             }
-            await db.transaction('rw', db.tables, async () => {
-                let batch = await ownedGenerationBatch(id, threadId);
+            await db.transaction('rw', db.tables, async (db) => {
+                let batch = await ownedGenerationBatch(id, threadId, undefined, db);
                 for (const record of inputRecords) {
                     const saved = await db.media.get(record.id);
-                    if (!saved || saved.projectId !== record.projectId || saved.mimeType !== record.mimeType || saved.blob.size !== record.blob.size) throw new Error('输入素材已变化，未写入结果');
+                    if (!saved || saved.projectId !== record.projectId || saved.mimeType !== record.mimeType || binaryByteLength(saved.blob) !== binaryByteLength(record.blob)) throw new Error('输入素材已变化，未写入结果');
                 }
-                const current = await readGenerationTarget(items[0].baseline.target);
+                const current = await readGenerationTarget(items[0].baseline.target, db);
                 if (current.revision !== batch.entityRevisions[key]) throw new Error('目标已被人工修改；结果保留，未覆盖');
                 for (const item of items) {
                     if (batch.selections[item.targetKey] !== item.id) throw new Error('所选候选已变化，请重新检查');
                     const job = await db.agentGenerationJobs.get(item.jobId!);
                     if (!job?.result || job.batchId !== id || job.batchItemId !== item.id) throw new Error('候选记录已变化');
                     const media = await db.media.get(job.result.mediaId);
-                    if (!media || media.projectId !== job.projectId || !media.blob.size || !media.mimeType.startsWith(`${job.kind}/`)) throw new Error('结果素材不可用');
-                    const target = await readGenerationTarget(job.target);
+                    if (!media || media.projectId !== job.projectId || !binaryByteLength(media.blob) || !media.mimeType.startsWith(`${job.kind}/`)) throw new Error('结果素材不可用');
+                    const target = await readGenerationTarget(job.target, db);
                     if (target.slot.result?.mediaId === job.result.mediaId) continue;
                     const slot = {...target.slot, result: job.result};
                     switch (job.target.kind) {
                         case 'shot':
-                            await setShotSlot(job.target.entityId, job.target.slot!, slot);
+                            await setShotSlot(job.target.entityId, job.target.slot!, slot, undefined, db);
                             break;
                         case 'character':
-                            await setCharacterSlot(job.target.entityId, job.target.slot, slot);
+                            await setCharacterSlot(job.target.entityId, job.target.slot, slot, undefined, db);
                             break;
                         case 'scene':
-                            await setSceneSlot(job.target.entityId, job.target.slot, slot);
+                            await setSceneSlot(job.target.entityId, job.target.slot, slot, undefined, db);
                             break;
                         case 'prop':
-                            await setPropSlot(job.target.entityId, job.target.slot, slot);
+                            await setPropSlot(job.target.entityId, job.target.slot, slot, undefined, db);
                             break;
                         case 'style':
-                            await setStyleSlot(job.target.entityId, job.target.slot, slot);
+                            await setStyleSlot(job.target.entityId, job.target.slot, slot, undefined, db);
                             break;
                     }
-                    const after = await readGenerationTarget(job.target);
+                    const after = await readGenerationTarget(job.target, db);
                     await db.agentGenerationJobs.update(job.id, {
                         status: 'applied',
                         error: undefined,
@@ -430,11 +450,12 @@ export async function applyBatchSelections(id: string, threadId: string) {
                             result: job.result,
                             at: nowIso(),
                         }]
-                    });
+                    }, db);
                 }
             });
             outcomes.push(...items.map(item => ({targetKey: item.targetKey, applied: true})));
         } catch (error) {
+        if (error instanceof StorageError && error.certainty === "unknown") throw error;
             outcomes.push(...items.map(item => ({
                 targetKey: item.targetKey,
                 applied: false,
@@ -445,18 +466,19 @@ export async function applyBatchSelections(id: string, threadId: string) {
     return outcomes;
 }
 
-export async function retryFailedBatch(id: string, threadId: string) {
-    const before = await readGenerationBatch(id, threadId);
+export async function retryFailedBatch(id: string, threadId: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    const before = await readGenerationBatch(id, threadId, db);
     const failures = before.items.filter(i => before.jobs.find(j => j.id === i.jobId)?.status === 'failed');
     if (!failures.length) throw new Error('没有明确失败的候选；未知提交不能重试');
     const prepared: Prepared[] = [];
-    for (const item of failures) prepared.push(await prepareGenerationSnapshot(item.draft, new AbortController().signal));
-    return db.transaction('rw', db.tables, async () => {
-        const source = await ownedGenerationBatch(id, threadId);
+    for (const item of failures) prepared.push(await prepareGenerationSnapshot(item.draft, new AbortController().signal, db));
+    return db.transaction('rw', db.tables, async (db) => {
+        const source = await ownedGenerationBatch(id, threadId, undefined, db);
         const at = nowIso(), nextId = createId('genbatch');
         for (const [index, item] of failures.entries()) {
             if ((await db.agentGenerationJobs.get(item.jobId!))?.status !== 'failed') throw new Error('失败状态已变化');
-            await recheck(prepared[index]);
+            await recheck(prepared[index], db);
         }
         const items = failures.map((item, index): GenerationBatchItem => ({
             ...item,
@@ -496,8 +518,9 @@ export async function retryFailedBatch(id: string, threadId: string) {
 }
 
 /** Call only while the caller holds this thread's Web Lock. Local reads/writes, no HTTP. */
-export async function recoverAbandonedGenerationBatches(threadId: string) {
-    await db.transaction('rw', db.tables, async () => {
+export async function recoverAbandonedGenerationBatches(threadId: string, store?: ProductStore) {
+    const db = store ?? productDb;
+    await db.transaction('rw', db.tables, async (db) => {
         const batches = await db.agentGenerationBatches.where('threadId').equals(threadId).toArray();
         for (const batch of batches) {
             if (batch.status !== 'running') continue;
@@ -508,7 +531,7 @@ export async function recoverAbandonedGenerationBatches(threadId: string) {
                     updatedAt: nowIso()
                 });
             }
-            await writeBatch(batch, {status: 'paused', pauseReason: '上次本地执行已中断，继续前请检查各候选状态'});
+            await writeBatch(batch, {status: 'paused', pauseReason: '上次本地执行已中断，继续前请检查各候选状态'}, db);
         }
     });
 }

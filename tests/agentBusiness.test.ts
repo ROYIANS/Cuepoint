@@ -1,3 +1,4 @@
+import {failStoreTableOnce} from "./helpers/storeFaults";
 import {registeredTools} from "./helpers/registeredTools";
 import { importReferenceFile } from "@/lib/references/import";
 import { ownerSnapshot, targetRevision } from "@/lib/agent/businessStore";
@@ -157,7 +158,7 @@ describe("committed business write receipts", () => {
   it("leaves no receipt or business effect after a failed ledger, foreign scope or rejected call", async () => {
     const scope = await fixture(), other = await fixture();
     const pending = await prepare("character_create", { ownerId: scope.ownerId, fields: { name: "不可提交" } });
-    const spy = vi.spyOn(db.agentToolCalls, "update").mockRejectedValueOnce(new Error("receipt ledger failed"));
+    const spy = failStoreTableOnce(db, "agentToolCalls", "update", new Error("receipt ledger failed"));
     try { await expect(pending.execute()).rejects.toThrow("receipt ledger failed"); } finally { spy.mockRestore(); }
     expect(await db.characters.count()).toBe(0);
     expect((await db.agentToolCalls.get(pending.context.callId))?.result).toBeUndefined();
@@ -245,7 +246,7 @@ describe("Agent creates every supported project kind", () => {
 
   it.each(["audio", "music"] as const)("rolls back %s seeds if saving its tool result fails", async (kind) => {
     const call = await prepare("project_create", { name: "应回滚", kind });
-    const failure = vi.spyOn(db.agentToolCalls, "update").mockRejectedValueOnce(new Error("ledger failure"));
+    const failure = failStoreTableOnce(db, "agentToolCalls", "update", new Error("ledger failure"));
     try { await expect(call.execute()).rejects.toBeInstanceOf(AtomicToolRollbackError); }
     finally { failure.mockRestore(); }
     expect(await db.projects.count()).toBe(0);
@@ -415,7 +416,7 @@ describe("business isolation, versioned approval and atomic outcomes", () => {
     expect(await db.projects.count()).toBe(1);
     expect((await db.agentToolCalls.get(pending.context.callId))?.status).toBe("completed");
     const failing = await prepare("project_create", { name: "不能落库" });
-    const spy = vi.spyOn(db.agentToolCalls, "update").mockRejectedValueOnce(new Error("ledger failed"));
+    const spy = failStoreTableOnce(db, "agentToolCalls", "update", new Error("ledger failed"));
     try { await expect(failing.execute()).rejects.toThrow("ledger failed"); } finally { spy.mockRestore(); }
     expect(await db.projects.count()).toBe(1);
     expect(await db.episodes.count()).toBe(1);

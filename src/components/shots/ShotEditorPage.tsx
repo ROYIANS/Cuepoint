@@ -126,18 +126,18 @@ function ShotEditorPageContent({
     const repository = useVideoWorkspaceRepository();
     const readStatus = useVideoWorkspaceReadStatus();
     const projectResult = useVideoWorkspaceQuery(
-        async () => ({projectId, project: await repository.project(projectId)}),
+        async (repository) => ({projectId, project: await repository.project(projectId)}),
         [projectId],
     );
     const episodeResult = useVideoWorkspaceQuery(
-        async () => ({projectId, episodeId, episode: await repository.episode(episodeId)}),
+        async (repository) => ({projectId, episodeId, episode: await repository.episode(episodeId)}),
         [projectId, episodeId],
     );
-    const shotsResult = useVideoWorkspaceQuery(async () => ({
+    const shotsResult = useVideoWorkspaceQuery(async (repository) => ({
         projectId, episodeId,
         shots: await repository.shots(episodeId),
     }), [projectId, episodeId]);
-    const assetsResult = useVideoWorkspaceQuery(async () => ({
+    const assetsResult = useVideoWorkspaceQuery(async (repository) => ({
         projectId,
         characters: await repository.characters(projectId),
         scenes: await repository.scenes(projectId),
@@ -153,7 +153,7 @@ function ShotEditorPageContent({
     const characters = useMemo(() => loadedCharacters ?? [], [loadedCharacters]);
     const scenes = useMemo(() => loadedScenes ?? [], [loadedScenes]);
 
-    const relationAssets = useVideoWorkspaceQuery(async () => ({
+    const relationAssets = useVideoWorkspaceQuery(async (repository) => ({
         projectId,
         props: await repository.props(projectId),
         styles: await repository.styles(projectId),

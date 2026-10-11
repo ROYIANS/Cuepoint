@@ -1,3 +1,4 @@
+import {installStoreHook} from "./helpers/storeBackendFaults";
 import { describe, expect, it } from "vitest";
 import { db } from "@/db/database";
 import {createAudioMusicProject} from "@/db/projects";
@@ -28,9 +29,9 @@ describe("audio script paragraphs", () => {
     const project = await createAudioMusicProject("回滚测试", "audio");
     const chapter = (await db.audioChapters.where("projectId").equals(project.id).toArray())[0];
     const rejectSecond = (_key: unknown, row: { text: string }) => { if (row.text === "拒绝此段") throw new Error("模拟写入失败"); };
-    db.audioSegments.hook("creating", rejectSecond);
+    const storeHook_audioSegments_rejectSecond=await installStoreHook(db, "audioSegments", "creating", rejectSecond);
     try { await expect(appendAudioScript(project.id, chapter.id, "首段\n\n拒绝此段")).rejects.toThrow("模拟写入失败"); }
-    finally { db.audioSegments.hook("creating").unsubscribe(rejectSecond); }
+    finally { storeHook_audioSegments_rejectSecond.mockRestore(); }
     expect(await db.audioSegments.where("chapterId").equals(chapter.id).count()).toBe(0);
   });
 });
@@ -77,9 +78,9 @@ describe("inline audio script editing", () => {
   it("rolls original text back if adding a split line fails", async () => {
     const { project, line } = await fixture();
     const rejectNew = () => { throw new Error("模拟行创建失败"); };
-    db.audioSegments.hook("creating", rejectNew);
+    const storeHook_audioSegments_rejectNew=await installStoreHook(db, "audioSegments", "creating", rejectNew);
     try { await expect(editAudioScriptLines({ projectId: project.id, segmentId: line.id, baseline: line.text, start: 1, end: 1 })).rejects.toThrow("模拟行创建失败"); }
-    finally { db.audioSegments.hook("creating").unsubscribe(rejectNew); }
+    finally { storeHook_audioSegments_rejectNew.mockRestore(); }
     expect(await db.audioSegments.get(line.id)).toEqual(line);
   });
 });

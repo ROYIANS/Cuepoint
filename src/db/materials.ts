@@ -1,5 +1,8 @@
-import {db} from './database';
-import type {Table} from 'dexie';
+import {readBinaryBlob} from "@/lib/storage/binary";
+import {binaryByteLength} from "@/domain/binary";
+import type {ProductStore} from "@/lib/storage/types";
+import {db as productDb} from './database';
+import type {StoreTable} from "@/lib/storage/types";
 import type {
     LibraryMaterial,
     MaterialEntity,
@@ -14,7 +17,7 @@ import {remapSlot, slotMediaIds} from '@/domain/slot';
 import {createId, nowIso} from '@/lib/ids';
 import {STUDIO_LIBRARY_ID} from '@/domain/types';
 
-const tables = () => [db.projects, db.ipProfiles, db.projectIpLinks, db.libraryMaterials, db.materialVersions, db.materialUses, db.materialEvents, db.media, db.characters, db.scenes, db.props, db.styles];
+const tables = (store?: ProductStore) => (db => [db.projects, db.ipProfiles, db.projectIpLinks, db.libraryMaterials, db.materialVersions, db.materialUses, db.materialEvents, db.media, db.characters, db.scenes, db.props, db.styles])(store ?? productDb);
 const MAX_FILE_SIZE = 512 * 1024 * 1024;
 const MIME_KINDS: Record<string, MaterialKind> = {
     'image/png': 'image',
@@ -77,7 +80,8 @@ function validName(name: string): string {
     return name.trim();
 }
 
-async function assertScope(scope: MaterialScope): Promise<void> {
+async function assertScope(scope: MaterialScope, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (scope.kind === 'global') return;
     if (scope.kind === 'ip') {
         const ip = await db.ipProfiles.get(scope.id);
@@ -88,27 +92,31 @@ async function assertScope(scope: MaterialScope): Promise<void> {
     } else throw new Error('素材归属无效');
 }
 
-async function activeMaterial(id: string, expectedRevision?: number): Promise<LibraryMaterial> {
+async function activeMaterial(id: string, expectedRevision?: number, store?: ProductStore): Promise<LibraryMaterial> {
+    const db = store ?? productDb;
     const material = await db.libraryMaterials.get(id);
     if (!material) throw new Error('素材不存在');
     if (material.archived) throw new Error('素材已归档，请先恢复');
     if (expectedRevision !== undefined && material.revision !== expectedRevision) throw new Error('素材已更新，请重新加载后再操作');
-    await assertScope(material.scope);
+    await assertScope(material.scope, db);
     return material;
 }
 
-async function versionOf(material: LibraryMaterial): Promise<MaterialVersion> {
+async function versionOf(material: LibraryMaterial, store?: ProductStore): Promise<MaterialVersion> {
+    const db = store ?? productDb;
     const version = await db.materialVersions.where('[materialId+revision]').equals([material.id, material.revision]).first();
     if (!version) throw new Error('素材版本缺失，无法继续操作');
     return version;
 }
 
-async function event(materialId: string, action: string, detail = ''): Promise<void> {
+async function event(materialId: string, action: string, detail = '', store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     await db.materialEvents.add({id: createId('mev'), materialId, action, detail, createdAt: nowIso()});
 }
 
-async function insertMaterial(name: string, kind: MaterialKind, scope: MaterialScope, payload: MaterialPayload, source?: LibraryMaterial['source'], metadata?: Pick<LibraryMaterial, 'notes' | 'tags'>): Promise<LibraryMaterial> {
-    await assertScope(scope);
+async function insertMaterial(name: string, kind: MaterialKind, scope: MaterialScope, payload: MaterialPayload, source?: LibraryMaterial['source'], metadata?: Pick<LibraryMaterial, 'notes' | 'tags'>, store?: ProductStore): Promise<LibraryMaterial> {
+    const db = store ?? productDb;
+    await assertScope(scope, db);
     const at = nowIso();
     const material: LibraryMaterial = {
         id: createId('mat'),
@@ -125,30 +133,33 @@ async function insertMaterial(name: string, kind: MaterialKind, scope: MaterialS
     };
     await db.libraryMaterials.add(material);
     await db.materialVersions.add({id: createId('mvr'), materialId: material.id, revision: 1, payload, createdAt: at});
-    await event(material.id, source ? 'promote' : 'create');
+    await event(material.id, source ? 'promote' : 'create', undefined, db);
     return material;
 }
 
-async function nextVersion(material: LibraryMaterial, payload: MaterialPayload, patch: Partial<Pick<LibraryMaterial, 'name' | 'notes' | 'tags'>> = {}): Promise<void> {
+async function nextVersion(material: LibraryMaterial, payload: MaterialPayload, patch: Partial<Pick<LibraryMaterial, 'name' | 'notes' | 'tags'>> = {}, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const at = nowIso();
     const revision = material.revision + 1;
     await db.materialVersions.add({id: createId('mvr'), materialId: material.id, revision, payload, createdAt: at});
     await db.libraryMaterials.put({...material, ...patch, revision, updatedAt: at});
-    await event(material.id, 'version', `v${revision}`);
+    await event(material.id, 'version', `v${revision}`, db);
 }
 
-function settingTable(kind: SettingMaterialKind): Table<MaterialEntity, string> {
-    return (kind === 'character' ? db.characters : kind === 'scene' ? db.scenes : kind === 'prop' ? db.props : db.styles) as Table<MaterialEntity, string>;
+function settingTable(kind: SettingMaterialKind, store?: ProductStore): StoreTable<MaterialEntity> {
+    const db = store ?? productDb;
+    return (kind === 'character' ? db.characters : kind === 'scene' ? db.scenes : kind === 'prop' ? db.props : db.styles) as StoreTable<MaterialEntity>;
 }
 
 function isSetting(kind: MaterialKind | 'media'): kind is SettingMaterialKind {
     return ['character', 'scene', 'prop', 'style'].includes(kind);
 }
 
-async function snapshotSetting(kind: SettingMaterialKind, entityId: string): Promise<Extract<MaterialPayload, {
+async function snapshotSetting(kind: SettingMaterialKind, entityId: string, store?: ProductStore): Promise<Extract<MaterialPayload, {
     type: 'setting'
 }>> {
-    const entity = await settingTable(kind).get(entityId);
+    const db = store ?? productDb;
+    const entity = await settingTable(kind, db).get(entityId);
     if (!entity) throw new Error('来源设定不存在');
     if (entity.projectId !== STUDIO_LIBRARY_ID && !await db.projects.get(entity.projectId)) throw new Error('来源项目不存在');
     const media = [];
@@ -159,74 +170,80 @@ async function snapshotSetting(kind: SettingMaterialKind, entityId: string): Pro
             for (const id of references) {
                 const item = await db.media.get(id);
                 if (!item || item.projectId !== entity.projectId) throw new Error('来源设定引用的素材缺失或不属于同一项目');
-                if (filePayload(item.blob, item.filename, item.mimeType).kind !== kindExpected) throw new Error('来源设定素材类型与槽位不一致');
+                if (filePayload(await db.waitFor(readBinaryBlob(item.blob)), item.filename, item.mimeType).kind !== kindExpected) throw new Error('来源设定素材类型与槽位不一致');
             }
         }
     }
     for (const id of ids) {
         const item = (await db.media.get(id))!;
-        media.push({...item, blob: item.blob.slice(0, item.blob.size, item.mimeType)});
+        media.push({...item, blob: (await db.waitFor(readBinaryBlob(item.blob))).slice(0, binaryByteLength(item.blob), item.mimeType)});
     }
     return {type: 'setting', kind, entity: structuredClone(entity), media};
 }
 
-export async function createFileMaterial(file: File, scope: MaterialScope, name?: string): Promise<LibraryMaterial> {
+export async function createFileMaterial(file: File, scope: MaterialScope, name?: string, store?: ProductStore): Promise<LibraryMaterial> {
+    const db = store ?? productDb;
     const {kind, payload} = filePayload(file, file.name, file.type);
-    return db.transaction('rw', tables(), async () => await insertMaterial(name ?? file.name, kind, scope, payload));
+    return db.transaction('rw', tables(db), async (db) => await insertMaterial(name ?? file.name, kind, scope, payload, undefined, undefined, db));
 }
 
-export async function promoteLegacyMaterial(kind: MaterialKind | 'media', entityId: string, scope: MaterialScope): Promise<LibraryMaterial> {
-    return db.transaction('rw', tables(), async () => {
+export async function promoteLegacyMaterial(kind: MaterialKind | 'media', entityId: string, scope: MaterialScope, store?: ProductStore): Promise<LibraryMaterial> {
+    const db = store ?? productDb;
+    return db.transaction('rw', tables(db), async (db) => {
         if (isSetting(kind)) {
-            const payload = await snapshotSetting(kind, entityId);
+            const payload = await snapshotSetting(kind, entityId, db);
             return insertMaterial(payload.entity.name, kind, scope, payload, {
                 projectId: payload.entity.projectId,
                 entityId
-            });
+            }, undefined, db);
         }
         const media = await db.media.get(entityId);
         if (!media) throw new Error('来源素材不存在');
         if (media.projectId !== STUDIO_LIBRARY_ID && !await db.projects.get(media.projectId)) throw new Error('来源项目不存在');
-        const parsed = filePayload(media.blob, media.filename, media.mimeType);
+        const parsed = filePayload(await db.waitFor(readBinaryBlob(media.blob)), media.filename, media.mimeType);
         if (kind !== 'media' && kind !== parsed.kind) throw new Error('来源素材类型不匹配');
         return insertMaterial(media.filename, parsed.kind, scope, parsed.payload, {
             projectId: media.projectId,
             entityId
-        });
+        }, undefined, db);
     });
 }
 
-export async function promoteMaterial(id: string, scope: MaterialScope): Promise<LibraryMaterial> {
-    return db.transaction('rw', tables(), async () => {
-        const material = await activeMaterial(id);
-        const version = await versionOf(material);
+export async function promoteMaterial(id: string, scope: MaterialScope, store?: ProductStore): Promise<LibraryMaterial> {
+    const db = store ?? productDb;
+    return db.transaction('rw', tables(db), async (db) => {
+        const material = await activeMaterial(id, undefined, db);
+        const version = await versionOf(material, db);
         return insertMaterial(material.name, material.kind, scope, version.payload, {
             materialId: id,
             revision: material.revision
-        }, material);
+        }, material, db);
     });
 }
 
-export async function addFileMaterialVersion(id: string, file: File, expectedRevision: number): Promise<void> {
+export async function addFileMaterialVersion(id: string, file: File, expectedRevision: number, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const parsed = filePayload(file, file.name, file.type);
-    await db.transaction('rw', tables(), async () => {
-        const material = await activeMaterial(id, expectedRevision);
+    await db.transaction('rw', tables(db), async (db) => {
+        const material = await activeMaterial(id, expectedRevision, db);
         if (material.kind !== parsed.kind) throw new Error('新版本必须与原素材属于同一类型');
-        await nextVersion(material, parsed.payload);
+        await nextVersion(material, parsed.payload, undefined, db);
     });
 }
 
-export async function refreshSettingMaterial(id: string, expectedRevision: number): Promise<void> {
-    await db.transaction('rw', tables(), async () => {
-        const material = await activeMaterial(id, expectedRevision);
+export async function refreshSettingMaterial(id: string, expectedRevision: number, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction('rw', tables(db), async (db) => {
+        const material = await activeMaterial(id, expectedRevision, db);
         if (!isSetting(material.kind) || !material.source?.entityId) throw new Error('此素材没有可刷新版本的来源设定');
-        const payload = await snapshotSetting(material.kind, material.source.entityId);
+        const payload = await snapshotSetting(material.kind, material.source.entityId, db);
         if (payload.entity.projectId !== material.source.projectId) throw new Error('来源设定归属已变化');
-        await nextVersion(material, payload);
+        await nextVersion(material, payload, undefined, db);
     });
 }
 
-export async function updateMaterialMetadata(id: string, patch: Partial<Pick<LibraryMaterial, 'name' | 'notes' | 'tags'>>, expectedRevision: number): Promise<void> {
+export async function updateMaterialMetadata(id: string, patch: Partial<Pick<LibraryMaterial, 'name' | 'notes' | 'tags'>>, expectedRevision: number, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     const safe: typeof patch = {};
     if (patch.name !== undefined) safe.name = validName(patch.name);
     if (patch.notes !== undefined) {
@@ -237,26 +254,28 @@ export async function updateMaterialMetadata(id: string, patch: Partial<Pick<Lib
         if (!Array.isArray(patch.tags) || patch.tags.length > 50 || patch.tags.some(tag => typeof tag !== 'string' || tag.length > 100)) throw new Error('标签无效或过长');
         safe.tags = [...new Set(patch.tags.map(tag => tag.trim()).filter(Boolean))];
     }
-    await db.transaction('rw', tables(), async () => {
-        const material = await activeMaterial(id, expectedRevision);
-        await nextVersion(material, (await versionOf(material)).payload, safe);
+    await db.transaction('rw', tables(db), async (db) => {
+        const material = await activeMaterial(id, expectedRevision, db);
+        await nextVersion(material, (await versionOf(material, db)).payload, safe, db);
     });
 }
 
-export async function setMaterialArchived(id: string, archived: boolean): Promise<void> {
-    await db.transaction('rw', tables(), async () => {
+export async function setMaterialArchived(id: string, archived: boolean, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction('rw', tables(db), async (db) => {
         const material = await db.libraryMaterials.get(id);
         if (!material) throw new Error('素材不存在');
         if (material.archived === archived) return;
-        if (!archived) await assertScope(material.scope);
-        await nextVersion(material, (await versionOf(material)).payload);
+        if (!archived) await assertScope(material.scope, db);
+        await nextVersion(material, (await versionOf(material, db)).payload, undefined, db);
         await db.libraryMaterials.update(id, {archived});
-        await event(id, archived ? 'archive' : 'restore');
+        await event(id, archived ? 'archive' : 'restore', undefined, db);
     });
 }
 
-export async function deleteMaterial(id: string): Promise<void> {
-    await db.transaction('rw', tables(), async () => {
+export async function deleteMaterial(id: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
+    await db.transaction('rw', tables(db), async (db) => {
         const material = await db.libraryMaterials.get(id);
         if (!material) throw new Error('素材不存在');
         if (!material.archived) throw new Error('请先归档素材，再彻底删除');
@@ -264,7 +283,7 @@ export async function deleteMaterial(id: string): Promise<void> {
         if (await db.libraryMaterials.filter(item => item.source?.materialId === id).count()) throw new Error('素材仍是其他素材的来源，无法彻底删除');
         await db.materialVersions.where('materialId').equals(id).delete();
         await db.libraryMaterials.delete(id);
-        await event(id, 'delete', material.name);
+        await event(id, 'delete', material.name, db);
     });
 }
 
@@ -274,7 +293,8 @@ function fingerprint(entity: MaterialEntity): string {
     return JSON.stringify(stable(entity));
 }
 
-async function assertProjectScope(material: LibraryMaterial, projectId: string): Promise<void> {
+async function assertProjectScope(material: LibraryMaterial, projectId: string, store?: ProductStore): Promise<void> {
+    const db = store ?? productDb;
     if (material.scope.kind === 'global') return;
     if (material.scope.kind === 'project') {
         if (material.scope.id !== projectId) throw new Error('项目专属素材只能用于所属项目，请先明确加入通用或 IP 素材');
@@ -284,11 +304,12 @@ async function assertProjectScope(material: LibraryMaterial, projectId: string):
     if (link?.ipId !== material.scope.id) throw new Error('IP 专属素材只能用于关联同一 IP 的项目');
 }
 
-async function adopt(material: LibraryMaterial, projectId: string): Promise<MaterialUse> {
-    await assertProjectScope(material, projectId);
+async function adopt(material: LibraryMaterial, projectId: string, store?: ProductStore): Promise<MaterialUse> {
+    const db = store ?? productDb;
+    await assertProjectScope(material, projectId, db);
     const project = await db.projects.get(projectId);
     if (!project || project.archivedAt) throw new Error('目标项目不存在或已归档');
-    const version = await versionOf(material);
+    const version = await versionOf(material, db);
     const at = nowIso();
     const use: MaterialUse = {
         id: createId('mus'),
@@ -303,7 +324,7 @@ async function adopt(material: LibraryMaterial, projectId: string): Promise<Mate
     };
     const payload = version.payload;
     if (payload.type === 'file') {
-        filePayload(payload.blob, payload.filename, payload.mimeType);
+        filePayload(await db.waitFor(readBinaryBlob(payload.blob)), payload.filename, payload.mimeType);
         use.targetId = createId('med');
         use.mediaIds = [use.targetId];
         await db.media.add({
@@ -319,7 +340,7 @@ async function adopt(material: LibraryMaterial, projectId: string): Promise<Mate
         for (const item of payload.media) {
             const id = createId('med');
             map.set(item.id, id);
-            filePayload(item.blob, item.filename, item.mimeType);
+            filePayload(await db.waitFor(readBinaryBlob(item.blob)), item.filename, item.mimeType);
             await db.media.add({...item, id, projectId, libraryRetained: true});
             use.mediaIds.push(id);
         }
@@ -334,54 +355,56 @@ async function adopt(material: LibraryMaterial, projectId: string): Promise<Mate
             slots: Object.fromEntries(Object.entries(payload.entity.slots).filter(([, slot]) => slot).map(([key, slot]) => [key, remapSlot(slot, id => id ? map.get(id) : undefined)])),
             extra: {...payload.entity.extra, sourceMaterialId: material.id, sourceMaterialRevision: material.revision}
         };
-        await settingTable(payload.kind).add(entity);
+        await settingTable(payload.kind, db).add(entity);
         use.targetId = entity.id;
         use.targetKind = payload.kind;
         use.targetFingerprint = fingerprint(entity);
     }
     await db.materialUses.add(use);
     await db.projects.update(projectId, {updatedAt: at});
-    await event(material.id, 'use', projectId);
+    await event(material.id, 'use', projectId, db);
     return use;
 }
 
-export async function adoptMaterialInProject(id: string, projectId: string): Promise<MaterialUse> {
-    return db.transaction('rw', tables(), async () => {
-        const material = await activeMaterial(id);
-        await assertProjectScope(material, projectId);
+export async function adoptMaterialInProject(id: string, projectId: string, store?: ProductStore): Promise<MaterialUse> {
+    const db = store ?? productDb;
+    return db.transaction('rw', tables(db), async (db) => {
+        const material = await activeMaterial(id, undefined, db);
+        await assertProjectScope(material, projectId, db);
         const project = await db.projects.get(projectId);
         if (!project || project.archivedAt) throw new Error('目标项目不存在或已归档');
         const existing = await db.materialUses.where('[materialId+projectId]').equals([id, projectId]).filter(use => use.revision === material.revision && !use.supersededBy).toArray();
         for (const use of existing) {
-            const target = use.targetKind === 'media' ? await db.media.get(use.targetId) : await settingTable(use.targetKind).get(use.targetId);
+            const target = use.targetKind === 'media' ? await db.media.get(use.targetId) : await settingTable(use.targetKind, db).get(use.targetId);
             if (target?.projectId === projectId) return use;
         }
-        return adopt(material, projectId);
+        return adopt(material, projectId, db);
     });
 }
 
-export async function updateMaterialUse(useId: string): Promise<MaterialUse> {
-    return db.transaction('rw', tables(), async () => {
+export async function updateMaterialUse(useId: string, store?: ProductStore): Promise<MaterialUse> {
+    const db = store ?? productDb;
+    return db.transaction('rw', tables(db), async (db) => {
         const use = await db.materialUses.get(useId);
         if (!use) throw new Error('素材使用记录不存在');
         if (use.supersededBy) throw new Error('此使用记录已有更新，请选择最新记录');
-        const material = await activeMaterial(use.materialId);
-        await assertProjectScope(material, use.projectId);
+        const material = await activeMaterial(use.materialId, undefined, db);
+        await assertProjectScope(material, use.projectId, db);
         const project = await db.projects.get(use.projectId);
         if (!project || project.archivedAt) throw new Error('目标项目不存在或已归档');
         if (use.revision === material.revision) {
-            const target = use.targetKind === 'media' ? await db.media.get(use.targetId) : await settingTable(use.targetKind).get(use.targetId);
+            const target = use.targetKind === 'media' ? await db.media.get(use.targetId) : await settingTable(use.targetKind, db).get(use.targetId);
             if (!target || target.projectId !== use.projectId) throw new Error('项目内的素材副本已删除或归属变化，请重新加入项目');
             return use;
         }
         if (use.targetKind !== 'media') {
-            const entity = await settingTable(use.targetKind).get(use.targetId);
+            const entity = await settingTable(use.targetKind, db).get(use.targetId);
             if (!entity || entity.projectId !== use.projectId) throw new Error('项目内的设定已删除或归属变化');
             if (fingerprint(entity) !== use.targetFingerprint) throw new Error('项目内的设定已有本地修改，不能更新。请另行加入新版本以保留修改');
         }
-        const next = await adopt(material, use.projectId);
+        const next = await adopt(material, use.projectId, db);
         await db.materialUses.put({...use, supersededBy: next.id, updatedAt: nowIso()});
-        await event(material.id, 'update-use', `${use.revision} → ${next.revision}`);
+        await event(material.id, 'update-use', `${use.revision} → ${next.revision}`, db);
         return next;
     });
 }
