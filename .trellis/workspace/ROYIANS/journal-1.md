@@ -1439,3 +1439,56 @@ Implemented and independently accepted browser managed-copy and bounded partial 
 ### Next Steps
 
 - 父任务 10-10-desktop-storage-sync 继续进行；后续接入原生世界、生成/媒体槽、音频/音乐和同步，不自动迁移旧数据。
+
+
+## Session 54: 共享完整产品与原生 Agent 接入完成
+<!-- trellis-session: v=2 fp=d7ab2989c351e29d -->
+
+**Date**: 2026-10-11
+**Task**: 共享完整产品与原生 Agent 接入完成
+**Branch**: `codex/native-agent-full-product`
+
+### Summary
+
+共享完整产品与 Agent 已通过批准范围内的 macOS 验收；用户批准三笔本地工作提交并归档子任务，父任务继续集中 SQLite 与同步。
+
+### Main Changes
+
+## 完成本次原生完整产品接入
+
+- 同一套 React 页面、业务命令与 Agent 在 Tauri 正常产品中复用；独立应用内部 IndexedDB 是当前唯一产品数据 owner。
+- 原生 HTTP／SSE、精确来源授权与取消断连、文件 Save／取消／已有目标保护、OS 外链和 macOS A4 横向打印接通。
+- 修复音频小数输入、已保存但收尾失败的反馈、打印方向和 AIHubMix 明确 image modality 映射。
+- 95 个工具／15 类按逐工具共享合同＋代表原生实际流程验收；D19／F74／O2 不等于95次实际逐工具调用。
+
+## 验收与范围
+
+- 独立 final AC1–AC9 通过，1035源码／配置／基线路径无未知漂移。
+- 完整自动测试213文件／3632通过／1跳过；root／desktop types、lint、quality及对应构建通过。Rust61和vendor18保留原凭据，13已审查allowance／568可见warning保持。
+- actual macOS1–106、browser1–18：真实聊天／工具审批拒绝／任务记录来源草稿／压缩原文与记忆输入／参考图写入／配音音乐录音／素材版本／系统导入保存／三页A4横向PDF／clipboard／external／正常与隔离profile冷启动。
+- Tavily独立实际原生合成探针7checks、3requests、stale0、cleanup；live Tavily未配置，Windows／Linux和实体打印机延期。
+- AI草稿仍待人工确认、失败聊天retry仍失败、原模型无效调用与未核实声明保留。未虚构供应商请求次数或图片描述准确性。
+- 私有真实录音及含音频ZIP只在temporary／ignored，不进入Git；唯一仓库音频为既有2秒合成tone。
+
+## 提交与归档
+
+- 用户批准549path精确分组三笔本地workcommits。workcommits已执行，子任务10-11-native-world-shot-relations已归档到archive/2026-10。
+- Git曾在docs提交中把验收CSV一处CRLF规范为LF；归档增加仅该CSV的task-local -text属性，最终保留293原始字节及SHA0c951f6e2b5d747746c1ddc3564e349bac263c699c5b3f207435376a2ce9b36a。其余原始证据保留冻结字节。
+- archive／journal为独立bookkeeping提交；不amend，不push，不merge main。
+
+## 下一步
+
+父任务10-10-desktop-storage-sync仍in_progress。现有7个子任务归档完成不代表同步已做；下一阶段集中改共享存储接口＋SQLite，再实现单人多设备同步插件与内部工作区文件。浏览器端保留共享功能；未来跨端同步另行规划。不做旧数据迁移／兼容，除非用户明确指定。
+
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `6e7ab75a70511983149636686d26cd31a3198d81` | feat(desktop): reuse complete product with native runtime services |
+| `20bf9d5e78e777a2af61e1e6b8cd48f7e3dec125` | test(desktop): verify packaged HTTP locks and search protocols |
+| `eaa67e6c16c2148b6d4e1b3ef4e4f7190f2c4b8c` | docs(desktop): record full product contracts and acceptance |
+
+### Status
+
+[OK] **Completed**
