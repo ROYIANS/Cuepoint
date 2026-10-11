@@ -1,9 +1,15 @@
 use crate::{
-    AssetAvailability, Availability, Error, Hooks, Job, Outcome, ReadyMarker, Result, SCHEMA,
-    State, database, paths,
+    AssetAvailability, Availability, Beat, Episode, Error, Hooks, Job, Outcome, ReadyMarker,
+    Result, SCHEMA, Shot, State, database, paths,
 };
 use rusqlite::{Connection, params};
-use std::{fs, io::Read, path::PathBuf};
+use std::{
+    collections::BTreeSet,
+    fs,
+    io::Read,
+    path::PathBuf,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 pub(crate) struct Workspace {
     pub root: PathBuf,
@@ -12,6 +18,159 @@ pub(crate) struct Workspace {
     pub id: String,
     pub hooks: Hooks,
     pub boundary: Boundary,
+}
+
+fn stamp() -> String {
+    let millis = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis();
+    format!("{millis}")
+}
+
+fn validate_episode_input(state: &State, episode: &Episode) -> Result<()> {
+    let mut episodes: Vec<_> = state
+        .episodes
+        .iter()
+        .filter(|e| e.id != episode.id)
+        .cloned()
+        .collect();
+    episodes.push(episode.clone());
+    database::validate_video_rows(
+        &state.projects,
+        &state.video_projects,
+        &episodes,
+        &state.beats,
+        &state.shots,
+        false,
+    )
+}
+fn validate_beat_input(state: &State, beat: &Beat) -> Result<()> {
+    let mut beats: Vec<_> = state
+        .beats
+        .iter()
+        .filter(|b| b.id != beat.id)
+        .cloned()
+        .collect();
+    beats.push(beat.clone());
+    database::validate_video_rows(
+        &state.projects,
+        &state.video_projects,
+        &state.episodes,
+        &beats,
+        &state.shots,
+        false,
+    )
+}
+fn validate_shot_input(state: &State, shot: &Shot) -> Result<()> {
+    let mut shots: Vec<_> = state
+        .shots
+        .iter()
+        .filter(|s| s.id != shot.id)
+        .cloned()
+        .collect();
+    shots.push(shot.clone());
+    database::validate_video_rows(
+        &state.projects,
+        &state.video_projects,
+        &state.episodes,
+        &state.beats,
+        &shots,
+        false,
+    )
+}
+
+fn video_state(state: &State, project_id: &str) -> Result<crate::VideoWorkspaceState> {
+    let project = state
+        .projects
+        .iter()
+        .find(|p| p.id == project_id)
+        .cloned()
+        .ok_or_else(|| Error::new("missing", "Project missing"))?;
+    let video = state
+        .video_projects
+        .iter()
+        .find(|p| p.project_id == project_id)
+        .cloned()
+        .ok_or_else(|| Error::new("missing", "Video project missing"))?;
+    let episodes: Vec<_> = state
+        .episodes
+        .iter()
+        .filter(|e| e.project_id == project_id)
+        .cloned()
+        .collect();
+    let episode_ids: BTreeSet<_> = episodes.iter().map(|e| e.id.as_str()).collect();
+    let beats: Vec<_> = state
+        .beats
+        .iter()
+        .filter(|b| episode_ids.contains(b.episode_id.as_str()))
+        .cloned()
+        .collect();
+    let shots: Vec<_> = state
+        .shots
+        .iter()
+        .filter(|s| s.project_id == project_id)
+        .cloned()
+        .collect();
+    let mut referenced_asset_ids: Vec<_> = state
+        .references
+        .iter()
+        .filter(|r| r.project_id == project_id)
+        .map(|r| r.asset_id.clone())
+        .collect();
+    referenced_asset_ids.sort();
+    referenced_asset_ids.dedup();
+    Ok(crate::VideoWorkspaceState {
+        project,
+        video,
+        episodes,
+        beats,
+        shots,
+        referenced_asset_ids,
+    })
+}
+
+fn reorder(
+    db: &mut Connection,
+    table: &str,
+    owner_column: &str,
+    owner: &str,
+    ordered_ids: Vec<String>,
+) -> Result<()> {
+    if ordered_ids.len() > crate::contracts::MAX_RECORDS {
+        return Err(Error::new("size", "Order boundary"));
+    }
+    let allowed = format!("SELECT id FROM {table} WHERE {owner_column}=? ORDER BY item_order,id");
+    let expected: Vec<String> = db
+        .prepare(&allowed)?
+        .query_map([owner], |r| r.get(0))?
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    let expected_set: BTreeSet<_> = expected.iter().collect();
+    let actual_set: BTreeSet<_> = ordered_ids.iter().collect();
+    if expected.len() != ordered_ids.len()
+        || expected_set != actual_set
+        || ordered_ids.iter().collect::<BTreeSet<_>>().len() != ordered_ids.len()
+    {
+        return Err(Error::new(
+            "order",
+            "Order list must contain every owned row exactly once",
+        ));
+    }
+    let tx = db.unchecked_transaction()?;
+    for (index, id) in ordered_ids.iter().enumerate() {
+        tx.execute(
+            &format!("UPDATE {table} SET item_order=? WHERE id=? AND {owner_column}=?"),
+            params![index as i64 + 1_000_000_i64, id, owner],
+        )?;
+    }
+    for (index, id) in ordered_ids.iter().enumerate() {
+        tx.execute(
+            &format!("UPDATE {table} SET item_order=? WHERE id=? AND {owner_column}=?"),
+            params![index as i64, id, owner],
+        )?;
+    }
+    tx.commit()?;
+    Ok(())
 }
 pub(crate) struct Boundary {
     root: PathBuf,
@@ -86,6 +245,7 @@ impl Workspace {
             paths::sync_dir(&root)?;
         }
         let state = database::validate(&db)?;
+        database::validate_state_closure(&state)?;
         if let Some(marker) = ready
             && (marker.format != "cuepoint.workspace.ready.v1"
                 || marker.schema != SCHEMA
@@ -144,11 +304,118 @@ impl Workspace {
                 }
                 let transaction = self.db.transaction()?;
                 transaction.execute("INSERT INTO projects VALUES (?,?) ON CONFLICT(id) DO UPDATE SET title=excluded.title",params![project.id,project.title])?;
+                transaction.execute("INSERT INTO video_projects (project_id,mode,logline,updated_at) VALUES (?,?,?,?) ON CONFLICT(project_id) DO NOTHING", params![project.id, "film", "", stamp()])?;
+                let has_episode: bool = transaction.query_row(
+                    "SELECT EXISTS(SELECT 1 FROM episodes WHERE project_id=?)",
+                    [&project.id],
+                    |r| r.get(0),
+                )?;
+                if !has_episode {
+                    transaction.execute("INSERT INTO episodes (id,project_id,item_order,title,logline,script,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)", params![uuid::Uuid::new_v4().to_string(), project.id, 0_i64, "第一集", "", "", stamp(), stamp()])?;
+                }
                 self.hooks.hit("project-precommit")?;
                 self.boundary.validate()?;
                 check()?;
                 transaction.commit()?;
                 Ok(Outcome::Project(project))
+            }
+            Job::SaveVideoProject(video) => {
+                let state = self.state()?;
+                database::validate_video_project(&video, &state.projects)?;
+                let tx = self.db.transaction()?;
+                tx.execute("INSERT INTO video_projects (project_id,mode,logline,updated_at) VALUES (?,?,?,?) ON CONFLICT(project_id) DO UPDATE SET mode=excluded.mode,logline=excluded.logline,updated_at=excluded.updated_at", params![video.project_id, video.mode, video.logline, video.updated_at])?;
+                tx.commit()?;
+                Ok(Outcome::VideoProject(video))
+            }
+            Job::VideoState(project_id) => Ok(Outcome::VideoState(video_state(
+                &self.state()?,
+                &project_id,
+            )?)),
+            Job::SaveEpisode(episode) => {
+                let state = self.state()?;
+                validate_episode_input(&state, &episode)?;
+                let tx = self.db.transaction()?;
+                tx.execute("INSERT INTO episodes (id,project_id,item_order,title,logline,script,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET project_id=excluded.project_id,item_order=excluded.item_order,title=excluded.title,logline=excluded.logline,script=excluded.script,created_at=excluded.created_at,updated_at=excluded.updated_at", params![episode.id,episode.project_id,episode.order as i64,episode.title,episode.logline,episode.script,episode.created_at,episode.updated_at])?;
+                tx.commit()?;
+                Ok(Outcome::Episode(episode))
+            }
+            Job::ReorderEpisodes {
+                project_id,
+                ordered_ids,
+            } => {
+                reorder(
+                    &mut self.db,
+                    "episodes",
+                    "project_id",
+                    &project_id,
+                    ordered_ids,
+                )?;
+                Ok(Outcome::VideoState(video_state(
+                    &self.state()?,
+                    &project_id,
+                )?))
+            }
+            Job::SaveBeat(beat) => {
+                let state = self.state()?;
+                validate_beat_input(&state, &beat)?;
+                let tx = self.db.transaction()?;
+                tx.execute("INSERT INTO beats (id,episode_id,item_order,title,content,time_of_day,script_start,script_end) VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET episode_id=excluded.episode_id,item_order=excluded.item_order,title=excluded.title,content=excluded.content,time_of_day=excluded.time_of_day,script_start=excluded.script_start,script_end=excluded.script_end", params![beat.id,beat.episode_id,beat.order as i64,beat.title,beat.content,beat.time_of_day,beat.script_start.map(i64::from),beat.script_end.map(i64::from)])?;
+                tx.commit()?;
+                Ok(Outcome::Beat(beat))
+            }
+            Job::ReorderBeats {
+                episode_id,
+                ordered_ids,
+            } => {
+                reorder(
+                    &mut self.db,
+                    "beats",
+                    "episode_id",
+                    &episode_id,
+                    ordered_ids,
+                )?;
+                let project_id = self
+                    .state()?
+                    .episodes
+                    .iter()
+                    .find(|e| e.id == episode_id)
+                    .map(|e| e.project_id.clone())
+                    .ok_or_else(|| Error::new("missing", "Episode missing"))?;
+                Ok(Outcome::VideoState(video_state(
+                    &self.state()?,
+                    &project_id,
+                )?))
+            }
+            Job::SaveShot(shot) => {
+                let state = self.state()?;
+                validate_shot_input(&state, &shot)?;
+                let tx = self.db.transaction()?;
+                tx.execute("INSERT INTO shots (id,project_id,episode_id,item_order,shot_number,beat_id,status,duration_sec,content,notes,scene_closeup,sound,emotion,camera_angle,camera_gear,focal_length) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET project_id=excluded.project_id,episode_id=excluded.episode_id,item_order=excluded.item_order,shot_number=excluded.shot_number,beat_id=excluded.beat_id,status=excluded.status,duration_sec=excluded.duration_sec,content=excluded.content,notes=excluded.notes,scene_closeup=excluded.scene_closeup,sound=excluded.sound,emotion=excluded.emotion,camera_angle=excluded.camera_angle,camera_gear=excluded.camera_gear,focal_length=excluded.focal_length", params![shot.id,shot.project_id,shot.episode_id,shot.order as i64,shot.shot_number as i64,shot.beat_id,shot.status,shot.duration_sec,shot.content,shot.notes,shot.scene_closeup,shot.sound,shot.emotion,shot.camera_angle,shot.camera_gear,shot.focal_length])?;
+                tx.commit()?;
+                Ok(Outcome::Shot(shot))
+            }
+            Job::ReorderShots {
+                episode_id,
+                ordered_ids,
+            } => {
+                reorder(
+                    &mut self.db,
+                    "shots",
+                    "episode_id",
+                    &episode_id,
+                    ordered_ids,
+                )?;
+                let project_id = self
+                    .state()?
+                    .episodes
+                    .iter()
+                    .find(|e| e.id == episode_id)
+                    .map(|e| e.project_id.clone())
+                    .ok_or_else(|| Error::new("missing", "Episode missing"))?;
+                Ok(Outcome::VideoState(video_state(
+                    &self.state()?,
+                    &project_id,
+                )?))
             }
             Job::Import(request) => Ok(Outcome::Asset(self.import(request, check)?)),
             Job::Availability => {

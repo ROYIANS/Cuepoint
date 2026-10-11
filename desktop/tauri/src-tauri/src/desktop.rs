@@ -1,7 +1,7 @@
 //! Closed renderer domain bridge. Paths are selected by native dialogs only.
 use crate::{
-    Asset, AssetKind, Error, Hooks, ImportRequest, Job, Outcome, Project, Result, State,
-    StorageWorker, paths,
+    Asset, AssetKind, Beat, Episode, Error, Hooks, ImportRequest, Job, Outcome, Project, Result,
+    Shot, State, StorageWorker, VideoProject, paths,
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -64,6 +64,40 @@ enum Action {
     Restore {},
     Project {
         project: Project,
+    },
+    VideoState {
+        #[serde(rename = "projectId")]
+        project_id: String,
+    },
+    VideoProject {
+        video: VideoProject,
+    },
+    Episode {
+        episode: Episode,
+    },
+    ReorderEpisodes {
+        #[serde(rename = "projectId")]
+        project_id: String,
+        #[serde(rename = "orderedIds")]
+        ordered_ids: Vec<String>,
+    },
+    Beat {
+        beat: Beat,
+    },
+    ReorderBeats {
+        #[serde(rename = "episodeId")]
+        episode_id: String,
+        #[serde(rename = "orderedIds")]
+        ordered_ids: Vec<String>,
+    },
+    Shot {
+        shot: Shot,
+    },
+    ReorderShots {
+        #[serde(rename = "episodeId")]
+        episode_id: String,
+        #[serde(rename = "orderedIds")]
+        ordered_ids: Vec<String>,
     },
     Import {
         metadata: ImportMetadata,
@@ -635,6 +669,80 @@ fn handle(
             cancel,
             Job::SaveProject(project),
         )?)),
+        Action::VideoState { project_id } => Ok(Value::Outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::VideoState(project_id),
+        )?)),
+        Action::VideoProject { video } => Ok(Value::Outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::SaveVideoProject(video),
+        )?)),
+        Action::Episode { episode } => Ok(Value::Outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::SaveEpisode(episode),
+        )?)),
+        Action::ReorderEpisodes {
+            project_id,
+            ordered_ids,
+        } => Ok(Value::Outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::ReorderEpisodes {
+                project_id,
+                ordered_ids,
+            },
+        )?)),
+        Action::Beat { beat } => Ok(Value::Outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::SaveBeat(beat),
+        )?)),
+        Action::ReorderBeats {
+            episode_id,
+            ordered_ids,
+        } => Ok(Value::Outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::ReorderBeats {
+                episode_id,
+                ordered_ids,
+            },
+        )?)),
+        Action::Shot { shot } => Ok(Value::Outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::SaveShot(shot),
+        )?)),
+        Action::ReorderShots {
+            episode_id,
+            ordered_ids,
+        } => Ok(Value::Outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::ReorderShots {
+                episode_id,
+                ordered_ids,
+            },
+        )?)),
         Action::Import { metadata } => {
             let selected_worker = worker(bridge, generation)?;
             let state = state_of(&selected_worker)?;
@@ -869,6 +977,7 @@ async fn workspace_request(
             | Action::ReadChunk { .. }
             | Action::ReadClose { .. }
             | Action::Availability {}
+            | Action::VideoState { .. }
     );
     let reply_generation;
     {

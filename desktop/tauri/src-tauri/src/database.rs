@@ -1,5 +1,6 @@
 use crate::{
-    Asset, AssetKind, Error, Project, Result, SCHEMA, State, TimingRef,
+    Asset, AssetKind, Beat, Episode, Error, Project, Result, SCHEMA, Shot, State, TimingRef,
+    VideoProject,
     contracts::{MAX_RECORDS, identity, text, timing},
     paths::{check_optional_file, derive_ref, exclusive, ordinary, validate_ref},
 };
@@ -26,6 +27,22 @@ const TABLES: &[(&str, &str)] = &[
     (
         "intents",
         "CREATE TABLE intents (id TEXT PRIMARY KEY NOT NULL, asset_id TEXT UNIQUE NOT NULL, project_id TEXT NOT NULL, stage TEXT UNIQUE NOT NULL, final_path TEXT UNIQUE NOT NULL, device TEXT, inode TEXT, byte_length INTEGER, content_hash TEXT)",
+    ),
+    (
+        "video_projects",
+        "CREATE TABLE video_projects (project_id TEXT PRIMARY KEY NOT NULL, mode TEXT NOT NULL, logline TEXT NOT NULL, updated_at TEXT NOT NULL)",
+    ),
+    (
+        "episodes",
+        "CREATE TABLE episodes (id TEXT PRIMARY KEY NOT NULL, project_id TEXT NOT NULL, item_order INTEGER NOT NULL, title TEXT NOT NULL, logline TEXT NOT NULL, script TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
+    ),
+    (
+        "beats",
+        "CREATE TABLE beats (id TEXT PRIMARY KEY NOT NULL, episode_id TEXT NOT NULL, item_order INTEGER NOT NULL, title TEXT NOT NULL, content TEXT NOT NULL, time_of_day TEXT NOT NULL, script_start INTEGER, script_end INTEGER)",
+    ),
+    (
+        "shots",
+        "CREATE TABLE shots (id TEXT PRIMARY KEY NOT NULL, project_id TEXT NOT NULL, episode_id TEXT NOT NULL, item_order INTEGER NOT NULL, shot_number INTEGER NOT NULL, beat_id TEXT, status TEXT NOT NULL, duration_sec REAL NOT NULL, content TEXT NOT NULL, notes TEXT NOT NULL, scene_closeup TEXT NOT NULL, sound TEXT NOT NULL, emotion TEXT NOT NULL, camera_angle TEXT NOT NULL, camera_gear TEXT NOT NULL, focal_length TEXT NOT NULL)",
     ),
 ];
 
@@ -116,7 +133,16 @@ pub(crate) fn validate(db: &Connection) -> Result<State> {
     {
         return Err(Error::new("identity", "Invalid portable workspace UUID"));
     }
-    for table in ["projects", "assets", "refs", "intents"] {
+    for table in [
+        "projects",
+        "assets",
+        "refs",
+        "intents",
+        "video_projects",
+        "episodes",
+        "beats",
+        "shots",
+    ] {
         let count: i64 =
             db.query_row(&format!("SELECT count(*) FROM {table}"), [], |r| r.get(0))?;
         if count > MAX_RECORDS as i64 {
@@ -191,6 +217,41 @@ pub(crate) fn validate(db: &Connection) -> Result<State> {
     if foreign_errors != 0 {
         return Err(Error::new("ownership", "Foreign-key closure failed"));
     }
+    let video_projects = db
+        .prepare(
+            "SELECT project_id,mode,logline,updated_at FROM video_projects ORDER BY project_id",
+        )?
+        .query_map([], |r| {
+            Ok(VideoProject {
+                project_id: r.get(0)?,
+                mode: r.get(1)?,
+                logline: r.get(2)?,
+                updated_at: r.get(3)?,
+            })
+        })?
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    // Keep the base project's historical rows readable when a test hook (or
+    // an interrupted external edit) removes the project row.  Child video
+    // records below still require a live project and video owner, and writes
+    // validate their owner before insertion.
+    for video in &video_projects {
+        if projects.iter().any(|p| p.id == video.project_id) {
+            validate_video_project(video, &projects)?;
+        }
+    }
+    let episodes = db
+        .prepare("SELECT id,project_id,item_order,title,logline,script,created_at,updated_at FROM episodes ORDER BY project_id,item_order,id")?
+        .query_map([], |r| Ok(Episode { id: r.get(0)?, project_id: r.get(1)?, order: r.get::<_, i64>(2)?.try_into().unwrap_or(u32::MAX), title: r.get(3)?, logline: r.get(4)?, script: r.get(5)?, created_at: r.get(6)?, updated_at: r.get(7)? }))?
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    let beats = db
+        .prepare("SELECT id,episode_id,item_order,title,content,time_of_day,script_start,script_end FROM beats ORDER BY episode_id,item_order,id")?
+        .query_map([], |r| Ok(Beat { id: r.get(0)?, episode_id: r.get(1)?, order: r.get::<_, i64>(2)?.try_into().unwrap_or(u32::MAX), title: r.get(3)?, content: r.get(4)?, time_of_day: r.get(5)?, script_start: r.get::<_, Option<i64>>(6)?.map(|v| v.try_into().unwrap_or(u32::MAX)), script_end: r.get::<_, Option<i64>>(7)?.map(|v| v.try_into().unwrap_or(u32::MAX)) }))?
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    let shots = db
+        .prepare("SELECT id,project_id,episode_id,item_order,shot_number,beat_id,status,duration_sec,content,notes,scene_closeup,sound,emotion,camera_angle,camera_gear,focal_length FROM shots ORDER BY episode_id,item_order,id")?
+        .query_map([], |r| Ok(Shot { id: r.get(0)?, project_id: r.get(1)?, episode_id: r.get(2)?, order: r.get::<_, i64>(3)?.try_into().unwrap_or(u32::MAX), shot_number: r.get::<_, i64>(4)?.try_into().unwrap_or(u32::MAX), beat_id: r.get(5)?, status: r.get(6)?, duration_sec: r.get(7)?, content: r.get(8)?, notes: r.get(9)?, scene_closeup: r.get(10)?, sound: r.get(11)?, emotion: r.get(12)?, camera_angle: r.get(13)?, camera_gear: r.get(14)?, focal_length: r.get(15)? }))?
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    validate_video_rows(&projects, &video_projects, &episodes, &beats, &shots, true)?;
     let sqlite_version = db.query_row("SELECT sqlite_version()", [], |r| r.get(0))?;
     Ok(State {
         schema,
@@ -199,7 +260,26 @@ pub(crate) fn validate(db: &Connection) -> Result<State> {
         assets,
         references,
         sqlite_version,
+        video_projects,
+        episodes,
+        beats,
+        shots,
     })
+}
+
+/// Validate relationship closure before a workspace is advertised as ready
+/// or reopened. Runtime snapshots remain tolerant of an external owner
+/// deletion so the worker can report retained logical rows and reject the
+/// next mutation without panicking.
+pub(crate) fn validate_state_closure(state: &State) -> Result<()> {
+    validate_video_rows(
+        &state.projects,
+        &state.video_projects,
+        &state.episodes,
+        &state.beats,
+        &state.shots,
+        false,
+    )
 }
 
 pub(crate) fn validate_project(p: &Project) -> Result<()> {
@@ -211,6 +291,188 @@ pub(crate) fn validate_project(p: &Project) -> Result<()> {
         ));
     }
     text(&p.title, "project title", 16_384)
+}
+
+pub(crate) fn validate_video_project(value: &VideoProject, projects: &[Project]) -> Result<()> {
+    identity(&value.project_id, 118)?;
+    if !projects.iter().any(|p| p.id == value.project_id) {
+        return Err(Error::new("ownership", "Video project owner missing"));
+    }
+    if !matches!(value.mode.as_str(), "film" | "series") {
+        return Err(Error::new("invalid", "Unsupported video project mode"));
+    }
+    text(&value.logline, "project logline", 16_384).or_else(|_| {
+        if value.logline.is_empty() {
+            Ok(())
+        } else {
+            Err(Error::new("invalid", "Invalid project logline"))
+        }
+    })?;
+    text(&value.updated_at, "project timestamp", 128)
+}
+
+fn validate_order(items: impl Iterator<Item = u32>) -> Result<()> {
+    for (expected, actual) in items.enumerate() {
+        if actual != expected as u32 {
+            return Err(Error::new("order", "Order must be contiguous"));
+        }
+    }
+    Ok(())
+}
+
+pub(crate) fn validate_video_rows(
+    projects: &[Project],
+    videos: &[VideoProject],
+    episodes: &[Episode],
+    beats: &[Beat],
+    shots: &[Shot],
+    allow_orphans: bool,
+) -> Result<()> {
+    for video in videos {
+        if projects
+            .iter()
+            .any(|project| project.id == video.project_id)
+        {
+            validate_video_project(video, projects)?;
+        }
+    }
+    let video_ids: BTreeSet<_> = videos.iter().map(|v| v.project_id.as_str()).collect();
+    let project_ids: BTreeSet<_> = projects.iter().map(|p| p.id.as_str()).collect();
+    for episode in episodes {
+        identity(&episode.id, 118)?;
+        identity(&episode.project_id, 118)?;
+        if !project_ids.contains(episode.project_id.as_str()) {
+            if allow_orphans {
+                continue;
+            }
+            return Err(Error::new("ownership", "Episode project missing"));
+        }
+        if !video_ids.contains(episode.project_id.as_str()) {
+            if allow_orphans {
+                continue;
+            }
+            return Err(Error::new("ownership", "Episode video project missing"));
+        }
+        text(&episode.title, "episode title", 16_384)?;
+        if episode.logline.len() > 16_384 || episode.script.len() > 2_000_000 {
+            return Err(Error::new("size", "Episode text boundary"));
+        }
+        text(&episode.created_at, "episode timestamp", 128)?;
+        text(&episode.updated_at, "episode timestamp", 128)?;
+    }
+    for project_id in project_ids.iter().copied() {
+        validate_order(
+            episodes
+                .iter()
+                .filter(|e| e.project_id == project_id)
+                .map(|e| e.order),
+        )?;
+    }
+    let episode_ids: BTreeSet<_> = episodes.iter().map(|e| e.id.as_str()).collect();
+    for beat in beats {
+        identity(&beat.id, 118)?;
+        let Some(episode) = episodes
+            .iter()
+            .find(|episode| episode.id == beat.episode_id)
+        else {
+            if allow_orphans {
+                continue;
+            }
+            return Err(Error::new("ownership", "Beat episode missing"));
+        };
+        text(&beat.title, "beat title", 16_384)?;
+        if beat.content.len() > 1_000_000 || beat.time_of_day.len() > 128 {
+            return Err(Error::new("size", "Beat text boundary"));
+        }
+        match (beat.script_start, beat.script_end) {
+            (None, None) => {}
+            (Some(start), Some(end)) if end >= start => {
+                let script_length = episode.script.encode_utf16().count() as u32;
+                if end > script_length {
+                    return Err(Error::new(
+                        "range",
+                        "Beat script range exceeds episode script",
+                    ));
+                }
+            }
+            _ => return Err(Error::new("range", "Invalid beat script range")),
+        }
+    }
+    for episode_id in episode_ids.iter().copied() {
+        validate_order(
+            beats
+                .iter()
+                .filter(|b| b.episode_id == episode_id)
+                .map(|b| b.order),
+        )?;
+    }
+    let beat_ids: BTreeSet<_> = beats.iter().map(|b| b.id.as_str()).collect();
+    for shot in shots {
+        identity(&shot.id, 118)?;
+        if !project_ids.contains(shot.project_id.as_str()) {
+            if allow_orphans {
+                continue;
+            }
+            return Err(Error::new("ownership", "Shot project missing"));
+        }
+        let Some(episode) = episodes
+            .iter()
+            .find(|episode| episode.id == shot.episode_id)
+        else {
+            if allow_orphans {
+                continue;
+            }
+            return Err(Error::new("ownership", "Shot episode missing"));
+        };
+        if episode.project_id != shot.project_id {
+            if allow_orphans {
+                continue;
+            }
+            return Err(Error::new("ownership", "Shot project mismatch"));
+        }
+        if shot
+            .beat_id
+            .as_deref()
+            .is_some_and(|id| !beat_ids.contains(id))
+        {
+            return Err(Error::new("ownership", "Shot beat missing"));
+        }
+        if let Some(id) = shot.beat_id.as_deref()
+            && beats
+                .iter()
+                .find(|beat| beat.id == id)
+                .is_some_and(|beat| beat.episode_id != shot.episode_id)
+        {
+            return Err(Error::new("ownership", "Shot beat episode mismatch"));
+        }
+        if !matches!(
+            shot.status.as_str(),
+            "draft" | "ready" | "framed" | "clipped" | "approved"
+        ) || !shot.duration_sec.is_finite()
+            || shot.duration_sec < 0.0
+            || shot.duration_sec > 86_400.0
+        {
+            return Err(Error::new("invalid", "Invalid shot status or duration"));
+        }
+        for (name, value, max) in [
+            ("shot content", &shot.content, 1_000_000),
+            ("shot notes", &shot.notes, 1_000_000),
+            ("shot status", &shot.status, 128),
+        ] {
+            if value.len() > max {
+                return Err(Error::new("size", format!("Invalid {name}")));
+            }
+        }
+    }
+    for episode_id in episode_ids.iter().copied() {
+        validate_order(
+            shots
+                .iter()
+                .filter(|s| s.episode_id == episode_id)
+                .map(|s| s.order),
+        )?;
+    }
+    Ok(())
 }
 pub(crate) fn validate_asset(a: &Asset, workspace: &str) -> Result<()> {
     identity(&a.id, 118)?;

@@ -6,16 +6,25 @@ const id=z.string().min(1).max(4096);
 const digest=z.string().regex(/^[a-f0-9]{64}$/);
 const reference=z.object({workspaceId:id,projectId:id,relativePath:z.string().max(1024)}).strict();
 const project=z.object({id,title:z.string().max(16384)}).strict();
+const videoProject=z.object({projectId:id,mode:z.enum(['film','series']),logline:z.string().max(16384),updatedAt:z.string().min(1).max(128)}).strict();
+const episode=z.object({id,projectId:id,order:z.number().int().nonnegative(),title:z.string().max(16384),logline:z.string().max(16384),script:z.string().max(2000000),createdAt:z.string().min(1).max(128),updatedAt:z.string().min(1).max(128)}).strict();
+const beat=z.object({id,episodeId:id,order:z.number().int().nonnegative(),title:z.string().max(16384),content:z.string().max(1000000),timeOfDay:z.string().max(128),scriptStart:z.number().int().nonnegative().optional(),scriptEnd:z.number().int().nonnegative().optional()}).strict();
+const shot=z.object({id,projectId:id,episodeId:id,order:z.number().int().nonnegative(),shotNumber:z.number().int().nonnegative(),beatId:id.optional(),status:z.enum(['draft','ready','framed','clipped','approved']),durationSec:z.number().finite().nonnegative().max(86400),content:z.string().max(1000000),notes:z.string().max(1000000),sceneCloseup:z.string(),sound:z.string(),emotion:z.string(),cameraAngle:z.string(),cameraGear:z.string(),focalLength:z.string()}).strict();
 const asset=z.object({id,projectId:id,kind:z.enum(['media','output']),displayName:z.string().max(4096),mimeType:z.string().max(256),byteLength:z.number().int().positive().max(16*1024**3),contentHash:digest,reference}).strict();
 const timing=z.object({id,projectId:id,assetId:id,startSec:z.number().finite().nonnegative(),durationSec:z.number().finite().positive()}).strict();
-const state=z.object({schema:z.literal(1),workspaceId:id,projects:z.array(project).max(10000),assets:z.array(asset).max(10000),references:z.array(timing).max(10000),sqliteVersion:z.string()}).strict();
+const state=z.object({schema:z.literal(3),workspaceId:id,projects:z.array(project).max(10000),assets:z.array(asset).max(10000),references:z.array(timing).max(10000),sqliteVersion:z.string(),videoProjects:z.array(videoProject).max(10000),episodes:z.array(episode).max(10000),beats:z.array(beat).max(10000),shots:z.array(shot).max(10000)}).strict();
 const availability=z.object({assetId:id,status:z.enum(['present','missing','corrupt'])}).strict();
-const backup=z.object({format:z.literal('cuepoint.native-backup.v1'),schema:z.literal(1),workspaceId:id,databaseBytes:z.number().int().positive(),databaseHash:digest,assets:z.array(asset).max(10000)}).strict();
+const backup=z.object({format:z.literal('cuepoint.native-backup.v1'),schema:z.literal(3),workspaceId:id,databaseBytes:z.number().int().positive(),databaseHash:digest,assets:z.array(asset).max(10000)}).strict();
 const outcome=z.discriminatedUnion('kind',[
     z.object({kind:z.literal('state'),value:state}).strict(),
     z.object({kind:z.literal('project'),value:project}).strict(),
     z.object({kind:z.literal('asset'),value:asset}).strict(),
     z.object({kind:z.literal('availability'),value:z.array(availability).max(10000)}).strict(),
+    z.object({kind:z.literal('videoProject'),value:videoProject}).strict(),
+    z.object({kind:z.literal('episode'),value:episode}).strict(),
+    z.object({kind:z.literal('beat'),value:beat}).strict(),
+    z.object({kind:z.literal('shot'),value:shot}).strict(),
+    z.object({kind:z.literal('videoState'),value:z.object({project,video:videoProject,episodes:z.array(episode),beats:z.array(beat),shots:z.array(shot),referencedAssetIds:z.array(id)}).strict()}).strict(),
     z.object({kind:z.literal('backup'),value:backup}).strict(),
 ]);
 const result=z.discriminatedUnion('type',[
@@ -32,6 +41,14 @@ export type NativeState=z.infer<typeof state>;
 type Action=
     | {type:'state'|'create'|'open'|'reopen'|'close'|'restore'|'availability'|'backup'}
     | {type:'project';project:{id:string;title:string}}
+    | {type:'videoState';projectId:string}
+    | {type:'videoProject';video:{projectId:string;mode:'film'|'series';logline:string;updatedAt:string}}
+    | {type:'episode';episode:z.infer<typeof episode>}
+    | {type:'reorderEpisodes';projectId:string;orderedIds:string[]}
+    | {type:'beat';beat:z.infer<typeof beat>}
+    | {type:'reorderBeats';episodeId:string;orderedIds:string[]}
+    | {type:'shot';shot:z.infer<typeof shot>}
+    | {type:'reorderShots';episodeId:string;orderedIds:string[]}
     | {type:'import';metadata:{projectId:string;assetId:string;kind:'media'|'output';displayName:string;mimeType:string}}
     | {type:'readStart'|'export';assetId:string}
     | {type:'readChunk';session:string;offset:number;length:number}

@@ -26,10 +26,10 @@ Native generated export accepts `format: "csv" | "zip" | "wav" | "microphone"` a
 ## 3. Contracts
 
 - Every request carries `version: 1`, a UUID `operationId`, and `expectedGeneration`. Replies carry the current generation and a discriminated result. A stale generation, extra envelope field, extra action field, unknown operation or unauthorized plugin command is an error.
-- Native workspace state is SQLite-backed and includes `schema: 1`, `workspaceId`, project summaries, asset summaries, reference timings and `sqliteVersion`. Imported bytes are copied into the managed workspace; original source paths are not live authorities.
+- Native workspace state is SQLite-backed and currently uses fresh-development `schema: 3`. It includes `workspaceId`, project summaries, managed asset summaries, reference timings and `sqliteVersion`, plus the native video spine (`videoProjects`, `episodes`, `beats`, and `shots`). Imported bytes are copied into the managed workspace; original source paths are not live authorities. A schema change replaces the disposable development workspace; it does not add a migration or legacy reader.
 - `ensure` opens or creates `<app_data_dir>/workspace` and is idempotent while the current generation owns the worker. A first successful ensure creates the workspace identity and managed directories; a later ensure returns the existing state without changing generation. Product code must never choose an absolute root.
 - The normal Tauri frontend is the root React/Vite application. The historical acceptance fixture is built only with `--acceptance`; changing the normal build must not silently replace it with the fixture or make the packaged product depend on a development server.
-- `NativeProjectGalleryPage`, `NativeAssetLibraryPage` and `NativeProjectWorkspacePage` are the native route boundary. They must not mirror rows into Dexie; browser implementations remain behind the runtime check until their native domain tables are implemented.
+- `NativeProjectGalleryPage`, `NativeAssetLibraryPage` and `NativeProjectWorkspacePage` are the native route boundary. The project page owns the native video routes `/p/:projectId`, `/p/:projectId/e/:episodeId` and `/p/:projectId/e/:episodeId/shots` for project mode, episode/story/beat and basic shot editing. They must not mirror rows into Dexie; browser implementations remain behind the runtime check until their native domain tables are implemented.
 - Tauri packaged entry navigation is restricted to `tauri://localhost` with no port or query and an entry path of `""`, `/` or `/index.html`. The empty path is required because packaged WebKit launches at `tauri://localhost`.
 - The acceptance app uses its own identifier and `data_store_identifier`, but must not enable WebKit private/incognito mode: IndexedDB Blob persistence fails in private mode even when an isolated store is configured.
 - Native generated files preserve renderer bytes and SHA-256. CSV is UTF-8 BOM text, ZIP begins with `PK`, and WAV is RIFF/WAVE. Existing destinations are rejected without changing workspace state.
@@ -49,6 +49,9 @@ Native generated export accepts `format: "csv" | "zip" | "wav" | "microphone"` a
 | `ensure` is called with an already opened worker | Return the current state and keep the generation stable |
 | Native project or asset owner is absent | Return `ownership`; do not create an orphan row or managed file |
 | Product code runs in browser mode | Keep the existing Dexie implementation; do not invoke the native command or import local data |
+| Native video row has a missing project, episode or beat owner | Reject the mutation; strict workspace reopen/ready validation rejects the workspace, while an already-open runtime may retain a diagnostic logical row from an external race |
+| Native beat range is outside the episode's UTF-16 script length | Reject the mutation and workspace reopen |
+| Native shot status or duration is unsupported | Reject the mutation; use the shared `draft/ready/framed/clipped/approved` status contract and a finite non-negative duration |
 | Export is canceled | Return `canceled`; do not create an asset or destination |
 | Renderer bytes/hash differ from native result | Fail the acceptance event; never report a successful export |
 | WebKit rejects optional microphone constraints | Do not retry with more constraints; request baseline audio and surface device/permission failure |

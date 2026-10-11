@@ -1,6 +1,6 @@
 mod support;
 use cuepoint_native_storage::{
-    AssetKind, Availability, Hooks, Job, Outcome, Project, StorageWorker, TimingRef,
+    AssetKind, Availability, Beat, Hooks, Job, Outcome, Project, Shot, StorageWorker, TimingRef,
 };
 use std::fs;
 use support::{Fixture, request, state};
@@ -12,6 +12,118 @@ fn project(worker: &StorageWorker, id: &str) {
             title: "测试项目".into(),
         }))
         .unwrap();
+}
+
+#[test]
+fn video_domain_reopens_with_stable_order_and_checkpoint_boundary() {
+    let fixture = Fixture::new();
+    let worker = StorageWorker::create(fixture.path("workspace"), Hooks::default()).unwrap();
+    project(&worker, "video");
+    let initial = state(&worker);
+    let episode = initial
+        .episodes
+        .iter()
+        .find(|e| e.project_id == "video")
+        .unwrap()
+        .clone();
+    worker
+        .run(Job::SaveEpisode(cuepoint_native_storage::Episode {
+            script: "进入房间".into(),
+            updated_at: "2".into(),
+            ..episode.clone()
+        }))
+        .unwrap();
+    worker
+        .run(Job::SaveBeat(Beat {
+            id: "beat-1".into(),
+            episode_id: episode.id.clone(),
+            order: 0,
+            title: "开场".into(),
+            content: "进入房间".into(),
+            time_of_day: "day".into(),
+            script_start: Some(0),
+            script_end: Some(4),
+        }))
+        .unwrap();
+    worker
+        .run(Job::SaveShot(Shot {
+            id: "shot-1".into(),
+            project_id: "video".into(),
+            episode_id: episode.id.clone(),
+            order: 0,
+            shot_number: 1,
+            beat_id: Some("beat-1".into()),
+            status: "draft".into(),
+            duration_sec: 2.5,
+            content: "推镜".into(),
+            notes: "".into(),
+            scene_closeup: "".into(),
+            sound: "".into(),
+            emotion: "".into(),
+            camera_angle: "".into(),
+            camera_gear: "".into(),
+            focal_length: "".into(),
+        }))
+        .unwrap();
+    let before = state(&worker);
+    assert_eq!(before.beats[0].id, "beat-1");
+    assert_eq!(before.shots[0].duration_sec, 2.5);
+    worker.close().unwrap();
+    let reopened = StorageWorker::open(fixture.path("workspace"), Hooks::default()).unwrap();
+    let reopened_state = state(&reopened);
+    assert_eq!(reopened_state.episodes, before.episodes);
+    assert_eq!(reopened_state.beats, before.beats);
+    assert_eq!(reopened_state.shots, before.shots);
+    match reopened.run(Job::VideoState("video".into())).unwrap() {
+        Outcome::VideoState(snapshot) => {
+            assert_eq!(snapshot.project.id, "video");
+            assert_eq!(snapshot.referenced_asset_ids, Vec::<String>::new());
+        }
+        _ => panic!("video state"),
+    }
+    reopened.close().unwrap();
+}
+
+#[test]
+fn reopen_rejects_orphaned_video_rows() {
+    for kind in ["episode", "beat", "shot"] {
+        let fixture = Fixture::new();
+        let root = fixture.path("workspace");
+        let worker = StorageWorker::create(&root, Hooks::default()).unwrap();
+        project(&worker, "video");
+        worker.close().unwrap();
+
+        let db = rusqlite::Connection::open(root.join("metadata.sqlite")).unwrap();
+        match kind {
+            "episode" => {
+                db.execute(
+                    "INSERT INTO episodes (id,project_id,item_order,title,logline,script,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)",
+                    rusqlite::params!["orphan-episode", "missing-project", 1_i64, "孤立集", "", "", "1", "1"],
+                )
+                .unwrap();
+            }
+            "beat" => {
+                db.execute(
+                    "INSERT INTO beats (id,episode_id,item_order,title,content,time_of_day,script_start,script_end) VALUES (?,?,?,?,?,?,?,?)",
+                    rusqlite::params!["orphan-beat", "missing-episode", 0_i64, "孤立节拍", "", "", Option::<i64>::None, Option::<i64>::None],
+                )
+                .unwrap();
+            }
+            "shot" => {
+                db.execute(
+                    "INSERT INTO shots (id,project_id,episode_id,item_order,shot_number,beat_id,status,duration_sec,content,notes,scene_closeup,sound,emotion,camera_angle,camera_gear,focal_length) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    rusqlite::params!["orphan-shot", "video", "missing-episode", 0_i64, 1_i64, Option::<String>::None, "draft", 1.0_f64, "", "", "", "", "", "", "", ""],
+                )
+                .unwrap();
+            }
+            _ => unreachable!(),
+        }
+        drop(db);
+        assert!(
+            StorageWorker::open(&root, Hooks::default()).is_err(),
+            "reopen must reject an orphan {kind} row"
+        );
+    }
 }
 
 #[cfg(feature = "test-hooks")]
@@ -458,11 +570,17 @@ fn owner_is_rechecked_at_real_commit_and_fresh_publication_never_overwrites() {
     );
     assert!(state(&w).assets.is_empty());
     w.close().unwrap();
-    let w = StorageWorker::open(&root, Hooks::default()).unwrap();
+    // The hook intentionally leaves the disposable workspace with an orphan
+    // episode. Fresh schema reopen rejects that incomplete relationship; the
+    // duplicate-publication assertion below uses a new workspace instead of
+    // adding a migration or repair path.
+    assert!(StorageWorker::open(&root, Hooks::default()).is_err());
+    let fresh_root = f.path("fresh-workspace");
+    let w = StorageWorker::create(&fresh_root, Hooks::default()).unwrap();
     project(&w, "project");
     let reference =
         cuepoint_native_storage::derive_ref(&state(&w).workspace_id, "project", "asset").unwrap();
-    let target = root.join(reference.relative_path);
+    let target = fresh_root.join(reference.relative_path);
     fs::create_dir_all(target.parent().unwrap()).unwrap();
     fs::write(&target, b"keep existing").unwrap();
     assert_eq!(

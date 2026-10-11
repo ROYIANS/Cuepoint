@@ -2,7 +2,7 @@ use crate::{Error, Result};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-pub const SCHEMA: u32 = 1;
+pub const SCHEMA: u32 = 3;
 pub const CHUNK: usize = 256 * 1024;
 pub const MAX_RECORDS: usize = 10_000;
 pub const MAX_MANIFEST_BYTES: u64 = 16 * 1024 * 1024;
@@ -21,6 +21,62 @@ pub struct WorkspaceRef {
 pub struct Project {
     pub id: String,
     pub title: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct VideoProject {
+    pub project_id: String,
+    pub mode: String,
+    pub logline: String,
+    pub updated_at: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct Episode {
+    pub id: String,
+    pub project_id: String,
+    pub order: u32,
+    pub title: String,
+    pub logline: String,
+    pub script: String,
+    pub created_at: String,
+    pub updated_at: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct Beat {
+    pub id: String,
+    pub episode_id: String,
+    pub order: u32,
+    pub title: String,
+    pub content: String,
+    pub time_of_day: String,
+    pub script_start: Option<u32>,
+    pub script_end: Option<u32>,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct Shot {
+    pub id: String,
+    pub project_id: String,
+    pub episode_id: String,
+    pub order: u32,
+    pub shot_number: u32,
+    pub beat_id: Option<String>,
+    pub status: String,
+    pub duration_sec: f64,
+    pub content: String,
+    pub notes: String,
+    pub scene_closeup: String,
+    pub sound: String,
+    pub emotion: String,
+    pub camera_angle: String,
+    pub camera_gear: String,
+    pub focal_length: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -62,6 +118,10 @@ pub struct State {
     pub assets: Vec<Asset>,
     pub references: Vec<TimingRef>,
     pub sqlite_version: String,
+    pub video_projects: Vec<VideoProject>,
+    pub episodes: Vec<Episode>,
+    pub beats: Vec<Beat>,
+    pub shots: Vec<Shot>,
 }
 
 /// Native caller only: paths never enter a renderer domain DTO or portable data.
@@ -98,7 +158,27 @@ pub enum Job {
     Import(ImportRequest),
     Availability,
     Backup(PathBuf),
-    ReadAsset { asset_id: String, max_bytes: usize },
+    ReadAsset {
+        asset_id: String,
+        max_bytes: usize,
+    },
+    SaveVideoProject(VideoProject),
+    VideoState(String),
+    SaveEpisode(Episode),
+    ReorderEpisodes {
+        project_id: String,
+        ordered_ids: Vec<String>,
+    },
+    SaveBeat(Beat),
+    ReorderBeats {
+        episode_id: String,
+        ordered_ids: Vec<String>,
+    },
+    SaveShot(Shot),
+    ReorderShots {
+        episode_id: String,
+        ordered_ids: Vec<String>,
+    },
 }
 
 #[derive(Debug, Serialize)]
@@ -110,6 +190,22 @@ pub enum Outcome {
     Availability(Vec<AssetAvailability>),
     Backup(BackupManifest),
     Bytes(Vec<u8>),
+    VideoProject(VideoProject),
+    Episode(Episode),
+    Beat(Beat),
+    Shot(Shot),
+    VideoState(crate::VideoWorkspaceState),
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct VideoWorkspaceState {
+    pub project: Project,
+    pub video: VideoProject,
+    pub episodes: Vec<Episode>,
+    pub beats: Vec<Beat>,
+    pub shots: Vec<Shot>,
+    pub referenced_asset_ids: Vec<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

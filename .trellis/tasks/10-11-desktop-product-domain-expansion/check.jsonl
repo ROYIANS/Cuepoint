@@ -1,0 +1,7 @@
+{"file":".trellis/spec/frontend/native-workspace.md","reason":"Verify native product routes use the closed bridge and preserve browser/native ownership separation"}
+{"file":".trellis/spec/frontend/state-management.md","reason":"Verify episode, beat, shot ownership, ordering, baseline and deletion contracts"}
+{"file":".trellis/spec/frontend/workspace-storage.md","reason":"Verify managed asset references and missing-file behavior"}
+{"file":".trellis/spec/guides/development-change-policy.md","reason":"Reject unrequested migration, compatibility or historical-data shims"}
+{"file":".trellis/tasks/10-11-desktop-product-domain-expansion/prd.md","reason":"Verify selected video domain scope and acceptance criteria"}
+{"file":".trellis/tasks/10-11-desktop-product-domain-expansion/design.md","reason":"Review SQLite schema, typed bridge and deferred sync boundary"}
+{"file":".trellis/tasks/10-11-desktop-product-domain-expansion/implement.md","reason":"Run quality, package and rollback gates"}
