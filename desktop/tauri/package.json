@@ -22,6 +22,8 @@
     "build:frontend": "node scripts/build-frontend.mjs",
     "build:app": "node scripts/build-app.mjs",
     "test:packaged": "node scripts/packaged-regression.mjs",
+    "test:native-locks": "node scripts/native-locks-regression.mjs",
+    "test:native-tavily": "node scripts/native-tavily-regression.mjs",
     "measure": "node scripts/measure.mjs",
     "fixtures:generate": "node scripts/generate-fixtures.mjs"
   }

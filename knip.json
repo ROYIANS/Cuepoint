@@ -3,6 +3,8 @@
   "entry": [
     "src/main.tsx!",
     "scripts/model-bank-snapshot.mjs!",
+    "scripts/native-product-fixture.mjs",
+    "scripts/native-product-fixture-check.mjs",
     "scripts/*-browser-regression.mjs",
     "scripts/e06-*.mjs",
     "tests/**/*.test.{ts,tsx}",

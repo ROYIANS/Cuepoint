@@ -13,6 +13,7 @@ import {checkAudio,checkPlayback,type AudioFixture} from './acceptanceAudio';
 import {checkStreaming} from './acceptanceStream';
 import {AcceptancePrint,seedDelivery,type DeliveryFixture} from './acceptancePrint';
 import {createCapture,stoppedCapture,checkLateDisposal,type LiveCapture} from './acceptanceRecorder';
+import {checkNativeLocks} from './acceptanceLocks';
 
 async function checkBridge(evidence:Evidence) {
     const state=await native.request({type:'state'});assert(state.type==='state'&&state.value,'原生 workspace 未创建');const original=JSON.stringify(state.value);
@@ -117,6 +118,7 @@ function AcceptanceMain({refresh}:{refresh:()=>Promise<void>}) {
     return <section className="acceptance-panel">
         <div className="acceptance-controls"><h2>打包兼容性验收</h2><p>仅使用本机临时项目和免费流端点。文档／媒体检查与系统交互分别记录，首次失败会保留。</p>
             <div className="prototype-toolbar"><Button disabled={busy||started} onClick={()=>void run(runAll)}>开始自动检查</Button><Button variant="outline" disabled={busy} onClick={()=>void run(()=>evidence.persist())}>保存当前报告</Button><span role="status">{status}</span></div>
+            <div className="prototype-toolbar"><Button variant="outline" disabled={busy||finished} onClick={()=>void run(async()=>{await checkNativeLocks(evidence);setStatus('原生 Web Locks 独立探针已记录；整套验收仍需分别完成。');})}>验证原生 Web Locks</Button><span className="prototype-meta">独立检查实际默认锁管理器，不运行工作区 setup、录音或打印，不完成整套验收。</span></div>
             <div className="prototype-toolbar"><Button disabled={busy||!audio||events.some(event=>event.ok&&event.name===required[0])} onClick={()=>void run(async()=>{assert(audio,'音频未准备好');await checkPlayback(audio,evidence);})}>播放、暂停并跳转音频</Button>
                 <Button variant="outline" disabled={busy||!delivery} onClick={()=>void run(async()=>{assert(delivery,'CSV 未准备好');await exportBlob('csv',delivery.csv);})}>保存 CSV</Button>
                 <Button variant="outline" disabled={busy||!delivery} onClick={()=>void run(async()=>{assert(delivery,'ZIP 未准备好');await exportBlob('zip',delivery.zip);})}>保存 ZIP</Button>
