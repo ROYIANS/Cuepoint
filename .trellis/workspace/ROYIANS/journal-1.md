@@ -1492,3 +1492,41 @@ Implemented and independently accepted browser managed-copy and bounded partial 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 55: 共享存储/SQLite代码检查点：本地提交，待解锁验收
+<!-- trellis-session: v=2 fp=2ff102238e5ae526 -->
+
+**Date**: 2026-10-12
+**Task**: 共享存储/SQLite代码检查点：本地提交，待解锁验收
+**Branch**: `codex/shared-storage-sqlite`
+
+### Summary
+
+完整共享存储及原生SQLite代码/探针/构建通过，3笔本地提交；Mac锁屏，子任务保持进行中，未启用正常SQLite、未归档、未推送。
+
+### Main Changes
+
+- 335代码与测试/runtime/config、12规范和1486任务/证据路径精确分组提交，独立审查SB01-SB08关闭。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `6375117beda21f6a127ff448120755510456c7c3` | feat(storage): integrate shared stores and isolated native SQLite |
+| `8e366cfcdcb3937eaf9ea7523254b2bdd6cbc3c2` | docs(storage): define shared transaction and managed media contracts |
+| `c337abaa0b74188cd9587583d0ffe32834e2df4f` | docs(storage): record verified SQLite checkpoint and pending host acceptance |
+
+### Testing
+
+- [OK] 完整浏览器227文件3941例；真实SQLite108文件1900例；95工具/49表提交和实名断言覆盖通过。
+- [OK] Rust默认7命令及完整桌面108例/Clippy；独立媒体9/权限2；最终隔离macOS包构建和静态身份通过。
+- [OK] 默认7跳过项已补真实nativeBinary6项及真实Chromium E07专项；1122冻结输入一致，85永久历史快照未改变。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Mac解锁后在准确最终隔离包完成AC8完整UI/Agent/WK/系统/重开；通过后启用normal SQLite并补验收及归档。
