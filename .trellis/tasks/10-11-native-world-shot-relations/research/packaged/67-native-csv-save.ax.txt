@@ -1,0 +1,69 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Network Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4/e/ep_553a3988-d769-4472-b9db-9776b046dc04/produce
+			3 container
+				4 link 小光点, Value: tauri://localhost/#/about
+				5 container 应用导航
+					6 link 创作助手, Value: tauri://localhost/#/agent
+					7 link IP, Value: tauri://localhost/#/ips
+					8 link 项目, Value: tauri://localhost/#/projects
+					9 link 素材库, Value: tauri://localhost/#/assets
+					10 link 任务, Value: tauri://localhost/#/agent/tasks
+					11 link 连接与模型, Value: tauri://localhost/#/connectors
+					12 link 关于, Value: tauri://localhost/#/about
+				13 button 导入项目
+			14 container
+				15 link 返回工作室, Value: tauri://localhost/#/projects
+				16 text 桌面真实 Agent 验收
+				17 container 项目工作区
+					18 link 故事, Value: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4/e/ep_553a3988-d769-4472-b9db-9776b046dc04
+					19 link 世界, Value: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4/world
+					20 link 分镜, Value: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4/e/ep_553a3988-d769-4472-b9db-9776b046dc04/shots
+					21 link 制作, Value: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4/e/ep_553a3988-d769-4472-b9db-9776b046dc04/produce
+					22 link 记忆, Value: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4/memory
+				23 link 项目素材, Value: tauri://localhost/#/assets?project=prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4
+				24 button 项目设定
+				25 button 备份项目
+			26 container
+				27 heading 制作与交付, Value: 1
+					28 text 制作与交付
+				29 text 检查当前项目的分镜完整性，并导出按当前顺序整理的交付物。
+				30 button 导出素材交付包
+				31 button 导出 CSV
+				32 link 打印故事板, Value: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4/e/ep_553a3988-d769-4472-b9db-9776b046dc04/storyboard
+			33 text 素材交付包包含逐镜头清单与首帧、尾帧、成片原文件，可交给剪辑继续制作。需要恢复整个项目时，请使用顶部「备份项目」。
+			34 description list
+				35 text 镜头
+				36 text 1
+				37 text 场次
+				38 text 1
+				39 text 缺失项
+				40 text 0
+				41 text 总时长
+				42 text 3秒
+			43 text 当前项目检查通过
+			44 text 检查内容、时长、场景和有效素材；成片必须是视频，图片占位仍需补充视频。镜头状态由你手动确认。
+			45 text 没有发现缺失项
+			46 text 可以导出交付物。
+			47 container 变更提案
+				48 heading 变更提案, Value: 2
+					49 text 变更提案
+				50 text 先预览镜头文字或素材变更，再决定是否应用。已应用的提案可以撤销；后续手动修改会受到保护。
+				51 button 新建提案
+				52 text 暂无提案
+				53 text 你可以先手动准备变更，确认后写入镜头。
+			54 container Notifications alt+T
+	55 close button
+	56 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	57 minimize button
+	58 text 小光点 · 完整产品验收
+59 menu bar
+	60 Cuepoint Network Review
+	61 File
+	62 Edit
+	63 View
+	64 Window
+	65 Help
+
+The focused UI element is 2 HTML content Description: 小光点, URL: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4/e/ep_553a3988-d769-4472-b9db-9776b046dc04/produce

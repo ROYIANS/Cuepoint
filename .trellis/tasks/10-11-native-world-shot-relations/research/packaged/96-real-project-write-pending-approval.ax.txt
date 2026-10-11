@@ -1,0 +1,147 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Real Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_c375f82a-3dbb-43ee-a261-a1c717690fac
+			3 container
+				4 link 小光点, Value: tauri://localhost/#/about
+				5 container 应用导航
+					6 link 创作助手, Value: tauri://localhost/#/agent
+					7 link IP, Value: tauri://localhost/#/ips
+					8 link 项目, Value: tauri://localhost/#/projects
+					9 link 素材库, Value: tauri://localhost/#/assets
+					10 link 任务, Value: tauri://localhost/#/agent/tasks
+					11 link 连接与模型, Value: tauri://localhost/#/connectors
+					12 link 关于, Value: tauri://localhost/#/about
+				13 button 导入项目
+			14 container
+				15 image avatar
+				16 text 小光点
+				17 button (expanded) 收起话题侧栏, Secondary Actions: Collapse
+				18 button 开启新话题
+				19 button 搜索
+				20 button 话题
+				21 button 任务
+				22 button (expanded) 话题 8, Secondary Actions: Collapse
+				23 button (expanded) 今天, Secondary Actions: Collapse
+				24 button 这是已授权的桌面隔离验收。请先直接看附件图片，简…
+				25 button 重命名
+				26 button 删除
+				27 button 原生任务生命周期验收
+				28 button 重命名
+				29 button 删除
+				30 button [fixture:overview]
+				31 button 重命名
+				32 button 删除
+				33 button 为当前项目建立一个名为“原生任务工具验收”的小任…
+				34 button 重命名
+				35 button 删除
+				36 button 这是隔离桌面验收，请实际调用工具，不要只给方案。…
+				37 button 重命名
+				38 button 删除
+				39 button native partial transport…
+				40 button 重命名
+				41 button 删除
+				42 button native stop transport fi…
+				43 button 重命名
+				44 button 删除
+				45 button 这是桌面端的隔离验收。请只回复：原生连接正常 �…
+				46 button 重命名
+				47 button 删除
+				48 button 连接
+				49 heading 这是已授权的桌面隔离验收。请先直接看附件图片，简…, Value: 1
+					50 text 这是已授权的桌面隔离验收。请先直接看附件图片，简…
+				51 pop up button 话题更多操作
+				52 button 创建关联任务
+				53 button (expanded) 收起话题侧栏, Secondary Actions: Collapse
+				54 image
+				55 text 19:53:15
+				56 container 已附加的资料
+					57 button image.png
+				58 text 这是已授权的桌面隔离验收。请先直接看附件图片，简短描述它的主要颜色与布局；再读取当前视频项目的第一个镜头和生成能力，准备一张使用该附件作参考的首帧图片（保留彩色渐变，抽象几何风格，无文字）。请用 APIMart 可用图片模型，最低可用分辨率、只生成 1 张；先给出待我确认的生成卡，未经确认不要提交。
+				59 image 小光点
+				60 text 小光点 19:53:15
+				61 container 执行过程
+					62 button (collapsed) 用时 41 秒 工具调用存在失败或拒绝 含 4 项失败, Secondary Actions: Expand
+					63 summary 成果声明未核实, Value: off
+						64 text 成果声明未核实
+				65 text 附件主要是绿色—青绿—蓝紫的横向渐变，画面简洁、无文字；渐变自左向右变化，右侧偏蓝紫。
+				66 text 首镜头内容是雨夜的蓝色车站站台，平视中景，暖色灯光映在湿润地面。已准备好 1 张首帧图片候选待确认卡：
+				67 content list
+					68 container - 模型：APIMart GPT Image 2
+					69 container - 尺寸：16:9，最低可用分辨率 1k
+					70 container - 参考图：本次附件
+					71 container - 方向：保留彩色渐变，采用抽象几何风格，无文字
+					72 container - 状态：草稿，未提交、未生成，也未写入镜头
+				73 text 请在批量面板确认后再提交生成。
+				74 summary 请求资料记录 · 8 次请求, Value: off
+					75 text 请求资料记录 · 8 次请求
+				76 container OpenAI
+				77 text gpt-6-luna 870.6  tok/s 52.3K
+				78 button 查看本次请求的记忆
+				79 button
+				80 image
+				81 text 21:04:28
+				82 text 这是拒绝审批验收。请先读取当前项目的一句话梗概，然后只准备一次 project_update，把 logline 改为 DENY-NATIVE-ONLY，等待我审批；不要做其他修改。若我拒绝，请保留拒绝结果，并只读核对原梗概没有变化，不要另换工具重试。
+				83 image 小光点
+				84 text 小光点 21:04:28
+				85 container 执行过程
+					86 button (expanded) 用时 12 秒 等待确认, Secondary Actions: Collapse
+					87 text 1 项调用等待确认，确认前不会执行这些调用。
+					88 pop up button 执行记录
+					89 container
+						90 text 我会先读取当前项目的一句话梗概，再准备一次指定的 project_update；不会执行其他修改。
+					91 button (collapsed) 加载创作工具、查询创作资料等 3 项, Secondary Actions: Expand
+					92 container
+						93 text 原梗概是“雨夜，创作者带着红伞来到车站。”现在只准备一次将项目 logline 改为 DENY-NATIVE-ONLY 的更新，等待审批。
+					94 button (expanded) 修改项目资料 1 项 · 待处理, Secondary Actions: Collapse
+					95 button (expanded) 修改项目资料 等待批准, Secondary Actions: Collapse
+					96 text 编辑数据
+					97 text 修改项目资料
+					98 content list
+						99 container 一句话梗概：DENY-NATIVE-ONLY
+							100 list marker •
+							101 text 一句话梗概：DENY-NATIVE-ONLY
+					102 link 查看项目 · 桌面真实 Agent 验收 ↗, Value: tauri://localhost/#/p/prj_30ac21cd-bea0-43de-a527-dade2cc63e8b
+					103 summary 参数与返回结果, Value: off
+						104 text 参数与返回结果
+					105 button 批准此次操作
+					106 button 拒绝
+					107 container 批量生成
+					108 button 结束本次执行
+				109 summary 请求资料记录 · 4 次请求, Value: off
+					110 text 请求资料记录 · 4 次请求
+				111 container OpenAI
+				112 text gpt-6-luna 160.5  tok/s 23.7K
+				113 button 查看本次请求的记忆
+				114 container 待你处理
+					115 text 需要你处理
+					116 container
+						117 text 待你批准操作 修改项目资料
+						118 button 查看并决定：修改项目资料
+				119 text 等待你批准操作
+				120 text entry area (settable) 消息内容, Value: [text entry area: 消息内容], Placeholder: 提问、创建内容或启动任务
+					121 text 提问、创建内容或启动任务
+				122 pop up button (disabled) 项目：桌面真实 Agent 验收, Help: 此对话的项目已固定；处理其他项目请新开对话
+				123 pop up button 更多选项
+				124 button (collapsed) 展开编辑器, Secondary Actions: Expand
+				125 pop up button 模型设置：gpt-6-luna
+				126 toggle button 语音输入, Value: off
+				127 button (disabled) 发送
+				128 button 发送方式
+				129 pop up button 智能模式
+				130 pop up button 权限：请求批准
+				131 pop up button 上下文明细, Help: 上下文预计占用 0.8%
+			132 container Notifications alt+T
+	133 close button
+	134 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	135 minimize button
+	136 text 小光点 · 完整产品验收
+137 menu bar
+	138 Cuepoint Real Review
+	139 File
+	140 Edit
+	141 View
+	142 Window
+	143 Help
+
+The focused UI element is 95 button (expanded) 修改项目资料 等待批准, Secondary Actions: Collapse

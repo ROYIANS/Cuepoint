@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-11T09:07:40.156411+00:00",
+  "source": "/Users/xiaomengdao/WebstormProjects/aifenjing/public/brand/sponsor-wechat.jpg",
+  "saved": "/private/tmp/cuepoint-full-product-20261011/native-sponsor.jpg",
+  "sourceBytes": 80663,
+  "savedBytes": 80663,
+  "sourceSha256": "7502389c1853a4472fb7b25f77dcbdb11070583e4830a4ec89636bce9d5dfab7",
+  "savedSha256": "7502389c1853a4472fb7b25f77dcbdb11070583e4830a4ec89636bce9d5dfab7",
+  "byteEqual": true,
+  "afterAttemptToReplace": true,
+  "existingTargetUnchanged": true,
+  "nativeEvidence": [
+    "35-about-native-save.ax.txt",
+    "36-about-native-canceled.ax.txt",
+    "37-about-native-existing-refused.ax.txt"
+  ]
+}

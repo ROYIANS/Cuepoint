@@ -1,0 +1,238 @@
+--- a/src/commands.rs
++++ b/src/commands.rs
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: Apache-2.0
+ // SPDX-License-Identifier: MIT
+ 
+-use std::{future::Future, pin::Pin, str::FromStr, sync::Arc, time::Duration};
++use std::{future::Future, pin::Pin, str::FromStr, sync::{Arc, atomic::{AtomicBool, Ordering}}, time::Duration};
+ 
+ use http::{HeaderMap, HeaderName, HeaderValue, Method, StatusCode, header};
+ use reqwest::{NoProxy, redirect::Policy};
+@@ -26,8 +26,61 @@
+ /// configure `maxRedirections`.
+ const DEFAULT_MAX_REDIRECTIONS: usize = 10;
+ 
+-struct ReqwestResponse(reqwest::Response);
+-impl tauri::Resource for ReqwestResponse {}
++// Cuepoint patch: closing a response must interrupt a body read that holds an Arc.
++// Mutex removes the original unsafe alias; Notify wakes a pending read on close.
++struct ReqwestResponse {
++    response: Mutex<Option<reqwest::Response>>,
++    canceled: AtomicBool,
++    closed: tokio::sync::Notify,
++}
++impl ReqwestResponse {
++    fn new(response: reqwest::Response) -> Self {
++        Self {response: Mutex::new(Some(response)), canceled: AtomicBool::new(false), closed: tokio::sync::Notify::new()}
++    }
++    async fn read_chunk(&self) -> Result<Option<Vec<u8>>> {
++        let notified = self.closed.notified();
++        tokio::pin!(notified);
++        // Register before checking the flag: close cannot be lost between the check and select.
++        notified.as_mut().enable();
++        let mut response = self.response.lock().await;
++        if self.canceled.load(Ordering::Acquire) {
++            response.take();
++            return Err(Error::RequestCanceled);
++        }
++        let Some(body) = response.as_mut() else {return Ok(None);};
++        let result = tokio::select! {
++            biased;
++            _ = &mut notified => Err(Error::RequestCanceled),
++            chunk = body.chunk() => chunk.map(|chunk| chunk.map(|chunk| chunk.to_vec())).map_err(Error::from),
++        };
++        if !matches!(result, Ok(Some(_))) {response.take();}
++        result
++    }
++}
++impl tauri::Resource for ReqwestResponse {
++    fn close(self: Arc<Self>) {
++        self.canceled.store(true, Ordering::Release);
++        self.closed.notify_waiters();
++        if let Ok(mut response) = self.response.try_lock() {response.take();}
++    }
++}
++
++// The official JS client creates a null body for these statuses and never calls
++// fetch_read_body/fetch_cancel_body. Keep its numeric rid reply shape while
++// releasing the otherwise unreachable native response before returning it.
++fn js_null_body(status: StatusCode) -> bool {
++    matches!(status.as_u16(), 101 | 103 | 204 | 205 | 304)
++}
++
++fn register_response(resources: &mut ResourceTable, response: reqwest::Response) -> ResourceId {
++    let null_body = js_null_body(response.status());
++    let rid = resources.add(ReqwestResponse::new(response));
++    if null_body {
++        // This rid was just added, so close can only succeed.
++        resources.close(rid).expect("newly registered HTTP response");
++    }
++    rid
++}
+ 
+ type CancelableResponseResult = Result<reqwest::Response>;
+ type CancelableResponseFuture =
+@@ -465,7 +518,7 @@
+     }
+ 
+     let mut resources_table = webview.resources_table();
+-    let rid = resources_table.add(ReqwestResponse(res));
++    let rid = register_response(&mut resources_table, res);
+ 
+     Ok(FetchResponse {
+         status: status.as_u16(),
+@@ -486,23 +539,19 @@
+         resources_table.get::<ReqwestResponse>(rid)?
+     };
+ 
+-    // SAFETY: we can access the inner value mutably
+-    // because we are the only ones with a reference to it
+-    // and we don't want to use `Arc::into_inner` because we want to keep the value in the table
+-    // for potential future calls to `fetch_cancel_body`
+-    let res_ptr = Arc::as_ptr(&res) as *mut ReqwestResponse;
+-    let res = unsafe { &mut *res_ptr };
+-    let res = &mut res.0;
+-
+-    let Some(chunk) = res.chunk().await? else {
+-        let mut resources_table = webview.resources_table();
+-        resources_table.close(rid)?;
+-
+-        // return a response with a single byte to indicate that the body is empty
+-        return Ok(tauri::ipc::Response::new(vec![1]));
++    let chunk = res.read_chunk().await;
++    let mut chunk = match chunk {
++        Ok(Some(chunk)) => chunk,
++        Ok(None) => {
++            let _ = webview.resources_table().close(rid);
++            return Ok(tauri::ipc::Response::new(vec![1]));
++        }
++        Err(error) => {
++            let _ = webview.resources_table().close(rid);
++            return Err(error);
++        }
+     };
+ 
+-    let mut chunk = chunk.to_vec();
+     // append a 0 byte to indicate that the body is not empty
+     chunk.push(0);
+ 
+@@ -729,3 +778,7 @@
+         assert_eq!(response.status(), StatusCode::FOUND);
+     }
+ }
++
++#[cfg(test)]
++#[path = "cuepoint_cancel_tests.rs"]
++mod cuepoint_cancel_tests;
+--- a/src/scope.rs
++++ b/src/scope.rs
+@@ -232,3 +232,22 @@
+         assert!(!scope.is_allowed(&"https://tauri.app/path#work".parse().unwrap()));
+     }
+ }
++
++#[cfg(test)]
++mod cuepoint_origin_tests {
++    use super::*;
++    #[test]
++    fn product_exact_origin_patterns_do_not_expand_hosts_ports_or_schemes() {
++        for (pattern, own, foreign) in [
++            ("https://api.example.test/*", "https://api.example.test/path?q=x", "https://api.example.test.evil/path"),
++            ("https://api.example.test:8443/*", "https://api.example.test:8443/path", "https://api.example.test:8444/path"),
++            ("http://127.0.0.1:3333/*", "http://127.0.0.1:3333/path", "http://127.0.0.1:3334/path"),
++            ("http://[\\:\\:1]:3333/*", "http://[::1]:3333/path", "http://[::1]:3334/path"),
++        ] {
++            let entry: Entry = pattern.parse().unwrap();
++            let scope = Scope::new(vec![Arc::new(entry)], vec![]);
++            assert!(scope.is_allowed(&own.parse().unwrap()), "{pattern} must match {own}");
++            assert!(!scope.is_allowed(&foreign.parse().unwrap()), "{pattern} must exclude {foreign}");
++        }
++    }
++}
+--- /dev/null
++++ b/src/cuepoint_cancel_tests.rs
+@@ -0,0 +1,83 @@
++// Regression uses actual reqwest body + Tauri ResourceTable, not a mocked future.
++use super::*;
++use std::io::{Read, Write};
++
++fn stalled_response() -> (String, std::sync::mpsc::Receiver<bool>, std::thread::JoinHandle<()>) {
++    let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
++    let url = format!("http://{}/stalled-body", listener.local_addr().unwrap());
++    let (tx, rx) = std::sync::mpsc::channel();
++    let server = std::thread::spawn(move || {
++        let (mut socket, _) = listener.accept().unwrap();
++        socket.set_read_timeout(Some(Duration::from_secs(3))).unwrap();
++        let mut request = [0; 4096]; socket.read(&mut request).unwrap();
++        socket.write_all(b"HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\nTransfer-Encoding: chunked\r\nConnection: close\r\n\r\n5\r\nfirst\r\n").unwrap();
++        socket.flush().unwrap();
++        let disconnected = matches!(socket.read(&mut request), Ok(0));
++        tx.send(disconnected).unwrap();
++    });
++    (url, rx, server)
++}
++
++#[test]
++fn pending_body_resource_close_interrupts_stalled_read_and_disconnects() {
++    tauri::async_runtime::block_on(async {
++        let (url, disconnected, server) = stalled_response();
++        let mut response = reqwest::Client::builder().no_proxy().build().unwrap().get(url).send().await.unwrap();
++        assert_eq!(response.chunk().await.unwrap().unwrap().as_ref(), b"first");
++        let mut table = ResourceTable::default();
++        let rid = table.add(ReqwestResponse::new(response));
++        let resource = table.get::<ReqwestResponse>(rid).unwrap();
++        let (ready_tx, ready_rx) = channel();
++        let task = tauri::async_runtime::spawn(async move {
++            let _ = ready_tx.send(());
++            resource.read_chunk().await
++        });
++        ready_rx.await.unwrap();
++        std::thread::sleep(Duration::from_millis(30));
++        table.close(rid).unwrap();
++        assert!(matches!(task.await.unwrap(), Err(Error::RequestCanceled)));
++        assert!(disconnected.recv_timeout(Duration::from_secs(2)).unwrap());
++        server.join().unwrap();
++    });
++}
++
++#[test]
++fn null_body_statuses_release_native_resources_without_affecting_streamed_responses() {
++    tauri::async_runtime::block_on(async {
++        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
++        let url = format!("http://{}/null-body", listener.local_addr().unwrap());
++        let server = std::thread::spawn(move || {
++            for status in [200, 204, 205, 304].into_iter().cycle().take(40) {
++                let (mut socket, _) = listener.accept().unwrap();
++                socket.set_read_timeout(Some(Duration::from_secs(3))).unwrap();
++                let mut request = [0; 4096];
++                socket.read(&mut request).unwrap();
++                let body = if status == 200 { "kept" } else { "" };
++                write!(socket, "HTTP/1.1 {status} Result\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}", body.len()).unwrap();
++                socket.flush().unwrap();
++            }
++        });
++        let client = reqwest::Client::builder().no_proxy().build().unwrap();
++        let mut table = ResourceTable::default();
++        for _ in 0..10 {
++            let response = client.get(&url).send().await.unwrap();
++            assert_eq!(response.status(), StatusCode::OK);
++            let kept = register_response(&mut table, response);
++            assert!(table.has(kept));
++            for status in [204, 205, 304] {
++                let response = client.get(&url).send().await.unwrap();
++                assert_eq!(response.status().as_u16(), status);
++                let rid = register_response(&mut table, response);
++                assert!(!table.has(rid), "null status {status} leaked a native resource");
++                assert!(table.has(kept), "null-body cleanup closed an unrelated response");
++            }
++            let response = table.get::<ReqwestResponse>(kept).unwrap();
++            assert_eq!(response.read_chunk().await.unwrap().unwrap(), b"kept");
++            assert!(response.read_chunk().await.unwrap().is_none());
++            table.close(kept).unwrap();
++        }
++        server.join().unwrap();
++        for status in [101, 103, 204, 205, 304] { assert!(js_null_body(StatusCode::from_u16(status).unwrap())); }
++        for status in [200, 201, 202, 206, 301, 400, 500] { assert!(!js_null_body(StatusCode::from_u16(status).unwrap())); }
++    });
++}

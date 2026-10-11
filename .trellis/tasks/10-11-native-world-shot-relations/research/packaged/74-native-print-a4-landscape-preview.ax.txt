@@ -1,0 +1,64 @@
+Window: "Unknown", App: Cuepoint Network Review.
+0 sheet ID: PDPrintPanel, Secondary Actions: Raise
+	1 split group
+		2 scroll area
+			3 collection (disabled)
+				4 section (disabled)
+					5 container
+						6 image
+						7 image selected
+						8 text Page 1 of 3
+					9 container
+						10 image
+						11 image selected
+						12 text Page 2 of 3
+					13 container
+						14 image
+						15 image selected
+						16 text Page 3 of 3
+		17 splitter (disabled, settable, float) 247
+		18 scroll area Secondary Actions: Scroll Up, Scroll Down
+			19 container
+				20 text field (settable) Description: Copies, Value: 1, ID: CopiesTF
+				21 text Copies
+				22 stepper Description: copies, Value: 1, ID: CopiesStepper, Secondary Actions: Increment, Decrement
+					23 increment arrow button
+					24 decrement arrow button
+				25 text Pages
+				26 text field (settable) Value: 1, ID: PRStart
+				27 text to
+				28 text field (settable) Value: 1, ID: PREnd
+				29 text Select pages from the sidebar
+				30 radio button All 3 Pages, Value: 1, ID: PRAll
+				31 radio button Range from, Value: 0, ID: PR
+				32 radio button Selection, Value: 0, ID: PRSelection
+			33 container
+				34 text Value: Layout 1 page per sheet, ID: LayoutLabel
+				35 disclosure triangle 0
+				36 text Value: Paper Handling Collate Sheets • All Sheets, ID: PaperHandlingLabel
+				37 disclosure triangle 0
+			38 scroll bar (disabled, settable, float) 1
+		39 container
+			40 text Value: Printer, ID: PDPrinterST
+			41 pop up button Value: No Printer Selected, ID: PDPrintersPopup
+			42 text Value: Presets, ID: PDPresetsST
+			43 pop up button Value: Default Settings, ID: PDPresetsPopup
+		44 button Cancel, ID: PDCancel
+		45 button Description: Help, ID: PDHelp
+		46 container
+			47 button PDF
+			48 menu button PDF
+		49 button (disabled) Print, ID: PDPrint
+50 menu bar
+	51 Cuepoint Network Review
+	52 File
+	53 Edit
+	54 View
+	55 Window
+	56 Help
+
+Selected text: ```
+1
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

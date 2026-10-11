@@ -6,7 +6,9 @@
 
 ## Overview
 
-Browser durable state lives in IndexedDB (`src/db/database.ts` + the business command owners listed in the D02 contract below). Browser reads use `useLiveQuery`; ephemeral UI (search, sort, dialog open) stays in React `useState`. Shared video pages access `videoWorkspaceRepository`, which selects browser commands or the native owner below the page boundary. The packaged native runtime uses fresh SQLite schema 4 and managed files through `src/lib/nativeWorkspace.ts`; native rows are not mirrored into Dexie. See [Shared Video Workspace](./video-workspace.md) and [Native Workspace](./native-workspace.md). No migration path is implied.
+Durable state in browser and the approved complete-product Tauri stage lives in Dexie IndexedDB (`src/db/database.ts` plus the D02 business command owners below). Both use existing `useLiveQuery`, transaction/Agent command and Blob behavior; ephemeral UI stays in React `useState`. Browser database identity remains `aifenjing`; normal Tauri uses the fixed fresh `cuepoint-desktop:<profileId>:v1` namespace installed before database construction. Runtime presence alone never selects SQLite. Shared video pages select repositories through `usesSqliteProductStorage()`. The explicit SQLite reference lane retains fresh schema 4 and managed files through `src/lib/nativeWorkspace.ts`; its rows are never mirrored into a second Dexie owner. See [Native Product Runtime](./native-product-runtime.md), [Shared Video Workspace](./video-workspace.md) and [Native Workspace](./native-workspace.md).
+
+Fresh development is the default: do not import old browser/native data or add migration, backfill, compatibility-reader or preservation work unless explicitly requested. Historical schema/import descriptions below document existing Web behavior; they do not authorize new legacy-data work. The later centralized SQLite replacement is a separate stage, not a second owner alongside the current desktop Agent.
 
 ---
 

@@ -1,10 +1,16 @@
 # Desktop storage and synchronization implementation plan
 
-Status: approved for staged implementation. The final planning summary was approved on 2026-10-10. The parent is in progress and tracks independently validated children; live service integration and production migration remain separately gated.
+Status: approved for staged implementation. The final planning summary was approved on 2026-10-10. The parent is in progress and tracks independently validated children. Complete native product coverage and live service integration remain separate deliverables; historical migration is excluded by the later fresh-development decision below.
 
 ## Execution decision update — no default historical migration (2026-10-11)
 
 The next product task starts from a fresh native workspace. Do not implement Dexie-to-SQLite migration, old-record backfills or compatibility readers unless a future task explicitly adds that requirement. Use disposable current-product fixtures to define and verify the new SQLite/file contracts. The prior migration-oriented steps below are retained as historical planning context and are not an execution prerequisite for the next child.
+
+## Current product checkpoint — 2026-10-11
+
+All six earlier children are accepted and archived, including the native product foundation, video core and shared product UI/native adapters. The normal product uses one React page tree with browser Dexie and native SQLite/file repositories; fresh schema 4 includes the accepted video workflow. World entities, generation/media slots, audio/music and full history/synchronization coverage are later domain slices.
+
+`10-11-native-world-shot-relations` is a planning child whose stable directory predates the latest priority correction. Its current title is shared business layer and native Agent integration. The user did not select the project-local world candidate: they want rapid native feature parity by reusing existing Web UI/business logic, with Agent/AI first. They explicitly selected the complete-feature-first Tauri stage using app-internal IndexedDB and centralized SQLite replacement later. This changes the earlier SQLite-first delivery order; the normal product stage must have one IndexedDB owner while retaining native OS/IPC services. Final design/execution review is pending, and historical migration remains excluded.
 
 The work is intentionally staged so the core can be verified without a real account or user data. Each phase produces a reviewable artifact and can be tested with disposable fixtures.
 

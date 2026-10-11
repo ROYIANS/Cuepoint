@@ -1,0 +1,206 @@
+   Compiling scopeguard v1.2.0
+   Compiling parking_lot_core v0.9.12
+   Compiling icu_normalizer v2.3.0
+   Compiling cssparser v0.37.0
+   Compiling smallvec v1.16.3
+   Compiling core-foundation-sys v0.8.7
+   Compiling objc2-foundation v0.3.2
+   Compiling form_urlencoded v1.2.2
+   Compiling tokio-macros v2.7.2
+   Compiling socket2 v0.6.5
+   Compiling lock_api v0.4.14
+   Compiling mio v1.2.4
+   Compiling futures-core v0.3.34
+   Compiling core-foundation v0.10.1
+   Compiling ring v0.17.14
+   Compiling parking_lot v0.12.5
+   Compiling slab v0.4.12
+   Compiling idna_adapter v1.2.2
+   Compiling string_cache v0.9.0
+   Compiling selectors v0.38.0
+   Compiling core-graphics-types v0.2.0
+   Compiling idna v1.1.0
+   Compiling tokio v1.53.2
+   Compiling zeroize v1.9.1
+   Compiling base64 v0.22.1
+   Compiling web_atoms v0.2.6
+   Compiling core-graphics v0.25.0
+   Compiling rustls-pki-types v1.15.1
+   Compiling url v2.5.8
+   Compiling markup5ever v0.39.0
+   Compiling tracing-core v0.1.36
+   Compiling http-body v1.1.0
+   Compiling getrandom v0.2.17
+   Compiling html5ever v0.39.0
+   Compiling urlpattern v0.6.0
+   Compiling schemars v0.8.22
+   Compiling httparse v1.10.1
+   Compiling system-configuration-sys v0.6.0
+   Compiling rustversion v1.0.23
+   Compiling futures-task v0.3.34
+   Compiling dom_query v0.28.0
+   Compiling futures-sink v0.3.34
+   Compiling untrusted v0.9.0
+   Compiling futures-util v0.3.34
+   Compiling tauri-utils v2.10.1
+   Compiling tracing v0.1.44
+   Compiling tower-service v0.3.3
+   Compiling try-lock v0.2.5
+   Compiling atomic-waker v1.1.2
+   Compiling rustls v0.23.45
+   Compiling want v0.3.2
+   Compiling futures-channel v0.3.34
+   Compiling core-foundation v0.9.4
+   Compiling subtle v2.6.1
+   Compiling sync_wrapper v1.0.2
+   Compiling objc2-quartz-core v0.3.2
+   Compiling system-configuration v0.7.0
+   Compiling ipnet v2.12.2
+   Compiling tower-layer v0.3.3
+   Compiling encoding_rs v0.8.42
+   Compiling webpki-roots v1.0.9
+   Compiling multiversion_no_op v1.0.0
+   Compiling ryu v1.0.23
+   Compiling objc2-app-kit v0.3.2
+   Compiling rustls-webpki v0.103.15
+   Compiling simdutf8 v0.1.5
+   Compiling serde_urlencoded v0.7.1
+   Compiling tokio-util v0.7.20
+   Compiling tower v0.5.3
+   Compiling tower-http v0.6.11
+   Compiling h2 v0.4.20
+   Compiling http-body-util v0.1.5
+   Compiling open v5.4.4
+   Compiling data-url v0.3.2
+   Compiling rusqlite v0.40.2
+   Compiling hyper v1.12.0
+   Compiling tokio-rustls v0.26.6
+   Compiling hyper-util v0.1.21
+   Compiling hyper-rustls v0.27.10
+   Compiling tauri-build v2.7.1
+   Compiling tauri-plugin v2.7.1
+   Compiling tauri-codegen v2.7.1
+   Compiling reqwest v0.12.28
+   Compiling objc2-web-kit v0.3.2
+   Compiling tao v0.37.1
+   Compiling muda v0.20.0
+   Compiling window-vibrancy v0.8.1
+   Compiling rfd v0.16.0
+   Compiling wry v0.57.0
+   Compiling tauri-runtime v2.12.1
+   Compiling tauri-runtime-wry v2.12.1
+   Compiling tauri v2.12.2
+   Compiling tauri-plugin-fs v2.7.0
+   Compiling tauri-macros v2.7.1
+   Compiling tauri-plugin-dialog v2.8.1
+   Compiling tauri-plugin-http v2.8.2
+   Compiling tauri-plugin-opener v2.5.4
+   Compiling cuepoint-prototype v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 28.02s
+     Running unittests src/lib.rs (.tools/target/debug/deps/cuepoint_native_storage-a56d69ab8647571b)
+
+running 17 tests
+test desktop::tests::packaged_entry_accepts_tauri_root_without_widening_navigation ... ok
+test desktop::tests::stale_pure_replies_reject_and_committed_outcomes_keep_their_producer_generation ... ok
+test desktop::tests::original_microphone_container_and_mime_are_preserved_without_relabeling ... ok
+test desktop::tests::closed_payload_denies_path_sql_extra_fields_and_oversized_chunks ... ok
+test desktop::tests::fresh_product_ensure_action_is_closed_and_generation_aware ... ok
+test file_transfer::tests::dialogs_are_bounded_and_do_not_idle_expire ... ok
+test runtime_services::tests::exact_origins_reject_scope_injection_and_unconfigured_http ... ok
+test runtime_services::tests::profiles_are_stable_isolated_and_explicit ... ok
+test file_transfer::tests::cancel_bounds_order_and_failed_hash_never_publish ... ok
+test desktop::tests::exclusive_export_never_overwrites_even_empty_files ... ok
+test file_transfer::tests::published_failure_is_truthful_and_abandonment_cleans_stages ... ok
+test runtime_services::tests::export_envelopes_are_closed_and_bounded_before_io ... ok
+test file_transfer::tests::existing_or_raced_destinations_are_preserved ... ok
+test desktop::tests::typed_baseline_diagnostic_contains_live_expected_requested_without_writing ... ok
+test desktop::tests::every_successful_bridge_close_waits_for_native_release_and_blocks_admission ... ok
+test file_transfer::tests::zero_and_large_exports_keep_byte_identity_without_sqlite ... ok
+test paths::tests::completion_publication_cannot_exceed_its_reader_boundary ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.97s
+
+     Running unittests src/main.rs (.tools/target/debug/deps/cuepoint_prototype-2ff618c01654322d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/workspace_probe.rs (.tools/target/debug/deps/workspace_probe-e4d521b7b288867a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/native_workspace.rs (.tools/target/debug/deps/native_workspace-75f8fe8d49ca20c5)
+
+running 22 tests
+test lifecycle_close_after_actual_commit_reports_committed_asset ... ok
+test multi_add_uses_scene_order_numbering_and_duration_settings_atomically ... ok
+test cancellation_is_independent_queued_inputs_frozen_and_commit_wins_late_abort ... ok
+test owner_is_rechecked_at_real_commit_and_fresh_publication_never_overwrites ... ok
+test missing_and_corrupt_keep_exact_logical_state ... ok
+test owner_removed_before_publication_rejects_at_actual_metadata_boundary ... ok
+test live_second_process_refuses_and_actual_death_releases_writer ... ok
+test real_writer_contention_and_new_root_no_overwrite ... ok
+test managed_bytes_changed_during_stage_or_actual_commit_are_not_ready ... ok
+test persistent_owned_media_output_studio_timing_and_source_independence ... ok
+test queued_backup_excludes_later_writes_and_lifecycle_close_cancels_before_commit ... ok
+test schema_identity_owner_and_incomplete_roots_reject ... ok
+test canceled_backup_has_no_completion_and_successful_publication_wins_late_cancel ... ok
+test symlink_hardlink_target_and_ancestor_boundaries_preserve_external_bytes ... ok
+test reopen_rejects_orphaned_video_rows ... ok
+test recovery_refuses_external_inode_alias_and_foreign_intent_paths_without_deletion ... ok
+test video_domain_reopens_with_stable_order_and_checkpoint_boundary ... ok
+test wire_numeric_baselines_compare_integer_and_float_values_semantically ... ok
+test source_change_injected_io_error_and_precommit_abort_leave_no_ready_asset ... ok
+test snapshot_backup_restore_exact_and_strict_corruption ... ok
+test genuine_backup_and_restore_process_kills_follow_completion_authority ... ok
+test genuine_process_kills_import_recovery_is_idempotent_and_preserves_unknown_sources ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.99s
+
+     Running tests/portable_contract.rs (.tools/target/debug/deps/portable_contract-ced2a65b3dbd4c66)
+
+running 2 tests
+test malformed_wire_extra_fields_and_native_lengths_reject ... ok
+test actual_typescript_oracle_is_exact_in_rust ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/shared_video_contract.rs (.tools/target/debug/deps/shared_video_contract-fbe7b485e838533c)
+
+running 10 tests
+test serialized_null_is_a_clear_and_missing_is_unchanged ... ok
+test invalid_multi_add_and_bulk_leave_every_row_unchanged ... ok
+test editing_script_clears_stale_utf16_associations_without_losing_scene_text ... ok
+test scalar_baselines_conflict_merge_converge_and_reject_invalid_fields ... ok
+test nullable_string_baselines_conflict_and_converge_after_unassignment ... ok
+test duplicate_scene_returns_its_rows_and_inverse_preserves_source_edits ... ok
+test committed_bulk_inverse_survives_reopen_and_preserves_unrelated_edits ... ok
+test duration_baselines_compare_numbers_across_javascript_and_rust_serialization ... ok
+test child_edits_and_inverse_touch_iso_project_time_without_reverting_later_metadata ... ok
+test project_delete_removes_logical_assets_and_reopens_while_retaining_owned_bytes ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+     Running tests/storage_review.rs (.tools/target/debug/deps/storage_review-23b81e2f044c081b)
+
+running 8 tests
+test journal_alias_added_after_open_cannot_modify_external_file ... ok
+test wrong_ready_fields_and_corrupt_database_are_not_initialized_over ... ok
+test bounded_managed_read_verifies_complete_bytes_and_retains_corrupt_refs ... ok
+test backup_rejects_destination_bytes_changed_before_completion ... ok
+test every_close_caller_waits_until_writer_is_released ... ok
+test strict_snapshot_rejects_unknown_index_and_duplicate_manifest_keys ... ok
+test restore_rechecks_copied_target_before_ready_marker ... ok
+test submit_close_race_never_leaves_completed_operations_cancelable ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.41s
+
+   Doc-tests cuepoint_native_storage
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

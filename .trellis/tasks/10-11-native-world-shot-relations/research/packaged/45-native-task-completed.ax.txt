@@ -1,0 +1,61 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_c8205daf-6831-49ef-8bb7-a9aea89d8d54
+			3 container Notifications alt+T
+				4 text 任务已确认完成
+			5 container 原生任务生命周期验收
+				6 button 任务工作台
+				7 button 关闭任务详情
+				8 text 已完成
+				9 heading 原生任务生命周期验收, Value: 2
+					10 text 原生任务生命周期验收
+				11 text 桌面真实音乐验收
+				12 text  · 小光点
+				13 text 更新于 10月11日 17:21
+				14 container 任务详情视图
+					15 toggle button 概览, Value: off
+					16 toggle button 工作记录, Value: off
+					17 toggle button 验收总结, Value: on
+				18 container 任务验收总结
+					19 text REVIEW & REFLECTION
+					20 heading 让这次工作，有一个清晰的收尾。, Value: 3
+						21 text 让这次工作，有一个清晰的收尾。
+					22 text 检查交付，留下决策与经验，再确认完成。
+					23 text 已确认 版本 3 · 人工修订
+					24 button 查看总结历史
+					25 button (disabled) 编辑
+					26 text 本版参考 4 / 4 项记录。验收仍需要你的判断。
+					27 text 已保存并实际回读人工记录 NATIVE-TASK-RECORD-20261011，正文含 NATIVE-RECORD-Q9，版本为1；对应执行步骤已完成。
+					28 heading 完成标准 1 / 1, Value: 3
+						29 text 完成标准 1 / 1
+					30 text 人工工作记录正文与版本号回读一致。 符合要求
+					31 text 实际展开记录后，正文和唯一标记一致，显示版本1。
+					32 heading 交付成果0, Value: 3
+						33 text 交付成果0
+					34 text 尚未记录。
+					35 heading 决策与约束0, Value: 3
+						36 text 决策与约束0
+					37 text 尚未记录。
+					38 heading 问题与经验0, Value: 3
+						39 text 问题与经验0
+					40 text 尚未记录。
+					41 heading 未完成与下一步0, Value: 3
+						42 text 未完成与下一步0
+					43 text 未列出待办事项。
+				44 container
+					45 button 归档
+					46 button 重新打开
+	47 close button
+	48 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	49 minimize button
+	50 text 小光点 · 完整产品验收
+51 menu bar
+	52 Cuepoint Product Review
+	53 File
+	54 Edit
+	55 View
+	56 Window
+	57 Help
+
+The focused UI element is 5 container 原生任务生命周期验收

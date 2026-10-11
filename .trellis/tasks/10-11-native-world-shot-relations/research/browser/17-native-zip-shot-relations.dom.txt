@@ -1,0 +1,111 @@
+- complementary:
+  - link "小光点":
+    - /url: /about
+    - generic: 小光点
+  - navigation "应用导航":
+    - link "创作助手":
+      - /url: /agent
+      - generic: 创作助手
+    - link "IP":
+      - /url: /ips
+      - generic: IP
+    - link "项目":
+      - /url: /projects
+      - generic: 项目
+    - link "素材库":
+      - /url: /assets
+      - generic: 素材库
+    - link "任务":
+      - /url: /agent/tasks
+      - generic: 任务
+    - link "连接与模型":
+      - /url: /connectors
+      - generic: 连接与模型
+    - link "关于":
+      - /url: /about
+      - generic: 关于
+  - button "导入项目":
+    - generic: 导入项目
+- banner:
+  - link "返回工作室":
+    - /url: /projects
+  - generic "桌面真实 Agent 验收"
+  - navigation "项目工作区":
+    - link "故事":
+      - /url: /p/prj_2f918e69-ed1e-42fe-9d50-816f062abf30/e/ep_dbc9c17d-23ac-4e52-80b1-d0d552279d4f
+    - link "世界":
+      - /url: /p/prj_2f918e69-ed1e-42fe-9d50-816f062abf30/world
+    - link "分镜" [active]:
+      - /url: /p/prj_2f918e69-ed1e-42fe-9d50-816f062abf30/e/ep_dbc9c17d-23ac-4e52-80b1-d0d552279d4f/shots
+    - link "制作":
+      - /url: /p/prj_2f918e69-ed1e-42fe-9d50-816f062abf30/e/ep_dbc9c17d-23ac-4e52-80b1-d0d552279d4f/produce
+    - link "记忆":
+      - /url: /p/prj_2f918e69-ed1e-42fe-9d50-816f062abf30/memory
+  - link "项目素材":
+    - /url: /assets?project=prj_2f918e69-ed1e-42fe-9d50-816f062abf30
+    - generic: 素材
+  - button "项目设定":
+    - generic: 项目设定
+  - button "备份项目":
+    - generic: 备份项目
+- banner:
+  - heading "分镜" [level=1]
+  - button "新建":
+    - text: 新建
+- button "道具与风格":
+  - text: 道具与风格
+- group "分镜视图":
+  - button "设计" [pressed]:
+    - text: 设计
+  - button "素材":
+    - text: 素材
+- button "筛选":
+  - text: 筛选
+- button "选择":
+  - text: 选择
+- button "分镜设置":
+  - text: 分镜设置
+- button "列设置":
+  - text: 列设置
+- generic: 顺序
+- generic: 镜号
+- generic: 状态
+- generic: 内容
+- generic: 时长 (秒)
+- generic: 角色
+- generic: 场景
+- generic: 备注
+- button "拖拽调整场次顺序":
+- textbox "场次标题": 雨夜抵达车站
+- status: 已保存
+- paragraph: 1 镜 · 3秒
+- button "删除场":
+- button "在上方插入镜头":
+- button "上移镜头" [disabled]:
+- button "拖拽调整镜头顺序":
+- button "下移镜头" [disabled]:
+- button "复制镜头":
+- textbox "镜号": "1"
+- status: 已保存
+- button "镜头 1 道具与风格": 设定
+- combobox "镜头 1 状态":
+  - generic: 草稿
+- textbox "镜头内容": 雨夜中，创作者撑着红伞走到蓝色车站站台，暖色灯光落在湿润地面。
+- status: 已保存
+- textbox "时长（秒）":
+  - /placeholder: 秒
+  - text: "3"
+- button "选择角色":
+  - generic: 小
+  - generic "小光点验收"
+- combobox "镜头 1 场景":
+  - generic: 蓝
+  - generic "蓝色车站"
+- textbox "备注"
+- status: 已保存
+- button "在末尾添加镜头":
+- status
+- status
+- text: 镜头总数 1
+- generic: 总时长 3秒
+- region "Notifications alt+T"

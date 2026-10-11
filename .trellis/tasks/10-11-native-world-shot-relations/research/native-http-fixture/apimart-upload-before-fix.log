@@ -1,0 +1,21 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: APIMart 返回的数据格式不符合接口约定
+
+false !== true
+
+    at file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/native-product-fixture-check.mjs:41:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async check (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/native-product-fixture-check.mjs:11:40)
+    at async file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/native-product-fixture-check.mjs:37:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.11.0

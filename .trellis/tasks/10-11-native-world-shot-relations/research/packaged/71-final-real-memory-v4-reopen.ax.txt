@@ -1,0 +1,83 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Real Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/p/prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe/memory
+			3 container
+				4 link 小光点, Value: tauri://localhost/#/about
+				5 container 应用导航
+					6 link 创作助手, Value: tauri://localhost/#/agent
+					7 link IP, Value: tauri://localhost/#/ips
+					8 link 项目, Value: tauri://localhost/#/projects
+					9 link 素材库, Value: tauri://localhost/#/assets
+					10 link 任务, Value: tauri://localhost/#/agent/tasks
+					11 link 连接与模型, Value: tauri://localhost/#/connectors
+					12 link 关于, Value: tauri://localhost/#/about
+				13 button 导入项目
+			14 container
+				15 link 返回工作室, Value: tauri://localhost/#/projects
+				16 text 桌面真实音乐验收
+				17 container 项目工作区
+					18 link 音乐创作, Value: tauri://localhost/#/p/prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe
+					19 link 记忆, Value: tauri://localhost/#/p/prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe/memory
+				20 link 项目素材, Value: tauri://localhost/#/assets?project=prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe
+				21 button 项目设定
+				22 button 备份项目
+			23 container
+				24 heading 项目记忆, Value: 1
+					25 text 项目记忆
+				26 text 管理这个项目已确认的规范、偏好与决策。
+				27 button 添加记忆
+				28 container 项目记忆列表
+					29 text field (settable) 搜索项目记忆, Placeholder: 搜索正文、标题或标签
+					30 combo box (collapsed, settable) 筛选记忆分类, Value: 全部分类, Secondary Actions: Expand
+						31 text 全部分类
+					32 combo box (collapsed, settable) 筛选记忆状态, Value: 全部状态, Secondary Actions: Expand
+						33 text 全部状态
+					34 text 1 条记忆 1 条已确认
+					35 toggle button Value: on, 项目规范 已确认 NATIVE-MEMORY-20261011 原生验收记忆：音乐保持纯乐，加入钢琴。
+手动记录 10月11日 17:13
+				36 container 记忆详情
+					37 text 版本 4
+					38 button 编辑这条记忆
+					39 button 删除这条记忆
+					40 text 项目规范 已确认
+					41 heading NATIVE-MEMORY-20261011, Value: 2
+						42 text NATIVE-MEMORY-20261011
+					43 text 原生验收记忆：音乐保持纯乐，加入钢琴。
+					44 heading 适用条件 按需引用, Value: 3
+						45 text 适用条件 按需引用
+					46 text 仅用于桌面真实音乐验收项目。
+					47 heading 来源与依据 手动记录, Value: 3
+						48 text 来源与依据 手动记录
+					49 text 人工整理的项目知识；适用性由用户确认
+					50 heading 修订历史 4 版, Value: 3
+						51 text 修订历史 4 版
+					52 summary 版本 4 · 已确认 10月11日 17:13, Value: off
+						53 text 版本 4 · 已确认
+						54 text 10月11日 17:13
+					55 summary 版本 3 · 已停用 10月11日 17:13, Value: off
+						56 text 版本 3 · 已停用
+						57 text 10月11日 17:13
+					58 summary 版本 2 · 已确认 10月11日 17:13, Value: off
+						59 text 版本 2 · 已确认
+						60 text 10月11日 17:13
+					61 summary 版本 1 · 已确认 10月11日 17:12, Value: off
+						62 text 版本 1 · 已确认
+						63 text 10月11日 17:12
+					64 text 创建于 10月11日 17:12 · 最近更新 10月11日 17:13
+					65 text 停用后内容和修订历史仍会保留。
+					66 button 停用记忆
+			67 container Notifications alt+T
+	68 close button
+	69 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	70 minimize button
+	71 text 小光点 · 完整产品验收
+72 menu bar
+	73 Cuepoint Real Review
+	74 File
+	75 Edit
+	76 View
+	77 Window
+	78 Help
+
+The focused UI element is 2 HTML content Description: 小光点, URL: tauri://localhost/#/p/prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe/memory

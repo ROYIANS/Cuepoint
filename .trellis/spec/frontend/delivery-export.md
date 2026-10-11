@@ -43,6 +43,10 @@ Print route:
 - Printed content is full text with preserved line breaks; do not use line-clamp, truncate or overflow clipping for authored prose.
 - Printable visual fallback is valid first-frame image, then valid last-frame image, then an empty placeholder.
 - Print CSS uses A4 landscape and removes application chrome.
+- Storyboard buttons use `printStoryboard()` from `lib/runtimePrint`; browser
+  keeps `window.print`, while macOS configures a copied native A4-landscape print
+  info. Follow [the runtime print contract](./native-product-runtime.md#native-storyboard-print).
+  Dialog initiation/cancel is not printed or saved-PDF success.
 
 ### 4. Validation & Error Matrix
 
@@ -67,6 +71,9 @@ Print route:
 - Chinese, comma, quote, and multiline CSV cells
 - Filename sanitization and UTF-8 BOM
 - Route rejects an episode owned by another project
+- `runtimePrint.test.ts`: actual loaded print callback, host split, awaited native
+  dispatch, safe error without fallback and no printed-success feedback. Actual
+  system landscape/multipage preview and PDF paper dimensions remain separate.
 
 ### 7. Wrong vs Correct
 

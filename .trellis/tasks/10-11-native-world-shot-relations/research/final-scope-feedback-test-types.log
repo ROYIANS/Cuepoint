@@ -1,0 +1,4 @@
+Command: ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm", "exec", "tsc", "--project", "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.tmp/final-audio-feedback.tsconfig.json", "--pretty", "false"]
+Started: 2026-10-11T17:40:24.959075+08:00
+Exit: 2
+tests/audioMusicSaveFeedback.test.ts(75,102): error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type 'MediaRecord'.

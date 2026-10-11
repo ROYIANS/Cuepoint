@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "capturedAtUtc": "2026-10-11T13:33:45.633Z",
+  "scope": "bounded independent visible macOS Tavily synthetic protocol, not normal Agent web-tool or live supplier acceptance",
+  "passed": true,
+  "runnerExitCode": 0,
+  "ownedChildPid": 72663,
+  "ownedChildExited": true,
+  "bundle": {
+    "app": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/run-ec68f6da-9951-403c-a224-caf8ea1d9b7b/Cuepoint Tavily Review.app",
+    "identifier": "dev.cuepoint.review.tavily.186e4e74-a288-4a8e-89da-e25c9443bd67",
+    "storage": "sqlite",
+    "webkitStoreId": "c7bfe0c66d556201732ba50b9305402d",
+    "binarySha256": "7c38cfdb355e140f81df929f08e906a0b84da4e6dfc37411381d9ab774d6488b"
+  },
+  "actualChecks": 7,
+  "nativeRequestCount": 3,
+  "paidRequests": 0,
+  "finishedAt": null,
+  "liveTavilyAccountVerified": false,
+  "wholeProductAcceptanceComplete": false,
+  "wholeHistoricalAcceptanceComplete": false,
+  "currentSelectedSourceCount": 11,
+  "currentSelectedSourcesMatch": true,
+  "binaryMatches": true,
+  "sourceFreeze": {
+    "format": "cuepoint.native-tavily-test-lane-source-freeze.v1",
+    "capturedAtUtc": "2026-10-11T12:56:47.227366+00:00",
+    "scope": "New test-only explicit visible native protocol lane; no product endpoint/ACL/credentials/profile change. Source gate only until actual button/report.",
+    "sourceFiles": [
+      {
+        "path": "desktop/tauri/ui/tavilyProbeFetch.ts",
+        "bytes": 1256,
+        "sha256": "5807404661f85aeb6af8dcc3f8b2bb5fbeee42f2cbd6b274d351b32d1b60a6f1"
+      },
+      {
+        "path": "desktop/tauri/ui/tavilyProbe.ts",
+        "bytes": 4594,
+        "sha256": "1fe87f2df10096c2999093cea605630bd75647437328942584083c42f6637aba"
+      },
+      {
+        "path": "desktop/tauri/ui/tavilyProbeMain.tsx",
+        "bytes": 2244,
+        "sha256": "930563fee1300ba2af1599f5fe1cd0a29f59e63488bf12f43cc2eaa5d5f514ac"
+      },
+      {
+        "path": "desktop/tauri/ui/tavily-probe/index.html",
+        "bytes": 303,
+        "sha256": "95adcbfe2c565d8b23ca2c4dfdd6453366440428e07985d600726ffa41612a88"
+      },
+      {
+        "path": "desktop/tauri/scripts/native-tavily-regression.mjs",
+        "bytes": 12621,
+        "sha256": "b5e99ca4696472ce1cc56a16d4b0292722c337211b0c27fab1e9cf432b11f507"
+      },
+      {
+        "path": "desktop/tauri/package.json",
+        "bytes": 1489,
+        "sha256": "c7f884d2e6125df5c0103d3883ed61ec00c53ff00d2ac4177c3d93f1c56d776b"
+      },
+      {
+        "path": "desktop/tauri/knip.json",
+        "bytes": 248,
+        "sha256": "e145cef20d36bdcbb4897cf0ee23953939b8a1022f0019cda030d03d870c0c6c"
+      },
+      {
+        "path": "tests/tavilyNativeProbe.test.ts",
+        "bytes": 6117,
+        "sha256": "7ab086bf5c924fa53b2a187107bda729cc8cd0f18015b1e574c7e21faf8c3b7c"
+      }
+    ]
+  },
+  "verifiedRequestRecords": [
+    {
+      "request": {
+        "at": "2026-10-11T13:29:22.020Z",
+        "type": "request",
+        "id": 18,
+        "method": "GET",
+        "path": "/usage",
+        "query": "",
+        "origin": "tauri://localhost",
+        "authorizationPresent": true,
+        "cookiePresent": false,
+        "contentType": null
+      },
+      "body": {
+        "at": "2026-10-11T13:29:22.021Z",
+        "type": "body",
+        "id": 18,
+        "byteLength": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model": null,
+        "offeredTools": []
+      },
+      "completion": {
+        "at": "2026-10-11T13:29:22.021Z",
+        "type": "disconnect",
+        "id": 18,
+        "path": "/usage",
+        "elapsedMs": 1,
+        "finished": true
+      },
+      "expectedRequestBodyByteLength": 0,
+      "expectedRequestBodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "requestBodyMatchesSharedAdapterPayload": true
+    },
+    {
+      "request": {
+        "at": "2026-10-11T13:29:22.027Z",
+        "type": "request",
+        "id": 19,
+        "method": "POST",
+        "path": "/search",
+        "query": "",
+        "origin": "tauri://localhost",
+        "authorizationPresent": true,
+        "cookiePresent": false,
+        "contentType": "application/json"
+      },
+      "body": {
+        "at": "2026-10-11T13:29:22.027Z",
+        "type": "body",
+        "id": 19,
+        "byteLength": 178,
+        "sha256": "94558d34906960183180e88c3a3628461b7269c1a23d2c2675d83c1c1f7d24bf",
+        "model": null,
+        "offeredTools": []
+      },
+      "completion": {
+        "at": "2026-10-11T13:29:22.027Z",
+        "type": "disconnect",
+        "id": 19,
+        "path": "/search",
+        "elapsedMs": 0,
+        "finished": true
+      },
+      "expectedRequestBodyByteLength": 178,
+      "expectedRequestBodySha256": "94558d34906960183180e88c3a3628461b7269c1a23d2c2675d83c1c1f7d24bf",
+      "requestBodyMatchesSharedAdapterPayload": true
+    },
+    {
+      "request": {
+        "at": "2026-10-11T13:29:22.036Z",
+        "type": "request",
+        "id": 20,
+        "method": "POST",
+        "path": "/extract",
+        "query": "",
+        "origin": "tauri://localhost",
+        "authorizationPresent": true,
+        "cookiePresent": false,
+        "contentType": "application/json"
+      },
+      "body": {
+        "at": "2026-10-11T13:29:22.036Z",
+        "type": "body",
+        "id": 20,
+        "byteLength": 114,
+        "sha256": "b92021eb35303b67242a03504145b91717e746347e345a240d9f5881e32b3d21",
+        "model": null,
+        "offeredTools": []
+      },
+      "completion": {
+        "at": "2026-10-11T13:29:22.036Z",
+        "type": "disconnect",
+        "id": 20,
+        "path": "/extract",
+        "elapsedMs": 0,
+        "finished": true
+      },
+      "expectedRequestBodyByteLength": 114,
+      "expectedRequestBodySha256": "b92021eb35303b67242a03504145b91717e746347e345a240d9f5881e32b3d21",
+      "requestBodyMatchesSharedAdapterPayload": true
+    }
+  ],
+  "postProbeEvidenceRead": {
+    "id": 21,
+    "path": "/evidence",
+    "probeRequest": false
+  },
+  "requestAuthorizationLimit": "Raw server ledger retains presence only. Synthetic key identity is established by frozen strict test-lane routing and actual report; no raw authorization value is retained or inferred from presence alone.",
+  "responseByteLimit": "Actual shared adapter checks prove exact expected synthetic text; sanitized server ledger body hashes are request hashes, not response hashes.",
+  "profileLimit": "Runner storage sqlite is historical acceptance identity metadata, not normal product storage. Exact event profile/database identity supplies this dedicated probe boundary.",
+  "evidence": [
+    {
+      "path": "native-tavily-packaged-report.json",
+      "bytes": 2276,
+      "sha256": "1fbef856ed53c3aa8054b6e130ee00310892925fbbd4ac44eaed37a5fd0b4a31"
+    },
+    {
+      "path": "native-tavily-runner-receipt.json",
+      "bytes": 3161,
+      "sha256": "38753c82cc01b229ff6ccc6e868dd2f765285f0530d75b46777b2f269ac9641e"
+    },
+    {
+      "path": "tavily-probe-launch-actual.log",
+      "bytes": 485,
+      "sha256": "f9235103892b9dae2a279072a5e2fe5a96b94a3f254968f7a7135f5ac233274a"
+    },
+    {
+      "path": "packaged/104-native-tavily-fixture-events.json",
+      "bytes": 10806,
+      "sha256": "89db502b6cc242a347f11dad0fd5024a3b04e55d1bde00ae95c6d9b243feade7"
+    },
+    {
+      "path": "packaged/104-native-tavily-probe.ax.txt",
+      "bytes": 3941,
+      "sha256": "a1aee87c946d9abd461608371ef198127b3642149ba34511c38a27bd138f5686"
+    },
+    {
+      "path": "packaged/104-native-tavily-probe.png",
+      "bytes": 316249,
+      "sha256": "62a75d8bf18c5f930ab74b9cbc8086e74e1be6e26556ae6f29f0f24c15d40136"
+    }
+  ]
+}

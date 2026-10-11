@@ -1,0 +1,17 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Shared product conventions and package entry"}
+{"file": ".trellis/spec/frontend/desktop-ui.md", "reason": "Retain accepted shared desktop UI and scroll/focus/print behavior"}
+{"file": ".trellis/spec/frontend/native-workspace.md", "reason": "Native trusted caller, packaged evidence, file integrity; approved task design supersedes previous SQLite-only product selection"}
+{"file": ".trellis/spec/frontend/video-workspace.md", "reason": "Shared page/repository behavior, existing SQLite adapter lane remains isolated; task design selects IndexedDB normal product"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Durable runs, retry/Stop/recovery and no paid replay"}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Existing permission and approval semantics"}
+{"file": ".trellis/spec/frontend/agent-write-evidence.md", "reason": "Atomic local tool mutation and completion receipts"}
+{"file": ".trellis/spec/frontend/agent-batch-generation.md", "reason": "Generation batches and bounded provider execution behavior"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "Existing model/provider contracts and source boundaries"}
+{"file": ".trellis/spec/frontend/audio-batch-arrangement.md", "reason": "Existing voice batching/selection/placement constraints"}
+{"file": ".trellis/spec/frontend/ip-material-library.md", "reason": "Existing global/IP/project library and version adoption"}
+{"file": ".trellis/spec/frontend/agent-references.md", "reason": "Reference parsing/media and actual image input"}
+{"file": ".trellis/spec/frontend/delivery-export.md", "reason": "Existing project delivery and print contracts"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Required quality checks and reviewed allowances"}
+{"file": ".trellis/tasks/10-11-native-world-shot-relations/research/runtime-gates-and-parity.md", "reason": "Complete runtime gates, source anchors and full feature/tool acceptance target"}
+{"file": ".trellis/tasks/10-11-native-world-shot-relations/research/native-runtime-services.md", "reason": "Pinned official HTTP2.8.2 service verification and file/lock limitations"}
+{"file": ".trellis/tasks/10-11-native-world-shot-relations/research/agent-reuse-audit.md", "reason": "Agent reuse direction and actual runtime blockers"}

@@ -1,0 +1,7 @@
+Command: ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm", "lint"]
+Started: 2026-10-11T17:40:24.957608+08:00
+Exit: 0
+
+> cuepoint@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing
+> tsc -b --pretty false
+

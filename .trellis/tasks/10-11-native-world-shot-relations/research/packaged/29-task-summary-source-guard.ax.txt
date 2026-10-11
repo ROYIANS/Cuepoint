@@ -1,0 +1,66 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_74120f0e-2956-4e68-ad95-7b045afcae28
+			3 container
+				4 container 执行过程
+					5 summary 成果声明未核实, Value: off
+						6 text 成果声明未核实
+				7 container 执行过程
+					8 summary 成果声明未核实, Value: off
+						9 text 成果声明未核实
+			10 container Notifications alt+T
+			11 container 原生任务工具验收
+				12 button 任务工作台
+				13 button 关闭任务详情
+				14 text 待确认
+				15 heading 原生任务工具验收, Value: 2
+					16 text 原生任务工具验收
+				17 text 桌面真实 Agent 验收
+				18 text  · 小光点
+				19 text 更新于 10月11日 16:53
+				20 text 请检查成果与清单，由你确认任务完成。
+				21 container 任务详情视图
+					22 toggle button 概览, Value: off
+					23 toggle button 工作记录, Value: off
+					24 toggle button 验收总结, Value: on
+				25 container 任务验收总结
+					26 text REVIEW & REFLECTION
+					27 heading 让这次工作，有一个清晰的收尾。, Value: 3
+						28 text 让这次工作，有一个清晰的收尾。
+					29 text 检查交付，留下决策与经验，再确认完成。
+					30 text 整理失败 版本 2 · AI 草稿
+					31 button 查看总结历史
+					32 button (disabled) 编辑
+					33 text AI 成果必须引用真实来源 可以重新整理，也可以手动接着写。
+					34 text 本版参考 17 / 17 项记录。验收仍需要你的判断。
+					35 button 重新尝试
+					36 button 新建人工版本
+					37 text 完成前还需要
+					38 content list
+						39 container 还有未完成的 Todo
+							40 list marker •
+							41 text 还有未完成的 Todo
+						42 container 请先检查最新总结草稿，旧版确认不能代表本次验收
+							43 list marker •
+							44 text 请先检查最新总结草稿，旧版确认不能代表本次验收
+						45 container 请先保存并确认任务总结
+							46 list marker •
+							47 text 请先保存并确认任务总结
+					48 text AI 成果必须引用真实来源
+				49 container
+					50 button 归档
+					51 text 由你检查并确认完成
+	52 close button
+	53 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	54 minimize button
+	55 text 小光点 · 完整产品验收
+56 menu bar
+	57 Cuepoint Product Review
+	58 File
+	59 Edit
+	60 View
+	61 Window
+	62 Help
+
+The focused UI element is 11 container 原生任务工具验收

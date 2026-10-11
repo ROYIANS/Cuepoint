@@ -2,7 +2,7 @@
   "id": "desktop-storage-sync",
   "name": "desktop-storage-sync",
   "title": "桌面端存储与同步",
-  "description": "Implement the approved local-first workspace, immutable checkpoints and provider contract in verified children; managed service and native migration retain concrete later gates.",
+  "description": "Implement the approved local-first workspace, native product domains, immutable checkpoints and provider contract in verified children; complete domain coverage and real sync remain separately scoped deliverables.",
   "status": "in_progress",
   "dev_type": null,
   "scope": null,
@@ -24,10 +24,11 @@
     "10-11-native-workspace-sqlite-prototype",
     "10-11-native-workspace-product-foundation",
     "10-11-desktop-product-domain-expansion",
-    "10-11-shared-product-ui-native-adapters"
+    "10-11-shared-product-ui-native-adapters",
+    "10-11-native-world-shot-relations"
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Two bounded foundations and the isolated Tauri prototype were accepted and archived on 2026-10-11. Parent remains in progress for the real desktop product workspace, complete current-product domain coverage and real sync. Fresh-development policy is explicit: do not implement old IndexedDB migration or historical compatibility unless a later task requests it. User selected complete original tool-history retention with field-by-field review; credentials, continuation tokens and executable authority remain excluded.",
+  "notes": "Two bounded foundations and the isolated Tauri prototype were accepted and archived on 2026-10-11. Parent remains in progress for the real desktop product workspace, complete current-product domain coverage and real sync. Fresh-development policy is explicit: do not implement old IndexedDB migration or historical compatibility unless a later task requests it. User selected complete original tool-history retention with field-by-field review; credentials, continuation tokens and executable authority remain excluded. The shared product UI/native adapter child was accepted and archived. The new planning child was redirected by the user to shared business reuse, rapid native feature parity and Agent/AI priority; the project-only world candidate was not selected. No implementation, push or merge is authorized by task creation. The user explicitly selected a complete-feature-first Tauri stage using internal IndexedDB, with centralized SQLite replacement later; this replaces the prior SQLite-first product expansion sequence. Final implementation review for that child is pending.",
   "meta": {}
 }

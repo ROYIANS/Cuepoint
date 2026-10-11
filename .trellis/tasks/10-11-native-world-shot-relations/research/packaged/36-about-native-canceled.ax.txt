@@ -1,0 +1,26 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/about
+			3 container Notifications alt+T
+				4 text 已取消保存赞赏码
+			5 container 感谢支持小光点
+				6 heading 感谢支持小光点, Value: 2
+					7 text 感谢支持小光点
+				8 text 使用微信扫一扫，或保存图片后在微信中识别赞赏码。
+				9 image 不完美小孩的微信赞赏码
+				10 button 保存赞赏码
+				11 button 关闭
+	12 close button
+	13 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	14 minimize button
+	15 text 小光点 · 完整产品验收
+16 menu bar
+	17 Cuepoint Product Review
+	18 File
+	19 Edit
+	20 View
+	21 Window
+	22 Help
+
+The focused UI element is 5 container 感谢支持小光点

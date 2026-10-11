@@ -1,0 +1,70 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Real Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_c375f82a-3dbb-43ee-a261-a1c717690fac
+			3 container 执行过程
+				4 summary 成果声明未核实, Value: off
+					5 text 成果声明未核实
+			6 container 首镜头首帧图片候选
+				7 container
+					8 text 批量生成 · 待确认
+					9 heading 首镜头首帧图片候选, Value: 2
+						10 text 首镜头首帧图片候选
+					11 text 逐项检查配置，每个目标最多 4 份候选，每批最多 20 份。
+					12 button 关闭批量生成
+				13 text 目标与候选
+				14 text 1/20 份 · 1 份将提交
+				15 container
+					16 checkbox 生成 镜头 1 · 首帧 候选 A, Value: 1
+					17 text 生成此候选
+				18 button (expanded) 镜头 1 · 首帧 候选 A APIMart · APIMart · gpt-image-2 · 16:9 / 1k · 1 份参考, Secondary Actions: Collapse
+				19 button 复制 镜头 1 · 首帧 候选 A, Help: 增加一份候选
+				20 button (disabled) 移除 镜头 1 · 首帧 候选 A, Help: 移除候选
+				21 link 查看目标 · 镜头 1 · 首帧, Value: tauri://localhost/#/p/prj_30ac21cd-bea0-43de-a527-dade2cc63e8b/e/ep_f79a0f69-c940-4d9e-91ca-5c075dab4ca4/shots?shot=sht_6820bf1e-8e28-4bfc-ae45-5c7f5a1d91c5
+				22 text 供应商连接
+				23 container APIMart · APIMart
+					24 text APIMart · APIMart
+					25 combo box (collapsed) 供应商连接, Secondary Actions: Expand
+				26 image down
+				27 text 生成模型
+				28 container GPT Image 2
+					29 text GPT Image 2
+					30 combo box (collapsed) 生成模型, Secondary Actions: Expand
+				31 image down
+				32 text 画面描述
+				33 text entry area (settable) 画面描述, Value: [text entry area], Secondary Actions: Show Writing Tools
+					34 text (settable) Create a single cinematic first-frame image for the opening shot of a film: a quiet rainy-night blue train station platform, viewed at eye level in a medium-wide composition, with warm station lights reflecting on wet ground. Use a vivid abstract geometric visual language inspired by the supplied reference image: preserve its colorful gradient palette and gradient transitions, combine clean large geometric forms with soft luminous gradients, balance cool blue station tones with warm highlights. No people or
+				35 text 图片比例
+				36 container 16:9
+					37 text 16:9
+					38 combo box (collapsed) 图片比例, Secondary Actions: Expand
+				39 image down
+				40 text 分辨率
+				41 container 1k
+					42 text 1k
+					43 combo box (collapsed) 分辨率, Secondary Actions: Expand
+				44 image down
+				45 text 已选 1 张参考图片 · 目标和参考素材沿用本次提案
+				46 container 固定参考素材
+					47 container
+						48 text 参考图 image.png
+				49 text 目标和参考素材固定于本次提案。每份候选分别提交一次。
+				50 container
+					51 text 1 次生成 · 同时处理 2 份 确认后向所选供应商提交，可能产生费用。每份候选独立计费。
+					52 button 放弃批次
+					53 button (disabled) 草稿已保存
+					54 button 确认生成 1 份
+			55 container Notifications alt+T
+	56 close button
+	57 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	58 minimize button
+	59 text 小光点 · 完整产品验收
+60 menu bar
+	61 Cuepoint Real Review
+	62 File
+	63 Edit
+	64 View
+	65 Window
+	66 Help
+
+The focused UI element is 6 container 首镜头首帧图片候选

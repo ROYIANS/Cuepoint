@@ -1,0 +1,67 @@
+- complementary:
+  - link "小光点":
+    - /url: /about
+    - generic: 小光点
+  - navigation "应用导航":
+    - link "创作助手":
+      - /url: /agent
+      - generic: 创作助手
+    - link "IP":
+      - /url: /ips
+      - generic: IP
+    - link "项目":
+      - /url: /projects
+      - generic: 项目
+    - link "素材库":
+      - /url: /assets
+      - generic: 素材库
+    - link "任务":
+      - /url: /agent/tasks
+      - generic: 任务
+    - link "连接与模型":
+      - /url: /connectors
+      - generic: 连接与模型
+    - link "关于":
+      - /url: /about
+      - generic: 关于
+  - button "导入项目":
+    - generic: 导入项目
+- banner:
+  - heading "项目" [level=1]
+  - generic: 管理视频、音频与音乐项目。
+  - button "新建项目":
+    - text: 新建项目
+- combobox "排序方式":
+  - generic: 按修改
+- textbox "搜索项目":
+  - /placeholder: 搜索…
+- group "按创作类型筛选":
+  - button "全部" [pressed]
+  - button "视频":
+    - text: 视频
+  - button "图片 即将推出":
+    - text: 图片
+    - generic: 即将推出
+  - button "文案 即将推出":
+    - text: 文案
+    - generic: 即将推出
+  - button "音频":
+    - text: 音频
+  - button "音乐":
+    - text: 音乐
+- text: 所属 IP
+- combobox "筛选所属 IP":
+  - generic: 全部
+- checkbox "查看已归档项目"
+- text: 查看已归档项目
+- button "浏览器隔离回归":
+  - generic: 浏
+  - paragraph: 浏览器隔离回归
+  - paragraph: 视频 · 独立项目 · 10月11日 16:19
+- button "浏览器隔离回归 操作":
+- button "浏览器隔离回归":
+  - generic: 浏
+  - paragraph: 浏览器隔离回归
+  - paragraph: 视频 · 独立项目 · 10月11日 16:09
+- button "浏览器隔离回归 操作":
+- region "Notifications alt+T"

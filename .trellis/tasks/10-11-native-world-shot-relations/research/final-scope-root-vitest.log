@@ -1,0 +1,17 @@
+Command: ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm", "exec", "vitest", "run", "--maxWorkers=4"]
+Cwd: /Users/xiaomengdao/WebstormProjects/aifenjing
+Started: 2026-10-11T17:28:53.859305+08:00
+Finished: 2026-10-11T17:29:37.896350+08:00
+Exit: 0
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  209 passed (209)
+      Tests  3562 passed | 1 skipped (3563)
+   Start at  17:28:54
+   Duration  42.89s (tests 71%, import 10%, transform 9%, setup 9%)
+
+    Isolate  209 workers spawned · ~84ms startup each (spawn + environment, per file)
+             at least ~4.31s faster with isolate: false — reuses workers across files instead of one per file
+

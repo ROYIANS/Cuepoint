@@ -1,0 +1,74 @@
+- complementary:
+  - link "小光点":
+    - /url: /about
+    - generic: 小光点
+  - navigation "应用导航":
+    - link "创作助手":
+      - /url: /agent
+      - generic: 创作助手
+    - link "IP":
+      - /url: /ips
+      - generic: IP
+    - link "项目":
+      - /url: /projects
+      - generic: 项目
+    - link "素材库":
+      - /url: /assets
+      - generic: 素材库
+    - link "任务":
+      - /url: /agent/tasks
+      - generic: 任务
+    - link "连接与模型":
+      - /url: /connectors
+      - generic: 连接与模型
+    - link "关于":
+      - /url: /about
+      - generic: 关于
+  - button "导入项目":
+    - generic: 导入项目
+- main:
+  - link "全部 IP":
+    - /url: /ips
+    - text: 全部 IP
+  - heading "浏览器验收 IP" [level=1]
+  - generic: 隔离回归里的雨夜故事创作。
+  - button "编辑档案":
+    - text: 编辑档案
+  - button "归档":
+    - text: 归档
+  - group "IP 内容":
+    - button "档案" [pressed]
+    - button "关联项目 0":
+      - text: 关联项目
+      - generic: "0"
+    - button "专属素材 0":
+      - text: 专属素材
+      - generic: "0"
+  - heading "IP 定位" [level=2]
+  - paragraph: 隔离回归里的雨夜故事创作。
+  - heading "目标受众" [level=2]
+  - paragraph: 尚未填写
+  - heading "内容主题" [level=2]
+  - paragraph: 尚未填写
+  - heading "表达方式" [level=2]
+  - paragraph: 尚未填写
+  - heading "视觉偏好" [level=2]
+  - paragraph: 暖色写实，红伞与蓝色车站。
+  - heading "声音偏好" [level=2]
+  - paragraph: 尚未填写
+  - paragraph: 关联项目的聊天会读取这份 IP 档案的精简摘要，完整设定按需查阅。生成仍以你确认的提示词和参数为准。
+  - heading "衍生创作" [level=2]
+  - paragraph: 衍生创作工作区正在准备中，当前可先整理参考与设定。
+  - article:
+    - heading "IP 形象" [level=3]
+    - paragraph: 形象图与视觉延展
+    - text: 即将推出
+  - article:
+    - heading "表情包" [level=3]
+    - paragraph: 情绪、动作与日常表达
+    - text: 即将推出
+  - article:
+    - heading "周边设计" [level=3]
+    - paragraph: 把创作带入生活
+    - text: 即将推出
+- region "Notifications alt+T"

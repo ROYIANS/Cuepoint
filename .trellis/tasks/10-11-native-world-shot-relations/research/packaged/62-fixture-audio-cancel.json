@@ -1,0 +1,31 @@
+[
+  {
+    "at": "2026-10-11T10:34:14.480Z",
+    "type": "request",
+    "id": 1,
+    "method": "GET",
+    "path": "/v1/models",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": null
+  },
+  {
+    "at": "2026-10-11T10:34:14.487Z",
+    "type": "body",
+    "id": 1,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:34:14.489Z",
+    "type": "disconnect",
+    "id": 1,
+    "path": "/v1/models",
+    "elapsedMs": 9,
+    "finished": true
+  }
+]

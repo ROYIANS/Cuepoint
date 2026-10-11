@@ -1,0 +1,57 @@
+- complementary:
+  - link:
+    - /url: /about
+    - generic: 小光点
+  - navigation:
+    - link:
+      - /url: /agent
+      - generic: 创作助手
+    - link:
+      - /url: /ips
+      - generic: IP
+    - link:
+      - /url: /projects
+      - generic: 项目
+    - link:
+      - /url: /assets
+      - generic: 素材库
+    - link:
+      - /url: /agent/tasks
+      - generic: 任务
+    - link:
+      - /url: /connectors
+      - generic: 连接与模型
+    - link:
+      - /url: /about
+      - generic: 关于
+  - button:
+    - generic: 导入项目
+- banner:
+  - heading [level=1]: 关于小光点
+- paragraph: 本地优先的影视创作工作室：项目、分镜、资产与交付，密钥只留在本机。
+- link:
+  - /url: https://github.com/ROYIANS/Cuepoint
+  - text: GitHub · Cuepoint
+- region:
+  - heading [level=2]: 支持小光点
+  - paragraph: 如果小光点帮你完成了创作，欢迎请开发者喝杯咖啡，支持项目继续打磨。感谢每一份使用、反馈与支持。
+  - link:
+    - /url: https://afdian.com/a/ROYIANS
+    - text: 在爱发电支持
+  - button [expanded]:
+    - text: 微信赞赏码
+- heading [level=2]: 数据与隐私
+- list:
+  - listitem: 项目、分镜与素材默认保存在当前设备的应用或浏览器中，不依赖云端用户库。
+  - listitem: AI 连接密钥（BYOK）只存在本机，不会写入项目备份 ZIP。
+  - listitem: 导出 / 导入由你主动触发；把备份交给谁，由你自己决定。
+  - listitem: 当前产品说明是普通语言告知，不是法律意见书；正式隐私政策可后续替换。
+- region "Notifications alt+T"
+- dialog "感谢支持小光点":
+  - heading "感谢支持小光点" [level=2]
+  - paragraph: 使用微信扫一扫，或保存图片后在微信中识别赞赏码。
+  - img "不完美小孩的微信赞赏码"
+  - link "保存赞赏码" [active]:
+    - /url: /brand/sponsor-wechat.jpg
+  - button "关闭":
+    - generic: 关闭

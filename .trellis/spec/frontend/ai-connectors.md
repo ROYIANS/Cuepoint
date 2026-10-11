@@ -122,6 +122,7 @@ Use for AIHubMix discovery, credential tests, native media requests and protecte
 - Chat Base URL ends in `/v1`. Media/catalog/schema routes derive from the same configured root, preserving proxy prefixes. Reject credentials/query/fragment in base URLs and unsupported path shapes. No hardcoded-host fallback.
 - `/api/v1/models` is public; never send the key or claim discovery authenticates it. `/v1/models` was also readable without a key. Test access via authenticated `GET /ai/v1/images?limit=1`; never a POST or public-directory fallback.
 - Metadata tokens: `types`, `endpoints`, `input_modalities`, `output_modalities`; missing annotations differ from explicit incompatibility. `t2t/t2i/t2v/reranking` map to documented current types. Preserve duplicates for conservative conflict resolution.
+- AIHubMix's `listAIHubMixModels` maps valid normalized `input_modalities` containing the exact `image` token to `metadata: {source:"provider", vision:true}` when `parseModelMetadata(row)` has no explicit boolean vision. Existing token parsing accepts comma-separated strings or arrays of strings, trimming/deduplicating case-insensitively. Explicit `capabilities.vision: true|false` takes precedence, including false against image input. Missing/malformed/non-image modalities do not create affirmative vision metadata. The shared `resolveVisionCapability` keeps its explicit-provider-first/exact-Model-Bank/unknown rules; never infer support from a model ID or bypass `requireVision`.
 - Suggest known text LLMs supporting Chat Completions or with unannotated protocols. Known non-chat types, media outputs and explicitly incompatible protocol sets block all selection sources and send. Image/video INPUT alone never blocks chat. Unknown/malformed metadata is manual-only after successful directory lookup; no name guessing.
 - Schema lookup is optional public data. Select native POST endpoint by path, never first array element; surface missing/invalid metadata and network/CORS failure distinctly. Do not execute returned routes.
 - Native image submit `/ai/v1/images/generations` defaults synchronous; preserve explicit boolean `async`. Native video `/ai/v1/videos` is always async, with numeric `duration` and native reference structures. Do not translate legacy `seconds`.
@@ -135,6 +136,9 @@ Use for AIHubMix discovery, credential tests, native media requests and protecte
 | Public model directory success | Metadata only; does not authenticate key |
 | Authenticated probe rejected | Explicit error, no fallback POST |
 | Vision input + text output | Eligible text model if protocol compatible |
+| Valid image input without explicit boolean vision | Provider vision true reaches discovery and attachment preflight |
+| Explicit vision false with image input, including a duplicate route | False remains authoritative; block attached-image execution |
+| Missing/invalid/non-image modality without other verified vision evidence | Unknown/unsupported; preserve attachment and reject before durable run/messages |
 | Known media or incompatible protocol, manual/saved | Exclude and block before all chat mutations |
 | Metadata unavailable / changed connector | Unverified; preserve draft and history |
 | Failed task in HTTP 200 | Return failed task and sanitized error |
@@ -149,9 +153,14 @@ Good: a metadata-only catalog can load while testing an invalid key still fails.
 ### 6. Tests Required
 `tests/aihubmix.test.ts`: fixed paths, auth separation, native payloads, schema path selection, task states/identity/output/expiry, malformed envelopes, abort/redaction/no retry, protected Blob retrieval and path/origin rejection. `tests/connectors.test.ts` and `tests/chatModelPolicy.test.ts`: provider dispatch, text vs media classification, unknown/manual and saved selection behavior, stale catalog, aborted/switched sends with no downstream writes, and persistence. ZIP export covers all providers.
 
+`tests/aihubmixVisionMetadata.test.ts` covers valid string/array tokens, malformed/absent/non-image input, explicit boolean precedence, conservative duplicate routes and special IDs. Exercise actual discovery → local PNG import → `beginAgentRun` → both wire materializers: exact pixels enter the wire while durable records contain no base64. Rejected capability creates no run/messages and retains the local reference. Catalog fetch is injected; these tests do not prove native transport, key entitlement or paid image inference.
+
 ### 7. Wrong vs Correct
 Wrong: use successful public model discovery as proof that the configured API key is valid.
 Correct: expose public discovery separately and test the authenticated task-list GET, describing that permission precisely.
+
+Wrong: require AIHubMix to provide `capabilities.vision`, or guess it from a model name.
+Correct: normalize its declared image input at the provider boundary, preserving any explicit boolean vision override and existing attachment guard.
 
 Wrong: pass `content_url` directly to `<img>` or fetch any provider-returned URL with a Bearer header.
 Correct: call the explicit guarded content reader, then let the future media runtime persist or display the Blob.

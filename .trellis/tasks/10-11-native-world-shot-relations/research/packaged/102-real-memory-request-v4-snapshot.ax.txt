@@ -1,0 +1,46 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Real Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_c8205daf-6831-49ef-8bb7-a9aea89d8d54
+			3 container 执行过程
+				4 summary 成果声明未核实, Value: off
+					5 text 成果声明未核实
+			6 container Notifications alt+T
+			7 container 这次带入的记忆
+				8 text 项目上下文
+				9 heading 这次带入的记忆, Value: 2
+					10 text 这次带入的记忆
+				11 text 查看模型请求对应的记忆版本，历史记录不会随项目编辑而改写。
+				12 container
+					13 text 查看请求
+					14 pop up button (collapsed) 查看请求, Value: 第 4 次模型请求, Secondary Actions: Expand
+				15 text 1 条已纳入
+				16 text ≈ 275 tokens
+				17 text 请求启动时记录的输入，不代表模型一定采用了其中的建议。
+				18 container NATIVE-MEMORY-20261011
+					19 text 项目规范 · 按需引用 版本 4
+					20 heading NATIVE-MEMORY-20261011, Value: 3
+						21 text NATIVE-MEMORY-20261011
+					22 text 与当前需求、近期讨论或任务目标相关
+					23 text 原生验收记忆：音乐保持纯乐，加入钢琴。
+					24 text 适用条件
+					25 text 仅用于桌面真实音乐验收项目。
+					26 text 来源：人工整理
+					27 link 查看记忆与来源 ↗, Value: tauri://localhost/#/p/prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe/memory?memory=pm_023d3e64-9b17-4804-ac99-8669f550d178
+					28 button 本对话排除
+				29 container
+					30 text 排除和修改在后续模型请求前生效，不影响正在生成的回复，也不会抹去已发送的历史内容。 当前要求和最新项目事实优先于历史记忆。数值为文本估算。
+				31 button 关闭
+	32 close button
+	33 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	34 minimize button
+	35 text 小光点 · 完整产品验收
+36 menu bar
+	37 Cuepoint Real Review
+	38 File
+	39 Edit
+	40 View
+	41 Window
+	42 Help
+
+The focused UI element is 14 pop up button (collapsed) 查看请求, Value: 第 4 次模型请求, Secondary Actions: Expand

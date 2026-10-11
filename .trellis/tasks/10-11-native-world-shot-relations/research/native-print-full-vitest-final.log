@@ -1,0 +1,12 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  211 passed (211)
+      Tests  3586 passed | 1 skipped (3587)
+   Start at  19:23:20
+   Duration  37.15s (tests 68%, import 12%, setup 11%, transform 8%)
+
+    Isolate  211 workers spawned · ~85ms startup each (spawn + environment, per file)
+             at least ~4.40s faster with isolate: false — reuses workers across files instead of one per file
+

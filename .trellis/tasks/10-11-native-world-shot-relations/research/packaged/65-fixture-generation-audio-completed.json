@@ -1,0 +1,271 @@
+[
+  {
+    "at": "2026-10-11T10:34:14.480Z",
+    "type": "request",
+    "id": 1,
+    "method": "GET",
+    "path": "/v1/models",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": null
+  },
+  {
+    "at": "2026-10-11T10:34:14.487Z",
+    "type": "body",
+    "id": 1,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:34:14.489Z",
+    "type": "disconnect",
+    "id": 1,
+    "path": "/v1/models",
+    "elapsedMs": 9,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T10:41:34.245Z",
+    "type": "request",
+    "id": 2,
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T10:41:34.246Z",
+    "type": "body",
+    "id": 2,
+    "byteLength": 177,
+    "sha256": "0e8e4dd1d3d67087d30f9e01084ba5c0503c62f885909f27b7815266de4ee288",
+    "model": "mimo-v2.5-tts",
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:41:34.246Z",
+    "type": "request",
+    "id": 3,
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T10:41:34.247Z",
+    "type": "body",
+    "id": 3,
+    "byteLength": 183,
+    "sha256": "7b7b644599a9dc65c2cafe243271116981a2e67dc282f2e9b2825df9d96c8594",
+    "model": "mimo-v2.5-tts",
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:41:34.252Z",
+    "type": "disconnect",
+    "id": 2,
+    "path": "/v1/chat/completions",
+    "elapsedMs": 7,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T10:41:34.252Z",
+    "type": "disconnect",
+    "id": 3,
+    "path": "/v1/chat/completions",
+    "elapsedMs": 6,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T10:49:38.710Z",
+    "type": "request",
+    "id": 4,
+    "method": "GET",
+    "path": "/v1/models",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": null
+  },
+  {
+    "at": "2026-10-11T10:49:38.710Z",
+    "type": "body",
+    "id": 4,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:49:38.711Z",
+    "type": "disconnect",
+    "id": 4,
+    "path": "/v1/models",
+    "elapsedMs": 1,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T10:50:18.265Z",
+    "type": "request",
+    "id": 5,
+    "method": "GET",
+    "path": "/v1/models",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T10:50:18.265Z",
+    "type": "body",
+    "id": 5,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:50:18.265Z",
+    "type": "disconnect",
+    "id": 5,
+    "path": "/v1/models",
+    "elapsedMs": 0,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T10:53:12.935Z",
+    "type": "request",
+    "id": 6,
+    "method": "POST",
+    "path": "/v1/uploads/images",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "multipart/form-data; boundary=----WebKitFormBoundarySv7lDdKR8aGRporM"
+  },
+  {
+    "at": "2026-10-11T10:53:12.935Z",
+    "type": "body",
+    "id": 6,
+    "byteLength": 359,
+    "sha256": "ab2f31fefc2e7bfdede57502c1c958510e859803994974d2c335eab5d729590d",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:53:12.935Z",
+    "type": "multipart-file",
+    "id": 6,
+    "filename": "image.png",
+    "byteLength": 177,
+    "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+  },
+  {
+    "at": "2026-10-11T10:53:12.936Z",
+    "type": "disconnect",
+    "id": 6,
+    "path": "/v1/uploads/images",
+    "elapsedMs": 1,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T10:53:12.944Z",
+    "type": "request",
+    "id": 7,
+    "method": "POST",
+    "path": "/v1/images/generations",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T10:53:12.944Z",
+    "type": "body",
+    "id": 7,
+    "byteLength": 189,
+    "sha256": "ff8ccf7b9f758b3ffb5ea4401c250be853f336a35b4919db744475ef0c1fb757",
+    "model": "gpt-image-2.5-flare",
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:53:12.944Z",
+    "type": "disconnect",
+    "id": 7,
+    "path": "/v1/images/generations",
+    "elapsedMs": 0,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T10:53:12.956Z",
+    "type": "request",
+    "id": 8,
+    "method": "GET",
+    "path": "/v1/tasks/fixture-image-7",
+    "query": "?language=zh",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": null
+  },
+  {
+    "at": "2026-10-11T10:53:12.957Z",
+    "type": "body",
+    "id": 8,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:53:12.957Z",
+    "type": "disconnect",
+    "id": 8,
+    "path": "/v1/tasks/fixture-image-7",
+    "elapsedMs": 1,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T10:53:12.967Z",
+    "type": "request",
+    "id": 9,
+    "method": "GET",
+    "path": "/media/image",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": false,
+    "cookiePresent": false,
+    "contentType": null
+  },
+  {
+    "at": "2026-10-11T10:53:12.967Z",
+    "type": "body",
+    "id": 9,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:53:12.968Z",
+    "type": "disconnect",
+    "id": 9,
+    "path": "/media/image",
+    "elapsedMs": 1,
+    "finished": true
+  }
+]

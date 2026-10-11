@@ -1,0 +1,60 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_60eae28f-b8de-43e5-9291-8d1cdc360f13
+			3 container
+				4 container 执行过程
+					5 summary 成果声明未核实, Value: off
+						6 text 成果声明未核实
+				7 container 执行过程
+					8 summary 成果声明未核实, Value: off
+						9 text 成果声明未核实
+				10 container 执行过程
+					11 summary 成果声明未核实, Value: off
+						12 text 成果声明未核实
+				13 container 执行过程
+					14 summary 成果声明未核实, Value: off
+						15 text 成果声明未核实
+				16 container 执行过程
+					17 summary 成果声明未核实, Value: off
+						18 text 成果声明未核实
+			19 container 原生合成网络验收
+				20 container
+					21 text 批量生成 · 处理完成
+					22 heading 原生合成网络验收, Value: 2
+						23 text 原生合成网络验收
+					24 text 按目标比较候选。选择后点击写入，其他结果仍会保留。
+					25 button 关闭批量生成
+				26 container
+					27 text 1 已保存 0 处理中 0 排队 1 失败 1 当前已写入
+				28 container 选择比较目标
+					29 toggle button 镜头 1 · 首帧 1 份, Value: off
+					30 toggle button 镜头 1 · 视频 1 份, Value: on
+				31 text 镜头 1 · 视频
+				32 link 查看目标, Value: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4/e/ep_553a3988-d769-4472-b9db-9776b046dc04/shots?shot=sht_b30ea5c7-2064-4431-bee9-62ebb9f52b45
+				33 container
+					34 text 候选 A 当前已写入
+					35 container 镜头 1 · 视频 · 候选 A, URL: blob:tauri://localhost/f8899cfe-dcce-4aeb-bc4c-e04b9ba42ab1
+						36 button Play
+					37 pop up button 放大查看 镜头 1 · 视频 · 候选 A
+					38 text APIMart · APIMart · MiniMax-H3 · 768P / 16:9 / 4 秒 · 0 份参考 已保存
+					39 summary 查看生成配置, Value: off
+						40 text 查看生成配置
+					41 button (disabled) 选择候选 A：镜头 1 · 视频
+				42 container 镜头 1 · 视频：已写入
+				43 container
+					44 text 1 个目标已选候选。写入会检查目标是否被修改；取消剩余仅阻止尚未发送的请求。
+					45 button 为失败项新建草稿
+					46 button 写入选中的 1 个目标
+			47 container Notifications alt+T
+	48 close button
+	49 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	50 minimize button
+	51 text 小光点 · 完整产品验收
+52 menu bar
+	53 Cuepoint Product Review
+	54 File
+	55 Edit
+	56 View
+	57 Window
+	58 Help

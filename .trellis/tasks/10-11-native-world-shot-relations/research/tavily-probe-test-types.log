@@ -1,0 +1,17 @@
+tests/tavilyNativeProbe.test.ts(32,97): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Argument of type '{ method: string; body?: BodyInit | null | undefined; cache?: RequestCache | undefined; credentials?: RequestCredentials | undefined; ... 9 more ...; window?: null | undefined; } | { ...; } | { ...; } | { ...; } | { ...; }' is not assignable to parameter of type 'RequestInit | undefined'.
+      Type '{ headers: { Authorization: string; Cookie?: undefined; }; body?: BodyInit | null; cache?: RequestCache; credentials?: RequestCredentials; integrity?: string; keepalive?: boolean; method?: string; ... 6 more ...; window?: null; }' is not assignable to type 'RequestInit'.
+        Types of property 'headers' are incompatible.
+          Type '{ Authorization: string; Cookie?: undefined; }' is not assignable to type 'HeadersInit | undefined'.
+            Type '{ Authorization: string; Cookie?: undefined; }' is not assignable to type 'Record<string, string>'.
+              Property 'Cookie' is incompatible with index signature.
+                Type 'undefined' is not assignable to type 'string'.
+  Overload 2 of 2, '(input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Argument of type '{ method: string; body?: BodyInit | null | undefined; cache?: RequestCache | undefined; credentials?: RequestCredentials | undefined; ... 9 more ...; window?: null | undefined; } | { ...; } | { ...; } | { ...; } | { ...; }' is not assignable to parameter of type 'RequestInit | undefined'.
+      Type '{ headers: { Authorization: string; Cookie?: undefined; }; body?: BodyInit | null; cache?: RequestCache; credentials?: RequestCredentials; integrity?: string; keepalive?: boolean; method?: string; ... 6 more ...; window?: null; }' is not assignable to type 'RequestInit'.
+        Types of property 'headers' are incompatible.
+          Type '{ Authorization: string; Cookie?: undefined; }' is not assignable to type 'HeadersInit | undefined'.
+            Type '{ Authorization: string; Cookie?: undefined; }' is not assignable to type 'Record<string, string>'.
+              Property 'Cookie' is incompatible with index signature.
+                Type 'undefined' is not assignable to type 'string'.

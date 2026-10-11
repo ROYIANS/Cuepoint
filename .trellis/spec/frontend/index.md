@@ -6,7 +6,7 @@
 
 ## Overview
 
-小光点 Cuepoint is a Vite + React + TanStack Router product with shared browser and Tauri pages. Browser persistence uses Dexie IndexedDB; native persistence uses SQLite and an app-managed file workspace through typed adapters. Specs in this directory describe routes, components, hooks, domain types, and tests so agents match existing patterns.
+小光点 Cuepoint is a Vite + React + TanStack Router product with one shared browser and Tauri page/Agent/command tree. The approved complete-product desktop stage uses fresh application-internal Dexie IndexedDB; browser keeps its existing namespace. The explicit SQLite/filesystem reference lane remains available for tests and later centralized storage replacement, without mirroring or automatic migration. Runtime detection selects system services/history; the fixed startup storage profile selects persistence. Specs describe those distinct boundaries and existing business contracts.
 
 ---
 
@@ -36,10 +36,11 @@
 | [Chat Performance](./chat-performance.md) | Agent transcript scroll + memo vs LobeHub virtua | Filled |
 | [AI Connectors](./ai-connectors.md) | Provider capabilities, APIMart/AIHubMix generation contracts and discovery | Filled |
 | [Hook Guidelines](./hook-guidelines.md) | Dexie liveQuery loading vs missing | Filled |
-| [Audio / Music Workspaces](./audio-music.md) | Project kinds, audio records, CAS editing, generation recovery/approval, MIME and ZIP | Filled |
+| [Audio / Music Workspaces](./audio-music.md) | Audio records, exact numeric clip editing/CAS, generation recovery/approval, MIME and ZIP | Filled |
 | [Voice Batches / Arrangement](./audio-batch-arrangement.md) | v24 batches, exact confirmation, bounded retry, take selection and retained-clip placement | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
 | [Managed Workspace](./workspace-storage.md) | Browser copy staging, cross-platform owned paths, incremental hashing and native boundaries | Filled |
+| [Native Product Runtime](./native-product-runtime.md) | Shared product, fixed desktop IndexedDB, official HTTP, native Save/system services and every-caller publication warnings | Filled |
 | [Native Workspace / Packaged Acceptance](./native-workspace.md) | Tauri DTO/generation/navigation boundaries, SQLite prototype, WebKit limitations and truthful packaged evidence | Filled |
 | [Shared Video Workspace](./video-workspace.md) | One product page tree, runtime repositories, field baselines, atomic commands and committed inverse receipts | Filled |
 | [Checkpoint / Sync Provider](./checkpoint-protocol.md) | Partial immutable fixture checkpoints, verified binary closure, conditional publication and application receipts | Filled |
@@ -55,6 +56,7 @@
 ## Pre-Development Checklist
 
 - [ ] New pages use shared AppFrame/PageLayout presentation and retain feature/runtime scroll owners; read desktop-ui.md before changing global styling
+- [ ] Storage gates use `usesSqliteProductStorage`, while native HTTP/Save/hash history use genuine runtime detection; read native-product-runtime.md before changing either
 - [ ] Studio asset create stays on `/characters|scenes|props|styles/$id` with `STUDIO_LIBRARY_ID`
 - [ ] Detail `useLiveQuery` uses `get(id) ?? null` so missing ids are not stuck on 加载中
 - [ ] `touchProject` no-ops for `isStudioLibrary`

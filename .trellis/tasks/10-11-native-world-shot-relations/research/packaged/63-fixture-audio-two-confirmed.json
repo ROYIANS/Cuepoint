@@ -1,0 +1,89 @@
+[
+  {
+    "at": "2026-10-11T10:34:14.480Z",
+    "type": "request",
+    "id": 1,
+    "method": "GET",
+    "path": "/v1/models",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": null
+  },
+  {
+    "at": "2026-10-11T10:34:14.487Z",
+    "type": "body",
+    "id": 1,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:34:14.489Z",
+    "type": "disconnect",
+    "id": 1,
+    "path": "/v1/models",
+    "elapsedMs": 9,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T10:41:34.245Z",
+    "type": "request",
+    "id": 2,
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T10:41:34.246Z",
+    "type": "body",
+    "id": 2,
+    "byteLength": 177,
+    "sha256": "0e8e4dd1d3d67087d30f9e01084ba5c0503c62f885909f27b7815266de4ee288",
+    "model": "mimo-v2.5-tts",
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:41:34.246Z",
+    "type": "request",
+    "id": 3,
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T10:41:34.247Z",
+    "type": "body",
+    "id": 3,
+    "byteLength": 183,
+    "sha256": "7b7b644599a9dc65c2cafe243271116981a2e67dc282f2e9b2825df9d96c8594",
+    "model": "mimo-v2.5-tts",
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T10:41:34.252Z",
+    "type": "disconnect",
+    "id": 2,
+    "path": "/v1/chat/completions",
+    "elapsedMs": 7,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T10:41:34.252Z",
+    "type": "disconnect",
+    "id": 3,
+    "path": "/v1/chat/completions",
+    "elapsedMs": 6,
+    "finished": true
+  }
+]

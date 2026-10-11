@@ -1,0 +1,133 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/p/prj_22884c1a-9129-44d9-880b-b36ad7edf49e
+			3 container
+				4 link 小光点, Value: tauri://localhost/#/about
+				5 container 应用导航
+					6 link 创作助手, Value: tauri://localhost/#/agent
+					7 link IP, Value: tauri://localhost/#/ips
+					8 link 项目, Value: tauri://localhost/#/projects
+					9 link 素材库, Value: tauri://localhost/#/assets
+					10 link 任务, Value: tauri://localhost/#/agent/tasks
+					11 link 连接与模型, Value: tauri://localhost/#/connectors
+					12 link 关于, Value: tauri://localhost/#/about
+				13 button 导入项目
+			14 container
+				15 link 返回工作室, Value: tauri://localhost/#/projects
+				16 text 桌面音频验收
+				17 container 项目工作区
+					18 link 音频制作, Value: tauri://localhost/#/p/prj_22884c1a-9129-44d9-880b-b36ad7edf49e
+					19 link 记忆, Value: tauri://localhost/#/p/prj_22884c1a-9129-44d9-880b-b36ad7edf49e/memory
+				20 link 项目素材, Value: tauri://localhost/#/assets?project=prj_22884c1a-9129-44d9-880b-b36ad7edf49e
+				21 button 项目设定
+				22 button 备份项目
+			23 heading 音频制作, Value: 1
+				24 text 音频制作
+			25 pop up button 第一章
+			26 text 桌面音频验收
+			27 button 音色
+			28 button (disabled) 配音
+			29 button (disabled) 批量配音
+			30 button (disabled) 批量选用
+			31 button (disabled) 排列已选声音
+			32 button 撤销时间线操作
+			33 pop up button 添加声音
+			34 button 收起声音面板
+			35 container
+				36 text 当前章节还没有脚本 写下脚本，或者导入、录制已有声音。制作方式由你决定。
+				37 button 写下第一段
+				38 button 粘贴完整稿件
+			39 container
+				40 text 声音工作区
+				41 button 收起声音工作区
+				42 container 声音面板
+					43 button 段落声音
+					44 button 素材
+					45 button 成品
+				46 text 项目声音 1 个声音版本，原始文件均保留
+				47 button 添加声音
+				48 heading 全部声音, Value: 3
+					49 text 全部声音
+				50 text 1
+				51 button 录音 2026-10-11 16-28-11 录音 · 00:08.9
+				52 button 播放 录音 2026-10-11 16-28-11
+				53 text 0:00
+				54 slider (settable, float) 录音 2026-10-11 16-28-11 播放进度, Value: 0
+				55 text 0:08
+				56 button 静音试听
+				57 slider (settable, float) 试听音量, Value: 1
+				58 button 保存到素材库
+				59 button (disabled) 删除未采用版本
+				60 text 放入音轨
+				61 combo box (collapsed, settable) 放入音轨, Value: 人声, Secondary Actions: Expand
+					62 text 人声
+				63 text 前置停顿（秒）
+				64 number field (settable) 前置停顿（秒）, Value: 0
+					65 stepper 0
+						66 unknown
+						67 unknown
+				68 button 加入时间线
+				69 text 追加到音轨末尾，已有剪辑保持原样。
+			70 container 音频制作时间线
+				71 button (expanded) 收起时间线, Secondary Actions: Collapse
+				72 button 回到开头
+				73 button 播放章节, Help: 播放 / 暂停 · Space
+				74 pop up button 精确定位播放位置
+				75 button 撤销时间线编辑, Help: 撤销 · ⌘/Ctrl Z
+				76 button 重做时间线编辑, Help: 重做 · ⌘/Ctrl Shift Z
+				77 button (disabled) 在播放位置分割, Help: 在播放位置分割 · S
+				78 button (disabled) 删除选中片段, Help: 删除片段 · Delete / Backspace（可撤销）
+				79 button (disabled) 片段更多操作, Help: 片段更多操作 / 右键菜单
+				80 button 缩小时间线
+				81 button 适应, Help: 完整显示当前章节
+				82 button 放大时间线
+				83 pop up button (disabled) 片段属性
+				84 pop up button 导出
+				85 text 时间线
+				86 text 2 个片段
+				87 toggle button 吸附片段边缘和播放头, Help: 吸附 · 拖动时按 Alt 暂停吸附, Value: on
+				88 pop up button 音轨
+				89 text 秒
+				90 slider (settable, float) 时间标尺，左右方向键定位, Value: 3
+				91 container 人声
+					92 text 人声
+				93 toggle button 人声 静音, Value: off
+				94 toggle button 人声 独听, Value: off
+				95 pop up button 人声 音量
+				96 container
+					97 container 旁白：录音 2026-10-11 16-28-11，起点 0.0 秒
+						98 toggle button 选择 旁白：录音 2026-10-11 16-28-11, Help: 旁白 · 录音 2026-10-11 16-28-11, Value: off
+						99 button 拖动裁剪起点, Help: 拖动裁剪；双击片段打开精确属性
+						100 button 拖动裁剪终点, Help: 拖动裁剪；双击片段打开精确属性
+					101 container 旁白：录音 2026-10-11 16-28-11，起点 3.0 秒
+						102 toggle button 选择 旁白：录音 2026-10-11 16-28-11, Help: 旁白 · 录音 2026-10-11 16-28-11, Value: off
+						103 button 拖动裁剪起点, Help: 拖动裁剪；双击片段打开精确属性
+						104 button 拖动裁剪终点, Help: 拖动裁剪；双击片段打开精确属性
+				105 text 选择片段开始剪辑
+				106 text Space 播放 · S 分割 · ⌘/Ctrl D 复制 · ⌘/Ctrl Z 撤销
+				107 container
+					108 text WAV 已保存到项目并导出。
+					109 button 关闭提示
+			110 container Notifications alt+T
+			111 container
+				112 text 导出声音作品
+				113 text 48 kHz · 立体声 · WAV
+				114 container
+					115 text 导出范围
+					116 combo box (collapsed, settable) 导出范围, Value: 当前章节, Secondary Actions: Expand
+						117 text 当前章节
+				118 button 导出 WAV
+	119 close button
+	120 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	121 minimize button
+	122 text 小光点 · 完整产品验收
+123 menu bar
+	124 Cuepoint Product Review
+	125 File
+	126 Edit
+	127 View
+	128 Window
+	129 Help
+
+The focused UI element is 111 container

@@ -1,0 +1,14 @@
+
+> cuepoint@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing
+> node scripts/quality-check.mjs
+
+lint: 14 errors, 566 review warnings, 13 reviewed allowances; 2 failures
+warning rules: {"complexity":141,"sonarjs/cognitive-complexity":99,"no-nested-ternary":322,"max-depth":4}
+architecture: 459 files, 1843 static value edges, 9 literal dynamic edges, 0 static cycles; 0 failures; 0 computed imports/requires outside static proof
+unused: 9 full-scope candidates, 7 reviewed contracts, 95 production-only review signals; 2 failures
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/prefer-promise-reject-errors\",\"src/lib/runtimeFetch.ts\",null]","count":1}
+{"section":"lint","kind":"unanchorable-diagnostic","file":"src/lib/runtimeFetch.ts","rule":"@typescript-eslint/prefer-promise-reject-errors","message":"Expected the Promise rejection reason to be an Error."}
+{"section":"unused","kind":"unallowed","key":"[\"files\",\"scripts/native-product-fixture.mjs\",\"\"]","count":1}
+{"section":"unused","kind":"unallowed","key":"[\"exports\",\"src/lib/runtimeFetch.ts\",\"runtimeFetch\"]","count":1}
+quality: FAIL (all)
+ ELIFECYCLE  Command failed with exit code 1.

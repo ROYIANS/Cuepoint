@@ -1,0 +1,63 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_c8205daf-6831-49ef-8bb7-a9aea89d8d54
+			3 container Notifications alt+T
+			4 container 原生任务生命周期验收
+				5 button 任务工作台
+				6 button 关闭任务详情
+				7 text 待开始
+				8 heading 原生任务生命周期验收, Value: 2
+					9 text 原生任务生命周期验收
+				10 text 桌面真实音乐验收
+				11 text  · 小光点
+				12 text 更新于 10月11日 17:19
+				13 container 任务详情视图
+					14 toggle button 概览, Value: off
+					15 toggle button 工作记录, Value: on
+					16 toggle button 验收总结, Value: off
+				17 heading 工作记录 3, Value: 3
+					18 text 工作记录 3
+				19 text 保留依据与决策，让下一次执行接得上。
+				20 button 新记录
+				21 text field (settable) 搜索工作记录, Placeholder: 搜索标题或内容…
+				22 container 记录类型
+					23 toggle button 全部, Value: on
+					24 toggle button 调研, Value: off
+					25 toggle button 方案, Value: off
+					26 toggle button 进展, Value: off
+					27 toggle button 验证, Value: off
+					28 toggle button 待解决, Value: off
+				29 container (expanded) Secondary Actions: Collapse
+					30 summary 调研 NATIVE-TASK-RECORD-20261011 建议 · 你 · 10月11日 17:19, Value: on
+						31 text 调研
+						32 text NATIVE-TASK-RECORD-20261011
+						33 text 建议 · 你 · 10月11日 17:19
+					34 text 版本 1
+					35 button 查看NATIVE-TASK-RECORD-20261011的历史版本
+					36 button 编辑NATIVE-TASK-RECORD-20261011
+					37 text 人工保存的验收记录，标记 NATIVE-RECORD-Q9；保存后核对正文与版本1。
+				38 summary 方案 用户修订任务要求 已确认决策 · 你 · 10月11日 17:18, Value: off
+					39 text 方案
+					40 text 用户修订任务要求
+					41 text 已确认决策 · 你 · 10月11日 17:18
+				42 summary 方案 用户修订任务要求 已确认决策 · 你 · 10月11日 17:18, Value: off
+					43 text 方案
+					44 text 用户修订任务要求
+					45 text 已确认决策 · 你 · 10月11日 17:18
+				46 container
+					47 button 归档
+					48 button 检查并收尾
+	49 close button
+	50 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	51 minimize button
+	52 text 小光点 · 完整产品验收
+53 menu bar
+	54 Cuepoint Product Review
+	55 File
+	56 Edit
+	57 View
+	58 Window
+	59 Help
+
+The focused UI element is 30 summary 调研 NATIVE-TASK-RECORD-20261011 建议 · 你 · 10月11日 17:19, Value: on

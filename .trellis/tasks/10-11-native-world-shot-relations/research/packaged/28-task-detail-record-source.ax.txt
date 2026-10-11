@@ -1,0 +1,79 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_74120f0e-2956-4e68-ad95-7b045afcae28
+			3 container
+				4 container 执行过程
+					5 summary 成果声明未核实, Value: off
+						6 text 成果声明未核实
+				7 container 执行过程
+					8 summary 成果声明未核实, Value: off
+						9 text 成果声明未核实
+			10 container Notifications alt+T
+			11 container 原生任务工具验收
+				12 button 任务工作台
+				13 button 关闭任务详情
+				14 text 待确认
+				15 heading 原生任务工具验收, Value: 2
+					16 text 原生任务工具验收
+				17 text 桌面真实 Agent 验收
+				18 text  · 小光点
+				19 text 更新于 10月11日 16:53
+				20 text 请检查成果与清单，由你确认任务完成。
+				21 container 任务详情视图
+					22 toggle button 概览, Value: off
+					23 toggle button 工作记录, Value: on
+					24 toggle button 验收总结, Value: off
+				25 heading 工作记录 4, Value: 3
+					26 text 工作记录 4
+				27 text 保留依据与决策，让下一次执行接得上。
+				28 button 新记录
+				29 text field (settable) 搜索工作记录, Placeholder: 搜索标题或内容…
+				30 container 记录类型
+					31 toggle button 全部, Value: on
+					32 toggle button 调研, Value: off
+					33 toggle button 方案, Value: off
+					34 toggle button 进展, Value: off
+					35 toggle button 验证, Value: off
+					36 toggle button 待解决, Value: off
+				37 summary 方案 任务要求调整 已确认决策 · 助手 · 10月11日 16:53, Value: off
+					38 text 方案
+					39 text 任务要求调整
+					40 text 已确认决策 · 助手 · 10月11日 16:53
+				41 container (expanded) Secondary Actions: Collapse
+					42 summary 方案 两步验收方案 建议 · 助手 · 10月11日 16:52, Value: on
+						43 text 方案
+						44 text 两步验收方案
+						45 text 建议 · 助手 · 10月11日 16:52
+					46 text 版本 1
+					47 button 查看两步验收方案的历史版本
+					48 button 编辑两步验收方案
+					49 text 建议按两步进行验收：1）记录本任务的两步验收计划；2）保存并重新读取本方案记录，核对内容可读。范围限制：仅做计划与记录核对，不生成素材、不修改故事或镜头；本次不将任务或步骤标记为完成。
+					50 heading 记录依据, Value: 4
+						51 text 记录依据
+					52 summary 用户 · 为当前项目建立一个名为“原生任务工具验收”的小任务。目标：记录两步验收计划，并保存一条能重新读取的方案记录。请先读取当前需求消息来源，再建立, Value: off
+						53 text 用户 · 为当前项目建立一个名为“原生任务工具验收”的小任务。目标：记录两步验收计划，并保存一条能重新读取的方案记录。请先读取当前需求消息来源，再建立
+				54 summary 进展 Todo 更新 建议 · 助手 · 10月11日 16:52, Value: off
+					55 text 进展
+					56 text Todo 更新
+					57 text 建议 · 助手 · 10月11日 16:52
+				58 summary 方案 任务目标与验收要求 已确认决策 · 助手 · 10月11日 16:52, Value: off
+					59 text 方案
+					60 text 任务目标与验收要求
+					61 text 已确认决策 · 助手 · 10月11日 16:52
+				62 container
+					63 button 归档
+					64 button 检查并收尾
+	65 close button
+	66 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	67 minimize button
+	68 text 小光点 · 完整产品验收
+69 menu bar
+	70 Cuepoint Product Review
+	71 File
+	72 Edit
+	73 View
+	74 Window
+	75 Help
+
+The focused UI element is 42 summary 方案 两步验收方案 建议 · 助手 · 10月11日 16:52, Value: on

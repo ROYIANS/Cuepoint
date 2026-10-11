@@ -1,0 +1,47 @@
+{
+  "path": "/private/tmp/cuepoint-full-product-20261011/native-a4-landscape.pdf",
+  "bytes": 42973,
+  "sha256": "dad5f6775a9ca5351c174351bda8cc046c6eb95050809b235faeee7b0cc22f24",
+  "pages": 3,
+  "pageBoxes": [
+    {
+      "width": 842.0,
+      "height": 595.0,
+      "rotate": 0
+    },
+    {
+      "width": 842.0,
+      "height": 595.0,
+      "rotate": 0
+    },
+    {
+      "width": 842.0,
+      "height": 595.0,
+      "rotate": 0
+    }
+  ],
+  "normalization": "NFKC; CJK radical supplement page glyph left unchanged",
+  "markers": {
+    "PRINT-SHOT-1-END": [
+      2
+    ],
+    "PRINT-SHOT-3-END": [
+      3
+    ],
+    "第三镜第20行": [
+      3
+    ],
+    "第20行": [
+      2,
+      3
+    ]
+  },
+  "applicationNavigationPresent": {
+    "创作助手": false,
+    "连接与模型": false,
+    "导入项目": false,
+    "返回工作室": false
+  },
+  "physicalPrinterTested": false,
+  "note": "Actual macOS sheet PDF save. pypdf repair warnings: three offset-0 pointers. Poppler rendering independently verified."
+}

@@ -1,0 +1,15 @@
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 75 modules transformed.
+rendering chunks...
+[plugin vite:reporter] 
+(!) /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/database.ts is dynamically imported by /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/runtimeHttpPolicy.ts but also statically imported by /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/tavilyProbe.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/tavily.ts, dynamic import will not move module into another chunk.
+
+computing gzip size...
+../../.acceptance/run-ec68f6da-9951-403c-a224-caf8ea1d9b7b/frontend/index.html                   0.39 kB │ gzip:   0.31 kB
+../../.acceptance/run-ec68f6da-9951-403c-a224-caf8ea1d9b7b/frontend/assets/index-zrrNMznx.css   16.03 kB │ gzip:   4.32 kB
+../../.acceptance/run-ec68f6da-9951-403c-a224-caf8ea1d9b7b/frontend/assets/index-MLTl2gnb.js     2.01 kB │ gzip:   0.92 kB
+../../.acceptance/run-ec68f6da-9951-403c-a224-caf8ea1d9b7b/frontend/assets/index-DRa8CN1f.js   454.41 kB │ gzip: 142.43 kB
+✓ built in 672ms
+Built only; no app launched: /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/run-ec68f6da-9951-403c-a224-caf8ea1d9b7b/Cuepoint Tavily Review.app
+Run root: /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/run-ec68f6da-9951-403c-a224-caf8ea1d9b7b

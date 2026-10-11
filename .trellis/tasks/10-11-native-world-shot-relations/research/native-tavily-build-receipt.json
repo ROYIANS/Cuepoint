@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "outcome": "built",
+  "scope": "independent test-only Tavily protocol over actual native HTTP",
+  "before": {
+    "ui/tavilyProbeFetch.ts": "5807404661f85aeb6af8dcc3f8b2bb5fbeee42f2cbd6b274d351b32d1b60a6f1",
+    "ui/tavilyProbe.ts": "1fe87f2df10096c2999093cea605630bd75647437328942584083c42f6637aba",
+    "ui/tavilyProbeMain.tsx": "930563fee1300ba2af1599f5fe1cd0a29f59e63488bf12f43cc2eaa5d5f514ac",
+    "ui/tavily-probe/index.html": "95adcbfe2c565d8b23ca2c4dfdd6453366440428e07985d600726ffa41612a88",
+    "ui/acceptanceEvidence.ts": "2325e5c3af29d6765aaf1f0745fa4aa6bd2191ae8b51ebf554553de03355d59b",
+    "scripts/native-tavily-regression.mjs": "b5e99ca4696472ce1cc56a16d4b0292722c337211b0c27fab1e9cf432b11f507",
+    "../../src/lib/ai/tavily.ts": "308c8656fed4eaa86a4bc7568d5e640f9d8b11eeabe9eafb831f53168d4cc2dc",
+    "../../src/lib/runtimeFetch.ts": "73d4361fb89e1e3a4bd834dbbf48909bc83014073be210397971e10ab6e0e92b",
+    "../../src/lib/runtimeHttpPolicy.ts": "75617a91963a2a226abeacd86bb6ed632e50d9f7086098cb2179ca20b4b3838d",
+    "../../src/lib/ai/requestBoundary.ts": "dd806032398035cba3866088bcd47efaf3fbb54e15f0bd70352f0a31adb66768",
+    "../../scripts/native-product-fixture.mjs": "8275221634b61402a2784f4d3a74272a78fb09f18d6ce53c05b05142f51f5e4b"
+  },
+  "after": {
+    "ui/tavilyProbeFetch.ts": "5807404661f85aeb6af8dcc3f8b2bb5fbeee42f2cbd6b274d351b32d1b60a6f1",
+    "ui/tavilyProbe.ts": "1fe87f2df10096c2999093cea605630bd75647437328942584083c42f6637aba",
+    "ui/tavilyProbeMain.tsx": "930563fee1300ba2af1599f5fe1cd0a29f59e63488bf12f43cc2eaa5d5f514ac",
+    "ui/tavily-probe/index.html": "95adcbfe2c565d8b23ca2c4dfdd6453366440428e07985d600726ffa41612a88",
+    "ui/acceptanceEvidence.ts": "2325e5c3af29d6765aaf1f0745fa4aa6bd2191ae8b51ebf554553de03355d59b",
+    "scripts/native-tavily-regression.mjs": "b5e99ca4696472ce1cc56a16d4b0292722c337211b0c27fab1e9cf432b11f507",
+    "../../src/lib/ai/tavily.ts": "308c8656fed4eaa86a4bc7568d5e640f9d8b11eeabe9eafb831f53168d4cc2dc",
+    "../../src/lib/runtimeFetch.ts": "73d4361fb89e1e3a4bd834dbbf48909bc83014073be210397971e10ab6e0e92b",
+    "../../src/lib/runtimeHttpPolicy.ts": "75617a91963a2a226abeacd86bb6ed632e50d9f7086098cb2179ca20b4b3838d",
+    "../../src/lib/ai/requestBoundary.ts": "dd806032398035cba3866088bcd47efaf3fbb54e15f0bd70352f0a31adb66768",
+    "../../scripts/native-product-fixture.mjs": "8275221634b61402a2784f4d3a74272a78fb09f18d6ce53c05b05142f51f5e4b"
+  },
+  "stable": true,
+  "bundle": {
+    "app": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/run-ec68f6da-9951-403c-a224-caf8ea1d9b7b/Cuepoint Tavily Review.app",
+    "identifier": "dev.cuepoint.review.tavily.186e4e74-a288-4a8e-89da-e25c9443bd67",
+    "storage": "sqlite",
+    "webkitStoreId": "c7bfe0c66d556201732ba50b9305402d",
+    "binarySha256": "7c38cfdb355e140f81df929f08e906a0b84da4e6dfc37411381d9ab774d6488b"
+  },
+  "results": [
+    {
+      "type": "build",
+      "code": 0,
+      "signal": null
+    }
+  ],
+  "liveTavilyAccountVerified": false,
+  "wholeProductAcceptanceComplete": false,
+  "wholeHistoricalAcceptanceComplete": false
+}

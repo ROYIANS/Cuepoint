@@ -1,0 +1,6 @@
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/nativeSystemServices.ts
+  23:8  warning  Async function 'saveNativeBlob' has a complexity of 23. Maximum allowed is 20  complexity
+
+✖ 1 problem (0 errors, 1 warning)
+

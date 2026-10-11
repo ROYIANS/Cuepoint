@@ -1,0 +1,45 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Network Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/ips/ip_121cd65f-7f2c-4954-a0c2-3af1cce4f132
+			3 container
+				4 link 小光点, Value: tauri://localhost/#/about
+				5 container 应用导航
+					6 link 创作助手, Value: tauri://localhost/#/agent
+					7 link IP, Value: tauri://localhost/#/ips
+					8 link 项目, Value: tauri://localhost/#/projects
+					9 link 素材库, Value: tauri://localhost/#/assets
+					10 link 任务, Value: tauri://localhost/#/agent/tasks
+					11 link 连接与模型, Value: tauri://localhost/#/connectors
+					12 link 关于, Value: tauri://localhost/#/about
+				13 button 导入项目
+			14 container
+				15 link 全部 IP, Value: tauri://localhost/#/ips
+				16 heading NATIVE-IP-20261011, Value: 1
+					17 text NATIVE-IP-20261011
+				18 text 原生验收：一个人的多设备创作。
+				19 button 编辑档案
+				20 button 归档
+				21 container IP 内容
+					22 toggle button 档案, Value: off
+					23 toggle button 关联项目 1, Value: on
+					24 toggle button 专属素材 0, Value: off
+				25 heading 关联项目, Value: 2
+					26 text 关联项目
+				27 text 项目保留各自的内容与素材，可以单独编辑。
+				28 link 管理项目, Value: tauri://localhost/#/projects
+				29 link 桌面真实 Agent 验收 视频 · 更新于 10月11日, Value: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4
+			30 container Notifications alt+T
+	31 close button
+	32 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	33 minimize button
+	34 text 小光点 · 完整产品验收
+35 menu bar
+	36 Cuepoint Network Review
+	37 File
+	38 Edit
+	39 View
+	40 Window
+	41 Help
+
+The focused UI element is 2 HTML content Description: 小光点, URL: tauri://localhost/#/ips/ip_121cd65f-7f2c-4954-a0c2-3af1cce4f132

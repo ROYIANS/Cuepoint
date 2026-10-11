@@ -1,6 +1,14 @@
 # Desktop storage and synchronization design contract
 
-Status: approved for staged implementation. The user approved the complete planning summary on 2026-10-10. Live service integration, deployment and production-data migration retain their later concrete gates.
+Status: approved for staged implementation. The user approved the complete planning summary on 2026-10-10. Live service integration and deployment retain later concrete gates. Fresh-development and delivery-order decisions below supersede historical migration and SQLite-first prerequisites.
+
+## Delivery-order update — complete functionality before SQLite (2026-10-11)
+
+The user explicitly prioritized Agent/AI and rapid complete desktop parity through reuse of existing Web UI and business logic. They selected a normal Tauri product stage backed by application-internal IndexedDB, with centralized shared-storage/SQLite replacement later. This deliberately supersedes the earlier SQLite-first product-domain expansion sequence; it does not change the eventual local-first SQLite/files and synchronization target.
+
+During this stage, one internal IndexedDB store owns the complete product, including media Blob copies. Tauri still owns trusted IPC, hash navigation and native system/network/file services. The accepted SQLite prototype/video code remains isolated reference/test infrastructure rather than a second concurrent product catalog. No old records are imported, mirrored or migrated. Internal Blob copies are not described as completed filesystem-workspace storage.
+
+Current planning child `10-11-native-world-shot-relations` retains its initial directory name but is titled shared business layer and native Agent integration. Its revised PRD/design/execution plan owns this stage; implementation approval follows final review. Historical world-only research is not the selected delivery boundary.
 
 ## Decision update — fresh product development (2026-10-11)
 

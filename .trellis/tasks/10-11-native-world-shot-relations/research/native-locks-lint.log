@@ -1,0 +1,12 @@
+
+> cuepoint-tauri-prototype@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node ../../node_modules/eslint/bin/eslint.js --config eslint.config.mjs scripts ui --max-warnings 0
+
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/acceptanceLocks.ts
+   2:25  error  'message' is defined but never used             @typescript-eslint/no-unused-vars
+  54:69  error  Async arrow function has no 'await' expression  @typescript-eslint/require-await
+
+✖ 2 problems (2 errors, 0 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.

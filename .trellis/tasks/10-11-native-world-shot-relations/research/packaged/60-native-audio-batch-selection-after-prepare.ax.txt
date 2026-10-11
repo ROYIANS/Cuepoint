@@ -1,0 +1,29 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/p/prj_8e66a5a7-d384-44a8-b095-cf2b4a3c97e1
+			3 container Notifications alt+T
+			4 container 选择本批段落
+				5 heading 选择本批段落, Value: 2
+					6 text 选择本批段落
+				7 text 默认包含没有声音版本的段落。每批 1–20 段；继承已保存角色音色，下一步核对实际请求再确认付费。
+				8 container
+					9 checkbox (settable, integer) 包含：合成配音第一段，仅本机验收。, Value: 1
+					10 text 合成配音第一段，仅本机验收。 默认音色 · mimo_default
+				11 container
+					12 checkbox (settable, integer) 包含：合成配音第二段，检查批次和重开。, Value: 1
+					13 text 合成配音第二段，检查批次和重开。 默认音色 · mimo_default
+				14 button 取消
+				15 button 准备 2 段请求
+				16 button 关闭
+	17 close button
+	18 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	19 minimize button
+	20 text 小光点 · 完整产品验收
+21 menu bar
+	22 Cuepoint Product Review
+	23 File
+	24 Edit
+	25 View
+	26 Window
+	27 Help

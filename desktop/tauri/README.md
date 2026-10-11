@@ -1,6 +1,31 @@
-# Disposable native storage prototype — work package A
+# Cuepoint desktop: shared product and native validation
 
-This isolated Rust crate is a minimal storage experiment for Cuepoint, not a migration of its production IndexedDB data. It has no GUI, renderer command surface, cloud provider or credentials. Work package B will build the actual Tauri window only after independent storage acceptance.
+The normal Tauri application now loads the existing root React product, including
+its Agent, pages and business commands. Its current data owner is an independent,
+stable application-internal IndexedDB namespace. Native HTTP, file saving,
+external-browser links and storyboard printing are centralized runtime services.
+Centralized SQLite replacement and synchronization remain subsequent work; normal
+startup does not mirror or import the historical SQLite experiment.
+
+The current contracts are in
+[native-product-runtime.md](../../.trellis/spec/frontend/native-product-runtime.md).
+Build the normal application with the local machine pnpm:
+
+```sh
+/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri build:app
+```
+
+The `--acceptance` frontend, storage CLI, lock probe and dedicated Tavily probe are
+explicit test lanes. Their finite reports do not replace full product, live
+supplier or other-platform acceptance.
+
+## Historical storage prototype — work package A
+
+The following sections document the retained isolated Rust storage experiment
+and its test contracts. At that historical checkpoint, the crate had no GUI,
+renderer command surface, cloud provider or credentials; the later Tauri window
+work was gated on independent storage acceptance. These statements describe that
+storage test lane, not the current normal product or its IndexedDB owner.
 
 ## Local tools and gates
 

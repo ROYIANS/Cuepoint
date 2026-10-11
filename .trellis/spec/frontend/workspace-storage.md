@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Apply when changing media-file import, workspace-relative references or the shared byte hash. Browser mode still prepares independent Blobs and persists through Dexie. Tauri mode now uses the separate native owner described in `native-workspace.md`: it creates a fresh app-owned SQLite workspace and managed files, with no browser-to-native migration or mirror.
+Apply when changing media-file import, workspace-relative references or the shared byte hash. Browser and the approved normal full-product Tauri stage prepare independent Blobs and persist through their separate Dexie namespaces. Normal desktop imports are internal Blob copies; they do not depend on external source paths and do not imply the future file-workspace storage has already replaced IndexedDB. Only an explicitly selected SQLite reference lane uses the native owner described in `native-workspace.md`. There is no migration or dual-owner mirror. Read `native-product-runtime.md` for fixed owner selection and independent native export.
 
 ## 2. Signatures / Owners
 
@@ -18,7 +18,7 @@ Project and media path components are `id-` followed by lowercase hexadecimal UT
 
 The resolver validates owner, expected workspace, the encoded media component and relative-path safety. It resolves against a supplied absolute device root. This is lexical containment only: a future native adapter must separately enforce real-root/symlink containment, filesystem limits and durable copy recovery.
 
-The native adapter must never accept a renderer-selected absolute root. Rust resolves `<app_data_dir>/workspace`, stages and hashes a selected source, publishes a generated relative path atomically, and commits the SQLite asset row only after the managed bytes are verified. A missing managed file retains its asset/reference rows and is reported as `missing`; the source path is diagnostic input only.
+The explicit SQLite/filesystem adapter must never accept a renderer-selected absolute root. Rust resolves `<app_data_dir>/workspace`, stages and hashes a selected source, publishes a generated relative path atomically, and commits the SQLite asset row only after the managed bytes are verified. A missing managed file retains its asset/reference rows and is reported as `missing`; the source path is diagnostic input only. This adapter contract is preserved for that lane; normal desktop IndexedDB does not call workspace ensure/create simply to import or export.
 
 Import reads, copies and hashes bounded 256 KiB chunks outside database transactions. Each completed chunk becomes an independent Blob part. Macrotask opportunities between chunks let cancellation and other browser work execute. Empty files, incomplete reads, metadata failure and source-read failure reject before a ready record exists. Filename is display metadata; storage names derive from IDs. Copies never delete source bytes.
 
@@ -49,7 +49,7 @@ Good: independently copy a video, allow cancellation between chunks, then hand t
 
 Use actual importer/repository calls and fake IndexedDB for no-ready-row, deleted-parent, touch failure, same-name and Studio cases. Test independent copied bytes, incremental block/padding/hash vectors, ordinary-HTTP behavior with WebCrypto absent, cancellation during chunked reading and macrotask progress before completion. Preserve immutable original-source revision comparisons and source checksums under stable `tests/fixtures/` paths.
 
-The read-only `tests/helpers/workspaceBinaryFixture.ts` supplements migration planning: it enumerates media, file material versions, nested setting media and explicit recording/output/history references, including audio-arrangement selection/item/before/receipt snapshots. It reports missing/foreign references, absent owners, empty bytes and read failure. It is not a full-workspace codec, a production migration or a secrecy guarantee for arbitrary user-authored strings. Native storage, persistent workspace identity, per-table checkpoint projections and live-provider tests remain separate deliverables.
+The read-only `tests/helpers/workspaceBinaryFixture.ts` supplements workspace/codec inspection: it enumerates media, file material versions, nested setting media and explicit recording/output/history references, including audio-arrangement selection/item/before/receipt snapshots. It reports missing/foreign references, absent owners, empty bytes and read failure. It is not a full-workspace codec, a production migration or a secrecy guarantee for arbitrary user-authored strings. Native storage, persistent workspace identity, per-table checkpoint projections and live-provider tests remain separate deliverables.
 
 ## 7. Wrong vs Correct
 

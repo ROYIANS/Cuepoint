@@ -1,0 +1,7 @@
+
+> cuepoint-tauri-prototype@0.1.0 build:app /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node scripts/build-app.mjs --isolated-product
+
+frontend: 0; logs /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791710135732-isolated-product
+native-bundle: 0; logs /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791710135732-isolated-product
+Actual isolated-product app: /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791710135732-isolated-product/Cuepoint Product Review.app

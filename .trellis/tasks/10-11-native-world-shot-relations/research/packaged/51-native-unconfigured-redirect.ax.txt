@@ -1,0 +1,141 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_faf95fa1-eb5f-4088-872a-6c2da1dadde1
+			3 container
+				4 link 小光点, Value: tauri://localhost/#/about
+				5 container 应用导航
+					6 link 创作助手, Value: tauri://localhost/#/agent
+					7 link IP, Value: tauri://localhost/#/ips
+					8 link 项目, Value: tauri://localhost/#/projects
+					9 link 素材库, Value: tauri://localhost/#/assets
+					10 link 任务, Value: tauri://localhost/#/agent/tasks
+					11 link 连接与模型, Value: tauri://localhost/#/connectors
+					12 link 关于, Value: tauri://localhost/#/about
+				13 button 导入项目
+			14 container
+				15 image avatar
+				16 text 小光点
+				17 button (expanded) 收起话题侧栏, Secondary Actions: Collapse
+				18 button 开启新话题
+				19 button 搜索
+				20 button 话题
+				21 button 任务
+				22 button (expanded) 话题 7, Secondary Actions: Collapse
+				23 button (expanded) 今天, Secondary Actions: Collapse
+				24 button [fixture:overview]
+				25 button 重命名
+				26 button 删除
+				27 button 原生任务生命周期验收
+				28 button 重命名
+				29 button 删除
+				30 button 为当前项目建立一个名为“原生任务工具验收”的小任…
+				31 button 重命名
+				32 button 删除
+				33 button 这是隔离桌面验收，请实际调用工具，不要只给方案。…
+				34 button 重命名
+				35 button 删除
+				36 button native partial transport…
+				37 button 重命名
+				38 button 删除
+				39 button native stop transport fi…
+				40 button 重命名
+				41 button 删除
+				42 button 这是桌面端的隔离验收。请只回复：原生连接正常 �…
+				43 button 重命名
+				44 button 删除
+				45 button 连接
+				46 heading [fixture:overview], Value: 1
+					47 text [fixture:overview]
+				48 pop up button 话题更多操作
+				49 button 创建关联任务
+				50 button (expanded) 收起话题侧栏, Secondary Actions: Collapse
+				51 image
+				52 text 17:15:54
+				53 text [fixture:overview]
+				54 image 小光点
+				55 text 小光点 17:15:54
+				56 container 执行过程
+					57 button (collapsed) 用时 0 秒 执行失败, Secondary Actions: Expand
+				58 container OpenAI
+				59 text gpt-5.6-luna 82.6  tok/s 30
+				60 button 查看本次请求的记忆
+				61 text 生成失败 · Responses 最终内容与流事件不一致
+				62 image 小光点
+				63 text 小光点 17:24:36
+				64 container 执行过程
+					65 button (expanded) 用时 1 秒 已读取，未执行修改, Secondary Actions: Collapse
+					66 summary 成果声明未核实, Value: off
+						67 text 成果声明未核实
+					68 text 本轮完成了读取及可能的准备操作，没有业务写入或网络执行记录。
+					69 pop up button 执行记录
+					70 button (collapsed) 已深度思考 0.1 秒, Secondary Actions: Expand
+					71 button (expanded) 查看工作区概览 1 项, Secondary Actions: Collapse
+					72 button (expanded) 查看工作区概览 已完成, Secondary Actions: Collapse
+					73 text 读取本地数据
+					74 container (expanded) Secondary Actions: Collapse
+						75 summary 参数与返回结果, Value: on
+							76 text 参数与返回结果
+						77 text AI 原始参数
+						78 text {}
+						79 text 返回结果
+						80 text {"project":{"id":"prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe","name":"桌面真实音乐验收"},"counts":{"characters":0,"scenes":0,"props":0,"styles":0}}
+					81 button (collapsed) 已深度思考 0.1 秒, Secondary Actions: Expand
+					82 text 已收到真实工具执行结果，请在项目或历史记录中核对。
+					83 button (collapsed) 已深度思考 0.1 秒, Secondary Actions: Expand
+					84 container 批量生成
+				85 text 已收到真实工具执行结果，请在项目或历史记录中核对。
+				86 container OpenAI
+				87 text gpt-5.6-luna 47.0  tok/s 120
+				88 button 查看本次请求的记忆
+				89 button
+				90 image
+				91 text 17:29:55
+				92 text native HTTP 429 fixture
+				93 image 小光点
+				94 text 小光点 17:29:55
+				95 container 执行过程
+					96 button (collapsed) 用时 0 秒 执行失败, Secondary Actions: Expand
+				97 image
+				98 text fixture-http-error
+				99 button 查看本次请求的记忆
+				100 text 生成失败 · 请求失败（429）：{"error":{"message":"Synthetic provider rejection"}}
+				101 image
+				102 text 17:31:00
+				103 text native unconfigured redirect
+				104 image 小光点
+				105 text 小光点 17:31:00
+				106 container 执行过程
+					107 button (collapsed) 用时 0 秒 执行失败, Secondary Actions: Expand
+				108 image
+				109 text fixture-redirect
+				110 button 查看本次请求的记忆
+				111 text 生成失败 · 网络请求地址不属于当前连接配置，请在连接页检查设置
+				112 button 重新生成
+				113 text 执行未完成
+				114 text entry area (settable) 消息内容, Value: [text entry area: 消息内容], Placeholder: 提问、创建内容或启动任务
+					115 text 提问、创建内容或启动任务
+				116 pop up button (disabled) 项目：桌面真实音乐验收, Help: 此对话的项目已固定；处理其他项目请新开对话
+				117 pop up button 更多选项
+				118 button (collapsed) 展开编辑器, Secondary Actions: Expand
+				119 pop up button 模型设置：fixture-redirect
+				120 toggle button 语音输入, Value: off
+				121 button (disabled) 发送
+				122 button 发送方式
+				123 pop up button 智能模式
+				124 pop up button 权限：请求批准
+				125 pop up button 上下文明细, Help: 上下文明细（估算）
+			126 container Notifications alt+T
+	127 close button
+	128 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	129 minimize button
+	130 text 小光点 · 完整产品验收
+131 menu bar
+	132 Cuepoint Product Review
+	133 File
+	134 Edit
+	135 View
+	136 Window
+	137 Help
+
+The focused UI element is 2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_faf95fa1-eb5f-4088-872a-6c2da1dadde1

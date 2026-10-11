@@ -1,0 +1,69 @@
+{
+  "source": {
+    "at": "2026-10-11T09:34:58.748Z",
+    "type": "request",
+    "id": 8,
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  "target": {
+    "at": "2026-10-11T09:34:58.783Z",
+    "type": "request",
+    "id": 9,
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "query": "?redirected=1",
+    "origin": "tauri://localhost",
+    "authorizationPresent": false,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  "sourceBody": {
+    "at": "2026-10-11T09:34:58.749Z",
+    "type": "body",
+    "id": 8,
+    "byteLength": 15577,
+    "sha256": "587d3bb91c4c66f84901447399e25292b17225af1c4c59893b04f51586ccca3c",
+    "model": "fixture-redirect",
+    "offeredTools": [
+      "workspace_overview",
+      "update_run_plan",
+      "load_tool_groups",
+      "project_create",
+      "music_read",
+      "music_save_draft",
+      "music_update_work",
+      "music_reuse_work",
+      "audio_generation_capabilities",
+      "music_generate",
+      "audio_generation_check"
+    ]
+  },
+  "targetBody": {
+    "at": "2026-10-11T09:34:58.783Z",
+    "type": "body",
+    "id": 9,
+    "byteLength": 15577,
+    "sha256": "587d3bb91c4c66f84901447399e25292b17225af1c4c59893b04f51586ccca3c",
+    "model": "fixture-redirect",
+    "offeredTools": [
+      "workspace_overview",
+      "update_run_plan",
+      "load_tool_groups",
+      "project_create",
+      "music_read",
+      "music_save_draft",
+      "music_update_work",
+      "music_reuse_work",
+      "audio_generation_capabilities",
+      "music_generate",
+      "audio_generation_check"
+    ]
+  },
+  "byteEqual": true
+}

@@ -1,0 +1,40 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/audioClipInspectorPrecision.test.ts (12 tests | 1 failed) 901ms
+   ❯ actual clip inspector precision and command wiring (12)
+     × allows an unchanged 8.945-second recording in every numeric field while retaining HTML bounds 28ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/audioClipInspectorPrecision.test.ts > actual clip inspector precision and command wiring > allows an unchanged 8.945-second recording in every numeric field while retaining HTML bounds
+AssertionError: expected { type: 'number', min: +0, …(5) } to match object { type: 'number', min: +0, …(2) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "min": 0,
+    "required": true,
+-   "step": "any",
++   "step": 0.01,
+    "type": "number",
+  }
+
+ ❯ tests/audioClipInspectorPrecision.test.ts:98:67
+     96|     it("allows an unchanged 8.945-second recording in every numeric fi…
+     97|         const host = await fixture();
+     98|         for (const key of editKeys) expect(host.input(key).props).toMa…
+       |                                                                   ^
+     99|         expect(host.input("gain").props.max).toBe(4);
+    100|         expect(host.input("trimEndSec").props.value).toBe("8.945");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  16:54:26
+   Duration  1.56s (tests 60%, transform 25%, import 12%, setup 3%)
+

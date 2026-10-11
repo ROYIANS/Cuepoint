@@ -1,0 +1,127 @@
+- complementary:
+  - link:
+    - /url: /about
+    - generic: 小光点
+  - navigation:
+    - link:
+      - /url: /agent
+      - generic: 创作助手
+    - link:
+      - /url: /ips
+      - generic: IP
+    - link:
+      - /url: /projects
+      - generic: 项目
+    - link:
+      - /url: /assets
+      - generic: 素材库
+    - link:
+      - /url: /agent/tasks
+      - generic: 任务
+    - link:
+      - /url: /connectors
+      - generic: 连接与模型
+    - link:
+      - /url: /about
+      - generic: 关于
+  - button:
+    - generic: 导入项目
+- main:
+  - heading [level=1]: 素材库
+  - generic: 管理媒体、资料和创作设定的版本。
+  - button:
+    - text: 导入素材
+  - tablist:
+    - tab [selected]:
+      - text: 媒体与资料
+    - tab:
+      - text: 创作设定
+  - tabpanel:
+    - textbox:
+      - /placeholder: 搜索名称、标签或备注
+    - combobox:
+      - generic: 共享素材（全局与 IP）
+    - combobox:
+      - generic: 全部类型
+    - combobox:
+      - generic: 使用中
+    - heading [level=2]: 版本素材 1
+    - paragraph: 默认展示全局与 IP 专属素材
+    - button:
+      - generic: reference.txt
+      - generic: 文档 · 全局
+      - generic: v3
+      - strong: reference.txt
+      - generic: 验收 · 资料
+    - region:
+      - heading [level=2]:
+        - text: 现有素材
+      - paragraph: 保留原来的编辑方式。提升为独立版本后，可在新的项目中复用。
+      - generic: 0 项
+      - paragraph: 当前筛选下没有现有素材。
+  - paragraph: 素材库与 IP 档案保存在当前设备本地。项目 ZIP 包含已加入项目的素材副本，不包含整个素材库或 IP 档案。
+- region "Notifications alt+T"
+- dialog "reference.txt" [active]:
+  - paragraph: 文档 · 全局素材
+  - heading "reference.txt" [level=2]
+  - paragraph: 版本 3 · 可复用
+  - button "关闭素材详情":
+  - generic: CUEPOINT-NATIVE-FULL-20261011-Q7 第一场：雨夜。角色林七举着红色雨伞，走进蓝色车站。 第二场：清晨。道具是一封没有寄出的信；风格为暖色写实。 Native project document parsing fixture. Imported bytes must remain internal.
+  - link "下载原文件":
+    - /url: blob:http://127.0.0.1:5176/7b00f1e6-c487-461a-a70a-80b924cfe702
+  - text: 查看历史版本
+  - combobox "查看历史版本":
+    - generic: 版本 3 · 2026/10/11
+  - heading "素材信息" [level=3]
+  - text: 名称
+  - textbox "名称": reference.txt
+  - text: 备注
+  - textbox "备注":
+    - /placeholder: 用途、注意事项或创作背景
+    - text: 浏览器素材第三版：项目副本应继续固定第二版。
+  - text: 标签
+  - textbox "标签":
+    - /placeholder: 用逗号分隔
+    - text: 验收，资料
+  - heading "来源与版本" [level=3]
+  - paragraph: 直接导入，原文件保存在素材版本中。
+  - button "上传新版本":
+    - text: 上传新版本
+  - button "复制到其他位置"
+  - heading "用于项目" [level=3]
+  - paragraph: 创建项目专属副本并固定版本，后续更新需手动确认。媒体会进入项目素材，不会自动替换镜头。
+  - combobox "使用素材的目标项目":
+    - generic: 浏览器隔离回归
+  - button "用于项目"
+  - list:
+    - link "浏览器隔离回归":
+      - /url: /p/prj_9d308e36-8d5d-449f-b417-2e4d0962f87c
+      - text: 浏览器隔离回归
+    - generic: 版本 2 · 历史引用
+    - button "移除未使用副本"
+    - link "浏览器隔离回归":
+      - /url: /p/prj_9d308e36-8d5d-449f-b417-2e4d0962f87c
+      - text: 浏览器隔离回归
+    - generic: 版本 3 · 当前采用
+    - button "移除未使用副本"
+  - heading "操作记录" [level=3]:
+    - text: 操作记录
+  - list:
+    - generic: 加入新版项目副本 · 2 → 3
+    - time: 2026/10/11 16:24:25
+    - generic: 加入项目 · prj_9d308e36-8d5d-449f-b417-2e4d0962f87c
+    - time: 2026/10/11 16:24:25
+    - generic: 保存新版本 · v3
+    - time: 2026/10/11 16:24:20
+    - generic: 加入项目 · prj_9d308e36-8d5d-449f-b417-2e4d0962f87c
+    - time: 2026/10/11 16:24:15
+    - generic: 保存新版本 · v2
+    - time: 2026/10/11 16:24:10
+    - generic: 导入素材
+    - time: 2026/10/11 16:19:01
+  - status: 新版项目副本已加入，已有编辑内容和素材引用没有替换。
+  - button "归档":
+    - text: 归档
+  - button "永久删除" [disabled]:
+    - text: 永久删除
+  - paragraph: 当前有 2 条项目引用、0 份衍生素材，不能永久删除；可归档。

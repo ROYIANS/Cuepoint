@@ -1,0 +1,159 @@
+[
+  {
+    "at": "2026-10-11T08:57:35.155Z",
+    "type": "request",
+    "id": 1,
+    "method": "GET",
+    "path": "/v1/models",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T08:57:35.160Z",
+    "type": "body",
+    "id": 1,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T08:57:35.162Z",
+    "type": "disconnect",
+    "id": 1,
+    "path": "/v1/models",
+    "elapsedMs": 7,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T09:05:03.762Z",
+    "type": "request",
+    "id": 2,
+    "method": "GET",
+    "path": "/v1/models",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T09:05:03.763Z",
+    "type": "body",
+    "id": 2,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T09:05:03.763Z",
+    "type": "disconnect",
+    "id": 2,
+    "path": "/v1/models",
+    "elapsedMs": 1,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T09:14:22.482Z",
+    "type": "request",
+    "id": 3,
+    "method": "GET",
+    "path": "/v1/models",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T09:14:22.482Z",
+    "type": "body",
+    "id": 3,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T09:14:22.483Z",
+    "type": "disconnect",
+    "id": 3,
+    "path": "/v1/models",
+    "elapsedMs": 1,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T09:15:04.623Z",
+    "type": "request",
+    "id": 4,
+    "method": "GET",
+    "path": "/v1/models",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T09:15:04.623Z",
+    "type": "body",
+    "id": 4,
+    "byteLength": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model": null,
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T09:15:04.624Z",
+    "type": "disconnect",
+    "id": 4,
+    "path": "/v1/models",
+    "elapsedMs": 1,
+    "finished": true
+  },
+  {
+    "at": "2026-10-11T09:15:55.034Z",
+    "type": "request",
+    "id": 5,
+    "method": "POST",
+    "path": "/v1/responses",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T09:15:55.035Z",
+    "type": "body",
+    "id": 5,
+    "byteLength": 14749,
+    "sha256": "59f21b4d4676c300f4e7f38925553eed3c9c5d4afecca017e3c6a2d90ff6b0a5",
+    "model": "gpt-5.6-luna",
+    "offeredTools": [
+      "workspace_overview",
+      "update_run_plan",
+      "load_tool_groups",
+      "project_create",
+      "music_read",
+      "music_save_draft",
+      "music_update_work",
+      "music_reuse_work",
+      "audio_generation_capabilities",
+      "music_generate",
+      "audio_generation_check"
+    ]
+  },
+  {
+    "at": "2026-10-11T09:15:55.281Z",
+    "type": "disconnect",
+    "id": 5,
+    "path": "/v1/responses",
+    "elapsedMs": 247,
+    "finished": false
+  }
+]

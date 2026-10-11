@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "fetchedAt": "2026-10-11T11:38:45.638Z",
+  "source": "https://aihubmix.com/api/v1/models",
+  "method": "GET",
+  "authorizationSent": false,
+  "paidRequests": 0,
+  "httpStatus": 200,
+  "responseBytes": 884434,
+  "responseSha256": "3d5d56a2346a82244233ce0716dceb4f903d90f2c7c681919d808359cca6baa7",
+  "success": true,
+  "modelCount": 870,
+  "selectedModel": {
+    "model_id": "gpt-6-luna",
+    "model_name": "GPT 6 Luna",
+    "types": "llm",
+    "input_modalities": "text,image",
+    "output_modalities": "text",
+    "endpoints": "",
+    "context_length": 1050000,
+    "max_output": 128000,
+    "schema_checked": false,
+    "vendor": "openai",
+    "last_updated": "2026-09-23",
+    "release_date": "2026-09-23"
+  },
+  "capabilitiesFieldPresent": false,
+  "officialPages": [
+    "https://aihubmix.com/model/gpt-6-luna",
+    "https://preview.aihubmix.com/model/gpt-6-luna"
+  ],
+  "scope": "Public supplier declared input capability only; no actual image inference or key entitlement proven"
+}

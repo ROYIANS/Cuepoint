@@ -1,0 +1,61 @@
+{
+  "format": "cuepoint.synthetic-native-product-acceptance.v1",
+  "marker": "CUEPOINT-NATIVE-FULL-20261011-Q7",
+  "expectedDocumentText": [
+    "CUEPOINT-NATIVE-FULL-20261011-Q7",
+    "第一场：雨夜。角色林七举着红色雨伞，走进蓝色车站。",
+    "第二场：清晨。道具是一封没有寄出的信；风格为暖色写实。",
+    "Native project document parsing fixture. Imported bytes must remain internal."
+  ],
+  "synthetic": true,
+  "userFilesRead": false,
+  "generators": {
+    "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+    "Pillow": "12.3.0",
+    "reportlab": "4.4.9",
+    "audio": "wave PCM16 mono 48000Hz 2s 440Hz",
+    "video": "fresh AVFoundation H264 64x48 12fps 24frames (existing generator source only)"
+  },
+  "sourceHashes": {
+    "generate-sources.py": "a361685b623f35cd4d4e73984928a9c08cbf1e8a29016be8a506ddaee907ffa9",
+    "generate-video.swift": "e1b4cb5f25a81b107dc1ffa59e0b7f1380ca224a222cbec694934b52a8e180e8"
+  },
+  "files": {
+    "image.png": {
+      "bytes": 310,
+      "sha256": "7dabaf0fb9a110732227780dd0d911a9636bd78cca748407d72d9c1ad5dc5c3a"
+    },
+    "movie.mp4": {
+      "bytes": 2769,
+      "sha256": "a5ef9047018980af3b5147b5145400787584781b3a15c87a161b04e130df57d5"
+    },
+    "tone.wav": {
+      "bytes": 192044,
+      "sha256": "80053305c2619f6f760e7296896f0fa8459dd247ee302d65847b0bce9a561883"
+    },
+    "reference.pdf": {
+      "bytes": 2811,
+      "sha256": "91d9515f914c355d644457604647c899124232630c00defd896a631c9ba9e56d"
+    },
+    "reference.docx": {
+      "bytes": 1094,
+      "sha256": "9a4e809e448d7d4288f61cea30ef5d42a22c1145dedaa18f1e47900647b4e80a"
+    },
+    "reference.txt": {
+      "bytes": 269,
+      "sha256": "9477cf0846efbaa494453509d08c8447df2053e9f47f7fdec0f6e3da8cef45b3"
+    },
+    "reference.md": {
+      "bytes": 274,
+      "sha256": "36a734f3d4c4ce7fbffec7d5205e02a4b89960364d70fc88319743f71a71fc92"
+    },
+    "existing-empty.csv": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "existing-keep.csv": {
+      "bytes": 40,
+      "sha256": "5015c92162771643b5d790bf7a7c0582f1b2018360de44dd18f631009f65c041"
+    }
+  }
+}

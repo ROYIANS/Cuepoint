@@ -515,3 +515,64 @@ Wrong: infer obsolete CSS from folder redesign or screenshot absence, or relax a
 ## Voice batches, selection and placement (2026-10-10)
 
 Dexie v24 adds `audioGenerationBatches`, `audioGenerationBatchItems` and `audioArrangementProposals`; legacy v23 audio records remain unchanged. The complete seven-section executable contract is [audio-batch-arrangement.md](./audio-batch-arrangement.md). This delivers bounded voice placement in the audio workspace; it does not add musical arrangement, MIDI, stems, covers or continuation. Generated sound, available local sound, selected version, placed clip and audition verification stay separate states. `deleteAudioTrack` and `deleteAudioSpeaker` remain intentional owner/CAS/atomic repository API contracts even where the current UI offers no caller.
+
+## Exact numeric clip editing (2026-10-11)
+
+### 1. Scope / Trigger
+
+Read before changing numeric controls populated from decoded source duration or
+persisted clip values, especially forms in native WebKit. An unchanged legal
+8.945-second recording must not block submission of a gain/fade edit because the
+browser invents an integer step or the UI imposes a 0.01-second grid.
+
+### 2. Signatures / Owners
+
+`AudioTimeline.tsx` owns ClipInspector string fields and converts with `Number`
+on submit. `AudioClipHistory.executePatch(clip, patch: AudioPatch<AudioClip>)`
+in `lib/audio/commands.ts` uses chapter-document replacement with revision guards;
+`db/audio.ts` owns finite values, trim/gain/fade bounds and ownership validation.
+
+### 3. Contracts
+
+Use `type="number" step="any" required` for startSec, trimStartSec, trimEndSec,
+gain, fadeInSec and fadeOutSec. Retain `min={0}` and gain `max={4}`. Initialize from
+`String(clip[field])`; preserve the exact finite numeric value without rounding or
+`toFixed` in the edit/save path. A display-only formatter is not persisted state.
+Other numeric controls must derive step from their actual domain: decoded duration
+is fractional, while requested music generation seconds retain the integer rule
+above. Permissive HTML step never weakens repository validation or revision CAS.
+
+### 4. Validation / Error Matrix
+
+| Input | Required result |
+| --- | --- |
+| Unchanged trimEndSec 8.945 with legal gain/fade change | Native form accepts; shared command saves exact values |
+| Legal higher-precision start/trim/fade/gain | Preserve values through edit, undo/redo and persisted readback |
+| NaN/Infinity/negative, gain > 4, invalid trim or excessive fades | Existing owner rejects; no partial write or history entry |
+| Stale revision or changed chapter document | Existing CAS/history conflict; no overwrite |
+
+### 5. Good / Base / Bad Cases
+
+Good: edit gain to 0.753 while preserving trimEndSec 8.945. Base: an unchanged
+fractional source value remains submittable. Bad: round to 8.95 to pass HTML
+validation, omit step (implicit integer), or apply step 0.01 without a domain rule.
+
+### 6. Tests Required
+
+`audioClipInspectorPrecision.test.ts` executes actual component callbacks and
+repositories: assert all six input attributes, original 8.945 duration, precise
+submitted fields, real undo/redo controls, unchanged source bytes, and invalid
+input with no row/history mutation. Keep `audioEngineCommands.test.ts` revision
+and stale-history guards. Separately verify actual native HTML validation and
+save/undo/redo/cold-reopen; a callback host does not simulate WebKit validation.
+For external audio/music saves also follow the shared
+[published-save warning contract](./native-product-runtime.md#native-save-and-external-links).
+
+### 7. Wrong vs Correct
+
+```tsx
+// Wrong: legal stored duration fails step validation or gets silently rounded.
+<Input type="number" step={0.01} value={trimEndSec.toFixed(2)} />
+// Correct: the form accepts exact values; the shared command validates them.
+<Input type="number" min={0} step="any" required value={String(trimEndSec)} />
+```

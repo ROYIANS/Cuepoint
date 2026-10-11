@@ -1,0 +1,154 @@
+[
+  {
+    "at": "2026-10-11T09:24:36.754Z",
+    "type": "request",
+    "id": 1,
+    "method": "POST",
+    "path": "/v1/responses",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T09:24:36.756Z",
+    "type": "body",
+    "id": 1,
+    "byteLength": 14749,
+    "sha256": "59f21b4d4676c300f4e7f38925553eed3c9c5d4afecca017e3c6a2d90ff6b0a5",
+    "model": "gpt-5.6-luna",
+    "offeredTools": [
+      "workspace_overview",
+      "update_run_plan",
+      "load_tool_groups",
+      "project_create",
+      "music_read",
+      "music_save_draft",
+      "music_update_work",
+      "music_reuse_work",
+      "audio_generation_capabilities",
+      "music_generate",
+      "audio_generation_check"
+    ]
+  },
+  {
+    "at": "2026-10-11T09:24:37.003Z",
+    "type": "disconnect",
+    "id": 1,
+    "path": "/v1/responses",
+    "elapsedMs": 249,
+    "finished": false
+  },
+  {
+    "at": "2026-10-11T09:24:37.076Z",
+    "type": "request",
+    "id": 2,
+    "method": "POST",
+    "path": "/v1/responses",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T09:24:37.077Z",
+    "type": "body",
+    "id": 2,
+    "byteLength": 15201,
+    "sha256": "47daac06d1f7508268c5a15f78ece75d38176d5143b0348d981c85ff9dd175cc",
+    "model": "gpt-5.6-luna",
+    "offeredTools": [
+      "workspace_overview",
+      "update_run_plan",
+      "load_tool_groups",
+      "project_create",
+      "music_read",
+      "music_save_draft",
+      "music_update_work",
+      "music_reuse_work",
+      "audio_generation_capabilities",
+      "music_generate",
+      "audio_generation_check"
+    ]
+  },
+  {
+    "at": "2026-10-11T09:24:37.444Z",
+    "type": "disconnect",
+    "id": 2,
+    "path": "/v1/responses",
+    "elapsedMs": 368,
+    "finished": false
+  },
+  {
+    "at": "2026-10-11T09:24:37.499Z",
+    "type": "request",
+    "id": 3,
+    "method": "POST",
+    "path": "/v1/responses",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T09:24:37.500Z",
+    "type": "body",
+    "id": 3,
+    "byteLength": 17704,
+    "sha256": "699ed81537caa6da93f815d6d0e72a56c25ae6b03038e7dab9cf9f53580f95f7",
+    "model": "gpt-5.6-luna",
+    "offeredTools": [
+      "workspace_overview",
+      "update_run_plan",
+      "load_tool_groups",
+      "project_create",
+      "music_read",
+      "music_save_draft",
+      "music_update_work",
+      "music_reuse_work",
+      "audio_generation_capabilities",
+      "music_generate",
+      "audio_generation_check"
+    ]
+  },
+  {
+    "at": "2026-10-11T09:24:37.866Z",
+    "type": "disconnect",
+    "id": 3,
+    "path": "/v1/responses",
+    "elapsedMs": 367,
+    "finished": false
+  },
+  {
+    "at": "2026-10-11T09:24:37.924Z",
+    "type": "request",
+    "id": 4,
+    "method": "POST",
+    "path": "/v1/responses",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T09:24:37.925Z",
+    "type": "body",
+    "id": 4,
+    "byteLength": 1848,
+    "sha256": "3c7d2b060e1f13047c2236fee3183d246f9a8a64519e455b67c51f42a2b26449",
+    "model": "gpt-5.6-luna",
+    "offeredTools": []
+  },
+  {
+    "at": "2026-10-11T09:24:38.293Z",
+    "type": "disconnect",
+    "id": 4,
+    "path": "/v1/responses",
+    "elapsedMs": 369,
+    "finished": false
+  }
+]

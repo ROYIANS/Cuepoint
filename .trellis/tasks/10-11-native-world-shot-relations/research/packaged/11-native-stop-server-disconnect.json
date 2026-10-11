@@ -1,0 +1,35 @@
+[
+  {
+    "at": "2026-10-11T08:05:15.785Z",
+    "type": "request",
+    "id": 3,
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "query": "",
+    "origin": "tauri://localhost",
+    "authorizationPresent": true,
+    "cookiePresent": false,
+    "contentType": "application/json"
+  },
+  {
+    "at": "2026-10-11T08:05:15.787Z",
+    "type": "body",
+    "id": 3,
+    "byteLength": 5614,
+    "sha256": "fc630b621267f2f378804550a958504fd7ad9fce9c6f6ac81c0eaf00009d4553",
+    "model": "fixture-stop",
+    "offeredTools": [
+      "workspace_overview",
+      "update_run_plan",
+      "load_tool_groups"
+    ]
+  },
+  {
+    "at": "2026-10-11T08:05:29.881Z",
+    "type": "disconnect",
+    "id": 3,
+    "path": "/v1/chat/completions",
+    "elapsedMs": 14096,
+    "finished": false
+  }
+]

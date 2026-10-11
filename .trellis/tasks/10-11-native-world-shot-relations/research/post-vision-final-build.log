@@ -1,0 +1,1485 @@
+
+> cuepoint-tauri-prototype@0.1.0 build:frontend /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node scripts/build-frontend.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 13180 modules transformed.
+rendering chunks...
+[plugin vite:reporter] 
+(!) /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/database.ts is dynamically imported by /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/runtimeHttpPolicy.ts but also statically imported by /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentComposerAttention.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentControls.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentGenerationBatches.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentGenerationResults.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ContextParameters.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/CreatedEntityLinks.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/GenerationReview.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/MemoryContextDetails.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/MessageList.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ReferenceAttachments.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ReferenceLibrary.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/TaskRecords.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/chatExecutionFlows.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/AssetLibraryPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/CharacterDetailPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/PropDetailPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/SceneDetailPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/StyleDetailPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/WorldSettingPanel.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioExports.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioGenerationBatches.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioInspector.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioSources.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioWorkspacePage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/ScriptDocument.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/SpeechControls.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/VoiceLibrary.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/VoiceReferencePicker.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audioMusic/shared.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/media/MediaPicker.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/music/MusicCreation.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/music/MusicWorkspacePage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/music/switchMusicVariant.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/produce/ProducePage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/produce/ProductionProposalsPanel.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/produce/StoryboardPrintPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/AssetLibraryPages.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/ConnectorsPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/IpProfilesPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/MaterialLibraryPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/ProjectIpPicker.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/materials/LegacyMaterialSources.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/materials/MaterialControls.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/materials/MaterialDetailPanel.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentContextPreview.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentFinalReview.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentFinishingCheck.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGeneration.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGenerationBatches.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGenerationTarget.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentProjectCreation.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentRuns.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentSettings.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskGuards.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskRecords.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskWrapups.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTasks.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentToolRecovery.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assets.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audio.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioArrangement.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioGeneration.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioGenerationBatches.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioShared.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/cascadeCommands.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/chat.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/connectors.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/contextSettings.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/episodes.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/generationPreferences.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/ipProfiles.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/materials.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/media.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/memoryRetrieval.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/music.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/productionProposals.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/productionShared.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/projectMemories.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/projects.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/references.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/searchConnections.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/shots.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/taskAudioGenerationEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/taskGenerationEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioArrangementTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioBatchTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioGenerationTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioProjectContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessStore.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessWriteReceipt.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/contextCompaction.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/finalReviewEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationBatchRuntime.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationPreparation.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationRuntime.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/imageDiscovery.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/imageQueue.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/ipTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/libraryToolHelpers.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/materialContent.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/materialImageInput.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/materialTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/memoryContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/memoryTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/musicGenerationReview.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/musicTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/projectContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/projectScope.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/referenceContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/referenceEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/referenceTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/runChat.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/runOwnership.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/taskContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/taskTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/taskWrapup.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/toolLoading.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/tools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/webTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/wrapupEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/referenceWire.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/tavily.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audio/buffers.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audio/scriptImport.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/batchEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/batchPreparation.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/batchRuntime.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/outputEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/reference.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/runtime.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioProjectPackage.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/media.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/productionHandoff.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/projectPackage.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/references/import.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/studioLibraryQueries.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/useShotMedia.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/videoWorkspaceRepository.tsx, dynamic import will not move module into another chunk.
+
+computing gzip size...
+desktop/tauri/dist/normal/assets/CNS2-V-DgHqi_gL.bcmap                       0.09 kB
+desktop/tauri/dist/normal/assets/Roman-CGyUGrKi.bcmap                        0.10 kB
+desktop/tauri/dist/normal/assets/Katakana-DueN_6wN.bcmap                     0.10 kB
+desktop/tauri/dist/normal/assets/ETenms-B5-H-DbS1LlRr.bcmap                  0.10 kB
+desktop/tauri/dist/normal/assets/UniJIS-UCS2-HW-H-BfJ3t__Z.bcmap             0.12 kB
+desktop/tauri/dist/normal/assets/Hiragana-Dy6yEHKG.bcmap                     0.12 kB
+desktop/tauri/dist/normal/assets/Hankaku-SMDjWZXJ.bcmap                      0.13 kB
+desktop/tauri/dist/normal/assets/B5-V-3ShXAXP7.bcmap                         0.14 kB
+desktop/tauri/dist/normal/assets/CNS1-V-BUvSsmpl.bcmap                       0.14 kB
+desktop/tauri/dist/normal/assets/B5pc-V-1X0fY8mT.bcmap                       0.14 kB
+desktop/tauri/dist/normal/assets/HKdla-B5-V-CHovDFKh.bcmap                   0.15 kB
+desktop/tauri/dist/normal/assets/HKdlb-B5-V-CDfiFKye.bcmap                   0.15 kB
+desktop/tauri/dist/normal/assets/HKgccs-B5-V-Bb0FD7uo.bcmap                  0.15 kB
+desktop/tauri/dist/normal/assets/HKm314-B5-V-BrK5Z_J-.bcmap                  0.15 kB
+desktop/tauri/dist/normal/assets/HKm471-B5-V-B7Ks-vkf.bcmap                  0.15 kB
+desktop/tauri/dist/normal/assets/UniCNS-UCS2-V-CbsnO1ia.bcmap                0.16 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF16-V-DoPO_42D.bcmap               0.16 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF8-V-BD4cmnNX.bcmap                0.16 kB
+desktop/tauri/dist/normal/assets/ETen-B5-V-CyIout1L.bcmap                    0.16 kB
+desktop/tauri/dist/normal/assets/ETHK-B5-V-DmzBBgI2.bcmap                    0.16 kB
+desktop/tauri/dist/normal/assets/HKscs-B5-V-CrljkNDo.bcmap                   0.16 kB
+desktop/tauri/dist/normal/assets/KSC-V-CDXb0xyy.bcmap                        0.16 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF32-V-DpuHKqNE.bcmap               0.16 kB
+desktop/tauri/dist/normal/assets/KSC-EUC-V-C8-Y2jkl.bcmap                    0.16 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF16-V-EgvK-6IG.bcmap                0.16 kB
+desktop/tauri/dist/normal/assets/KSC-Johab-V-CWzqnmVV.bcmap                  0.17 kB
+desktop/tauri/dist/normal/assets/KSCms-UHC-V-DaEePsjg.bcmap                  0.17 kB
+desktop/tauri/dist/normal/assets/KSCpc-EUC-V-Bd6pD5ID.bcmap                  0.17 kB
+desktop/tauri/dist/normal/assets/V-BJkwLeFB.bcmap                            0.17 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF32-V-CnOTbPsn.bcmap                0.17 kB
+desktop/tauri/dist/normal/assets/78-V-CJGcNX1t.bcmap                         0.17 kB
+desktop/tauri/dist/normal/assets/KSCms-UHC-HW-V-DKemUgQi.bcmap               0.17 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF8-V-BIFFPWWm.bcmap                 0.17 kB
+desktop/tauri/dist/normal/assets/EUC-V-BQ9CW2K_.bcmap                        0.17 kB
+desktop/tauri/dist/normal/assets/RKSJ-V-CVQ5ujKs.bcmap                       0.17 kB
+desktop/tauri/dist/normal/assets/ETenms-B5-V-DsL3AkeM.bcmap                  0.17 kB
+desktop/tauri/dist/normal/assets/78-EUC-V-ChJxef36.bcmap                     0.17 kB
+desktop/tauri/dist/normal/assets/78-RKSJ-V-CyaguwXf.bcmap                    0.17 kB
+desktop/tauri/dist/normal/assets/GB-V-DQcXdwec.bcmap                         0.18 kB
+desktop/tauri/dist/normal/assets/GBT-V-DVsZ47Yj.bcmap                        0.18 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF16-V-E1RoE6KW.bcmap                0.18 kB
+desktop/tauri/dist/normal/assets/UniKS-UCS2-V-ahlksFWQ.bcmap                 0.18 kB
+desktop/tauri/dist/normal/assets/GB-EUC-V-DUJE8ZfE.bcmap                     0.18 kB
+desktop/tauri/dist/normal/assets/WP-Symbol-C3zzKJnO.bcmap                    0.18 kB
+desktop/tauri/dist/normal/assets/GBK-EUC-V-bmo5E_xa.bcmap                    0.18 kB
+desktop/tauri/dist/normal/assets/GBT-EUC-V-CCaONgYB.bcmap                    0.18 kB
+desktop/tauri/dist/normal/assets/GBKp-EUC-V-FKuJrjD8.bcmap                   0.18 kB
+desktop/tauri/dist/normal/assets/GBpc-EUC-V-BNBtOgzw.bcmap                   0.18 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF8-V-C8SGUjFI.bcmap                 0.18 kB
+desktop/tauri/dist/normal/assets/GBTpc-EUC-V-D_dpKF5g.bcmap                  0.18 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF32-V-BFm4myiz.bcmap                0.18 kB
+desktop/tauri/dist/normal/assets/UniGB-UCS2-V-COOBrDBb.bcmap                 0.19 kB
+desktop/tauri/dist/normal/assets/Ext-V-ByyLJMVu.bcmap                        0.22 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-0-DCLN2jmY.bcmap                  0.22 kB
+desktop/tauri/dist/normal/assets/Ext-RKSJ-V-gySMsgy2.bcmap                   0.22 kB
+desktop/tauri/dist/normal/assets/GBK2K-V-VEqjiYVJ.bcmap                      0.22 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-0-7ueYY-cc.bcmap               0.23 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-1-DymoVrld.bcmap               0.23 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-2-WYxwCoVU.bcmap               0.23 kB
+desktop/tauri/dist/normal/assets/Adobe-Korea1-0-A0Ew6GJu.bcmap               0.24 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-3-DU7EG9_k.bcmap               0.24 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-1-C_oGAEc2.bcmap                  0.25 kB
+desktop/tauri/dist/normal/assets/NWP-V-DvbaGBQ0.bcmap                        0.25 kB
+desktop/tauri/dist/normal/assets/90pv-RKSJ-V-BuoQaCHG.bcmap                  0.26 kB
+desktop/tauri/dist/normal/assets/Add-V-CzFvKnCs.bcmap                        0.28 kB
+desktop/tauri/dist/normal/assets/Add-RKSJ-V-C7YDsPzV.bcmap                   0.29 kB
+desktop/tauri/dist/normal/assets/78ms-RKSJ-V-4hl06FMz.bcmap                  0.29 kB
+desktop/tauri/dist/normal/assets/90ms-RKSJ-V-BbstlayK.bcmap                  0.29 kB
+desktop/tauri/dist/normal/assets/90msp-RKSJ-V-BWep_0YK.bcmap                 0.29 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-0-CfVBOElR.bcmap                 0.32 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-4-CPqEnWe7.bcmap               0.34 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-1-Cs9TI-Yv.bcmap                 0.37 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-2-D3SWzMKj.bcmap                 0.38 kB
+desktop/tauri/dist/normal/assets/Adobe-Korea1-1-DFSgDZ4w.bcmap               0.39 kB
+desktop/tauri/dist/normal/assets/Adobe-Korea1-2-LZ89XEQ6.bcmap               0.39 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-3-BNxX-hNa.bcmap                 0.40 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-4-uApBOf1n.bcmap                 0.41 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-5-BWUfkzOP.bcmap                 0.41 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-6-DfjBny4_.bcmap                 0.41 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-5-CyFviWdc.bcmap               0.43 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-2-BT5g0uLo.bcmap                  0.47 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-3-BWe_tZZF.bcmap                  0.47 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-6-8p9YIft8.bcmap               0.49 kB
+desktop/tauri/dist/normal/assets/CNS2-H-COHfjmw4.bcmap                       0.50 kB
+desktop/tauri/dist/normal/assets/GB-H-CjAQlF1j.bcmap                         0.53 kB
+desktop/tauri/dist/normal/assets/RKSJ-H-CotmKIAY.bcmap                       0.53 kB
+desktop/tauri/dist/normal/assets/GB-EUC-H-OgfW-rVY.bcmap                     0.55 kB
+desktop/tauri/dist/normal/assets/H-BJYV6_el.bcmap                            0.55 kB
+desktop/tauri/dist/normal/assets/GBpc-EUC-H-4mXfmDQd.bcmap                   0.56 kB
+desktop/tauri/dist/normal/assets/EUC-H-D0J4HUB1.bcmap                        0.58 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-4-CYF1KDey.bcmap                  0.60 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-5-B89PBerI.bcmap                  0.63 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF16-V-DfK_Aqy1.bcmap               0.64 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF16-V-BSHgoaRy.bcmap           0.65 kB
+desktop/tauri/dist/normal/assets/UniJIS-UCS2-V-Cr3xs5m4.bcmap                0.66 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF32-V-0rh54ED3.bcmap               0.68 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF8-V-BGWFHinB.bcmap                0.68 kB
+desktop/tauri/dist/normal/assets/UniJIS-UCS2-HW-V-BZyQaeYZ.bcmap             0.68 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF32-V-CH3k_ouF.bcmap           0.68 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF8-V-D8AJhywu.bcmap            0.68 kB
+desktop/tauri/dist/normal/assets/UniJISX0213-UTF32-V-Cz7JBDr9.bcmap          0.68 kB
+desktop/tauri/dist/normal/assets/UniJISX02132004-UTF32-V-BqqDIAe5.bcmap      0.69 kB
+desktop/tauri/dist/normal/assets/UniJISPro-UCS2-V-BpvX7JBA.bcmap             0.69 kB
+desktop/tauri/dist/normal/assets/UniJISPro-UCS2-HW-V-DLNkNO1x.bcmap          0.71 kB
+desktop/tauri/dist/normal/assets/CNS1-H-DAbVz1sI.bcmap                       0.71 kB
+desktop/tauri/dist/normal/assets/90msp-RKSJ-H-GTsoumJQ.bcmap                 0.72 kB
+desktop/tauri/dist/normal/assets/90ms-RKSJ-H-Bhsfh4Ys.bcmap                  0.72 kB
+desktop/tauri/dist/normal/assets/UniJISPro-UTF8-V-Db5K6XXE.bcmap             0.73 kB
+desktop/tauri/dist/normal/assets/83pv-RKSJ-H-DNQtuaxs.bcmap                  0.91 kB
+desktop/tauri/dist/normal/index.html                                         0.96 kB │ gzip:     0.47 kB
+desktop/tauri/dist/normal/assets/90pv-RKSJ-H-DOcWKG7K.bcmap                  0.98 kB
+desktop/tauri/dist/normal/assets/B5-H-Cw4_8on0.bcmap                         1.09 kB
+desktop/tauri/dist/normal/assets/B5pc-H-BLVOWhvh.bcmap                       1.10 kB
+desktop/tauri/dist/normal/assets/ETen-B5-H-BUa4x82H.bcmap                    1.13 kB
+desktop/tauri/dist/normal/assets/HKm314-B5-H-CUeI2x46.bcmap                  1.77 kB
+desktop/tauri/dist/normal/assets/CNS-EUC-H-C1HifF4e.bcmap                    1.78 kB
+desktop/tauri/dist/normal/assets/KSC-H-CUtFgdXl.bcmap                        1.83 kB
+desktop/tauri/dist/normal/assets/KSC-EUC-H-CYoqfsaA.bcmap                    1.85 kB
+desktop/tauri/dist/normal/assets/CNS-EUC-V-DYWNmJNX.bcmap                    1.92 kB
+desktop/tauri/dist/normal/assets/KSCpc-EUC-H-BxNLD7US.bcmap                  2.02 kB
+desktop/tauri/dist/normal/assets/HKm471-B5-H-B_3IWC_G.bcmap                  2.17 kB
+desktop/tauri/dist/normal/assets/HKgccs-B5-H-BSg_4Hb2.bcmap                  2.29 kB
+desktop/tauri/dist/normal/assets/78-H-CSvm1opZ.bcmap                         2.38 kB
+desktop/tauri/dist/normal/assets/78-RKSJ-H-34XPL1-s.bcmap                    2.40 kB
+desktop/tauri/dist/normal/assets/78-EUC-H-Uf9aYsyl.bcmap                     2.40 kB
+desktop/tauri/dist/normal/assets/Add-RKSJ-H-BpPRzomz.bcmap                   2.41 kB
+desktop/tauri/dist/normal/assets/HKdlb-B5-H-Bf7o2mkD.bcmap                   2.41 kB
+desktop/tauri/dist/normal/assets/Add-H-1H-FQZVX.bcmap                        2.42 kB
+desktop/tauri/dist/normal/assets/Ext-H-BSOXjlXj.bcmap                        2.54 kB
+desktop/tauri/dist/normal/assets/Ext-RKSJ-H-DGTwwnmY.bcmap                   2.54 kB
+desktop/tauri/dist/normal/assets/78ms-RKSJ-H-BuwLY695.bcmap                  2.65 kB
+desktop/tauri/dist/normal/assets/HKdla-B5-H-Bg4tZIUs.bcmap                   2.65 kB
+desktop/tauri/dist/normal/assets/NWP-H-BSh0nlh5.bcmap                        2.77 kB
+desktop/tauri/dist/normal/assets/KSCms-UHC-H-i6eA63f9.bcmap                  2.79 kB
+desktop/tauri/dist/normal/assets/KSCms-UHC-HW-H-lQjjyo98.bcmap               2.79 kB
+desktop/tauri/dist/normal/assets/ETHK-B5-H-1MLb5v9x.bcmap                    4.43 kB
+desktop/tauri/dist/normal/assets/HKscs-B5-H-CXbBbq6g.bcmap                   4.44 kB
+desktop/tauri/dist/normal/assets/GBT-H-DL9h-WkS.bcmap                        7.27 kB
+desktop/tauri/dist/normal/assets/GBT-EUC-H-BTsQIL1M.bcmap                    7.29 kB
+desktop/tauri/dist/normal/assets/GBTpc-EUC-H-DnIh5WJ3.bcmap                  7.30 kB
+desktop/tauri/dist/normal/assets/GBKp-EUC-H-CElrnV5g.bcmap                  14.69 kB
+desktop/tauri/dist/normal/assets/GBK-EUC-H-CAORqCkf.bcmap                   14.69 kB
+desktop/tauri/dist/normal/assets/FoxitSymbol-BVtbc20u.pfb                   16.73 kB
+desktop/tauri/dist/normal/assets/KSC-Johab-H-CGtV3MPT.bcmap                 16.79 kB
+desktop/tauri/dist/normal/assets/FoxitFixed-Dyd5Nipw.pfb                    17.60 kB
+desktop/tauri/dist/normal/assets/FoxitFixedBold-D5TuYRwj.pfb                18.06 kB
+desktop/tauri/dist/normal/assets/FoxitFixedItalic-DqjQkmbS.pfb              18.75 kB
+desktop/tauri/dist/normal/assets/FoxitFixedBoldItalic-BqlXQ_Yv.pfb          19.15 kB
+desktop/tauri/dist/normal/assets/FoxitSerifBold-DZZ4CclT.pfb                19.40 kB
+desktop/tauri/dist/normal/assets/FoxitSerif-qbgiDIe-.pfb                    19.47 kB
+desktop/tauri/dist/normal/assets/GBK2K-H-Cv55KPk8.bcmap                     19.66 kB
+desktop/tauri/dist/normal/assets/FoxitSerifBoldItalic-DSQtwd_X.pfb          20.73 kB
+desktop/tauri/dist/normal/assets/FoxitSerifItalic-CQs5lx9Y.pfb              21.23 kB
+desktop/tauri/dist/normal/assets/Adobe-Korea1-UCS2-BEQZuOdo.bcmap           23.29 kB
+desktop/tauri/dist/normal/assets/UniJIS-UCS2-H-2DbZ0MaQ.bcmap               25.44 kB
+desktop/tauri/dist/normal/assets/UniKS-UCS2-H-YeUc7k1L.bcmap                25.78 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF16-H-B0dvB-Td.bcmap               26.33 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF32-H-olR_LtmR.bcmap               26.45 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF8-H-CbpebD-y.bcmap                27.79 kB
+desktop/tauri/dist/normal/assets/FoxitDingbats-BaQLufoW.pfb                 29.51 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-UCS2-BA083yIo.bcmap              33.97 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF16-H-BlDDPdCK.bcmap              39.44 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF16-H-KXixH-HI.bcmap          39.53 kB
+desktop/tauri/dist/normal/assets/UniJISX0213-UTF32-H-BavAhZjb.bcmap         40.52 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF32-H-BIQPWkjv.bcmap              40.54 kB
+desktop/tauri/dist/normal/assets/UniJISX02132004-UTF32-H-DAH-AgUq.bcmap     40.61 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF32-H-CXrD-9YE.bcmap          40.63 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-UCS2-BL-4M2vS.bcmap           40.95 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-UCS2-fO900upv.bcmap             41.19 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF8-H-CGusholx.bcmap               41.70 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF8-H-BkOctZjn.bcmap           41.78 kB
+desktop/tauri/dist/normal/assets/UniGB-UCS2-H-D7xzRvZN.bcmap                43.37 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF16-H-DKjbEwc0.bcmap               44.09 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF32-H-Behfouj5.bcmap               45.74 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF8-H-EROft1ro.bcmap                46.84 kB
+desktop/tauri/dist/normal/assets/UniCNS-UCS2-H-DWzv8UhH.bcmap               48.28 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF16-H-Bw0JKgCq.bcmap              50.42 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF32-H-IE_GrH2i.bcmap              52.68 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF8-H-BbLcFh6Q.bcmap               53.63 kB
+desktop/tauri/dist/normal/assets/LiberationSans-BoldItalic-Bj53-jFw.ttf    135.12 kB
+desktop/tauri/dist/normal/assets/LiberationSans-Bold-BPt4bU5Z.ttf          137.05 kB
+desktop/tauri/dist/normal/assets/LiberationSans-Regular-cbskN6YR.ttf       139.51 kB
+desktop/tauri/dist/normal/assets/LiberationSans-Italic-5QhGB3P9.ttf        162.04 kB
+desktop/tauri/dist/normal/assets/docx.worker-D6l3sNo2.js                   600.15 kB
+desktop/tauri/dist/normal/assets/pdf.worker.min-LyOxJPrg.mjs             1,072.84 kB
+desktop/tauri/dist/normal/assets/MessageList-SMBnSpKm.css                   17.15 kB │ gzip:     3.42 kB
+desktop/tauri/dist/normal/assets/index-CN2DPAOe.css                        211.71 kB │ gzip:    34.56 kB
+desktop/tauri/dist/normal/assets/core-DV6XEvTN.js                            0.10 kB │ gzip:     0.11 kB
+desktop/tauri/dist/normal/assets/codeowners-Bp6g37R7.js                      0.55 kB │ gzip:     0.32 kB
+desktop/tauri/dist/normal/assets/useFillId-B4MHppgm.js                       0.67 kB │ gzip:     0.38 kB
+desktop/tauri/dist/normal/assets/shellsession-BADoaaVG.js                    0.71 kB │ gzip:     0.43 kB
+desktop/tauri/dist/normal/assets/tsv-B_m7g4N7.js                             0.74 kB │ gzip:     0.34 kB
+desktop/tauri/dist/normal/assets/html-derivative-DlHx6ybY.js                 0.90 kB │ gzip:     0.50 kB
+desktop/tauri/dist/normal/assets/git-rebase-r7XF79zn.js                      0.98 kB │ gzip:     0.44 kB
+desktop/tauri/dist/normal/assets/qmldir-C8lEn-DE.js                          1.00 kB │ gzip:     0.45 kB
+desktop/tauri/dist/normal/assets/csv-fuZLfV_i.js                             1.14 kB │ gzip:     0.37 kB
+desktop/tauri/dist/normal/assets/git-commit-F4YmCXRG.js                      1.23 kB │ gzip:     0.53 kB
+desktop/tauri/dist/normal/assets/xsl-CtQFsRM5.js                             1.39 kB │ gzip:     0.52 kB
+desktop/tauri/dist/normal/assets/dotenv-Da5cRb03.js                          1.42 kB │ gzip:     0.53 kB
+desktop/tauri/dist/normal/assets/sparql-rVzFXLq3.js                          1.48 kB │ gzip:     0.82 kB
+desktop/tauri/dist/normal/assets/ini-BEwlwnbL.js                             1.53 kB │ gzip:     0.50 kB
+desktop/tauri/dist/normal/assets/fortran-fixed-form-CkoXwp7k.js              1.67 kB │ gzip:     0.69 kB
+desktop/tauri/dist/normal/assets/docker-BcOcwvcX.js                          1.74 kB │ gzip:     0.60 kB
+desktop/tauri/dist/normal/assets/desktop-BmXAJ9_W.js                         1.83 kB │ gzip:     0.76 kB
+desktop/tauri/dist/normal/assets/hxml-2-FPmUDs.js                            1.89 kB │ gzip:     0.90 kB
+desktop/tauri/dist/normal/assets/index-C9hje3JS.js                           1.98 kB │ gzip:     0.90 kB
+desktop/tauri/dist/normal/assets/wenyan-BV7otONQ.js                          2.16 kB │ gzip:     1.09 kB
+desktop/tauri/dist/normal/assets/jssm-C2t-YnRu.js                            2.24 kB │ gzip:     0.62 kB
+desktop/tauri/dist/normal/assets/reg-C-SQnVFl.js                             2.35 kB │ gzip:     0.70 kB
+desktop/tauri/dist/normal/assets/edge-FbVlp4U3.js                            2.36 kB │ gzip:     0.70 kB
+desktop/tauri/dist/normal/assets/index-BkAiyu0t.js                           2.49 kB │ gzip:     1.17 kB
+desktop/tauri/dist/normal/assets/diff-D97Zzqfu.js                            2.57 kB │ gzip:     0.70 kB
+desktop/tauri/dist/normal/assets/gleam-BspZqrRM.js                           2.58 kB │ gzip:     0.82 kB
+desktop/tauri/dist/normal/assets/index-CwGC4hZC.js                           2.58 kB │ gzip:     1.18 kB
+desktop/tauri/dist/normal/assets/erb-DXfck5VN.js                             2.61 kB │ gzip:     0.84 kB
+desktop/tauri/dist/normal/assets/hy-DFXneXwc.js                              2.65 kB │ gzip:     1.18 kB
+desktop/tauri/dist/normal/assets/nativeSystemServices-DQlGY4o2.js            2.65 kB │ gzip:     1.34 kB
+desktop/tauri/dist/normal/assets/json-Cp-IABpG.js                            2.82 kB │ gzip:     0.78 kB
+desktop/tauri/dist/normal/assets/openscad-C4EeE6gA.js                        2.82 kB │ gzip:     1.01 kB
+desktop/tauri/dist/normal/assets/log-2UxHyX5q.js                             2.85 kB │ gzip:     0.90 kB
+desktop/tauri/dist/normal/assets/cairo-KRGpt6FW.js                           2.94 kB │ gzip:     0.81 kB
+desktop/tauri/dist/normal/assets/berry-uYugtg8r.js                           3.01 kB │ gzip:     0.81 kB
+desktop/tauri/dist/normal/assets/jsonl-DcaNXYhu.js                           3.01 kB │ gzip:     0.79 kB
+desktop/tauri/dist/normal/assets/jsonc-Des-eS-w.js                           3.11 kB │ gzip:     0.80 kB
+desktop/tauri/dist/normal/assets/logo-BtOb2qkB.js                            3.13 kB │ gzip:     1.47 kB
+desktop/tauri/dist/normal/assets/po-BTJTHyun.js                              3.24 kB │ gzip:     0.91 kB
+desktop/tauri/dist/normal/assets/json5-C9tS-k6U.js                           3.25 kB │ gzip:     0.83 kB
+desktop/tauri/dist/normal/assets/mipsasm-CKIfxQSi.js                         3.26 kB │ gzip:     1.18 kB
+desktop/tauri/dist/normal/assets/tasl-QIJgUcNo.js                            3.29 kB │ gzip:     0.85 kB
+desktop/tauri/dist/normal/assets/rbs-CpoqiR4B.js                             3.31 kB │ gzip:     0.73 kB
+desktop/tauri/dist/normal/assets/genie-D0YGMca9.js                           3.36 kB │ gzip:     1.21 kB
+desktop/tauri/dist/normal/assets/rel-C3B-1QV4.js                             3.37 kB │ gzip:     1.11 kB
+desktop/tauri/dist/normal/assets/vala-CsfeWuGM.js                            3.37 kB │ gzip:     1.19 kB
+desktop/tauri/dist/normal/assets/splunk-BtCnVYZw.js                          3.44 kB │ gzip:     1.52 kB
+desktop/tauri/dist/normal/assets/fluent-C4IJs8-o.js                          3.61 kB │ gzip:     0.90 kB
+desktop/tauri/dist/normal/assets/ssh-config-_ykCGR6B.js                      3.62 kB │ gzip:     1.60 kB
+desktop/tauri/dist/normal/assets/jsonnet-DFQXde-d.js                         3.62 kB │ gzip:     1.05 kB
+desktop/tauri/dist/normal/assets/kdl-DV7GczEv.js                             3.63 kB │ gzip:     1.04 kB
+desktop/tauri/dist/normal/assets/glsl-DplSGwfg.js                            3.63 kB │ gzip:     1.41 kB
+desktop/tauri/dist/normal/assets/hurl-irOxFIW8.js                            3.65 kB │ gzip:     1.16 kB
+desktop/tauri/dist/normal/assets/narrat-DRg8JJMk.js                          3.67 kB │ gzip:     1.11 kB
+desktop/tauri/dist/normal/assets/turtle-BsS91CYL.js                          3.70 kB │ gzip:     0.98 kB
+desktop/tauri/dist/normal/assets/Mono-CU4rc9GZ.js                            3.76 kB │ gzip:     1.91 kB
+desktop/tauri/dist/normal/assets/zenscript-DVFEvuxE.js                       3.91 kB │ gzip:     1.28 kB
+desktop/tauri/dist/normal/assets/ron-D8l8udqQ.js                             3.91 kB │ gzip:     0.98 kB
+desktop/tauri/dist/normal/assets/gn-n2N0HUVH.js                              4.00 kB │ gzip:     1.49 kB
+desktop/tauri/dist/normal/assets/index-NpHtstey.js                           4.01 kB │ gzip:     1.43 kB
+desktop/tauri/dist/normal/assets/pascal-D93ZcfNL.js                          4.15 kB │ gzip:     1.67 kB
+desktop/tauri/dist/normal/assets/Text-_nCD2rpA.js                            4.36 kB │ gzip:     2.28 kB
+desktop/tauri/dist/normal/assets/tcl-dwOrl1Do.js                             4.43 kB │ gzip:     1.52 kB
+desktop/tauri/dist/normal/assets/nextflow-C-mBbutL.js                        4.51 kB │ gzip:     1.17 kB
+desktop/tauri/dist/normal/assets/rosmsg-BJDFO7_C.js                          4.52 kB │ gzip:     1.06 kB
+desktop/tauri/dist/normal/assets/http-jrhK8wxY.js                            4.55 kB │ gzip:     1.12 kB
+desktop/tauri/dist/normal/assets/polar-C0HS_06l.js                           4.67 kB │ gzip:     1.12 kB
+desktop/tauri/dist/normal/assets/sdbl-DVxCFoDh.js                            4.70 kB │ gzip:     2.01 kB
+desktop/tauri/dist/normal/assets/fennel-BYunw83y.js                          4.77 kB │ gzip:     1.53 kB
+desktop/tauri/dist/normal/assets/bibtex-CHM0blh-.js                          4.80 kB │ gzip:     0.83 kB
+desktop/tauri/dist/normal/assets/llvm-BZoOZj88.js                            5.04 kB │ gzip:     2.01 kB
+desktop/tauri/dist/normal/assets/wgsl-Dx-B1_4e.js                            5.14 kB │ gzip:     1.39 kB
+desktop/tauri/dist/normal/assets/gdresource-TyuKm33G.js                      5.29 kB │ gzip:     1.34 kB
+desktop/tauri/dist/normal/assets/qml-3beO22l8.js                             5.34 kB │ gzip:     1.38 kB
+desktop/tauri/dist/normal/assets/zig-VOosw3JB.js                             5.34 kB │ gzip:     1.55 kB
+desktop/tauri/dist/normal/assets/dax-CEL-wOlO.js                             5.37 kB │ gzip:     2.23 kB
+desktop/tauri/dist/normal/assets/bicep-Bmn6On1c.js                           5.38 kB │ gzip:     1.15 kB
+desktop/tauri/dist/normal/assets/xml-sdJ4AIDG.js                             5.38 kB │ gzip:     1.21 kB
+desktop/tauri/dist/normal/assets/awk-DMzUqQB5.js                             5.46 kB │ gzip:     1.38 kB
+desktop/tauri/dist/normal/assets/jinja-f2NsQr07.js                           5.69 kB │ gzip:     1.40 kB
+desktop/tauri/dist/normal/assets/lean-BZvkOJ9d.js                            5.78 kB │ gzip:     1.92 kB
+desktop/tauri/dist/normal/assets/powerquery-CEu0bR-o.js                      5.90 kB │ gzip:     1.52 kB
+desktop/tauri/dist/normal/assets/shaderlab-Dg9Lc6iA.js                       5.92 kB │ gzip:     2.08 kB
+desktop/tauri/dist/normal/assets/cypher-COkxafJQ.js                          5.96 kB │ gzip:     1.73 kB
+desktop/tauri/dist/normal/assets/coq-C7JzOVbR.js                             6.01 kB │ gzip:     1.95 kB
+desktop/tauri/dist/normal/assets/vb-Cu-pLBUe.js                              6.08 kB │ gzip:     2.33 kB
+desktop/tauri/dist/normal/assets/min-dark-CafNBF8u.js                        6.29 kB │ gzip:     1.71 kB
+desktop/tauri/dist/normal/assets/gdshader-DkwncUOv.js                        6.33 kB │ gzip:     1.73 kB
+desktop/tauri/dist/normal/assets/ara-BRHolxvo.js                             6.36 kB │ gzip:     1.81 kB
+desktop/tauri/dist/normal/assets/verilog-nZwndyjY.js                         6.41 kB │ gzip:     1.92 kB
+desktop/tauri/dist/normal/assets/clojure-P80f7IUj.js                         6.41 kB │ gzip:     1.42 kB
+desktop/tauri/dist/normal/assets/postcss-CXtECtnM.js                         6.42 kB │ gzip:     1.91 kB
+desktop/tauri/dist/normal/assets/red-hvxz__6c.js                             6.42 kB │ gzip:     1.63 kB
+desktop/tauri/dist/normal/assets/toml-vGWfd6FD.js                            6.43 kB │ gzip:     1.28 kB
+desktop/tauri/dist/normal/assets/proto-C7zT0LnQ.js                           6.55 kB │ gzip:     1.42 kB
+desktop/tauri/dist/normal/assets/chapel-DTp_pixX.js                          6.62 kB │ gzip:     1.85 kB
+desktop/tauri/dist/normal/assets/solarized-light-Dlz6yCKv.js                 6.63 kB │ gzip:     1.76 kB
+desktop/tauri/dist/normal/assets/r-Cf5RLm7j.js                               6.74 kB │ gzip:     1.84 kB
+desktop/tauri/dist/normal/assets/talonscript-CkByrt1z.js                     6.76 kB │ gzip:     1.49 kB
+desktop/tauri/dist/normal/assets/riscv-BM1_JUlF.js                           6.91 kB │ gzip:     1.98 kB
+desktop/tauri/dist/normal/assets/min-light-CTRr51gU.js                       6.97 kB │ gzip:     1.89 kB
+desktop/tauri/dist/normal/assets/soy-8wufbnw4.js                             6.98 kB │ gzip:     1.66 kB
+desktop/tauri/dist/normal/assets/solarized-dark-CpvCGNkr.js                  7.00 kB │ gzip:     1.83 kB
+desktop/tauri/dist/normal/assets/scheme-C98Dy4si.js                          7.17 kB │ gzip:     2.05 kB
+desktop/tauri/dist/normal/assets/index-BHBK9cIc.js                           7.20 kB │ gzip:     2.07 kB
+desktop/tauri/dist/normal/assets/index-DHTd3sLG.js                           7.21 kB │ gzip:     2.19 kB
+desktop/tauri/dist/normal/assets/hlsl-D3lLCCz7.js                            7.26 kB │ gzip:     2.19 kB
+desktop/tauri/dist/normal/assets/index-DGPqFyay.js                           7.27 kB │ gzip:     2.31 kB
+desktop/tauri/dist/normal/assets/index-s6oq-1Rz.js                           7.45 kB │ gzip:     2.21 kB
+desktop/tauri/dist/normal/assets/qss-IeuSbFQv.js                             7.47 kB │ gzip:     2.58 kB
+desktop/tauri/dist/normal/assets/index-DKkQHMNM.js                           7.66 kB │ gzip:     1.83 kB
+desktop/tauri/dist/normal/assets/prisma-Vru482bI.js                          7.74 kB │ gzip:     1.48 kB
+desktop/tauri/dist/normal/assets/index-KN49C0Fg.js                           7.80 kB │ gzip:     2.36 kB
+desktop/tauri/dist/normal/assets/systemd-4A_iFExJ.js                         7.87 kB │ gzip:     2.55 kB
+desktop/tauri/dist/normal/assets/index-BEmdYGKv.js                           7.89 kB │ gzip:     2.57 kB
+desktop/tauri/dist/normal/assets/regexp-CDVJQ6XC.js                          7.99 kB │ gzip:     1.42 kB
+desktop/tauri/dist/normal/assets/monokai-BRVnQi9A.js                         8.03 kB │ gzip:     1.94 kB
+desktop/tauri/dist/normal/assets/index-DXXpm5uI.js                           8.07 kB │ gzip:     2.04 kB
+desktop/tauri/dist/normal/assets/haml-D5jkg6IW.js                            8.26 kB │ gzip:     1.81 kB
+desktop/tauri/dist/normal/assets/index-B1Zt2xWe.js                           8.46 kB │ gzip:     2.13 kB
+desktop/tauri/dist/normal/assets/vue-html-AaS7Mt5G.js                        8.47 kB │ gzip:     1.68 kB
+desktop/tauri/dist/normal/assets/index-DepTTnBJ.js                           8.47 kB │ gzip:     2.13 kB
+desktop/tauri/dist/normal/assets/index-r46wsaGV.js                           8.49 kB │ gzip:     2.28 kB
+desktop/tauri/dist/normal/assets/plsql-ChMvpjG-.js                           8.51 kB │ gzip:     3.00 kB
+desktop/tauri/dist/normal/assets/dart-bE4Kk8sk.js                            8.62 kB │ gzip:     2.00 kB
+desktop/tauri/dist/normal/assets/index-SIxAfFFD.js                           8.76 kB │ gzip:     1.88 kB
+desktop/tauri/dist/normal/assets/index-BEBOtnNf.js                           8.77 kB │ gzip:     1.91 kB
+desktop/tauri/dist/normal/assets/horizon-BUw7H-hv.js                         8.78 kB │ gzip:     1.96 kB
+desktop/tauri/dist/normal/assets/kotlin-BdnUsdx6.js                          8.79 kB │ gzip:     2.13 kB
+desktop/tauri/dist/normal/assets/horizon-bright-CUuTKBJd.js                  8.79 kB │ gzip:     1.97 kB
+desktop/tauri/dist/normal/assets/index-CCFmQZmU.js                           8.85 kB │ gzip:     1.99 kB
+desktop/tauri/dist/normal/assets/index-DlUCaVho.js                           8.90 kB │ gzip:     2.44 kB
+desktop/tauri/dist/normal/assets/index-CWcERmyB.js                           8.95 kB │ gzip:     2.51 kB
+desktop/tauri/dist/normal/assets/make-CHLpvVh8.js                            8.96 kB │ gzip:     1.77 kB
+desktop/tauri/dist/normal/assets/andromeeda-C4gqWexZ.js                      9.02 kB │ gzip:     2.36 kB
+desktop/tauri/dist/normal/assets/sas-DEy46yEz.js                             9.06 kB │ gzip:     3.81 kB
+desktop/tauri/dist/normal/assets/dark-plus-C3mMm8J8.js                       9.10 kB │ gzip:     2.10 kB
+desktop/tauri/dist/normal/assets/slack-dark-BthQWCQV.js                      9.12 kB │ gzip:     1.97 kB
+desktop/tauri/dist/normal/assets/smithy-cds9vsN8.js                          9.13 kB │ gzip:     1.53 kB
+desktop/tauri/dist/normal/assets/index-BfHPg1Zk.js                           9.25 kB │ gzip:     2.53 kB
+desktop/tauri/dist/normal/assets/sass-Cj5Yp3dK.js                            9.29 kB │ gzip:     2.49 kB
+desktop/tauri/dist/normal/assets/index-CAUGnSVS.js                           9.29 kB │ gzip:     2.43 kB
+desktop/tauri/dist/normal/assets/plastic-3e1v2bzS.js                         9.30 kB │ gzip:     1.98 kB
+desktop/tauri/dist/normal/assets/index-Cua2zFXd.js                           9.38 kB │ gzip:     2.53 kB
+desktop/tauri/dist/normal/assets/index-Bwjt7vzR.js                           9.38 kB │ gzip:     2.66 kB
+desktop/tauri/dist/normal/assets/slack-ochin-DqwNpetd.js                     9.43 kB │ gzip:     2.10 kB
+desktop/tauri/dist/normal/assets/index-CmiEzZRU.js                           9.45 kB │ gzip:     2.60 kB
+desktop/tauri/dist/normal/assets/index-B7i-5EtV.js                           9.54 kB │ gzip:     2.74 kB
+desktop/tauri/dist/normal/assets/index-BH3sNP6g.js                           9.64 kB │ gzip:     2.78 kB
+desktop/tauri/dist/normal/assets/tex-D96PA37w.js                             9.67 kB │ gzip:     3.06 kB
+desktop/tauri/dist/normal/assets/jison-wvAkD_A8.js                           9.69 kB │ gzip:     1.85 kB
+desktop/tauri/dist/normal/assets/index-DjIhCx69.js                           9.73 kB │ gzip:     2.78 kB
+desktop/tauri/dist/normal/assets/index-Dujz8E1z.js                           9.85 kB │ gzip:     2.85 kB
+desktop/tauri/dist/normal/assets/cmake-D1j8_8rp.js                           9.86 kB │ gzip:     3.37 kB
+desktop/tauri/dist/normal/assets/index-BNcdtF7l.js                           9.89 kB │ gzip:     1.82 kB
+desktop/tauri/dist/normal/assets/light-plus-B7mTdjB0.js                      9.94 kB │ gzip:     2.27 kB
+desktop/tauri/dist/normal/assets/index-hYqT3QO_.js                           9.98 kB │ gzip:     2.88 kB
+desktop/tauri/dist/normal/assets/hcl-BWvSN4gD.js                            10.05 kB │ gzip:     1.93 kB
+desktop/tauri/dist/normal/assets/index-NEEIWnRl.js                          10.16 kB │ gzip:     2.83 kB
+desktop/tauri/dist/normal/assets/index-DP-SwFcE.js                          10.20 kB │ gzip:     2.89 kB
+desktop/tauri/dist/normal/assets/pkl-u5AG7uiY.js                            10.37 kB │ gzip:     1.38 kB
+desktop/tauri/dist/normal/assets/beancount-k_qm7-4y.js                      10.37 kB │ gzip:     1.44 kB
+desktop/tauri/dist/normal/assets/nextflow-groovy-vE_lwT2v.js                10.44 kB │ gzip:     2.14 kB
+desktop/tauri/dist/normal/assets/dream-maker-BtqSS_iP.js                    10.47 kB │ gzip:     2.25 kB
+desktop/tauri/dist/normal/assets/raku-DXvB9xmW.js                           10.47 kB │ gzip:     2.94 kB
+desktop/tauri/dist/normal/assets/yaml-Buea-lGh.js                           10.51 kB │ gzip:     2.27 kB
+desktop/tauri/dist/normal/assets/index-COx3qB-Z.js                          10.59 kB │ gzip:     2.20 kB
+desktop/tauri/dist/normal/assets/rst-bs7f0vWN.js                            10.67 kB │ gzip:     2.42 kB
+desktop/tauri/dist/normal/assets/index-BOVeez7p.js                          10.70 kB │ gzip:     3.37 kB
+desktop/tauri/dist/normal/assets/index-m7GZN5sO.js                          10.73 kB │ gzip:     2.28 kB
+desktop/tauri/dist/normal/assets/index-DwGrgCH8.js                          10.84 kB │ gzip:     2.60 kB
+desktop/tauri/dist/normal/assets/index-CDkSWVZq.js                          10.84 kB │ gzip:     2.34 kB
+desktop/tauri/dist/normal/assets/index-B_BeqqGN.js                          10.88 kB │ gzip:     2.22 kB
+desktop/tauri/dist/normal/assets/index-CakUB4GL.js                          10.94 kB │ gzip:     2.32 kB
+desktop/tauri/dist/normal/assets/elm-DbKCFpqz.js                            10.97 kB │ gzip:     2.12 kB
+desktop/tauri/dist/normal/assets/index-BPaCwYkR.js                          11.08 kB │ gzip:     2.31 kB
+desktop/tauri/dist/normal/assets/github-light-DAi9KRSo.js                   11.18 kB │ gzip:     2.51 kB
+desktop/tauri/dist/normal/assets/just-Cwhn7H3k.js                           11.23 kB │ gzip:     2.80 kB
+desktop/tauri/dist/normal/assets/index-DKAUTvir.js                          11.31 kB │ gzip:     3.88 kB
+desktop/tauri/dist/normal/assets/index-BPyfzRP8.js                          11.35 kB │ gzip:     2.34 kB
+desktop/tauri/dist/normal/assets/prolog-CbFg5uaA.js                         11.36 kB │ gzip:     3.83 kB
+desktop/tauri/dist/normal/assets/terraform-BETggiCN.js                      11.39 kB │ gzip:     2.51 kB
+desktop/tauri/dist/normal/assets/github-dark-DHJKELXO.js                    11.41 kB │ gzip:     2.55 kB
+desktop/tauri/dist/normal/assets/puppet-BMWR74SV.js                         11.44 kB │ gzip:     2.11 kB
+desktop/tauri/dist/normal/assets/laserwave-DUszq2jm.js                      11.50 kB │ gzip:     2.58 kB
+desktop/tauri/dist/normal/assets/index-Q0LBX166.js                          11.52 kB │ gzip:     2.64 kB
+desktop/tauri/dist/normal/assets/index-DNwef0M2.js                          11.53 kB │ gzip:     3.66 kB
+desktop/tauri/dist/normal/assets/index-CiGwNEUg.js                          11.57 kB │ gzip:     2.72 kB
+desktop/tauri/dist/normal/assets/index-CAd5AyjY.js                          11.57 kB │ gzip:     3.55 kB
+desktop/tauri/dist/normal/assets/index-Bln9CvBj.js                          11.62 kB │ gzip:     2.61 kB
+desktop/tauri/dist/normal/assets/index-CxUh-Wgt.js                          11.73 kB │ gzip:     2.73 kB
+desktop/tauri/dist/normal/assets/index-i37GUGk8.js                          11.84 kB │ gzip:     3.69 kB
+desktop/tauri/dist/normal/assets/index-jLtmyWA-.js                          11.89 kB │ gzip:     3.71 kB
+desktop/tauri/dist/normal/assets/index-CHTuUc9a.js                          11.92 kB │ gzip:     2.58 kB
+desktop/tauri/dist/normal/assets/gherkin-DyxjwDmM.js                        11.95 kB │ gzip:     5.05 kB
+desktop/tauri/dist/normal/assets/index-BqJvZ3Iy.js                          11.98 kB │ gzip:     2.90 kB
+desktop/tauri/dist/normal/assets/wasm-MzD3tlZU.js                           12.01 kB │ gzip:     2.19 kB
+desktop/tauri/dist/normal/assets/index-_ALqIfHh.js                          12.04 kB │ gzip:     2.79 kB
+desktop/tauri/dist/normal/assets/hjson-D5-asLiD.js                          12.05 kB │ gzip:     1.64 kB
+desktop/tauri/dist/normal/assets/surrealql-Cjom0U5J.js                      12.06 kB │ gzip:     3.30 kB
+desktop/tauri/dist/normal/assets/index-8PV0OK4i.js                          12.15 kB │ gzip:     3.00 kB
+desktop/tauri/dist/normal/assets/handlebars-BpdQsYii.js                     12.15 kB │ gzip:     2.38 kB
+desktop/tauri/dist/normal/assets/index-nPLC9sQy.js                          12.26 kB │ gzip:     2.99 kB
+desktop/tauri/dist/normal/assets/index-NrzmF6v7.js                          12.27 kB │ gzip:     2.69 kB
+desktop/tauri/dist/normal/assets/index-CJp19yuS.js                          12.30 kB │ gzip:     2.78 kB
+desktop/tauri/dist/normal/assets/index-B6XG4cHY.js                          12.35 kB │ gzip:     2.41 kB
+desktop/tauri/dist/normal/assets/index-RlNd-Jk9.js                          12.35 kB │ gzip:     4.01 kB
+desktop/tauri/dist/normal/assets/index-E94FZHhU.js                          12.40 kB │ gzip:     2.93 kB
+desktop/tauri/dist/normal/assets/index-DOL5b-7u.js                          12.44 kB │ gzip:     2.91 kB
+desktop/tauri/dist/normal/assets/apache-Pmp26Uib.js                         12.46 kB │ gzip:     3.72 kB
+desktop/tauri/dist/normal/assets/index-DUtKFD0n.js                          12.47 kB │ gzip:     2.98 kB
+desktop/tauri/dist/normal/assets/index-BE5lC_B0.js                          12.53 kB │ gzip:     3.75 kB
+desktop/tauri/dist/normal/assets/index-C9dvaPIn.js                          12.54 kB │ gzip:     2.74 kB
+desktop/tauri/dist/normal/assets/index-D7jKMSSM.js                          12.55 kB │ gzip:     3.99 kB
+desktop/tauri/dist/normal/assets/index-CwmHjtef.js                          12.61 kB │ gzip:     2.94 kB
+desktop/tauri/dist/normal/assets/index-CNWO4CgQ.js                          12.62 kB │ gzip:     3.08 kB
+desktop/tauri/dist/normal/assets/index-Nz2AhhzT.js                          12.70 kB │ gzip:     4.05 kB
+desktop/tauri/dist/normal/assets/vesper-DRje8inN.js                         12.73 kB │ gzip:     1.98 kB
+desktop/tauri/dist/normal/assets/index-Bg1iYzyM.js                          12.75 kB │ gzip:     2.89 kB
+desktop/tauri/dist/normal/assets/index-DAkQk6zs.js                          12.84 kB │ gzip:     2.69 kB
+desktop/tauri/dist/normal/assets/index-Bf4XsX0B.js                          12.88 kB │ gzip:     2.96 kB
+desktop/tauri/dist/normal/assets/bat-CickPsom.js                            12.89 kB │ gzip:     3.23 kB
+desktop/tauri/dist/normal/assets/index-Bqmzwc2t.js                          12.90 kB │ gzip:     3.04 kB
+desktop/tauri/dist/normal/assets/index-C72anwkw.js                          12.92 kB │ gzip:     2.91 kB
+desktop/tauri/dist/normal/assets/index-B0svGHnW.js                          12.93 kB │ gzip:     3.93 kB
+desktop/tauri/dist/normal/assets/fish-BvzEVeQv.js                           13.04 kB │ gzip:     1.74 kB
+desktop/tauri/dist/normal/assets/index-B5CifhU9.js                          13.09 kB │ gzip:     3.09 kB
+desktop/tauri/dist/normal/assets/nsis-BlV79W_Q.js                           13.13 kB │ gzip:     4.07 kB
+desktop/tauri/dist/normal/assets/index-BILeZ7Kt.js                          13.21 kB │ gzip:     3.66 kB
+desktop/tauri/dist/normal/assets/index-Ca1OiQl9.js                          13.21 kB │ gzip:     3.08 kB
+desktop/tauri/dist/normal/assets/v-BGw2Nkan.js                              13.33 kB │ gzip:     2.77 kB
+desktop/tauri/dist/normal/assets/index-DEh_kvMO.js                          13.45 kB │ gzip:     3.51 kB
+desktop/tauri/dist/normal/assets/index-HV2FF3Lo.js                          13.54 kB │ gzip:     3.07 kB
+desktop/tauri/dist/normal/assets/vitesse-light-CVO1_9PV.js                  13.62 kB │ gzip:     3.04 kB
+desktop/tauri/dist/normal/assets/index-CjHUbbRw.js                          13.62 kB │ gzip:     2.51 kB
+desktop/tauri/dist/normal/assets/index-E5hUSoXL.js                          13.65 kB │ gzip:     4.31 kB
+desktop/tauri/dist/normal/assets/aurora-x-D-2ljcwZ.js                       13.66 kB │ gzip:     2.28 kB
+desktop/tauri/dist/normal/assets/index-D2u0OaDO.js                          13.67 kB │ gzip:     3.25 kB
+desktop/tauri/dist/normal/assets/vitesse-black-Bkuqu6BP.js                  13.68 kB │ gzip:     3.06 kB
+desktop/tauri/dist/normal/assets/index-DnNh0Omw.js                          13.70 kB │ gzip:     3.55 kB
+desktop/tauri/dist/normal/assets/index-U9SOqlhG.js                          13.75 kB │ gzip:     3.19 kB
+desktop/tauri/dist/normal/assets/vitesse-dark-D0r3Knsf.js                   13.76 kB │ gzip:     3.06 kB
+desktop/tauri/dist/normal/assets/index-C6J77FBe.js                          13.84 kB │ gzip:     3.82 kB
+desktop/tauri/dist/normal/assets/pug-DKIMFp6K.js                            13.84 kB │ gzip:     2.58 kB
+desktop/tauri/dist/normal/assets/synthwave-84-CbfX1IO0.js                   14.04 kB │ gzip:     2.87 kB
+desktop/tauri/dist/normal/assets/index-DGNHYN2L.js                          14.05 kB │ gzip:     3.62 kB
+desktop/tauri/dist/normal/assets/index-Bj2UyyKL.js                          14.11 kB │ gzip:     3.75 kB
+desktop/tauri/dist/normal/assets/index-svewE5B0.js                          14.12 kB │ gzip:     4.46 kB
+desktop/tauri/dist/normal/assets/smalltalk-BOQMe2GC.js                      14.13 kB │ gzip:     2.16 kB
+desktop/tauri/dist/normal/assets/index-aqWTkpcN.js                          14.15 kB │ gzip:     3.56 kB
+desktop/tauri/dist/normal/assets/github-light-default-D7oLnXFd.js           14.16 kB │ gzip:     3.04 kB
+desktop/tauri/dist/normal/assets/index-DxPuB6E3.js                          14.21 kB │ gzip:     3.80 kB
+desktop/tauri/dist/normal/assets/index-mBICRI65.js                          14.25 kB │ gzip:     4.17 kB
+desktop/tauri/dist/normal/assets/github-light-high-contrast-BfjtVDDH.js     14.28 kB │ gzip:     3.02 kB
+desktop/tauri/dist/normal/assets/clarity-Dn5IMItf.js                        14.36 kB │ gzip:     2.51 kB
+desktop/tauri/dist/normal/assets/index-acoNHY21.js                          14.39 kB │ gzip:     4.16 kB
+desktop/tauri/dist/normal/assets/index-CpXEdMq8.js                          14.43 kB │ gzip:     3.70 kB
+desktop/tauri/dist/normal/assets/github-dark-dimmed-DH5Ifo-i.js             14.43 kB │ gzip:     3.13 kB
+desktop/tauri/dist/normal/assets/github-dark-default-Cuk6v7N8.js            14.44 kB │ gzip:     3.13 kB
+desktop/tauri/dist/normal/assets/index-CXOIna03.js                          14.53 kB │ gzip:     3.69 kB
+desktop/tauri/dist/normal/assets/index-Cz6US5I1.js                          14.56 kB │ gzip:     4.60 kB
+desktop/tauri/dist/normal/assets/github-dark-high-contrast-E3gJ1_iC.js      14.60 kB │ gzip:     3.09 kB
+desktop/tauri/dist/normal/assets/index-rOsN_fJz.js                          14.60 kB │ gzip:     3.04 kB
+desktop/tauri/dist/normal/assets/index-Bc8m0Ps4.js                          14.62 kB │ gzip:     3.29 kB
+desktop/tauri/dist/normal/assets/index-B_8iGzBr.js                          14.68 kB │ gzip:     2.94 kB
+desktop/tauri/dist/normal/assets/gnuplot-DdkO51Og.js                        14.78 kB │ gzip:     3.27 kB
+desktop/tauri/dist/normal/assets/index-DsOZwazU.js                          14.86 kB │ gzip:     3.70 kB
+desktop/tauri/dist/normal/assets/index-CIKDYEOI.js                          14.88 kB │ gzip:     4.64 kB
+desktop/tauri/dist/normal/assets/index-CxrP3rjj.js                          14.89 kB │ gzip:     3.41 kB
+desktop/tauri/dist/normal/assets/index-qfGhU-c8.js                          14.92 kB │ gzip:     3.44 kB
+desktop/tauri/dist/normal/assets/index-BuHoYZRy.js                          14.96 kB │ gzip:     3.21 kB
+desktop/tauri/dist/normal/assets/index-D0kyeeJl.js                          14.96 kB │ gzip:     3.97 kB
+desktop/tauri/dist/normal/assets/index-CZW37oZ7.js                          15.01 kB │ gzip:     4.03 kB
+desktop/tauri/dist/normal/assets/rust-B1yitclQ.js                           15.07 kB │ gzip:     2.72 kB
+desktop/tauri/dist/normal/assets/index-Cl7qp9o3.js                          15.17 kB │ gzip:     4.22 kB
+desktop/tauri/dist/normal/assets/kusto-wEQ09or8.js                          15.17 kB │ gzip:     3.92 kB
+desktop/tauri/dist/normal/assets/index-DeH_0j4J.js                          15.23 kB │ gzip:     3.97 kB
+desktop/tauri/dist/normal/assets/index-DDHYYPu9.js                          15.34 kB │ gzip:     4.36 kB
+desktop/tauri/dist/normal/assets/index-DxN_8lUR.js                          15.37 kB │ gzip:     3.96 kB
+desktop/tauri/dist/normal/assets/index-B14gpiYa.js                          15.44 kB │ gzip:     4.97 kB
+desktop/tauri/dist/normal/assets/index-B98iTsq9.js                          15.45 kB │ gzip:     4.23 kB
+desktop/tauri/dist/normal/assets/index-DCJmWDUX.js                          15.47 kB │ gzip:     3.05 kB
+desktop/tauri/dist/normal/assets/index-m72IHHN6.js                          15.47 kB │ gzip:     3.83 kB
+desktop/tauri/dist/normal/assets/nix-CwoSXNpI.js                            15.51 kB │ gzip:     2.48 kB
+desktop/tauri/dist/normal/assets/lua-BaeVxFsk.js                            15.54 kB │ gzip:     3.16 kB
+desktop/tauri/dist/normal/assets/actionscript-3-B3316cI-.js                 15.54 kB │ gzip:     2.71 kB
+desktop/tauri/dist/normal/assets/index-BEsodjHk.js                          15.57 kB │ gzip:     4.00 kB
+desktop/tauri/dist/normal/assets/index-DTl6jnYy.js                          15.60 kB │ gzip:     4.29 kB
+desktop/tauri/dist/normal/assets/abap-BdImnpbu.js                           15.85 kB │ gzip:     5.91 kB
+desktop/tauri/dist/normal/assets/index-CaxDctIT.js                          15.88 kB │ gzip:     4.08 kB
+desktop/tauri/dist/normal/assets/index-BpfKjR8q.js                          15.91 kB │ gzip:     3.78 kB
+desktop/tauri/dist/normal/assets/index-Bw8Nw454.js                          15.95 kB │ gzip:     4.48 kB
+desktop/tauri/dist/normal/assets/index-BTYaQKvE.js                          15.96 kB │ gzip:     4.39 kB
+desktop/tauri/dist/normal/assets/index-Dv8_LeiY.js                          16.05 kB │ gzip:     3.71 kB
+desktop/tauri/dist/normal/assets/matlab-D7o27uSR.js                         16.09 kB │ gzip:     3.06 kB
+desktop/tauri/dist/normal/assets/luau-BnpPk5vE.js                           16.14 kB │ gzip:     3.55 kB
+desktop/tauri/dist/normal/assets/index-RHgoMkCH.js                          16.15 kB │ gzip:     4.46 kB
+desktop/tauri/dist/normal/assets/index-CCspAma0.js                          16.15 kB │ gzip:     3.64 kB
+desktop/tauri/dist/normal/assets/cue-D82EKSYY.js                            16.20 kB │ gzip:     2.06 kB
+desktop/tauri/dist/normal/assets/index-C7mNyE-W.js                          16.28 kB │ gzip:     3.72 kB
+desktop/tauri/dist/normal/assets/index-7LfgSMoF.js                          16.31 kB │ gzip:     4.22 kB
+desktop/tauri/dist/normal/assets/index-BZx-6zy1.js                          16.31 kB │ gzip:     3.80 kB
+desktop/tauri/dist/normal/assets/elixir-CkH2-t6x.js                         16.32 kB │ gzip:     2.80 kB
+desktop/tauri/dist/normal/assets/solidity-DijEV5ha.js                       16.41 kB │ gzip:     3.16 kB
+desktop/tauri/dist/normal/assets/index-TCtZT_gZ.js                          16.49 kB │ gzip:     3.93 kB
+desktop/tauri/dist/normal/assets/index-C-_6UNPH.js                          16.49 kB │ gzip:     3.78 kB
+desktop/tauri/dist/normal/assets/odin-BBf5iR-q.js                           16.51 kB │ gzip:     2.94 kB
+desktop/tauri/dist/normal/assets/index-CwdrvykT.js                          16.52 kB │ gzip:     4.30 kB
+desktop/tauri/dist/normal/assets/ts-tags-D351s5mN.js                        16.57 kB │ gzip:     2.07 kB
+desktop/tauri/dist/normal/assets/index-DJyaXeqG.js                          16.71 kB │ gzip:     5.79 kB
+desktop/tauri/dist/normal/assets/index-CSq96eyM.js                          16.71 kB │ gzip:     3.82 kB
+desktop/tauri/dist/normal/assets/index-CTQO8Tsn.js                          16.86 kB │ gzip:     4.19 kB
+desktop/tauri/dist/normal/assets/index-CbToeqYh.js                          16.86 kB │ gzip:     5.02 kB
+desktop/tauri/dist/normal/assets/index-F0F3ETFI.js                          16.90 kB │ gzip:     4.63 kB
+desktop/tauri/dist/normal/assets/index-DTCkb2yZ.js                          17.09 kB │ gzip:     5.78 kB
+desktop/tauri/dist/normal/assets/kanagawa-wave-DFGoQZhC.js                  17.12 kB │ gzip:     2.93 kB
+desktop/tauri/dist/normal/assets/kanagawa-lotus-C3DzagqV.js                 17.12 kB │ gzip:     2.93 kB
+desktop/tauri/dist/normal/assets/kanagawa-dragon-BuwD2xS4.js                17.12 kB │ gzip:     2.95 kB
+desktop/tauri/dist/normal/assets/index-DtyuURVR.js                          17.26 kB │ gzip:     4.29 kB
+desktop/tauri/dist/normal/assets/index-hM4jjDiE.js                          17.29 kB │ gzip:     5.13 kB
+desktop/tauri/dist/normal/assets/index-CRgwnCHO.js                          17.32 kB │ gzip:     4.28 kB
+desktop/tauri/dist/normal/assets/index-gb4_0Ffl.js                          17.51 kB │ gzip:     4.85 kB
+desktop/tauri/dist/normal/assets/move-el3G9tDJ.js                           17.66 kB │ gzip:     3.06 kB
+desktop/tauri/dist/normal/assets/index-DkEqNJJr.js                          17.74 kB │ gzip:     4.62 kB
+desktop/tauri/dist/normal/assets/graphql-ChdNCCLP.js                        18.00 kB │ gzip:     2.52 kB
+desktop/tauri/dist/normal/assets/index-_zWTAXVS.js                          18.00 kB │ gzip:     4.11 kB
+desktop/tauri/dist/normal/assets/index-DhLLny2W.js                          18.07 kB │ gzip:     4.65 kB
+desktop/tauri/dist/normal/assets/liquid-C0sCDyMI.js                         18.09 kB │ gzip:     3.16 kB
+desktop/tauri/dist/normal/assets/index-BZxSy1U_.js                          18.21 kB │ gzip:     3.34 kB
+desktop/tauri/dist/normal/assets/svelte-Cy7k_4gC.js                         18.24 kB │ gzip:     3.14 kB
+desktop/tauri/dist/normal/assets/index-CRMbV1Pu.js                          18.50 kB │ gzip:     5.62 kB
+desktop/tauri/dist/normal/assets/index-2eC4WYYI.js                          18.55 kB │ gzip:     4.44 kB
+desktop/tauri/dist/normal/assets/index-CRScg28h.js                          18.56 kB │ gzip:     4.26 kB
+desktop/tauri/dist/normal/assets/index-CxRyq7Pg.js                          18.56 kB │ gzip:     5.07 kB
+desktop/tauri/dist/normal/assets/material-theme-D5KoaKCx.js                 18.62 kB │ gzip:     3.11 kB
+desktop/tauri/dist/normal/assets/index-DW8Aw6wi.js                          18.62 kB │ gzip:     4.29 kB
+desktop/tauri/dist/normal/assets/material-theme-darker-BfHTSMKl.js          18.63 kB │ gzip:     3.11 kB
+desktop/tauri/dist/normal/assets/material-theme-ocean-CyktbL80.js           18.63 kB │ gzip:     3.14 kB
+desktop/tauri/dist/normal/assets/material-theme-lighter-B0m2ddpp.js         18.63 kB │ gzip:     3.11 kB
+desktop/tauri/dist/normal/assets/material-theme-palenight-Csfq5Kiy.js       18.64 kB │ gzip:     3.13 kB
+desktop/tauri/dist/normal/assets/index-CjQQKJr2.js                          18.74 kB │ gzip:     4.32 kB
+desktop/tauri/dist/normal/assets/index-qW2twrr0.js                          18.86 kB │ gzip:     5.88 kB
+desktop/tauri/dist/normal/assets/index-CsgLlgnL.js                          18.90 kB │ gzip:     4.98 kB
+desktop/tauri/dist/normal/assets/gdscript-DqcFQ5yU.js                       19.09 kB │ gzip:     3.77 kB
+desktop/tauri/dist/normal/assets/index-BAPJXClW.js                          19.15 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/groovy-gcz8RCvz.js                         19.18 kB │ gzip:     3.60 kB
+desktop/tauri/dist/normal/assets/index-D-HX00JL.js                          19.53 kB │ gzip:     4.39 kB
+desktop/tauri/dist/normal/assets/index-B4_S9Azp.js                          19.54 kB │ gzip:     5.03 kB
+desktop/tauri/dist/normal/assets/index-Bp031dHp.js                          19.57 kB │ gzip:     5.41 kB
+desktop/tauri/dist/normal/assets/index-CjaT4EOp.js                          19.87 kB │ gzip:     4.91 kB
+desktop/tauri/dist/normal/assets/glimmer-js-ByusRIyA.js                     20.07 kB │ gzip:     2.95 kB
+desktop/tauri/dist/normal/assets/glimmer-ts-BfAWNZQY.js                     20.07 kB │ gzip:     2.94 kB
+desktop/tauri/dist/normal/assets/ayu-dark-DYE7WIF3.js                       20.08 kB │ gzip:     3.94 kB
+desktop/tauri/dist/normal/assets/ayu-mirage-32ctXXKs.js                     20.09 kB │ gzip:     3.94 kB
+desktop/tauri/dist/normal/assets/ayu-light-BA47KaF1.js                      20.15 kB │ gzip:     3.93 kB
+desktop/tauri/dist/normal/assets/powershell-BmBUJMz7.js                     20.16 kB │ gzip:     4.07 kB
+desktop/tauri/dist/normal/assets/mdc-D1_yUvq7.js                            20.18 kB │ gzip:     6.81 kB
+desktop/tauri/dist/normal/assets/viml-CJc9bBzg.js                           20.37 kB │ gzip:     6.73 kB
+desktop/tauri/dist/normal/assets/index-DLW4XtPX.js                          20.46 kB │ gzip:     5.42 kB
+desktop/tauri/dist/normal/assets/snazzy-light-Bw305WKR.js                   20.77 kB │ gzip:     3.83 kB
+desktop/tauri/dist/normal/assets/pdf-BTpra46M.js                            20.80 kB │ gzip:     5.00 kB
+desktop/tauri/dist/normal/assets/nushell-D3jzshHO.js                        20.88 kB │ gzip:     5.36 kB
+desktop/tauri/dist/normal/assets/index-DemLTkFO.js                          20.93 kB │ gzip:     5.54 kB
+desktop/tauri/dist/normal/assets/dracula-BzJJZx-M.js                        21.07 kB │ gzip:     4.00 kB
+desktop/tauri/dist/normal/assets/dracula-soft-BXkSAIEj.js                   21.08 kB │ gzip:     4.04 kB
+desktop/tauri/dist/normal/assets/index-Dlh8x4Ra.js                          21.10 kB │ gzip:     5.98 kB
+desktop/tauri/dist/normal/assets/wit-5i3qLPDT.js                            21.47 kB │ gzip:     2.89 kB
+desktop/tauri/dist/normal/assets/index-DbnRjIvG.js                          21.54 kB │ gzip:     5.82 kB
+desktop/tauri/dist/normal/assets/index-z_Cmw50W.js                          21.73 kB │ gzip:     5.09 kB
+desktop/tauri/dist/normal/assets/rose-pine-5qJOZa0Y.js                      21.74 kB │ gzip:     3.88 kB
+desktop/tauri/dist/normal/assets/rose-pine-moon-C9pEdX9L.js                 21.75 kB │ gzip:     3.90 kB
+desktop/tauri/dist/normal/assets/rose-pine-dawn-zx0QlTCp.js                 21.75 kB │ gzip:     3.90 kB
+desktop/tauri/dist/normal/assets/twig-27uCiNez.js                           21.98 kB │ gzip:     3.98 kB
+desktop/tauri/dist/normal/assets/nim-BIad80T-.js                            22.46 kB │ gzip:     3.16 kB
+desktop/tauri/dist/normal/assets/index-CA5P-OBq.js                          22.53 kB │ gzip:     4.37 kB
+desktop/tauri/dist/normal/assets/common-lisp-Cg-RD9OK.js                    22.58 kB │ gzip:     6.06 kB
+desktop/tauri/dist/normal/assets/gruvbox-dark-hard-CFHQjOhq.js              22.63 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/gruvbox-dark-soft-CVdnzihN.js              22.63 kB │ gzip:     4.17 kB
+desktop/tauri/dist/normal/assets/gruvbox-light-hard-CH1njM8p.js             22.64 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/gruvbox-light-soft-hJgmCMqR.js             22.64 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/gruvbox-dark-medium-GsRaNv29.js            22.64 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/gruvbox-light-medium-DRw_LuNl.js           22.64 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/index-GR3K-hlx.js                          23.04 kB │ gzip:     4.45 kB
+desktop/tauri/dist/normal/assets/index-dawfRB3E.js                          23.32 kB │ gzip:     4.78 kB
+desktop/tauri/dist/normal/assets/sql-CRqJ_cUM.js                            23.43 kB │ gzip:     7.42 kB
+desktop/tauri/dist/normal/assets/cadence-Bv_4Rxtq.js                        23.67 kB │ gzip:     3.67 kB
+desktop/tauri/dist/normal/assets/astro-HNnZUWAn.js                          24.01 kB │ gzip:     7.55 kB
+desktop/tauri/dist/normal/assets/apl-CORt7UWP.js                            24.04 kB │ gzip:     4.20 kB
+desktop/tauri/dist/normal/assets/templ-DhtptRzy.js                          24.06 kB │ gzip:     5.40 kB
+desktop/tauri/dist/normal/assets/index-NoNCMGoG.js                          24.11 kB │ gzip:     4.86 kB
+desktop/tauri/dist/normal/assets/vhdl-CeAyd5Ju.js                           24.26 kB │ gzip:     3.87 kB
+desktop/tauri/dist/normal/assets/angular-html-DA-rfuFy.js                   24.29 kB │ gzip:     4.01 kB
+desktop/tauri/dist/normal/assets/index-BTNQm9P0.js                          24.58 kB │ gzip:     5.31 kB
+desktop/tauri/dist/normal/assets/purescript-CklMAg4u.js                     24.69 kB │ gzip:     3.25 kB
+desktop/tauri/dist/normal/assets/moonbit-CHtswR0a.js                        24.94 kB │ gzip:     3.79 kB
+desktop/tauri/dist/normal/assets/vue-BqiEGhQt.js                            24.96 kB │ gzip:     3.04 kB
+desktop/tauri/dist/normal/assets/typespec-CAFt9gP4.js                       25.05 kB │ gzip:     2.63 kB
+desktop/tauri/dist/normal/assets/index-BHrydAko.js                          25.11 kB │ gzip:     7.66 kB
+desktop/tauri/dist/normal/assets/one-light-C3Wv6jpd.js                      25.30 kB │ gzip:     3.67 kB
+desktop/tauri/dist/normal/assets/fsharp-CXgrBDvD.js                         25.31 kB │ gzip:     4.13 kB
+desktop/tauri/dist/normal/assets/marko-DjSrsDqO.js                          25.48 kB │ gzip:     3.59 kB
+desktop/tauri/dist/normal/assets/night-owl-light-CMTm3GFP.js                25.90 kB │ gzip:     4.26 kB
+desktop/tauri/dist/normal/assets/c3-Dp5svz6Z.js                             26.39 kB │ gzip:     3.99 kB
+desktop/tauri/dist/normal/assets/system-verilog-0hqHdDBg.js                 26.56 kB │ gzip:     4.88 kB
+desktop/tauri/dist/normal/assets/index-C7cKaEOz.js                          26.64 kB │ gzip:     8.60 kB
+desktop/tauri/dist/normal/assets/index-CVtUwia6.js                          26.67 kB │ gzip:     7.57 kB
+desktop/tauri/dist/normal/assets/nord-Ddv68eIx.js                           26.72 kB │ gzip:     4.40 kB
+desktop/tauri/dist/normal/assets/codeql-DsOJ9woJ.js                         26.88 kB │ gzip:     3.79 kB
+desktop/tauri/dist/normal/assets/index-CTBZekRP.js                          27.05 kB │ gzip:     6.46 kB
+desktop/tauri/dist/normal/assets/scss-D5BDwBP9.js                           27.20 kB │ gzip:     4.20 kB
+desktop/tauri/dist/normal/assets/java-CylS5w8V.js                           27.22 kB │ gzip:     4.26 kB
+desktop/tauri/dist/normal/assets/coffee-Ch7k5sss.js                         27.42 kB │ gzip:     6.35 kB
+desktop/tauri/dist/normal/assets/razor-BjBPvh-w.js                          27.51 kB │ gzip:     3.57 kB
+desktop/tauri/dist/normal/assets/index-Dlrqi5j8.js                          27.63 kB │ gzip:     6.77 kB
+desktop/tauri/dist/normal/assets/index-BsOAOm0r.js                          27.93 kB │ gzip:     6.65 kB
+desktop/tauri/dist/normal/assets/index-Be0wurfa.js                          28.27 kB │ gzip:     7.13 kB
+desktop/tauri/dist/normal/assets/index-BCNEex0v.js                          28.80 kB │ gzip:    11.23 kB
+desktop/tauri/dist/normal/assets/scala-CqE71os6.js                          28.89 kB │ gzip:     3.94 kB
+desktop/tauri/dist/normal/assets/night-owl-C39BiMTA.js                      28.91 kB │ gzip:     5.16 kB
+desktop/tauri/dist/normal/assets/crystal-DGywbUpC.js                        29.39 kB │ gzip:     4.45 kB
+desktop/tauri/dist/normal/assets/applescript-Co6uUVPk.js                    29.57 kB │ gzip:     5.93 kB
+desktop/tauri/dist/normal/assets/stylus-BEDo0Tqx.js                         31.07 kB │ gzip:     7.99 kB
+desktop/tauri/dist/normal/assets/julia-5Bft2YPA.js                          31.08 kB │ gzip:     4.34 kB
+desktop/tauri/dist/normal/assets/index-DOqvKI6t.js                          31.32 kB │ gzip:     6.96 kB
+desktop/tauri/dist/normal/assets/ahk-CsyLZFj1.js                            31.44 kB │ gzip:     7.81 kB
+desktop/tauri/dist/normal/assets/index-gEWpgKC3.js                          31.98 kB │ gzip:     6.70 kB
+desktop/tauri/dist/normal/assets/index-B9L1EIm9.js                          32.06 kB │ gzip:     5.80 kB
+desktop/tauri/dist/normal/assets/poimandres-CS3Unz2-.js                     33.49 kB │ gzip:     5.50 kB
+desktop/tauri/dist/normal/assets/one-dark-pro-DVMEJ2y_.js                   33.79 kB │ gzip:     5.52 kB
+desktop/tauri/dist/normal/assets/bsl-DlhNcFeZ.js                            33.95 kB │ gzip:     8.36 kB
+desktop/tauri/dist/normal/assets/nginx-BpAMiNFr.js                          35.37 kB │ gzip:     4.43 kB
+desktop/tauri/dist/normal/assets/index-D5L6OYLQ.js                          35.40 kB │ gzip:     9.11 kB
+desktop/tauri/dist/normal/assets/houston-DnULxvSX.js                        35.42 kB │ gzip:     5.78 kB
+desktop/tauri/dist/normal/assets/index-DA2gzEb1.js                          35.53 kB │ gzip:     9.02 kB
+desktop/tauri/dist/normal/assets/tokyo-night-hegEt444.js                    35.67 kB │ gzip:     6.24 kB
+desktop/tauri/dist/normal/assets/haxe-CfZj7gIn.js                           35.95 kB │ gzip:     6.01 kB
+desktop/tauri/dist/normal/assets/org-DM6o9KBp.js                            36.32 kB │ gzip:     3.70 kB
+desktop/tauri/dist/normal/assets/erlang-DsQrWhSR.js                         37.48 kB │ gzip:     4.40 kB
+desktop/tauri/dist/normal/assets/index-DeNx2RG8.js                          38.62 kB │ gzip:     9.65 kB
+desktop/tauri/dist/normal/assets/bird2-Bx8U0n9b.js                          38.68 kB │ gzip:     8.50 kB
+desktop/tauri/dist/normal/assets/cobol-nBiQ_Alo.js                          39.13 kB │ gzip:    10.86 kB
+desktop/tauri/dist/normal/assets/asm-D_Q5rh1f.js                            40.72 kB │ gzip:     8.21 kB
+desktop/tauri/dist/normal/assets/shellscript-Yzrsuije.js                    41.48 kB │ gzip:     6.09 kB
+desktop/tauri/dist/normal/assets/haskell-Df6bDoY_.js                        41.49 kB │ gzip:     6.44 kB
+desktop/tauri/dist/normal/assets/ModelIconCatalog-DAY6gzwu.js               42.46 kB │ gzip:    11.03 kB
+desktop/tauri/dist/normal/assets/perl-B9cMNwum.js                           43.16 kB │ gzip:     4.67 kB
+desktop/tauri/dist/normal/assets/index-BSVpS38A.js                          43.49 kB │ gzip:     9.86 kB
+desktop/tauri/dist/normal/assets/d-85-TOEBH.js                              43.80 kB │ gzip:     8.47 kB
+desktop/tauri/dist/normal/assets/ahk2-8Zs4aa1G.js                           45.07 kB │ gzip:     9.88 kB
+desktop/tauri/dist/normal/assets/ruby-C0TQ7zu5.js                           46.72 kB │ gzip:     5.83 kB
+desktop/tauri/dist/normal/assets/go-C27-OAKa.js                             46.82 kB │ gzip:     5.18 kB
+desktop/tauri/dist/normal/assets/apex-DhZFqWV2.js                           47.89 kB │ gzip:     6.90 kB
+desktop/tauri/dist/normal/assets/ada-bCR0ucgS.js                            48.08 kB │ gzip:     6.03 kB
+desktop/tauri/dist/normal/assets/css-CLj8gQPS.js                            49.04 kB │ gzip:    11.86 kB
+desktop/tauri/dist/normal/assets/imba-DGztddWO.js                           49.93 kB │ gzip:     9.46 kB
+desktop/tauri/dist/normal/assets/catppuccin-mocha-Ct7hS0mc.js               50.85 kB │ gzip:     8.49 kB
+desktop/tauri/dist/normal/assets/catppuccin-latte-DH-8KZSZ.js               50.85 kB │ gzip:     8.49 kB
+desktop/tauri/dist/normal/assets/catppuccin-frappe-CZL1YF0i.js              50.85 kB │ gzip:     8.51 kB
+desktop/tauri/dist/normal/assets/catppuccin-macchiato-B7yYVSCf.js           50.86 kB │ gzip:     8.50 kB
+desktop/tauri/dist/normal/assets/everforest-dark-BgDCqdQA.js                53.75 kB │ gzip:     8.42 kB
+desktop/tauri/dist/normal/assets/everforest-light-C8M2exoo.js               53.75 kB │ gzip:     8.42 kB
+desktop/tauri/dist/normal/assets/mermaid-CQcHuHx7.js                        54.81 kB │ gzip:     4.81 kB
+desktop/tauri/dist/normal/assets/wikitext-BhOHFoWU.js                       55.89 kB │ gzip:     4.76 kB
+desktop/tauri/dist/normal/assets/stata-DI20mbqo.js                          56.99 kB │ gzip:    12.36 kB
+desktop/tauri/dist/normal/assets/html-pp8916En.js                           57.25 kB │ gzip:    11.69 kB
+desktop/tauri/dist/normal/assets/ballerina-BFfxhgS-.js                      58.69 kB │ gzip:     8.15 kB
+desktop/tauri/dist/normal/assets/markdown-Cvjx9yec.js                       59.34 kB │ gzip:     5.64 kB
+desktop/tauri/dist/normal/assets/ocaml-C0hk2d4L.js                          62.45 kB │ gzip:     5.02 kB
+desktop/tauri/dist/normal/assets/index-CirXsFWG.js                          68.38 kB │ gzip:    24.25 kB
+desktop/tauri/dist/normal/assets/mojo-DJz3ZmWd.js                           69.52 kB │ gzip:     9.27 kB
+desktop/tauri/dist/normal/assets/python-B6aJPvgy.js                         69.95 kB │ gzip:     9.13 kB
+desktop/tauri/dist/normal/assets/c-BIGW1oBm.js                              72.11 kB │ gzip:    10.51 kB
+desktop/tauri/dist/normal/assets/latex-D5pSuvFb.js                          72.90 kB │ gzip:     6.78 kB
+desktop/tauri/dist/normal/assets/vyper-CDx5xZoG.js                          74.65 kB │ gzip:    10.74 kB
+desktop/tauri/dist/normal/assets/hack-BWmVpMyf.js                           81.13 kB │ gzip:    26.38 kB
+desktop/tauri/dist/normal/assets/swift-C2oV4EkX.js                          87.23 kB │ gzip:    14.84 kB
+desktop/tauri/dist/normal/assets/fortran-free-form-BxgE0vQu.js              88.97 kB │ gzip:    11.27 kB
+desktop/tauri/dist/normal/assets/csharp-DSvCPggb.js                         90.19 kB │ gzip:    10.75 kB
+desktop/tauri/dist/normal/assets/racket-BqYA7rlc.js                         92.39 kB │ gzip:    15.02 kB
+desktop/tauri/dist/normal/assets/less-B1dDrJ26.js                           97.63 kB │ gzip:    14.70 kB
+desktop/tauri/dist/normal/assets/index-C6WBgiRD.js                         103.21 kB │ gzip:    38.92 kB
+desktop/tauri/dist/normal/assets/blade-2xfisSek.js                         104.98 kB │ gzip:    28.20 kB
+desktop/tauri/dist/normal/assets/objective-c-DXmwc3jG.js                   105.41 kB │ gzip:    23.33 kB
+desktop/tauri/dist/normal/assets/index-C3TV2N9j.js                         110.25 kB │ gzip:    27.15 kB
+desktop/tauri/dist/normal/assets/php-Csjmro_R.js                           113.09 kB │ gzip:    28.74 kB
+desktop/tauri/dist/normal/assets/asciidoc-CSVQ5wI8.js                      136.05 kB │ gzip:     9.50 kB
+desktop/tauri/dist/normal/assets/mdx-Cmh6b_Ma.js                           136.11 kB │ gzip:    23.35 kB
+desktop/tauri/dist/normal/assets/typst-BUadGCkm.js                         163.55 kB │ gzip:    10.98 kB
+desktop/tauri/dist/normal/assets/objective-cpp-CLxacb5B.js                 171.97 kB │ gzip:    30.62 kB
+desktop/tauri/dist/normal/assets/javascript-wDzz0qaB.js                    174.83 kB │ gzip:    16.51 kB
+desktop/tauri/dist/normal/assets/tsx-COt5Ahok.js                           175.54 kB │ gzip:    16.51 kB
+desktop/tauri/dist/normal/assets/jsx-g9-lgVsj.js                           177.79 kB │ gzip:    16.61 kB
+desktop/tauri/dist/normal/assets/typescript-BPQ3VLAy.js                    181.08 kB │ gzip:    16.04 kB
+desktop/tauri/dist/normal/assets/angular-ts-BrjP3tb8.js                    183.82 kB │ gzip:    16.63 kB
+desktop/tauri/dist/normal/assets/vue-vine-BoDAl6tE.js                      190.05 kB │ gzip:    17.99 kB
+desktop/tauri/dist/normal/assets/wolfram-lXgVvXCa.js                       262.39 kB │ gzip:    77.14 kB
+desktop/tauri/dist/normal/assets/pdf-CdE6nnZT.js                           407.56 kB │ gzip:   119.31 kB
+desktop/tauri/dist/normal/assets/wasm-CG6Dc4jp.js                          622.34 kB │ gzip:   230.29 kB
+desktop/tauri/dist/normal/assets/cpp-BMRokrvK.js                           785.49 kB │ gzip:    53.20 kB
+desktop/tauri/dist/normal/assets/emacs-lisp-C_m_b--Z.js                    790.01 kB │ gzip:   198.83 kB
+desktop/tauri/dist/normal/assets/models.generated-B68mm077.js            1,125.54 kB │ gzip:   153.60 kB
+desktop/tauri/dist/normal/assets/index-DjYgc2kr.js                       3,496.42 kB │ gzip: 1,079.20 kB
+desktop/tauri/dist/normal/assets/MessageList-CX41UtP-.js                 3,678.57 kB │ gzip:   958.66 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 26.53s
+        Info Looking up installed tauri packages to check mismatched versions...
+   Compiling cuepoint-prototype v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+warning: unused variable: `app`
+   --> vendor/tauri-plugin-http/src/lib.rs:136:20
+    |
+136 |         .on_event(|app, event| {
+    |                    ^^^ help: if this is intentional, prefix it with an underscore: `_app`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `event`
+   --> vendor/tauri-plugin-http/src/lib.rs:136:25
+    |
+136 |         .on_event(|app, event| {
+    |                         ^^^^^ help: if this is intentional, prefix it with an underscore: `_event`
+
+warning: `tauri-plugin-http` (lib) generated 2 warnings (run `cargo fix --lib -p tauri-plugin-http` to apply 2 suggestions)
+    Finished `release` profile [optimized] target(s) in 33.56s
+       Built application at: /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/cuepoint-prototype
+    Bundling Cuepoint Real Review.app (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Real Review.app)
+     Signing with identity "-"
+Signing with identity "-"
+Signing /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Real Review.app/Contents/MacOS/cuepoint-prototype
+/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Real Review.app/Contents/MacOS/cuepoint-prototype: replacing existing signature
+Signing with identity "-"
+Signing /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Real Review.app
+/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Real Review.app: replacing existing signature
+        Warn skipping app notarization, no APPLE_ID & APPLE_PASSWORD & APPLE_TEAM_ID or APPLE_API_KEY & APPLE_API_ISSUER & APPLE_API_KEY_PATH environment variables found
+    Finished 1 bundle at:
+        /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Real Review.app (28.58 MiB)
+
+
+> cuepoint-tauri-prototype@0.1.0 build:frontend /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node scripts/build-frontend.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 13180 modules transformed.
+rendering chunks...
+[plugin vite:reporter] 
+(!) /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/database.ts is dynamically imported by /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/runtimeHttpPolicy.ts but also statically imported by /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentChatPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentComposerAttention.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentControls.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentGenerationBatches.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/AgentGenerationResults.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ContextParameters.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/CreatedEntityLinks.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/GenerationReview.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/MemoryContextDetails.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/MessageList.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ReferenceAttachments.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/ReferenceLibrary.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/TaskRecords.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/agent/chatExecutionFlows.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/AssetLibraryPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/CharacterDetailPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/PropDetailPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/SceneDetailPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/StyleDetailPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/assets/WorldSettingPanel.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioExports.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioGenerationBatches.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioInspector.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioSources.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/AudioWorkspacePage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/ScriptDocument.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/SpeechControls.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/VoiceLibrary.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audio/VoiceReferencePicker.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/audioMusic/shared.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/media/MediaPicker.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/music/MusicCreation.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/music/MusicWorkspacePage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/music/switchMusicVariant.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/produce/ProducePage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/produce/ProductionProposalsPanel.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/produce/StoryboardPrintPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/AssetLibraryPages.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/ConnectorsPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/IpProfilesPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/MaterialLibraryPage.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/ProjectIpPicker.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/materials/LegacyMaterialSources.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/materials/MaterialControls.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/materials/MaterialDetailPanel.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentContextPreview.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentFinalReview.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentFinishingCheck.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGeneration.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGenerationBatches.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGenerationTarget.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentProjectCreation.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentRuns.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentSettings.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskGuards.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskRecords.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskWrapups.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTasks.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentToolRecovery.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assetReuse.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assets.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audio.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioArrangement.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioGeneration.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioGenerationBatches.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioShared.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/cascadeCommands.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/chat.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/connectors.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/contextSettings.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/episodes.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/generationPreferences.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/ipProfiles.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/materials.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/media.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/memoryRetrieval.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/music.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/productionProposals.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/productionShared.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/projectMemories.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/projects.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/references.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/searchConnections.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/shots.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/taskAudioGenerationEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/taskGenerationEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioArrangementTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioBatchTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioGenerationTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioProjectContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessStore.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessWriteReceipt.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/contextCompaction.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/finalReviewEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationBatchRuntime.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationPreparation.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationRuntime.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/imageDiscovery.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/imageQueue.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/ipTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/libraryToolHelpers.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/materialContent.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/materialImageInput.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/materialTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/memoryContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/memoryTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/musicGenerationReview.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/musicTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/projectContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/projectScope.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/referenceContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/referenceEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/referenceTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/runChat.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/runOwnership.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/taskContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/taskTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/taskWrapup.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/toolLoading.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/tools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/webTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/wrapupEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/referenceWire.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/tavily.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audio/buffers.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audio/scriptImport.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/batchEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/batchPreparation.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/batchRuntime.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/outputEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/reference.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/runtime.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioProjectPackage.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/media.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/productionHandoff.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/projectPackage.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/references/import.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/studioLibraryQueries.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/useShotMedia.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/videoWorkspaceRepository.tsx, dynamic import will not move module into another chunk.
+
+computing gzip size...
+desktop/tauri/dist/normal/assets/CNS2-V-DgHqi_gL.bcmap                       0.09 kB
+desktop/tauri/dist/normal/assets/Roman-CGyUGrKi.bcmap                        0.10 kB
+desktop/tauri/dist/normal/assets/Katakana-DueN_6wN.bcmap                     0.10 kB
+desktop/tauri/dist/normal/assets/ETenms-B5-H-DbS1LlRr.bcmap                  0.10 kB
+desktop/tauri/dist/normal/assets/UniJIS-UCS2-HW-H-BfJ3t__Z.bcmap             0.12 kB
+desktop/tauri/dist/normal/assets/Hiragana-Dy6yEHKG.bcmap                     0.12 kB
+desktop/tauri/dist/normal/assets/Hankaku-SMDjWZXJ.bcmap                      0.13 kB
+desktop/tauri/dist/normal/assets/B5-V-3ShXAXP7.bcmap                         0.14 kB
+desktop/tauri/dist/normal/assets/CNS1-V-BUvSsmpl.bcmap                       0.14 kB
+desktop/tauri/dist/normal/assets/B5pc-V-1X0fY8mT.bcmap                       0.14 kB
+desktop/tauri/dist/normal/assets/HKdla-B5-V-CHovDFKh.bcmap                   0.15 kB
+desktop/tauri/dist/normal/assets/HKdlb-B5-V-CDfiFKye.bcmap                   0.15 kB
+desktop/tauri/dist/normal/assets/HKgccs-B5-V-Bb0FD7uo.bcmap                  0.15 kB
+desktop/tauri/dist/normal/assets/HKm314-B5-V-BrK5Z_J-.bcmap                  0.15 kB
+desktop/tauri/dist/normal/assets/HKm471-B5-V-B7Ks-vkf.bcmap                  0.15 kB
+desktop/tauri/dist/normal/assets/UniCNS-UCS2-V-CbsnO1ia.bcmap                0.16 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF16-V-DoPO_42D.bcmap               0.16 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF8-V-BD4cmnNX.bcmap                0.16 kB
+desktop/tauri/dist/normal/assets/ETen-B5-V-CyIout1L.bcmap                    0.16 kB
+desktop/tauri/dist/normal/assets/ETHK-B5-V-DmzBBgI2.bcmap                    0.16 kB
+desktop/tauri/dist/normal/assets/HKscs-B5-V-CrljkNDo.bcmap                   0.16 kB
+desktop/tauri/dist/normal/assets/KSC-V-CDXb0xyy.bcmap                        0.16 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF32-V-DpuHKqNE.bcmap               0.16 kB
+desktop/tauri/dist/normal/assets/KSC-EUC-V-C8-Y2jkl.bcmap                    0.16 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF16-V-EgvK-6IG.bcmap                0.16 kB
+desktop/tauri/dist/normal/assets/KSC-Johab-V-CWzqnmVV.bcmap                  0.17 kB
+desktop/tauri/dist/normal/assets/KSCms-UHC-V-DaEePsjg.bcmap                  0.17 kB
+desktop/tauri/dist/normal/assets/KSCpc-EUC-V-Bd6pD5ID.bcmap                  0.17 kB
+desktop/tauri/dist/normal/assets/V-BJkwLeFB.bcmap                            0.17 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF32-V-CnOTbPsn.bcmap                0.17 kB
+desktop/tauri/dist/normal/assets/78-V-CJGcNX1t.bcmap                         0.17 kB
+desktop/tauri/dist/normal/assets/KSCms-UHC-HW-V-DKemUgQi.bcmap               0.17 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF8-V-BIFFPWWm.bcmap                 0.17 kB
+desktop/tauri/dist/normal/assets/EUC-V-BQ9CW2K_.bcmap                        0.17 kB
+desktop/tauri/dist/normal/assets/RKSJ-V-CVQ5ujKs.bcmap                       0.17 kB
+desktop/tauri/dist/normal/assets/ETenms-B5-V-DsL3AkeM.bcmap                  0.17 kB
+desktop/tauri/dist/normal/assets/78-EUC-V-ChJxef36.bcmap                     0.17 kB
+desktop/tauri/dist/normal/assets/78-RKSJ-V-CyaguwXf.bcmap                    0.17 kB
+desktop/tauri/dist/normal/assets/GB-V-DQcXdwec.bcmap                         0.18 kB
+desktop/tauri/dist/normal/assets/GBT-V-DVsZ47Yj.bcmap                        0.18 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF16-V-E1RoE6KW.bcmap                0.18 kB
+desktop/tauri/dist/normal/assets/UniKS-UCS2-V-ahlksFWQ.bcmap                 0.18 kB
+desktop/tauri/dist/normal/assets/GB-EUC-V-DUJE8ZfE.bcmap                     0.18 kB
+desktop/tauri/dist/normal/assets/WP-Symbol-C3zzKJnO.bcmap                    0.18 kB
+desktop/tauri/dist/normal/assets/GBK-EUC-V-bmo5E_xa.bcmap                    0.18 kB
+desktop/tauri/dist/normal/assets/GBT-EUC-V-CCaONgYB.bcmap                    0.18 kB
+desktop/tauri/dist/normal/assets/GBKp-EUC-V-FKuJrjD8.bcmap                   0.18 kB
+desktop/tauri/dist/normal/assets/GBpc-EUC-V-BNBtOgzw.bcmap                   0.18 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF8-V-C8SGUjFI.bcmap                 0.18 kB
+desktop/tauri/dist/normal/assets/GBTpc-EUC-V-D_dpKF5g.bcmap                  0.18 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF32-V-BFm4myiz.bcmap                0.18 kB
+desktop/tauri/dist/normal/assets/UniGB-UCS2-V-COOBrDBb.bcmap                 0.19 kB
+desktop/tauri/dist/normal/assets/Ext-V-ByyLJMVu.bcmap                        0.22 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-0-DCLN2jmY.bcmap                  0.22 kB
+desktop/tauri/dist/normal/assets/Ext-RKSJ-V-gySMsgy2.bcmap                   0.22 kB
+desktop/tauri/dist/normal/assets/GBK2K-V-VEqjiYVJ.bcmap                      0.22 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-0-7ueYY-cc.bcmap               0.23 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-1-DymoVrld.bcmap               0.23 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-2-WYxwCoVU.bcmap               0.23 kB
+desktop/tauri/dist/normal/assets/Adobe-Korea1-0-A0Ew6GJu.bcmap               0.24 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-3-DU7EG9_k.bcmap               0.24 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-1-C_oGAEc2.bcmap                  0.25 kB
+desktop/tauri/dist/normal/assets/NWP-V-DvbaGBQ0.bcmap                        0.25 kB
+desktop/tauri/dist/normal/assets/90pv-RKSJ-V-BuoQaCHG.bcmap                  0.26 kB
+desktop/tauri/dist/normal/assets/Add-V-CzFvKnCs.bcmap                        0.28 kB
+desktop/tauri/dist/normal/assets/Add-RKSJ-V-C7YDsPzV.bcmap                   0.29 kB
+desktop/tauri/dist/normal/assets/78ms-RKSJ-V-4hl06FMz.bcmap                  0.29 kB
+desktop/tauri/dist/normal/assets/90ms-RKSJ-V-BbstlayK.bcmap                  0.29 kB
+desktop/tauri/dist/normal/assets/90msp-RKSJ-V-BWep_0YK.bcmap                 0.29 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-0-CfVBOElR.bcmap                 0.32 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-4-CPqEnWe7.bcmap               0.34 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-1-Cs9TI-Yv.bcmap                 0.37 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-2-D3SWzMKj.bcmap                 0.38 kB
+desktop/tauri/dist/normal/assets/Adobe-Korea1-1-DFSgDZ4w.bcmap               0.39 kB
+desktop/tauri/dist/normal/assets/Adobe-Korea1-2-LZ89XEQ6.bcmap               0.39 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-3-BNxX-hNa.bcmap                 0.40 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-4-uApBOf1n.bcmap                 0.41 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-5-BWUfkzOP.bcmap                 0.41 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-6-DfjBny4_.bcmap                 0.41 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-5-CyFviWdc.bcmap               0.43 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-2-BT5g0uLo.bcmap                  0.47 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-3-BWe_tZZF.bcmap                  0.47 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-6-8p9YIft8.bcmap               0.49 kB
+desktop/tauri/dist/normal/assets/CNS2-H-COHfjmw4.bcmap                       0.50 kB
+desktop/tauri/dist/normal/assets/GB-H-CjAQlF1j.bcmap                         0.53 kB
+desktop/tauri/dist/normal/assets/RKSJ-H-CotmKIAY.bcmap                       0.53 kB
+desktop/tauri/dist/normal/assets/GB-EUC-H-OgfW-rVY.bcmap                     0.55 kB
+desktop/tauri/dist/normal/assets/H-BJYV6_el.bcmap                            0.55 kB
+desktop/tauri/dist/normal/assets/GBpc-EUC-H-4mXfmDQd.bcmap                   0.56 kB
+desktop/tauri/dist/normal/assets/EUC-H-D0J4HUB1.bcmap                        0.58 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-4-CYF1KDey.bcmap                  0.60 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-5-B89PBerI.bcmap                  0.63 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF16-V-DfK_Aqy1.bcmap               0.64 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF16-V-BSHgoaRy.bcmap           0.65 kB
+desktop/tauri/dist/normal/assets/UniJIS-UCS2-V-Cr3xs5m4.bcmap                0.66 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF32-V-0rh54ED3.bcmap               0.68 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF8-V-BGWFHinB.bcmap                0.68 kB
+desktop/tauri/dist/normal/assets/UniJIS-UCS2-HW-V-BZyQaeYZ.bcmap             0.68 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF32-V-CH3k_ouF.bcmap           0.68 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF8-V-D8AJhywu.bcmap            0.68 kB
+desktop/tauri/dist/normal/assets/UniJISX0213-UTF32-V-Cz7JBDr9.bcmap          0.68 kB
+desktop/tauri/dist/normal/assets/UniJISX02132004-UTF32-V-BqqDIAe5.bcmap      0.69 kB
+desktop/tauri/dist/normal/assets/UniJISPro-UCS2-V-BpvX7JBA.bcmap             0.69 kB
+desktop/tauri/dist/normal/assets/UniJISPro-UCS2-HW-V-DLNkNO1x.bcmap          0.71 kB
+desktop/tauri/dist/normal/assets/CNS1-H-DAbVz1sI.bcmap                       0.71 kB
+desktop/tauri/dist/normal/assets/90msp-RKSJ-H-GTsoumJQ.bcmap                 0.72 kB
+desktop/tauri/dist/normal/assets/90ms-RKSJ-H-Bhsfh4Ys.bcmap                  0.72 kB
+desktop/tauri/dist/normal/assets/UniJISPro-UTF8-V-Db5K6XXE.bcmap             0.73 kB
+desktop/tauri/dist/normal/assets/83pv-RKSJ-H-DNQtuaxs.bcmap                  0.91 kB
+desktop/tauri/dist/normal/index.html                                         0.96 kB │ gzip:     0.47 kB
+desktop/tauri/dist/normal/assets/90pv-RKSJ-H-DOcWKG7K.bcmap                  0.98 kB
+desktop/tauri/dist/normal/assets/B5-H-Cw4_8on0.bcmap                         1.09 kB
+desktop/tauri/dist/normal/assets/B5pc-H-BLVOWhvh.bcmap                       1.10 kB
+desktop/tauri/dist/normal/assets/ETen-B5-H-BUa4x82H.bcmap                    1.13 kB
+desktop/tauri/dist/normal/assets/HKm314-B5-H-CUeI2x46.bcmap                  1.77 kB
+desktop/tauri/dist/normal/assets/CNS-EUC-H-C1HifF4e.bcmap                    1.78 kB
+desktop/tauri/dist/normal/assets/KSC-H-CUtFgdXl.bcmap                        1.83 kB
+desktop/tauri/dist/normal/assets/KSC-EUC-H-CYoqfsaA.bcmap                    1.85 kB
+desktop/tauri/dist/normal/assets/CNS-EUC-V-DYWNmJNX.bcmap                    1.92 kB
+desktop/tauri/dist/normal/assets/KSCpc-EUC-H-BxNLD7US.bcmap                  2.02 kB
+desktop/tauri/dist/normal/assets/HKm471-B5-H-B_3IWC_G.bcmap                  2.17 kB
+desktop/tauri/dist/normal/assets/HKgccs-B5-H-BSg_4Hb2.bcmap                  2.29 kB
+desktop/tauri/dist/normal/assets/78-H-CSvm1opZ.bcmap                         2.38 kB
+desktop/tauri/dist/normal/assets/78-RKSJ-H-34XPL1-s.bcmap                    2.40 kB
+desktop/tauri/dist/normal/assets/78-EUC-H-Uf9aYsyl.bcmap                     2.40 kB
+desktop/tauri/dist/normal/assets/Add-RKSJ-H-BpPRzomz.bcmap                   2.41 kB
+desktop/tauri/dist/normal/assets/HKdlb-B5-H-Bf7o2mkD.bcmap                   2.41 kB
+desktop/tauri/dist/normal/assets/Add-H-1H-FQZVX.bcmap                        2.42 kB
+desktop/tauri/dist/normal/assets/Ext-H-BSOXjlXj.bcmap                        2.54 kB
+desktop/tauri/dist/normal/assets/Ext-RKSJ-H-DGTwwnmY.bcmap                   2.54 kB
+desktop/tauri/dist/normal/assets/78ms-RKSJ-H-BuwLY695.bcmap                  2.65 kB
+desktop/tauri/dist/normal/assets/HKdla-B5-H-Bg4tZIUs.bcmap                   2.65 kB
+desktop/tauri/dist/normal/assets/NWP-H-BSh0nlh5.bcmap                        2.77 kB
+desktop/tauri/dist/normal/assets/KSCms-UHC-H-i6eA63f9.bcmap                  2.79 kB
+desktop/tauri/dist/normal/assets/KSCms-UHC-HW-H-lQjjyo98.bcmap               2.79 kB
+desktop/tauri/dist/normal/assets/ETHK-B5-H-1MLb5v9x.bcmap                    4.43 kB
+desktop/tauri/dist/normal/assets/HKscs-B5-H-CXbBbq6g.bcmap                   4.44 kB
+desktop/tauri/dist/normal/assets/GBT-H-DL9h-WkS.bcmap                        7.27 kB
+desktop/tauri/dist/normal/assets/GBT-EUC-H-BTsQIL1M.bcmap                    7.29 kB
+desktop/tauri/dist/normal/assets/GBTpc-EUC-H-DnIh5WJ3.bcmap                  7.30 kB
+desktop/tauri/dist/normal/assets/GBKp-EUC-H-CElrnV5g.bcmap                  14.69 kB
+desktop/tauri/dist/normal/assets/GBK-EUC-H-CAORqCkf.bcmap                   14.69 kB
+desktop/tauri/dist/normal/assets/FoxitSymbol-BVtbc20u.pfb                   16.73 kB
+desktop/tauri/dist/normal/assets/KSC-Johab-H-CGtV3MPT.bcmap                 16.79 kB
+desktop/tauri/dist/normal/assets/FoxitFixed-Dyd5Nipw.pfb                    17.60 kB
+desktop/tauri/dist/normal/assets/FoxitFixedBold-D5TuYRwj.pfb                18.06 kB
+desktop/tauri/dist/normal/assets/FoxitFixedItalic-DqjQkmbS.pfb              18.75 kB
+desktop/tauri/dist/normal/assets/FoxitFixedBoldItalic-BqlXQ_Yv.pfb          19.15 kB
+desktop/tauri/dist/normal/assets/FoxitSerifBold-DZZ4CclT.pfb                19.40 kB
+desktop/tauri/dist/normal/assets/FoxitSerif-qbgiDIe-.pfb                    19.47 kB
+desktop/tauri/dist/normal/assets/GBK2K-H-Cv55KPk8.bcmap                     19.66 kB
+desktop/tauri/dist/normal/assets/FoxitSerifBoldItalic-DSQtwd_X.pfb          20.73 kB
+desktop/tauri/dist/normal/assets/FoxitSerifItalic-CQs5lx9Y.pfb              21.23 kB
+desktop/tauri/dist/normal/assets/Adobe-Korea1-UCS2-BEQZuOdo.bcmap           23.29 kB
+desktop/tauri/dist/normal/assets/UniJIS-UCS2-H-2DbZ0MaQ.bcmap               25.44 kB
+desktop/tauri/dist/normal/assets/UniKS-UCS2-H-YeUc7k1L.bcmap                25.78 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF16-H-B0dvB-Td.bcmap               26.33 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF32-H-olR_LtmR.bcmap               26.45 kB
+desktop/tauri/dist/normal/assets/UniKS-UTF8-H-CbpebD-y.bcmap                27.79 kB
+desktop/tauri/dist/normal/assets/FoxitDingbats-BaQLufoW.pfb                 29.51 kB
+desktop/tauri/dist/normal/assets/Adobe-GB1-UCS2-BA083yIo.bcmap              33.97 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF16-H-BlDDPdCK.bcmap              39.44 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF16-H-KXixH-HI.bcmap          39.53 kB
+desktop/tauri/dist/normal/assets/UniJISX0213-UTF32-H-BavAhZjb.bcmap         40.52 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF32-H-BIQPWkjv.bcmap              40.54 kB
+desktop/tauri/dist/normal/assets/UniJISX02132004-UTF32-H-DAH-AgUq.bcmap     40.61 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF32-H-CXrD-9YE.bcmap          40.63 kB
+desktop/tauri/dist/normal/assets/Adobe-Japan1-UCS2-BL-4M2vS.bcmap           40.95 kB
+desktop/tauri/dist/normal/assets/Adobe-CNS1-UCS2-fO900upv.bcmap             41.19 kB
+desktop/tauri/dist/normal/assets/UniJIS-UTF8-H-CGusholx.bcmap               41.70 kB
+desktop/tauri/dist/normal/assets/UniJIS2004-UTF8-H-BkOctZjn.bcmap           41.78 kB
+desktop/tauri/dist/normal/assets/UniGB-UCS2-H-D7xzRvZN.bcmap                43.37 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF16-H-DKjbEwc0.bcmap               44.09 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF32-H-Behfouj5.bcmap               45.74 kB
+desktop/tauri/dist/normal/assets/UniGB-UTF8-H-EROft1ro.bcmap                46.84 kB
+desktop/tauri/dist/normal/assets/UniCNS-UCS2-H-DWzv8UhH.bcmap               48.28 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF16-H-Bw0JKgCq.bcmap              50.42 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF32-H-IE_GrH2i.bcmap              52.68 kB
+desktop/tauri/dist/normal/assets/UniCNS-UTF8-H-BbLcFh6Q.bcmap               53.63 kB
+desktop/tauri/dist/normal/assets/LiberationSans-BoldItalic-Bj53-jFw.ttf    135.12 kB
+desktop/tauri/dist/normal/assets/LiberationSans-Bold-BPt4bU5Z.ttf          137.05 kB
+desktop/tauri/dist/normal/assets/LiberationSans-Regular-cbskN6YR.ttf       139.51 kB
+desktop/tauri/dist/normal/assets/LiberationSans-Italic-5QhGB3P9.ttf        162.04 kB
+desktop/tauri/dist/normal/assets/docx.worker-D6l3sNo2.js                   600.15 kB
+desktop/tauri/dist/normal/assets/pdf.worker.min-LyOxJPrg.mjs             1,072.84 kB
+desktop/tauri/dist/normal/assets/MessageList-SMBnSpKm.css                   17.15 kB │ gzip:     3.42 kB
+desktop/tauri/dist/normal/assets/index-CN2DPAOe.css                        211.71 kB │ gzip:    34.56 kB
+desktop/tauri/dist/normal/assets/core-DV6XEvTN.js                            0.10 kB │ gzip:     0.11 kB
+desktop/tauri/dist/normal/assets/codeowners-Bp6g37R7.js                      0.55 kB │ gzip:     0.32 kB
+desktop/tauri/dist/normal/assets/useFillId-B4MHppgm.js                       0.67 kB │ gzip:     0.38 kB
+desktop/tauri/dist/normal/assets/shellsession-BADoaaVG.js                    0.71 kB │ gzip:     0.43 kB
+desktop/tauri/dist/normal/assets/tsv-B_m7g4N7.js                             0.74 kB │ gzip:     0.34 kB
+desktop/tauri/dist/normal/assets/html-derivative-DlHx6ybY.js                 0.90 kB │ gzip:     0.50 kB
+desktop/tauri/dist/normal/assets/git-rebase-r7XF79zn.js                      0.98 kB │ gzip:     0.44 kB
+desktop/tauri/dist/normal/assets/qmldir-C8lEn-DE.js                          1.00 kB │ gzip:     0.45 kB
+desktop/tauri/dist/normal/assets/csv-fuZLfV_i.js                             1.14 kB │ gzip:     0.37 kB
+desktop/tauri/dist/normal/assets/git-commit-F4YmCXRG.js                      1.23 kB │ gzip:     0.53 kB
+desktop/tauri/dist/normal/assets/xsl-CtQFsRM5.js                             1.39 kB │ gzip:     0.52 kB
+desktop/tauri/dist/normal/assets/dotenv-Da5cRb03.js                          1.42 kB │ gzip:     0.53 kB
+desktop/tauri/dist/normal/assets/sparql-rVzFXLq3.js                          1.48 kB │ gzip:     0.82 kB
+desktop/tauri/dist/normal/assets/ini-BEwlwnbL.js                             1.53 kB │ gzip:     0.50 kB
+desktop/tauri/dist/normal/assets/fortran-fixed-form-CkoXwp7k.js              1.67 kB │ gzip:     0.69 kB
+desktop/tauri/dist/normal/assets/docker-BcOcwvcX.js                          1.74 kB │ gzip:     0.60 kB
+desktop/tauri/dist/normal/assets/desktop-BmXAJ9_W.js                         1.83 kB │ gzip:     0.76 kB
+desktop/tauri/dist/normal/assets/hxml-2-FPmUDs.js                            1.89 kB │ gzip:     0.90 kB
+desktop/tauri/dist/normal/assets/index-C9hje3JS.js                           1.98 kB │ gzip:     0.90 kB
+desktop/tauri/dist/normal/assets/wenyan-BV7otONQ.js                          2.16 kB │ gzip:     1.09 kB
+desktop/tauri/dist/normal/assets/jssm-C2t-YnRu.js                            2.24 kB │ gzip:     0.62 kB
+desktop/tauri/dist/normal/assets/reg-C-SQnVFl.js                             2.35 kB │ gzip:     0.70 kB
+desktop/tauri/dist/normal/assets/edge-FbVlp4U3.js                            2.36 kB │ gzip:     0.70 kB
+desktop/tauri/dist/normal/assets/index-BkAiyu0t.js                           2.49 kB │ gzip:     1.17 kB
+desktop/tauri/dist/normal/assets/diff-D97Zzqfu.js                            2.57 kB │ gzip:     0.70 kB
+desktop/tauri/dist/normal/assets/gleam-BspZqrRM.js                           2.58 kB │ gzip:     0.82 kB
+desktop/tauri/dist/normal/assets/index-CwGC4hZC.js                           2.58 kB │ gzip:     1.18 kB
+desktop/tauri/dist/normal/assets/erb-DXfck5VN.js                             2.61 kB │ gzip:     0.84 kB
+desktop/tauri/dist/normal/assets/hy-DFXneXwc.js                              2.65 kB │ gzip:     1.18 kB
+desktop/tauri/dist/normal/assets/nativeSystemServices-DQlGY4o2.js            2.65 kB │ gzip:     1.34 kB
+desktop/tauri/dist/normal/assets/json-Cp-IABpG.js                            2.82 kB │ gzip:     0.78 kB
+desktop/tauri/dist/normal/assets/openscad-C4EeE6gA.js                        2.82 kB │ gzip:     1.01 kB
+desktop/tauri/dist/normal/assets/log-2UxHyX5q.js                             2.85 kB │ gzip:     0.90 kB
+desktop/tauri/dist/normal/assets/cairo-KRGpt6FW.js                           2.94 kB │ gzip:     0.81 kB
+desktop/tauri/dist/normal/assets/berry-uYugtg8r.js                           3.01 kB │ gzip:     0.81 kB
+desktop/tauri/dist/normal/assets/jsonl-DcaNXYhu.js                           3.01 kB │ gzip:     0.79 kB
+desktop/tauri/dist/normal/assets/jsonc-Des-eS-w.js                           3.11 kB │ gzip:     0.80 kB
+desktop/tauri/dist/normal/assets/logo-BtOb2qkB.js                            3.13 kB │ gzip:     1.47 kB
+desktop/tauri/dist/normal/assets/po-BTJTHyun.js                              3.24 kB │ gzip:     0.91 kB
+desktop/tauri/dist/normal/assets/json5-C9tS-k6U.js                           3.25 kB │ gzip:     0.83 kB
+desktop/tauri/dist/normal/assets/mipsasm-CKIfxQSi.js                         3.26 kB │ gzip:     1.18 kB
+desktop/tauri/dist/normal/assets/tasl-QIJgUcNo.js                            3.29 kB │ gzip:     0.85 kB
+desktop/tauri/dist/normal/assets/rbs-CpoqiR4B.js                             3.31 kB │ gzip:     0.73 kB
+desktop/tauri/dist/normal/assets/genie-D0YGMca9.js                           3.36 kB │ gzip:     1.21 kB
+desktop/tauri/dist/normal/assets/rel-C3B-1QV4.js                             3.37 kB │ gzip:     1.11 kB
+desktop/tauri/dist/normal/assets/vala-CsfeWuGM.js                            3.37 kB │ gzip:     1.19 kB
+desktop/tauri/dist/normal/assets/splunk-BtCnVYZw.js                          3.44 kB │ gzip:     1.52 kB
+desktop/tauri/dist/normal/assets/fluent-C4IJs8-o.js                          3.61 kB │ gzip:     0.90 kB
+desktop/tauri/dist/normal/assets/ssh-config-_ykCGR6B.js                      3.62 kB │ gzip:     1.60 kB
+desktop/tauri/dist/normal/assets/jsonnet-DFQXde-d.js                         3.62 kB │ gzip:     1.05 kB
+desktop/tauri/dist/normal/assets/kdl-DV7GczEv.js                             3.63 kB │ gzip:     1.04 kB
+desktop/tauri/dist/normal/assets/glsl-DplSGwfg.js                            3.63 kB │ gzip:     1.41 kB
+desktop/tauri/dist/normal/assets/hurl-irOxFIW8.js                            3.65 kB │ gzip:     1.16 kB
+desktop/tauri/dist/normal/assets/narrat-DRg8JJMk.js                          3.67 kB │ gzip:     1.11 kB
+desktop/tauri/dist/normal/assets/turtle-BsS91CYL.js                          3.70 kB │ gzip:     0.98 kB
+desktop/tauri/dist/normal/assets/Mono-CU4rc9GZ.js                            3.76 kB │ gzip:     1.91 kB
+desktop/tauri/dist/normal/assets/zenscript-DVFEvuxE.js                       3.91 kB │ gzip:     1.28 kB
+desktop/tauri/dist/normal/assets/ron-D8l8udqQ.js                             3.91 kB │ gzip:     0.98 kB
+desktop/tauri/dist/normal/assets/gn-n2N0HUVH.js                              4.00 kB │ gzip:     1.49 kB
+desktop/tauri/dist/normal/assets/index-NpHtstey.js                           4.01 kB │ gzip:     1.43 kB
+desktop/tauri/dist/normal/assets/pascal-D93ZcfNL.js                          4.15 kB │ gzip:     1.67 kB
+desktop/tauri/dist/normal/assets/Text-_nCD2rpA.js                            4.36 kB │ gzip:     2.28 kB
+desktop/tauri/dist/normal/assets/tcl-dwOrl1Do.js                             4.43 kB │ gzip:     1.52 kB
+desktop/tauri/dist/normal/assets/nextflow-C-mBbutL.js                        4.51 kB │ gzip:     1.17 kB
+desktop/tauri/dist/normal/assets/rosmsg-BJDFO7_C.js                          4.52 kB │ gzip:     1.06 kB
+desktop/tauri/dist/normal/assets/http-jrhK8wxY.js                            4.55 kB │ gzip:     1.12 kB
+desktop/tauri/dist/normal/assets/polar-C0HS_06l.js                           4.67 kB │ gzip:     1.12 kB
+desktop/tauri/dist/normal/assets/sdbl-DVxCFoDh.js                            4.70 kB │ gzip:     2.01 kB
+desktop/tauri/dist/normal/assets/fennel-BYunw83y.js                          4.77 kB │ gzip:     1.53 kB
+desktop/tauri/dist/normal/assets/bibtex-CHM0blh-.js                          4.80 kB │ gzip:     0.83 kB
+desktop/tauri/dist/normal/assets/llvm-BZoOZj88.js                            5.04 kB │ gzip:     2.01 kB
+desktop/tauri/dist/normal/assets/wgsl-Dx-B1_4e.js                            5.14 kB │ gzip:     1.39 kB
+desktop/tauri/dist/normal/assets/gdresource-TyuKm33G.js                      5.29 kB │ gzip:     1.34 kB
+desktop/tauri/dist/normal/assets/qml-3beO22l8.js                             5.34 kB │ gzip:     1.38 kB
+desktop/tauri/dist/normal/assets/zig-VOosw3JB.js                             5.34 kB │ gzip:     1.55 kB
+desktop/tauri/dist/normal/assets/dax-CEL-wOlO.js                             5.37 kB │ gzip:     2.23 kB
+desktop/tauri/dist/normal/assets/bicep-Bmn6On1c.js                           5.38 kB │ gzip:     1.15 kB
+desktop/tauri/dist/normal/assets/xml-sdJ4AIDG.js                             5.38 kB │ gzip:     1.21 kB
+desktop/tauri/dist/normal/assets/awk-DMzUqQB5.js                             5.46 kB │ gzip:     1.38 kB
+desktop/tauri/dist/normal/assets/jinja-f2NsQr07.js                           5.69 kB │ gzip:     1.40 kB
+desktop/tauri/dist/normal/assets/lean-BZvkOJ9d.js                            5.78 kB │ gzip:     1.92 kB
+desktop/tauri/dist/normal/assets/powerquery-CEu0bR-o.js                      5.90 kB │ gzip:     1.52 kB
+desktop/tauri/dist/normal/assets/shaderlab-Dg9Lc6iA.js                       5.92 kB │ gzip:     2.08 kB
+desktop/tauri/dist/normal/assets/cypher-COkxafJQ.js                          5.96 kB │ gzip:     1.73 kB
+desktop/tauri/dist/normal/assets/coq-C7JzOVbR.js                             6.01 kB │ gzip:     1.95 kB
+desktop/tauri/dist/normal/assets/vb-Cu-pLBUe.js                              6.08 kB │ gzip:     2.33 kB
+desktop/tauri/dist/normal/assets/min-dark-CafNBF8u.js                        6.29 kB │ gzip:     1.71 kB
+desktop/tauri/dist/normal/assets/gdshader-DkwncUOv.js                        6.33 kB │ gzip:     1.73 kB
+desktop/tauri/dist/normal/assets/ara-BRHolxvo.js                             6.36 kB │ gzip:     1.81 kB
+desktop/tauri/dist/normal/assets/verilog-nZwndyjY.js                         6.41 kB │ gzip:     1.92 kB
+desktop/tauri/dist/normal/assets/clojure-P80f7IUj.js                         6.41 kB │ gzip:     1.42 kB
+desktop/tauri/dist/normal/assets/postcss-CXtECtnM.js                         6.42 kB │ gzip:     1.91 kB
+desktop/tauri/dist/normal/assets/red-hvxz__6c.js                             6.42 kB │ gzip:     1.63 kB
+desktop/tauri/dist/normal/assets/toml-vGWfd6FD.js                            6.43 kB │ gzip:     1.28 kB
+desktop/tauri/dist/normal/assets/proto-C7zT0LnQ.js                           6.55 kB │ gzip:     1.42 kB
+desktop/tauri/dist/normal/assets/chapel-DTp_pixX.js                          6.62 kB │ gzip:     1.85 kB
+desktop/tauri/dist/normal/assets/solarized-light-Dlz6yCKv.js                 6.63 kB │ gzip:     1.76 kB
+desktop/tauri/dist/normal/assets/r-Cf5RLm7j.js                               6.74 kB │ gzip:     1.84 kB
+desktop/tauri/dist/normal/assets/talonscript-CkByrt1z.js                     6.76 kB │ gzip:     1.49 kB
+desktop/tauri/dist/normal/assets/riscv-BM1_JUlF.js                           6.91 kB │ gzip:     1.98 kB
+desktop/tauri/dist/normal/assets/min-light-CTRr51gU.js                       6.97 kB │ gzip:     1.89 kB
+desktop/tauri/dist/normal/assets/soy-8wufbnw4.js                             6.98 kB │ gzip:     1.66 kB
+desktop/tauri/dist/normal/assets/solarized-dark-CpvCGNkr.js                  7.00 kB │ gzip:     1.83 kB
+desktop/tauri/dist/normal/assets/scheme-C98Dy4si.js                          7.17 kB │ gzip:     2.05 kB
+desktop/tauri/dist/normal/assets/index-BHBK9cIc.js                           7.20 kB │ gzip:     2.07 kB
+desktop/tauri/dist/normal/assets/index-DHTd3sLG.js                           7.21 kB │ gzip:     2.19 kB
+desktop/tauri/dist/normal/assets/hlsl-D3lLCCz7.js                            7.26 kB │ gzip:     2.19 kB
+desktop/tauri/dist/normal/assets/index-DGPqFyay.js                           7.27 kB │ gzip:     2.31 kB
+desktop/tauri/dist/normal/assets/index-s6oq-1Rz.js                           7.45 kB │ gzip:     2.21 kB
+desktop/tauri/dist/normal/assets/qss-IeuSbFQv.js                             7.47 kB │ gzip:     2.58 kB
+desktop/tauri/dist/normal/assets/index-DKkQHMNM.js                           7.66 kB │ gzip:     1.83 kB
+desktop/tauri/dist/normal/assets/prisma-Vru482bI.js                          7.74 kB │ gzip:     1.48 kB
+desktop/tauri/dist/normal/assets/index-KN49C0Fg.js                           7.80 kB │ gzip:     2.36 kB
+desktop/tauri/dist/normal/assets/systemd-4A_iFExJ.js                         7.87 kB │ gzip:     2.55 kB
+desktop/tauri/dist/normal/assets/index-BEmdYGKv.js                           7.89 kB │ gzip:     2.57 kB
+desktop/tauri/dist/normal/assets/regexp-CDVJQ6XC.js                          7.99 kB │ gzip:     1.42 kB
+desktop/tauri/dist/normal/assets/monokai-BRVnQi9A.js                         8.03 kB │ gzip:     1.94 kB
+desktop/tauri/dist/normal/assets/index-DXXpm5uI.js                           8.07 kB │ gzip:     2.04 kB
+desktop/tauri/dist/normal/assets/haml-D5jkg6IW.js                            8.26 kB │ gzip:     1.81 kB
+desktop/tauri/dist/normal/assets/index-B1Zt2xWe.js                           8.46 kB │ gzip:     2.13 kB
+desktop/tauri/dist/normal/assets/vue-html-AaS7Mt5G.js                        8.47 kB │ gzip:     1.68 kB
+desktop/tauri/dist/normal/assets/index-DepTTnBJ.js                           8.47 kB │ gzip:     2.13 kB
+desktop/tauri/dist/normal/assets/index-r46wsaGV.js                           8.49 kB │ gzip:     2.28 kB
+desktop/tauri/dist/normal/assets/plsql-ChMvpjG-.js                           8.51 kB │ gzip:     3.00 kB
+desktop/tauri/dist/normal/assets/dart-bE4Kk8sk.js                            8.62 kB │ gzip:     2.00 kB
+desktop/tauri/dist/normal/assets/index-SIxAfFFD.js                           8.76 kB │ gzip:     1.88 kB
+desktop/tauri/dist/normal/assets/index-BEBOtnNf.js                           8.77 kB │ gzip:     1.91 kB
+desktop/tauri/dist/normal/assets/horizon-BUw7H-hv.js                         8.78 kB │ gzip:     1.96 kB
+desktop/tauri/dist/normal/assets/kotlin-BdnUsdx6.js                          8.79 kB │ gzip:     2.13 kB
+desktop/tauri/dist/normal/assets/horizon-bright-CUuTKBJd.js                  8.79 kB │ gzip:     1.97 kB
+desktop/tauri/dist/normal/assets/index-CCFmQZmU.js                           8.85 kB │ gzip:     1.99 kB
+desktop/tauri/dist/normal/assets/index-DlUCaVho.js                           8.90 kB │ gzip:     2.44 kB
+desktop/tauri/dist/normal/assets/index-CWcERmyB.js                           8.95 kB │ gzip:     2.51 kB
+desktop/tauri/dist/normal/assets/make-CHLpvVh8.js                            8.96 kB │ gzip:     1.77 kB
+desktop/tauri/dist/normal/assets/andromeeda-C4gqWexZ.js                      9.02 kB │ gzip:     2.36 kB
+desktop/tauri/dist/normal/assets/sas-DEy46yEz.js                             9.06 kB │ gzip:     3.81 kB
+desktop/tauri/dist/normal/assets/dark-plus-C3mMm8J8.js                       9.10 kB │ gzip:     2.10 kB
+desktop/tauri/dist/normal/assets/slack-dark-BthQWCQV.js                      9.12 kB │ gzip:     1.97 kB
+desktop/tauri/dist/normal/assets/smithy-cds9vsN8.js                          9.13 kB │ gzip:     1.53 kB
+desktop/tauri/dist/normal/assets/index-BfHPg1Zk.js                           9.25 kB │ gzip:     2.53 kB
+desktop/tauri/dist/normal/assets/sass-Cj5Yp3dK.js                            9.29 kB │ gzip:     2.49 kB
+desktop/tauri/dist/normal/assets/index-CAUGnSVS.js                           9.29 kB │ gzip:     2.43 kB
+desktop/tauri/dist/normal/assets/plastic-3e1v2bzS.js                         9.30 kB │ gzip:     1.98 kB
+desktop/tauri/dist/normal/assets/index-Cua2zFXd.js                           9.38 kB │ gzip:     2.53 kB
+desktop/tauri/dist/normal/assets/index-Bwjt7vzR.js                           9.38 kB │ gzip:     2.66 kB
+desktop/tauri/dist/normal/assets/slack-ochin-DqwNpetd.js                     9.43 kB │ gzip:     2.10 kB
+desktop/tauri/dist/normal/assets/index-CmiEzZRU.js                           9.45 kB │ gzip:     2.60 kB
+desktop/tauri/dist/normal/assets/index-B7i-5EtV.js                           9.54 kB │ gzip:     2.74 kB
+desktop/tauri/dist/normal/assets/index-BH3sNP6g.js                           9.64 kB │ gzip:     2.78 kB
+desktop/tauri/dist/normal/assets/tex-D96PA37w.js                             9.67 kB │ gzip:     3.06 kB
+desktop/tauri/dist/normal/assets/jison-wvAkD_A8.js                           9.69 kB │ gzip:     1.85 kB
+desktop/tauri/dist/normal/assets/index-DjIhCx69.js                           9.73 kB │ gzip:     2.78 kB
+desktop/tauri/dist/normal/assets/index-Dujz8E1z.js                           9.85 kB │ gzip:     2.85 kB
+desktop/tauri/dist/normal/assets/cmake-D1j8_8rp.js                           9.86 kB │ gzip:     3.37 kB
+desktop/tauri/dist/normal/assets/index-BNcdtF7l.js                           9.89 kB │ gzip:     1.82 kB
+desktop/tauri/dist/normal/assets/light-plus-B7mTdjB0.js                      9.94 kB │ gzip:     2.27 kB
+desktop/tauri/dist/normal/assets/index-hYqT3QO_.js                           9.98 kB │ gzip:     2.88 kB
+desktop/tauri/dist/normal/assets/hcl-BWvSN4gD.js                            10.05 kB │ gzip:     1.93 kB
+desktop/tauri/dist/normal/assets/index-NEEIWnRl.js                          10.16 kB │ gzip:     2.83 kB
+desktop/tauri/dist/normal/assets/index-DP-SwFcE.js                          10.20 kB │ gzip:     2.89 kB
+desktop/tauri/dist/normal/assets/pkl-u5AG7uiY.js                            10.37 kB │ gzip:     1.38 kB
+desktop/tauri/dist/normal/assets/beancount-k_qm7-4y.js                      10.37 kB │ gzip:     1.44 kB
+desktop/tauri/dist/normal/assets/nextflow-groovy-vE_lwT2v.js                10.44 kB │ gzip:     2.14 kB
+desktop/tauri/dist/normal/assets/dream-maker-BtqSS_iP.js                    10.47 kB │ gzip:     2.25 kB
+desktop/tauri/dist/normal/assets/raku-DXvB9xmW.js                           10.47 kB │ gzip:     2.94 kB
+desktop/tauri/dist/normal/assets/yaml-Buea-lGh.js                           10.51 kB │ gzip:     2.27 kB
+desktop/tauri/dist/normal/assets/index-COx3qB-Z.js                          10.59 kB │ gzip:     2.20 kB
+desktop/tauri/dist/normal/assets/rst-bs7f0vWN.js                            10.67 kB │ gzip:     2.42 kB
+desktop/tauri/dist/normal/assets/index-BOVeez7p.js                          10.70 kB │ gzip:     3.37 kB
+desktop/tauri/dist/normal/assets/index-m7GZN5sO.js                          10.73 kB │ gzip:     2.28 kB
+desktop/tauri/dist/normal/assets/index-DwGrgCH8.js                          10.84 kB │ gzip:     2.60 kB
+desktop/tauri/dist/normal/assets/index-CDkSWVZq.js                          10.84 kB │ gzip:     2.34 kB
+desktop/tauri/dist/normal/assets/index-B_BeqqGN.js                          10.88 kB │ gzip:     2.22 kB
+desktop/tauri/dist/normal/assets/index-CakUB4GL.js                          10.94 kB │ gzip:     2.32 kB
+desktop/tauri/dist/normal/assets/elm-DbKCFpqz.js                            10.97 kB │ gzip:     2.12 kB
+desktop/tauri/dist/normal/assets/index-BPaCwYkR.js                          11.08 kB │ gzip:     2.31 kB
+desktop/tauri/dist/normal/assets/github-light-DAi9KRSo.js                   11.18 kB │ gzip:     2.51 kB
+desktop/tauri/dist/normal/assets/just-Cwhn7H3k.js                           11.23 kB │ gzip:     2.80 kB
+desktop/tauri/dist/normal/assets/index-DKAUTvir.js                          11.31 kB │ gzip:     3.88 kB
+desktop/tauri/dist/normal/assets/index-BPyfzRP8.js                          11.35 kB │ gzip:     2.34 kB
+desktop/tauri/dist/normal/assets/prolog-CbFg5uaA.js                         11.36 kB │ gzip:     3.83 kB
+desktop/tauri/dist/normal/assets/terraform-BETggiCN.js                      11.39 kB │ gzip:     2.51 kB
+desktop/tauri/dist/normal/assets/github-dark-DHJKELXO.js                    11.41 kB │ gzip:     2.55 kB
+desktop/tauri/dist/normal/assets/puppet-BMWR74SV.js                         11.44 kB │ gzip:     2.11 kB
+desktop/tauri/dist/normal/assets/laserwave-DUszq2jm.js                      11.50 kB │ gzip:     2.58 kB
+desktop/tauri/dist/normal/assets/index-Q0LBX166.js                          11.52 kB │ gzip:     2.64 kB
+desktop/tauri/dist/normal/assets/index-DNwef0M2.js                          11.53 kB │ gzip:     3.66 kB
+desktop/tauri/dist/normal/assets/index-CiGwNEUg.js                          11.57 kB │ gzip:     2.72 kB
+desktop/tauri/dist/normal/assets/index-CAd5AyjY.js                          11.57 kB │ gzip:     3.55 kB
+desktop/tauri/dist/normal/assets/index-Bln9CvBj.js                          11.62 kB │ gzip:     2.61 kB
+desktop/tauri/dist/normal/assets/index-CxUh-Wgt.js                          11.73 kB │ gzip:     2.73 kB
+desktop/tauri/dist/normal/assets/index-i37GUGk8.js                          11.84 kB │ gzip:     3.69 kB
+desktop/tauri/dist/normal/assets/index-jLtmyWA-.js                          11.89 kB │ gzip:     3.71 kB
+desktop/tauri/dist/normal/assets/index-CHTuUc9a.js                          11.92 kB │ gzip:     2.58 kB
+desktop/tauri/dist/normal/assets/gherkin-DyxjwDmM.js                        11.95 kB │ gzip:     5.05 kB
+desktop/tauri/dist/normal/assets/index-BqJvZ3Iy.js                          11.98 kB │ gzip:     2.90 kB
+desktop/tauri/dist/normal/assets/wasm-MzD3tlZU.js                           12.01 kB │ gzip:     2.19 kB
+desktop/tauri/dist/normal/assets/index-_ALqIfHh.js                          12.04 kB │ gzip:     2.79 kB
+desktop/tauri/dist/normal/assets/hjson-D5-asLiD.js                          12.05 kB │ gzip:     1.64 kB
+desktop/tauri/dist/normal/assets/surrealql-Cjom0U5J.js                      12.06 kB │ gzip:     3.30 kB
+desktop/tauri/dist/normal/assets/index-8PV0OK4i.js                          12.15 kB │ gzip:     3.00 kB
+desktop/tauri/dist/normal/assets/handlebars-BpdQsYii.js                     12.15 kB │ gzip:     2.38 kB
+desktop/tauri/dist/normal/assets/index-nPLC9sQy.js                          12.26 kB │ gzip:     2.99 kB
+desktop/tauri/dist/normal/assets/index-NrzmF6v7.js                          12.27 kB │ gzip:     2.69 kB
+desktop/tauri/dist/normal/assets/index-CJp19yuS.js                          12.30 kB │ gzip:     2.78 kB
+desktop/tauri/dist/normal/assets/index-B6XG4cHY.js                          12.35 kB │ gzip:     2.41 kB
+desktop/tauri/dist/normal/assets/index-RlNd-Jk9.js                          12.35 kB │ gzip:     4.01 kB
+desktop/tauri/dist/normal/assets/index-E94FZHhU.js                          12.40 kB │ gzip:     2.93 kB
+desktop/tauri/dist/normal/assets/index-DOL5b-7u.js                          12.44 kB │ gzip:     2.91 kB
+desktop/tauri/dist/normal/assets/apache-Pmp26Uib.js                         12.46 kB │ gzip:     3.72 kB
+desktop/tauri/dist/normal/assets/index-DUtKFD0n.js                          12.47 kB │ gzip:     2.98 kB
+desktop/tauri/dist/normal/assets/index-BE5lC_B0.js                          12.53 kB │ gzip:     3.75 kB
+desktop/tauri/dist/normal/assets/index-C9dvaPIn.js                          12.54 kB │ gzip:     2.74 kB
+desktop/tauri/dist/normal/assets/index-D7jKMSSM.js                          12.55 kB │ gzip:     3.99 kB
+desktop/tauri/dist/normal/assets/index-CwmHjtef.js                          12.61 kB │ gzip:     2.94 kB
+desktop/tauri/dist/normal/assets/index-CNWO4CgQ.js                          12.62 kB │ gzip:     3.08 kB
+desktop/tauri/dist/normal/assets/index-Nz2AhhzT.js                          12.70 kB │ gzip:     4.05 kB
+desktop/tauri/dist/normal/assets/vesper-DRje8inN.js                         12.73 kB │ gzip:     1.98 kB
+desktop/tauri/dist/normal/assets/index-Bg1iYzyM.js                          12.75 kB │ gzip:     2.89 kB
+desktop/tauri/dist/normal/assets/index-DAkQk6zs.js                          12.84 kB │ gzip:     2.69 kB
+desktop/tauri/dist/normal/assets/index-Bf4XsX0B.js                          12.88 kB │ gzip:     2.96 kB
+desktop/tauri/dist/normal/assets/bat-CickPsom.js                            12.89 kB │ gzip:     3.23 kB
+desktop/tauri/dist/normal/assets/index-Bqmzwc2t.js                          12.90 kB │ gzip:     3.04 kB
+desktop/tauri/dist/normal/assets/index-C72anwkw.js                          12.92 kB │ gzip:     2.91 kB
+desktop/tauri/dist/normal/assets/index-B0svGHnW.js                          12.93 kB │ gzip:     3.93 kB
+desktop/tauri/dist/normal/assets/fish-BvzEVeQv.js                           13.04 kB │ gzip:     1.74 kB
+desktop/tauri/dist/normal/assets/index-B5CifhU9.js                          13.09 kB │ gzip:     3.09 kB
+desktop/tauri/dist/normal/assets/nsis-BlV79W_Q.js                           13.13 kB │ gzip:     4.07 kB
+desktop/tauri/dist/normal/assets/index-BILeZ7Kt.js                          13.21 kB │ gzip:     3.66 kB
+desktop/tauri/dist/normal/assets/index-Ca1OiQl9.js                          13.21 kB │ gzip:     3.08 kB
+desktop/tauri/dist/normal/assets/v-BGw2Nkan.js                              13.33 kB │ gzip:     2.77 kB
+desktop/tauri/dist/normal/assets/index-DEh_kvMO.js                          13.45 kB │ gzip:     3.51 kB
+desktop/tauri/dist/normal/assets/index-HV2FF3Lo.js                          13.54 kB │ gzip:     3.07 kB
+desktop/tauri/dist/normal/assets/vitesse-light-CVO1_9PV.js                  13.62 kB │ gzip:     3.04 kB
+desktop/tauri/dist/normal/assets/index-CjHUbbRw.js                          13.62 kB │ gzip:     2.51 kB
+desktop/tauri/dist/normal/assets/index-E5hUSoXL.js                          13.65 kB │ gzip:     4.31 kB
+desktop/tauri/dist/normal/assets/aurora-x-D-2ljcwZ.js                       13.66 kB │ gzip:     2.28 kB
+desktop/tauri/dist/normal/assets/index-D2u0OaDO.js                          13.67 kB │ gzip:     3.25 kB
+desktop/tauri/dist/normal/assets/vitesse-black-Bkuqu6BP.js                  13.68 kB │ gzip:     3.06 kB
+desktop/tauri/dist/normal/assets/index-DnNh0Omw.js                          13.70 kB │ gzip:     3.55 kB
+desktop/tauri/dist/normal/assets/index-U9SOqlhG.js                          13.75 kB │ gzip:     3.19 kB
+desktop/tauri/dist/normal/assets/vitesse-dark-D0r3Knsf.js                   13.76 kB │ gzip:     3.06 kB
+desktop/tauri/dist/normal/assets/index-C6J77FBe.js                          13.84 kB │ gzip:     3.82 kB
+desktop/tauri/dist/normal/assets/pug-DKIMFp6K.js                            13.84 kB │ gzip:     2.58 kB
+desktop/tauri/dist/normal/assets/synthwave-84-CbfX1IO0.js                   14.04 kB │ gzip:     2.87 kB
+desktop/tauri/dist/normal/assets/index-DGNHYN2L.js                          14.05 kB │ gzip:     3.62 kB
+desktop/tauri/dist/normal/assets/index-Bj2UyyKL.js                          14.11 kB │ gzip:     3.75 kB
+desktop/tauri/dist/normal/assets/index-svewE5B0.js                          14.12 kB │ gzip:     4.46 kB
+desktop/tauri/dist/normal/assets/smalltalk-BOQMe2GC.js                      14.13 kB │ gzip:     2.16 kB
+desktop/tauri/dist/normal/assets/index-aqWTkpcN.js                          14.15 kB │ gzip:     3.56 kB
+desktop/tauri/dist/normal/assets/github-light-default-D7oLnXFd.js           14.16 kB │ gzip:     3.04 kB
+desktop/tauri/dist/normal/assets/index-DxPuB6E3.js                          14.21 kB │ gzip:     3.80 kB
+desktop/tauri/dist/normal/assets/index-mBICRI65.js                          14.25 kB │ gzip:     4.17 kB
+desktop/tauri/dist/normal/assets/github-light-high-contrast-BfjtVDDH.js     14.28 kB │ gzip:     3.02 kB
+desktop/tauri/dist/normal/assets/clarity-Dn5IMItf.js                        14.36 kB │ gzip:     2.51 kB
+desktop/tauri/dist/normal/assets/index-acoNHY21.js                          14.39 kB │ gzip:     4.16 kB
+desktop/tauri/dist/normal/assets/index-CpXEdMq8.js                          14.43 kB │ gzip:     3.70 kB
+desktop/tauri/dist/normal/assets/github-dark-dimmed-DH5Ifo-i.js             14.43 kB │ gzip:     3.13 kB
+desktop/tauri/dist/normal/assets/github-dark-default-Cuk6v7N8.js            14.44 kB │ gzip:     3.13 kB
+desktop/tauri/dist/normal/assets/index-CXOIna03.js                          14.53 kB │ gzip:     3.69 kB
+desktop/tauri/dist/normal/assets/index-Cz6US5I1.js                          14.56 kB │ gzip:     4.60 kB
+desktop/tauri/dist/normal/assets/github-dark-high-contrast-E3gJ1_iC.js      14.60 kB │ gzip:     3.09 kB
+desktop/tauri/dist/normal/assets/index-rOsN_fJz.js                          14.60 kB │ gzip:     3.04 kB
+desktop/tauri/dist/normal/assets/index-Bc8m0Ps4.js                          14.62 kB │ gzip:     3.29 kB
+desktop/tauri/dist/normal/assets/index-B_8iGzBr.js                          14.68 kB │ gzip:     2.94 kB
+desktop/tauri/dist/normal/assets/gnuplot-DdkO51Og.js                        14.78 kB │ gzip:     3.27 kB
+desktop/tauri/dist/normal/assets/index-DsOZwazU.js                          14.86 kB │ gzip:     3.70 kB
+desktop/tauri/dist/normal/assets/index-CIKDYEOI.js                          14.88 kB │ gzip:     4.64 kB
+desktop/tauri/dist/normal/assets/index-CxrP3rjj.js                          14.89 kB │ gzip:     3.41 kB
+desktop/tauri/dist/normal/assets/index-qfGhU-c8.js                          14.92 kB │ gzip:     3.44 kB
+desktop/tauri/dist/normal/assets/index-BuHoYZRy.js                          14.96 kB │ gzip:     3.21 kB
+desktop/tauri/dist/normal/assets/index-D0kyeeJl.js                          14.96 kB │ gzip:     3.97 kB
+desktop/tauri/dist/normal/assets/index-CZW37oZ7.js                          15.01 kB │ gzip:     4.03 kB
+desktop/tauri/dist/normal/assets/rust-B1yitclQ.js                           15.07 kB │ gzip:     2.72 kB
+desktop/tauri/dist/normal/assets/index-Cl7qp9o3.js                          15.17 kB │ gzip:     4.22 kB
+desktop/tauri/dist/normal/assets/kusto-wEQ09or8.js                          15.17 kB │ gzip:     3.92 kB
+desktop/tauri/dist/normal/assets/index-DeH_0j4J.js                          15.23 kB │ gzip:     3.97 kB
+desktop/tauri/dist/normal/assets/index-DDHYYPu9.js                          15.34 kB │ gzip:     4.36 kB
+desktop/tauri/dist/normal/assets/index-DxN_8lUR.js                          15.37 kB │ gzip:     3.96 kB
+desktop/tauri/dist/normal/assets/index-B14gpiYa.js                          15.44 kB │ gzip:     4.97 kB
+desktop/tauri/dist/normal/assets/index-B98iTsq9.js                          15.45 kB │ gzip:     4.23 kB
+desktop/tauri/dist/normal/assets/index-DCJmWDUX.js                          15.47 kB │ gzip:     3.05 kB
+desktop/tauri/dist/normal/assets/index-m72IHHN6.js                          15.47 kB │ gzip:     3.83 kB
+desktop/tauri/dist/normal/assets/nix-CwoSXNpI.js                            15.51 kB │ gzip:     2.48 kB
+desktop/tauri/dist/normal/assets/lua-BaeVxFsk.js                            15.54 kB │ gzip:     3.16 kB
+desktop/tauri/dist/normal/assets/actionscript-3-B3316cI-.js                 15.54 kB │ gzip:     2.71 kB
+desktop/tauri/dist/normal/assets/index-BEsodjHk.js                          15.57 kB │ gzip:     4.00 kB
+desktop/tauri/dist/normal/assets/index-DTl6jnYy.js                          15.60 kB │ gzip:     4.29 kB
+desktop/tauri/dist/normal/assets/abap-BdImnpbu.js                           15.85 kB │ gzip:     5.91 kB
+desktop/tauri/dist/normal/assets/index-CaxDctIT.js                          15.88 kB │ gzip:     4.08 kB
+desktop/tauri/dist/normal/assets/index-BpfKjR8q.js                          15.91 kB │ gzip:     3.78 kB
+desktop/tauri/dist/normal/assets/index-Bw8Nw454.js                          15.95 kB │ gzip:     4.48 kB
+desktop/tauri/dist/normal/assets/index-BTYaQKvE.js                          15.96 kB │ gzip:     4.39 kB
+desktop/tauri/dist/normal/assets/index-Dv8_LeiY.js                          16.05 kB │ gzip:     3.71 kB
+desktop/tauri/dist/normal/assets/matlab-D7o27uSR.js                         16.09 kB │ gzip:     3.06 kB
+desktop/tauri/dist/normal/assets/luau-BnpPk5vE.js                           16.14 kB │ gzip:     3.55 kB
+desktop/tauri/dist/normal/assets/index-RHgoMkCH.js                          16.15 kB │ gzip:     4.46 kB
+desktop/tauri/dist/normal/assets/index-CCspAma0.js                          16.15 kB │ gzip:     3.64 kB
+desktop/tauri/dist/normal/assets/cue-D82EKSYY.js                            16.20 kB │ gzip:     2.06 kB
+desktop/tauri/dist/normal/assets/index-C7mNyE-W.js                          16.28 kB │ gzip:     3.72 kB
+desktop/tauri/dist/normal/assets/index-7LfgSMoF.js                          16.31 kB │ gzip:     4.22 kB
+desktop/tauri/dist/normal/assets/index-BZx-6zy1.js                          16.31 kB │ gzip:     3.80 kB
+desktop/tauri/dist/normal/assets/elixir-CkH2-t6x.js                         16.32 kB │ gzip:     2.80 kB
+desktop/tauri/dist/normal/assets/solidity-DijEV5ha.js                       16.41 kB │ gzip:     3.16 kB
+desktop/tauri/dist/normal/assets/index-TCtZT_gZ.js                          16.49 kB │ gzip:     3.93 kB
+desktop/tauri/dist/normal/assets/index-C-_6UNPH.js                          16.49 kB │ gzip:     3.78 kB
+desktop/tauri/dist/normal/assets/odin-BBf5iR-q.js                           16.51 kB │ gzip:     2.94 kB
+desktop/tauri/dist/normal/assets/index-CwdrvykT.js                          16.52 kB │ gzip:     4.30 kB
+desktop/tauri/dist/normal/assets/ts-tags-D351s5mN.js                        16.57 kB │ gzip:     2.07 kB
+desktop/tauri/dist/normal/assets/index-DJyaXeqG.js                          16.71 kB │ gzip:     5.79 kB
+desktop/tauri/dist/normal/assets/index-CSq96eyM.js                          16.71 kB │ gzip:     3.82 kB
+desktop/tauri/dist/normal/assets/index-CTQO8Tsn.js                          16.86 kB │ gzip:     4.19 kB
+desktop/tauri/dist/normal/assets/index-CbToeqYh.js                          16.86 kB │ gzip:     5.02 kB
+desktop/tauri/dist/normal/assets/index-F0F3ETFI.js                          16.90 kB │ gzip:     4.63 kB
+desktop/tauri/dist/normal/assets/index-DTCkb2yZ.js                          17.09 kB │ gzip:     5.78 kB
+desktop/tauri/dist/normal/assets/kanagawa-wave-DFGoQZhC.js                  17.12 kB │ gzip:     2.93 kB
+desktop/tauri/dist/normal/assets/kanagawa-lotus-C3DzagqV.js                 17.12 kB │ gzip:     2.93 kB
+desktop/tauri/dist/normal/assets/kanagawa-dragon-BuwD2xS4.js                17.12 kB │ gzip:     2.95 kB
+desktop/tauri/dist/normal/assets/index-DtyuURVR.js                          17.26 kB │ gzip:     4.29 kB
+desktop/tauri/dist/normal/assets/index-hM4jjDiE.js                          17.29 kB │ gzip:     5.13 kB
+desktop/tauri/dist/normal/assets/index-CRgwnCHO.js                          17.32 kB │ gzip:     4.28 kB
+desktop/tauri/dist/normal/assets/index-gb4_0Ffl.js                          17.51 kB │ gzip:     4.85 kB
+desktop/tauri/dist/normal/assets/move-el3G9tDJ.js                           17.66 kB │ gzip:     3.06 kB
+desktop/tauri/dist/normal/assets/index-DkEqNJJr.js                          17.74 kB │ gzip:     4.62 kB
+desktop/tauri/dist/normal/assets/graphql-ChdNCCLP.js                        18.00 kB │ gzip:     2.52 kB
+desktop/tauri/dist/normal/assets/index-_zWTAXVS.js                          18.00 kB │ gzip:     4.11 kB
+desktop/tauri/dist/normal/assets/index-DhLLny2W.js                          18.07 kB │ gzip:     4.65 kB
+desktop/tauri/dist/normal/assets/liquid-C0sCDyMI.js                         18.09 kB │ gzip:     3.16 kB
+desktop/tauri/dist/normal/assets/index-BZxSy1U_.js                          18.21 kB │ gzip:     3.34 kB
+desktop/tauri/dist/normal/assets/svelte-Cy7k_4gC.js                         18.24 kB │ gzip:     3.14 kB
+desktop/tauri/dist/normal/assets/index-CRMbV1Pu.js                          18.50 kB │ gzip:     5.62 kB
+desktop/tauri/dist/normal/assets/index-2eC4WYYI.js                          18.55 kB │ gzip:     4.44 kB
+desktop/tauri/dist/normal/assets/index-CRScg28h.js                          18.56 kB │ gzip:     4.26 kB
+desktop/tauri/dist/normal/assets/index-CxRyq7Pg.js                          18.56 kB │ gzip:     5.07 kB
+desktop/tauri/dist/normal/assets/material-theme-D5KoaKCx.js                 18.62 kB │ gzip:     3.11 kB
+desktop/tauri/dist/normal/assets/index-DW8Aw6wi.js                          18.62 kB │ gzip:     4.29 kB
+desktop/tauri/dist/normal/assets/material-theme-darker-BfHTSMKl.js          18.63 kB │ gzip:     3.11 kB
+desktop/tauri/dist/normal/assets/material-theme-ocean-CyktbL80.js           18.63 kB │ gzip:     3.14 kB
+desktop/tauri/dist/normal/assets/material-theme-lighter-B0m2ddpp.js         18.63 kB │ gzip:     3.11 kB
+desktop/tauri/dist/normal/assets/material-theme-palenight-Csfq5Kiy.js       18.64 kB │ gzip:     3.13 kB
+desktop/tauri/dist/normal/assets/index-CjQQKJr2.js                          18.74 kB │ gzip:     4.32 kB
+desktop/tauri/dist/normal/assets/index-qW2twrr0.js                          18.86 kB │ gzip:     5.88 kB
+desktop/tauri/dist/normal/assets/index-CsgLlgnL.js                          18.90 kB │ gzip:     4.98 kB
+desktop/tauri/dist/normal/assets/gdscript-DqcFQ5yU.js                       19.09 kB │ gzip:     3.77 kB
+desktop/tauri/dist/normal/assets/index-BAPJXClW.js                          19.15 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/groovy-gcz8RCvz.js                         19.18 kB │ gzip:     3.60 kB
+desktop/tauri/dist/normal/assets/index-D-HX00JL.js                          19.53 kB │ gzip:     4.39 kB
+desktop/tauri/dist/normal/assets/index-B4_S9Azp.js                          19.54 kB │ gzip:     5.03 kB
+desktop/tauri/dist/normal/assets/index-Bp031dHp.js                          19.57 kB │ gzip:     5.41 kB
+desktop/tauri/dist/normal/assets/index-CjaT4EOp.js                          19.87 kB │ gzip:     4.91 kB
+desktop/tauri/dist/normal/assets/glimmer-js-ByusRIyA.js                     20.07 kB │ gzip:     2.95 kB
+desktop/tauri/dist/normal/assets/glimmer-ts-BfAWNZQY.js                     20.07 kB │ gzip:     2.94 kB
+desktop/tauri/dist/normal/assets/ayu-dark-DYE7WIF3.js                       20.08 kB │ gzip:     3.94 kB
+desktop/tauri/dist/normal/assets/ayu-mirage-32ctXXKs.js                     20.09 kB │ gzip:     3.94 kB
+desktop/tauri/dist/normal/assets/ayu-light-BA47KaF1.js                      20.15 kB │ gzip:     3.93 kB
+desktop/tauri/dist/normal/assets/powershell-BmBUJMz7.js                     20.16 kB │ gzip:     4.07 kB
+desktop/tauri/dist/normal/assets/mdc-D1_yUvq7.js                            20.18 kB │ gzip:     6.81 kB
+desktop/tauri/dist/normal/assets/viml-CJc9bBzg.js                           20.37 kB │ gzip:     6.73 kB
+desktop/tauri/dist/normal/assets/index-DLW4XtPX.js                          20.46 kB │ gzip:     5.42 kB
+desktop/tauri/dist/normal/assets/snazzy-light-Bw305WKR.js                   20.77 kB │ gzip:     3.83 kB
+desktop/tauri/dist/normal/assets/pdf-BTpra46M.js                            20.80 kB │ gzip:     5.00 kB
+desktop/tauri/dist/normal/assets/nushell-D3jzshHO.js                        20.88 kB │ gzip:     5.36 kB
+desktop/tauri/dist/normal/assets/index-DemLTkFO.js                          20.93 kB │ gzip:     5.54 kB
+desktop/tauri/dist/normal/assets/dracula-BzJJZx-M.js                        21.07 kB │ gzip:     4.00 kB
+desktop/tauri/dist/normal/assets/dracula-soft-BXkSAIEj.js                   21.08 kB │ gzip:     4.04 kB
+desktop/tauri/dist/normal/assets/index-Dlh8x4Ra.js                          21.10 kB │ gzip:     5.98 kB
+desktop/tauri/dist/normal/assets/wit-5i3qLPDT.js                            21.47 kB │ gzip:     2.89 kB
+desktop/tauri/dist/normal/assets/index-DbnRjIvG.js                          21.54 kB │ gzip:     5.82 kB
+desktop/tauri/dist/normal/assets/index-z_Cmw50W.js                          21.73 kB │ gzip:     5.09 kB
+desktop/tauri/dist/normal/assets/rose-pine-5qJOZa0Y.js                      21.74 kB │ gzip:     3.88 kB
+desktop/tauri/dist/normal/assets/rose-pine-moon-C9pEdX9L.js                 21.75 kB │ gzip:     3.90 kB
+desktop/tauri/dist/normal/assets/rose-pine-dawn-zx0QlTCp.js                 21.75 kB │ gzip:     3.90 kB
+desktop/tauri/dist/normal/assets/twig-27uCiNez.js                           21.98 kB │ gzip:     3.98 kB
+desktop/tauri/dist/normal/assets/nim-BIad80T-.js                            22.46 kB │ gzip:     3.16 kB
+desktop/tauri/dist/normal/assets/index-CA5P-OBq.js                          22.53 kB │ gzip:     4.37 kB
+desktop/tauri/dist/normal/assets/common-lisp-Cg-RD9OK.js                    22.58 kB │ gzip:     6.06 kB
+desktop/tauri/dist/normal/assets/gruvbox-dark-hard-CFHQjOhq.js              22.63 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/gruvbox-dark-soft-CVdnzihN.js              22.63 kB │ gzip:     4.17 kB
+desktop/tauri/dist/normal/assets/gruvbox-light-hard-CH1njM8p.js             22.64 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/gruvbox-light-soft-hJgmCMqR.js             22.64 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/gruvbox-dark-medium-GsRaNv29.js            22.64 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/gruvbox-light-medium-DRw_LuNl.js           22.64 kB │ gzip:     4.18 kB
+desktop/tauri/dist/normal/assets/index-GR3K-hlx.js                          23.04 kB │ gzip:     4.45 kB
+desktop/tauri/dist/normal/assets/index-dawfRB3E.js                          23.32 kB │ gzip:     4.78 kB
+desktop/tauri/dist/normal/assets/sql-CRqJ_cUM.js                            23.43 kB │ gzip:     7.42 kB
+desktop/tauri/dist/normal/assets/cadence-Bv_4Rxtq.js                        23.67 kB │ gzip:     3.67 kB
+desktop/tauri/dist/normal/assets/astro-HNnZUWAn.js                          24.01 kB │ gzip:     7.55 kB
+desktop/tauri/dist/normal/assets/apl-CORt7UWP.js                            24.04 kB │ gzip:     4.20 kB
+desktop/tauri/dist/normal/assets/templ-DhtptRzy.js                          24.06 kB │ gzip:     5.40 kB
+desktop/tauri/dist/normal/assets/index-NoNCMGoG.js                          24.11 kB │ gzip:     4.86 kB
+desktop/tauri/dist/normal/assets/vhdl-CeAyd5Ju.js                           24.26 kB │ gzip:     3.87 kB
+desktop/tauri/dist/normal/assets/angular-html-DA-rfuFy.js                   24.29 kB │ gzip:     4.01 kB
+desktop/tauri/dist/normal/assets/index-BTNQm9P0.js                          24.58 kB │ gzip:     5.31 kB
+desktop/tauri/dist/normal/assets/purescript-CklMAg4u.js                     24.69 kB │ gzip:     3.25 kB
+desktop/tauri/dist/normal/assets/moonbit-CHtswR0a.js                        24.94 kB │ gzip:     3.79 kB
+desktop/tauri/dist/normal/assets/vue-BqiEGhQt.js                            24.96 kB │ gzip:     3.04 kB
+desktop/tauri/dist/normal/assets/typespec-CAFt9gP4.js                       25.05 kB │ gzip:     2.63 kB
+desktop/tauri/dist/normal/assets/index-BHrydAko.js                          25.11 kB │ gzip:     7.66 kB
+desktop/tauri/dist/normal/assets/one-light-C3Wv6jpd.js                      25.30 kB │ gzip:     3.67 kB
+desktop/tauri/dist/normal/assets/fsharp-CXgrBDvD.js                         25.31 kB │ gzip:     4.13 kB
+desktop/tauri/dist/normal/assets/marko-DjSrsDqO.js                          25.48 kB │ gzip:     3.59 kB
+desktop/tauri/dist/normal/assets/night-owl-light-CMTm3GFP.js                25.90 kB │ gzip:     4.26 kB
+desktop/tauri/dist/normal/assets/c3-Dp5svz6Z.js                             26.39 kB │ gzip:     3.99 kB
+desktop/tauri/dist/normal/assets/system-verilog-0hqHdDBg.js                 26.56 kB │ gzip:     4.88 kB
+desktop/tauri/dist/normal/assets/index-C7cKaEOz.js                          26.64 kB │ gzip:     8.60 kB
+desktop/tauri/dist/normal/assets/index-CVtUwia6.js                          26.67 kB │ gzip:     7.57 kB
+desktop/tauri/dist/normal/assets/nord-Ddv68eIx.js                           26.72 kB │ gzip:     4.40 kB
+desktop/tauri/dist/normal/assets/codeql-DsOJ9woJ.js                         26.88 kB │ gzip:     3.79 kB
+desktop/tauri/dist/normal/assets/index-CTBZekRP.js                          27.05 kB │ gzip:     6.46 kB
+desktop/tauri/dist/normal/assets/scss-D5BDwBP9.js                           27.20 kB │ gzip:     4.20 kB
+desktop/tauri/dist/normal/assets/java-CylS5w8V.js                           27.22 kB │ gzip:     4.26 kB
+desktop/tauri/dist/normal/assets/coffee-Ch7k5sss.js                         27.42 kB │ gzip:     6.35 kB
+desktop/tauri/dist/normal/assets/razor-BjBPvh-w.js                          27.51 kB │ gzip:     3.57 kB
+desktop/tauri/dist/normal/assets/index-Dlrqi5j8.js                          27.63 kB │ gzip:     6.77 kB
+desktop/tauri/dist/normal/assets/index-BsOAOm0r.js                          27.93 kB │ gzip:     6.65 kB
+desktop/tauri/dist/normal/assets/index-Be0wurfa.js                          28.27 kB │ gzip:     7.13 kB
+desktop/tauri/dist/normal/assets/index-BCNEex0v.js                          28.80 kB │ gzip:    11.23 kB
+desktop/tauri/dist/normal/assets/scala-CqE71os6.js                          28.89 kB │ gzip:     3.94 kB
+desktop/tauri/dist/normal/assets/night-owl-C39BiMTA.js                      28.91 kB │ gzip:     5.16 kB
+desktop/tauri/dist/normal/assets/crystal-DGywbUpC.js                        29.39 kB │ gzip:     4.45 kB
+desktop/tauri/dist/normal/assets/applescript-Co6uUVPk.js                    29.57 kB │ gzip:     5.93 kB
+desktop/tauri/dist/normal/assets/stylus-BEDo0Tqx.js                         31.07 kB │ gzip:     7.99 kB
+desktop/tauri/dist/normal/assets/julia-5Bft2YPA.js                          31.08 kB │ gzip:     4.34 kB
+desktop/tauri/dist/normal/assets/index-DOqvKI6t.js                          31.32 kB │ gzip:     6.96 kB
+desktop/tauri/dist/normal/assets/ahk-CsyLZFj1.js                            31.44 kB │ gzip:     7.81 kB
+desktop/tauri/dist/normal/assets/index-gEWpgKC3.js                          31.98 kB │ gzip:     6.70 kB
+desktop/tauri/dist/normal/assets/index-B9L1EIm9.js                          32.06 kB │ gzip:     5.80 kB
+desktop/tauri/dist/normal/assets/poimandres-CS3Unz2-.js                     33.49 kB │ gzip:     5.50 kB
+desktop/tauri/dist/normal/assets/one-dark-pro-DVMEJ2y_.js                   33.79 kB │ gzip:     5.52 kB
+desktop/tauri/dist/normal/assets/bsl-DlhNcFeZ.js                            33.95 kB │ gzip:     8.36 kB
+desktop/tauri/dist/normal/assets/nginx-BpAMiNFr.js                          35.37 kB │ gzip:     4.43 kB
+desktop/tauri/dist/normal/assets/index-D5L6OYLQ.js                          35.40 kB │ gzip:     9.11 kB
+desktop/tauri/dist/normal/assets/houston-DnULxvSX.js                        35.42 kB │ gzip:     5.78 kB
+desktop/tauri/dist/normal/assets/index-DA2gzEb1.js                          35.53 kB │ gzip:     9.02 kB
+desktop/tauri/dist/normal/assets/tokyo-night-hegEt444.js                    35.67 kB │ gzip:     6.24 kB
+desktop/tauri/dist/normal/assets/haxe-CfZj7gIn.js                           35.95 kB │ gzip:     6.01 kB
+desktop/tauri/dist/normal/assets/org-DM6o9KBp.js                            36.32 kB │ gzip:     3.70 kB
+desktop/tauri/dist/normal/assets/erlang-DsQrWhSR.js                         37.48 kB │ gzip:     4.40 kB
+desktop/tauri/dist/normal/assets/index-DeNx2RG8.js                          38.62 kB │ gzip:     9.65 kB
+desktop/tauri/dist/normal/assets/bird2-Bx8U0n9b.js                          38.68 kB │ gzip:     8.50 kB
+desktop/tauri/dist/normal/assets/cobol-nBiQ_Alo.js                          39.13 kB │ gzip:    10.86 kB
+desktop/tauri/dist/normal/assets/asm-D_Q5rh1f.js                            40.72 kB │ gzip:     8.21 kB
+desktop/tauri/dist/normal/assets/shellscript-Yzrsuije.js                    41.48 kB │ gzip:     6.09 kB
+desktop/tauri/dist/normal/assets/haskell-Df6bDoY_.js                        41.49 kB │ gzip:     6.44 kB
+desktop/tauri/dist/normal/assets/ModelIconCatalog-DAY6gzwu.js               42.46 kB │ gzip:    11.03 kB
+desktop/tauri/dist/normal/assets/perl-B9cMNwum.js                           43.16 kB │ gzip:     4.67 kB
+desktop/tauri/dist/normal/assets/index-BSVpS38A.js                          43.49 kB │ gzip:     9.86 kB
+desktop/tauri/dist/normal/assets/d-85-TOEBH.js                              43.80 kB │ gzip:     8.47 kB
+desktop/tauri/dist/normal/assets/ahk2-8Zs4aa1G.js                           45.07 kB │ gzip:     9.88 kB
+desktop/tauri/dist/normal/assets/ruby-C0TQ7zu5.js                           46.72 kB │ gzip:     5.83 kB
+desktop/tauri/dist/normal/assets/go-C27-OAKa.js                             46.82 kB │ gzip:     5.18 kB
+desktop/tauri/dist/normal/assets/apex-DhZFqWV2.js                           47.89 kB │ gzip:     6.90 kB
+desktop/tauri/dist/normal/assets/ada-bCR0ucgS.js                            48.08 kB │ gzip:     6.03 kB
+desktop/tauri/dist/normal/assets/css-CLj8gQPS.js                            49.04 kB │ gzip:    11.86 kB
+desktop/tauri/dist/normal/assets/imba-DGztddWO.js                           49.93 kB │ gzip:     9.46 kB
+desktop/tauri/dist/normal/assets/catppuccin-mocha-Ct7hS0mc.js               50.85 kB │ gzip:     8.49 kB
+desktop/tauri/dist/normal/assets/catppuccin-latte-DH-8KZSZ.js               50.85 kB │ gzip:     8.49 kB
+desktop/tauri/dist/normal/assets/catppuccin-frappe-CZL1YF0i.js              50.85 kB │ gzip:     8.51 kB
+desktop/tauri/dist/normal/assets/catppuccin-macchiato-B7yYVSCf.js           50.86 kB │ gzip:     8.50 kB
+desktop/tauri/dist/normal/assets/everforest-dark-BgDCqdQA.js                53.75 kB │ gzip:     8.42 kB
+desktop/tauri/dist/normal/assets/everforest-light-C8M2exoo.js               53.75 kB │ gzip:     8.42 kB
+desktop/tauri/dist/normal/assets/mermaid-CQcHuHx7.js                        54.81 kB │ gzip:     4.81 kB
+desktop/tauri/dist/normal/assets/wikitext-BhOHFoWU.js                       55.89 kB │ gzip:     4.76 kB
+desktop/tauri/dist/normal/assets/stata-DI20mbqo.js                          56.99 kB │ gzip:    12.36 kB
+desktop/tauri/dist/normal/assets/html-pp8916En.js                           57.25 kB │ gzip:    11.69 kB
+desktop/tauri/dist/normal/assets/ballerina-BFfxhgS-.js                      58.69 kB │ gzip:     8.15 kB
+desktop/tauri/dist/normal/assets/markdown-Cvjx9yec.js                       59.34 kB │ gzip:     5.64 kB
+desktop/tauri/dist/normal/assets/ocaml-C0hk2d4L.js                          62.45 kB │ gzip:     5.02 kB
+desktop/tauri/dist/normal/assets/index-CirXsFWG.js                          68.38 kB │ gzip:    24.25 kB
+desktop/tauri/dist/normal/assets/mojo-DJz3ZmWd.js                           69.52 kB │ gzip:     9.27 kB
+desktop/tauri/dist/normal/assets/python-B6aJPvgy.js                         69.95 kB │ gzip:     9.13 kB
+desktop/tauri/dist/normal/assets/c-BIGW1oBm.js                              72.11 kB │ gzip:    10.51 kB
+desktop/tauri/dist/normal/assets/latex-D5pSuvFb.js                          72.90 kB │ gzip:     6.78 kB
+desktop/tauri/dist/normal/assets/vyper-CDx5xZoG.js                          74.65 kB │ gzip:    10.74 kB
+desktop/tauri/dist/normal/assets/hack-BWmVpMyf.js                           81.13 kB │ gzip:    26.38 kB
+desktop/tauri/dist/normal/assets/swift-C2oV4EkX.js                          87.23 kB │ gzip:    14.84 kB
+desktop/tauri/dist/normal/assets/fortran-free-form-BxgE0vQu.js              88.97 kB │ gzip:    11.27 kB
+desktop/tauri/dist/normal/assets/csharp-DSvCPggb.js                         90.19 kB │ gzip:    10.75 kB
+desktop/tauri/dist/normal/assets/racket-BqYA7rlc.js                         92.39 kB │ gzip:    15.02 kB
+desktop/tauri/dist/normal/assets/less-B1dDrJ26.js                           97.63 kB │ gzip:    14.70 kB
+desktop/tauri/dist/normal/assets/index-C6WBgiRD.js                         103.21 kB │ gzip:    38.92 kB
+desktop/tauri/dist/normal/assets/blade-2xfisSek.js                         104.98 kB │ gzip:    28.20 kB
+desktop/tauri/dist/normal/assets/objective-c-DXmwc3jG.js                   105.41 kB │ gzip:    23.33 kB
+desktop/tauri/dist/normal/assets/index-C3TV2N9j.js                         110.25 kB │ gzip:    27.15 kB
+desktop/tauri/dist/normal/assets/php-Csjmro_R.js                           113.09 kB │ gzip:    28.74 kB
+desktop/tauri/dist/normal/assets/asciidoc-CSVQ5wI8.js                      136.05 kB │ gzip:     9.50 kB
+desktop/tauri/dist/normal/assets/mdx-Cmh6b_Ma.js                           136.11 kB │ gzip:    23.35 kB
+desktop/tauri/dist/normal/assets/typst-BUadGCkm.js                         163.55 kB │ gzip:    10.98 kB
+desktop/tauri/dist/normal/assets/objective-cpp-CLxacb5B.js                 171.97 kB │ gzip:    30.62 kB
+desktop/tauri/dist/normal/assets/javascript-wDzz0qaB.js                    174.83 kB │ gzip:    16.51 kB
+desktop/tauri/dist/normal/assets/tsx-COt5Ahok.js                           175.54 kB │ gzip:    16.51 kB
+desktop/tauri/dist/normal/assets/jsx-g9-lgVsj.js                           177.79 kB │ gzip:    16.61 kB
+desktop/tauri/dist/normal/assets/typescript-BPQ3VLAy.js                    181.08 kB │ gzip:    16.04 kB
+desktop/tauri/dist/normal/assets/angular-ts-BrjP3tb8.js                    183.82 kB │ gzip:    16.63 kB
+desktop/tauri/dist/normal/assets/vue-vine-BoDAl6tE.js                      190.05 kB │ gzip:    17.99 kB
+desktop/tauri/dist/normal/assets/wolfram-lXgVvXCa.js                       262.39 kB │ gzip:    77.14 kB
+desktop/tauri/dist/normal/assets/pdf-CdE6nnZT.js                           407.56 kB │ gzip:   119.31 kB
+desktop/tauri/dist/normal/assets/wasm-CG6Dc4jp.js                          622.34 kB │ gzip:   230.29 kB
+desktop/tauri/dist/normal/assets/cpp-BMRokrvK.js                           785.49 kB │ gzip:    53.20 kB
+desktop/tauri/dist/normal/assets/emacs-lisp-C_m_b--Z.js                    790.01 kB │ gzip:   198.83 kB
+desktop/tauri/dist/normal/assets/models.generated-B68mm077.js            1,125.54 kB │ gzip:   153.60 kB
+desktop/tauri/dist/normal/assets/index-DjYgc2kr.js                       3,496.42 kB │ gzip: 1,079.20 kB
+desktop/tauri/dist/normal/assets/MessageList-CX41UtP-.js                 3,678.57 kB │ gzip:   958.66 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 22.76s
+        Info Looking up installed tauri packages to check mismatched versions...
+   Compiling cuepoint-prototype v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+warning: unused variable: `app`
+   --> vendor/tauri-plugin-http/src/lib.rs:136:20
+    |
+136 |         .on_event(|app, event| {
+    |                    ^^^ help: if this is intentional, prefix it with an underscore: `_app`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `event`
+   --> vendor/tauri-plugin-http/src/lib.rs:136:25
+    |
+136 |         .on_event(|app, event| {
+    |                         ^^^^^ help: if this is intentional, prefix it with an underscore: `_event`
+
+warning: `tauri-plugin-http` (lib) generated 2 warnings (run `cargo fix --lib -p tauri-plugin-http` to apply 2 suggestions)
+    Finished `release` profile [optimized] target(s) in 28.85s
+       Built application at: /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/cuepoint-prototype
+    Bundling Cuepoint Network Review.app (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Network Review.app)
+     Signing with identity "-"
+Signing with identity "-"
+Signing /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Network Review.app/Contents/MacOS/cuepoint-prototype
+/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Network Review.app/Contents/MacOS/cuepoint-prototype: replacing existing signature
+Signing with identity "-"
+Signing /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Network Review.app
+/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Network Review.app: replacing existing signature
+        Warn skipping app notarization, no APPLE_ID & APPLE_PASSWORD & APPLE_TEAM_ID or APPLE_API_KEY & APPLE_API_ISSUER & APPLE_API_KEY_PATH environment variables found
+    Finished 1 bundle at:
+        /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Network Review.app (28.58 MiB)
+
+
+> cuepoint-tauri-prototype@0.1.0 build:app /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node scripts/build-app.mjs
+
+frontend: 0; logs /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791719406236-normal
+native-bundle: 0; logs /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791719406236-normal
+Actual normal app: /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791719406236-normal/Cuepoint Prototype.app

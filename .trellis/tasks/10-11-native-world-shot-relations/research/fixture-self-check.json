@@ -1,0 +1,11 @@
+{
+  "passed": [
+    "no CORS/model directory",
+    "real bytes/hash",
+    "multipart accepts file",
+    "submit/poll",
+    "chat stream/tools",
+    "stalled read abort/disconnect"
+  ],
+  "limits": "Node fetch verifies fixture behavior only; this is not native transport or product acceptance."
+}

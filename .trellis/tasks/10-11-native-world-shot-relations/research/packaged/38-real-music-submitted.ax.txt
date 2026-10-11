@@ -1,0 +1,93 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/p/prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe
+			3 container
+				4 link 小光点, Value: tauri://localhost/#/about
+				5 container 应用导航
+					6 link 创作助手, Value: tauri://localhost/#/agent
+					7 link IP, Value: tauri://localhost/#/ips
+					8 link 项目, Value: tauri://localhost/#/projects
+					9 link 素材库, Value: tauri://localhost/#/assets
+					10 link 任务, Value: tauri://localhost/#/agent/tasks
+					11 link 连接与模型, Value: tauri://localhost/#/connectors
+					12 link 关于, Value: tauri://localhost/#/about
+				13 button 导入项目
+			14 container
+				15 link 返回工作室, Value: tauri://localhost/#/projects
+				16 text 桌面真实音乐验收
+				17 container 项目工作区
+					18 link 音乐创作, Value: tauri://localhost/#/p/prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe
+					19 link 记忆, Value: tauri://localhost/#/p/prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe/memory
+				20 link 项目素材, Value: tauri://localhost/#/assets?project=prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe
+				21 button 项目设定
+				22 button 备份项目
+			23 heading 音乐创作, Value: 1
+				24 text 音乐创作
+			25 container 音乐创作
+				26 combo box (disabled, collapsed, settable) 创作草稿, Value: 原生音乐验收 · Flow, Secondary Actions: Expand
+				27 button (disabled) 新建创作
+				28 text Flow Music
+				29 combo box (disabled, collapsed, settable) 音乐引擎与模型, Value: Flow Music, Secondary Actions: Expand
+				30 container
+					31 text 描述你想听到的音乐
+					32 text entry area (disabled, settable) 音乐描述, Value: [text entry area: 音乐描述], Placeholder: 写下风格、情绪、乐器，或让你产生灵感的场景…
+						33 text 短促的钢琴提示音，无人声，用于本机验收。
+				34 button (collapsed) 歌词（可选）, Secondary Actions: Expand
+				35 button (expanded) 更多设置, Secondary Actions: Collapse
+				36 container
+					37 text 作品名称（可选）
+					38 text field (disabled, settable) 作品名称, Value: 原生音乐验收
+				39 container
+					40 text 期望时长（秒）
+					41 number field (disabled, settable) 期望时长, Value: 1
+						42 stepper 0
+							43 unknown
+							44 unknown
+				45 container
+					46 text BPM
+					47 number field (disabled, settable) BPM
+						48 stepper 0
+							49 unknown
+							50 unknown
+				51 container
+					52 text 随机种子
+					53 text field (disabled, settable) 随机种子
+				54 text 已保存
+				55 container
+					56 text 生成连接
+					57 combo box (collapsed, settable) 生成连接, Value: APIMart, Secondary Actions: Expand
+						58 text APIMart
+				59 button (disabled) 提交生成中…
+				60 text 使用所选 APIMart 账户计费
+			61 container 音乐作品库
+				62 heading 作品, Value: 2
+					63 text 作品
+				64 text 0 首
+				65 text field (settable) 搜索作品, Placeholder: 搜索作品或歌词
+				66 toggle button 收藏, Value: off
+				67 combo box (collapsed, settable) 作品排序, Value: 最新, Secondary Actions: Expand
+					68 text 最新
+				69 container 音乐生成任务
+					70 text 原生音乐验收
+					71 text 正在提交
+					72 button 刷新任务或重试下载
+				73 text 还没有音乐作品
+				74 text 描述想听到的音乐，生成的每个版本都会留在这里。
+			75 text 试听作品
+			76 text 选择一个版本或作品开始试听
+			77 text 尚未选择音频
+			78 container Notifications alt+T
+	79 close button
+	80 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	81 minimize button
+	82 text 小光点 · 完整产品验收
+83 menu bar
+	84 Cuepoint Product Review
+	85 File
+	86 Edit
+	87 View
+	88 Window
+	89 Help
+
+The focused UI element is 2 HTML content Description: 小光点, URL: tauri://localhost/#/p/prj_d0d63e5e-2567-4ef5-9c6d-ada67c8d61fe

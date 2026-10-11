@@ -1,0 +1,59 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Network Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_60eae28f-b8de-43e5-9291-8d1cdc360f13
+			3 container
+				4 container 执行过程
+					5 summary 成果声明未核实, Value: off
+						6 text 成果声明未核实
+				7 container 执行过程
+					8 summary 成果声明未核实, Value: off
+						9 text 成果声明未核实
+				10 container 执行过程
+					11 summary 成果声明未核实, Value: off
+						12 text 成果声明未核实
+				13 container 执行过程
+					14 summary 成果声明未核实, Value: off
+						15 text 成果声明未核实
+				16 container 执行过程
+					17 summary 成果声明未核实, Value: off
+						18 text 成果声明未核实
+			19 container 原生合成网络验收 · 重试
+				20 container
+					21 text 批量生成 · 处理完成
+					22 heading 原生合成网络验收 · 重试, Value: 2
+						23 text 原生合成网络验收 · 重试
+					24 text 按目标比较候选。选择后点击写入，其他结果仍会保留。
+					25 button 关闭批量生成
+				26 container
+					27 text 1 已保存 0 处理中 0 排队 1 当前已写入
+				28 container 选择比较目标
+					29 toggle button 镜头 1 · 首帧 1 份, Value: on
+				30 text 镜头 1 · 首帧
+				31 link 查看目标, Value: tauri://localhost/#/p/prj_79168ffc-d31a-46ca-8524-c5e6b13f89e4/e/ep_553a3988-d769-4472-b9db-9776b046dc04/shots?shot=sht_b30ea5c7-2064-4431-bee9-62ebb9f52b45
+				32 container
+					33 text 候选 A 当前已写入
+					34 image 镜头 1 · 首帧 · 候选 A
+					35 pop up button 放大查看 镜头 1 · 首帧 · 候选 A
+					36 text APIMart · APIMart · gpt-image-2.5-flare · 模型默认参数 · 1 份参考 已保存
+					37 summary 查看生成配置, Value: off
+						38 text 查看生成配置
+					39 button (disabled) 选择候选 A：镜头 1 · 首帧
+				40 container 镜头 1 · 首帧：已写入
+				41 container
+					42 text 1 个目标已选候选。写入会检查目标是否被修改；取消剩余仅阻止尚未发送的请求。
+					43 button 写入选中的 1 个目标
+			44 container Notifications alt+T
+	45 close button
+	46 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	47 minimize button
+	48 text 小光点 · 完整产品验收
+49 menu bar
+	50 Cuepoint Network Review
+	51 File
+	52 Edit
+	53 View
+	54 Window
+	55 Help
+
+The focused UI element is 19 container 原生合成网络验收 · 重试

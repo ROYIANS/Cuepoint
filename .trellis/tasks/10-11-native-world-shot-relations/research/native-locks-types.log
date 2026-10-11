@@ -1,0 +1,6 @@
+
+> cuepoint-tauri-prototype@0.1.0 types /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node ../../node_modules/typescript/bin/tsc --project tsconfig.json --noEmit
+
+ui/acceptanceLocks.ts(2,25): error TS6133: 'message' is declared but its value is never read.
+ ELIFECYCLE  Command failed with exit code 2.

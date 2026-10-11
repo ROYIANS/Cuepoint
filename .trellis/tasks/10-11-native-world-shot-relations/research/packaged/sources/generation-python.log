@@ -1,0 +1,38 @@
+{
+  "image.png": {
+    "bytes": 310,
+    "sha256": "7dabaf0fb9a110732227780dd0d911a9636bd78cca748407d72d9c1ad5dc5c3a"
+  },
+  "movie.mp4": {
+    "bytes": 2769,
+    "sha256": "a5ef9047018980af3b5147b5145400787584781b3a15c87a161b04e130df57d5"
+  },
+  "tone.wav": {
+    "bytes": 192044,
+    "sha256": "80053305c2619f6f760e7296896f0fa8459dd247ee302d65847b0bce9a561883"
+  },
+  "reference.pdf": {
+    "bytes": 2811,
+    "sha256": "91d9515f914c355d644457604647c899124232630c00defd896a631c9ba9e56d"
+  },
+  "reference.docx": {
+    "bytes": 1094,
+    "sha256": "9a4e809e448d7d4288f61cea30ef5d42a22c1145dedaa18f1e47900647b4e80a"
+  },
+  "reference.txt": {
+    "bytes": 269,
+    "sha256": "9477cf0846efbaa494453509d08c8447df2053e9f47f7fdec0f6e3da8cef45b3"
+  },
+  "reference.md": {
+    "bytes": 274,
+    "sha256": "36a734f3d4c4ce7fbffec7d5205e02a4b89960364d70fc88319743f71a71fc92"
+  },
+  "existing-empty.csv": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "existing-keep.csv": {
+    "bytes": 40,
+    "sha256": "5015c92162771643b5d790bf7a7c0582f1b2018360de44dd18f631009f65c041"
+  }
+}

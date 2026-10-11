@@ -1,0 +1,103 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Network Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/p/prj_8e66a5a7-d384-44a8-b095-cf2b4a3c97e1
+			3 container
+				4 link 小光点, Value: tauri://localhost/#/about
+				5 container 应用导航
+					6 link 创作助手, Value: tauri://localhost/#/agent
+					7 link IP, Value: tauri://localhost/#/ips
+					8 link 项目, Value: tauri://localhost/#/projects
+					9 link 素材库, Value: tauri://localhost/#/assets
+					10 link 任务, Value: tauri://localhost/#/agent/tasks
+					11 link 连接与模型, Value: tauri://localhost/#/connectors
+					12 link 关于, Value: tauri://localhost/#/about
+				13 button 导入项目
+			14 container
+				15 link 返回工作室, Value: tauri://localhost/#/projects
+				16 text 原生合成批量配音验收
+				17 container 项目工作区
+					18 link 音频制作, Value: tauri://localhost/#/p/prj_8e66a5a7-d384-44a8-b095-cf2b4a3c97e1
+					19 link 记忆, Value: tauri://localhost/#/p/prj_8e66a5a7-d384-44a8-b095-cf2b4a3c97e1/memory
+				20 link 项目素材, Value: tauri://localhost/#/assets?project=prj_8e66a5a7-d384-44a8-b095-cf2b4a3c97e1
+				21 button 项目设定
+				22 button 备份项目
+			23 heading 音频制作, Value: 1
+				24 text 音频制作
+			25 pop up button 第一章
+			26 text 原生合成批量配音验收
+			27 button 音色
+			28 button 配音
+			29 button 批量配音
+			30 button 批量选用
+			31 button 排列已选声音
+			32 button 撤销时间线操作
+			33 text 新增 2 个片段；保留 0 段已有剪辑（其中 0 段需手动检查）。此操作未核验试听效果。
+			34 pop up button 添加声音
+			35 button 打开声音面板
+			36 container
+				37 pop up button 段落 1 选择说话人和音色
+				38 text entry area (settable) 第 1 行正文, Value: [text entry area: 第 1 行正文], Placeholder: 写下正文…
+					39 text (settable) 合成配音第一段，仅本机验收。
+				40 pop up button 段落 2 选择说话人和音色
+				41 text entry area (settable) 第 2 行正文, Value: [text entry area: 第 2 行正文], Placeholder: 写下正文…
+					42 text (settable) 合成配音第二段，检查批次和重开。
+				43 button 添加一行
+				44 button 粘贴稿件
+				45 text 文字编辑自动保存
+				46 container 批量配音进度
+					47 text 批量配音
+					48 text 2 段 · 已保存 2 · 失败 0 · 待处理 0
+					49 summary 查看各段进度与失败项, Value: off
+						50 text 查看各段进度与失败项
+			51 container 音频制作时间线
+				52 button (expanded) 收起时间线, Secondary Actions: Collapse
+				53 button 回到开头
+				54 button 播放章节, Help: 播放 / 暂停 · Space
+				55 pop up button 精确定位播放位置
+				56 button 撤销时间线编辑, Help: 撤销 · ⌘/Ctrl Z
+				57 button (disabled) 重做时间线编辑, Help: 重做 · ⌘/Ctrl Shift Z
+				58 button (disabled) 在播放位置分割, Help: 在播放位置分割 · S
+				59 button (disabled) 删除选中片段, Help: 删除片段 · Delete / Backspace（可撤销）
+				60 button (disabled) 片段更多操作, Help: 片段更多操作 / 右键菜单
+				61 button 缩小时间线
+				62 button 适应, Help: 完整显示当前章节
+				63 button 放大时间线
+				64 pop up button (disabled) 片段属性
+				65 pop up button 导出
+				66 text 时间线
+				67 text 2 个片段
+				68 toggle button 吸附片段边缘和播放头, Help: 吸附 · 拖动时按 Alt 暂停吸附, Value: on
+				69 pop up button 音轨
+				70 text 秒
+				71 slider (settable, float) 时间标尺，左右方向键定位, Value: 0
+				72 container 人声
+					73 text 人声
+				74 toggle button 人声 静音, Value: off
+				75 toggle button 人声 独听, Value: off
+				76 pop up button 人声 音量
+				77 container
+					78 container 旁白：合成配音第二段，检查批次和重开。，起点 2.0 秒
+						79 toggle button 选择 旁白：合成配音第二段，检查批次和重开。, Help: 旁白 · 合成配音第二段，检查批次和重开。, Value: off
+						80 button 拖动裁剪起点, Help: 拖动裁剪；双击片段打开精确属性
+						81 button 拖动裁剪终点, Help: 拖动裁剪；双击片段打开精确属性
+					82 container 旁白：合成配音第一段，仅本机验收。，起点 0.0 秒
+						83 toggle button 选择 旁白：合成配音第一段，仅本机验收。, Help: 旁白 · 合成配音第一段，仅本机验收。, Value: off
+						84 button 拖动裁剪起点, Help: 拖动裁剪；双击片段打开精确属性
+						85 button 拖动裁剪终点, Help: 拖动裁剪；双击片段打开精确属性
+				86 text 选择片段开始剪辑
+				87 text Space 播放 · S 分割 · ⌘/Ctrl D 复制 · ⌘/Ctrl Z 撤销
+			88 container Notifications alt+T
+	89 close button
+	90 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	91 minimize button
+	92 text 小光点 · 完整产品验收
+93 menu bar
+	94 Cuepoint Network Review
+	95 File
+	96 Edit
+	97 View
+	98 Window
+	99 Help
+
+The focused UI element is 31 button 排列已选声音

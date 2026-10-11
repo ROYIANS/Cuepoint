@@ -1,0 +1,53 @@
+Window: "小光点 · 原生工作区原型", App: Cuepoint Prototype.
+0 standard window 小光点 · 原生工作区原型, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/projects
+			3 container
+				4 link 小光点, Value: tauri://localhost/#/about
+				5 container 应用导航
+					6 link 创作助手, Value: tauri://localhost/#/agent
+					7 link IP, Value: tauri://localhost/#/ips
+					8 link 项目, Value: tauri://localhost/#/projects
+					9 link 素材库, Value: tauri://localhost/#/assets
+					10 link 任务, Value: tauri://localhost/#/agent/tasks
+					11 link 连接与模型, Value: tauri://localhost/#/connectors
+					12 link 关于, Value: tauri://localhost/#/about
+				13 button 导入项目
+			14 container
+				15 heading 项目, Value: 1
+					16 text 项目
+				17 text 管理视频、音频与音乐项目。
+				18 button 新建项目
+			19 combo box (collapsed, settable) 排序方式, Value: 按修改, Secondary Actions: Expand
+				20 text 按修改
+			21 text field (settable) 搜索项目, Placeholder: 搜索…
+			22 container 按创作类型筛选
+				23 toggle button 全部, Value: on
+				24 toggle button 视频, Value: off
+				25 toggle button 图片 即将推出, Value: off
+				26 toggle button 文案 即将推出, Value: off
+				27 toggle button 音频, Value: off
+				28 toggle button 音乐, Value: off
+			29 container
+				30 text 所属 IP
+				31 combo box (collapsed, settable) 筛选所属 IP, Value: 全部, Secondary Actions: Expand
+					32 text 全部
+			33 container
+				34 checkbox (settable, integer) 查看已归档项目, Value: 0
+				35 text 查看已归档项目
+			36 button 正式配置隔离标记
+			37 pop up button 正式配置隔离标记 操作
+			38 container Notifications alt+T
+	39 close button
+	40 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	41 minimize button
+	42 text 小光点 · 原生工作区原型
+43 menu bar
+	44 Cuepoint Prototype
+	45 File
+	46 Edit
+	47 View
+	48 Window
+	49 Help
+
+The focused UI element is 2 HTML content Description: 小光点, URL: tauri://localhost/#/projects

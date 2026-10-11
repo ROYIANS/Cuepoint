@@ -105,7 +105,7 @@
         },
         {
           "file": ".trellis/spec/frontend/audio-music.md",
-          "sha256": "ea8be073462c392309dcc290dcd09b3c245f7c5de2f1962eb8b13fdde0413f67"
+          "sha256": "a8c2f93345033db1988fa7969bf47615c4af501e76d027da102f59a13961406c"
         }
       ]
     },
@@ -123,7 +123,7 @@
         },
         {
           "file": ".trellis/spec/frontend/audio-music.md",
-          "sha256": "ea8be073462c392309dcc290dcd09b3c245f7c5de2f1962eb8b13fdde0413f67"
+          "sha256": "a8c2f93345033db1988fa7969bf47615c4af501e76d027da102f59a13961406c"
         }
       ]
     }

@@ -1,0 +1,17 @@
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/src/components/studio/materials/MaterialPreview.tsx
+  10:8   warning  Function 'MaterialPreview' has a complexity of 35. Maximum allowed is 20             complexity
+  10:17  warning  Refactor this function to reduce its Cognitive Complexity from 40 to the 20 allowed  sonarjs/cognitive-complexity
+  59:14  warning  Do not nest ternary expressions                                                      no-nested-ternary
+  61:19  warning  Do not nest ternary expressions                                                      no-nested-ternary
+  64:23  warning  Do not nest ternary expressions                                                      no-nested-ternary
+  66:27  warning  Do not nest ternary expressions                                                      no-nested-ternary
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/tests/aboutPageSponsorSave.test.ts
+  0:0  warning  File ignored because no matching configuration was supplied
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/tests/materialPreviewSave.test.ts
+  0:0  warning  File ignored because no matching configuration was supplied
+
+✖ 8 problems (0 errors, 8 warnings)
+

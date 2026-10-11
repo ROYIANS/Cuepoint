@@ -1,0 +1,14 @@
+{
+  "path": "/private/tmp/cuepoint-full-product-20261011/桌面音频验收-第一native-mix.wav章.wav",
+  "bytes": 1717484,
+  "sha256": "296e8e7c9908c87e0836f5fb1b4994517e97ef76c3b583d3bdfac54ec6b6a3c0",
+  "rate": 48000,
+  "channels": 2,
+  "sampleWidth": 2,
+  "frames": 429360,
+  "durationSec": 8.945,
+  "expectedBytes": 1717484,
+  "actualFormat": "NONE",
+  "privateAudioStoredOnlyInTmp": true,
+  "filenameNote": "Native automation typed ASCII into selection rather than replacing full name; actual dialog-chosen path is recorded."
+}

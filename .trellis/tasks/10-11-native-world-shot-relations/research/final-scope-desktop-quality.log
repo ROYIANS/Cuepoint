@@ -1,0 +1,9 @@
+Command: ["/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm", "quality"]
+Cwd: /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+Started: 2026-10-11T17:28:53.866216+08:00
+Finished: 2026-10-11T17:28:55.865392+08:00
+Exit: 0
+
+> cuepoint-tauri-prototype@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node ../../node_modules/knip/bin/knip.js --config knip.json --no-progress
+

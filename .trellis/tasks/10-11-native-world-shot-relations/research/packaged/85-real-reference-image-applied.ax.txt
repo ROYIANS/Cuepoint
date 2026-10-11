@@ -1,0 +1,44 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Real Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/agent/cth_c375f82a-3dbb-43ee-a261-a1c717690fac
+			3 container 执行过程
+				4 summary 成果声明未核实, Value: off
+					5 text 成果声明未核实
+			6 container 首镜头首帧图片候选
+				7 container
+					8 text 批量生成 · 处理完成
+					9 heading 首镜头首帧图片候选, Value: 2
+						10 text 首镜头首帧图片候选
+					11 text 按目标比较候选。选择后点击写入，其他结果仍会保留。
+					12 button 关闭批量生成
+				13 container
+					14 text 1 已保存 0 处理中 0 排队 1 当前已写入
+				15 container 选择比较目标
+					16 toggle button 镜头 1 · 首帧 1 份, Value: on
+				17 text 镜头 1 · 首帧
+				18 link 查看目标, Value: tauri://localhost/#/p/prj_30ac21cd-bea0-43de-a527-dade2cc63e8b/e/ep_f79a0f69-c940-4d9e-91ca-5c075dab4ca4/shots?shot=sht_6820bf1e-8e28-4bfc-ae45-5c7f5a1d91c5
+				19 container
+					20 text 候选 A 当前已写入
+					21 image 镜头 1 · 首帧 · 候选 A
+					22 pop up button 放大查看 镜头 1 · 首帧 · 候选 A
+					23 text APIMart · APIMart · gpt-image-2 · 16:9 / 1k · 1 份参考 已保存
+					24 summary 查看生成配置, Value: off
+						25 text 查看生成配置
+					26 button (disabled) 选择候选 A：镜头 1 · 首帧
+				27 container 镜头 1 · 首帧：已写入
+				28 container
+					29 text 1 个目标已选候选。写入会检查目标是否被修改；取消剩余仅阻止尚未发送的请求。
+					30 button 写入选中的 1 个目标
+			31 container Notifications alt+T
+	32 close button
+	33 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	34 minimize button
+	35 text 小光点 · 完整产品验收
+36 menu bar
+	37 Cuepoint Real Review
+	38 File
+	39 Edit
+	40 View
+	41 Window
+	42 Help

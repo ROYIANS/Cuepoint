@@ -1,0 +1,102 @@
+{
+  "format": "cuepoint.native-tavily-test-lane-verification.v1",
+  "recordedAtUtc": "2026-10-11T13:00:27.382736+00:00",
+  "basis": "Reviewer-observed completed command exits; this records previous runs and never invents start/end times. Successful empty strict types logs rely on observed exit 0. Actual root button/report is still pending.",
+  "checks": [
+    {
+      "name": "root-full",
+      "exit": 0,
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-full-vitest-final.log",
+      "sha256": "2599710358a7aefdf8a1034c6ecaca23aff191bc30b197e961cd6249f2df98a7",
+      "result": "213 files; 3632 passed; one skipped; 20:57:18 / 45.64s"
+    },
+    {
+      "name": "root-types",
+      "exit": 0,
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-root-types-final.log",
+      "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+      "result": "tsc -b passed"
+    },
+    {
+      "name": "root-quality",
+      "exit": 0,
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-root-quality-final.log",
+      "sha256": "c7c2ae9dd9ca856226a539e321cc7d0539f5d4b8d5afbabc512941b6e46453c5",
+      "result": "13 reviewed allowances / 568 visible warnings / zero failures; architecture unchanged"
+    },
+    {
+      "name": "desktop-types",
+      "exit": 0,
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-types-final.log",
+      "sha256": "6f46de1c6f4487e33d41a122d74a08f3c92a6a67ff880a9a5293b0c6ab8af60d",
+      "result": "PASS"
+    },
+    {
+      "name": "desktop-lint",
+      "exit": 0,
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-lint-freeze.log",
+      "sha256": "032c836532bb5b8949c83c124a9353d0b6727efc6efc50358eef31d43c218b6a",
+      "result": "PASS"
+    },
+    {
+      "name": "desktop-quality",
+      "exit": 0,
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-quality-final.log",
+      "sha256": "fdd444fe6e9a40f8a8f6d372ab8a72163b5ccb7c8745e443c2137dbbb788dab8",
+      "result": "PASS"
+    },
+    {
+      "name": "new-test-strict-types",
+      "exit": 0,
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-test-types-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "PASS; observed exit 0, normal output empty"
+    },
+    {
+      "name": "focused",
+      "exit": 0,
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-focused-final.log",
+      "sha256": "2b06576ac415e7c6cb4e71fa6ba105c1913c7a4a83c36ae38483a8e9d701facc",
+      "result": "Three files / 63 cases, 22 new probe cases; transport injected, not native HTTP"
+    },
+    {
+      "name": "report-oracle",
+      "exit": 0,
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-report-oracle-final.log",
+      "sha256": "3e0b8a8d49ec429111a675c1d226e057b179cf4617eb3bb494662d5e9adb4266",
+      "result": "Eight offline cases; no native HTTP claim"
+    },
+    {
+      "name": "build-only",
+      "exit": 0,
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-build-launch.log",
+      "sha256": "4f772d52d8612ecee3c182a361d888b869a87c8937feaa12a6abf11c03201e0d",
+      "result": "PASS; dedicated native app built, not launched"
+    }
+  ],
+  "initialFailures": [
+    {
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-quality.log",
+      "sha256": "0be0ca7e209f5ff306fda17c5773012f640e3d9d6cfda1c1058c58c32d0303ff",
+      "exit": 1,
+      "result": "Mapper exported only for external root tests appeared unused in desktop scope. Moved the actual routing boundary into separate shared test-lane module consumed by the probe, without ignore/debt."
+    },
+    {
+      "log": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-test-types.log",
+      "sha256": "623fbcf320db5b005e8710c0cbb19115cca9b8d949b265c8733ceae08ebe0851",
+      "exit": 2,
+      "result": "Strict test table inferred optional undefined header key; use actual Headers in invalid policy witnesses. No assertion weakened."
+    }
+  ],
+  "sourceFreeze": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-source-freeze.json",
+  "sourceFreezeSha256": "43d5c6be40a5008daaf914d4a0c44eb6681a1b41632941ad0b3c7912fd964152",
+  "buildReceipt": ".trellis/tasks/10-11-native-world-shot-relations/research/native-tavily-build-receipt.json",
+  "buildReceiptSha256": "57176a9447130e9f088bac760850b6c6d9b96a79b967b024806741d4856f6688",
+  "nativeBuildLog": ".trellis/tasks/10-11-native-world-shot-relations/research/tavily-probe-native-build.log",
+  "nativeBuildLogSha256": "b6eab4cb0315eef958ca3a1c09e4dbe33ed85789875d61417421b28b7979eae3",
+  "runRoot": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/run-ec68f6da-9951-403c-a224-caf8ea1d9b7b",
+  "actualProtocolProbeComplete": false,
+  "liveTavilyAccountVerified": false,
+  "wholeProductAcceptanceComplete": false,
+  "wholeHistoricalAcceptanceComplete": false
+}
