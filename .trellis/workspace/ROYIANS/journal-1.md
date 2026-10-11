@@ -1355,3 +1355,25 @@ Implemented and independently accepted browser managed-copy and bounded partial 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 51: 完成原生工作区产品化基础切片
+<!-- trellis-session: v=2 fp=d4e0ab1221e70396 -->
+
+**Date**: 2026-10-11
+**Task**: 完成原生工作区产品化基础切片
+**Branch**: `codex/native-workspace-product-foundation`
+
+### Summary
+
+将真实 React/Vite 产品入口接入 Tauri 正常构建，新增应用自有 SQLite 工作区 ensure、原生项目与托管素材路由，接入可用性/缺失状态与 generation-aware typed bridge；保持浏览器 Dexie 独立且不迁移旧数据。通过根应用 189 个测试、桌面 TypeScript/Rust 质量门、正常与验收前端构建及 .app 打包；归档任务，未推送。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `abf26cf8` | feat(tauri): integrate native workspace product slice |
+
+### Status
+
+[OK] **Completed**
