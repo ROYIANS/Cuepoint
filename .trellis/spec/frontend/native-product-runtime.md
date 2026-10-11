@@ -85,6 +85,25 @@ same normal root frontend, desktop backend/CSP/services. Its archived app receip
 records identifier/storage/store ID. Historical `--acceptance` remains a separate
 SQLite/probe frontend and cannot substitute for normal product evidence.
 
+The official `pnpm --dir desktop/tauri build:app` entry point defaults normal
+packaging to `product-sqlite`. `--sqlite-product` is optional for that normal
+lane. An explicit `--isolated-product` without it remains the IndexedDB reference;
+adding it selects the complete isolated SQLite product. `--acceptance` rejects
+either full-product SQLite or isolated-product flags before creating build output.
+Keep Cargo default features and explicit `desktop` reference builds separate:
+changing every desktop feature build to SQLite would contradict the deliberately
+IndexedDB review lane and its receipt.
+
+```js
+const productSqlite = process.argv.includes('--sqlite-product') || (!acceptance && !isolated);
+if (productSqlite && acceptance) throw new Error('Full-product SQLite and fixture acceptance are separate build lanes');
+```
+
+Normal SQLite uses bundle identifier `dev.cuepoint.prototype.offline` and WK
+store `ed4550f181f509d050d0643fe7cb7ae0`, with server-owned
+`product-workspace-v1/.local/state.sqlite` and internal `assets/`. This new
+identity does not read/copy the previous IndexedDB WK store or schema-4 workspace.
+
 The full product exposes the same routes, world/material/media features and
 Agent on either adapter; no owner-dependent reduced feature gate belongs in
 those pages. Genuine runtime detection remains authoritative for hash history,
@@ -247,6 +266,9 @@ paper/orientation; CSS presence alone cannot prove the system preview's geometry
 | Trigger | Required result |
 | --- | --- |
 | Tauri missing/malformed/extra-field profile | Startup error; no browser/SQLite fallback |
+| Normal official build / explicit normal SQLite flag | Compile product-sqlite; receipt and injected profile declare SQLite |
+| Isolated build without / with SQLite flag | Distinct review identity; IndexedDB reference / complete SQLite respectively |
+| Fixture acceptance combined with full-product SQLite or isolated flag | Reject before output-directory creation or build execution |
 | Profile mutates after module construction | Existing fixed owner/namespace remain |
 | Complete product query/write on either adapter | Existing shared command with explicit StoreTx; no schema-4 fallback |
 | Removed connector / exhausted origin grants | Reject before native request; no fallback/retry |
@@ -275,6 +297,11 @@ Base: an isolated full SQLite product uses all shared features with distinct
 profile/store identity and the same compiled services. Schema-4 prototype
 capability tests remain separate from full-product evidence.
 
+Good: a standard normal build selects SQLite explicitly through build policy,
+then opens its fresh full-product root. Base: a deliberately isolated IndexedDB
+build stays a named reference. Bad: silently infer a new owner from the presence
+of Tauri or open old profile data to populate an empty normal workspace.
+
 Bad: infer SQLite from Tauri, hide full Agent routes, mirror projects for exports,
 copy old keys/data, globally widen fetch/CSP, retry native failures through WebView,
 call a rejected JS promise actual disconnect proof, or display success before
@@ -290,6 +317,13 @@ as “export failed” and encourages saving already-published bytes again.
 - productStorage/productStorageQueries: owner fixed before construction, fresh
   profile isolation, full media queries, browser sentinel unread, visible native
   open failure without fallback and no eager IndexedDB construction for SQLite.
+- Packaging policy: verify normal no-flags/explicit SQLite, isolated
+  IndexedDB/SQLite and both incompatible acceptance combinations. Do not import
+  the executable build script merely to inspect flags: import would start builds.
+  Build the official normal entry point and independently compare receipt,
+  merged plist, executable and derived WK ID. Actual fresh SQLite writes,
+  managed preview/Save and original Agent histories must survive a clean reopen
+  without a chat/generation POST; model-catalog GET alone is not paid replay.
 - videoWorkspaceRepository/shared page tests: both full adapters use existing
   commands/capabilities; explicit prototype retains separate generation/CAS
   reference tests. Sync remains unavailable until implemented.
@@ -344,12 +378,9 @@ all-platform claim follows from a passing unit test.
 if (isTauriRuntime()) await nativeWorkspace.ensure();
 await nativeWorkspace.createProject(project.name);
 
-// Correct: startup selected exactly one owner; native Save is independent.
-if (usesSqliteProductStorage()) {
-  // Explicit reference adapter only; retain its closed contracts.
-} else {
-  // Existing shared IndexedDB business command owner.
-}
+// Correct: initialize the fixed shared owner before rendering product routes.
+await initializeProductStorage();
+// All existing business commands use that ProductStore; Save is independent.
 const result = await downloadBlob(generatedBlob, authoredFilename);
 if (result === "saved") showSavedFeedback();
 // The caller separately handles isPublishedSaveError as a saved-file warning.
