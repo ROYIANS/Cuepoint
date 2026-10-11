@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-11T23:10:25.815746+00:00",
+  "task": "10-11-shared-storage-sqlite",
+  "reviewer": "grid_context_review",
+  "scope": "Independent narrow review of native root admission repair; no full-task, packaged host, owner activation or cross-platform signoff.",
+  "verdict": "pass for narrow source/probe repair; specification sync and actual rebuilt WK host recheck remain required",
+  "sourceSha256": {
+    "src/lib/storage/native.ts": "92f8a8126e2301a02fb4464f1c8921eff3d7317d315e89a636ad25cf0e677e64",
+    "tests/sharedNativeAdmission.test.ts": "42674ea66f2a1249c56996471d05862e453959e3f81fa70554a56668243d15d2",
+    "src/lib/storage/store.ts": "232506e5d08845bc3ed329a8b7c47ca446e19c1de73fbdaf100192328ec27e96",
+    "src/lib/storage/notifications.ts": "87233c65c63dbc78a15894d97e729d804db7ffe36417fd3ff95c5aa4b2ff17a6",
+    "desktop/tauri/src-tauri/src/full_product_store/mod.rs": "7b8d7925979e88b690734d3003df41e794025a95c8cd314afa738f4156e58b19"
+  },
+  "productEditsByReviewer": [],
+  "permanentTestEditsByReviewer": [],
+  "findingsFixed": [],
+  "findingsNotFixed": [
+    {
+      "id": "GCR-DOC-01",
+      "kind": "documentation follow-up",
+      "path": ".trellis/spec/frontend/shared-product-storage.md",
+      "issue": "Root admission paragraph describes fairness but not the new maximum of 32 concurrent root reads per driver or retirement of queued disposed observations before native begin.",
+      "recommendation": "Main session should extend the owning contract with the 32/64 distinction, queue-only cancellation, cleanup and no-callback-replay behavior.",
+      "reason": "Specs belong to coordinating main session; outside assigned source/test delta. No product defect remains from this finding."
+    },
+    {
+      "id": "GCR-HOST-01",
+      "kind": "remaining acceptance gate",
+      "path": ".trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/grid-mounted.json",
+      "issue": "A rebuilt actual WK grid revisit and following write have not been proved by this reviewer.",
+      "recommendation": "Main UI owner must repeat the original 70-material grid -> project save -> grid route sequence after rebuilding the reviewed native.ts source, inspect late thumbnails and reopen.",
+      "reason": "No UI or application profile authority assigned to this reviewer. Real Rust probe tests do not establish actual packaged WK behavior."
+    }
+  ],
+  "checks": [
+    {
+      "name": "Types",
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+      "exitCode": 0,
+      "log": "grid-context-review-01/types.log"
+    },
+    {
+      "name": "Formal quality",
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm quality",
+      "exitCode": 0,
+      "log": "grid-context-review-01/quality.log",
+      "reviewedAllowances": 12,
+      "visibleWarnings": 584,
+      "failures": 0
+    },
+    {
+      "name": "Focused permanent tests",
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/sharedNativeAdmission.test.ts tests/sharedNativeOutcome.test.ts tests/sharedNativePreparationOutcome.test.ts tests/sharedProductQueryHooks.test.ts --maxWorkers=2 --reporter=verbose",
+      "exitCode": 0,
+      "filesPassed": 4,
+      "testsPassed": 15,
+      "log": "grid-context-review-01/focused.log"
+    },
+    {
+      "name": "Independent real Rust lifecycle cases",
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node .trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-review-01/run.mjs",
+      "exitCode": 0,
+      "testsPassed": 4,
+      "log": "grid-context-review-01/independent-runtime.log",
+      "acceptance": "grid-context-review-01/acceptance.json",
+      "sourceChanged": []
+    }
+  ],
+  "counterexampleReviewed": {
+    "receipt": "grid-context-repair-01/acceptance.json",
+    "before": "grid-context-repair-01/before.log",
+    "actualRustRejectedOf70": 6,
+    "failureMessage": "Too many concurrent storage contexts",
+    "existingSourceBefore": "635cca7b57a13c281e335ba36e76e33ce0a2831ec2dac209904ffee4a14d4282",
+    "afterCases": "Three 70-query bursts, zero failed queries, 210 begin acknowledgements; queued disposed observations no callbacks, writer and final read only."
+  },
+  "reviewedInvariants": [
+    "FIFO root queue bounds readers at 32 without changing Rust guard 64.",
+    "A queued writer waits for prior readers and prevents later readers bypassing it.",
+    "Nested explicit StoreTx joins backend directly without recursively acquiring root admission.",
+    "Admission is released in finally after success, begin/callback/validate failure, commit reconciliation or uncertainty.",
+    "Observation disposal retires queued work and suppresses late callback publication; active native contexts settle through existing cleanup.",
+    "No transaction callback automatic replay, native-to-browser fallback, schema change, provider request or owner activation.",
+    "Postcommit notify does not await consumer-issued storage work while holding writer admission."
+  ],
+  "independentCases": [
+    {
+      "name": "Postcommit subscriber reentrancy queues reads and writes without holding notification delivery",
+      "status": "passed",
+      "elapsedMs": 218,
+      "observations": {
+        "order": [
+          "root",
+          "nested",
+          "notify",
+          "notification-read",
+          "notification-write"
+        ],
+        "rows": 2,
+        "nestedRootJoined": true
+      }
+    },
+    {
+      "name": "A rejected begin releases admission and does not execute or replay its callback",
+      "status": "passed",
+      "elapsedMs": 488,
+      "observations": {
+        "outcomes": [
+          "rejected",
+          "fulfilled"
+        ],
+        "callbacks": 0,
+        "rows": 1
+      }
+    },
+    {
+      "name": "A rejected validate releases its reader before the queued writer and later snapshot",
+      "status": "passed",
+      "elapsedMs": 219,
+      "observations": {
+        "outcomes": [
+          "rejected",
+          "fulfilled"
+        ],
+        "callbacks": 1,
+        "rows": 1
+      }
+    },
+    {
+      "name": "Unknown committed outcome releases admission without replay or known-rollback classification",
+      "status": "passed",
+      "elapsedMs": 112,
+      "observations": {
+        "outcomes": [
+          "rejected",
+          "fulfilled"
+        ],
+        "uncertainty": "unknown",
+        "callbacks": 1,
+        "commits": 2,
+        "rowsAfterReopen": 2
+      }
+    }
+  ],
+  "limits": [
+    "Only fresh disposable helper-owned Rust workspaces used. No app DB reads/writes, key/profile access, UI automation, Rust build or provider calls.",
+    "The full 227-file browser suite was intentionally not rerun for this narrow check; main session owns final frozen full gates.",
+    "Windows/Linux host acceptance and task completion are not asserted."
+  ],
+  "evidenceSha256": {
+    "acceptance.json": "10442c9977a09685832d5815649212065a057cb02c0d4facbe10b9e2dee64f76",
+    "focused.log": "7bd15f93840cbc499d073bf9047061532a218da30e8f93c8da873f252b7d16f6",
+    "independent-runtime.log": "10442c9977a09685832d5815649212065a057cb02c0d4facbe10b9e2dee64f76",
+    "quality.log": "1f3a3b932dc0358d9e6ced99809f0fa81c063845b1c6591567f4202eceb32e8a",
+    "run.mjs": "f1a03d824561b7f407b14fcabb5f0b6f0eb4c43d2cf0e1dbe981fdfedd4d5adf",
+    "types.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa"
+  }
+}

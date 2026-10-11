@@ -1,0 +1,111 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ × tests/sharedNativeAdmission.test.ts > native root operation admission > bounds repeated grids of seventy simultaneous material-version snapshots below the native context ceiling 1715ms
+   → expected [ { status: 'rejected', …(1) }, …(5) ] to deeply equal []
+ × tests/sharedNativeAdmission.test.ts > native root operation admission > retires disposed queued grid observations without beginning native contexts or invoking their callbacks 65ms
+   → Too many concurrent storage contexts
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > advances the FIFO after cancellation and failure without replaying a callback 49ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > admits concurrent readers, waits for their snapshots, and keeps later readers behind a queued writer 48ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sharedNativeAdmission.test.ts > native root operation admission > bounds repeated grids of seventy simultaneous material-version snapshots below the native context ceiling
+AssertionError: expected [ { status: 'rejected', …(1) }, …(5) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "reason": StorageError {
++       "message": "Too many concurrent storage contexts",
++       "code": "unavailable",
++       "certainty": "rollback",
++       "name": "StorageError",
++     },
++     "status": "rejected",
++   },
++   {
++     "reason": StorageError {
++       "message": "Too many concurrent storage contexts",
++       "code": "unavailable",
++       "certainty": "rollback",
++       "name": "StorageError",
++     },
++     "status": "rejected",
++   },
++   {
++     "reason": StorageError {
++       "message": "Too many concurrent storage contexts",
++       "code": "unavailable",
++       "certainty": "rollback",
++       "name": "StorageError",
++     },
++     "status": "rejected",
++   },
++   {
++     "reason": StorageError {
++       "message": "Too many concurrent storage contexts",
++       "code": "unavailable",
++       "certainty": "rollback",
++       "name": "StorageError",
++     },
++     "status": "rejected",
++   },
++   {
++     "reason": StorageError {
++       "message": "Too many concurrent storage contexts",
++       "code": "unavailable",
++       "certainty": "rollback",
++       "name": "StorageError",
++     },
++     "status": "rejected",
++   },
++   {
++     "reason": StorageError {
++       "message": "Too many concurrent storage contexts",
++       "code": "unavailable",
++       "certainty": "rollback",
++       "name": "StorageError",
++     },
++     "status": "rejected",
++   },
++ ]
+
+ ❯ tests/sharedNativeAdmission.test.ts:24:81
+     22|             for (let mount=0;mount<3;mount++) {
+     23|                 const outcomes=await Promise.allSettled(Array.from({le…
+     24|                 expect(outcomes.filter(outcome=>outcome.status === "re…
+       |                                                                                 ^
+     25|                 expect(outcomes.map(outcome=>outcome.status === "fulfi…
+     26|                 expect(live.size).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/sharedNativeAdmission.test.ts > native root operation admission > retires disposed queued grid observations without beginning native contexts or invoking their callbacks
+StorageError: Too many concurrent storage contexts
+ ❯ transportError src/lib/storage/nativeBridge.ts:46:26
+     44|         const codes=["conflict","constraint","invalid","unavailable","…
+     45|         const code=codes.find(code=>code === raw.code);
+     46|         if (code) return new StorageError(code,raw.message,"rollback");
+       |                          ^
+     47|     }
+     48|     return new Error("原生存储连接失败",{cause:raw});
+ ❯ call src/lib/storage/nativeBridge.ts:53:105
+ ❯ Object.begin src/lib/storage/nativeBridge.ts:75:32
+ ❯ NativeStoreDriver.runTransaction src/lib/storage/native.ts:248:22
+ ❯ NativeStoreDriver.transaction src/lib/storage/native.ts:235:25
+ ❯ tests/sharedNativeAdmission.test.ts:46:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'unavailable', certainty: 'rollback' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  07:02:12
+   Duration  2.10s (tests 92%, transform 5%, setup 3%)
+

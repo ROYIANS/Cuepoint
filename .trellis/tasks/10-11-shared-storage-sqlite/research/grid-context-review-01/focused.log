@@ -1,0 +1,24 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ✓ tests/sharedNativeOutcome.test.ts > real native commit certainty through the business atomic boundary > reconciles a malformed acknowledgement without replaying the callback 315ms
+ ✓ tests/sharedNativeOutcome.test.ts > real native commit certainty through the business atomic boundary > reconciles a rejected acknowledgement without replaying the callback 271ms
+ ✓ tests/sharedNativeOutcome.test.ts > real native commit certainty through the business atomic boundary > preserves unknown certainty when durable status cannot be reached after COMMIT 192ms
+ ✓ tests/sharedNativeOutcome.test.ts > actual native observation races and precise selectors > retries a conflicted initial readonly snapshot and delivers only its coherent result 244ms
+ ✓ tests/sharedNativeOutcome.test.ts > actual native observation races and precise selectors > tracks point and fixed-kind selectors and stops delivering after disposal 360ms
+ ✓ tests/sharedNativePreparationOutcome.test.ts > actual native local preparation certainty > retains batch COMMIT uncertainty and never begins a paid POST 454ms
+ ✓ tests/sharedNativePreparationOutcome.test.ts > actual native local preparation certainty > retains claim COMMIT uncertainty and never begins a paid POST 294ms
+ ✓ tests/sharedProductQueryHooks.test.ts > shared query lifecycle used by current pages > passes explicit Tx, retains success during a scope change and ignores late old-owner replies 10ms
+ ✓ tests/sharedProductQueryHooks.test.ts > shared query lifecycle used by current pages > preserves prior data with truthful failure state and recovers on a later success 5ms
+ ✓ tests/sharedProductQueryHooks.test.ts > shared query lifecycle used by current pages > the ordinary hook propagates storage errors to the page error boundary 6ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > bounds repeated grids of seventy simultaneous material-version snapshots below the native context ceiling 3332ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > retires disposed queued grid observations without beginning native contexts or invoking their callbacks 91ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > finishes an over-capacity reader batch before its writer and releases a failed snapshot without callback replay 90ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > advances the FIFO after cancellation and failure without replaying a callback 111ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > admits concurrent readers, waits for their snapshots, and keeps later readers behind a queued writer 85ms
+
+ Test Files  4 passed (4)
+      Tests  15 passed (15)
+   Start at  07:08:40
+   Duration  4.02s (tests 84%, transform 11%, setup 4%, import 1%)
+

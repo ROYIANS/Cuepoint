@@ -1,0 +1,569 @@
+{
+  "at": "2026-10-11T22:50:39.623988+00:00",
+  "actualUi": {
+    "memoryRevision2": true,
+    "systemBackupSaved": true,
+    "copyImportNewProjectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+    "importedTimelineStartDisplayed": "0.1 seconds (0.125 persisted)",
+    "importedMemorySource": "项目备份",
+    "importedMemoryVersions": [
+      3,
+      2,
+      1
+    ],
+    "importedMemoryRequiresReview": true,
+    "simpleCustomMusicDraftsRemainSeparate": true
+  },
+  "backup": {
+    "bytes": 800993,
+    "sha256": "c6b6d25ccf22b6f38200be9166beca44ee7569d6cadda86091fca61d451969f5",
+    "entries": [
+      "manifest.json",
+      "audioProject.json",
+      "project.json",
+      "characters.json",
+      "scenes.json",
+      "props.json",
+      "styles.json",
+      "episodes.json",
+      "shots.json",
+      "memories.json",
+      "memoryVersions.json",
+      "references.json",
+      "referenceChunks.json",
+      "mediaMetadata.json",
+      "media/",
+      "media/med_9eb5f8cf-b2cc-4474-81c4-862947c6ffbe.wav",
+      "media/med_745201e4-145d-4ee7-a191-59e8d3a21c03.wav"
+    ]
+  },
+  "durableRows": {
+    "audioChapters": [
+      {
+        "title": "第一章",
+        "order": 0,
+        "id": "ach_f1ba6fcf-b9c9-4e9b-aced-4f3d27a591a4",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:42:05.841Z",
+        "updatedAt": "2026-10-11T22:42:05.841Z"
+      },
+      {
+        "id": "aud_5de4cb8d-228f-468c-bada-37ad412affd7",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:42:05.841Z",
+        "updatedAt": "2026-10-11T22:42:05.841Z",
+        "title": "第一章",
+        "order": 0
+      }
+    ],
+    "audioClips": [
+      {
+        "chapterId": "ach_f1ba6fcf-b9c9-4e9b-aced-4f3d27a591a4",
+        "trackId": "atr_965c94de-1d88-4185-ae97-edf8e207363b",
+        "takeId": "atk_4a2c9057-5439-40d5-ba6f-32630fd267d9",
+        "startSec": 0.125,
+        "trimStartSec": 0,
+        "trimEndSec": 2,
+        "gain": 0.75,
+        "fadeInSec": 0,
+        "fadeOutSec": 0,
+        "id": "acl_e2864a83-44a1-478f-86c7-2c98b83cf3fc",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 4,
+        "createdAt": "2026-10-11T22:42:33.472Z",
+        "updatedAt": "2026-10-11T22:42:59.178Z"
+      },
+      {
+        "id": "aud_eefbfefc-11bc-4999-aca5-cff5455638cc",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 4,
+        "createdAt": "2026-10-11T22:42:33.472Z",
+        "updatedAt": "2026-10-11T22:42:59.178Z",
+        "chapterId": "aud_5de4cb8d-228f-468c-bada-37ad412affd7",
+        "trackId": "aud_7c5a2134-9e7d-45ce-8540-12d00d5783fd",
+        "takeId": "aud_043c6af6-a38d-4fb8-9d9f-41c67d8840f7",
+        "startSec": 0.125,
+        "trimStartSec": 0,
+        "trimEndSec": 2,
+        "gain": 0.75,
+        "fadeInSec": 0,
+        "fadeOutSec": 0
+      }
+    ],
+    "audioExports": [
+      {
+        "chapterId": "ach_f1ba6fcf-b9c9-4e9b-aced-4f3d27a591a4",
+        "scope": "chapter",
+        "chapterTitle": "第一章",
+        "fingerprint": "{\"schedule\":{\"chapterOffsets\":{\"ach_f1ba6fcf-b9c9-4e9b-aced-4f3d27a591a4\":0},\"clips\":[{\"clipId\":\"acl_e2864a83-44a1-478f-86c7-2c98b83cf3fc\",\"durationSec\":2,\"envelope\":[{\"gain\":0.75,\"time\":0},{\"gain\":0.75,\"time\":2}],\"mediaId\":\"med_9eb5f8cf-b2cc-4474-81c4-862947c6ffbe\",\"offsetSec\":0,\"startSec\":0.125}],\"durationSec\":2.125,\"sources\":[{\"channels\":2,\"createdAt\":\"2026-10-11T22:42:26.154Z\",\"durationSec\":2,\"id\":\"atk_4a2c9057-5439-40d5-ba6f-32630fd267d9\",\"mediaId\":\"med_9eb5f8cf-b2cc-4474-81c4-862947c6ffbe\",\"name\":\"tone.wav\",\"projectId\":\"prj_76a87120-29ca-47eb-a8be-a6a6500196a3\",\"revision\":1,\"sampleRate\":48000,\"segmentId\":\"asg_ff12cbfe-9916-424f-97b7-abe509731b8f\",\"source\":\"library\",\"updatedAt\":\"2026-10-11T22:42:26.154Z\"}]},\"version\":1}",
+        "format": "wav",
+        "mediaId": "med_745201e4-145d-4ee7-a191-59e8d3a21c03",
+        "durationSec": 2.125,
+        "id": "aex_a56e9893-44df-4b11-8aa0-736039b17d95",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:43:06.641Z",
+        "updatedAt": "2026-10-11T22:43:06.641Z"
+      },
+      {
+        "id": "aud_25d17690-57f8-4b2d-8737-7606b79c5f29",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:43:06.641Z",
+        "updatedAt": "2026-10-11T22:43:06.641Z",
+        "chapterId": "aud_5de4cb8d-228f-468c-bada-37ad412affd7",
+        "scope": "chapter",
+        "chapterTitle": "第一章",
+        "fingerprint": "{\"schedule\":{\"chapterOffsets\":{\"aud_5de4cb8d-228f-468c-bada-37ad412affd7\":0},\"clips\":[{\"clipId\":\"aud_eefbfefc-11bc-4999-aca5-cff5455638cc\",\"durationSec\":2,\"envelope\":[{\"gain\":0.75,\"time\":0},{\"gain\":0.75,\"time\":2}],\"mediaId\":\"med_e1dbc160-9065-4a77-9906-3cfdb37c4793\",\"offsetSec\":0,\"startSec\":0.125}],\"durationSec\":2.125,\"sources\":[{\"channels\":2,\"createdAt\":\"2026-10-11T22:42:26.154Z\",\"durationSec\":2,\"id\":\"aud_043c6af6-a38d-4fb8-9d9f-41c67d8840f7\",\"mediaId\":\"med_e1dbc160-9065-4a77-9906-3cfdb37c4793\",\"name\":\"tone.wav\",\"projectId\":\"prj_332a8aab-143a-4175-8640-cf1bfdb77676\",\"revision\":1,\"sampleRate\":48000,\"segmentId\":\"aud_b3e055f8-2d45-40db-92cb-ff3cc27a4e7b\",\"source\":\"library\",\"updatedAt\":\"2026-10-11T22:42:26.154Z\"}]},\"version\":1}",
+        "format": "wav",
+        "mediaId": "med_326ed2c2-5ea1-4b6a-8120-9f9dcaffa950",
+        "durationSec": 2.125
+      }
+    ],
+    "audioSegments": [
+      {
+        "chapterId": "ach_f1ba6fcf-b9c9-4e9b-aced-4f3d27a591a4",
+        "order": 1,
+        "text": "这是保存在内部工作区的音频脚本。",
+        "notes": "",
+        "id": "asg_ff12cbfe-9916-424f-97b7-abe509731b8f",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 3,
+        "createdAt": "2026-10-11T22:42:10.336Z",
+        "updatedAt": "2026-10-11T22:42:33.377Z",
+        "selectedTakeId": "atk_4a2c9057-5439-40d5-ba6f-32630fd267d9"
+      },
+      {
+        "id": "aud_b3e055f8-2d45-40db-92cb-ff3cc27a4e7b",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 3,
+        "createdAt": "2026-10-11T22:42:10.336Z",
+        "updatedAt": "2026-10-11T22:42:33.377Z",
+        "chapterId": "aud_5de4cb8d-228f-468c-bada-37ad412affd7",
+        "order": 1,
+        "text": "这是保存在内部工作区的音频脚本。",
+        "notes": "",
+        "selectedTakeId": "aud_043c6af6-a38d-4fb8-9d9f-41c67d8840f7"
+      }
+    ],
+    "audioTakes": [
+      {
+        "durationSec": 2,
+        "sampleRate": 48000,
+        "channels": 2,
+        "mediaId": "med_9eb5f8cf-b2cc-4474-81c4-862947c6ffbe",
+        "name": "tone.wav",
+        "source": "library",
+        "segmentId": "asg_ff12cbfe-9916-424f-97b7-abe509731b8f",
+        "id": "atk_4a2c9057-5439-40d5-ba6f-32630fd267d9",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:42:26.154Z",
+        "updatedAt": "2026-10-11T22:42:26.154Z"
+      },
+      {
+        "id": "aud_043c6af6-a38d-4fb8-9d9f-41c67d8840f7",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:42:26.154Z",
+        "updatedAt": "2026-10-11T22:42:26.154Z",
+        "durationSec": 2,
+        "sampleRate": 48000,
+        "channels": 2,
+        "segmentId": "aud_b3e055f8-2d45-40db-92cb-ff3cc27a4e7b",
+        "mediaId": "med_e1dbc160-9065-4a77-9906-3cfdb37c4793",
+        "name": "tone.wav",
+        "source": "library"
+      }
+    ],
+    "audioTracks": [
+      {
+        "chapterId": "ach_f1ba6fcf-b9c9-4e9b-aced-4f3d27a591a4",
+        "role": "voice",
+        "name": "人声",
+        "order": 0,
+        "gain": 1,
+        "muted": false,
+        "solo": false,
+        "id": "atr_965c94de-1d88-4185-ae97-edf8e207363b",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:42:05.841Z",
+        "updatedAt": "2026-10-11T22:42:05.841Z"
+      },
+      {
+        "id": "aud_7c5a2134-9e7d-45ce-8540-12d00d5783fd",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:42:05.841Z",
+        "updatedAt": "2026-10-11T22:42:05.841Z",
+        "chapterId": "aud_5de4cb8d-228f-468c-bada-37ad412affd7",
+        "role": "voice",
+        "name": "人声",
+        "order": 0,
+        "gain": 1,
+        "muted": false,
+        "solo": false
+      }
+    ],
+    "musicDrafts": [
+      {
+        "settings": {
+          "engine": "suno",
+          "version": "v6",
+          "custom": true,
+          "instrumental": false,
+          "prompt": "[Verse]\n清晨打开窗，故事正在发光。\n[Chorus]\n把灵感留在我们的工作台上。",
+          "title": "清晨工作台",
+          "style": "自然原声钢琴，温暖低频，安静的工作室氛围。",
+          "negativeTags": "强烈鼓点",
+          "durationSec": 30
+        },
+        "id": "mdr_4fd919f1-d475-4972-86e6-d294426eae26",
+        "projectId": "prj_6a21d4d2-283d-41dc-98d4-c7128db564a7",
+        "revision": 4,
+        "createdAt": "2026-10-11T22:48:23.702Z",
+        "updatedAt": "2026-10-11T22:48:41.230Z"
+      },
+      {
+        "settings": {
+          "engine": "suno",
+          "version": "v6",
+          "custom": false,
+          "instrumental": true,
+          "prompt": "清晨工作室的轻柔钢琴，克制、温暖，适合个人创作短片。",
+          "title": "",
+          "style": "",
+          "negativeTags": ""
+        },
+        "id": "mdr_b167fe32-2f1e-4c9c-ba27-695e39f9d8c1",
+        "projectId": "prj_6a21d4d2-283d-41dc-98d4-c7128db564a7",
+        "revision": 2,
+        "createdAt": "2026-10-11T22:48:18.464Z",
+        "updatedAt": "2026-10-11T22:48:23.688Z"
+      }
+    ],
+    "projectMemories": [
+      {
+        "category": "convention",
+        "inclusion": "relevant",
+        "title": "音频交付规范",
+        "topicKey": "音频交付规范",
+        "body": "保留原始声音，混音输出采用 48 kHz 立体声 WAV；片头保留 0.125 秒。",
+        "applicability": "本轮本地音频验收项目。",
+        "tags": [],
+        "id": "pm_65dbbb75-308a-479a-9724-dfe7f8d39521",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "status": "active",
+        "revision": 2,
+        "source": {
+          "kind": "manual"
+        },
+        "createdAt": "2026-10-11T22:44:12.060Z",
+        "updatedAt": "2026-10-11T22:47:15.915Z",
+        "reviewedAt": "2026-10-11T22:47:15.915Z"
+      },
+      {
+        "category": "convention",
+        "inclusion": "relevant",
+        "title": "音频交付规范",
+        "topicKey": "音频交付规范",
+        "body": "保留原始声音，混音输出采用 48 kHz 立体声 WAV；片头保留 0.125 秒。",
+        "applicability": "本轮本地音频验收项目。",
+        "tags": [],
+        "id": "pm_88267336-c24c-4ebf-97b1-32c987eeac72",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "status": "pending_review",
+        "revision": 3,
+        "source": {
+          "kind": "imported",
+          "originProjectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+          "originMemoryId": "pm_65dbbb75-308a-479a-9724-dfe7f8d39521",
+          "originalKind": "manual",
+          "excerpt": "保留原始声音，混音输出采用 48 kHz 立体声 WAV；片头保留 0.125 秒。"
+        },
+        "createdAt": "2026-10-11T22:44:12.060Z",
+        "updatedAt": "2026-10-11T22:47:49.477Z",
+        "supersededBy": "<undefined>"
+      }
+    ],
+    "projectMemoryVersions": [
+      {
+        "versionId": "pmv_0a260812-0090-43d7-91fb-515b4c6dda64",
+        "memoryId": "pm_88267336-c24c-4ebf-97b1-32c987eeac72",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 3,
+        "reason": "导入项目备份，等待重新审核",
+        "snapshot": {
+          "category": "convention",
+          "inclusion": "relevant",
+          "title": "音频交付规范",
+          "topicKey": "音频交付规范",
+          "body": "保留原始声音，混音输出采用 48 kHz 立体声 WAV；片头保留 0.125 秒。",
+          "applicability": "本轮本地音频验收项目。",
+          "tags": [],
+          "id": "pm_88267336-c24c-4ebf-97b1-32c987eeac72",
+          "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+          "status": "pending_review",
+          "revision": 3,
+          "source": {
+            "kind": "imported",
+            "originProjectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+            "originMemoryId": "pm_65dbbb75-308a-479a-9724-dfe7f8d39521",
+            "originalKind": "manual",
+            "excerpt": "保留原始声音，混音输出采用 48 kHz 立体声 WAV；片头保留 0.125 秒。"
+          },
+          "createdAt": "2026-10-11T22:44:12.060Z",
+          "updatedAt": "2026-10-11T22:47:49.477Z",
+          "supersededBy": "<undefined>"
+        }
+      },
+      {
+        "versionId": "pmv_1ed4a60a-75cd-4835-9d65-a0cf0a0362a4",
+        "memoryId": "pm_65dbbb75-308a-479a-9724-dfe7f8d39521",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 2,
+        "reason": "人工修订",
+        "snapshot": {
+          "category": "convention",
+          "inclusion": "relevant",
+          "title": "音频交付规范",
+          "topicKey": "音频交付规范",
+          "body": "保留原始声音，混音输出采用 48 kHz 立体声 WAV；片头保留 0.125 秒。",
+          "applicability": "本轮本地音频验收项目。",
+          "tags": [],
+          "id": "pm_65dbbb75-308a-479a-9724-dfe7f8d39521",
+          "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+          "status": "active",
+          "revision": 2,
+          "source": {
+            "kind": "manual"
+          },
+          "createdAt": "2026-10-11T22:44:12.060Z",
+          "updatedAt": "2026-10-11T22:47:15.915Z",
+          "reviewedAt": "2026-10-11T22:47:15.915Z"
+        }
+      },
+      {
+        "versionId": "pmv_82a7f5eb-0546-4e3f-bad3-f37f8dc9e5b9",
+        "memoryId": "pm_88267336-c24c-4ebf-97b1-32c987eeac72",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 1,
+        "reason": "用户确认创建",
+        "snapshot": {
+          "category": "convention",
+          "inclusion": "relevant",
+          "title": "音频交付规范",
+          "topicKey": "音频交付规范",
+          "body": "保留原始声音，混音输出采用 48 kHz 立体声 WAV。",
+          "applicability": "本轮本地音频验收项目。",
+          "tags": [],
+          "id": "pm_88267336-c24c-4ebf-97b1-32c987eeac72",
+          "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+          "status": "active",
+          "revision": 1,
+          "source": {
+            "kind": "imported",
+            "originProjectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+            "originMemoryId": "pm_65dbbb75-308a-479a-9724-dfe7f8d39521",
+            "originalKind": "manual",
+            "excerpt": "保留原始声音，混音输出采用 48 kHz 立体声 WAV。"
+          },
+          "createdAt": "2026-10-11T22:44:12.060Z",
+          "updatedAt": "2026-10-11T22:44:12.060Z",
+          "reviewedAt": "2026-10-11T22:44:12.060Z",
+          "supersededBy": "<undefined>"
+        }
+      },
+      {
+        "versionId": "pmv_8407289e-23ba-4f3a-b637-932d53f9d5d6",
+        "memoryId": "pm_65dbbb75-308a-479a-9724-dfe7f8d39521",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 1,
+        "reason": "用户确认创建",
+        "snapshot": {
+          "category": "convention",
+          "inclusion": "relevant",
+          "title": "音频交付规范",
+          "topicKey": "音频交付规范",
+          "body": "保留原始声音，混音输出采用 48 kHz 立体声 WAV。",
+          "applicability": "本轮本地音频验收项目。",
+          "tags": [],
+          "id": "pm_65dbbb75-308a-479a-9724-dfe7f8d39521",
+          "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+          "status": "active",
+          "revision": 1,
+          "source": {
+            "kind": "manual"
+          },
+          "createdAt": "2026-10-11T22:44:12.060Z",
+          "updatedAt": "2026-10-11T22:44:12.060Z",
+          "reviewedAt": "2026-10-11T22:44:12.060Z"
+        }
+      },
+      {
+        "versionId": "pmv_8775452b-24c7-41c6-a5c0-eed9b716a489",
+        "memoryId": "pm_88267336-c24c-4ebf-97b1-32c987eeac72",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 2,
+        "reason": "人工修订",
+        "snapshot": {
+          "category": "convention",
+          "inclusion": "relevant",
+          "title": "音频交付规范",
+          "topicKey": "音频交付规范",
+          "body": "保留原始声音，混音输出采用 48 kHz 立体声 WAV；片头保留 0.125 秒。",
+          "applicability": "本轮本地音频验收项目。",
+          "tags": [],
+          "id": "pm_88267336-c24c-4ebf-97b1-32c987eeac72",
+          "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+          "status": "active",
+          "revision": 2,
+          "source": {
+            "kind": "imported",
+            "originProjectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+            "originMemoryId": "pm_65dbbb75-308a-479a-9724-dfe7f8d39521",
+            "originalKind": "manual",
+            "excerpt": "保留原始声音，混音输出采用 48 kHz 立体声 WAV；片头保留 0.125 秒。"
+          },
+          "createdAt": "2026-10-11T22:44:12.060Z",
+          "updatedAt": "2026-10-11T22:47:15.915Z",
+          "reviewedAt": "2026-10-11T22:47:15.915Z",
+          "supersededBy": "<undefined>"
+        }
+      }
+    ],
+    "projects": [
+      {
+        "kind": "audio",
+        "id": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "name": "SQLite 音频验收",
+        "archivedAt": "<undefined>",
+        "brief": "<undefined>",
+        "genre": "<undefined>",
+        "audience": "<undefined>",
+        "tone": "<undefined>",
+        "defaultStyleId": "<undefined>",
+        "generationDefaults": "<undefined>",
+        "musicVariantLinks": "<undefined>",
+        "mode": "film",
+        "aspectPreset": "16:9",
+        "createdAt": "2026-10-11T22:47:49.477Z",
+        "updatedAt": "2026-10-11T22:47:49.477Z",
+        "columnSettings": {
+          "visible": [
+            "durationSec",
+            "content",
+            "characters",
+            "scene",
+            "notes"
+          ]
+        },
+        "shotSettings": {
+          "defaultDurationSec": 0,
+          "autoIncrementShotNumber": true,
+          "workspaceView": "design",
+          "filters": {
+            "statuses": [],
+            "beatIds": [],
+            "gaps": []
+          }
+        },
+        "story": {
+          "logline": ""
+        },
+        "setting": {
+          "worldview": "",
+          "background": "",
+          "rules": ""
+        },
+        "extra": "<undefined>"
+      },
+      {
+        "id": "prj_6a21d4d2-283d-41dc-98d4-c7128db564a7",
+        "name": "SQLite 音乐验收",
+        "mode": "film",
+        "aspectPreset": "16:9",
+        "createdAt": "2026-10-11T22:48:18.456Z",
+        "updatedAt": "2026-10-11T22:48:41.232Z",
+        "columnSettings": {
+          "visible": [
+            "durationSec",
+            "content",
+            "characters",
+            "scene",
+            "notes"
+          ]
+        },
+        "shotSettings": {
+          "defaultDurationSec": 0,
+          "autoIncrementShotNumber": true,
+          "workspaceView": "design",
+          "filters": {
+            "statuses": [],
+            "beatIds": [],
+            "gaps": []
+          }
+        },
+        "story": {
+          "logline": ""
+        },
+        "setting": {
+          "worldview": "",
+          "background": "",
+          "rules": ""
+        },
+        "kind": "music",
+        "musicVariantLinks": {
+          "mdr_b167fe32-2f1e-4c9c-ba27-695e39f9d8c1": {
+            "suno-simple": "mdr_b167fe32-2f1e-4c9c-ba27-695e39f9d8c1",
+            "suno-custom": "mdr_4fd919f1-d475-4972-86e6-d294426eae26"
+          },
+          "mdr_4fd919f1-d475-4972-86e6-d294426eae26": {
+            "suno-simple": "mdr_b167fe32-2f1e-4c9c-ba27-695e39f9d8c1",
+            "suno-custom": "mdr_4fd919f1-d475-4972-86e6-d294426eae26"
+          }
+        }
+      },
+      {
+        "id": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "name": "SQLite 音频验收",
+        "mode": "film",
+        "aspectPreset": "16:9",
+        "createdAt": "2026-10-11T22:42:05.835Z",
+        "updatedAt": "2026-10-11T22:43:06.642Z",
+        "columnSettings": {
+          "visible": [
+            "durationSec",
+            "content",
+            "characters",
+            "scene",
+            "notes"
+          ]
+        },
+        "shotSettings": {
+          "defaultDurationSec": 0,
+          "autoIncrementShotNumber": true,
+          "workspaceView": "design",
+          "filters": {
+            "statuses": [],
+            "beatIds": [],
+            "gaps": []
+          }
+        },
+        "story": {
+          "logline": ""
+        },
+        "setting": {
+          "worldview": "",
+          "background": "",
+          "rules": ""
+        },
+        "kind": "audio"
+      }
+    ]
+  },
+  "audioProjectsEmptyExplanation": "Existing shared product creates unified projects(kind=audio); audioProjects is optional settings row, not the parent catalog. Unified parent and children are asserted here."
+}

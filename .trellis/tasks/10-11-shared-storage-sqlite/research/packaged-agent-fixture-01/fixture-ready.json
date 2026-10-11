@@ -1,0 +1,6 @@
+{
+  "origin": "http://127.0.0.1:58470",
+  "cors": false,
+  "token": "synthetic-local-only",
+  "limits": "Synthetic fixture only; no supplier or normal-product result is implied."
+}

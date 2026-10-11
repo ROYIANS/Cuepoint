@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-11T22:37:11.580861+00:00",
+  "actualUiImportedVideoBytes": 89613670,
+  "actualWKPreviewOpaqueUrl": "http://127.0.0.1:59728/41defacd-b5db-4984-8d45-8aa43d42c728",
+  "actualUiControls": "Pause; Duration30seconds",
+  "tableCounts": {
+    "agentRuns": 4,
+    "agentToolCalls": 4,
+    "agents": 1,
+    "characters": 1,
+    "chatMessages": 8,
+    "chatThreads": 4,
+    "connectors": 1,
+    "episodes": 2,
+    "libraryMaterials": 1,
+    "materialEvents": 1,
+    "materialVersions": 1,
+    "projects": 2,
+    "props": 1,
+    "scenes": 1,
+    "shots": 1,
+    "styles": 1
+  },
+  "managedFilesVerified": [
+    {
+      "id": "39f91ff3-bee3-4451-9296-2b526a5a1622",
+      "bytes": 89613670,
+      "mime": "video/mp4",
+      "sha256": "6f361344b18c5aac5b7ea8706d2783fa450907e788d3e19dd325ada3617fdee7",
+      "relativePath": "assets/id-33396639316666332d626565332d343435312d393239362d326235323661356131363232"
+    }
+  ]
+}

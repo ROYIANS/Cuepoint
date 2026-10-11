@@ -1,0 +1,13 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run tests/e01ManualDraftDeparture.test.ts tests/manualDraftWiring.test.ts tests/debouncedDraft.test.ts tests/draftConcurrency.test.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  4 passed (4)
+      Tests  38 passed (38)
+   Start at  06:29:56
+   Duration  1.05s (transform 47%, tests 25%, setup 16%, import 12%)
+

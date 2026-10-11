@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/import/image.png",
+    "bytes": 177,
+    "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+    "disposableCopyOf": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/fixtures/media/image.png"
+  },
+  {
+    "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/import/document.pdf",
+    "bytes": 3033,
+    "sha256": "ee62307e225b723a2ed696922cfd849ddcdc14f35cd564d08a96b771a3d01717",
+    "disposableCopyOf": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/fixtures/media/document.pdf"
+  },
+  {
+    "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/import/document.docx",
+    "bytes": 1084,
+    "sha256": "ce29dc1edf52d07a8d442e89dd5e44af208748a79c53092262dc661f94bad26a",
+    "disposableCopyOf": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/fixtures/media/document.docx"
+  },
+  {
+    "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/import/tone.wav",
+    "bytes": 384044,
+    "sha256": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4",
+    "disposableCopyOf": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/fixtures/media/tone.wav"
+  },
+  {
+    "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/import/range-video.mp4",
+    "bytes": 89613670,
+    "sha256": "6f361344b18c5aac5b7ea8706d2783fa450907e788d3e19dd325ada3617fdee7",
+    "disposableCopyOf": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/large-playback/range-video.mp4"
+  }
+]

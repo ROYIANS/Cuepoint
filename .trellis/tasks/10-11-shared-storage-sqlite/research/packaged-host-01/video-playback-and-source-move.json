@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-11T22:38:24.121301+00:00",
+  "actualWKObservedTimesSeconds": [
+    0,
+    16,
+    21,
+    25
+  ],
+  "pausedAtSeconds": 10,
+  "uiSliderClickThenObservedSeconds": 15,
+  "resumedAtSeconds": 14,
+  "videoOpaqueUrl": "http://127.0.0.1:59728/41defacd-b5db-4984-8d45-8aa43d42c728",
+  "actualDecodedNoiseFramesSeen": true,
+  "externalDisposableSourceMovedFrom": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/import/range-video.mp4",
+  "externalDisposableSourceMovedTo": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/import/range-video-source-moved.mp4",
+  "originalFixtureUntouched": true,
+  "internalHashVerifiedPreviously": true,
+  "next": "close/reopen detail after source moved, verify play/end; exact network Range not instrumented"
+}

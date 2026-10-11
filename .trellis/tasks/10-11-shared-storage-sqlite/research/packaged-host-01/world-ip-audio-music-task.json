@@ -1,0 +1,2398 @@
+{
+  "at": "2026-10-11T23:06:34.827779+00:00",
+  "actualUi": {
+    "pendingDepartureCancelResolved": true,
+    "pendingDepartureDiscardNavigatedWorld": true,
+    "shotCharacterSelected": "林舟",
+    "shotScene": "创作工作室",
+    "shotProp": "黑色笔记本",
+    "shotStyle": "清晨纪实",
+    "projectDefaultStyle": "清晨纪实",
+    "shotFirstFrameSelectedAndSaved": true,
+    "characterFrontImageSelectedAndSaved": true,
+    "ipSettingSnapshotPreviewedAndSaved": true,
+    "ttsGeneratedTakePlayedAndAdopted": true,
+    "ttsOriginalClipPreserved": true,
+    "reusablePresetSpeakerSavedAndUsed": "工作室旁白",
+    "musicGeneratedWorkPlayed": "00:02.0",
+    "musicOriginalParametersInspected": true,
+    "musicWorkRenamedAndReused": true,
+    "manualTaskRecordVersionsVisible": [
+      2,
+      1
+    ],
+    "manualWrapupVersionsVisible": [
+      3,
+      2,
+      1
+    ],
+    "taskMarkedComplete": false,
+    "microphoneAttempt": "waiting OS permission; canceled before any recording"
+  },
+  "rows": {
+    "projects": [
+      {
+        "id": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+        "name": "SQLite 桌面验收短片",
+        "mode": "film",
+        "aspectPreset": "16:9",
+        "createdAt": "2026-10-11T22:22:50.816Z",
+        "updatedAt": "2026-10-11T22:57:54.577Z",
+        "columnSettings": {
+          "visible": [
+            "durationSec",
+            "content",
+            "characters",
+            "scene",
+            "notes"
+          ]
+        },
+        "shotSettings": {
+          "defaultDurationSec": 0,
+          "autoIncrementShotNumber": true,
+          "workspaceView": "media",
+          "filters": {
+            "statuses": [],
+            "beatIds": [],
+            "gaps": []
+          }
+        },
+        "story": {
+          "logline": ""
+        },
+        "setting": {
+          "worldview": "当代的个人创作工作室。",
+          "background": "",
+          "rules": ""
+        },
+        "defaultStyleId": "sty_32828490-5b3e-454e-9891-141c2bad4bcb"
+      },
+      {
+        "kind": "audio",
+        "id": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "name": "SQLite 音频验收",
+        "archivedAt": "<undefined>",
+        "brief": "<undefined>",
+        "genre": "<undefined>",
+        "audience": "<undefined>",
+        "tone": "<undefined>",
+        "defaultStyleId": "<undefined>",
+        "generationDefaults": "<undefined>",
+        "musicVariantLinks": "<undefined>",
+        "mode": "film",
+        "aspectPreset": "16:9",
+        "createdAt": "2026-10-11T22:47:49.477Z",
+        "updatedAt": "2026-10-11T22:47:49.477Z",
+        "columnSettings": {
+          "visible": [
+            "durationSec",
+            "content",
+            "characters",
+            "scene",
+            "notes"
+          ]
+        },
+        "shotSettings": {
+          "defaultDurationSec": 0,
+          "autoIncrementShotNumber": true,
+          "workspaceView": "design",
+          "filters": {
+            "statuses": [],
+            "beatIds": [],
+            "gaps": []
+          }
+        },
+        "story": {
+          "logline": ""
+        },
+        "setting": {
+          "worldview": "",
+          "background": "",
+          "rules": ""
+        },
+        "extra": "<undefined>"
+      },
+      {
+        "id": "prj_6a21d4d2-283d-41dc-98d4-c7128db564a7",
+        "name": "SQLite 音乐验收",
+        "mode": "film",
+        "aspectPreset": "16:9",
+        "createdAt": "2026-10-11T22:48:18.456Z",
+        "updatedAt": "2026-10-11T23:04:04.319Z",
+        "columnSettings": {
+          "visible": [
+            "durationSec",
+            "content",
+            "characters",
+            "scene",
+            "notes"
+          ]
+        },
+        "shotSettings": {
+          "defaultDurationSec": 0,
+          "autoIncrementShotNumber": true,
+          "workspaceView": "design",
+          "filters": {
+            "statuses": [],
+            "beatIds": [],
+            "gaps": []
+          }
+        },
+        "story": {
+          "logline": ""
+        },
+        "setting": {
+          "worldview": "",
+          "background": "",
+          "rules": ""
+        },
+        "kind": "music",
+        "musicVariantLinks": {
+          "mdr_b167fe32-2f1e-4c9c-ba27-695e39f9d8c1": {
+            "suno-simple": "mdr_b167fe32-2f1e-4c9c-ba27-695e39f9d8c1",
+            "suno-custom": "mdr_4fd919f1-d475-4972-86e6-d294426eae26"
+          },
+          "mdr_4fd919f1-d475-4972-86e6-d294426eae26": {
+            "suno-simple": "mdr_b167fe32-2f1e-4c9c-ba27-695e39f9d8c1",
+            "suno-custom": "mdr_4fd919f1-d475-4972-86e6-d294426eae26"
+          }
+        }
+      },
+      {
+        "id": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "name": "SQLite 音频验收",
+        "mode": "film",
+        "aspectPreset": "16:9",
+        "createdAt": "2026-10-11T22:42:05.835Z",
+        "updatedAt": "2026-10-11T23:02:04.048Z",
+        "columnSettings": {
+          "visible": [
+            "durationSec",
+            "content",
+            "characters",
+            "scene",
+            "notes"
+          ]
+        },
+        "shotSettings": {
+          "defaultDurationSec": 0,
+          "autoIncrementShotNumber": true,
+          "workspaceView": "design",
+          "filters": {
+            "statuses": [],
+            "beatIds": [],
+            "gaps": []
+          }
+        },
+        "story": {
+          "logline": ""
+        },
+        "setting": {
+          "worldview": "",
+          "background": "",
+          "rules": ""
+        },
+        "kind": "audio"
+      },
+      {
+        "id": "prj_de20a848-4054-427a-8409-77d9fe1333be",
+        "name": "原生 Agent 验收项目",
+        "mode": "film",
+        "aspectPreset": "16:9",
+        "createdAt": "2026-10-11T22:30:29.240Z",
+        "updatedAt": "2026-10-11T22:30:29.240Z",
+        "columnSettings": {
+          "visible": [
+            "durationSec",
+            "content",
+            "characters",
+            "scene",
+            "notes"
+          ]
+        },
+        "shotSettings": {
+          "defaultDurationSec": 0,
+          "autoIncrementShotNumber": true,
+          "workspaceView": "design",
+          "filters": {
+            "statuses": [],
+            "beatIds": [],
+            "gaps": []
+          }
+        },
+        "story": {
+          "logline": ""
+        },
+        "setting": {
+          "worldview": "",
+          "background": "",
+          "rules": ""
+        }
+      }
+    ],
+    "projectIpLinks": [
+      {
+        "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+        "ipId": "ip_89b32bc9-bca9-4a6b-91ac-f4eff0f4cd8f",
+        "updatedAt": "2026-10-11T22:58:28.772Z"
+      },
+      {
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "ipId": "ip_89b32bc9-bca9-4a6b-91ac-f4eff0f4cd8f",
+        "updatedAt": "2026-10-11T22:42:05.839Z"
+      }
+    ],
+    "ipProfiles": [
+      {
+        "id": "ip_89b32bc9-bca9-4a6b-91ac-f4eff0f4cd8f",
+        "name": "本地创作验收 IP",
+        "positioning": "个人创作者的工作室日常。",
+        "audience": "",
+        "topics": "",
+        "expression": "",
+        "visual": "",
+        "voice": "",
+        "revision": 1,
+        "archived": false,
+        "createdAt": "2026-10-11T22:41:39.006Z",
+        "updatedAt": "2026-10-11T22:41:39.006Z"
+      }
+    ],
+    "characters": [
+      {
+        "id": "chr_4557b2b8-9579-4f59-8cbd-90163ada93ac",
+        "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+        "name": "林舟",
+        "bio": "独立创作者，整理资料并制作短片。",
+        "appearance": "",
+        "notes": "",
+        "slots": {
+          "front": {
+            "prompt": "林舟的正面角色参考，工作室中的年轻创作者。",
+            "referenceImageIds": [],
+            "referenceVideoIds": [],
+            "result": {
+              "mediaId": "med_93541a4d-ba67-442b-813d-61cfc1ba4e5c",
+              "kind": "image"
+            }
+          }
+        },
+        "createdAt": "2026-10-11T22:33:28.206Z",
+        "updatedAt": "2026-10-11T22:56:53.855Z"
+      }
+    ],
+    "shots": [
+      {
+        "id": "sht_c94feae5-227d-45d8-a07e-865cba70672e",
+        "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+        "episodeId": "ep_99a7309f-32d6-4871-9b10-f234c65654b7",
+        "order": 1,
+        "shotNumber": "1",
+        "status": "draft",
+        "firstFrame": {
+          "prompt": "清晨自然光中的工作室书桌，黑色笔记本特写。",
+          "referenceImageIds": [],
+          "referenceVideoIds": [],
+          "result": {
+            "mediaId": "med_93541a4d-ba67-442b-813d-61cfc1ba4e5c",
+            "kind": "image"
+          }
+        },
+        "lastFrame": {
+          "prompt": "",
+          "referenceImageIds": [],
+          "referenceVideoIds": []
+        },
+        "clip": {
+          "prompt": "",
+          "referenceImageIds": [],
+          "referenceVideoIds": []
+        },
+        "category": "",
+        "durationSec": 4.125,
+        "content": "林舟在书桌前翻开黑色笔记本。",
+        "notes": "",
+        "sceneCloseup": "",
+        "sound": "",
+        "emotion": "",
+        "cameraAngle": "",
+        "cameraGear": "",
+        "focalLength": "",
+        "characterIds": [
+          "chr_4557b2b8-9579-4f59-8cbd-90163ada93ac"
+        ],
+        "beatId": "beat_5d826731-7123-4e69-9fca-f26d20256f73",
+        "sceneId": "scn_fb966093-3609-46ca-b50d-2957de5dbb47",
+        "propIds": [
+          "prp_6966d753-886d-40a8-aceb-77bd66b21f4b"
+        ],
+        "styleId": "sty_32828490-5b3e-454e-9891-141c2bad4bcb"
+      }
+    ],
+    "libraryMaterials": [
+      {
+        "id": "mat_1257ff5c-9c1f-44e7-bb2e-674cb05b2581",
+        "name": "image.png",
+        "kind": "image",
+        "scope": {
+          "kind": "global"
+        },
+        "revision": 2,
+        "archived": false,
+        "notes": "",
+        "tags": [],
+        "source": "<undefined>",
+        "createdAt": "2026-10-11T22:40:03.558Z",
+        "updatedAt": "2026-10-11T22:52:10.267Z"
+      },
+      {
+        "id": "mat_413999f1-e75b-42fd-a5b0-d97b7a9ae7d8",
+        "name": "range-video.mp4",
+        "kind": "video",
+        "scope": {
+          "kind": "global"
+        },
+        "revision": 1,
+        "archived": false,
+        "notes": "",
+        "tags": [],
+        "source": "<undefined>",
+        "createdAt": "2026-10-11T22:36:39.846Z",
+        "updatedAt": "2026-10-11T22:36:39.846Z"
+      },
+      {
+        "id": "mat_7f0f7a12-65ae-4004-a871-84adb23ac345",
+        "name": "林舟",
+        "kind": "character",
+        "scope": {
+          "kind": "ip",
+          "id": "ip_89b32bc9-bca9-4a6b-91ac-f4eff0f4cd8f"
+        },
+        "revision": 1,
+        "archived": false,
+        "notes": "",
+        "tags": [],
+        "source": {
+          "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+          "entityId": "chr_4557b2b8-9579-4f59-8cbd-90163ada93ac"
+        },
+        "createdAt": "2026-10-11T22:57:21.335Z",
+        "updatedAt": "2026-10-11T22:57:21.335Z"
+      },
+      {
+        "id": "mat_9cc8a548-62c8-4e85-8cd3-9637a92546bb",
+        "name": "document.docx",
+        "kind": "document",
+        "scope": {
+          "kind": "global"
+        },
+        "revision": 1,
+        "archived": false,
+        "notes": "",
+        "tags": [],
+        "source": "<undefined>",
+        "createdAt": "2026-10-11T22:40:03.485Z",
+        "updatedAt": "2026-10-11T22:40:03.485Z"
+      },
+      {
+        "id": "mat_d90b7ccc-a538-4999-82d3-7e8efd9d1eff",
+        "name": "document.pdf",
+        "kind": "document",
+        "scope": {
+          "kind": "global"
+        },
+        "revision": 1,
+        "archived": false,
+        "notes": "",
+        "tags": [],
+        "source": "<undefined>",
+        "createdAt": "2026-10-11T22:40:03.524Z",
+        "updatedAt": "2026-10-11T22:40:03.524Z"
+      },
+      {
+        "id": "mat_fba585e5-ed5b-42c4-b7e4-c69dcee81206",
+        "name": "tone.wav",
+        "kind": "audio",
+        "scope": {
+          "kind": "global"
+        },
+        "revision": 1,
+        "archived": false,
+        "notes": "",
+        "tags": [],
+        "source": "<undefined>",
+        "createdAt": "2026-10-11T22:40:03.430Z",
+        "updatedAt": "2026-10-11T22:40:03.430Z"
+      }
+    ],
+    "materialVersions": [
+      {
+        "id": "mvr_2001b629-466b-4895-ab3e-07bbc6ec8414",
+        "materialId": "mat_d90b7ccc-a538-4999-82d3-7e8efd9d1eff",
+        "revision": 1,
+        "payload": {
+          "type": "file",
+          "blob": {
+            "managedBinaryRef": {
+              "binaryId": "f1a9cbf4-a57d-4b03-9217-2164030d3994",
+              "byteLength": 3033,
+              "contentHash": "ee62307e225b723a2ed696922cfd849ddcdc14f35cd564d08a96b771a3d01717",
+              "mimeType": "application/pdf",
+              "version": 1,
+              "workspaceId": "328dabb8-d4ba-489a-ac8f-ffb37c5b4098"
+            }
+          },
+          "filename": "document.pdf",
+          "mimeType": "application/pdf"
+        },
+        "createdAt": "2026-10-11T22:40:03.524Z"
+      },
+      {
+        "id": "mvr_29888353-d806-4567-b6aa-9460e1519935",
+        "materialId": "mat_7f0f7a12-65ae-4004-a871-84adb23ac345",
+        "revision": 1,
+        "payload": {
+          "type": "setting",
+          "kind": "character",
+          "entity": {
+            "id": "chr_4557b2b8-9579-4f59-8cbd-90163ada93ac",
+            "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+            "name": "林舟",
+            "bio": "独立创作者，整理资料并制作短片。",
+            "appearance": "",
+            "notes": "",
+            "slots": {
+              "front": {
+                "prompt": "林舟的正面角色参考，工作室中的年轻创作者。",
+                "referenceImageIds": [],
+                "referenceVideoIds": [],
+                "result": {
+                  "mediaId": "med_93541a4d-ba67-442b-813d-61cfc1ba4e5c",
+                  "kind": "image"
+                }
+              }
+            },
+            "createdAt": "2026-10-11T22:33:28.206Z",
+            "updatedAt": "2026-10-11T22:56:53.855Z"
+          },
+          "media": [
+            {
+              "id": "med_93541a4d-ba67-442b-813d-61cfc1ba4e5c",
+              "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+              "libraryRetained": true,
+              "blob": {
+                "managedBinaryRef": {
+                  "binaryId": "8de29e36-6487-4104-b497-17ffb2f92525",
+                  "byteLength": 177,
+                  "contentHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+                  "mimeType": "image/png",
+                  "version": 1,
+                  "workspaceId": "328dabb8-d4ba-489a-ac8f-ffb37c5b4098"
+                }
+              },
+              "filename": "image.png",
+              "mimeType": "image/png"
+            }
+          ]
+        },
+        "createdAt": "2026-10-11T22:57:21.335Z"
+      },
+      {
+        "id": "mvr_312b2393-3606-4de2-aa9a-8955bc15e983",
+        "materialId": "mat_fba585e5-ed5b-42c4-b7e4-c69dcee81206",
+        "revision": 1,
+        "payload": {
+          "type": "file",
+          "blob": {
+            "managedBinaryRef": {
+              "binaryId": "541f9c90-88ba-4a8d-b739-dbcfcd566b1e",
+              "byteLength": 384044,
+              "contentHash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4",
+              "mimeType": "audio/x-wav",
+              "version": 1,
+              "workspaceId": "328dabb8-d4ba-489a-ac8f-ffb37c5b4098"
+            }
+          },
+          "filename": "tone.wav",
+          "mimeType": "audio/x-wav"
+        },
+        "createdAt": "2026-10-11T22:40:03.430Z"
+      },
+      {
+        "id": "mvr_5c7af197-2e77-48e2-b14b-7b33d2abad94",
+        "materialId": "mat_1257ff5c-9c1f-44e7-bb2e-674cb05b2581",
+        "revision": 1,
+        "payload": {
+          "type": "file",
+          "blob": {
+            "managedBinaryRef": {
+              "binaryId": "93980fed-876a-4d02-a6e0-9f1a999ff0d9",
+              "byteLength": 177,
+              "contentHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+              "mimeType": "image/png",
+              "version": 1,
+              "workspaceId": "328dabb8-d4ba-489a-ac8f-ffb37c5b4098"
+            }
+          },
+          "filename": "image.png",
+          "mimeType": "image/png"
+        },
+        "createdAt": "2026-10-11T22:40:03.558Z"
+      },
+      {
+        "id": "mvr_a4b505cd-0c05-450e-8b4e-e8131197b623",
+        "materialId": "mat_1257ff5c-9c1f-44e7-bb2e-674cb05b2581",
+        "revision": 2,
+        "payload": {
+          "type": "file",
+          "blob": {
+            "managedBinaryRef": {
+              "binaryId": "a9d41609-8ab2-4a54-8145-8657def7e46c",
+              "byteLength": 177,
+              "contentHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+              "mimeType": "image/png",
+              "version": 1,
+              "workspaceId": "328dabb8-d4ba-489a-ac8f-ffb37c5b4098"
+            }
+          },
+          "filename": "image.png",
+          "mimeType": "image/png"
+        },
+        "createdAt": "2026-10-11T22:52:10.267Z"
+      },
+      {
+        "id": "mvr_bcc5ff28-5c5f-4073-8a1e-851e95f217d7",
+        "materialId": "mat_9cc8a548-62c8-4e85-8cd3-9637a92546bb",
+        "revision": 1,
+        "payload": {
+          "type": "file",
+          "blob": {
+            "managedBinaryRef": {
+              "binaryId": "da299a7f-d26a-454b-ba44-11f8db104f70",
+              "byteLength": 1084,
+              "contentHash": "ce29dc1edf52d07a8d442e89dd5e44af208748a79c53092262dc661f94bad26a",
+              "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "version": 1,
+              "workspaceId": "328dabb8-d4ba-489a-ac8f-ffb37c5b4098"
+            }
+          },
+          "filename": "document.docx",
+          "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        },
+        "createdAt": "2026-10-11T22:40:03.485Z"
+      },
+      {
+        "id": "mvr_db78dec6-5efb-492c-99c4-eed56b1797a3",
+        "materialId": "mat_413999f1-e75b-42fd-a5b0-d97b7a9ae7d8",
+        "revision": 1,
+        "payload": {
+          "type": "file",
+          "blob": {
+            "managedBinaryRef": {
+              "binaryId": "39f91ff3-bee3-4451-9296-2b526a5a1622",
+              "byteLength": 89613670,
+              "contentHash": "6f361344b18c5aac5b7ea8706d2783fa450907e788d3e19dd325ada3617fdee7",
+              "mimeType": "video/mp4",
+              "version": 1,
+              "workspaceId": "328dabb8-d4ba-489a-ac8f-ffb37c5b4098"
+            }
+          },
+          "filename": "range-video.mp4",
+          "mimeType": "video/mp4"
+        },
+        "createdAt": "2026-10-11T22:36:39.846Z"
+      }
+    ],
+    "materialUses": [
+      {
+        "id": "mus_ddc8153d-c6ad-4aa3-92f2-553a76ff8369",
+        "materialId": "mat_1257ff5c-9c1f-44e7-bb2e-674cb05b2581",
+        "revision": 1,
+        "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+        "targetKind": "media",
+        "targetId": "med_93541a4d-ba67-442b-813d-61cfc1ba4e5c",
+        "mediaIds": [
+          "med_93541a4d-ba67-442b-813d-61cfc1ba4e5c"
+        ],
+        "createdAt": "2026-10-11T22:40:27.505Z",
+        "updatedAt": "2026-10-11T22:40:27.505Z"
+      },
+      {
+        "id": "mus_e5229dc9-d534-437e-b749-8698eaaf9cd6",
+        "materialId": "mat_fba585e5-ed5b-42c4-b7e4-c69dcee81206",
+        "revision": 1,
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "targetKind": "media",
+        "targetId": "med_9eb5f8cf-b2cc-4474-81c4-862947c6ffbe",
+        "mediaIds": [
+          "med_9eb5f8cf-b2cc-4474-81c4-862947c6ffbe"
+        ],
+        "createdAt": "2026-10-11T22:42:26.091Z",
+        "updatedAt": "2026-10-11T22:42:26.091Z"
+      }
+    ],
+    "materialEvents": [
+      {
+        "id": "mev_0c7f04e2-3b93-434f-85be-d2d579565416",
+        "materialId": "mat_2b43233a-2fd0-4706-9362-061f50d0954b",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.002Z"
+      },
+      {
+        "id": "mev_0c929fee-46ee-491b-82d8-f0f9d86643e7",
+        "materialId": "mat_44319e55-41f8-42a7-b85e-91967fc88a3c",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.612Z"
+      },
+      {
+        "id": "mev_0ca8bb2c-8899-4975-b77f-f0114cb3a617",
+        "materialId": "mat_1257ff5c-9c1f-44e7-bb2e-674cb05b2581",
+        "action": "use",
+        "detail": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+        "createdAt": "2026-10-11T22:40:27.509Z"
+      },
+      {
+        "id": "mev_0d7fe68f-c9b3-4d6f-abd4-8731a4089101",
+        "materialId": "mat_e323c5a0-7c20-45f7-a0e9-e0e92fce598f",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.926Z"
+      },
+      {
+        "id": "mev_0f0e8797-2459-4b2e-a261-c43b6ebc348b",
+        "materialId": "mat_71560f51-83c2-4ae2-b56d-913522ccf5f8",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.004Z"
+      },
+      {
+        "id": "mev_0fb51fdd-ca5e-471e-b06b-1c6b057b0090",
+        "materialId": "mat_fc119152-9f51-43a2-9df7-22b4120ffe21",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.043Z"
+      },
+      {
+        "id": "mev_12e5654b-e270-4f72-8c8a-e2908f30e188",
+        "materialId": "mat_27a01610-da28-4cee-93c7-0b8e873440eb",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.576Z"
+      },
+      {
+        "id": "mev_140f48ed-6a68-41f6-bf53-58fb75701bfb",
+        "materialId": "mat_7f0f7a12-65ae-4004-a871-84adb23ac345",
+        "action": "promote",
+        "detail": "",
+        "createdAt": "2026-10-11T22:57:21.336Z"
+      },
+      {
+        "id": "mev_178366dc-d372-47dc-a0b7-2809a1ee644e",
+        "materialId": "mat_c27d4ffa-9d84-495f-85db-e1e11db14858",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.238Z"
+      },
+      {
+        "id": "mev_1ff54017-653f-4815-9353-8976500d03df",
+        "materialId": "mat_7dee8a56-7769-47f1-8b24-a545dd822ceb",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.966Z"
+      },
+      {
+        "id": "mev_2346a069-1bf9-4845-8d16-5346932c3e4a",
+        "materialId": "mat_f3ee3027-9b88-4edc-ae10-9fd824006cca",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.288Z"
+      },
+      {
+        "id": "mev_2ce4e4bc-8a82-4816-9f9e-cbde1f6ad83e",
+        "materialId": "mat_d6c9a6f1-9941-4e63-afcb-d7784aeaad9e",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.789Z"
+      },
+      {
+        "id": "mev_2d8d3243-094f-487d-84f2-674c6c27fbed",
+        "materialId": "mat_bf6ef0fa-0ba6-426e-ae55-daf94e8d9845",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.511Z"
+      },
+      {
+        "id": "mev_2d995d33-8dc9-46be-a480-c2b517dd031d",
+        "materialId": "mat_ea1f8129-a47b-4fc3-b3e6-4de24ca36258",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.859Z"
+      },
+      {
+        "id": "mev_2da17a0f-2191-440a-b5f4-ba8b391b96ce",
+        "materialId": "mat_3e0b8de6-df3e-4c4c-b5e0-149b34e94c08",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.660Z"
+      },
+      {
+        "id": "mev_310b6897-7341-4213-aeb4-120ef0f17109",
+        "materialId": "mat_7baf6e16-04de-44ee-98b4-daeb0fbc3962",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.425Z"
+      },
+      {
+        "id": "mev_31b0778f-ebb5-40c6-8a6b-5910e70dce16",
+        "materialId": "mat_2f984956-be2a-49eb-82f0-ed60f35c1fd3",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.081Z"
+      },
+      {
+        "id": "mev_375da729-5f36-4ec5-a40e-8a619998ec75",
+        "materialId": "mat_0b693868-fdeb-4a4c-9ccf-debe46aef3f4",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.501Z"
+      },
+      {
+        "id": "mev_379bf66a-cfa2-4da8-9d92-eaead8cc9a72",
+        "materialId": "mat_e609027d-645e-496f-b18f-137babcebbc2",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.157Z"
+      },
+      {
+        "id": "mev_37bb54c1-6644-47ed-86f4-60ce2e58e472",
+        "materialId": "mat_7128988c-4966-45f4-9c12-bc36c0fa18f5",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.152Z"
+      },
+      {
+        "id": "mev_37d1bd63-23fb-4de2-8b4e-bac1252f4d7b",
+        "materialId": "mat_fe7a5776-a014-4961-b0f5-b77a73340331",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.440Z"
+      },
+      {
+        "id": "mev_3dcf1a26-024c-46ac-bfdc-e2d0980a14df",
+        "materialId": "mat_1d797f2c-618b-443b-a3d3-d14e000a530c",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.587Z"
+      },
+      {
+        "id": "mev_3e7266e5-f9a8-4d4f-b93c-47ca502df05d",
+        "materialId": "mat_4a040469-60fb-442a-a68a-20536927e5c5",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.622Z"
+      },
+      {
+        "id": "mev_3f3db082-3e0a-46b7-93af-42b67ac8a5a1",
+        "materialId": "mat_1257ff5c-9c1f-44e7-bb2e-674cb05b2581",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:40:03.560Z"
+      },
+      {
+        "id": "mev_4ab506e7-3d22-4bfb-971e-c6a98b72ebd2",
+        "materialId": "mat_c45036d3-b98f-436d-983f-af0696fed2d1",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.478Z"
+      },
+      {
+        "id": "mev_531c2399-3509-4244-830d-3f1595796d57",
+        "materialId": "mat_4d3da4ea-3374-4db7-8f2f-1cf6f2256a33",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.312Z"
+      },
+      {
+        "id": "mev_57df3411-f6a5-4478-80e7-01ea6b439dc6",
+        "materialId": "mat_67db4b41-159d-475c-bca5-0c7036eddc20",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.931Z"
+      },
+      {
+        "id": "mev_5b6582ea-600d-41fb-8e2e-c5c47f40c92d",
+        "materialId": "mat_2e13ab35-4df0-4d81-ab0c-8f4e3a011c56",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.550Z"
+      },
+      {
+        "id": "mev_5f42922c-56dd-49c3-8a97-7bfddb8abd82",
+        "materialId": "mat_39997157-2d8a-4767-ae97-4bdf81342151",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.646Z"
+      },
+      {
+        "id": "mev_60c415ba-cb1c-4a5c-973c-e3372fdcdd79",
+        "materialId": "mat_1257ff5c-9c1f-44e7-bb2e-674cb05b2581",
+        "action": "version",
+        "detail": "v2",
+        "createdAt": "2026-10-11T22:52:10.271Z"
+      },
+      {
+        "id": "mev_63fe5ea7-a481-42b7-8c6e-a2ffead8cc62",
+        "materialId": "mat_571b1b5d-74f2-435f-b3c9-63dcb0100e65",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.259Z"
+      },
+      {
+        "id": "mev_65864b52-b2bb-4be7-a28c-9697fe6a1d8f",
+        "materialId": "mat_ae878162-9f25-4fb0-abaa-4c54e341b069",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.349Z"
+      },
+      {
+        "id": "mev_66cf92cc-c61b-436d-bf79-f9395abe864c",
+        "materialId": "mat_4f4cb639-1ec7-4839-a649-0dfea51fc262",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.963Z"
+      },
+      {
+        "id": "mev_6797f7e7-e657-42a3-b60d-fdb326b621bf",
+        "materialId": "mat_f802f392-1121-45f0-b7b3-1ddaf838c834",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.299Z"
+      },
+      {
+        "id": "mev_6b875f1c-94f7-4789-9305-90050e5a665e",
+        "materialId": "mat_27a2c3ea-d8bf-474c-b557-591591ee12d1",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.370Z"
+      },
+      {
+        "id": "mev_75440526-5f1c-48df-9657-cace3dc990ef",
+        "materialId": "mat_aa80b026-b641-49e1-a7a8-83b37b5d2560",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.702Z"
+      },
+      {
+        "id": "mev_7584342a-4725-458d-8788-342eef797cd2",
+        "materialId": "mat_2703e305-1fb1-4d09-aad6-427b6075ba23",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.090Z"
+      },
+      {
+        "id": "mev_7f809ce1-25d4-47bd-9b5d-8d76296ea386",
+        "materialId": "mat_98f7a96f-943b-4f84-8cfd-1db57cb68389",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.513Z"
+      },
+      {
+        "id": "mev_84685527-b6ec-4363-a816-b4bbb49f2eb9",
+        "materialId": "mat_8e02178c-4eee-46ed-a25f-897d72e55efc",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.334Z"
+      },
+      {
+        "id": "mev_84af636a-1264-4d7d-a9cd-f3c1803647e5",
+        "materialId": "mat_c60d6855-065d-48d5-af73-1584c673b0c9",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.779Z"
+      },
+      {
+        "id": "mev_87e993f6-c9f1-4d6c-8e14-55a0ba9ff403",
+        "materialId": "mat_b4a4c588-85b6-4769-93de-18a35281a947",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.683Z"
+      },
+      {
+        "id": "mev_8cc9bda6-57d9-404d-90a7-4e6c22fbd1b2",
+        "materialId": "mat_fba585e5-ed5b-42c4-b7e4-c69dcee81206",
+        "action": "use",
+        "detail": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "createdAt": "2026-10-11T22:42:26.111Z"
+      },
+      {
+        "id": "mev_925499de-1ca0-4ed6-b257-963bdeed4c0c",
+        "materialId": "mat_67530f70-553b-47eb-8ca8-ae4cee9bd4fe",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.239Z"
+      },
+      {
+        "id": "mev_9600344d-c554-41bd-9a88-b6d9bf220301",
+        "materialId": "mat_a1236f6f-d00e-43a1-b904-bff64992989f",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.367Z"
+      },
+      {
+        "id": "mev_98f831a5-e69d-4b92-a644-98e5b0138ca1",
+        "materialId": "mat_c0d089e8-9db1-4219-9ccc-eea95ff70123",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.404Z"
+      },
+      {
+        "id": "mev_9b15f307-56f4-4a93-b0e9-56d0746bd9b0",
+        "materialId": "mat_55ecb245-c06e-4fc1-a35d-954b8ba804f2",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.716Z"
+      },
+      {
+        "id": "mev_9e8bdc4e-2fc0-4335-8dc0-d201e6695ab8",
+        "materialId": "mat_f2d3a368-d091-4689-9724-4b64e4738abf",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.387Z"
+      },
+      {
+        "id": "mev_9eb0f248-5e76-4afc-a7a4-d4a4aa263511",
+        "materialId": "mat_84a30f1f-db5b-4341-a36c-d64e61d41dda",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.275Z"
+      },
+      {
+        "id": "mev_a058c5df-948a-41d7-b56f-2245059d4ff7",
+        "materialId": "mat_413999f1-e75b-42fd-a5b0-d97b7a9ae7d8",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:36:39.851Z"
+      },
+      {
+        "id": "mev_a10def87-263f-4643-b88e-898b261dcd83",
+        "materialId": "mat_ab2b27fa-e5af-4d78-b885-c0cf5020da0e",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.895Z"
+      },
+      {
+        "id": "mev_a133fd45-75ee-4666-830a-a37108bd290a",
+        "materialId": "mat_db6403fb-dd7d-4574-b530-242741f67260",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.444Z"
+      },
+      {
+        "id": "mev_a198e377-9918-4cbb-bed6-d8e04df50c23",
+        "materialId": "mat_a4266313-f20f-4f62-8c89-dcb14728a88f",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.040Z"
+      },
+      {
+        "id": "mev_a238c9b8-0d68-46f9-8f66-fa24815ccb1f",
+        "materialId": "mat_08a1c05a-a1c8-4df8-b105-b3ea4bcad6a1",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.223Z"
+      },
+      {
+        "id": "mev_a6fcd805-7996-49f0-b8d5-a7c3e90ddc9a",
+        "materialId": "mat_871afa32-858e-47d0-a7db-ed651c0c0862",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.187Z"
+      },
+      {
+        "id": "mev_a70ea77b-b656-4b71-afed-584f43726d89",
+        "materialId": "mat_80217583-6e02-4278-8ee6-b34ef33e6c7b",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.477Z"
+      },
+      {
+        "id": "mev_aad30e34-2128-45cc-9f48-1d37f2270ad1",
+        "materialId": "mat_dd56fed1-3ef2-46c6-9d18-70a5e4afb17c",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.752Z"
+      },
+      {
+        "id": "mev_b238d553-a603-422f-be05-f2fe7a788ca9",
+        "materialId": "mat_c005f6c9-d58a-417d-ae56-802688b54931",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.621Z"
+      },
+      {
+        "id": "mev_b37396cc-89ee-4b58-98ce-ed8f1ccc85de",
+        "materialId": "mat_66d744af-bfbc-4d5a-a497-1daed5451708",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.825Z"
+      },
+      {
+        "id": "mev_b579b409-506c-4eba-b0bc-e65c2bd55b02",
+        "materialId": "mat_926edcbf-d3c2-4b1e-81af-aec4b0101754",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.464Z"
+      },
+      {
+        "id": "mev_b95a9f76-6874-4453-a4ca-fd11e86c4c40",
+        "materialId": "mat_60c6dae8-787f-465f-99f5-82d830091ed5",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.889Z"
+      },
+      {
+        "id": "mev_b96ab315-a7c8-4fb7-888e-a9f605bf0031",
+        "materialId": "mat_d0cddb60-6fe9-4383-8e64-820e068a42bb",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.814Z"
+      },
+      {
+        "id": "mev_b9849250-6dba-4274-ac1c-b282157c4b33",
+        "materialId": "mat_9cc8a548-62c8-4e85-8cd3-9637a92546bb",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:40:03.486Z"
+      },
+      {
+        "id": "mev_ba26082b-6524-44cf-b23d-60f590455ad2",
+        "materialId": "mat_03c41f54-3aee-46d8-a9a5-d20d15aba80b",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.329Z"
+      },
+      {
+        "id": "mev_bc897c3f-496e-4bee-80b5-16e385154c05",
+        "materialId": "mat_1b6d0cf6-2bbb-4564-a15f-9aacbcb67b78",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.742Z"
+      },
+      {
+        "id": "mev_c33cd4f6-957b-4054-9591-6a4bbb36e236",
+        "materialId": "mat_737c62a2-e1a7-4ac8-a05c-205cd9405538",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.118Z"
+      },
+      {
+        "id": "mev_c41d9f9e-0194-4b1c-94f7-f6f70d07e583",
+        "materialId": "mat_089c5c97-82b2-49c5-a5b9-192cab45c7f4",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:10.405Z"
+      },
+      {
+        "id": "mev_cc117bf5-64ee-455f-a696-cf824e1f2909",
+        "materialId": "mat_d67500ca-ed2a-44fe-8cfa-14fdd97a4f50",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.659Z"
+      },
+      {
+        "id": "mev_cd918938-848b-4d1e-917c-6a3405bb4467",
+        "materialId": "mat_6139f92d-195d-4d8d-bbf4-654472f0a7f8",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.588Z"
+      },
+      {
+        "id": "mev_ced65a94-251e-4c53-8ed9-5c481d1dded8",
+        "materialId": "mat_fba585e5-ed5b-42c4-b7e4-c69dcee81206",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:40:03.434Z"
+      },
+      {
+        "id": "mev_d59bb5b4-7d9e-4415-868f-6bee5eee53fb",
+        "materialId": "mat_b5742b21-67b6-4ff7-8de2-b3d98fc635f6",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.546Z"
+      },
+      {
+        "id": "mev_e12aad99-9456-4d8d-8204-90bf80140db6",
+        "materialId": "mat_e69208e1-f100-4868-b47f-80b8c0e0d624",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.199Z"
+      },
+      {
+        "id": "mev_ef51643e-68f5-4424-8c3f-0ae11cc19a34",
+        "materialId": "mat_bae51569-7992-4fc7-b41d-203aef4ac4eb",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:08.850Z"
+      },
+      {
+        "id": "mev_f511656b-6921-4468-8b9f-07e49bcb7256",
+        "materialId": "mat_d90b7ccc-a538-4999-82d3-7e8efd9d1eff",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:40:03.526Z"
+      },
+      {
+        "id": "mev_fcb035b1-e11c-43d0-affb-928d1d1bccb8",
+        "materialId": "mat_5fbefcc9-7c4b-4aff-aac4-e10c42894d61",
+        "action": "create",
+        "detail": "",
+        "createdAt": "2026-10-11T22:54:09.539Z"
+      }
+    ],
+    "audioSpeakers": [
+      {
+        "name": "工作室旁白",
+        "voice": "mimo_default",
+        "speed": 1,
+        "mimo": {
+          "mode": "preset",
+          "instruction": ""
+        },
+        "id": "asp_a2746486-011f-4060-8d62-e3b0dffb1dbc",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 1,
+        "createdAt": "2026-10-11T23:01:59.286Z",
+        "updatedAt": "2026-10-11T23:01:59.286Z"
+      }
+    ],
+    "audioSegments": [
+      {
+        "chapterId": "ach_f1ba6fcf-b9c9-4e9b-aced-4f3d27a591a4",
+        "order": 1,
+        "text": "这是保存在内部工作区的音频脚本。",
+        "notes": "",
+        "id": "asg_ff12cbfe-9916-424f-97b7-abe509731b8f",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 5,
+        "createdAt": "2026-10-11T22:42:10.336Z",
+        "updatedAt": "2026-10-11T23:02:04.046Z",
+        "selectedTakeId": "atk_169de22b-e22f-41a2-a258-a998ae2982e7",
+        "speakerId": "asp_a2746486-011f-4060-8d62-e3b0dffb1dbc"
+      },
+      {
+        "id": "aud_b3e055f8-2d45-40db-92cb-ff3cc27a4e7b",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 3,
+        "createdAt": "2026-10-11T22:42:10.336Z",
+        "updatedAt": "2026-10-11T22:42:33.377Z",
+        "chapterId": "aud_5de4cb8d-228f-468c-bada-37ad412affd7",
+        "order": 1,
+        "text": "这是保存在内部工作区的音频脚本。",
+        "notes": "",
+        "selectedTakeId": "aud_043c6af6-a38d-4fb8-9d9f-41c67d8840f7"
+      }
+    ],
+    "audioTakes": [
+      {
+        "durationSec": 2,
+        "sampleRate": 48000,
+        "channels": 2,
+        "mediaId": "med_2a11a1a1-9534-4b7f-b21e-4c8ad327fe3e",
+        "name": "这是保存在内部工作区的音频脚本。",
+        "source": "tts",
+        "textSnapshot": "合成配音验收",
+        "segmentId": "asg_ff12cbfe-9916-424f-97b7-abe509731b8f",
+        "provenance": {
+          "provider": "mimo",
+          "model": "mimo-v2.5-tts",
+          "jobId": "agj_aabe0994-8caf-4e45-8498-7f5b535113ef"
+        },
+        "id": "atk_169de22b-e22f-41a2-a258-a998ae2982e7",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 1,
+        "createdAt": "2026-10-11T23:01:26.110Z",
+        "updatedAt": "2026-10-11T23:01:26.110Z"
+      },
+      {
+        "durationSec": 2,
+        "sampleRate": 48000,
+        "channels": 2,
+        "mediaId": "med_9eb5f8cf-b2cc-4474-81c4-862947c6ffbe",
+        "name": "tone.wav",
+        "source": "library",
+        "segmentId": "asg_ff12cbfe-9916-424f-97b7-abe509731b8f",
+        "id": "atk_4a2c9057-5439-40d5-ba6f-32630fd267d9",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:42:26.154Z",
+        "updatedAt": "2026-10-11T22:42:26.154Z"
+      },
+      {
+        "id": "aud_043c6af6-a38d-4fb8-9d9f-41c67d8840f7",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:42:26.154Z",
+        "updatedAt": "2026-10-11T22:42:26.154Z",
+        "durationSec": 2,
+        "sampleRate": 48000,
+        "channels": 2,
+        "segmentId": "aud_b3e055f8-2d45-40db-92cb-ff3cc27a4e7b",
+        "mediaId": "med_e1dbc160-9065-4a77-9906-3cfdb37c4793",
+        "name": "tone.wav",
+        "source": "library"
+      }
+    ],
+    "audioClips": [
+      {
+        "chapterId": "ach_f1ba6fcf-b9c9-4e9b-aced-4f3d27a591a4",
+        "trackId": "atr_965c94de-1d88-4185-ae97-edf8e207363b",
+        "takeId": "atk_4a2c9057-5439-40d5-ba6f-32630fd267d9",
+        "startSec": 0.125,
+        "trimStartSec": 0,
+        "trimEndSec": 2,
+        "gain": 0.75,
+        "fadeInSec": 0,
+        "fadeOutSec": 0,
+        "id": "acl_e2864a83-44a1-478f-86c7-2c98b83cf3fc",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 4,
+        "createdAt": "2026-10-11T22:42:33.472Z",
+        "updatedAt": "2026-10-11T22:42:59.178Z"
+      },
+      {
+        "id": "aud_eefbfefc-11bc-4999-aca5-cff5455638cc",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 4,
+        "createdAt": "2026-10-11T22:42:33.472Z",
+        "updatedAt": "2026-10-11T22:42:59.178Z",
+        "chapterId": "aud_5de4cb8d-228f-468c-bada-37ad412affd7",
+        "trackId": "aud_7c5a2134-9e7d-45ce-8540-12d00d5783fd",
+        "takeId": "aud_043c6af6-a38d-4fb8-9d9f-41c67d8840f7",
+        "startSec": 0.125,
+        "trimStartSec": 0,
+        "trimEndSec": 2,
+        "gain": 0.75,
+        "fadeInSec": 0,
+        "fadeOutSec": 0
+      }
+    ],
+    "audioExports": [
+      {
+        "chapterId": "ach_f1ba6fcf-b9c9-4e9b-aced-4f3d27a591a4",
+        "scope": "chapter",
+        "chapterTitle": "第一章",
+        "fingerprint": "{\"schedule\":{\"chapterOffsets\":{\"ach_f1ba6fcf-b9c9-4e9b-aced-4f3d27a591a4\":0},\"clips\":[{\"clipId\":\"acl_e2864a83-44a1-478f-86c7-2c98b83cf3fc\",\"durationSec\":2,\"envelope\":[{\"gain\":0.75,\"time\":0},{\"gain\":0.75,\"time\":2}],\"mediaId\":\"med_9eb5f8cf-b2cc-4474-81c4-862947c6ffbe\",\"offsetSec\":0,\"startSec\":0.125}],\"durationSec\":2.125,\"sources\":[{\"channels\":2,\"createdAt\":\"2026-10-11T22:42:26.154Z\",\"durationSec\":2,\"id\":\"atk_4a2c9057-5439-40d5-ba6f-32630fd267d9\",\"mediaId\":\"med_9eb5f8cf-b2cc-4474-81c4-862947c6ffbe\",\"name\":\"tone.wav\",\"projectId\":\"prj_76a87120-29ca-47eb-a8be-a6a6500196a3\",\"revision\":1,\"sampleRate\":48000,\"segmentId\":\"asg_ff12cbfe-9916-424f-97b7-abe509731b8f\",\"source\":\"library\",\"updatedAt\":\"2026-10-11T22:42:26.154Z\"}]},\"version\":1}",
+        "format": "wav",
+        "mediaId": "med_745201e4-145d-4ee7-a191-59e8d3a21c03",
+        "durationSec": 2.125,
+        "id": "aex_a56e9893-44df-4b11-8aa0-736039b17d95",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:43:06.641Z",
+        "updatedAt": "2026-10-11T22:43:06.641Z"
+      },
+      {
+        "id": "aud_25d17690-57f8-4b2d-8737-7606b79c5f29",
+        "projectId": "prj_332a8aab-143a-4175-8640-cf1bfdb77676",
+        "revision": 1,
+        "createdAt": "2026-10-11T22:43:06.641Z",
+        "updatedAt": "2026-10-11T22:43:06.641Z",
+        "chapterId": "aud_5de4cb8d-228f-468c-bada-37ad412affd7",
+        "scope": "chapter",
+        "chapterTitle": "第一章",
+        "fingerprint": "{\"schedule\":{\"chapterOffsets\":{\"aud_5de4cb8d-228f-468c-bada-37ad412affd7\":0},\"clips\":[{\"clipId\":\"aud_eefbfefc-11bc-4999-aca5-cff5455638cc\",\"durationSec\":2,\"envelope\":[{\"gain\":0.75,\"time\":0},{\"gain\":0.75,\"time\":2}],\"mediaId\":\"med_e1dbc160-9065-4a77-9906-3cfdb37c4793\",\"offsetSec\":0,\"startSec\":0.125}],\"durationSec\":2.125,\"sources\":[{\"channels\":2,\"createdAt\":\"2026-10-11T22:42:26.154Z\",\"durationSec\":2,\"id\":\"aud_043c6af6-a38d-4fb8-9d9f-41c67d8840f7\",\"mediaId\":\"med_e1dbc160-9065-4a77-9906-3cfdb37c4793\",\"name\":\"tone.wav\",\"projectId\":\"prj_332a8aab-143a-4175-8640-cf1bfdb77676\",\"revision\":1,\"sampleRate\":48000,\"segmentId\":\"aud_b3e055f8-2d45-40db-92cb-ff3cc27a4e7b\",\"source\":\"library\",\"updatedAt\":\"2026-10-11T22:42:26.154Z\"}]},\"version\":1}",
+        "format": "wav",
+        "mediaId": "med_326ed2c2-5ea1-4b6a-8120-9f9dcaffa950",
+        "durationSec": 2.125
+      }
+    ],
+    "generationJobs": [],
+    "musicDrafts": [
+      {
+        "settings": {
+          "engine": "suno",
+          "version": "v6",
+          "custom": true,
+          "instrumental": false,
+          "prompt": "[Verse]\n清晨打开窗，故事正在发光。\n[Chorus]\n把灵感留在我们的工作台上。",
+          "title": "清晨工作台",
+          "style": "自然原声钢琴，温暖低频，安静的工作室氛围。",
+          "negativeTags": "强烈鼓点",
+          "durationSec": 30
+        },
+        "id": "mdr_4fd919f1-d475-4972-86e6-d294426eae26",
+        "projectId": "prj_6a21d4d2-283d-41dc-98d4-c7128db564a7",
+        "revision": 4,
+        "createdAt": "2026-10-11T22:48:23.702Z",
+        "updatedAt": "2026-10-11T22:48:41.230Z"
+      },
+      {
+        "settings": {
+          "engine": "suno",
+          "version": "v6",
+          "custom": false,
+          "instrumental": true,
+          "prompt": "清晨工作室的轻柔钢琴，克制、温暖，适合个人创作短片。",
+          "title": "",
+          "style": "",
+          "negativeTags": ""
+        },
+        "id": "mdr_b167fe32-2f1e-4c9c-ba27-695e39f9d8c1",
+        "projectId": "prj_6a21d4d2-283d-41dc-98d4-c7128db564a7",
+        "revision": 2,
+        "createdAt": "2026-10-11T22:48:18.464Z",
+        "updatedAt": "2026-10-11T22:48:23.688Z"
+      },
+      {
+        "settings": {
+          "engine": "suno",
+          "version": "v6",
+          "custom": true,
+          "instrumental": false,
+          "prompt": "[Verse]\n清晨打开窗，故事正在发光。\n[Chorus]\n把灵感留在我们的工作台上。",
+          "title": "清晨工作台",
+          "style": "自然原声钢琴，温暖低频，安静的工作室氛围。",
+          "negativeTags": "强烈鼓点",
+          "durationSec": 30
+        },
+        "id": "mdr_eeee74ba-a61e-4f3e-8ab3-c3ef649b32ce",
+        "projectId": "prj_6a21d4d2-283d-41dc-98d4-c7128db564a7",
+        "revision": 1,
+        "createdAt": "2026-10-11T23:04:04.316Z",
+        "updatedAt": "2026-10-11T23:04:04.316Z"
+      }
+    ],
+    "musicWorks": [
+      {
+        "durationSec": 2,
+        "sampleRate": 48000,
+        "channels": 2,
+        "mediaId": "med_7820f905-26ec-4f21-83b5-3b1edfaee476",
+        "title": "本地验收音乐 · 已保留",
+        "notes": "",
+        "favorite": false,
+        "lyrics": "",
+        "settings": {
+          "engine": "suno",
+          "version": "v6",
+          "custom": true,
+          "instrumental": false,
+          "prompt": "[Verse]\n清晨打开窗，故事正在发光。\n[Chorus]\n把灵感留在我们的工作台上。",
+          "title": "清晨工作台",
+          "style": "自然原声钢琴，温暖低频，安静的工作室氛围。",
+          "negativeTags": "强烈鼓点",
+          "durationSec": 30
+        },
+        "provenance": {
+          "provider": "apimart",
+          "model": "suno",
+          "jobId": "agj_be00bc5c-3f43-43cb-aa30-5a933e6df62f",
+          "taskId": "fixture-audio-22",
+          "audioIndex": 1,
+          "clipId": "<undefined>",
+          "audioUrl": "http://127.0.0.1:58470/media/audio",
+          "coverUrl": "<undefined>"
+        },
+        "id": "mwk_15078f54-bcd8-4730-b789-2ed5ffa0e95a",
+        "projectId": "prj_6a21d4d2-283d-41dc-98d4-c7128db564a7",
+        "revision": 2,
+        "createdAt": "2026-10-11T23:03:37.547Z",
+        "updatedAt": "2026-10-11T23:03:59.547Z"
+      }
+    ],
+    "agentTasks": [
+      {
+        "title": "SQLite 工作记录验收",
+        "goal": "记录本轮实际检查过程，并在重开后核对版本和总结。",
+        "acceptanceCriteria": [],
+        "plan": [],
+        "id": "task_812e417f-ff2f-43ea-9d7b-d6ab611c0f4c",
+        "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+        "threadId": "cth_2c9224ae-ae74-477a-a2e4-1c43d3d0a695",
+        "agentId": "agent_general",
+        "revision": 1,
+        "lifecycle": "open",
+        "artifacts": [],
+        "createdAt": "2026-10-11T23:04:44.594Z",
+        "updatedAt": "2026-10-11T23:05:22.799Z"
+      }
+    ],
+    "agentTaskRecords": [
+      {
+        "kind": "research",
+        "claim": "proposal",
+        "title": "持久化复核方案",
+        "body": "先保存工作记录和总结，再关闭应用核对版本、来源及原始内容；重开不得自动发送请求。",
+        "sources": [],
+        "todoId": "<undefined>",
+        "id": "trec_f504515c-ba0e-4608-890a-82945dfd6e0f",
+        "taskId": "task_812e417f-ff2f-43ea-9d7b-d6ab611c0f4c",
+        "revision": 2,
+        "author": "user",
+        "runId": "<undefined>",
+        "createdAt": "2026-10-11T23:05:04.600Z",
+        "updatedAt": "2026-10-11T23:05:22.799Z"
+      }
+    ],
+    "agentTaskRecordVersions": [
+      {
+        "kind": "research",
+        "claim": "proposal",
+        "title": "持久化复核方案",
+        "body": "先保存工作记录和总结，再关闭应用核对它们的版本与内容。",
+        "sources": [],
+        "id": "trec_f504515c-ba0e-4608-890a-82945dfd6e0f",
+        "taskId": "task_812e417f-ff2f-43ea-9d7b-d6ab611c0f4c",
+        "revision": 1,
+        "author": "user",
+        "runId": "<undefined>",
+        "createdAt": "2026-10-11T23:05:04.600Z",
+        "updatedAt": "2026-10-11T23:05:04.600Z",
+        "recordId": "trec_f504515c-ba0e-4608-890a-82945dfd6e0f",
+        "versionId": "trec_f504515c-ba0e-4608-890a-82945dfd6e0f:1"
+      },
+      {
+        "kind": "research",
+        "claim": "proposal",
+        "title": "持久化复核方案",
+        "body": "先保存工作记录和总结，再关闭应用核对版本、来源及原始内容；重开不得自动发送请求。",
+        "sources": [],
+        "todoId": "<undefined>",
+        "id": "trec_f504515c-ba0e-4608-890a-82945dfd6e0f",
+        "taskId": "task_812e417f-ff2f-43ea-9d7b-d6ab611c0f4c",
+        "revision": 2,
+        "author": "user",
+        "runId": "<undefined>",
+        "createdAt": "2026-10-11T23:05:04.600Z",
+        "updatedAt": "2026-10-11T23:05:22.799Z",
+        "recordId": "trec_f504515c-ba0e-4608-890a-82945dfd6e0f",
+        "versionId": "trec_f504515c-ba0e-4608-890a-82945dfd6e0f:2"
+      }
+    ],
+    "agentTaskWrapups": [
+      {
+        "id": "wrap_6cb74334-b7bc-4b9b-a0e0-37c3b7fbeb4a",
+        "taskId": "task_812e417f-ff2f-43ea-9d7b-d6ab611c0f4c",
+        "threadId": "cth_2c9224ae-ae74-477a-a2e4-1c43d3d0a695",
+        "revision": 3,
+        "status": "draft",
+        "author": "user",
+        "content": {
+          "overview": "已通过实际界面保存两版工作记录。当前仅为阶段总结，待应用重开后核对内容和历史版本。",
+          "results": [],
+          "acceptance": [],
+          "decisions": [],
+          "lessons": [],
+          "unresolved": []
+        },
+        "snapshot": {
+          "fingerprint": "sha256-v1:6f7a1ef51e4ed8895fa3e22c97538b3b40bbb7df28ecc35b6f5eaebc2ce840d4",
+          "taskRevision": 1,
+          "criteria": [],
+          "evidence": [
+            {
+              "id": "record:trec_f504515c-ba0e-4608-890a-82945dfd6e0f",
+              "kind": "record",
+              "label": "持久化复核方案",
+              "body": "{\"kind\":\"research\",\"claim\":\"proposal\",\"author\":\"user\",\"body\":\"先保存工作记录和总结，再关闭应用核对版本、来源及原始内容；重开不得自动发送请求。\",\"sources\":[]}",
+              "outcome": "fact",
+              "available": true,
+              "truncated": false
+            }
+          ],
+          "coverage": {
+            "total": 1,
+            "included": 1,
+            "omitted": 0,
+            "truncated": 0
+          }
+        },
+        "createdAt": "2026-10-11T23:05:57.193Z",
+        "updatedAt": "2026-10-11T23:06:07.968Z",
+        "confirmedAt": "2026-10-11T23:06:07.968Z"
+      }
+    ],
+    "generationTasks": [],
+    "musicJobs": [],
+    "audioGenerationJobs": [
+      {
+        "intentId": "audio-intent_d2ee7dfa-114c-4bf5-acc1-f1a5da9467bb",
+        "input": {
+          "kind": "speech",
+          "text": "这是保存在内部工作区的音频脚本。",
+          "voice": "mimo_default",
+          "speed": 1,
+          "mimo": {
+            "mode": "preset",
+            "instruction": ""
+          },
+          "segmentId": "asg_ff12cbfe-9916-424f-97b7-abe509731b8f",
+          "segmentRevision": 3
+        },
+        "connector": {
+          "id": "conn_16a2ed13-3802-4a6c-a6aa-01464a19d681",
+          "provider": "mimo",
+          "baseUrl": "http://127.0.0.1:58470/v1"
+        },
+        "source": {
+          "kind": "manual"
+        },
+        "status": "saved",
+        "taskIds": [],
+        "results": [
+          {
+            "key": "agj_aabe0994-8caf-4e45-8498-7f5b535113ef:speech",
+            "title": "这是保存在内部工作区的音频脚本。",
+            "provenance": {
+              "provider": "mimo",
+              "model": "mimo-v2.5-tts",
+              "jobId": "agj_aabe0994-8caf-4e45-8498-7f5b535113ef"
+            },
+            "finalTextPreview": "合成配音验收",
+            "mediaId": "med_2a11a1a1-9534-4b7f-b21e-4c8ad327fe3e",
+            "takeId": "atk_169de22b-e22f-41a2-a258-a998ae2982e7",
+            "durationSec": 2,
+            "error": "<undefined>"
+          }
+        ],
+        "id": "agj_aabe0994-8caf-4e45-8498-7f5b535113ef",
+        "projectId": "prj_76a87120-29ca-47eb-a8be-a6a6500196a3",
+        "revision": 6,
+        "createdAt": "2026-10-11T23:01:25.959Z",
+        "updatedAt": "2026-10-11T23:01:26.172Z",
+        "claim": {
+          "owner": "submit_e7aeaa34-8b20-4219-bd06-2359dd85b756",
+          "claimedAt": "2026-10-11T23:01:25.987Z"
+        },
+        "error": "<undefined>"
+      },
+      {
+        "intentId": "audio-intent_e599a994-6abf-419d-8603-36de4785203e",
+        "input": {
+          "kind": "music",
+          "settings": {
+            "engine": "suno",
+            "version": "v6",
+            "custom": true,
+            "instrumental": false,
+            "prompt": "[Verse]\n清晨打开窗，故事正在发光。\n[Chorus]\n把灵感留在我们的工作台上。",
+            "title": "清晨工作台",
+            "style": "自然原声钢琴，温暖低频，安静的工作室氛围。",
+            "negativeTags": "强烈鼓点",
+            "durationSec": 30
+          },
+          "draftId": "mdr_4fd919f1-d475-4972-86e6-d294426eae26",
+          "draftRevision": 4
+        },
+        "connector": {
+          "id": "conn_d2b206e6-d0e5-452b-b231-3092b1c1eef4",
+          "provider": "apimart",
+          "baseUrl": "http://127.0.0.1:58470/v1"
+        },
+        "source": {
+          "kind": "manual"
+        },
+        "status": "saved",
+        "taskIds": [
+          "fixture-audio-22"
+        ],
+        "results": [
+          {
+            "key": "fixture-audio-22:1",
+            "title": "本地验收音乐",
+            "lyrics": "<undefined>",
+            "durationSec": 2,
+            "provenance": {
+              "provider": "apimart",
+              "model": "suno",
+              "jobId": "agj_be00bc5c-3f43-43cb-aa30-5a933e6df62f",
+              "taskId": "fixture-audio-22",
+              "audioIndex": 1,
+              "clipId": "<undefined>",
+              "audioUrl": "http://127.0.0.1:58470/media/audio",
+              "coverUrl": "<undefined>"
+            },
+            "mediaId": "med_7820f905-26ec-4f21-83b5-3b1edfaee476",
+            "workId": "mwk_15078f54-bcd8-4730-b789-2ed5ffa0e95a",
+            "error": "<undefined>"
+          }
+        ],
+        "id": "agj_be00bc5c-3f43-43cb-aa30-5a933e6df62f",
+        "projectId": "prj_6a21d4d2-283d-41dc-98d4-c7128db564a7",
+        "revision": 8,
+        "createdAt": "2026-10-11T23:03:34.099Z",
+        "updatedAt": "2026-10-11T23:03:37.604Z",
+        "claim": {
+          "owner": "submit_a47df739-2740-46ff-85ce-8795ae47c738",
+          "claimedAt": "2026-10-11T23:03:34.134Z"
+        },
+        "error": "<undefined>",
+        "taskObservations": [
+          {
+            "taskId": "fixture-audio-22",
+            "checkedAt": "2026-10-11T23:03:37.479Z",
+            "status": "completed",
+            "lastVerified": {
+              "status": "completed",
+              "observedAt": "2026-10-11T23:03:37.479Z"
+            }
+          }
+        ]
+      }
+    ],
+    "agentTaskWrapupVersions": [
+      {
+        "id": "wrap_6cb74334-b7bc-4b9b-a0e0-37c3b7fbeb4a",
+        "taskId": "task_812e417f-ff2f-43ea-9d7b-d6ab611c0f4c",
+        "threadId": "cth_2c9224ae-ae74-477a-a2e4-1c43d3d0a695",
+        "revision": 1,
+        "status": "draft",
+        "author": "user",
+        "content": {
+          "overview": "",
+          "results": [],
+          "acceptance": [],
+          "decisions": [],
+          "lessons": [],
+          "unresolved": []
+        },
+        "snapshot": {
+          "fingerprint": "sha256-v1:6f7a1ef51e4ed8895fa3e22c97538b3b40bbb7df28ecc35b6f5eaebc2ce840d4",
+          "taskRevision": 1,
+          "criteria": [],
+          "evidence": [
+            {
+              "id": "record:trec_f504515c-ba0e-4608-890a-82945dfd6e0f",
+              "kind": "record",
+              "label": "持久化复核方案",
+              "body": "{\"kind\":\"research\",\"claim\":\"proposal\",\"author\":\"user\",\"body\":\"先保存工作记录和总结，再关闭应用核对版本、来源及原始内容；重开不得自动发送请求。\",\"sources\":[]}",
+              "outcome": "fact",
+              "available": true,
+              "truncated": false
+            }
+          ],
+          "coverage": {
+            "total": 1,
+            "included": 1,
+            "omitted": 0,
+            "truncated": 0
+          }
+        },
+        "createdAt": "2026-10-11T23:05:57.193Z",
+        "updatedAt": "2026-10-11T23:05:57.193Z",
+        "versionId": "wrap_6cb74334-b7bc-4b9b-a0e0-37c3b7fbeb4a:1"
+      },
+      {
+        "id": "wrap_6cb74334-b7bc-4b9b-a0e0-37c3b7fbeb4a",
+        "taskId": "task_812e417f-ff2f-43ea-9d7b-d6ab611c0f4c",
+        "threadId": "cth_2c9224ae-ae74-477a-a2e4-1c43d3d0a695",
+        "revision": 2,
+        "status": "draft",
+        "author": "user",
+        "content": {
+          "overview": "已通过实际界面保存两版工作记录。当前仅为阶段总结，待应用重开后核对内容和历史版本。",
+          "results": [],
+          "acceptance": [],
+          "decisions": [],
+          "lessons": [],
+          "unresolved": []
+        },
+        "snapshot": {
+          "fingerprint": "sha256-v1:6f7a1ef51e4ed8895fa3e22c97538b3b40bbb7df28ecc35b6f5eaebc2ce840d4",
+          "taskRevision": 1,
+          "criteria": [],
+          "evidence": [
+            {
+              "id": "record:trec_f504515c-ba0e-4608-890a-82945dfd6e0f",
+              "kind": "record",
+              "label": "持久化复核方案",
+              "body": "{\"kind\":\"research\",\"claim\":\"proposal\",\"author\":\"user\",\"body\":\"先保存工作记录和总结，再关闭应用核对版本、来源及原始内容；重开不得自动发送请求。\",\"sources\":[]}",
+              "outcome": "fact",
+              "available": true,
+              "truncated": false
+            }
+          ],
+          "coverage": {
+            "total": 1,
+            "included": 1,
+            "omitted": 0,
+            "truncated": 0
+          }
+        },
+        "createdAt": "2026-10-11T23:05:57.193Z",
+        "updatedAt": "2026-10-11T23:06:02.933Z",
+        "versionId": "wrap_6cb74334-b7bc-4b9b-a0e0-37c3b7fbeb4a:2"
+      },
+      {
+        "id": "wrap_6cb74334-b7bc-4b9b-a0e0-37c3b7fbeb4a",
+        "taskId": "task_812e417f-ff2f-43ea-9d7b-d6ab611c0f4c",
+        "threadId": "cth_2c9224ae-ae74-477a-a2e4-1c43d3d0a695",
+        "revision": 3,
+        "status": "draft",
+        "author": "user",
+        "content": {
+          "overview": "已通过实际界面保存两版工作记录。当前仅为阶段总结，待应用重开后核对内容和历史版本。",
+          "results": [],
+          "acceptance": [],
+          "decisions": [],
+          "lessons": [],
+          "unresolved": []
+        },
+        "snapshot": {
+          "fingerprint": "sha256-v1:6f7a1ef51e4ed8895fa3e22c97538b3b40bbb7df28ecc35b6f5eaebc2ce840d4",
+          "taskRevision": 1,
+          "criteria": [],
+          "evidence": [
+            {
+              "id": "record:trec_f504515c-ba0e-4608-890a-82945dfd6e0f",
+              "kind": "record",
+              "label": "持久化复核方案",
+              "body": "{\"kind\":\"research\",\"claim\":\"proposal\",\"author\":\"user\",\"body\":\"先保存工作记录和总结，再关闭应用核对版本、来源及原始内容；重开不得自动发送请求。\",\"sources\":[]}",
+              "outcome": "fact",
+              "available": true,
+              "truncated": false
+            }
+          ],
+          "coverage": {
+            "total": 1,
+            "included": 1,
+            "omitted": 0,
+            "truncated": 0
+          }
+        },
+        "createdAt": "2026-10-11T23:05:57.193Z",
+        "updatedAt": "2026-10-11T23:06:07.968Z",
+        "confirmedAt": "2026-10-11T23:06:07.968Z",
+        "versionId": "wrap_6cb74334-b7bc-4b9b-a0e0-37c3b7fbeb4a:3"
+      }
+    ]
+  },
+  "binaries": [
+    {
+      "id": "39f91ff3-bee3-4451-9296-2b526a5a1622",
+      "bytes": 89613670,
+      "mime": "video/mp4",
+      "hash": "6f361344b18c5aac5b7ea8706d2783fa450907e788d3e19dd325ada3617fdee7",
+      "fileExists": true,
+      "actualHash": "6f361344b18c5aac5b7ea8706d2783fa450907e788d3e19dd325ada3617fdee7"
+    },
+    {
+      "id": "541f9c90-88ba-4a8d-b739-dbcfcd566b1e",
+      "bytes": 384044,
+      "mime": "audio/x-wav",
+      "hash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4",
+      "fileExists": true,
+      "actualHash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4"
+    },
+    {
+      "id": "da299a7f-d26a-454b-ba44-11f8db104f70",
+      "bytes": 1084,
+      "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "hash": "ce29dc1edf52d07a8d442e89dd5e44af208748a79c53092262dc661f94bad26a",
+      "fileExists": true,
+      "actualHash": "ce29dc1edf52d07a8d442e89dd5e44af208748a79c53092262dc661f94bad26a"
+    },
+    {
+      "id": "f1a9cbf4-a57d-4b03-9217-2164030d3994",
+      "bytes": 3033,
+      "mime": "application/pdf",
+      "hash": "ee62307e225b723a2ed696922cfd849ddcdc14f35cd564d08a96b771a3d01717",
+      "fileExists": true,
+      "actualHash": "ee62307e225b723a2ed696922cfd849ddcdc14f35cd564d08a96b771a3d01717"
+    },
+    {
+      "id": "93980fed-876a-4d02-a6e0-9f1a999ff0d9",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "4ca1942d-b679-4c95-a214-a70d5e10276e",
+      "bytes": 408044,
+      "mime": "audio/wav",
+      "hash": "a0b9d2635940b43eacf091f58c5465e14eaaebfdbfc7c710083ee3bb28ced369",
+      "fileExists": true,
+      "actualHash": "a0b9d2635940b43eacf091f58c5465e14eaaebfdbfc7c710083ee3bb28ced369"
+    },
+    {
+      "id": "2b0291a0-7b8d-4148-8e91-7002423dacba",
+      "bytes": 384044,
+      "mime": "audio/x-wav",
+      "hash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4",
+      "fileExists": true,
+      "actualHash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4"
+    },
+    {
+      "id": "f855972f-32dd-4bd2-b674-05ae76c51595",
+      "bytes": 408044,
+      "mime": "audio/wav",
+      "hash": "a0b9d2635940b43eacf091f58c5465e14eaaebfdbfc7c710083ee3bb28ced369",
+      "fileExists": true,
+      "actualHash": "a0b9d2635940b43eacf091f58c5465e14eaaebfdbfc7c710083ee3bb28ced369"
+    },
+    {
+      "id": "a9d41609-8ab2-4a54-8145-8657def7e46c",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "9e96defc-2f2c-4d53-944f-ec722e3ab259",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "0829caf2-d9c5-4be8-a932-6fd5d7c81d54",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "ca0aedf5-7fab-418c-9fda-9a18ec800428",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "1735b89e-2136-48b5-8495-adc561ae3c28",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "6781d86d-0727-485d-bf48-0c01a713eb0d",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "d1de31c4-3d85-4f43-b71d-96245f2b5cdf",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "e013e9c1-b927-483c-98fe-0915788a8a43",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "c2267a8f-d343-4736-b032-c3bdd8572a65",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "1c6c037e-ce50-419b-8c6c-606f44f5b43a",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "4c51c0ee-59f1-4992-93c9-0c56c311deda",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "912886df-4223-4abd-9e48-3b74dac7ddfa",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "a5f1d6e6-e1bd-43f6-b378-bd8bb0e59340",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "cf96b1e7-188c-4aa0-a23f-3a8c9201e7c4",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "2f4669a3-6908-4b7c-a171-dc97b9230e7f",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "43c40569-4a55-4221-9827-0defefea3038",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "522a068c-0333-4bcb-bac6-1c14534012c1",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "42d2c263-2cb2-4c45-90bb-5c072e435c06",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "daea5028-ee01-4442-8b69-bf41934bff90",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "752195ae-47a0-4aba-a4d3-739974e7368b",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "a9749106-0372-483e-b3fe-0dd41ed92440",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "f2d32fe5-2307-4207-9b65-f505a6503fee",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "22135178-b981-4d2a-ac71-187f8353c86b",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "d971f4e6-261b-4339-b0ce-a88e84543e2f",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "80e3da2e-ad7e-4336-94e3-afb197885d81",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "9831e1d4-2573-4d35-9351-e41c766c0478",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "dc440c41-fc94-4e74-a951-d1873a8c8bd1",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "bdcb4a8e-2bea-462a-b57f-95f5cef11fde",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "68eae326-1110-495c-9dfa-3c4e1d5d1b0d",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "71b45619-fca4-400e-b8f1-d599d42e6560",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "92655e0f-d847-47c3-ada8-25ebdca6065f",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "8ac812ea-d8a9-42ed-9313-ef2b51fc074a",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "f6b314ef-3f3c-41f8-b506-03f061c37163",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "a68de707-21c0-4fcc-b3c0-fec79d2f3fb9",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "d3b89d3b-7711-4caa-b725-4f7ad774e585",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "672bedbe-0a51-4162-a538-18abd09c3e84",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "ceed4e08-8794-46e3-b51d-18b7a36381a6",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "5ad6df8e-fabf-4b22-9c37-4bb9b10c901a",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "4104521d-849f-482f-b863-66146f03dde3",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "5f65b323-fc17-49f1-89a2-627b5ace2d59",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "3eabaf7b-a30b-4c97-9f58-771cc260bc99",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "96a88d06-e572-4b57-acb2-6dd26994bcb2",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "1fefa8f3-efcb-41d9-95b6-7e4c594b2b88",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "eaa6bec7-96f3-4394-8a49-875d5de5d56b",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "bb0bffb8-8fe6-4929-bf32-c1e6ee18164a",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "43abeeeb-1330-4706-b525-e14e24778539",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "00672032-678a-42aa-9223-fb5791c83edb",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "697e9a45-dae8-4a66-9daf-6aaa0693e3f1",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "3e4a1a10-1781-4038-bb0c-50f66392b0d2",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "01f80519-f431-498c-9c2d-5ef56ffd7cdc",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "72ee34d0-9353-41a0-8ac5-a3bd33fe357c",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "9ed2df05-20f6-4a50-9cfd-51a6308e5944",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "edd141f0-b0c4-4cb2-934e-979c02f5bcef",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "bbf3680c-38f4-46ec-8faf-9dbe0cb64878",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "e53ee2b5-57a9-4fe2-b8e5-485b497f6dbe",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "56127838-8b45-44bb-82c0-b1a3961a62ef",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "284c5c25-80cc-4ccd-96fe-a2991329e3d7",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "79cc98bd-c136-4eb1-80fd-776c97633fe4",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "05829a12-ba63-4d90-856f-06d15a5416ac",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "eb808ce7-99e2-44b1-b023-c02327cfb80b",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "7d31d616-eff2-42af-93b1-05b0dcb7a306",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "766c52b0-4312-47f2-b180-99ac1f701cd2",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "e84e4f90-d40b-4f57-8a5d-77ab5d5cd919",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "3557e2bd-8db8-4ea2-8cf4-b55d0085a714",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "350d45d9-d2f5-4fd9-add4-eb1ef2b09546",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "6a420550-958a-4eba-b165-39d4fe8a55d7",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "8de29e36-6487-4104-b497-17ffb2f92525",
+      "bytes": 177,
+      "mime": "image/png",
+      "hash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "fileExists": true,
+      "actualHash": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "id": "6e2604ed-14ff-4625-95e1-f9d7c05939b9",
+      "bytes": 384044,
+      "mime": "audio/wav",
+      "hash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4",
+      "fileExists": true,
+      "actualHash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4"
+    },
+    {
+      "id": "02d4170a-f48d-4f7e-8fff-9ee533ccda2c",
+      "bytes": 384044,
+      "mime": "audio/wav",
+      "hash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4",
+      "fileExists": true,
+      "actualHash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4"
+    },
+    {
+      "id": "68fee75d-fad7-4902-a50f-f43614410dc4",
+      "bytes": 384044,
+      "mime": "audio/wav",
+      "hash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4",
+      "fileExists": true,
+      "actualHash": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4"
+    }
+  ]
+}

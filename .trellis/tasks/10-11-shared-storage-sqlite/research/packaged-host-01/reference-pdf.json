@@ -1,0 +1,61 @@
+{
+  "projectReferences": [
+    {
+      "kind": "pdf",
+      "mimeType": "application/pdf",
+      "id": "ref_01d9ef81-32db-4b88-8985-635df002b58f",
+      "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94",
+      "mediaId": "med_e464b08f-d653-4697-ab83-dddeeafe57ec",
+      "digest": "ee62307e225b723a2ed696922cfd849ddcdc14f35cd564d08a96b771a3d01717",
+      "filename": "document.pdf",
+      "size": 3033,
+      "revision": 1,
+      "operationId": "parse_3e276831-46a2-41b1-8053-0ce729076dad",
+      "status": "ready",
+      "coverage": {
+        "totalUnits": 2,
+        "processedUnits": 2,
+        "emptyUnits": [],
+        "characters": 93,
+        "truncated": false
+      },
+      "warnings": [
+        "PDF 按页提取文字，阅读顺序与排版可能与原件不同"
+      ],
+      "createdAt": "2026-10-11T23:08:20.181Z",
+      "updatedAt": "2026-10-11T23:08:20.589Z",
+      "error": "<undefined>"
+    }
+  ],
+  "at": "2026-10-11T23:09:41.449946+00:00",
+  "actualUi": "document.pdf v1 可使用;93characters;2/2pages;exact source text visibly inspected",
+  "note": "Reference is local and only attached to unsent draft; no model-read claim.",
+  "referenceChunks": [
+    {
+      "index": 0,
+      "text": "第一场：雨夜；角色：林一；保持红色雨伞。 \nCuepoint fixture 2026-10-11",
+      "locator": {
+        "kind": "page",
+        "start": 1,
+        "end": 1
+      },
+      "id": "rfc_add743f7-3d9a-4227-90e1-18d76b11fc25",
+      "referenceId": "ref_01d9ef81-32db-4b88-8985-635df002b58f",
+      "revision": 1,
+      "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94"
+    },
+    {
+      "index": 1,
+      "text": "第二场：清晨；素材属于工作区。 \nCuepoint fixture 2026-10-11",
+      "locator": {
+        "kind": "page",
+        "start": 2,
+        "end": 2
+      },
+      "id": "rfc_b2bc7487-0e8f-403e-b180-94e2fb2f5be5",
+      "referenceId": "ref_01d9ef81-32db-4b88-8985-635df002b58f",
+      "revision": 1,
+      "projectId": "prj_19e6d8dc-b047-4d95-b6bc-386780f15d94"
+    }
+  ]
+}

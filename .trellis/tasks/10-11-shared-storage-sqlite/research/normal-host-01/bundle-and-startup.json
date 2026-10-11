@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-12T07:35:00.172515+08:00",
+  "buildExitCode": 0,
+  "standardInvocation": "CARGO_INCREMENTAL=0 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri build:app",
+  "bundle": {
+    "profile": "normal",
+    "identifier": "dev.cuepoint.prototype.offline",
+    "storage": "sqlite",
+    "webkitStoreId": "ed4550f181f509d050d0643fe7cb7ae0",
+    "app": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791761629702-normal/Cuepoint Prototype.app",
+    "evidence": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791761629702-normal"
+  },
+  "plist": {
+    "identifier": "dev.cuepoint.prototype.offline",
+    "executable": "cuepoint-prototype",
+    "sha256": "4fbc24ce9bc8cacac33c669ea5715b1bd4466be82e88601f4be6719a97f97bb0",
+    "microphonePurpose": "由你点击录音后，为项目录制声音并保存到本机应用内部。",
+    "ATS": {
+      "NSExceptionDomains": {
+        "127.0.0.1": {
+          "NSExceptionAllowsInsecureHTTPLoads": true
+        }
+      }
+    }
+  },
+  "executableSHA256": "6c0abe0e860b8ed375240638cf5aac02476d6e473dd1dcc7e56d8193558e92cf",
+  "sourceDuringBuildCanonical": "640cf2d6cd12578b60806bc29b9bbc3cd329c6f5a1777b9e7cb1b828926b2edb",
+  "sourceChangesSinceBuildCapture": [],
+  "logs": {
+    "frontend.log": {
+      "bytes": 79992,
+      "sha256": "eae27ec0dd9e509ed5a192e9ac0fa30f1f44f5a4a65367529a0996257c5d9b43"
+    },
+    "native-bundle.log": {
+      "bytes": 2246,
+      "sha256": "496fb851a13235f005063b8de8a1a1bef95f533a34bbfef8bcedebede72fd51c"
+    }
+  },
+  "observedSQLitePath": "/Users/xiaomengdao/Library/Application Support/dev.cuepoint.prototype.offline/product-workspace-v1/.local/state.sqlite",
+  "initialTableCounts": {},
+  "actualUi": {
+    "startup": true,
+    "hashRoute": "tauri://localhost/#/agent",
+    "emptyConnectionState": true
+  },
+  "normalOwnerVerifiedByActualDBCreation": true,
+  "limits": [
+    "Initial startup proof only; full focused writes/reopen still pending."
+  ],
+  "normalRootExistedBeforeLaunch": false
+}

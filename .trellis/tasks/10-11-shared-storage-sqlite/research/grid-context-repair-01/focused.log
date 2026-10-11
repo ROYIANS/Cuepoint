@@ -1,0 +1,160 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ✓ tests/sharedProductQueryHooks.test.ts > shared query lifecycle used by current pages > passes explicit Tx, retains success during a scope change and ignores late old-owner replies 13ms
+ ✓ tests/sharedProductQueryHooks.test.ts > shared query lifecycle used by current pages > preserves prior data with truthful failure state and recovers on a later success 6ms
+ ✓ tests/sharedProductQueryHooks.test.ts > shared query lifecycle used by current pages > the ordinary hook propagates storage errors to the page error boundary 4ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > covers every current table with exact native registry parity 16ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips projects under its actual primary key 12ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips characters under its actual primary key 8ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips scenes under its actual primary key 12ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips shots under its actual primary key 18ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips media under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips props under its actual primary key 13ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > covers every current table with exact native registry parity 82ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips styles under its actual primary key 17ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips episodes under its actual primary key 10ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips connectors under its actual primary key 8ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips chatThreads under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips chatMessages under its actual primary key 8ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips productionProposals under its actual primary key 10ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agents under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agentRuns under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agentToolCalls under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agentTasks under its actual primary key 10ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips contextCompactions under its actual primary key 9ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agentGenerationJobs under its actual primary key 11ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips projects under its actual primary key 119ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agentTaskRecords under its actual primary key 8ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agentTaskRecordVersions under its actual primary key 17ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agentTaskWrapups under its actual primary key 8ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agentTaskWrapupVersions under its actual primary key 9ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips projectMemories under its actual primary key 12ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips projectMemoryVersions under its actual primary key 9ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips searchConnections under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agentGenerationBatches under its actual primary key 11ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips agentGenerationBatchItems under its actual primary key 21ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips characters under its actual primary key 100ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips projectReferences under its actual primary key 12ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips referenceChunks under its actual primary key 16ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips connectorAliases under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips ipProfiles under its actual primary key 6ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips projectIpLinks under its actual primary key 14ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips libraryMaterials under its actual primary key 8ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips materialVersions under its actual primary key 10ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips materialUses under its actual primary key 10ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips materialEvents under its actual primary key 10ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioChapters under its actual primary key 12ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips scenes under its actual primary key 115ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioSpeakers under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioSegments under its actual primary key 8ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioTakes under its actual primary key 10ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioTracks under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioClips under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioExports under its actual primary key 8ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips musicDrafts under its actual primary key 6ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips musicWorks under its actual primary key 13ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioGenerationJobs under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioGenerationBatches under its actual primary key 11ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioGenerationBatchItems under its actual primary key 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > roundtrips audioArrangementProposals under its actual primary key 6ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips shots under its actual primary key 101ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > preserves compound optional unique indexes and rejects collisions atomically 9ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > joins nested explicit scopes, queries staged rows, and rolls back late failure 8ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > rejects widening, readonly writes and escaped closed handles 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > returns clones and applies supplied patch keys including explicit undefined 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > orders indexed ties by primary key and preserves reverse sort direction 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > does not issue commit notification after failed writes 9ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips media under its actual primary key 88ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > queries every registered index with the same equality, anyOf and ordering rules 89ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > retains empty, NUL, long and lone UTF16 identities and indexed values 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > keeps bulk writes atomic and exposes callback changes, deletes and empty selections 7ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > preserves a long UTF16 object key through the actual row adapter 6ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > isolates postcommit subscribers for put, transactions and atomic tool ledgers 11ms
+ ✓ tests/sharedStorageContract.test.ts > shared storage conformance/indexeddb > keeps limit-before-sortBy and aggregate count semantics with duplicate selectors 7ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > rejects unsupported cycles with a typed error without overflowing carrier traversal 3ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > preserves own undefined, reserved property names and receipt revision equality 3ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > retains original unpaired UTF16 values and property names exactly 3ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > reconstructs long unpaired UTF16 property names without an argument limit 11ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > does not mistake user-shaped reference objects for managed binary authority 3ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > limits binary externalization to all3registered carrier paths 3ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > rejects malformed codec reply "undef" 4ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > rejects malformed codec reply "num" 3ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > rejects malformed codec reply "date" 3ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > rejects malformed codec reply "bytes" 3ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > rejects malformed codec reply "bogus" 3ms
+ ✓ tests/sharedStorageContract.test.ts > lossless local row codec > rejects malformed codec reply "obj" 3ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips props under its actual primary key 99ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips styles under its actual primary key 91ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips episodes under its actual primary key 94ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips connectors under its actual primary key 96ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips chatThreads under its actual primary key 89ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips chatMessages under its actual primary key 100ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips productionProposals under its actual primary key 100ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agents under its actual primary key 91ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentRuns under its actual primary key 94ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentToolCalls under its actual primary key 90ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentTasks under its actual primary key 92ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips contextCompactions under its actual primary key 94ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentGenerationJobs under its actual primary key 88ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentTaskRecords under its actual primary key 91ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentTaskRecordVersions under its actual primary key 87ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentTaskWrapups under its actual primary key 91ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentTaskWrapupVersions under its actual primary key 89ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips projectMemories under its actual primary key 95ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips projectMemoryVersions under its actual primary key 89ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips searchConnections under its actual primary key 74ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentGenerationBatches under its actual primary key 54ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentGenerationBatchItems under its actual primary key 51ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips projectReferences under its actual primary key 50ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips referenceChunks under its actual primary key 51ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips connectorAliases under its actual primary key 47ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips ipProfiles under its actual primary key 81ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > bounds repeated grids of seventy simultaneous material-version snapshots below the native context ceiling 3011ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > retires disposed queued grid observations without beginning native contexts or invoking their callbacks 82ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips projectIpLinks under its actual primary key 78ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > finishes an over-capacity reader batch before its writer and releases a failed snapshot without callback replay 96ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips libraryMaterials under its actual primary key 51ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips materialVersions under its actual primary key 71ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > advances the FIFO after cancellation and failure without replaying a callback 80ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > admits concurrent readers, waits for their snapshots, and keeps later readers behind a queued writer 79ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips materialUses under its actual primary key 80ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips materialEvents under its actual primary key 49ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioChapters under its actual primary key 49ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioSpeakers under its actual primary key 46ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioSegments under its actual primary key 48ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioTakes under its actual primary key 51ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioTracks under its actual primary key 54ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioClips under its actual primary key 49ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioExports under its actual primary key 49ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips musicDrafts under its actual primary key 47ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips musicWorks under its actual primary key 51ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioGenerationJobs under its actual primary key 46ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioGenerationBatches under its actual primary key 46ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioGenerationBatchItems under its actual primary key 47ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioArrangementProposals under its actual primary key 56ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > preserves compound optional unique indexes and rejects collisions atomically 54ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > joins nested explicit scopes, queries staged rows, and rolls back late failure 46ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > rejects widening, readonly writes and escaped closed handles 46ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > returns clones and applies supplied patch keys including explicit undefined 52ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > orders indexed ties by primary key and preserves reverse sort direction 57ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > does not issue commit notification after failed writes 47ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > queries every registered index with the same equality, anyOf and ordering rules 1222ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > retains empty, NUL, long and lone UTF16 identities and indexed values 105ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > keeps bulk writes atomic and exposes callback changes, deletes and empty selections 58ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > preserves a long UTF16 object key through the actual row adapter 342ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > isolates postcommit subscribers for put, transactions and atomic tool ledgers 62ms
+ ✓ tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > keeps limit-before-sortBy and aggregate count semantics with duplicate selectors 51ms
+ ✓ tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > transfers arbitrary oversized read identities within the IPC envelope budget 17020ms
+ ✓ tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > returns bounded history pages and counts without hydrating original tool bodies 804ms
+ ✓ tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > reopens a row with a 180001-unit UTF16 object key losslessly 341ms
+ ✓ tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > roundtrips all49primary-key families, ownundefined and complete original strings across reopen 223ms
+ ✓ tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > joins nested commands, sees uncommitted indexed rows and rolls back late ledgers 52ms
+ ✓ tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > pages large metadata rows and anyOf lists without a user-visible row/key cap 3129ms
+ ✓ tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > rejects an empty-scan phantom without replaying a mutation callback 63ms
+
+ Test Files  4 passed (4)
+      Tests  151 passed (151)
+   Start at  07:03:54
+   Duration  28.15s (tests 95%, transform 3%, setup 1%)
+

@@ -1,0 +1,126 @@
+{
+  "recordedAt": "2026-10-11T23:32:35.814Z",
+  "sourcePath": "desktop/tauri/scripts/build-app.mjs",
+  "sourceSha256": "400b055517253c142264c780a857a1bee73cff0611b8cc7cf11ea88cddc12f05",
+  "method": "Evaluate only actual source declaration prefix and feature/storage expressions in a fresh VM with argv/env, no import/entrypoint/build/filesystem side effects; this is source policy verification, not packaged-host proof.",
+  "sourcePolicy": "const acceptance=process.argv.includes('--acceptance');\nconst isolated=process.argv.includes('--isolated-product');\nconst productSqlite=process.argv.includes('--sqlite-product') || (!acceptance && !isolated);\nif(productSqlite && acceptance)throw new Error('Full-product SQLite and fixture acceptance are separate build lanes');\nif(acceptance && isolated)throw new Error('Fixture and normal-product isolation are separate build lanes');\nconst identifier=isolated ? process.env.CUEPOINT_PRODUCT_IDENTIFIER : acceptance?'dev.cuepoint.prototype.acceptance':'dev.cuepoint.prototype.offline';\nif(!identifier || !/^dev\\.cuepoint\\.review\\.[a-z0-9][a-z0-9.-]{0,100}$/.test(identifier) && isolated)throw new Error('Isolated product requires a dedicated dev.cuepoint.review.* identifier');\nconst profile=acceptance?'acceptance':isolated?(productSqlite?'isolated-sqlite-product':'isolated-product'):'normal';\nconst appName=acceptance?'Cuepoint Acceptance':isolated?'Cuepoint Product Review':'Cuepoint Prototype';\n",
+  "nativeFeatureExpression": "acceptance?'acceptance':productSqlite?'product-sqlite':'desktop'",
+  "storageExpression": "acceptance || productSqlite?'sqlite':'indexeddb'",
+  "laneGroups": 6,
+  "invocations": 7,
+  "pass": true,
+  "decisions": [
+    {
+      "lane": "normal-default",
+      "flags": [],
+      "expected": {
+        "nativeFeature": "product-sqlite",
+        "storage": "sqlite",
+        "profile": "normal",
+        "identifier": "dev.cuepoint.prototype.offline"
+      },
+      "actual": {
+        "nativeFeature": "product-sqlite",
+        "storage": "sqlite",
+        "profile": "normal",
+        "identifier": "dev.cuepoint.prototype.offline"
+      },
+      "pass": true
+    },
+    {
+      "lane": "normal-explicit-sqlite",
+      "flags": [
+        "--sqlite-product"
+      ],
+      "expected": {
+        "nativeFeature": "product-sqlite",
+        "storage": "sqlite",
+        "profile": "normal",
+        "identifier": "dev.cuepoint.prototype.offline"
+      },
+      "actual": {
+        "nativeFeature": "product-sqlite",
+        "storage": "sqlite",
+        "profile": "normal",
+        "identifier": "dev.cuepoint.prototype.offline"
+      },
+      "pass": true
+    },
+    {
+      "lane": "isolated-indexeddb-reference",
+      "flags": [
+        "--isolated-product"
+      ],
+      "expected": {
+        "nativeFeature": "desktop",
+        "storage": "indexeddb",
+        "profile": "isolated-product",
+        "identifier": "dev.cuepoint.review.lanecheck"
+      },
+      "actual": {
+        "nativeFeature": "desktop",
+        "storage": "indexeddb",
+        "profile": "isolated-product",
+        "identifier": "dev.cuepoint.review.lanecheck"
+      },
+      "pass": true
+    },
+    {
+      "lane": "isolated-full-sqlite",
+      "flags": [
+        "--isolated-product",
+        "--sqlite-product"
+      ],
+      "expected": {
+        "nativeFeature": "product-sqlite",
+        "storage": "sqlite",
+        "profile": "isolated-sqlite-product",
+        "identifier": "dev.cuepoint.review.lanecheck"
+      },
+      "actual": {
+        "nativeFeature": "product-sqlite",
+        "storage": "sqlite",
+        "profile": "isolated-sqlite-product",
+        "identifier": "dev.cuepoint.review.lanecheck"
+      },
+      "pass": true
+    },
+    {
+      "lane": "fixture-acceptance",
+      "flags": [
+        "--acceptance"
+      ],
+      "expected": {
+        "nativeFeature": "acceptance",
+        "storage": "sqlite",
+        "profile": "acceptance",
+        "identifier": "dev.cuepoint.prototype.acceptance"
+      },
+      "actual": {
+        "nativeFeature": "acceptance",
+        "storage": "sqlite",
+        "profile": "acceptance",
+        "identifier": "dev.cuepoint.prototype.acceptance"
+      },
+      "pass": true
+    },
+    {
+      "lane": "reject-fixture-full-sqlite",
+      "flags": [
+        "--acceptance",
+        "--sqlite-product"
+      ],
+      "error": "Full-product SQLite and fixture acceptance are separate build lanes",
+      "pass": true
+    },
+    {
+      "lane": "reject-fixture-product-isolation",
+      "flags": [
+        "--acceptance",
+        "--isolated-product"
+      ],
+      "error": "Fixture and normal-product isolation are separate build lanes",
+      "pass": true
+    }
+  ]
+}

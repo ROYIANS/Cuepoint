@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-11T22:51:22.387436+00:00",
+  "binaryId": "93980fed-876a-4d02-a6e0-9f1a999ff0d9",
+  "action": "reversible rename of current synthetic fixture only",
+  "restorePath": "/Users/xiaomengdao/Library/Application Support/dev.cuepoint.review.sqlite20261012final/product-workspace-v1/assets/id-39333938306665642d383736612d346430322d613665302d396631613939396666306439",
+  "heldPath": "/Users/xiaomengdao/Library/Application Support/dev.cuepoint.review.sqlite20261012final/product-workspace-v1/assets/id-39333938306665642d383736612d346430322d613665302d396631613939396666306439.host-missing-test",
+  "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+  "restoredAt": "2026-10-11T22:51:44.500654+00:00",
+  "actualUiExportRejectedWhilePreviewWasCached": "保存原文件失败：素材已丢失，请重新导入",
+  "actualUiReopenedPreview": "素材已丢失，请重新导入",
+  "actualUiMetadataAndUseHistoryRemain": true,
+  "actualUiReferencedDeletionDisabled": true,
+  "restoredHashMatches": true
+}

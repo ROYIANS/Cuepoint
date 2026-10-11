@@ -1,0 +1,82 @@
+{
+  "startedAt": "2026-10-11T23:08:29.592Z",
+  "cases": [
+    {
+      "name": "Postcommit subscriber reentrancy queues reads and writes without holding notification delivery",
+      "status": "passed",
+      "elapsedMs": 218,
+      "observations": {
+        "order": [
+          "root",
+          "nested",
+          "notify",
+          "notification-read",
+          "notification-write"
+        ],
+        "rows": 2,
+        "nestedRootJoined": true
+      }
+    },
+    {
+      "name": "A rejected begin releases admission and does not execute or replay its callback",
+      "status": "passed",
+      "elapsedMs": 488,
+      "observations": {
+        "outcomes": [
+          "rejected",
+          "fulfilled"
+        ],
+        "callbacks": 0,
+        "rows": 1
+      }
+    },
+    {
+      "name": "A rejected validate releases its reader before the queued writer and later snapshot",
+      "status": "passed",
+      "elapsedMs": 219,
+      "observations": {
+        "outcomes": [
+          "rejected",
+          "fulfilled"
+        ],
+        "callbacks": 1,
+        "rows": 1
+      }
+    },
+    {
+      "name": "Unknown committed outcome releases admission without replay or known-rollback classification",
+      "status": "passed",
+      "elapsedMs": 112,
+      "observations": {
+        "outcomes": [
+          "rejected",
+          "fulfilled"
+        ],
+        "uncertainty": "unknown",
+        "callbacks": 1,
+        "commits": 2,
+        "rowsAfterReopen": 2
+      }
+    }
+  ],
+  "before": {
+    "src/lib/storage/native.ts": "92f8a8126e2301a02fb4464f1c8921eff3d7317d315e89a636ad25cf0e677e64",
+    "src/lib/storage/store.ts": "232506e5d08845bc3ed329a8b7c47ca446e19c1de73fbdaf100192328ec27e96",
+    "src/lib/storage/nativeBridge.ts": "53d00a8e8aeb64d2f331c013042a1fc22eee0e8642ef8a5113c82bc249426bf1",
+    "tests/sharedNativeAdmission.test.ts": "42674ea66f2a1249c56996471d05862e453959e3f81fa70554a56668243d15d2",
+    "tests/helpers/nativeProductProbe.ts": "9a85ef9be4c0f14551e560732c8e9a82f7a0d48ffefd513436f0e62c48859453",
+    "desktop/tauri/.tools/target/debug/product_store_probe": "a84eba5c0ccc14f17c71bf301ffd55988046a837c0f0bdf5d0c3dfcc906c9d4e"
+  },
+  "scope": "Independent existing real Rust probe on fresh disposable workspaces only. No application profile, UI, provider or Rust build.",
+  "after": {
+    "src/lib/storage/native.ts": "92f8a8126e2301a02fb4464f1c8921eff3d7317d315e89a636ad25cf0e677e64",
+    "src/lib/storage/store.ts": "232506e5d08845bc3ed329a8b7c47ca446e19c1de73fbdaf100192328ec27e96",
+    "src/lib/storage/nativeBridge.ts": "53d00a8e8aeb64d2f331c013042a1fc22eee0e8642ef8a5113c82bc249426bf1",
+    "tests/sharedNativeAdmission.test.ts": "42674ea66f2a1249c56996471d05862e453959e3f81fa70554a56668243d15d2",
+    "tests/helpers/nativeProductProbe.ts": "9a85ef9be4c0f14551e560732c8e9a82f7a0d48ffefd513436f0e62c48859453",
+    "desktop/tauri/.tools/target/debug/product_store_probe": "a84eba5c0ccc14f17c71bf301ffd55988046a837c0f0bdf5d0c3dfcc906c9d4e"
+  },
+  "changedInputs": [],
+  "finishedAt": "2026-10-11T23:08:30.997Z",
+  "pass": true
+}

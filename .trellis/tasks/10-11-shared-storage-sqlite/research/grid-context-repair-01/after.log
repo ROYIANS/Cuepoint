@@ -1,0 +1,13 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > bounds repeated grids of seventy simultaneous material-version snapshots below the native context ceiling 1707ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > retires disposed queued grid observations without beginning native contexts or invoking their callbacks 54ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > advances the FIFO after cancellation and failure without replaying a callback 52ms
+ ✓ tests/sharedNativeAdmission.test.ts > native root operation admission > admits concurrent readers, waits for their snapshots, and keeps later readers behind a queued writer 49ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  07:02:55
+   Duration  2.09s (tests 91%, transform 6%, setup 3%)
+

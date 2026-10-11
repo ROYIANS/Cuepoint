@@ -1,0 +1,307 @@
+# Final concrete local commit plan
+
+- Date: 2026-10-12T07:56:56.417795+08:00
+- Branch: `codex/shared-storage-sqlite`; base `main`.
+- Technical acceptance: **PASS**, independent `normal-final-signoff.md/json`, no material blocker.
+- Authorization: user explicitly delegated full responsibility/automatic approval. This concrete inventory is presented before execution; no renewed permission is required.
+- Total: **268 paths**, unknown source **0**.
+- Existing checkpoint commits are preserved; no amend, push or main merge.
+
+## Work commits (in order)
+
+### 1. `fix(storage): bound native read admission for large material grids`
+
+Count: **3 paths**.
+
+- `src/lib/storage/native.ts`
+- `tests/sharedNativeAdmission.test.ts`
+- `.trellis/spec/frontend/shared-product-storage.md`
+
+### 2. `feat(desktop): default normal product builds to SQLite storage`
+
+Count: **2 paths**.
+
+- `desktop/tauri/scripts/build-app.mjs`
+- `.trellis/spec/frontend/native-product-runtime.md`
+
+### 3. `docs(storage): record complete packaged SQLite acceptance`
+
+Count: **263 paths**.
+
+- `.trellis/tasks/10-10-desktop-storage-sync/task.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/implement.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/acceptance-gap-audit.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/acceptance-gap-audit.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/completion-matrix.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/completion-matrix.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-01/after.png`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-01/focused-tests.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-01/harness.tsx`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-01/index.html`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-01/quality.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-01/report.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-01/run.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-01/run.mjs`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-01/typecheck.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-02/after.png`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-02/harness.tsx`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-02/index.html`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-02/report.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-02/run.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/departure-reactdom-02/run.mjs`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/final-commit-plan.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/final-commit-plan.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-repair-01/acceptance.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-repair-01/admission-final.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-repair-01/after.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-repair-01/before.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-repair-01/diagnosis.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-repair-01/eslint-final.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-repair-01/eslint.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-repair-01/focused.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-repair-01/types-final.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-repair-01/types.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-review-01/acceptance.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-review-01/focused.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-review-01/independent-runtime.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-review-01/quality.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-review-01/run.mjs`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-review-01/types.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-review.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/grid-context-review.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/isolated-final-signoff.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/isolated-final-signoff.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/acceptance.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/browserOnly-tests.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/69961-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/70429-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/70990-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/71034-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/71343-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/71379-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/71405-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/71634-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/71836-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/71852-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/72079-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/72099-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/72313-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/72520-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/72790-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/72877-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/72961-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/72992-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/73090-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/73159-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/73177-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/73284-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/73505-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/73635-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/73950-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/73985-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74069-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74290-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74295-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74416-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74530-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74564-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74803-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74839-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74884-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74928-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/74964-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/75114-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/75169-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/75598-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/75720-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/75843-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/75848-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/75972-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/76158-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/76218-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/76379-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/76498-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/76540-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/76720-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-69960-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-69961-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-70429-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-70524-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-70577-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-70990-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-71034-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-71343-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-71379-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-71405-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-71634-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-71836-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-71852-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72079-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72099-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72313-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72386-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72418-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72520-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72581-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72690-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72724-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72790-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72877-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72961-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-72992-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-73090-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-73159-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-73177-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-73284-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-73362-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-73505-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-73754-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-73886-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-73950-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-73985-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74049-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74069-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74084-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74290-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74295-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74387-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74416-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74476-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74530-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74564-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74657-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74660-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74763-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74803-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74839-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74884-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74928-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74964-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-74984-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75065-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75114-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75169-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75200-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75280-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75308-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75598-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75619-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75682-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75720-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75753-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75767-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75843-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75848-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75930-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75965-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-75972-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76030-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76099-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76135-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76158-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76186-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76218-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76246-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76291-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76340-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76355-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76379-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76444-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76456-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76485-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76498-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76511-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76531-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76540-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76555-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76556-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76583-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76594-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76609-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76644-2.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76662-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76697-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76765-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/coverage/tables-76893-1.jsonl`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/native-tests.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/probe-build.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/selfHostedNative-tests.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/native-grid-final/tool-and-table-coverage.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/build-app.before.mjs.txt`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/build-app.diff`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/checks.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/desktop-lint.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/desktop-quality.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/desktop-types.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/diff-check.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/lane-decisions.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/product-storage-focused.log`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/source-after.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/source-before.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-implementation.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-implementation.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-plan.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-build-source.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-final-signoff.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-final-signoff.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-final-source.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-host-01/acceptance.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-host-01/after-reopen.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-host-01/before-reopen.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-host-01/bundle-and-startup.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-host-01/capture-known-workspace.py`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-host-01/final-acceptance.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/normal-root-before-activation.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-agent-fixture-01/fixture-events.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-agent-fixture-01/fixture-ready.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-agent-fixture-guide.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-departure-diagnosis.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-departure-diagnosis.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/agent-approval-after-relaunch.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/agent-approval-before-relaunch.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/agent-approved-real-write.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/agent-provider-error.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/agent-real-tool-error.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/agent-rejected-no-write.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/agent-stop.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/audio-mix-retained.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/before-final-reopen.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/final-reopen-and-recording.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/fixture-events-before-final-reopen.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/fixture-events-before-repaired-relaunch.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/grid-fixture-generation-handoff.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/grid-fixture-generator.py`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/grid-fixture-manifest.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/grid-mounted.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/import-fixtures.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/materials-documents-adoption.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/missing-file-action.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/printed-pdf-content.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/progress.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/project-backup-memory-music.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/reference-pdf.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/repaired-bundle-identity.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/repaired-project-grid-and-print.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/video-export.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/video-internal-copy.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/video-playback-and-source-move.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/world-agent-table-counts.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/world-ip-audio-music-task.json`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-remaining.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-media-fixture-discovery.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-provider-task-guide.md`
+- `.trellis/tasks/10-11-shared-storage-sqlite/task.json`
+
+## Bookkeeping after all work commits
+
+1. Archive only `10-11-shared-storage-sqlite` using task.py; parent remains in progress.
+2. Record the session journal with the work commit hashes.
+
+## Exclusions and verification
+
+- Unknown/unrelated paths: none.
+- No app bundle, database, audio/video, ZIP, node_modules or compiled build output is staged. Existing large raw JSON evidence is preserved unchanged.
+- Native108files1903tests, actual binary6/browser capability5,49table/95tool closure, focused activation tests and actual normal build/host/reopen pass. Historical browser227/3941 and Rust gates are explicitly qualified unchanged-source reuse.
+- Final source map1122 inputs matches current disk. Only runtime-spec documentation changed after normal build.
+- Limited static secret-pattern scan found no private-key/common API-key/nonlocal Bearer signatures in the added receipts; this is not a comprehensive security audit.
+- All earlier failures, locked-host and conditional checkpoints are retained; current success receipts do not rewrite them.

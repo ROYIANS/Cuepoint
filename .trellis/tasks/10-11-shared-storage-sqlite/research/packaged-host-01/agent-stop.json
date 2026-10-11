@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-11T22:32:39.395797+00:00",
+  "actualUiState": "执行已取消; 已停止，已收到的内容与完成的步骤保留",
+  "threadId": "cth_f6cfcef0-ee93-42c0-9677-07a1d4094a3c",
+  "serverDisconnect": {
+    "at": "2026-10-11T22:32:29.869Z",
+    "type": "disconnect",
+    "id": 13,
+    "path": "/v1/chat/completions",
+    "elapsedMs": 4692,
+    "finished": false
+  },
+  "bodyMetadata": {
+    "at": "2026-10-11T22:32:25.178Z",
+    "type": "body",
+    "id": 13,
+    "byteLength": 5619,
+    "sha256": "fae98bde4bc46a8dc24831dd542570abc3fd0dd63b92bf37ed152712a2867c22",
+    "model": "fixture-stop",
+    "offeredTools": [
+      "workspace_overview",
+      "update_run_plan",
+      "load_tool_groups"
+    ]
+  },
+  "regenerateClicked": false
+}

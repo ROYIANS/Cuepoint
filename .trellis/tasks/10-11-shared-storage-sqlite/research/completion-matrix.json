@@ -1,0 +1,741 @@
+{
+  "schemaVersion": 1,
+  "query": "Final technical R/AC acceptance after isolated and normal actual SQLite checks; authorized local bookkeeping follows",
+  "scope": "internal",
+  "date": "2026-10-12",
+  "observedAt": "2026-10-12T07:52:39.843884+08:00",
+  "task": ".trellis/tasks/10-11-shared-storage-sqlite",
+  "state": "technical_acceptance_pass_closeout_pending",
+  "isolatedAcceptanceComplete": true,
+  "isolatedIndependentReview": {
+    "verdict": "isolated_full_product_prerequisite_pass",
+    "report": "isolated-final-signoff.md",
+    "receipt": "isolated-final-signoff.json",
+    "materialBlockers": []
+  },
+  "normalOwnerActivationAccepted": true,
+  "normalActualAcceptanceComplete": true,
+  "taskComplete": false,
+  "archiveAllowed": true,
+  "sourceReuse": {
+    "historicalScopeCount": 1122,
+    "historicalCanonicalSha256": "e9bed94f523a8b5ae646dd60f62a4789083238967901551c717e58479f59e72b",
+    "acceptedIsolatedScopeCount": 1122,
+    "acceptedIsolatedCanonicalSha256": "fc5b890d1b08452dee3bbdf46f4724bf0643b481387131f48f6b26491c7a68ea",
+    "acceptedIsolatedScopedChanges": {
+      ".trellis/spec/frontend/shared-product-storage.md": {
+        "old": "0403ddbb90ac684a11346c2678df75512fb27bdcd519b83038e762cf27a09dfd",
+        "new": "15f0aa5657050b0c8f6bfe668b64cdb307abdd9d88e2a574ea119d511c9b7767"
+      },
+      "src/lib/storage/native.ts": {
+        "old": "635cca7b57a13c281e335ba36e76e33ce0a2831ec2dac209904ffee4a14d4282",
+        "new": "92f8a8126e2301a02fb4464f1c8921eff3d7317d315e89a636ad25cf0e677e64"
+      },
+      "tests/sharedNativeAdmission.test.ts": {
+        "old": "1925746b8ae88e54b5dfebbc517445d37b108d3f595253e7e7d076c36233026e",
+        "new": "42674ea66f2a1249c56996471d05862e453959e3f81fa70554a56668243d15d2"
+      }
+    },
+    "acceptedNativeScopeCount": 988,
+    "acceptedNativeCanonicalSha256": "1fb76deb4a5dcb99a835f7eaaf556d27ff968580a190bf05c764180f41263549",
+    "nativeRunChangedInputs": [],
+    "concurrentNormalActivationChangesOutsideIsolatedSnapshot": [
+      "desktop/tauri/scripts/build-app.mjs",
+      ".trellis/spec/frontend/native-product-runtime.md"
+    ],
+    "rule": "Exact historical receipts remain frozen. Reuse unchanged owner/browser/Rust evidence through reviewed scope comparison; current native admission has new full native/focused/host evidence. Normal activation must supply its own changed-source and real normal-package receipts.",
+    "finalSourceReceipt": "normal-final-source.json",
+    "finalScopeCanonicalSha256": "3f0a16264f2592634a215148365dacff52d969cb38271fcbdf5dfc799bfe7219"
+  },
+  "acceptedIsolatedBundle": {
+    "profile": "isolated-sqlite-product",
+    "identifier": "dev.cuepoint.review.sqlite20261012final",
+    "storage": "sqlite",
+    "webkitStoreId": "49c5fa378662ccbac5440b2e85767e62",
+    "app": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791760048580-isolated-sqlite-product/Cuepoint Product Review.app",
+    "evidence": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791760048580-isolated-sqlite-product",
+    "executableSha256": "f09e00dbbab0be2c16154a1a91ed3ec701341bc1be56a2fceb2edddf396fcd21",
+    "infoPlistSha256": "fc370341002b11fe7faecc8a54a1d718e19df8c409a63cc02afd59759892324a",
+    "buildLogsVerified": true
+  },
+  "gates": {
+    "lint": "pass via qualified recorded gates",
+    "typeCheck": "pass via qualified recorded gates",
+    "tests": "pass via qualified recorded gates",
+    "newNativeFiles": 108,
+    "newNativeTests": 1903,
+    "selfHostedActualBinaryTests": 6,
+    "browserCapabilityTests": 5,
+    "historicalBrowserFiles": 227,
+    "historicalBrowserTests": 3941,
+    "focusedCurrentFiles": 4,
+    "focusedCurrentTests": 15,
+    "independentActualRustCases": 4,
+    "nativeTables": 49,
+    "registeredTools": 95,
+    "missingCoverage": {
+      "missingSuccessfulExecutions": [],
+      "missingValidArguments": [],
+      "missingInvalidArguments": [],
+      "missingNativeCommittedTables": [],
+      "missingNativeBusinessTables": [],
+      "missingNativeOwnerAssertions": []
+    },
+    "reviewedAllowances": 12,
+    "visibleWarnings": 584
+  },
+  "actualIsolatedHost": {
+    "rowCount": 320,
+    "allRowsUnchangedAfterFinalRestart": true,
+    "managedBinaries": 80,
+    "allManagedHashesMatch": true,
+    "originalVideoSourceAbsent": true,
+    "recordingDecodedDurationSec": 1.885,
+    "recordingUiTimerSec": 3.4,
+    "recordingRetainedTakes": 1,
+    "recordingTemporaryAttemptsDiscarded": 2,
+    "recordingPlayedAfterRestart": true,
+    "printPdfPoints": [
+      842,
+      595
+    ],
+    "printActualNativePanelAndPdf": true,
+    "gridCount": 70,
+    "exactGridProjectSaveReturnPassed": true,
+    "gridV2FinalReopenPassed": true,
+    "unsolicitedChatOrGenerationPostOnRestart": false,
+    "idleRestartCatalogGets": 1,
+    "providers": "synthetic loopback only"
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "contract": "Existing complete product; shared UI/commands/Agent",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "native-grid-final/tool-and-table-coverage.json",
+        "storage-access-inventory-current.json",
+        "packaged-host-01/world-ip-audio-music-task.json",
+        "packaged-host-01/final-reopen-and-recording.json",
+        "isolated-final-signoff.md"
+      ],
+      "isolatedResult": "49 actual native table families and95 registered tools; complete existing shared routes and representative product workflows in the real isolated package. No parallel native business/UI/Agent tree.",
+      "normalDependencies": [
+        "N2",
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "R2",
+      "contract": "SQLite sole desktop durable owner; browser IndexedDB",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "final-code-checkpoint.json",
+        "packaged-host-01/repaired-bundle-identity.json",
+        "isolated-final-signoff.md"
+      ],
+      "isolatedResult": "One fixed selected owner initialized before routes; isolated full product uses SQLite/files without browser mirror/fallback. Separate browser adapter passes. Normal build policy/identity is subsequently verified in N1-N3.",
+      "normalDependencies": [
+        "N1",
+        "N2",
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "R3",
+      "contract": "Atomic transactions/CAS/index/receipt and truthful uncertainty",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "grid-context-review.json",
+        "independent-final-signoff.md",
+        "independent-final-wrappers-fixed.log"
+      ],
+      "isolatedResult": "Actual Rust guards/uniqueness/snapshots/nested receipt atomicity, crash/ACK/status reconciliation, callbacks once, bounded fair root admission; no mutation/paid replay.",
+      "normalDependencies": [],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "R4",
+      "contract": "Lossless current history and explicit same-device continuation",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "independent-final-signoff.md",
+        "packaged-host-01/agent-approval-before-relaunch.json",
+        "packaged-host-01/agent-approval-after-relaunch.json",
+        "packaged-host-01/agent-approved-real-write.json",
+        "packaged-host-01/agent-rejected-no-write.json",
+        "packaged-host-01/agent-stop.json",
+        "packaged-host-01/agent-provider-error.json",
+        "packaged-host-01/agent-real-tool-error.json",
+        "packaged-host-01/final-reopen-and-recording.json"
+      ],
+      "isolatedResult": "Original arguments/results, errors, approvals, task versions and continuation semantics preserved. All320 row payloads/revisions unchanged on final relaunch; no chat/generation POST. One expected catalog GET is explicitly accounted.",
+      "normalDependencies": [
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "R5",
+      "contract": "Internal owned copies for all binary carriers and outputs",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "native-grid-final/selfHostedNative-tests.log",
+        "packaged-host-01/video-internal-copy.json",
+        "packaged-host-01/project-backup-memory-music.json",
+        "packaged-host-01/world-ip-audio-music-task.json",
+        "packaged-host-01/missing-file-action.json",
+        "packaged-host-01/final-reopen-and-recording.json"
+      ],
+      "isolatedResult": "Actual native media/file-version/nested-setting carriers, copied package, synthetic TTS/music, retained mix and real recorded take.80 managed binaries match actual lengths/hashes after relaunch; absent original video source harmless.",
+      "normalDependencies": [
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "R6",
+      "contract": "Reactive reads/drafts/system behavior; bounded IO",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "grid-context-review.json",
+        "e07-draft-final-checks.json",
+        "independent-final-media-rerun-checks.json",
+        "packaged-host-01/video-playback-and-source-move.json",
+        "packaged-host-01/video-export.json",
+        "packaged-host-01/repaired-project-grid-and-print.json",
+        "packaged-host-01/final-reopen-and-recording.json"
+      ],
+      "isolatedResult": "Current32-root-reader FIFO plus Rust64 guard and genuine70-item grid/project-save/return/reopen; large real WK decode/seek/export, loading/missing behavior, Save/cancel, recorder/print consumers verified.",
+      "normalDependencies": [
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "R7",
+      "contract": "Fresh identity; no legacy-data/secret migration",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "native-default-final/receipt.json",
+        "packaged-host-01/progress.json",
+        "packaged-host-01/repaired-bundle-identity.json",
+        "normal-root-before-activation.json",
+        "isolated-final-signoff.md"
+      ],
+      "isolatedResult": "Fresh isolated namespace/workspace with no prior profile/key import or old schema upgrade/deletion. New normal full-store root recorded absent before activation; actual normal startup/write/reopen is subsequently verified in N2-N3.",
+      "normalDependencies": [
+        "N2",
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "R8",
+      "contract": "Content/device/mixed classification and durable music links",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "agent-state-and-device-boundaries.md",
+        "src/lib/storage/schema.json",
+        "src/domain/types.ts:264",
+        "src/components/music/switchMusicVariant.ts:17",
+        "packaged-host-01/world-ip-audio-music-task.json",
+        "native-grid-final/acceptance.json",
+        "packaged-host-01/final-reopen-and-recording.json",
+        "isolated-final-signoff.md"
+      ],
+      "isolatedResult": "One private local transaction owner retains content, device credentials/preferences and mixed runtime fields without portable leakage; musicVariantLinks now project data and simple/custom links restore. Sync must use separately reviewed future projections; no portable full-history or keychain claim.",
+      "normalDependencies": [],
+      "deliveryStatus": "pass"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "contract": "All registered table/key/index/query/codec contracts",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "code-gates-03/acceptance.json",
+        "native-grid-final/acceptance.json",
+        "native-grid-final/tool-and-table-coverage.json",
+        "table-acceptance-ledger.csv"
+      ],
+      "isolatedResult": "Shared browser conformance and actual Rust SQLite cover49 primary-key families/all indexes, optional/compound uniqueness, ordering, clones, own-undefined/null/omitted and hashes.",
+      "normalDependencies": [],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "AC2",
+      "contract": "Same real command/tool fixtures on both stores",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "native-grid-final/tool-and-table-coverage.json",
+        "registered-tool-inventory-current.json",
+        "storage-access-inventory-current.json",
+        "isolated-final-signoff.md"
+      ],
+      "isolatedResult": "Current95 tools accepted/rejected/success recipes and49 business-command/owner assertion mappings; six missing arrays empty. Packaged full shared route controls observed.",
+      "normalDependencies": [
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "AC3",
+      "contract": "Atomic business/bindings/ledger rollback and read races",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "native-default-final/receipt.json",
+        "worker-media-stream-checks.json",
+        "independent-final-signoff.md",
+        "grid-context-review.json"
+      ],
+      "isolatedResult": "Actual nested late-fault rollback, point/absence/phantom/delete-recreate/CAS/uniqueness/snapshot races plus fair admission lifecycle tests pass.",
+      "normalDependencies": [],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "AC4",
+      "contract": "Durable commit certainty and saved-result continuation",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "independent-final-signoff.md",
+        "independent-final-wrappers-fixed.log",
+        "independent-final-cause-privacy.log",
+        "packaged-host-01/agent-approval-after-relaunch.json",
+        "packaged-host-01/final-reopen-and-recording.json"
+      ],
+      "isolatedResult": "Actual process death/ACK/status/unknown outcome and explicit saved-result continuation; pending approval preserved, explicit approval once, final320 rows unchanged/no chat or generation POST.",
+      "normalDependencies": [
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "AC5",
+      "contract": "All real binary owners/recovery/source deletion/restart",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "native-grid-final/selfHostedNative-tests.log",
+        "packaged-host-01/project-backup-memory-music.json",
+        "packaged-host-01/world-ip-audio-music-task.json",
+        "packaged-host-01/final-reopen-and-recording.json"
+      ],
+      "isolatedResult": "Three real carriers, output/job ownership, package copy-import, staged failure/recovery, actual recording retention and80 hashes after restart; source video absent.",
+      "normalDependencies": [
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "AC6",
+      "contract": "Unavailable bytes preserve logical state and block false success",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "native-grid-final/selfHostedNative-tests.log",
+        "packaged-host-01/missing-file-action.json",
+        "independent-final-signoff.md"
+      ],
+      "isolatedResult": "Native corrupt/missing/lease/cache/evidence cases pass; actual cached preview export refuses missing file, UI loses material but keeps metadata/use history; known fixture restored.",
+      "normalDependencies": [],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "AC7",
+      "contract": "Precise reactive lifecycle and real media above32MiB",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-grid-final/acceptance.json",
+        "grid-context-review.json",
+        "e07-draft-final-checks.json",
+        "native-history-measurement.md",
+        "independent-final-media-rerun-checks.json",
+        "packaged-host-01/repaired-bundle-identity.json",
+        "packaged-host-01/repaired-project-grid-and-print.json",
+        "packaged-host-01/video-playback-and-source-move.json",
+        "packaged-host-01/video-export.json",
+        "packaged-host-01/final-reopen-and-recording.json"
+      ],
+      "isolatedResult": "70-item exact route/write/reopen plus notification/draft/dispose tests;89,613,670-byte real WK video advances/seeks/ends and exports exact bytes. Separate94,371,857-byte raw HTTP fullGET/Range/HEAD and67 idle caps FD6→6 proof; no app RSS benchmark claim.",
+      "normalDependencies": [
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "AC8",
+      "contract": "Actual packaged complete macOS product and relaunch",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "packaged-host-01/progress.json",
+        "packaged-host-01/world-ip-audio-music-task.json",
+        "packaged-host-01/reference-pdf.json",
+        "packaged-host-01/project-backup-memory-music.json",
+        "packaged-host-01/repaired-project-grid-and-print.json",
+        "packaged-host-01/printed-pdf-content.json",
+        "packaged-host-01/final-reopen-and-recording.json",
+        "isolated-final-signoff.md"
+      ],
+      "isolatedResult": "All named representative product families and history flows restored. Real retained microphone take and actual native white A4-landscape preview/PDF complete affected system checks; synthetic-provider label preserved.",
+      "normalDependencies": [
+        "N2",
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "AC9",
+      "contract": "Fresh root, lock/containment/trusted owner and secret boundary",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "native-default-final/receipt.json",
+        "worker-media-stream-checks.json",
+        "native-grid-final/acceptance.json",
+        "independent-final-cause-privacy.log",
+        "packaged-host-01/repaired-bundle-identity.json",
+        "normal-root-before-activation.json",
+        "isolated-final-signoff.md"
+      ],
+      "isolatedResult": "Actual native fresh/corrupt/unsupported/exclusive-lock/containment/session tests; isolated identifier/WK namespace and scoped ATS verified. No previous data/key import. Normal identity actual launch/write/reopen is subsequently verified in N2-N3.",
+      "normalDependencies": [
+        "N2",
+        "N3"
+      ],
+      "deliveryStatus": "pass"
+    },
+    {
+      "id": "AC10",
+      "contract": "Formal gates, complete-scope independent review and honest limits",
+      "isolatedStatus": "pass",
+      "isolatedEvidence": [
+        "final-code-checkpoint.json",
+        "code-gates-02/acceptance.json",
+        "code-gates-03/acceptance.json",
+        "native-default-final/receipt.json",
+        "native-grid-final/acceptance.json",
+        "native-grid-final/tool-and-table-coverage.json",
+        "grid-context-review.json",
+        "immutable-snapshots-final-check.json",
+        "independent-final-signoff.md",
+        "isolated-final-signoff.md",
+        "isolated-final-signoff.json"
+      ],
+      "isolatedResult": "Isolated complete-scope independent PASS: immutable historical browser227/3941 and10 code gates, current native108/1903+actualbinary6+browsercapability5, current focused quality/types and rebuilt host.12 reviewed allowances/584 warnings; Windows/Linux and genuine-provider limits explicit.",
+      "normalDependencies": [
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "deliveryStatus": "pass"
+    }
+  ],
+  "remainingNormalAndCloseout": [
+    {
+      "id": "N1",
+      "status": "pass",
+      "required": "Reviewed minimal normal build-lane policy defaults product-sqlite; explicit isolated IndexedDB reference and historical acceptance remain separate.",
+      "evidenceToAttach": [
+        "activation implementation/check source receipt",
+        "new source comparison from accepted isolated1122-input map"
+      ],
+      "note": "Official normal no-flag build selects SQLite. Explicit reference and fixture lanes remain separate. Independent source review completed; final host signoff follows.",
+      "evidence": [
+        "normal-activation-implementation.json",
+        "normal-final-source.json"
+      ]
+    },
+    {
+      "id": "N2",
+      "status": "pass",
+      "required": "Actual standard normal build success with exact app/source/executable/plist/profile/WK/storage identity and unchanged narrow system policies.",
+      "evidenceToAttach": [
+        "desktop/tauri/.acceptance/normal-bundle.json",
+        "normal frontend/native build logs",
+        "normal source/build comparison"
+      ],
+      "expectedIdentifier": "dev.cuepoint.prototype.offline",
+      "expectedStorage": "sqlite",
+      "expectedWebkitStoreId": "ed4550f181f509d050d0643fe7cb7ae0",
+      "evidence": [
+        "normal-host-01/bundle-and-startup.json",
+        "normal-build-source.json",
+        "normal-final-source.json"
+      ],
+      "note": "Actual standard normal build exit0, correct SQLite/WK identity and unchanged built inputs; only subsequent runtime-spec documentation sync."
+    },
+    {
+      "id": "N3",
+      "status": "pass",
+      "required": "Fresh normal SQLite ready/root+actual writes/full routes, managed asset/preview/Save byte equality, one actual approved fixture Agent write with original result; Quit/reopen same IDs/text/bytes/history and no unsolicited chat/generation POST.",
+      "evidenceToAttach": [
+        "actual normal UI/SQLite/bytes/reopen receipt",
+        "fixture before/after no-paid-replay receipt"
+      ],
+      "note": "Actual normal full route families, managed video/seek/Save, approved Agent write,35 unchanged rows/five matching managed files after clean reopen; one catalog GET/zeroPOST.",
+      "evidence": [
+        "normal-host-01/final-acceptance.json",
+        "normal-host-01/before-reopen.json",
+        "normal-host-01/after-reopen.json"
+      ]
+    },
+    {
+      "id": "N4",
+      "status": "technical review pass; concrete local commits/archive/journal follow",
+      "required": "Final current-source complete scope review and matrix update, concrete local commit groups, journal and child archive after all required gates. Parent remains open; no push/main merge.",
+      "evidenceToAttach": [
+        "final current-source review",
+        "concrete commit plan/inventory",
+        "journal/archive receipts"
+      ],
+      "note": "Independent final reviewer directly reported PASS on source/normal host. Report is normal-final-signoff.md/json; bookkeeping completion is recorded by archive task and journal after work commits.",
+      "evidence": [
+        "normal-final-signoff.md",
+        "normal-final-signoff.json",
+        "final-commit-plan.md",
+        "final-commit-plan.json",
+        "subsequent archive metadata and journal"
+      ]
+    }
+  ],
+  "limits": [
+    "Actual host proof is macOS only; Windows/Linux filesystem/media/installer acceptance requires those hosts and is deferred.",
+    "Current actual provider calls are synthetic local fixtures. Prior genuine provider evidence is historical baseline, not live quality/compatibility proof for this build. No new paid smoke is inherently required by this storage task.",
+    "All49 actual-native business mappings complement representative packaged workflows.39 nonempty table families /320 app rows are not a manual all49-table UI execution claim.",
+    "Final recording UI timer3.4s decodes to1.885s at48kHz mono; one retained take and reopened playback/byte hash are proved. Two longer temporary attempts were discarded. No exact3s or speech-intelligibility claim.",
+    "Actual native print has one white/chrome-free landscape page and saved PDF842×595pt, consistent with A4 rounding. No physical print or new multipage claim.",
+    "Idle final reopen emits one existing GET /v1/models; zero chat/generation POST and zero business-row change. Fixture events are intentionally not byte-identical; do not claim network silence.",
+    "Dedicated actual midstream root/session replacement experiment and whole-app/WK RSS measurement were not performed. Existing per-chunk source checks, actual revoke/disconnect/session-before-request and warm root substitution proof remain specifically bounded.",
+    "No sync/plugin marketplace/portable full-history apply, migration/backfill/old-data reader, physical GC, keychain/encryption-at-rest or collaboration delivery is claimed.",
+    "Original failures/locked-host/conditional checkpoint/audit snapshots remain unchanged; they are superseded by newer exact receipts, not rewritten as prior successes."
+  ],
+  "evidenceSha256": {
+    "agent-state-and-device-boundaries.md": "556b561583b8a51a3b79180034134aca676341d16a64dbcd88e2e12d9ccab953",
+    "code-gates-02/acceptance.json": "6364dc216d7e471ebe14abe966a9f7419fc66bca7afe8208ce513a94b89fa6b8",
+    "code-gates-03/acceptance.json": "1a94747b18516a716bab0de4a373fb1d3fd9a67707df09d6ae559d781e305566",
+    "e07-draft-final-checks.json": "59492b881e3fa8ed4a300f45534193f658cb733317875e58895828eb5cafa0de",
+    "final-code-checkpoint.json": "bb3dc6c99a0217b7c6619c7d016fa7ff28173ea2324f34b357f05ccca0dee7ab",
+    "grid-context-review.json": "160e134d5b3509a7ef9fec9c8b5826ea426b659ebc1192cd48248241f2c90d7a",
+    "immutable-snapshots-final-check.json": "aaef6a7b58d5c86c675aebc2ceeed53f5314f3342811cec50ab83f857992b613",
+    "independent-final-cause-privacy.log": "142f6cd7a4735a3251ea5d55a52daf18f4d8043ceb71ff914566d313844f469b",
+    "independent-final-media-rerun-checks.json": "f2c73bec35278907c9988cc28108a6fd46fd91013e2255120f56ec0bf758db8f",
+    "independent-final-signoff.md": "30260cb5596073502d55b3251409103a3666cfb9ee0ed02bbb65e8aac429d168",
+    "independent-final-wrappers-fixed.log": "d7cd5ea788e9c485f668647a6553aad0468c3dea495f032b887fa5ee7c83a538",
+    "isolated-final-signoff.json": "07bf180782f859e1bf45a3e2ecc21f7ccd19e547f3a0366a1796d9109889e8a4",
+    "isolated-final-signoff.md": "24086cf60b16d6232cc42edbcb39d4915244c89d81d02ced195d2fdd25883926",
+    "native-default-final/receipt.json": "c7f12c70720c4348c43ec669d517e96f21d129f938a6f2fa5a28e85e874eff37",
+    "native-grid-final/acceptance.json": "25cd152b94c8972af4ec1f594becc8266c64dbaeb88ec935b4a6e22ce92b6d30",
+    "native-grid-final/selfHostedNative-tests.log": "eace2c8f25e3cc8a8d68d00eaa6fade7df8d1babdfef8ce2cd2d5c131e215112",
+    "native-grid-final/tool-and-table-coverage.json": "78bc940562212f4e9b65f735cf82abd3409156ff03049c7f9ebb9f4ed6463ce8",
+    "native-history-measurement.md": "ac78809688b92a3c2346a7b487e59e31683aa155c2d83362f6922ba00479d34b",
+    "normal-root-before-activation.json": "7b96b939c52c93be33683bf1f1ed21b967dddcc243f338227f05d1383c200103",
+    "packaged-host-01/agent-approval-after-relaunch.json": "d4ecf015e87207593d46e9ac1acc52c8f6b3aa48340ebdced25fda3bc2ad8a00",
+    "packaged-host-01/agent-approval-before-relaunch.json": "469e3b77b47ff6bf5916d8a2082df515a8cdd7c747422f52284dcc113ac9623b",
+    "packaged-host-01/agent-approved-real-write.json": "e61c6ad2d0f2d33abc7b109c7f7f410f79d4d282bc166c1068620a547785e07c",
+    "packaged-host-01/agent-provider-error.json": "0db956ce78cacf8ae9aa4097cd8480550fb6a0b6b6e54a613ee95d0de381a8f2",
+    "packaged-host-01/agent-real-tool-error.json": "9dcc770aea5eb9118dc6a205381ffeca8013eeaecd39f52ac73b7e4b82468383",
+    "packaged-host-01/agent-rejected-no-write.json": "b072fdc52f7d4e1c2576892ef5ef2b9d61ae61a9d2789f7c8ac4a7f93f5f8463",
+    "packaged-host-01/agent-stop.json": "38ce22bbd3e8c9bba19a8a45bd0f46b45d9502f7ba67a3bc5ebfabbe05a3404f",
+    "packaged-host-01/final-reopen-and-recording.json": "6127ab90ca1f42a94dc2345d0dfa224518785acf3e2dd59993e08372ab16027d",
+    "packaged-host-01/missing-file-action.json": "18fa15dcd222d3e1c76f6b90e7d0b0f6f99e25437079298e417c8e30589e314e",
+    "packaged-host-01/printed-pdf-content.json": "887f7c5a6ae11989bb352360be04331a425d1eadbe65012757552764e0283490",
+    "packaged-host-01/progress.json": "3016b602a85a40ba459f0d1624565761494a0029e9e338a5df7814bf20d19b00",
+    "packaged-host-01/project-backup-memory-music.json": "2d5c429a8d7c51b029f802fe59789b0e9e14c90c269d58bb0b0c4eca28606ed5",
+    "packaged-host-01/reference-pdf.json": "1b71fe009e9a1f0447d9301b2a447c06e7ca5354f51af3d647b82beda22ba873",
+    "packaged-host-01/repaired-bundle-identity.json": "021ddb91279349053b33451db454b4b7947993cc1d1e7ebd4ded932dd8d75914",
+    "packaged-host-01/repaired-project-grid-and-print.json": "bf56c803f96efb7d19465106a4d39549952c68b31f044b8e0450678f2e77dc0a",
+    "packaged-host-01/video-export.json": "b1afefadebb736b78c2b27ed9caf2350909e6bc96c9b964a4aa54d3304b62e51",
+    "packaged-host-01/video-internal-copy.json": "ae7b2c0e323956ad2ab8763735cf3e011ee2575dee33a971e8593c8b890711d8",
+    "packaged-host-01/video-playback-and-source-move.json": "99f64affe231d98681adc241a9e6e5acc23658a71fbf477e54fce6d015bc2f70",
+    "packaged-host-01/world-ip-audio-music-task.json": "1c2c4d122a04a0a85acb2eb6b8b9f01177bf8d2f4204c7222d0996026952ce34",
+    "registered-tool-inventory-current.json": "eb3aec2e3f8e7d3d95bc4e90f0632dff87680ca954ecad6518e45e095d4573c6",
+    "storage-access-inventory-current.json": "149a2bc4644ba556cf1bc172d0a26cefc830843e06f0fa5583dd58e0096c04bc",
+    "table-acceptance-ledger.csv": "cd8171ecb49d5e4336862294cac3b064bc23f288c2ab10a623bc52ae3a38f3c6",
+    "worker-media-stream-checks.json": "f499728e2ec60bce96feddd46f0c02aea2aaf54c1dc0cc095eaade03a271829f",
+    "normal-activation-implementation.json": "71687115520f1c849787c0502a8639f5b18db9e3e6fe2efdabda2b95e4e012a7",
+    "normal-final-source.json": "23ed13b200a913716e47a4b107e36832af0e7b357545a6b437e8667b460f636d",
+    "normal-host-01/bundle-and-startup.json": "4c509fe0374c2d24a6019a4a3e254d139060ce0a1f9cbace5e49b9a275c35d08",
+    "normal-host-01/final-acceptance.json": "0c2007544e4f7783d78ca327b876d0720d88f24590e18be2024935e91d8bb536",
+    "normal-host-01/before-reopen.json": "b478b18e88d1efde8f7e23640d8d914b39f2f274a8335403aa4db643e32e4a29",
+    "normal-host-01/after-reopen.json": "d55a2bd09cc0644ad5ec2d1c8a1e8130d96ec027785dd4163efc7ba6c4ace2c5",
+    "normal-final-signoff.md": "33cebd136a55a99de6b6f6bb3d766caf4eb80d253e17f1effd564efd449d5581",
+    "normal-final-signoff.json": "d75501a1dd48cd83e3154b456cb3b1948285c35abf2292dc9ac933dbd54444dc"
+  },
+  "auditBoundaries": [
+    "Initial matrix compiled by read-only research agent; root updated with actual normal UI/SQLite/hash/event/source evidence.",
+    "Historical code checkpoints/failure/audit receipts are preserved.",
+    "This is the precommit acceptance snapshot; archive task state and subsequent journal establish completed bookkeeping."
+  ],
+  "normalActualAcceptance": {
+    "at": "2026-10-12T07:50:14.661018+08:00",
+    "verdict": "pass",
+    "profile": "normal",
+    "bundle": {
+      "profile": "normal",
+      "identifier": "dev.cuepoint.prototype.offline",
+      "storage": "sqlite",
+      "webkitStoreId": "ed4550f181f509d050d0643fe7cb7ae0",
+      "app": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791761629702-normal/Cuepoint Prototype.app",
+      "evidence": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791761629702-normal"
+    },
+    "workspace": "/Users/xiaomengdao/Library/Application Support/dev.cuepoint.prototype.offline/product-workspace-v1",
+    "workspaceId": "a4aec7ed-5c96-48d5-a83d-92b46ceadd7b",
+    "normalRootExistedBeforeLaunch": false,
+    "sourceReceipt": "../normal-final-source.json",
+    "normalStartup": true,
+    "sqliteActualWrites": true,
+    "sameSharedUiBusinessAgent": true,
+    "routeSmoke": [
+      "agent/home",
+      "agent/thread",
+      "agent/tasks",
+      "projects",
+      "video/story",
+      "video/world",
+      "video/shots",
+      "video/produce",
+      "project/memory",
+      "ips",
+      "assets",
+      "audio/workbench",
+      "music/workbench",
+      "connectors",
+      "about"
+    ],
+    "routeMethod": "Actual visible link/button navigation in CUA, observed tauri hash routes and expected headings; unchanged isolated full-domain workflows reused separately.",
+    "manualProject": {
+      "id": "prj_02f40742-07db-4eb2-904f-19434e0f793a",
+      "name": "正常 SQLite 工作区验收",
+      "episodeId": "ep_d53b536c-bd6c-4647-8ade-eec737458944",
+      "title": "正常包持久化验证",
+      "story": {
+        "logline": "共享界面在正常 SQLite 工作区保存并恢复。",
+        "script": "第一场：创作者打开内部素材，继续剪辑。",
+        "beats": []
+      },
+      "actualUiReopenedText": true
+    },
+    "audioProjectId": "prj_4fa04f05-b928-47ec-be5b-455aa4aa41e8",
+    "musicDraft": {
+      "id": "mdr_501e3dc6-37dd-48c5-bc4f-cd72e0315eb0",
+      "projectId": "prj_76a8f603-738f-4381-a99d-8bca426ce6a8",
+      "prompt": "正常包独立 SQLite 草稿恢复验收。",
+      "actualUiReopenedText": true
+    },
+    "managedImports": [
+      "range-video-source-moved.mp4",
+      "tone.wav",
+      "document.docx",
+      "document.pdf",
+      "image.png"
+    ],
+    "materialCount": 5,
+    "normalVideo": {
+      "byteLength": 89613670,
+      "contentHash": "6f361344b18c5aac5b7ea8706d2783fa450907e788d3e19dd325ada3617fdee7",
+      "nativeOpaqueLoopback": true,
+      "actualDecodedVideoVisible": true,
+      "playedFrom0To12": true,
+      "seekMethod": "Native control keyboard focus via Tab, Page_Up/End/Page_Down",
+      "observedPausedPositionsSec": [
+        12,
+        15,
+        30,
+        24
+      ],
+      "resumedAt24": true,
+      "note": "Coordinate/AX slider-set attempts did not seek. Keyboard-focused native slider produced real time changes; play resumed at24s. These automation attempts were not counted as product failures or false seek passes."
+    },
+    "systemSave": {
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/exports/normal-sqlite-image.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+      "matchesKnownSource": true
+    },
+    "imageReopened": {
+      "actualGradientPixelsVisible": true,
+      "pinnedProjectVersion": 1,
+      "projectId": "prj_02f40742-07db-4eb2-904f-19434e0f793a",
+      "currentAdoptionVisible": true
+    },
+    "agent": {
+      "threadId": "cth_0ff28902-49e1-4ae4-9100-315f64b5a13e",
+      "runId": "run_f9732498-d054-47bb-944c-bdbd4d394940",
+      "toolId": "tool_c8bae9a4-833b-4ce5-9627-0eb037511710",
+      "toolName": "project_create",
+      "status": "completed",
+      "decision": "approve",
+      "arguments": "{\"name\":\"原生 Agent 验收项目\",\"kind\":\"video\",\"mode\":\"film\",\"continueInProject\":false}",
+      "originalResult": "{\"id\":\"prj_f80ce4b7-6a7d-4c7b-a58f-3e2f540614d6\",\"kind\":\"project\",\"ownerId\":\"prj_f80ce4b7-6a7d-4c7b-a58f-3e2f540614d6\",\"label\":\"原生 Agent 验收项目\",\"excerpt\":\"\",\"target\":{\"label\":\"项目 · 原生 Agent 验收项目\",\"href\":\"/p/prj_f80ce4b7-6a7d-4c7b-a58f-3e2f540614d6\"},\"revision\":\"sha256-v1:ac1c016678ac033858858d9e5fef844aeb239933ffbc61fa9d92c941780136d4\",\"projectKind\":\"video\",\"continuation\":{\"projectId\":\"prj_f80ce4b7-6a7d-4c7b-a58f-3e2f540614d6\",\"action\":\"new_project_conversation\",\"note\":\"当前对话未绑定，可从结果入口开启项目对话。\"},\"firstEpisodeId\":\"ep_bf05e4b5-fdb9-4664-973f-8fd33b1a4539\",\"writeReceipt\":{\"version\":1,\"coverage\":\"direct_targets\",\"entries\":[{\"kind\":\"project\",\"operation\":\"created\",\"id\":\"prj_f80ce4b7-6a7d-4c7b-a58f-3e2f540614d6\",\"ownerId\":\"prj_f80ce4b7-6a7d-4c7b-a58f-3e2f540614d6\",\"revision\":\"sha256-v1:ac1c016678ac033858858d9e5fef844aeb239933ffbc61fa9d92c941780136d4\",\"label\":\"原生 Agent 验收项目\"},{\"kind\":\"episode\",\"operation\":\"created\",\"id\":\"ep_bf05e4b5-fdb9-4664-973f-8fd33b1a4539\",\"ownerId\":\"prj_f80ce4b7-6a7d-4c7b-a58f-3e2f540614d6\",\"revision\":\"sha256-v1:b483c9b084cda1a085acf5c0c825433f141625327c72ae359c0d9ce811151d25\",\"label\":\"\"}]},\"record\":{\"id\":\"prj_f80ce4b7-6a7d-4c7b-a58f-3e2f540614d6\",\"name\":\"原生 Agent 验收项目\",\"mode\":\"film\",\"aspectPreset\":\"16:9\",\"story\":{\"logline\":\"\"},\"setting\":{\"worldview\":\"\",\"background\":\"\",\"rules\":\"\"},\"shotSettings\":{\"defaultDurationSec\":0,\"autoIncrementShotNumber\":true},\"kind\":\"video\"},\"recordTruncated\":false}",
+      "projectId": "prj_f80ce4b7-6a7d-4c7b-a58f-3e2f540614d6",
+      "firstEpisodeId": "ep_bf05e4b5-fdb9-4664-973f-8fd33b1a4539",
+      "actualApprovalOnce": true,
+      "actualOriginalArgumentsAndResultsVisibleBeforeAndAfterReopen": true,
+      "uiFinalClaimState": "成果声明未核实",
+      "note": "Synthetic fixture confirms original tool result; actual DB and UI independently verify project and first episode. No genuine model quality or final claim verification is inferred."
+    },
+    "reopen": {
+      "cleanQuitMenuUsed": true,
+      "exactArchivedAppRelaunched": true,
+      "rows": 35,
+      "nonemptyTableFamilies": 16,
+      "allPayloadHashesAndRevisionsUnchanged": true,
+      "managedBinaries": 5,
+      "allManagedByteLengthsAndHashesMatch": true,
+      "allManagedMetadataUnchanged": true,
+      "catalogGetRequests": 1,
+      "chatOrGenerationPosts": 0,
+      "automaticApprovalOrMutation": false,
+      "fixtureRequestDelta": [
+        {
+          "at": "2026-10-11T23:48:18.682Z",
+          "type": "request",
+          "id": 37,
+          "method": "GET",
+          "path": "/v1/models",
+          "query": "",
+          "origin": "tauri://localhost",
+          "authorizationPresent": true,
+          "cookiePresent": false,
+          "contentType": "application/json"
+        }
+      ]
+    },
+    "evidenceSha256": {
+      "before-reopen.json": "b478b18e88d1efde8f7e23640d8d914b39f2f274a8335403aa4db643e32e4a29",
+      "after-reopen.json": "d55a2bd09cc0644ad5ec2d1c8a1e8130d96ec027785dd4163efc7ba6c4ace2c5",
+      "bundle-and-startup.json": "4c509fe0374c2d24a6019a4a3e254d139060ce0a1f9cbace5e49b9a275c35d08",
+      "normal-final-source.json": "23ed13b200a913716e47a4b107e36832af0e7b357545a6b437e8667b460f636d",
+      "normal-root-before-activation.json": "7b96b939c52c93be33683bf1f1ed21b967dddcc243f338227f05d1383c200103"
+    },
+    "limits": [
+      "macOS actual host only. Full-domain representative isolated acceptance and all49-table/95-tool native gates are complementary; normal35 rows are not an all-table UI claim.",
+      "Synthetic loopback public fixture only; no previous profile/data/real keys copied and no genuine provider smoke claimed.",
+      "Root captures are read-only on the fresh known normal acceptance workspace; connector payload values excluded.",
+      "No cloud synchronization/plugins/old-data migration/physical GC delivered by this child.",
+      "Independent final review and concrete local commit/archive/journal still follow; this host receipt alone is not task completion."
+    ]
+  },
+  "technicalAcceptanceComplete": true,
+  "finalIndependentReview": {
+    "verdict": "complete_scoped_technical_acceptance_pass",
+    "technicalAcceptancePassed": true,
+    "normalOwnerActivated": true,
+    "normalActualAcceptanceComplete": true,
+    "materialBlockers": [],
+    "readyForConcreteCommitAndFinishGate": true
+  }
+}

@@ -1,0 +1,423 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-12T06:52:14.530367+08:00",
+  "kind": "65 disposable synthetic PNG grid inputs",
+  "createdCount": 65,
+  "reusedMatchingCount": 0,
+  "fileCount": 65,
+  "source": {
+    "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/fixtures/media/image.png",
+    "bytes": 177,
+    "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a",
+    "provenance": "desktop/tauri/fixtures/media-provenance.json",
+    "generator": "desktop/tauri/scripts/generate-fixtures.py",
+    "png": {
+      "width": 64,
+      "height": 48,
+      "bitDepth": 8,
+      "colorType": 2
+    }
+  },
+  "copier": {
+    "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-shared-storage-sqlite/research/packaged-host-01/grid-fixture-generator.py",
+    "sha256": "9902145dc56b7c1b07ecb215b4817161c24015cc48ada53dbd12c8c2e1963c61"
+  },
+  "directory": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import",
+  "files": [
+    {
+      "name": "grid-001.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-001.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-002.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-002.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-003.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-003.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-004.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-004.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-005.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-005.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-006.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-006.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-007.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-007.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-008.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-008.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-009.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-009.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-010.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-010.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-011.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-011.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-012.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-012.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-013.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-013.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-014.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-014.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-015.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-015.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-016.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-016.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-017.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-017.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-018.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-018.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-019.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-019.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-020.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-020.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-021.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-021.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-022.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-022.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-023.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-023.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-024.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-024.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-025.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-025.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-026.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-026.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-027.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-027.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-028.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-028.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-029.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-029.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-030.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-030.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-031.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-031.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-032.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-032.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-033.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-033.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-034.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-034.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-035.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-035.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-036.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-036.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-037.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-037.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-038.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-038.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-039.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-039.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-040.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-040.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-041.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-041.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-042.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-042.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-043.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-043.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-044.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-044.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-045.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-045.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-046.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-046.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-047.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-047.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-048.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-048.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-049.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-049.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-050.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-050.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-051.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-051.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-052.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-052.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-053.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-053.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-054.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-054.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-055.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-055.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-056.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-056.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-057.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-057.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-058.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-058.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-059.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-059.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-060.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-060.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-061.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-061.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-062.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-062.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-063.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-063.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-064.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-064.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    {
+      "name": "grid-065.png",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/shared-storage-host-01/grid-import/grid-065.png",
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    }
+  ],
+  "limits": [
+    "Files only; not imported into app or database.",
+    "No UI/media playback/capability/descriptor acceptance established.",
+    "Identical known valid PNG bytes with distinct disposable filenames; no user media read."
+  ]
+}

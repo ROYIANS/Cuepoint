@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-11T23:34:47.336484+00:00",
+  "implementer": "/root/normal_sqlite_activation",
+  "task": "10-11-shared-storage-sqlite",
+  "verdict": "normal_build_default_sqlite_policy_and_focused_checks_pass",
+  "authorization": "Parent dispatch after independent isolated_full_product_prerequisite_pass; existing user full-responsibility/automatic-approval applies. No remote operation authorized/performed.",
+  "isolatedPrerequisite": {
+    "report": "isolated-final-signoff.json",
+    "sha256": "07bf180782f859e1bf45a3e2ecc21f7ccd19e547f3a0366a1796d9109889e8a4",
+    "normalActivationPrerequisitePassed": true,
+    "materialBlockers": []
+  },
+  "productFilesChanged": [
+    "desktop/tauri/scripts/build-app.mjs"
+  ],
+  "source": {
+    "recordedAt": "2026-10-11T23:34:47.335647+00:00",
+    "path": "desktop/tauri/scripts/build-app.mjs",
+    "beforeSha256": "5ce4ca71f17633289f52097b140b9efc657245d85eb286830f189a4058031dd2",
+    "afterSha256": "400b055517253c142264c780a857a1bee73cff0611b8cc7cf11ea88cddc12f05",
+    "diff": "build-app.diff",
+    "diffSha256": "b4a5b6fa86cf64b925ef254064eb0c7ac75692535a60bd85f05e1eeb1521ec3a",
+    "diffCheckExitCode": 0,
+    "sourceUnchangedDuringChecks": true,
+    "productFilesEdited": [
+      "desktop/tauri/scripts/build-app.mjs"
+    ],
+    "note": "This scoped implementation receipt does not overwrite accepted isolated source identities or establish an exact-source reuse claim for the changed build script. Parent owns the complete final source manifest."
+  },
+  "changes": [
+    "Normal no-flags and explicit --sqlite-product use existing product-sqlite feature and SQLite receipt.",
+    "Isolated without --sqlite-product remains explicit IndexedDB reference; isolated with flag remains full SQLite.",
+    "Fixture --acceptance rejects --sqlite-product before filesystem/build side effects; existing acceptance+isolated rejection retained.",
+    "Updated stale comment to describe storage-selected native feature."
+  ],
+  "verification": {
+    "laneGroups": 6,
+    "laneInvocations": 7,
+    "lanePass": true,
+    "desktopTypes": "pass",
+    "desktopLint": "pass (max-warnings 0; no diagnostics)",
+    "desktopQuality": "pass (Knip; no diagnostics)",
+    "focusedTestFiles": 2,
+    "focusedTests": 16,
+    "focusedTestsResult": "pass",
+    "diffCheckExitCode": 0,
+    "sourceStableDuringChecks": true,
+    "versions": {
+      "pnpm": "10.15.0",
+      "node": "v24.11.0"
+    },
+    "commands": [
+      {
+        "name": "desktop-types",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "--dir",
+          "desktop/tauri",
+          "types"
+        ],
+        "startedAt": "2026-10-11T23:32:55.380687+00:00",
+        "elapsedSeconds": 3.958,
+        "exitCode": 0,
+        "log": ".trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/desktop-types.log",
+        "logSha256": "6f46de1c6f4487e33d41a122d74a08f3c92a6a67ff880a9a5293b0c6ab8af60d"
+      },
+      {
+        "name": "desktop-lint",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "--dir",
+          "desktop/tauri",
+          "lint"
+        ],
+        "startedAt": "2026-10-11T23:32:55.380851+00:00",
+        "elapsedSeconds": 3.722,
+        "exitCode": 0,
+        "log": ".trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/desktop-lint.log",
+        "logSha256": "032c836532bb5b8949c83c124a9353d0b6727efc6efc50358eef31d43c218b6a"
+      },
+      {
+        "name": "desktop-quality",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "--dir",
+          "desktop/tauri",
+          "quality"
+        ],
+        "startedAt": "2026-10-11T23:32:55.380972+00:00",
+        "elapsedSeconds": 0.969,
+        "exitCode": 0,
+        "log": ".trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/desktop-quality.log",
+        "logSha256": "fdd444fe6e9a40f8a8f6d372ab8a72163b5ccb7c8745e443c2137dbbb788dab8"
+      },
+      {
+        "name": "product-storage-focused",
+        "argv": [
+          "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+          "exec",
+          "vitest",
+          "run",
+          "tests/productStorage.test.ts",
+          "tests/productStorageQueries.test.ts"
+        ],
+        "startedAt": "2026-10-11T23:32:55.381055+00:00",
+        "elapsedSeconds": 1.164,
+        "exitCode": 0,
+        "log": ".trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/product-storage-focused.log",
+        "logSha256": "2917eae5f720d3db6c3e03065e40bd88089d886ada2a9317b0cd80d912efaca3"
+      }
+    ]
+  },
+  "normalBuildDefaultActivatedInSource": true,
+  "normalBuildRunByThisAgent": false,
+  "normalActualAcceptanceComplete": false,
+  "taskComplete": false,
+  "archiveAllowedByThisReceipt": false,
+  "untouched": [
+    "Shared React/business/Agent/storage code",
+    "Rust features/defaults/dependencies/profile injection/schema",
+    "Browser owner/namespace",
+    "Isolated identifier validation and app-name/identifier identity",
+    "CSP/ATS/system services",
+    "Tests/specs/task metadata/other agents evidence",
+    "Existing user app data and credentials"
+  ],
+  "requiredParentFollowup": [
+    "Independent activation review.",
+    "Standard normal build: CARGO_INCREMENTAL=0 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri build:app.",
+    "Actual normal exact-bundle identity, fresh SQLite owner/full routes/write/managed bytes/Agent result/clean reopen/no unsolicited POST proof.",
+    "Owning spec update, final source/evidence/AC consolidation and concrete commit/journal/archive gate."
+  ],
+  "limits": [
+    "Source decision evaluation deliberately does not import or execute the build entrypoint. It is policy proof, not packaged proof.",
+    "Focused desktop logs have no diagnostics; this does not claim zero warnings for the complete root quality gate, whose 12 reviewed allowances/584 warnings remain separately qualified.",
+    "Existing explicit IndexedDB test cases remain reference-adapter cases; no semantic test changes or new mirror tests.",
+    "No build, CUA, app-data, credentials, provider requests, commit, push or merge performed by this agent.",
+    "Windows/Linux actual host acceptance remains deferred."
+  ],
+  "evidenceSha256": {
+    "normal-activation-01/build-app.before.mjs.txt": "5ce4ca71f17633289f52097b140b9efc657245d85eb286830f189a4058031dd2",
+    "normal-activation-01/build-app.diff": "b4a5b6fa86cf64b925ef254064eb0c7ac75692535a60bd85f05e1eeb1521ec3a",
+    "normal-activation-01/checks.json": "3bdcd522a7ac43732a1553ec87d09d2223ec4920d9949b0914327590d51c070e",
+    "normal-activation-01/desktop-lint.log": "032c836532bb5b8949c83c124a9353d0b6727efc6efc50358eef31d43c218b6a",
+    "normal-activation-01/desktop-quality.log": "fdd444fe6e9a40f8a8f6d372ab8a72163b5ccb7c8745e443c2137dbbb788dab8",
+    "normal-activation-01/desktop-types.log": "6f46de1c6f4487e33d41a122d74a08f3c92a6a67ff880a9a5293b0c6ab8af60d",
+    "normal-activation-01/diff-check.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "normal-activation-01/lane-decisions.json": "2ca9fd0b925a53f515c0bb7bf31cfd700d1cf14a2a5022f6e1f67187b690cfea",
+    "normal-activation-01/product-storage-focused.log": "2917eae5f720d3db6c3e03065e40bd88089d886ada2a9317b0cd80d912efaca3",
+    "normal-activation-01/source-after.json": "9f8c74009e4ba20015c936e0529c13a4994e7d482f513c8db57045423af4af41",
+    "normal-activation-01/source-before.json": "b9be180664758ab8a4775a10141b7ae8e2ece81c2a75157c6cf3316b6237600e"
+  }
+}

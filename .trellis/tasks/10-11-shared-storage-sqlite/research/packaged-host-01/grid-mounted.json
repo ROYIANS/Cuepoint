@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-11T22:54:29.317664+00:00",
+  "pid": 64567,
+  "totalLsofLines": 87,
+  "managedAssetOpenDescriptors": 0,
+  "actualUiMaterialCount": 70,
+  "actualUiGridButtons": 70,
+  "actualUiSyntheticImportCount": 65,
+  "observation": "Metadata+thumbnail grid mounted; does not assert all offscreen thumbnails visually decoded.",
+  "laterActualVisibleDecodedThumbnails": [
+    "grid-063.png",
+    "grid-064.png",
+    "grid-065.png",
+    "grid-001.png",
+    "grid-002.png",
+    "image.png v2"
+  ],
+  "laterNavigationFailure": {
+    "at": "2026-10-11T22:59:06.349284+00:00",
+    "route": "/assets",
+    "actualErrorBoundary": "Something went wrong!",
+    "expandedError": "Too many concurrent storage contexts",
+    "status": "must repair; initial mounted grid result is insufficient"
+  }
+}

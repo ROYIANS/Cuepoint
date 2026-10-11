@@ -1,0 +1,73 @@
+{
+  "recordedAt": "2026-10-11T23:32:59.339162+00:00",
+  "versions": {
+    "pnpm": "10.15.0",
+    "node": "v24.11.0"
+  },
+  "sourcePath": "desktop/tauri/scripts/build-app.mjs",
+  "sourceBeforeSha256": "400b055517253c142264c780a857a1bee73cff0611b8cc7cf11ea88cddc12f05",
+  "sourceAfterSha256": "400b055517253c142264c780a857a1bee73cff0611b8cc7cf11ea88cddc12f05",
+  "sourceUnchangedDuringChecks": true,
+  "commands": [
+    {
+      "name": "desktop-types",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "types"
+      ],
+      "startedAt": "2026-10-11T23:32:55.380687+00:00",
+      "elapsedSeconds": 3.958,
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/desktop-types.log",
+      "logSha256": "6f46de1c6f4487e33d41a122d74a08f3c92a6a67ff880a9a5293b0c6ab8af60d"
+    },
+    {
+      "name": "desktop-lint",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "lint"
+      ],
+      "startedAt": "2026-10-11T23:32:55.380851+00:00",
+      "elapsedSeconds": 3.722,
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/desktop-lint.log",
+      "logSha256": "032c836532bb5b8949c83c124a9353d0b6727efc6efc50358eef31d43c218b6a"
+    },
+    {
+      "name": "desktop-quality",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "quality"
+      ],
+      "startedAt": "2026-10-11T23:32:55.380972+00:00",
+      "elapsedSeconds": 0.969,
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/desktop-quality.log",
+      "logSha256": "fdd444fe6e9a40f8a8f6d372ab8a72163b5ccb7c8745e443c2137dbbb788dab8"
+    },
+    {
+      "name": "product-storage-focused",
+      "argv": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "tests/productStorage.test.ts",
+        "tests/productStorageQueries.test.ts"
+      ],
+      "startedAt": "2026-10-11T23:32:55.381055+00:00",
+      "elapsedSeconds": 1.164,
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-11-shared-storage-sqlite/research/normal-activation-01/product-storage-focused.log",
+      "logSha256": "2917eae5f720d3db6c3e03065e40bd88089d886ada2a9317b0cd80d912efaca3"
+    }
+  ],
+  "pass": true,
+  "limitations": "Focused policy/storage checks do not establish actual normal packaged SQLite startup or persistence. Parent owns build and actual-host proof. No full suites were repeated for this build-entry policy change."
+}
