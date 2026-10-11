@@ -1530,3 +1530,43 @@ Implemented and independently accepted browser managed-copy and bounded partial 
 ### Next Steps
 
 - Mac解锁后在准确最终隔离包完成AC8完整UI/Agent/WK/系统/重开；通过后启用normal SQLite并补验收及归档。
+
+
+## Session 56: 共享存储 SQLite 完整桌面验收与归档
+<!-- trellis-session: v=2 fp=a05df401d4f4b16b -->
+
+**Date**: 2026-10-12
+**Task**: 共享存储 SQLite 完整桌面验收与归档
+**Branch**: `codex/shared-storage-sqlite`
+
+### Summary
+
+共享 UI、业务和 Agent 的完整存储接入已完成；正常 Tauri 包默认使用 SQLite 与内部素材文件。修复70项素材网格读取并发，完成隔离与正常 macOS 实机验收、独立签核及子任务归档。父同步任务继续；未推送、未合并 main。
+
+### Main Changes
+
+- 原生根读取32并发FIFO，取消未入场观察任务，保留写入公平性和Rust64上下文保护，不重放事务。
+- 正常无参数 build:app 使用现有 product-sqlite；浏览器仍为独立 IndexedDB 适配器，复用同一套 React、业务和95个Agent工具。
+- 保留原始失败和冻结证据；完整提交268路径，来源不明为零；共享存储子任务已归档，父任务实际跨设备同步仍未完成。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `9383f3f52557ba785db0b6eb687b6bd3f9498fd8` | fix(storage): bound native read admission for large material grids |
+| `8612d1fab586d2baceb04296907ef993eeb075ab` | feat(desktop): default normal product builds to SQLite storage |
+| `07646728dfd6ae6ab8580292694f7e0d628ccc3f` | docs(storage): record complete packaged SQLite acceptance |
+
+### Testing
+
+- [OK] 当前实际原生108文件1903测试，加实际二进制6与浏览器capability5，49表/95工具零缺项；浏览器227文件3941测试及Rust108门禁按明确源码范围复用，非本轮全部重跑。
+- [OK] 隔离macOS完整域验收、70素材网格、真实录音保留与重开、原生打印PDF、320行/80文件重开一致均通过。正常标准构建及实际全路由、视频解码定位、177B系统Save、Agent批准写入通过；重开35行/5文件一致，仅1目录GET/0POST。
+- [OK] 独立完整签核PASS；源码1122哈希核对，正常build后只更新运行时规范文档。现有质量584告警/12 allowances保留，0正式失败。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 父桌面端存储与同步任务继续：后续单用户多设备同步和可移植原始历史逐字段投影另行规划；Windows/Linux实际宿主验收单列。
