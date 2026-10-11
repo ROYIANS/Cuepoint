@@ -2,6 +2,10 @@
 
 Status: approved for staged implementation. The final planning summary was approved on 2026-10-10. The parent is in progress and tracks independently validated children; live service integration and production migration remain separately gated.
 
+## Execution decision update — no default historical migration (2026-10-11)
+
+The next product task starts from a fresh native workspace. Do not implement Dexie-to-SQLite migration, old-record backfills or compatibility readers unless a future task explicitly adds that requirement. Use disposable current-product fixtures to define and verify the new SQLite/file contracts. The prior migration-oriented steps below are retained as historical planning context and are not an execution prerequisite for the next child.
+
 The work is intentionally staged so the core can be verified without a real account or user data. Each phase produces a reviewable artifact and can be tested with disposable fixtures.
 
 ## Child map and dependencies

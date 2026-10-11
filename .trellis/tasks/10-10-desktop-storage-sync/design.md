@@ -2,6 +2,12 @@
 
 Status: approved for staged implementation. The user approved the complete planning summary on 2026-10-10. Live service integration, deployment and production-data migration retain their later concrete gates.
 
+## Decision update — fresh product development (2026-10-11)
+
+The current application is still in development and the developer's existing local data is disposable. The Tauri prototype is an isolated feasibility demo, not a migration source. Future desktop product work starts with a new native workspace and current schema; it does not need to import or preserve existing IndexedDB data unless a later task explicitly requests that compatibility.
+
+This supersedes the parent plan's previously proposed production migration as a default prerequisite. The durable workspace, SQLite schema, native file ownership and checkpoint projection are still required for the product, but they may be designed and initialized from fresh fixtures. Historical migration, old local database readers, backfills and compatibility branches remain out of scope by default.
+
 ## Product contract
 
 Cuepoint remains an independent desktop application and owns its extension point. Synchronization is one plugin category. The first release targets one person moving between devices in sequence. The application is the authority for editable content; provider files and generated project files are transport artifacts, not an external editing surface.

@@ -23,6 +23,7 @@ These guides help you **ask the right questions before coding**.
 |-------|---------|-------------|
 | [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md) | Identify patterns and reduce duplication | When you notice repeated patterns |
 | [Cross-Layer Thinking Guide](./cross-layer-thinking-guide.md) | Think through data flow across layers | Features spanning multiple layers |
+| [Development Change Policy](./development-change-policy.md) | Decide when compatibility and migration work is required | Before changing storage, schemas or persisted formats |
 
 ---
 
@@ -51,6 +52,14 @@ These guides help you **ask the right questions before coding**.
 - [ ] Agent chat streaming / scroll / ChatItem list (read [Chat Performance](../frontend/chat-performance.md) before adding virtua, smooth scroll, or per-tick `markdownProps` objects)
 
 → Read [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md)
+
+### When to Decide Compatibility Scope
+
+- [ ] The task touches persisted data, schemas, project files or provider checkpoints
+- [ ] Someone proposes a migration, legacy reader, backfill or compatibility alias
+- [ ] Confirm whether the task explicitly requires historical data preservation
+
+→ Read [Development Change Policy](./development-change-policy.md)
 
 ### When Verifying AI Cross-Review Results
 
