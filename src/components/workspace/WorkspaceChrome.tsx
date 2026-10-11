@@ -30,6 +30,8 @@ import {AppFrame} from "@/components/layout/AppFrame";
 import {PageState} from "@/components/layout/PageLayout";
 import {importStudioProject} from "@/components/studio/importStudioProject";
 import {pickZipFile} from "@/lib/library";
+import {isNativeWorkspaceRuntime} from "@/lib/nativeWorkspace";
+import {NativeProjectWorkspacePage} from "./NativeProjectWorkspacePage";
 
 const SERIES_STEPS = [
     {id: "episodes", label: "集", to: "/p/$projectId" as const, exact: true},
@@ -49,6 +51,11 @@ function episodeIdFromPath(pathname: string, projectId: string): string | undefi
 }
 
 export function WorkspaceChrome({projectId}: { projectId: string }) {
+    if (isNativeWorkspaceRuntime()) return NativeProjectWorkspacePage({projectId});
+    return BrowserWorkspaceChrome({projectId});
+}
+
+function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
     const navigate = useNavigate();
     const pathname = useRouterState({select: (state) => state.location.pathname});
     const episodeId = episodeIdFromPath(pathname, projectId);

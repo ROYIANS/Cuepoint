@@ -41,8 +41,15 @@ import {PROJECT_KINDS, type ProjectKindId, ProjectKindPlaceholder} from "./proje
 import {cn} from "@/lib/utils";
 import {readProjectCoverIds} from "@/lib/studioLibraryQueries";
 import {PageContent, PageState, PageToolbar} from "@/components/layout/PageLayout";
+import {isNativeWorkspaceRuntime} from "@/lib/nativeWorkspace";
+import {NativeProjectGalleryPage} from "./NativeProjectGalleryPage";
 
 export function ProjectGalleryPage() {
+    if (isNativeWorkspaceRuntime()) return NativeProjectGalleryPage();
+    return BrowserProjectGalleryPage();
+}
+
+function BrowserProjectGalleryPage() {
     const navigate = useNavigate();
     const activeRef = useRef(true);
     useEffect(() => {

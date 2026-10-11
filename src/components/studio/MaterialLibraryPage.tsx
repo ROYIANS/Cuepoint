@@ -14,6 +14,8 @@ import {LegacyMaterialSources} from "./materials/LegacyMaterialSources";
 import {KIND_LABELS, MaterialScopeSelect, MaterialSelect, SETTINGS_KINDS} from "./materials/MaterialControls";
 import {PageContent, PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import "./materials/materialLibrary.css";
+import {isNativeWorkspaceRuntime} from "@/lib/nativeWorkspace";
+import {NativeAssetLibraryPage} from "./NativeAssetLibraryPage";
 
 export type MaterialLibrarySearch = {
     ip?: string;
@@ -23,6 +25,11 @@ export type MaterialLibrarySearch = {
 };
 
 export function MaterialLibraryPage({search: routeSearch}: { search: MaterialLibrarySearch }) {
+    if (isNativeWorkspaceRuntime()) return NativeAssetLibraryPage({search: routeSearch});
+    return BrowserMaterialLibraryPage({routeSearch});
+}
+
+function BrowserMaterialLibraryPage({routeSearch}: {routeSearch: MaterialLibrarySearch}) {
     const navigate = useNavigate();
     const [view, setView] = useState<"media" | "settings">(routeSearch.view ?? "media");
     const scope = routeSearch.project ? `project:${routeSearch.project}` : routeSearch.ip ? `ip:${routeSearch.ip}` : routeSearch.scope ?? "shared";

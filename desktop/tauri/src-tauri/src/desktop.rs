@@ -55,6 +55,7 @@ pub struct Envelope {
 #[derive(Deserialize)]
 #[serde(tag = "type", rename_all = "camelCase", deny_unknown_fields)]
 enum Action {
+    Ensure {},
     State {},
     Create {},
     Open {},
@@ -542,6 +543,24 @@ fn handle(
     let operation_id = &envelope.operation_id;
     checked(bridge, generation, cancel)?;
     match envelope.action {
+        Action::Ensure {} => {
+            if let Some(current) = lock(bridge)?.worker.clone() {
+                return Ok(Value::State(Some(state_of(&current)?)));
+            }
+            let parent = window
+                .app_handle()
+                .path()
+                .app_data_dir()
+                .map_err(|e| Error::new("profile", e.to_string()))?;
+            fs::create_dir_all(&parent)?;
+            let root = parent.join("workspace");
+            let worker = if root.join("workspace.ready.json").is_file() {
+                StorageWorker::open(&root, Hooks::default())?
+            } else {
+                StorageWorker::create(&root, Hooks::default())?
+            };
+            transition(bridge, generation, cancel, || Ok((worker, root)))
+        }
         Action::State {} => {
             let current = lock(bridge)?.worker.clone();
             Ok(Value::State(current.map(|w| state_of(&w)).transpose()?))
@@ -831,7 +850,8 @@ async fn workspace_request(
     let operation_generation = request.expected_generation;
     let advances = matches!(
         request.action,
-        Action::Create {}
+        Action::Ensure {}
+            | Action::Create {}
             | Action::Open {}
             | Action::Reopen {}
             | Action::Restore {}
@@ -840,6 +860,7 @@ async fn workspace_request(
     let pure = matches!(
         request.action,
         Action::State {}
+            | Action::Ensure {}
             | Action::Create {}
             | Action::Open {}
             | Action::Reopen {}
@@ -853,8 +874,13 @@ async fn workspace_request(
     {
         let mut inner = lock(&bridge)?;
         current(&inner, request.expected_generation)?;
+        let ensure_existing = matches!(request.action, Action::Ensure {}) && inner.worker.is_some();
         reply_generation = operation_generation
-            + u64::from(advances && !(matches!(request.action, Action::Close {}) && inner.closing));
+            + u64::from(
+                advances
+                    && !ensure_existing
+                    && !(matches!(request.action, Action::Close {}) && inner.closing),
+            );
         if inner.requests.len() >= 64 || inner.requests.contains_key(&request.operation_id) {
             return Err(Error::new(
                 "operation",
@@ -966,6 +992,19 @@ mod tests {
         for path in ["/assets/app.js", "/other", "?query"] {
             assert!(!is_entry_path(path));
         }
+    }
+    #[test]
+    fn fresh_product_ensure_action_is_closed_and_generation_aware() {
+        let request = serde_json::json!({
+            "version": 1,
+            "operationId": uuid::Uuid::new_v4().to_string(),
+            "expectedGeneration": 0,
+            "action": {"type": "ensure"}
+        });
+        assert!(serde_json::from_value::<Envelope>(request.clone()).is_ok());
+        let mut extra = request;
+        extra["action"]["path"] = serde_json::json!("/outside");
+        assert!(serde_json::from_value::<Envelope>(extra).is_err());
     }
     #[test]
     fn closed_payload_denies_path_sql_extra_fields_and_oversized_chunks() {

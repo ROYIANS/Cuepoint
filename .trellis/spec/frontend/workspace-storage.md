@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Apply when changing media-file import, workspace-relative references or the shared byte hash. The current implemented adapter prepares independent browser Blobs and persists through Dexie. It does not create operating-system workspace files, migrate to SQLite, synchronize devices or establish a durable portable workspace identity.
+Apply when changing media-file import, workspace-relative references or the shared byte hash. Browser mode still prepares independent Blobs and persists through Dexie. Tauri mode now uses the separate native owner described in `native-workspace.md`: it creates a fresh app-owned SQLite workspace and managed files, with no browser-to-native migration or mirror.
 
 ## 2. Signatures / Owners
 
@@ -17,6 +17,8 @@ Apply when changing media-file import, workspace-relative references or the shar
 Project and media path components are `id-` followed by lowercase hexadecimal UTF-8 bytes of the exact well-formed ID. Do not normalize identity strings or retain their literal letters: case-insensitive and Unicode-normalizing filesystems must not alias distinct valid IDs. Unpaired UTF-16 surrogates reject before UTF-8 replacement. Studio media stays under `studio/assets/`; other owners use `projects/<encoded-owner>/assets/<encoded-media>`.
 
 The resolver validates owner, expected workspace, the encoded media component and relative-path safety. It resolves against a supplied absolute device root. This is lexical containment only: a future native adapter must separately enforce real-root/symlink containment, filesystem limits and durable copy recovery.
+
+The native adapter must never accept a renderer-selected absolute root. Rust resolves `<app_data_dir>/workspace`, stages and hashes a selected source, publishes a generated relative path atomically, and commits the SQLite asset row only after the managed bytes are verified. A missing managed file retains its asset/reference rows and is reported as `missing`; the source path is diagnostic input only.
 
 Import reads, copies and hashes bounded 256 KiB chunks outside database transactions. Each completed chunk becomes an independent Blob part. Macrotask opportunities between chunks let cancellation and other browser work execute. Empty files, incomplete reads, metadata failure and source-read failure reject before a ready record exists. Filename is display metadata; storage names derive from IDs. Copies never delete source bytes.
 
