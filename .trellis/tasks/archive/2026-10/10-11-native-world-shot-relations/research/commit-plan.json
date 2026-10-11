@@ -3,7 +3,7 @@
   "branch": "codex/native-agent-full-product",
   "baseRevision": "0b1f0db785e542b3a4c5d4537bee249b663e8ed2",
   "capturedAt": "2026-10-11T13:54:42.627792+00:00",
-  "status": "awaiting-user-approval",
+  "status": "user-approved-work-commits-completed",
   "workCommits": [
     {
       "number": 1,
@@ -109,7 +109,8 @@
         "tests/sharedVideoPageParity.test.ts",
         "tests/videoWorkspaceBrowserRepository.test.ts",
         "tests/videoWorkspaceRepository.test.ts"
-      ]
+      ],
+      "commit": "6e7ab75a70511983149636686d26cd31a3198d81"
     },
     {
       "number": 2,
@@ -129,7 +130,8 @@
         "scripts/native-product-fixture-check.mjs",
         "scripts/native-product-fixture.mjs",
         "tests/tavilyNativeProbe.test.ts"
-      ]
+      ],
+      "commit": "20bf9d5e78e777a2af61e1e6b8cd48f7e3dec125"
     },
     {
       "number": 3,
@@ -570,7 +572,8 @@
         ".trellis/tasks/10-11-native-world-shot-relations/task.json",
         "desktop/tauri/README.md",
         "quality/unused-contracts.json"
-      ]
+      ],
+      "commit": "eaa67e6c16c2148b6d4e1b3ef4e4f7190f2c4b8c"
     }
   ],
   "totalPaths": 549,
@@ -589,5 +592,7 @@
     "temporary or ignored provider outputs"
   ],
   "scope": "All nonignored dirty files in this task, including known3 parent planning changes. Final independent provenance rescan must reconcile this exact path set before approval request. No staging or commit performed.",
-  "sourceSignoff": "research/final-full-scope-signoff.json"
+  "sourceSignoff": "research/final-full-scope-signoff.json",
+  "approval": "User explicitly approved this exact549-path plan and child archive/journal on2026-10-11; no push/main merge.",
+  "bookkeepingNote": "Archival metadata and journal follow work commits separately. Preserve original293-byte CSV in final archive with task-local -text attribute; earlier documentation commit normalized oneCRLF toLF."
 }

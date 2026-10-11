@@ -97,8 +97,8 @@ Root quality self-tests/model-bank verification need a new run only if affected 
 - [x] Demonstrate real isolated browser regression and actual normal packaged product behavior; separate injected/mocked fixtures, native transport fixtures and live-provider evidence.
 - [x] Independent Trellis checker reviews source + cross-layer owner/network/file/execution flow, meaningful regressions and evidence truthfulness. Main session does not replace final checker with a summary of worker claims.
 - [x] Record remaining cross-platform OS evidence as deferred; no Windows/Linux acceptance claim is made on this macOS host.
-- [ ] Before commit, inspect full dirty paths/provenance and submit the concrete grouped commit/archival plan for approval. Preserve raw evidence bytes; authored source/docs must pass whitespace checks.
-- [ ] After approved work commits, archive only this completed child and journal the results; parent continues for centralized SQLite replacement and synchronization. No remote push or main merge without explicit instruction.
+- [x] Before commit, inspect full dirty paths/provenance and submit the concrete grouped commit/archival plan for approval. Preserve raw evidence bytes; authored source/docs must pass whitespace checks.
+- [x] User approved the549-path commit/child-archive/journal plan on2026-10-11. All three work commits completed; Trellis archived only this child toarchive/2026-10 and recorded developer journal session54 with the three work hashes. Archive and journal changes are committed separately, in that order. Parent continues for centralized SQLite replacement and synchronization. No remote push or main merge is authorized.
 
 ## Rollback points
 

@@ -1,6 +1,6 @@
 # 完整产品复用与原生 Agent：本地提交计划
 
-状态：待用户一次确认；尚未暂存、提交、归档、推送或合并。
+状态：用户已于2026-10-11批准；3笔工作提交已完成，归档和journal正在执行。未推送、未合并。
 
 在 `codex/native-agent-full-product` 上执行下列3笔工作提交，之后归档本子任务并记录 journal。父任务“桌面端存储与同步”继续进行。当前方案逐项覆盖全部非 ignored 修改；来源复核见 [change-provenance-review.md](change-provenance-review.md)，机器可读清单见 [commit-plan.json](commit-plan.json)。
 
@@ -591,3 +591,11 @@
 ignored构建包、真实连接与profile、API密钥、真实麦克风音频及含音频ZIP、临时供应商输出均不在提交中。已有真实录音只保留临时或ignored验收工作区，仓库仅包含非音频UI与哈希记录。3个父任务planning文件属于此前明确路线调整的已知变更，已列入第3组。
 
 本次确认依据项目 `.trellis/workflow.md` 的Phase3.4：先逐项展示修改与分组计划，再一次确认批量提交。确认后只执行上列本地工作提交与随后的本子任务归档/journal。
+
+## 批准后执行记录
+
+- `6e7ab75a70511983149636686d26cd31a3198d81` — feat(desktop): reuse complete product with native runtime services
+- `20bf9d5e78e777a2af61e1e6b8cd48f7e3dec125` — test(desktop): verify packaged HTTP locks and search protocols
+- `eaa67e6c16c2148b6d4e1b3ef4e4f7190f2c4b8c` — docs(desktop): record full product contracts and acceptance
+
+工作区549路径在提交前与冻结清单精确一致、内容无漂移。归档bookkeeping另行更新任务元数据和执行状态；原始来源清单保留其提交前历史身份。Git在第三笔提交中将CSV的一处CRLF转为LF，原文件仍为293字节；归档加入仅该文件的task-local `-text`属性，最终归档保留原始字节和原哈希。
