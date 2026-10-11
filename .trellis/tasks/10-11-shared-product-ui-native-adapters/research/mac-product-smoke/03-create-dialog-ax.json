@@ -1,0 +1,600 @@
+[
+  {
+    "actions": [
+      "AXRaise"
+    ],
+    "AXRole": "AXWindow",
+    "AXTitle": "小光点 · 原生工作区原型",
+    "path": "0"
+  },
+  {
+    "actions": [],
+    "AXEnabled": true,
+    "AXRole": "AXGroup",
+    "path": "0.0"
+  },
+  {
+    "actions": [],
+    "AXRole": "AXGroup",
+    "path": "0.0.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXScrollArea",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "小光点",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXWebArea",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "Notifications alt+T",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "Notifications alt+T",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "新建项目",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "新建项目",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXHeading",
+    "AXTitle": "新建项目",
+    "AXValue": 2,
+    "path": "0.0.0.0.0.1.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "新建项目",
+    "path": "0.0.0.0.0.1.0.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.1"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "选择视频、音频或音乐项目，也可以关联已有 IP。",
+    "path": "0.0.0.0.0.1.1.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "创作类型",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.2"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "创作类型",
+    "path": "0.0.0.0.0.1.2.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "视频 已开放",
+    "AXValue": 1,
+    "path": "0.0.0.0.0.1.2.1"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "图片 即将推出",
+    "AXValue": 0,
+    "path": "0.0.0.0.0.1.2.2"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "文案 即将推出",
+    "AXValue": 0,
+    "path": "0.0.0.0.0.1.2.3"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "音频 即将推出",
+    "AXValue": 0,
+    "path": "0.0.0.0.0.1.2.4"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "音乐 即将推出",
+    "AXValue": 0,
+    "path": "0.0.0.0.0.1.2.5"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "项目名称",
+    "path": "0.0.0.0.0.1.3"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "项目名称",
+    "path": "0.0.0.0.0.1.3.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "项目名称",
+    "AXRole": "AXTextField",
+    "AXTitle": "项目名称",
+    "AXValue": "未命名项目共享原生界面验收",
+    "path": "0.0.0.0.0.1.4"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "视频形式",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.5"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "视频形式",
+    "path": "0.0.0.0.0.1.5.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "单片 直接进入故事，适合短片和电影",
+    "AXValue": 0,
+    "path": "0.0.0.0.0.1.5.1"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "连载 按集管理故事、分镜和制作",
+    "AXValue": 1,
+    "path": "0.0.0.0.0.1.5.2"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "画幅比例",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.6"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "画幅比例",
+    "path": "0.0.0.0.0.1.6.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "21:9",
+    "AXValue": 0,
+    "path": "0.0.0.0.0.1.6.1"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "16:9",
+    "AXValue": 0,
+    "path": "0.0.0.0.0.1.6.2"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "4:3",
+    "AXValue": 0,
+    "path": "0.0.0.0.0.1.6.3"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "1:1",
+    "AXValue": 0,
+    "path": "0.0.0.0.0.1.6.4"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "3:4",
+    "AXValue": 0,
+    "path": "0.0.0.0.0.1.6.5"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXCheckBox",
+    "AXTitle": "9:16",
+    "AXValue": 1,
+    "path": "0.0.0.0.0.1.6.6"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.6.7"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "生成模型与分辨率可在创建后的项目设定中分别配置",
+    "path": "0.0.0.0.0.1.6.7.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.7"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "项目类型创建后固定。可选择所属 IP，也可以独立创作。",
+    "path": "0.0.0.0.0.1.7.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXButton",
+    "AXTitle": "取消",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.8"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXButton",
+    "AXTitle": "创建项目",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.9"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXButton",
+    "AXTitle": "关闭",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.10"
+  },
+  {
+    "actions": [
+      "AXPress"
+    ],
+    "AXEnabled": true,
+    "AXRole": "AXButton",
+    "path": "0.1"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXZoomWindow",
+      "AXShowMenu"
+    ],
+    "AXEnabled": true,
+    "AXHelp": "this button also has an action to zoom the window",
+    "AXRole": "AXButton",
+    "path": "0.2"
+  },
+  {
+    "actions": [],
+    "AXRole": "AXGroup",
+    "path": "0.2.0"
+  },
+  {
+    "actions": [],
+    "AXRole": "AXGroup",
+    "path": "0.2.0.0"
+  },
+  {
+    "actions": [
+      "AXPress"
+    ],
+    "AXEnabled": true,
+    "AXRole": "AXButton",
+    "path": "0.3"
+  },
+  {
+    "actions": [],
+    "AXEnabled": true,
+    "AXRole": "AXStaticText",
+    "AXValue": "小光点 · 原生工作区原型",
+    "path": "0.4"
+  }
+]

@@ -1,0 +1,715 @@
+[
+  {
+    "actions": [
+      "AXRaise"
+    ],
+    "AXRole": "AXWindow",
+    "AXTitle": "小光点 · 原生工作区原型",
+    "path": "0"
+  },
+  {
+    "actions": [],
+    "AXEnabled": true,
+    "AXRole": "AXGroup",
+    "path": "0.0"
+  },
+  {
+    "actions": [],
+    "AXRole": "AXGroup",
+    "path": "0.0.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXScrollArea",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "小光点",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXWebArea",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "小光点",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "小光点",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "应用导航",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "应用导航",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0.1"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "创作助手",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "创作助手",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0.1.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "IP",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "IP",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0.1.1"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "项目",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "项目",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0.1.2"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "素材库",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "素材库",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0.1.3"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "任务",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "任务",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0.1.4"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "连接与模型",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "连接与模型",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0.1.5"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "关于",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "关于",
+    "AXValue": "",
+    "path": "0.0.0.0.0.0.1.6"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "返回工作室",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "返回工作室",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "未命名项目共享原生界面验收",
+    "path": "0.0.0.0.0.1.1"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "项目工作区",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "项目工作区",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.2"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "集",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.2.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "集",
+    "path": "0.0.0.0.0.1.2.0.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "世界",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.2.1"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "世界",
+    "path": "0.0.0.0.0.1.2.1.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "记忆",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.2.2"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "记忆",
+    "path": "0.0.0.0.0.1.2.2.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "项目素材",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXLink",
+    "AXTitle": "项目素材",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.3"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "素材",
+    "path": "0.0.0.0.0.1.3.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "项目设定",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXButton",
+    "AXTitle": "项目设定",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.4"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "备份项目",
+    "AXEnabled": false,
+    "AXHelp": "原生工作区备份将在后续接入",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXButton",
+    "AXTitle": "备份项目",
+    "AXValue": "",
+    "path": "0.0.0.0.0.1.5"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.2"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXHeading",
+    "AXTitle": "集",
+    "AXValue": 1,
+    "path": "0.0.0.0.0.2.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "集",
+    "path": "0.0.0.0.0.2.0.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.2.1"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "按集整理故事与分镜，各集共用项目世界。",
+    "path": "0.0.0.0.0.2.1.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXButton",
+    "AXTitle": "新建第 3 集",
+    "AXValue": "",
+    "path": "0.0.0.0.0.2.2"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.3"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "已保存",
+    "path": "0.0.0.0.0.3.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "整部戏一句话",
+    "path": "0.0.0.0.0.4"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXStaticText",
+    "AXTitle": "",
+    "AXValue": "整部戏一句话",
+    "path": "0.0.0.0.0.4.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "这部戏，用一句话说完（可选）",
+    "AXRole": "AXTextField",
+    "AXTitle": "整部戏一句话",
+    "AXValue": "",
+    "path": "0.0.0.0.0.5"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.5.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "第1集 · 第一集",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXButton",
+    "AXTitle": "第1集 · 第一集",
+    "AXValue": "",
+    "path": "0.0.0.0.0.6"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.7"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "第1集 · 第一集 操作",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXPopUpButton",
+    "AXTitle": "第1集 · 第一集 操作",
+    "AXValue": "",
+    "path": "0.0.0.0.0.7.0"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "第2集 · 第2集",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXButton",
+    "AXTitle": "第2集 · 第2集",
+    "AXValue": "",
+    "path": "0.0.0.0.0.8"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "",
+    "AXValue": "",
+    "path": "0.0.0.0.0.9"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "第2集 · 第2集 操作",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXPopUpButton",
+    "AXTitle": "第2集 · 第2集 操作",
+    "AXValue": "",
+    "path": "0.0.0.0.0.9.0"
+  },
+  {
+    "actions": [
+      "AXShowMenu",
+      "AXScrollToVisible"
+    ],
+    "AXDescription": "Notifications alt+T",
+    "AXEnabled": true,
+    "AXHelp": "",
+    "AXPlaceholderValue": "",
+    "AXRole": "AXGroup",
+    "AXTitle": "Notifications alt+T",
+    "AXValue": "",
+    "path": "0.0.0.0.0.10"
+  },
+  {
+    "actions": [
+      "AXPress"
+    ],
+    "AXEnabled": true,
+    "AXRole": "AXButton",
+    "path": "0.1"
+  },
+  {
+    "actions": [
+      "AXPress",
+      "AXZoomWindow",
+      "AXShowMenu"
+    ],
+    "AXEnabled": true,
+    "AXHelp": "this button also has an action to zoom the window",
+    "AXRole": "AXButton",
+    "path": "0.2"
+  },
+  {
+    "actions": [],
+    "AXRole": "AXGroup",
+    "path": "0.2.0"
+  },
+  {
+    "actions": [],
+    "AXRole": "AXGroup",
+    "path": "0.2.0.0"
+  },
+  {
+    "actions": [
+      "AXPress"
+    ],
+    "AXEnabled": true,
+    "AXRole": "AXButton",
+    "path": "0.3"
+  },
+  {
+    "actions": [],
+    "AXEnabled": true,
+    "AXRole": "AXStaticText",
+    "AXValue": "小光点 · 原生工作区原型",
+    "path": "0.4"
+  }
+]

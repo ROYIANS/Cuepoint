@@ -1,0 +1,11 @@
+{
+  "schema": 4,
+  "projectId": "7c2cafc3-64d0-408e-8b27-49eace351997",
+  "episodes": 2,
+  "shots": 7,
+  "duration": 3.5,
+  "status": "ready",
+  "filter": "ready",
+  "defaultDuration": 2.25,
+  "autoIncrement": false
+}

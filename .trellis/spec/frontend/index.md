@@ -6,7 +6,7 @@
 
 ## Overview
 
-小光点 Cuepoint is a Vite + React + TanStack Router client with Dexie IndexedDB as the system of record. Specs in this directory describe how routes, components, hooks, domain types, and tests are actually structured so agents match existing patterns.
+小光点 Cuepoint is a Vite + React + TanStack Router product with shared browser and Tauri pages. Browser persistence uses Dexie IndexedDB; native persistence uses SQLite and an app-managed file workspace through typed adapters. Specs in this directory describe routes, components, hooks, domain types, and tests so agents match existing patterns.
 
 ---
 
@@ -41,6 +41,7 @@
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
 | [Managed Workspace](./workspace-storage.md) | Browser copy staging, cross-platform owned paths, incremental hashing and native boundaries | Filled |
 | [Native Workspace / Packaged Acceptance](./native-workspace.md) | Tauri DTO/generation/navigation boundaries, SQLite prototype, WebKit limitations and truthful packaged evidence | Filled |
+| [Shared Video Workspace](./video-workspace.md) | One product page tree, runtime repositories, field baselines, atomic commands and committed inverse receipts | Filled |
 | [Checkpoint / Sync Provider](./checkpoint-protocol.md) | Partial immutable fixture checkpoints, verified binary closure, conditional publication and application receipts | Filled |
 | [IP / Material Library](./ip-material-library.md) | Multi-IP profiles, owned immutable snapshots, explicit adoption and retention | Filled |
 | [Asset / Output Foundation](./asset-output-foundation.md) | Optional metadata, prop/style relationships, media reuse and APIMart output profiles | Filled |

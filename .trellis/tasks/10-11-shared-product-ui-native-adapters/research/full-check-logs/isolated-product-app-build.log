@@ -1,0 +1,16 @@
+        Info Looking up installed tauri packages to check mismatched versions...
+   Compiling cuepoint-prototype v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+    Finished `release` profile [optimized] target(s) in 16.80s
+       Built application at: /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/cuepoint-prototype
+    Bundling Cuepoint Shared UI Review.app (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Shared UI Review.app)
+     Signing with identity "-"
+Signing with identity "-"
+Signing /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Shared UI Review.app/Contents/MacOS/cuepoint-prototype
+/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Shared UI Review.app/Contents/MacOS/cuepoint-prototype: replacing existing signature
+Signing with identity "-"
+Signing /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Shared UI Review.app
+/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Shared UI Review.app: replacing existing signature
+        Warn skipping app notarization, no APPLE_ID & APPLE_PASSWORD & APPLE_TEAM_ID or APPLE_API_KEY & APPLE_API_ISSUER & APPLE_API_KEY_PATH environment variables found
+    Finished 1 bundle at:
+        /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Shared UI Review.app (22.01 MiB)
+

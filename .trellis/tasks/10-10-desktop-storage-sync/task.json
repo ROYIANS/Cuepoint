@@ -23,7 +23,8 @@
     "10-10-storage-checkpoint-plugin-foundation",
     "10-11-native-workspace-sqlite-prototype",
     "10-11-native-workspace-product-foundation",
-    "10-11-desktop-product-domain-expansion"
+    "10-11-desktop-product-domain-expansion",
+    "10-11-shared-product-ui-native-adapters"
   ],
   "parent": null,
   "relatedFiles": [],

@@ -1,0 +1,61 @@
+{
+  "status": "passed",
+  "date": "2026-10-11",
+  "runtime": "normal packaged Tauri product, isolated identifier",
+  "applicationIdentifier": "dev.cuepoint.shared-ui-review.20261011",
+  "normalBuild": "../build-receipt.json",
+  "uiTools": {
+    "initial": "macOS accessibility helper (historical first integration)",
+    "final": "cua_repl macOS accessibility, actions, screenshots and system file chooser"
+  },
+  "storageVerification": "read-only SQLite/file checks after real UI writes; no seeded rows or injected renderer code",
+  "checks": [
+    "fresh native empty gallery and shared create dialog",
+    "series and 9:16 creation stored atomically",
+    "project title, brief and series logline persist",
+    "two episodes and episode title/logline/script persist",
+    "beat title/content/timeOfDay persist",
+    "shot content/notes/duration/status persist",
+    "two settings fields persist together",
+    "status filter hides a ready shot under draft then selects 1/7 under ready",
+    "five-shot creation commits defaults 2.25sec and contiguous orders",
+    "copy-shot committed inverse restores eight rows to seven",
+    "actual close/reopen preserves project/story/shot/settings/filter",
+    "unsupported produce route retains shared chrome and working return link",
+    "native assets entry reaches existing managed library",
+    "real macOS open panel imports repository PNG as an internal copy",
+    "managed source/hash/length match in read-only filesystem and SQLite assertions",
+    "close/reopen retains the imported managed asset"
+  ],
+  "productBlockers": [],
+  "historicalFindings": [
+    "first packaged path navigation violated narrow entry ACL; native hash routing fixes it without widening ACL",
+    "first numeric duration draft had 0 vs 0.0 baseline mismatch; semantic scalar comparison fixes it",
+    "resumed full review caught /assets allowlist omission; final package rebuilt after its fix"
+  ],
+  "interactionLimits": [
+    "early keyboard fill helper did not reliably replace text; later AXValue/CUA edits are verified by persisted SQLite state",
+    "one stale CUA index closed the isolated window; it was reopened; no database mutation resulted",
+    "one copy undo attempt missed the expiring button; one copied row remains in disposable test data; a subsequent fresh copy/undo is verified eight to seven rows",
+    "last UI screenshots show 1/7 ready-status filter; seven rows include original shot, five added shots and that retained test copy"
+  ],
+  "notClaimed": [
+    "Windows/Linux packaged verification",
+    "cloud sync or native world/generation/media-slot/audio/music domains",
+    "release signing/notarization or Finder/Dock cache refresh",
+    "microphone/paid-provider/print reacceptance outside current scope"
+  ],
+  "finalEvidence": [
+    "11-final-reopen-story.png",
+    "12-status-filter.png",
+    "13-multiadd-ax.txt",
+    "14-core-saved.png",
+    "15-managed-asset.png",
+    "16-final-reopen-settings.png",
+    "17-final-capability.png",
+    "18-final-reopen-assets.png",
+    "multiadd-sqlite.json",
+    "pre-reopen-sqlite.json",
+    "final-sqlite.json"
+  ]
+}

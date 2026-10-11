@@ -1,0 +1,295 @@
+{
+  "macOSIconutilDecodedMembers": {
+    "icon_128x128.png": {
+      "size": 128,
+      "alphaRange": [
+        255,
+        255
+      ],
+      "corners": [
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ]
+      ]
+    },
+    "icon_128x128@2x.png": {
+      "size": 256,
+      "alphaRange": [
+        255,
+        255
+      ],
+      "corners": [
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ]
+      ]
+    },
+    "icon_16x16@2x.png": {
+      "size": 32,
+      "alphaRange": [
+        255,
+        255
+      ],
+      "corners": [
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ]
+      ]
+    },
+    "icon_256x256.png": {
+      "size": 256,
+      "alphaRange": [
+        255,
+        255
+      ],
+      "corners": [
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ]
+      ]
+    },
+    "icon_256x256@2x.png": {
+      "size": 512,
+      "alphaRange": [
+        255,
+        255
+      ],
+      "corners": [
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ]
+      ]
+    },
+    "icon_32x32@2x.png": {
+      "size": 64,
+      "alphaRange": [
+        255,
+        255
+      ],
+      "corners": [
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ]
+      ]
+    },
+    "icon_512x512.png": {
+      "size": 512,
+      "alphaRange": [
+        255,
+        255
+      ],
+      "corners": [
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ]
+      ]
+    },
+    "icon_512x512@2x.png": {
+      "size": 1024,
+      "alphaRange": [
+        255,
+        255
+      ],
+      "corners": [
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ],
+        [
+          12,
+          12,
+          12,
+          255
+        ]
+      ]
+    }
+  },
+  "negativeChecks": [
+    {
+      "case": "non-corner PNG alpha changed",
+      "rejected": true,
+      "message": "32x32.png: expected every pixel opaque, found alpha range (0, 255)"
+    },
+    {
+      "case": "PNG background RGB changed",
+      "rejected": true,
+      "message": "32x32.png: corners differ from #0c0c0c: [(13, 12, 12, 255), (12, 12, 12, 255), (12, 12, 12, 255), (12, 12, 12, 255)]"
+    },
+    {
+      "case": "original artwork pixel changed",
+      "rejected": true,
+      "message": "Native source changes approved logo pixels/framing beyond alpha compositing"
+    },
+    {
+      "case": "ic11 ICNS alpha changed",
+      "rejected": true,
+      "message": "icon.icns/ic11: expected every pixel opaque, found alpha range (0, 255)"
+    },
+    {
+      "case": "ic10 ICNS alpha changed",
+      "rejected": true,
+      "message": "icon.icns/ic10: expected every pixel opaque, found alpha range (0, 255)"
+    }
+  ]
+}

@@ -1,0 +1,315 @@
+{
+  "capturedAt": "2026-10-11T14:35:09.735688+08:00",
+  "baseRevision": "55a4ad54d1a3a3f050d357444a4cffd817734e33",
+  "branch": "codex/shared-product-ui-native-adapters",
+  "purpose": "Current changed product, test, native generated asset and quality-configuration footprint for drift detection. Historical TS gate logs have no preceding per-source hash manifest; timestamps and reviewed regressions establish correspondence but are not a cryptographic historical attestation. Rust raw-command receipt separately hashes complete Rust source/tests before and after execution. Main-owned task/spec/evidence edits are outside this product footprint.",
+  "entries": [
+    {
+      "path": "desktop/tauri/scripts/generate-native-icons.py",
+      "status": "present",
+      "sha256": "cab4937bfe9c1ec1a3090586a200aa52a3f76bab9b9e879719edda57f92b0f51"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/128x128.png",
+      "status": "present",
+      "sha256": "80098e0a2e5a8bb22303db9eeaefd61d3227c45b1e84b912abe2c932ad405eca"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/128x128@2x.png",
+      "status": "present",
+      "sha256": "a04d7941f06894f7a306050a17babf59b6acf32b8f29e6166b133d4a83c75c21"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/16x16.png",
+      "status": "present",
+      "sha256": "e45559d18bef9cf9467c56430534871724dfa18792e4c241d822544fe6ca3124"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/32x32.png",
+      "status": "present",
+      "sha256": "331e44a809807523b1e77fb4a5aeb5ff5f48bd6f68cf12d6f19d02f26f937d3b"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/64x64.png",
+      "status": "present",
+      "sha256": "68b9292db5bc483fe7bbbc57a292acda58d3a08d6648bb672595d0280591a0af"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/README.md",
+      "status": "present",
+      "sha256": "50e6e5a0fb1c0742d27cf1800f933d68fc8128c1589bf48232755eeade030584"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/icon.icns",
+      "status": "present",
+      "sha256": "95553f48e1c5c628626d8b245dc0ff4ea4a893a6cbb76974d58315cc6297232e"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/icon.ico",
+      "status": "present",
+      "sha256": "c504f9ceaa0ddd07b5d6e5951d011054a8c424a0d35abc64d4e02f0f17743e88"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/icon.png",
+      "status": "present",
+      "sha256": "7844911ec0a036c9bd25f06680db1dc8bd4e4f7ad9f5a125a0d836f45608a231"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/provenance.json",
+      "status": "present",
+      "sha256": "d2f84cad242d2553985ffc3c04d5a4f894d1a079ba1dfa6787641d60aa7568f5"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/icons/source.png",
+      "status": "present",
+      "sha256": "142b89eef8d4dfd5c412c202d97f34fedb3b14c25359baf7681ca2c0bd991f74"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/contracts.rs",
+      "status": "present",
+      "sha256": "e56125a7270e044b419dab180388872fca00c89c99270a0f04fb7b2aa591bd20"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/database.rs",
+      "status": "present",
+      "sha256": "aa144934f5ca836122bba20055c9efe8b752133b3b8d2abc20d54b7df6dc238d"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/desktop.rs",
+      "status": "present",
+      "sha256": "a960ab3c9d16a6f861a7835d2252c8b0652a55af530f0327b108f1aeeffea0b3"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/workspace.rs",
+      "status": "present",
+      "sha256": "17629eff0b808a2e5ac8c6afdb39164b6a41e537da985dc5d1f371eddf82b615"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/tests/native_workspace.rs",
+      "status": "present",
+      "sha256": "4cede8ae8b6630604f0db683c2c454f9564a3a523281744a37ea8ba92f5a135e"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/tests/shared_video_contract.rs",
+      "status": "present",
+      "sha256": "964133ad86ad12d56f1f6772a7e1dbca41eb50dfa9733fc92c2b93a9267a01c7"
+    },
+    {
+      "path": "desktop/tauri/ui/bridge.ts",
+      "status": "present",
+      "sha256": "07d96e5557d1223c9086064469d6afd1c18279293280963aeb860a88cf8d9b2f"
+    },
+    {
+      "path": "knip.json",
+      "status": "present",
+      "sha256": "40bcf93e94050887e0aa51588e653333c2dce1e1a400a3da8c4f5d6f7ac9e0e6"
+    },
+    {
+      "path": "src/components/shots/DurationInput.tsx",
+      "status": "present",
+      "sha256": "acee4c743331a8158c7313cad1c1b42a8393dd0843610dd3e5957ec080e54f8f"
+    },
+    {
+      "path": "src/components/shots/ShotEditorPage.tsx",
+      "status": "present",
+      "sha256": "2775cedae88b6d3a909d1509bc6defc7a3a9323b15d62242a3b377cc56b495de"
+    },
+    {
+      "path": "src/components/shots/ShotRelationsEditor.tsx",
+      "status": "present",
+      "sha256": "b31804e3aa1ee6cb755096aef8a6c128524a9962d0d15a152320833e276610ad"
+    },
+    {
+      "path": "src/components/shots/ShotRow.tsx",
+      "status": "present",
+      "sha256": "d754833445d77d84055d6412256d080cc491cdbaaa546e09fff40fcd51de2b74"
+    },
+    {
+      "path": "src/components/shots/ShotTextField.tsx",
+      "status": "present",
+      "sha256": "ca3b428e9e15b507f45f6192a73fad9f7f54f36bb342bcf7d9771cae8ebd3559"
+    },
+    {
+      "path": "src/components/shots/shotEditorCommands.ts",
+      "status": "present",
+      "sha256": "ac96d996387a8d46ded226cecaf46b699398dea5bb2b0c1430aafd8611636095"
+    },
+    {
+      "path": "src/components/story/BeatTextField.tsx",
+      "status": "present",
+      "sha256": "92391471f3221580baeb862ce06d4b292d6ae0f313f6b41bc5ae5c458b453523"
+    },
+    {
+      "path": "src/components/story/StoryPage.tsx",
+      "status": "present",
+      "sha256": "077e0e516167261e276a06519963a43571a0ca845d19b8418bf78890883f6d97"
+    },
+    {
+      "path": "src/components/studio/NativeProjectGalleryPage.tsx",
+      "status": "deleted",
+      "sha256": null
+    },
+    {
+      "path": "src/components/studio/ProjectGalleryPage.tsx",
+      "status": "present",
+      "sha256": "d5d063eb1d508acb46c10a39034f6174b3a9429e9c84abbc0a4ca1fa3121d506"
+    },
+    {
+      "path": "src/components/workspace/EpisodeListPage.tsx",
+      "status": "present",
+      "sha256": "6f8764ee77b5388bb846b56c345049b0ec8a91907884edc1c853c628bdf7ea6b"
+    },
+    {
+      "path": "src/components/workspace/NativeProjectWorkspacePage.tsx",
+      "status": "deleted",
+      "sha256": null
+    },
+    {
+      "path": "src/components/workspace/ProjectHomePage.tsx",
+      "status": "present",
+      "sha256": "2f288ac832aaeee2c2a6b8685aa7d41718d96d609ba457b4cc981c8a87a4d2b1"
+    },
+    {
+      "path": "src/components/workspace/ProjectSettingsPanel.tsx",
+      "status": "present",
+      "sha256": "72df16533601dec7fa8bc1cbc7ec4ff8d30def0b8e30035b28c626ce43286469"
+    },
+    {
+      "path": "src/components/workspace/VideoWorkspaceReadNotice.tsx",
+      "status": "present",
+      "sha256": "e42c77ba1f42de1e0482a8be7c7c44f946630cdef05b73ad569ea7f0bf507d7a"
+    },
+    {
+      "path": "src/components/workspace/WorkspaceCapabilityState.tsx",
+      "status": "present",
+      "sha256": "6f311bc250e05f6006ff70bccf24b6e3b1c4dc273e9da69b862fa0ce96a01dbb"
+    },
+    {
+      "path": "src/components/workspace/WorkspaceChrome.tsx",
+      "status": "present",
+      "sha256": "fdcd282aa5aef9c1c54da9e6e34f012474b83ed9945e1ca9a300b27992ecbb2c"
+    },
+    {
+      "path": "src/domain/videoWorkspace.ts",
+      "status": "present",
+      "sha256": "37b4fcefb47cc133a2b5e786578057c48099fe5b792e6e2a662e744dfd99afea"
+    },
+    {
+      "path": "src/lib/media.ts",
+      "status": "present",
+      "sha256": "5a79bca5aa5feabc631d27b24225a6c33bf6a3e87e90bfe4b0a0634d4994ca7c"
+    },
+    {
+      "path": "src/lib/nativeWorkspace.ts",
+      "status": "present",
+      "sha256": "652a0c30e4d510babe16b1d65265ddc60cd225f64ad3a0b78e97c43a9f87a559"
+    },
+    {
+      "path": "src/lib/nativeWorkspaceContract.ts",
+      "status": "present",
+      "sha256": "c093fc81c9532d678602fe1299c91378abd624edf03bd3d7570ceb9cdd9303a3"
+    },
+    {
+      "path": "src/lib/productRouterHistory.ts",
+      "status": "present",
+      "sha256": "ee35c606526dd1e336c55b9ea95e3d1e086a2403381f06e67b5012cb135fef14"
+    },
+    {
+      "path": "src/lib/useShotMedia.ts",
+      "status": "present",
+      "sha256": "95cd5cd97634ae6484399f91107c8499ef79b77816e9212ae285b6f297c5551b"
+    },
+    {
+      "path": "src/lib/videoWorkspaceRepository.tsx",
+      "status": "present",
+      "sha256": "98967ab1a3a5b5dbe7efd820a86b888d772c3a9867bdedd350af7b76763eb0dd"
+    },
+    {
+      "path": "src/main.tsx",
+      "status": "present",
+      "sha256": "98f25fd013415cef949bc64e1302e890b6bd764c41ad5b55ed2bc9b83cde3f22"
+    },
+    {
+      "path": "src/routes/_studio.index.tsx",
+      "status": "present",
+      "sha256": "bbae9ad609369582b27e2ec99ee348786f121237b36e16a1cb314ab2d92fb87d"
+    },
+    {
+      "path": "src/routes/_studio.tsx",
+      "status": "present",
+      "sha256": "fae64fbdbffb59cc5b17d1d67a5ea32a94c5446cd677731dfe24a82da981f759"
+    },
+    {
+      "path": "src/routes/p.$projectId.plan.tsx",
+      "status": "present",
+      "sha256": "b6bacc654300f9dd27f8f54736c4fc96ddc1b7bee12287503864afce049c7f7d"
+    },
+    {
+      "path": "src/routes/p.$projectId.produce.tsx",
+      "status": "present",
+      "sha256": "d63f3ce66be3b391c608f767fe708cf81de0414ac4d7e367ba7a14e277e0c861"
+    },
+    {
+      "path": "src/routes/p.$projectId.report.tsx",
+      "status": "present",
+      "sha256": "c653313dfc2532aae0033d2787d77633036d1ed86873c69ed5b1b5c2c1da92fc"
+    },
+    {
+      "path": "src/routes/p.$projectId.shots.tsx",
+      "status": "present",
+      "sha256": "9a29c435a6ea0de2e72c8396b0a86b8a40ab6f2f4d89cf410e601f694c5d9526"
+    },
+    {
+      "path": "tests/nativeAcceptanceBridge.test.ts",
+      "status": "present",
+      "sha256": "7460489503d288ec0deb5a9bf4bb8528aa405fd3eada8d6678dbaec9783aada0"
+    },
+    {
+      "path": "tests/nativeWorkspace.test.ts",
+      "status": "present",
+      "sha256": "4f950a52a7058963eec5bff9976d3a9d8a3abc6d1ac065ae88a9a788accdc111"
+    },
+    {
+      "path": "tests/nativeWorkspaceConcurrency.test.ts",
+      "status": "present",
+      "sha256": "ecc72c2cec0f829e1f0707ac9c0a6fc649b27686b1d48cfdcd6dcd74f6c44926"
+    },
+    {
+      "path": "tests/nativeWorkspaceDeletion.test.ts",
+      "status": "present",
+      "sha256": "5ab807ce78db25ce2585241f4d10b7255b1d2071a15e2ee3e01983ae122c7583"
+    },
+    {
+      "path": "tests/productRouterHistory.test.ts",
+      "status": "present",
+      "sha256": "3681d39ebedb049c79610429388ec73599f97b74818b960c71c31bc45c601bf4"
+    },
+    {
+      "path": "tests/sharedVideoPageParity.test.ts",
+      "status": "present",
+      "sha256": "5c5654522b5d46c3cd4ce33cc1ef8aa3d1b9df327a880bb3c5f619e086328142"
+    },
+    {
+      "path": "tests/videoWorkspaceBrowserRepository.test.ts",
+      "status": "present",
+      "sha256": "7703001bff5c4fd9773f9a0bee126dde066f0ee7c699be2baccae16282fb8a5a"
+    },
+    {
+      "path": "tests/videoWorkspaceRepository.test.ts",
+      "status": "present",
+      "sha256": "0f6ff941a3a4432f38ceebc83a2a4b30422816dfa0c0c1392fff99638502c4dd"
+    }
+  ],
+  "verifiedAfterGatesAt": "2026-10-11T06:39:00.902561+00:00",
+  "sourceUnchangedAfterGates": true,
+  "currentGateLogSha256": {
+    "root-quality-self-test.log": "684bbc59ce209405437b91ad2d51874e1b60181ff4ec2f0cb8ed230d79e1985d",
+    "rust-final-receipt.json": "05d445d8eada8cf5294b48fd0c15cda7694792922bba0dcf71fbdb6fae007edc",
+    "studio-route-targeted.log": "979c9156f424974be9e65396cc607118b9349bebf3166895bf99c65819f916dc",
+    "root-lint-resumption.log": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+    "root-quality-self-test-summary.json": "a869936c60b05abdeeea57625930433206273ac632d74ec5eb3651cb957b2e72",
+    "root-quality-resumption.log": "1a5dbe81793e365859cf7869ed41ada76916c5b4e2028d89ceb17b8f9ba6b9dc",
+    "root-tests-resumption.log": "60d962ed8c8f54df1cfb96c60aa8f356fefc5ac7fbf9859c211989723d54b670",
+    "model-bank-verify.log": "f58b777b746a7ebd4198b0b7f1a3fcd25d51250f9683c34e11da47c7468cd87d"
+  }
+}

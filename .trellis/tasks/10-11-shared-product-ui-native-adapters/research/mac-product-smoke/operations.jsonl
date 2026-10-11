@@ -1,0 +1,65 @@
+{"pid": "56231", "command": "wait", "arguments": ["还没有项目"], "status": "passed"}
+{"pid": "56231", "command": "snapshot", "arguments": ["02-fixed-empty"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "新建项目"], "status": "passed"}
+{"pid": "56231", "command": "inspect", "arguments": [], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["项目名称", "共享原生界面验收"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["项目名称", "共享原生界面验收"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXCheckBox", "连载 按集管理故事、分镜和制作"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXCheckBox", "9:16"], "status": "passed"}
+{"pid": "56231", "command": "snapshot", "arguments": ["03-create-dialog"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "创建项目"], "status": "passed"}
+{"pid": "56231", "command": "wait", "arguments": ["整部戏一句话"], "status": "passed"}
+{"pid": "56231", "command": "inspect", "arguments": [], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["整部戏一句话", "创作者在原生工作区完成同一部作品。"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "新建第 2 集"], "status": "passed"}
+{"pid": "56231", "command": "wait", "arguments": ["第2集"], "status": "passed"}
+{"pid": "56231", "command": "snapshot", "arguments": ["04-episodes"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "第1集 · 第一集"], "status": "passed"}
+{"pid": "56231", "command": "wait", "arguments": ["本集故事"], "status": "passed"}
+{"pid": "56231", "command": "inspect", "arguments": [], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["集标题（可选）", "开场"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["本集一句话", "创作者打开原生工作区。"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["剧本", "清晨，创作者打开工作区。他写下故事，并逐个制作镜头。"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "加一场"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["场次标题", "清晨"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["场次内容", "创作者打开工作区。"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["时段", "日"], "status": "passed"}
+{"pid": "56231", "command": "key", "arguments": ["48"], "status": "passed"}
+{"pid": "56231", "command": "wait", "arguments": ["已保存"], "status": "passed"}
+{"pid": "56231", "command": "snapshot", "arguments": ["05-story"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXLink", "分镜"], "status": "passed"}
+{"pid": "56231", "command": "wait", "arguments": ["添加镜头"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "添加镜头"], "status": "passed"}
+{"pid": "56231", "command": "inspect", "arguments": [], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["镜头内容", "中景：创作者打开工作区。"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["时长（秒）", "3.5"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["备注", "本机验收"], "status": "passed"}
+{"pid": "56231", "command": "wait", "arguments": ["已保存"], "status": "passed"}
+{"pid": "56231", "command": "snapshot", "arguments": ["06-shot-edit"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXLink", "故事"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["集标题（可选）", "开场"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["本集一句话", "创作者打开原生工作区。"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["剧本", "清晨，创作者打开工作区。他写下故事，并逐个制作镜头。"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["场次标题", "清晨"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["场次内容", "创作者打开工作区。"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["时段", "日"], "status": "passed"}
+{"pid": "56231", "command": "snapshot", "arguments": ["07-story-saved"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "项目设定"], "status": "passed"}
+{"pid": "56231", "command": "inspect", "arguments": [], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["项目名称", "共享原生界面验收"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["创作简述", "同一套产品界面，SQLite 保存本机工作区。"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "完成"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXLink", "分镜"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "复制镜头"], "status": "passed"}
+{"pid": "56231", "command": "wait", "arguments": ["撤销"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "撤销"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXLink", "制作"], "status": "passed"}
+{"pid": "56231", "command": "snapshot", "arguments": ["08-capability"], "status": "passed"}
+{"pid": "56231", "command": "inspect", "arguments": [], "status": "passed"}
+{"pid": "56231", "command": "snapshot", "arguments": ["08-capability"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXLink", "返回项目"], "status": "passed"}
+{"pid": "56231", "command": "fill", "arguments": ["整部戏一句话", "创作者在原生工作区完成同一部作品。"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXButton", "第1集 · 开场"], "status": "passed"}
+{"pid": "56231", "command": "snapshot", "arguments": ["09-story-saved"], "status": "passed"}
+{"pid": "56231", "command": "press", "arguments": ["AXLink", "分镜"], "status": "passed"}
+{"pid": "56231", "command": "snapshot", "arguments": ["10-shot-saved"], "status": "passed"}

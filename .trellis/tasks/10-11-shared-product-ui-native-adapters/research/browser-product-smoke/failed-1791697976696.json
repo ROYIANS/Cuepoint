@@ -1,0 +1,36 @@
+{
+  "origin": "http://127.0.0.1:5174",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "runtime": "browser",
+  "isolatedContext": true,
+  "checks": [
+    {
+      "name": "project empty state"
+    },
+    {
+      "name": "shared project create mode/aspect",
+      "projectId": "prj_6b274bce-d7cb-4f10-9cea-77f1e04d0461",
+      "mode": "series",
+      "aspect": "9:16"
+    },
+    {
+      "name": "episode create and series logline"
+    },
+    {
+      "name": "story and beat retained draft saves",
+      "episodeId": "ep_c2f84e72-e98f-4d17-8cb4-36e507e1216f"
+    },
+    {
+      "name": "shared workbench text/duration/status editing"
+    },
+    {
+      "name": "duplicate shot and committed undo"
+    }
+  ],
+  "errors": [],
+  "status": "failed",
+  "failure": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('menuitem', { name: '创建5个分镜', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <div tabindex=\"-1\" role=\"menuitem\" data-variant=\"default\" data-orientation=\"vertical\" data-radix-collection-item=\"\" data-slot=\"dropdown-menu-item\" class=\"focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foregroun…>…</div>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not stable\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is not stable\u001b[22m\n\u001b[2m  - retrying click action\u001b[22m\n\u001b[2m    - waiting 100ms\u001b[22m\n\u001b[2m  - element was detached from the DOM, retrying\u001b[22m\n"
+}

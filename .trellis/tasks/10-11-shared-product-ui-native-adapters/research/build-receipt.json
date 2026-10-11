@@ -1,0 +1,38 @@
+{
+  "status": "passed",
+  "sourceDrift": false,
+  "sourceManifest": "final-resumption-source.json",
+  "apps": [
+    {
+      "kind": "normal",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791700489450-normal/Cuepoint Prototype.app",
+      "identifier": "dev.cuepoint.prototype.offline",
+      "bytes": 23078106,
+      "executableSha256": "f78b0c7d70feefb54fbcb112d7e30913f1dd560c24923619eaa6afe9d8a7b941",
+      "iconSha256": "95553f48e1c5c628626d8b245dc0ff4ea4a893a6cbb76974d58315cc6297232e"
+    },
+    {
+      "kind": "isolatedProduct",
+      "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Shared UI Review.app",
+      "identifier": "dev.cuepoint.shared-ui-review.20261011",
+      "bytes": 23078144,
+      "executableSha256": "946b862391b77deeb9108f111289788af17bcad43715e950866e23e6ec4295f5",
+      "iconSha256": "95553f48e1c5c628626d8b245dc0ff4ea4a893a6cbb76974d58315cc6297232e"
+    }
+  ],
+  "frontendDist": "desktop/tauri/dist/normal",
+  "isolatedConfig": {
+    "productName": "Cuepoint Shared UI Review",
+    "identifier": "dev.cuepoint.shared-ui-review.20261011"
+  },
+  "isolatedOverrides": "productName and identifier only; same desktop feature, normal frontend and Rust product source",
+  "acceptanceFixtureUsedForProductSmoke": false,
+  "logs": [
+    "full-check-logs/root-build.log",
+    "full-check-logs/normal-app-build.log",
+    "full-check-logs/normal-frontend-build.log",
+    "full-check-logs/normal-native-bundle.log",
+    "full-check-logs/acceptance-frontend-build.log",
+    "full-check-logs/isolated-product-app-build.log"
+  ]
+}

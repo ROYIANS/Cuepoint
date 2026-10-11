@@ -1,0 +1,9 @@
+{
+  "status": "failed",
+  "app": "Cuepoint Shared UI Review.app",
+  "identifier": "dev.cuepoint.shared-ui-review.20261011",
+  "rootCause": "Native browser history changed document path to /projects before ensure; narrow packaged bridge accepts only entry paths.",
+  "visibleError": "读取工作区失败：读取原生工作区失败",
+  "fix": "Native createProductRouterHistory uses createHashHistory; browser retains browser history. Rust ACL stays entry-only.",
+  "evidence": "01-empty.png"
+}

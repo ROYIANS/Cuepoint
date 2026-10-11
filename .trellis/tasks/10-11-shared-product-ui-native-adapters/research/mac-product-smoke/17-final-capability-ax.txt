@@ -1,0 +1,42 @@
+Window: "小光点 · 原生工作区原型", App: Cuepoint Shared UI Review.
+0 standard window 小光点 · 原生工作区原型, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/p/7c2cafc3-64d0-408e-8b27-49eace351997/e/b714827e-cc92-4cba-8461-54ae4ace92a8/produce
+			3 container
+				4 link 小光点, Value: tauri://localhost/#/about
+				5 container 应用导航
+					6 link 创作助手, Value: tauri://localhost/#/agent
+					7 link IP, Value: tauri://localhost/#/ips
+					8 link 项目, Value: tauri://localhost/#/projects
+					9 link 素材库, Value: tauri://localhost/#/assets
+					10 link 任务, Value: tauri://localhost/#/agent/tasks
+					11 link 连接与模型, Value: tauri://localhost/#/connectors
+					12 link 关于, Value: tauri://localhost/#/about
+			13 container
+				14 link 返回集列表, Value: tauri://localhost/#/p/7c2cafc3-64d0-408e-8b27-49eace351997
+				15 text 第1集 · 开场
+				16 container 项目工作区
+					17 link 故事, Value: tauri://localhost/#/p/7c2cafc3-64d0-408e-8b27-49eace351997/e/b714827e-cc92-4cba-8461-54ae4ace92a8
+					18 link 分镜, Value: tauri://localhost/#/p/7c2cafc3-64d0-408e-8b27-49eace351997/e/b714827e-cc92-4cba-8461-54ae4ace92a8/shots
+					19 link 制作, Value: tauri://localhost/#/p/7c2cafc3-64d0-408e-8b27-49eace351997/e/b714827e-cc92-4cba-8461-54ae4ace92a8/produce
+					20 link 记忆, Value: tauri://localhost/#/p/7c2cafc3-64d0-408e-8b27-49eace351997/memory
+				21 link 项目素材, Value: tauri://localhost/#/assets?project=7c2cafc3-64d0-408e-8b27-49eace351997
+				22 button 项目设定
+				23 button (disabled) 备份项目, Help: 原生工作区备份将在后续接入
+			24 text 此工作区能力尚未接入
+			25 text 当前可使用视频项目、集数、故事与分镜。后续桌面模块接入后，这里会沿用同一套产品界面。
+			26 link 返回项目, Value: tauri://localhost/#/p/7c2cafc3-64d0-408e-8b27-49eace351997
+			27 container Notifications alt+T
+	28 close button
+	29 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	30 minimize button
+	31 text 小光点 · 原生工作区原型
+32 menu bar
+	33 Cuepoint Shared UI Review
+	34 File
+	35 Edit
+	36 View
+	37 Window
+	38 Help
+
+The focused UI element is 2 HTML content Description: 小光点, URL: tauri://localhost/#/p/7c2cafc3-64d0-408e-8b27-49eace351997/e/b714827e-cc92-4cba-8461-54ae4ace92a8/produce

@@ -1,0 +1,7 @@
+{"file":".trellis/spec/frontend/desktop-ui.md","reason":"Shared AppFrame, PageLayout, scroll ownership, responsive navigation, overlay and print presentation contract."}
+{"file":".trellis/spec/frontend/component-guidelines.md","reason":"Feature page, shared widget, repository ownership and no duplicate UI-system rules."}
+{"file":".trellis/spec/frontend/native-workspace.md","reason":"Browser Dexie/native SQLite runtime boundary, closed Tauri bridge and fresh schema policy."}
+{"file":".trellis/spec/frontend/state-management.md","reason":"Current Dexie owner, native state boundary and persistence/ownership conventions."}
+{"file":".trellis/spec/frontend/workspace-storage.md","reason":"Managed native files, asset references and missing-file behavior."}
+{"file":".trellis/tasks/10-11-shared-product-ui-native-adapters/research/shared-video-ui.md","reason":"Repository evidence for browser feature behavior, native DTO gaps and five implementation batches."}
+{"file":".trellis/tasks/10-11-shared-product-ui-native-adapters/research/native-icon.md","reason":"Measured alpha evidence and reproducible Tauri icon generation plan."}

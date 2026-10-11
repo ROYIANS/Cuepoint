@@ -6,7 +6,7 @@
 
 ## Overview
 
-There is no backend. Browser durable state lives in IndexedDB (`src/db/database.ts` + the business command owners listed in the D02 contract below). UI reads with `useLiveQuery`. Ephemeral UI (search, sort, dialog open) stays in React `useState`. The packaged native runtime is a separate owner: its fresh SQLite schema 3 stores the first video product slice (project mode, episodes, beats and shots) through `src/lib/nativeWorkspace.ts`; native rows are not mirrored into Dexie and this browser contract does not imply a migration path.
+Browser durable state lives in IndexedDB (`src/db/database.ts` + the business command owners listed in the D02 contract below). Browser reads use `useLiveQuery`; ephemeral UI (search, sort, dialog open) stays in React `useState`. Shared video pages access `videoWorkspaceRepository`, which selects browser commands or the native owner below the page boundary. The packaged native runtime uses fresh SQLite schema 4 and managed files through `src/lib/nativeWorkspace.ts`; native rows are not mirrored into Dexie. See [Shared Video Workspace](./video-workspace.md) and [Native Workspace](./native-workspace.md). No migration path is implied.
 
 ---
 

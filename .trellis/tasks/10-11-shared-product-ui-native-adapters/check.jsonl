@@ -1,0 +1,6 @@
+{"file":".trellis/spec/frontend/desktop-ui.md","reason":"Review shared page tree and visual parity against the desktop UI contract."}
+{"file":".trellis/spec/frontend/native-workspace.md","reason":"Review browser/native ownership, bridge closure, schema and packaged acceptance behavior."}
+{"file":".trellis/spec/frontend/component-guidelines.md","reason":"Check no duplicate feature editors, correct command owners and shared primitive usage."}
+{"file":".trellis/tasks/10-11-shared-product-ui-native-adapters/research/shared-video-ui.md","reason":"Cross-check implementation against identified browser behavior and native gaps."}
+{"file":".trellis/tasks/10-11-shared-product-ui-native-adapters/research/native-icon.md","reason":"Verify native-only opaque icon assets, color, alpha and package inspection evidence."}
+{"file":".trellis/spec/frontend/video-workspace.md","reason":"Verify shared repository, field baselines, atomic mutations, distinct inverse receipts and honest packaged UI evidence."}

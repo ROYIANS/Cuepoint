@@ -1,0 +1,30 @@
+{
+  "origin": "http://127.0.0.1:5174",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "runtime": "browser",
+  "isolatedContext": true,
+  "checks": [
+    {
+      "name": "project empty state"
+    },
+    {
+      "name": "shared project create mode/aspect",
+      "projectId": "prj_df6bb9c8-87d2-4a16-b6b9-033c106997f9",
+      "mode": "series",
+      "aspect": "9:16"
+    },
+    {
+      "name": "episode create and series logline"
+    },
+    {
+      "name": "story and beat retained draft saves",
+      "episodeId": "ep_b6fbdf90-c4ca-4858-b0a8-4b218bd17591"
+    }
+  ],
+  "errors": [],
+  "status": "failed",
+  "failure": "Durable state did not settle"
+}

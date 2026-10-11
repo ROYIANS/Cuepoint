@@ -1,0 +1,53 @@
+{
+  "origin": "http://127.0.0.1:5174",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "runtime": "browser",
+  "isolatedContext": true,
+  "checks": [
+    {
+      "name": "project empty state"
+    },
+    {
+      "name": "shared project create mode/aspect",
+      "projectId": "prj_ecab3f71-9aa3-4aef-afa9-fe4ef4f01207",
+      "mode": "series",
+      "aspect": "9:16"
+    },
+    {
+      "name": "episode create and series logline"
+    },
+    {
+      "name": "story and beat retained draft saves",
+      "episodeId": "ep_c1ccbf76-0d4a-4a39-913c-c73f3203ca78"
+    },
+    {
+      "name": "shared workbench text/duration/status editing"
+    },
+    {
+      "name": "duplicate shot and committed undo"
+    },
+    {
+      "name": "episode-owned status filter"
+    },
+    {
+      "name": "reload retains canonical browser state"
+    },
+    {
+      "name": "missing project owner blocks editor"
+    },
+    {
+      "name": "unavailable project-kind capability"
+    },
+    {
+      "name": "compact workbench retains internal horizontal scroll"
+    },
+    {
+      "name": "browser runtime has no Tauri invoke authority"
+    }
+  ],
+  "errors": [],
+  "status": "passed"
+}
