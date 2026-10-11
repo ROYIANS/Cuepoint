@@ -1,0 +1,18 @@
+2026-10-11 packaged acceptance final run
+
+Runner: desktop/tauri/.acceptance/run-ac0b9c9b-08ea-4019-bfae-1a309edc7607/runner-receipt.json
+Report: desktop/tauri/.acceptance/run-ac0b9c9b-08ea-4019-bfae-1a309edc7607/report.json
+Outcome: passed; stable=true; 65 events; zero failed events; zero skipped events; pending=[]; paidRequests=0.
+
+Interactive evidence:
+- AudioPreviewPlayer playback/pause/seek/dispose passed with one bounded WebKit resume warm-up retry (before=0.207s, paused=0.207s, after=0.877s).
+- Real microphone capture passed with MIME audio/webm; codecs=opus, wall-clock 3.007s, decoded duration 1.9825s, one real request, ended track, closed AudioContext.
+- Real microphone retention preserved the original MIME/bytes in the local workspace; immediate dispose race passed with ended track and closed context.
+- The non-main-window denied probe produced the actual NotAllowedError path; workspace and acceptance commands remained denied.
+- Native CSV, ZIP and WAV saves matched renderer bytes/hashes; cancel and existing-target rejection completed without workspace writes.
+- Episode 1 and Episode 2 native print previews were manually reviewed as white, A4 landscape, application chrome hidden, with complete multi-page text.
+
+Final gates after the acceptance fixes:
+- Root pnpm lint and full test: 188 files, 3355 passed, 1 skipped.
+- Desktop pnpm types, lint and quality: passed.
+- Isolated Rust fmt check, feature test suite (1 + 18 + 2 + 8 tests) and acceptance clippy: passed.

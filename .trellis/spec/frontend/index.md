@@ -40,6 +40,7 @@
 | [Voice Batches / Arrangement](./audio-batch-arrangement.md) | v24 batches, exact confirmation, bounded retry, take selection and retained-clip placement | Filled |
 | [State Management](./state-management.md) | IndexedDB owner id, episodes, STUDIO_LIBRARY_ID | Filled |
 | [Managed Workspace](./workspace-storage.md) | Browser copy staging, cross-platform owned paths, incremental hashing and native boundaries | Filled |
+| [Native Workspace / Packaged Acceptance](./native-workspace.md) | Tauri DTO/generation/navigation boundaries, SQLite prototype, WebKit limitations and truthful packaged evidence | Filled |
 | [Checkpoint / Sync Provider](./checkpoint-protocol.md) | Partial immutable fixture checkpoints, verified binary closure, conditional publication and application receipts | Filled |
 | [IP / Material Library](./ip-material-library.md) | Multi-IP profiles, owned immutable snapshots, explicit adoption and retention | Filled |
 | [Asset / Output Foundation](./asset-output-foundation.md) | Optional metadata, prop/style relationships, media reuse and APIMart output profiles | Filled |

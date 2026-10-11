@@ -1,0 +1,235 @@
+{
+  "format": "cuepoint.native-contract-corpus.v1",
+  "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+  "references": [
+    {
+      "assetId": "",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "Project",
+        "relativePath": "projects/id-50726f6a656374/assets/id-c285"
+      },
+      "resolved": "/temporary/oracle/projects/id-50726f6a656374/assets/id-c285"
+    },
+    {
+      "assetId": "\u0000x",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "project",
+        "relativePath": "projects/id-70726f6a656374/assets/id-0078"
+      },
+      "resolved": "/temporary/oracle/projects/id-70726f6a656374/assets/id-0078"
+    },
+    {
+      "assetId": " trailing ",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "é",
+        "relativePath": "projects/id-c3a9/assets/id-20747261696c696e6720"
+      },
+      "resolved": "/temporary/oracle/projects/id-c3a9/assets/id-20747261696c696e6720"
+    },
+    {
+      "assetId": "../a\\b:c",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "é",
+        "relativePath": "projects/id-65cc81/assets/id-2e2e2f615c623a63"
+      },
+      "resolved": "/temporary/oracle/projects/id-65cc81/assets/id-2e2e2f615c623a63"
+    },
+    {
+      "assetId": "CON",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "项目🌹",
+        "relativePath": "projects/id-e9a1b9e79baef09f8cb9/assets/id-434f4e"
+      },
+      "resolved": "/temporary/oracle/projects/id-e9a1b9e79baef09f8cb9/assets/id-434f4e"
+    },
+    {
+      "assetId": "项目🌹",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "CON",
+        "relativePath": "projects/id-434f4e/assets/id-e9a1b9e79baef09f8cb9"
+      },
+      "resolved": "/temporary/oracle/projects/id-434f4e/assets/id-e9a1b9e79baef09f8cb9"
+    },
+    {
+      "assetId": "é",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "../a\\b:c",
+        "relativePath": "projects/id-2e2e2f615c623a63/assets/id-65cc81"
+      },
+      "resolved": "/temporary/oracle/projects/id-2e2e2f615c623a63/assets/id-65cc81"
+    },
+    {
+      "assetId": "é",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": " trailing ",
+        "relativePath": "projects/id-20747261696c696e6720/assets/id-c3a9"
+      },
+      "resolved": "/temporary/oracle/projects/id-20747261696c696e6720/assets/id-c3a9"
+    },
+    {
+      "assetId": "project",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "\u0000x",
+        "relativePath": "projects/id-0078/assets/id-70726f6a656374"
+      },
+      "resolved": "/temporary/oracle/projects/id-0078/assets/id-70726f6a656374"
+    },
+    {
+      "assetId": "Project",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "",
+        "relativePath": "projects/id-c285/assets/id-50726f6a656374"
+      },
+      "resolved": "/temporary/oracle/projects/id-c285/assets/id-50726f6a656374"
+    },
+    {
+      "assetId": "声音🌹",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "studio",
+        "relativePath": "studio/assets/id-e5a3b0e99fb3f09f8cb9"
+      },
+      "resolved": "/temporary/oracle/studio/assets/id-e5a3b0e99fb3f09f8cb9"
+    }
+  ],
+  "invalid": [
+    {
+      "assetId": "asset",
+      "reference": {
+        "workspaceId": "foreign",
+        "projectId": "Project",
+        "relativePath": "projects/id-50726f6a656374/assets/id-6173736574"
+      },
+      "rejectedByOracle": true
+    },
+    {
+      "assetId": "asset",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "foreign",
+        "relativePath": "projects/id-50726f6a656374/assets/id-6173736574"
+      },
+      "rejectedByOracle": true
+    },
+    {
+      "assetId": "asset",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "Project",
+        "relativePath": "../asset"
+      },
+      "rejectedByOracle": true
+    },
+    {
+      "assetId": "asset",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "Project",
+        "relativePath": "PROJECTS/ID-50726F6A656374/ASSETS/ID-6173736574"
+      },
+      "rejectedByOracle": true
+    },
+    {
+      "assetId": "asset",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "Project",
+        "relativePath": "projects/id-50726f6a656374/assets/id-6173736574/other"
+      },
+      "rejectedByOracle": true
+    },
+    {
+      "assetId": "asset",
+      "reference": {
+        "workspaceId": "b844e02c-8e56-4dc0-90e6-ab9d57b27f05",
+        "projectId": "Project",
+        "relativePath": "studio/assets/id-6161"
+      },
+      "rejectedByOracle": true
+    }
+  ],
+  "rejectedIdentities": [
+    {
+      "rawJson": "\"\"",
+      "rejected": true
+    },
+    {
+      "rawJson": "\"  \"",
+      "rejected": true
+    },
+    {
+      "rawJson": "\"﻿\"",
+      "rejected": true
+    },
+    {
+      "rawJson": "\"\\ud800\"",
+      "rejected": true
+    },
+    {
+      "rawJson": "\"\\udfff\"",
+      "rejected": true
+    }
+  ],
+  "hashes": [
+    {
+      "length": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "length": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "length": 55,
+      "sha256": "463eb28e72f82e0a96c0a4cc53690c571281131f672aa229e0d45ae59b598b59"
+    },
+    {
+      "length": 56,
+      "sha256": "da2ae4d6b36748f2a318f23e7ab1dfdf45acdc9d049bd80e59de82a60895f562"
+    },
+    {
+      "length": 63,
+      "sha256": "29af2686fd53374a36b0846694cc342177e428d1647515f078784d69cdb9e488"
+    },
+    {
+      "length": 64,
+      "sha256": "fdeab9acf3710362bd2658cdc9a29e8f9c757fcf9811603a8c447cd1d9151108"
+    },
+    {
+      "length": 65,
+      "sha256": "4bfd2c8b6f1eec7a2afeb48b934ee4b2694182027e6d0fc075074f2fabb31781"
+    },
+    {
+      "length": 127,
+      "sha256": "92ca0fa6651ee2f97b884b7246a562fa71250fedefe5ebf270d31c546bfea976"
+    },
+    {
+      "length": 128,
+      "sha256": "471fb943aa23c511f6f72f8d1652d9c880cfa392ad80503120547703e56a2be5"
+    },
+    {
+      "length": 257,
+      "sha256": "a2c6cad2ffa699b14538231fef914f45d30440389e6f8d79091efba836165a2b"
+    },
+    {
+      "length": 262151,
+      "sha256": "738d598ffd7a5fd6869724409bb1f7bdb26b8f3473fa0e95c9a01fa18f459b8a"
+    }
+  ],
+  "sources": {
+    "src/lib/workspace.ts": "bef1650cee404e8cf50460edf3fd90315dbeb64ffb5125c0be621734d0f69df9",
+    "src/lib/sha256.ts": "639e86426c7ba06930e5820c9fa13fc1d565f15b16dde58783a011139f7b5dc4",
+    "src/domain/types.ts": "2fd6270b0a2a97ed725148046ef67d2875fee04d7107ef22d8f212cdd9cce78f",
+    "desktop/tauri/scripts/contract-oracle.ts": "b16d44fa4146cdf4b0edf2826306ad0ce8ba6b966de92adfade73bc76ac0b9ae"
+  }
+}

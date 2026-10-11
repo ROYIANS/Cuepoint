@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "args": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "types"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 813,
+      "log": "frontend-final-types.log"
+    },
+    {
+      "args": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "lint"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 1531,
+      "log": "frontend-final-lint.log"
+    },
+    {
+      "args": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "quality"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 715,
+      "log": "frontend-final-quality.log"
+    },
+    {
+      "args": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "test:parity"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 1064,
+      "log": "frontend-final-test-parity.log"
+    }
+  ]
+}

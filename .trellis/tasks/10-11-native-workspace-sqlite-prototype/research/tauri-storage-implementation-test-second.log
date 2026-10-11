@@ -1,0 +1,29 @@
+   Compiling cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+error[E0425]: cannot find function `hex_digest` in module `paths`
+   --> src/import.rs:159:37
+    |
+159 |         asset.content_hash = paths::hex_digest(hash.finalize());
+    |                                     ^^^^^^^^^^ not found in `paths`
+
+error[E0425]: cannot find function `hex_digest` in module `paths`
+   --> src/workspace.rs:219:31
+    |
+219 |                     || paths::hex_digest(sha2::Digest::finalize(hash)) != asset.content_hash
+    |                               ^^^^^^^^^^ not found in `paths`
+
+error[E0425]: cannot find function `hex_digest` in this scope
+   --> src/paths.rs:217:15
+    |
+217 |     Ok((size, hex_digest(hash.finalize())))
+    |               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `hex_digest` in this scope
+   --> src/paths.rs:255:12
+    |
+255 |         || hex_digest(hash.finalize()) != expected_hash
+    |            ^^^^^^^^^^ not found in this scope
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `cuepoint-native-storage` (lib) due to 4 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `cuepoint-native-storage` (lib test) due to 4 previous errors

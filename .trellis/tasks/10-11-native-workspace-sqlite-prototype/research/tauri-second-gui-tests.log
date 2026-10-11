@@ -1,0 +1,27 @@
+   Compiling cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+error[E0533]: expected unit struct, unit variant or constant, found struct variant `AcceptanceAction::Setup`
+  --> src/desktop/acceptance.rs:96:13
+   |
+96 |             AcceptanceAction::Setup=>{
+   |             ^^^^^^^^^^^^^^^^^^^^^^^ not a unit struct, unit variant or constant
+   |
+help: use the struct variant pattern syntax
+   |
+96 |             AcceptanceAction::Setup {}=>{
+   |                                     ++
+
+error[E0533]: expected unit struct, unit variant or constant, found struct variant `AcceptanceAction::Ready`
+   --> src/desktop/acceptance.rs:122:13
+    |
+122 | ...   AcceptanceAction::Ready=>{fs::write(root.join("ready.json"),serde_json::to_vec(&serde_json::json!({"version":1,"atMillis":std...
+    |       ^^^^^^^^^^^^^^^^^^^^^^^ not a unit struct, unit variant or constant
+    |
+help: use the struct variant pattern syntax
+    |
+122 |             AcceptanceAction::Ready {}=>{fs::write(root.join("ready.json"),serde_json::to_vec(&serde_json::json!({"version":1,"atMillis":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_err(|e|Error::new("clock",e.to_string()))?.as_millis()}))?)?;}
+    |                                     ++
+
+For more information about this error, try `rustc --explain E0533`.
+error: could not compile `cuepoint-native-storage` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `cuepoint-native-storage` (lib test) due to 2 previous errors

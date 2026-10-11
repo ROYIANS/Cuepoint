@@ -1,0 +1,13 @@
+{
+  "args": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/workspace_probe",
+    "create",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/review-runtime-2ww_dxyh/workspace"
+  ],
+  "exitCode": 0,
+  "binarySha256": "ea67d5d2e83fbdc137d7d5ad5d4898d1a6e5dc91b2d16e7998b3345739c23bae",
+  "sqliteVersion": "3.53.2",
+  "workspaceId": "98b3daef-ce60-4c12-9551-1bbbfc34b7ad",
+  "isolatedFixtureRemoved": true,
+  "scope": "actual final release native CLI only"
+}

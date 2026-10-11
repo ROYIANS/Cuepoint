@@ -1,0 +1,32 @@
+Executable=/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Prototype.app/Contents/MacOS/cuepoint-prototype
+Identifier=dev.cuepoint.prototype.offline
+Format=app bundle with Mach-O thin (arm64)
+CodeDirectory v=20500 size=26047 flags=0x10002(adhoc,runtime) hashes=803+7 location=embedded
+VersionPlatform=1
+VersionMin=851968
+VersionSDK=1769472
+Hash type=sha256 size=32
+CandidateCDHash sha256=217ec2e4bded3bcddda8c916aa33a4252cfd0e03
+CandidateCDHashFull sha256=217ec2e4bded3bcddda8c916aa33a4252cfd0e0365e1165b6db32000a93c5f9e
+Hash choices=sha256
+CMSDigest=217ec2e4bded3bcddda8c916aa33a4252cfd0e0365e1165b6db32000a93c5f9e
+CMSDigestType=2
+Executable Segment base=0
+Executable Segment limit=8863744
+Executable Segment flags=0x1
+Page size=16384
+CDHash=217ec2e4bded3bcddda8c916aa33a4252cfd0e03
+Signature=adhoc
+Info.plist entries=15
+TeamIdentifier=not set
+Runtime Version=27.0.0
+Sealed Resources version=2 rules=13 files=1
+Internal requirements count=0 size=12
+Total signatures=1
+Chosen signature=1
+[Dict]
+	[Key] com.apple.security.device.audio-input
+	[Value]
+		[Bool] true
+desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Prototype.app: valid on disk
+desktop/tauri/.tools/target/release/bundle/macos/Cuepoint Prototype.app: satisfies its Designated Requirement

@@ -1,0 +1,22 @@
+   Compiling cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.72s
+     Running tests/storage_review.rs (.tools/target/debug/deps/storage_review-4e2d63755c9a46bf)
+
+running 1 test
+test every_close_caller_waits_until_writer_is_released ... FAILED
+
+failures:
+
+---- every_close_caller_waits_until_writer_is_released stdout ----
+
+thread 'every_close_caller_waits_until_writer_is_released' (1482896) panicked at tests/storage_review.rs:141:5:
+a successful second close returned while the worker still held the writer lock
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    every_close_caller_waits_until_writer_is_released
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.09s
+
+error: test failed, to rerun pass `--test storage_review`

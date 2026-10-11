@@ -1,0 +1,8 @@
+{
+  "exitCode": 28,
+  "timeoutSeconds": 180,
+  "partialBytes": 10291147,
+  "expectedBytes": 11319056,
+  "execution": "not executed; failed before checksum/help",
+  "next": "same official URL, resume missing bytes, verify complete official hash"
+}

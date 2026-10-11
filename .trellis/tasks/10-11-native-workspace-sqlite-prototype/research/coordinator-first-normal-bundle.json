@@ -1,0 +1,56 @@
+{
+  "recordedAt": "2026-10-10T17:51:59.515765+00:00",
+  "bundle": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791654572848-normal/Cuepoint Prototype.app",
+  "artifact": "early non-final normal bundle",
+  "binarySha256": "e21ce7c7d8e895e842a9221be2e88d2e827025c0cbb03f1f548972060af9428c",
+  "binaryBytes": 13168304,
+  "launchSession": 47072,
+  "uiObservation": "CUA getApp failed: Mac locked, automatic unlock failed; human unlock requested",
+  "packagedVisualOrDialogAcceptance": false,
+  "bundleMetadata": {
+    "CFBundleIdentifier": "dev.cuepoint.prototype.offline",
+    "CFBundleShortVersionString": "0.1.0",
+    "CFBundleVersion": "0.1.0",
+    "NSMicrophoneUsageDescription": "由你点击录音后，在本机临时工作区录制约三秒用于音频兼容性验收。"
+  },
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791654572848-normal/Cuepoint Prototype.app"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/codesign",
+        "-d",
+        "--entitlements",
+        ":-",
+        "--verbose=4",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791654572848-normal/Cuepoint Prototype.app"
+      ],
+      "exitCode": 0,
+      "stdout": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"https://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict><key>com.apple.security.device.audio-input</key><true/></dict></plist>\n",
+      "stderr": "Executable=/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791654572848-normal/Cuepoint Prototype.app/Contents/MacOS/cuepoint-prototype\nIdentifier=dev.cuepoint.prototype.offline\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=26047 flags=0x10002(adhoc,runtime) hashes=803+7 location=embedded\nVersionPlatform=1\nVersionMin=851968\nVersionSDK=1769472\nHash type=sha256 size=32\nCandidateCDHash sha256=217ec2e4bded3bcddda8c916aa33a4252cfd0e03\nCandidateCDHashFull sha256=217ec2e4bded3bcddda8c916aa33a4252cfd0e0365e1165b6db32000a93c5f9e\nHash choices=sha256\nCMSDigest=217ec2e4bded3bcddda8c916aa33a4252cfd0e0365e1165b6db32000a93c5f9e\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=8863744\nExecutable Segment flags=0x1\nPage size=16384\nCDHash=217ec2e4bded3bcddda8c916aa33a4252cfd0e03\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=27.0.0\nSealed Resources version=2 rules=13 files=1\nInternal requirements count=0 size=12\nwarning: Specifying ':' in the path is deprecated and will not work in a future release\nTotal signatures=1\nChosen signature=1\n"
+    }
+  ],
+  "ownMainProcess": [
+    {
+      "pid": 34691,
+      "ppid": 57768,
+      "rssKiB": 22576,
+      "executable": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791654572848-normal/Cuepoint Prototype.app/Contents/MacOS/cuepoint-prototype"
+    }
+  ],
+  "limits": [
+    "Process launch and signing are observed, not actual bundled-window/dialog/media acceptance.",
+    "An isolated first main-process RSS is not aggregate WebKit memory or final measurement.",
+    "UI actions remain pending while the Mac is locked."
+  ]
+}

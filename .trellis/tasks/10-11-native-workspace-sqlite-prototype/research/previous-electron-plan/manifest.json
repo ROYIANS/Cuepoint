@@ -1,0 +1,11 @@
+{
+  "scope": "Historical Electron plan before Tauri candidate convergence; unaccepted product draft is separately preserved",
+  "sha256": {
+    "prd.md": "ecd1e0e02d879bb5d193a5b630d8933c720cec51ceeb577bdb1a2a387f698e88",
+    "design.md": "12a30eda7543ba911f4b58990280285f4f87e1d44f95dac326ee4c4834c6ce3a",
+    "implement.md": "af34454f1ef249af0099cbe73481ea3f51a83cf4d778aa26c62928898603d32f",
+    "implement.jsonl": "22765ec04c2cfdfad26fd21dcc4057b8e760db2f2f0e259112b39221f0a239f7",
+    "check.jsonl": "22765ec04c2cfdfad26fd21dcc4057b8e760db2f2f0e259112b39221f0a239f7",
+    "task.json": "efbd8312918dd6b423e05e46809a89a96e5b8f23b3004446e4d4e9c58c9dbffb"
+  }
+}

@@ -20,10 +20,11 @@
   "subtasks": [],
   "children": [
     "10-10-storage-workspace-foundation",
-    "10-10-storage-checkpoint-plugin-foundation"
+    "10-10-storage-checkpoint-plugin-foundation",
+    "10-11-native-workspace-sqlite-prototype"
   ],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Two bounded foundations independently accepted; commit/archive sequence approved on 2026-10-11. Parent remains in progress for native persistence, production codecs and real sync. User selected complete original tool-history retention with field-by-field review; credentials, continuation tokens and executable authority remain excluded.",
+  "notes": "Two bounded foundations independently accepted; commit/archive sequence approved on 2026-10-11. Parent remains in progress for native persistence, production codecs and real sync. User selected complete original tool-history retention with field-by-field review; credentials, continuation tokens and executable authority remain excluded. Native prototype child returned to planning and user selected Tauri 2 for lightweight feasibility; final runtime adoption remains pending observed native/storage/WebView results.",
   "meta": {}
 }

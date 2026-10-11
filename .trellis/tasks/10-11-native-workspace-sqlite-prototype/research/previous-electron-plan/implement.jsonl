@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Existing package boundaries and quality gates"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Strict unknown boundaries and type-only imports"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Typed lint and meaningful unchanged root gates"}
+{"file": ".trellis/spec/frontend/workspace-storage.md", "reason": "Reuse exact identity/path/incremental hash owners and native limits"}
+{"file": ".trellis/spec/frontend/checkpoint-protocol.md", "reason": "Partial fixture boundaries and commit/cancellation authority"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "One owner for DB/IPC/backup payloads"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "No duplicate portable storage path/hash helpers"}
+{"file": ".trellis/tasks/10-11-native-workspace-sqlite-prototype/research/native-prototype-research.md", "reason": "Verified pinned runtime, SQLite/backup/security/filesystem constraints"}

@@ -1,0 +1,20 @@
+{
+  "recordedAt": "2026-10-10T17:47:23.672950+00:00",
+  "taskStatus": "in_progress",
+  "workPackage": "B packaged compatibility",
+  "storageGate": "A1-A5 independently accepted; final release reprobe passed; 29 frozen source hashes matched",
+  "storageReceipt": "research/tauri-storage-acceptance.json",
+  "nativeNormalTests": 13,
+  "nativeFeatureTests": 29,
+  "packagedGate": "Native bridge/config/scripts and isolated UI fixture implementation underway; actual packaged gates pending",
+  "contextEntries": 19,
+  "paidRequests": 0,
+  "productionDataChanged": false,
+  "committed": false,
+  "pushed": false,
+  "owners": {
+    "native": "/root/native_tauri_storage",
+    "ui": "/root/native_tauri_ui",
+    "coordinator": "/root"
+  }
+}

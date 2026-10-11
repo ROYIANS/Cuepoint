@@ -1,0 +1,8 @@
+    Updating crates.io index
+     Locking 432 packages to highest Rust 1.99 compatible versions
+      Adding generic-array v0.14.7 (available: v0.14.9)
+      Adding serde_json v1.0.151 (available: v1.0.152)
+      Adding tauri-plugin-dialog v2.8.1 (available: v2.8.2)
+      Adding toml v0.8.2 (available: v0.8.23)
+      Adding toml_datetime v0.6.3 (available: v0.6.11)
+      Adding toml_edit v0.20.2 (available: v0.20.7)

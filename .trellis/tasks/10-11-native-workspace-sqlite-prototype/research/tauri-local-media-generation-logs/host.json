@@ -1,0 +1,8 @@
+{
+  "command": [
+    "sw_vers"
+  ],
+  "exitCode": 0,
+  "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n",
+  "stderr": ""
+}

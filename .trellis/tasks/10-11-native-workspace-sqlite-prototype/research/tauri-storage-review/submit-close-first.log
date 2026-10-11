@@ -1,0 +1,22 @@
+   Compiling cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.82s
+     Running tests/storage_review.rs (.tools/target/debug/deps/storage_review-4e2d63755c9a46bf)
+
+running 1 test
+test submit_close_race_never_leaves_completed_operations_cancelable ... FAILED
+
+failures:
+
+---- submit_close_race_never_leaves_completed_operations_cancelable stdout ----
+
+thread 'submit_close_race_never_leaves_completed_operations_cancelable' (1486831) panicked at tests/storage_review.rs:186:13:
+a completed lifecycle retains a nonexistent live operation
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    submit_close_race_never_leaves_completed_operations_cancelable
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--test storage_review`

@@ -1,0 +1,9 @@
+
+> cuepoint@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing
+> node scripts/quality-check.mjs
+
+lint: 13 errors, 554 review warnings, 13 reviewed allowances; 0 failures
+warning rules: {"complexity":137,"sonarjs/cognitive-complexity":95,"no-nested-ternary":318,"max-depth":4}
+architecture: 444 files, 1802 static value edges, 6 literal dynamic edges, 0 static cycles; 0 failures; 0 computed imports/requires outside static proof
+unused: 7 full-scope candidates, 7 reviewed contracts, 95 production-only review signals; 0 failures
+quality: PASS (all)

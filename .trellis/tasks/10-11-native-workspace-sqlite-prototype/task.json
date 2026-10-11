@@ -1,0 +1,36 @@
+{
+  "id": "native-workspace-sqlite-prototype",
+  "name": "native-workspace-sqlite-prototype",
+  "title": "原生工作区与 SQLite 原型",
+  "description": "Verify the selected lightweight Tauri 2 candidate through isolated Rust/SQLite owned workspace persistence, crash/backup recovery and packaged macOS media/document/print/stream compatibility; no production migration or live sync.",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-10-11",
+  "completedAt": null,
+  "branch": "codex/desktop-storage-sync",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-10-desktop-storage-sync",
+  "relatedFiles": [],
+  "notes": "2026-10-11: user approved the revised complete two-stage Tauri 2 plan, project-local fixed toolchain and gesture-only ~3-second local microphone/print acceptance. Execute native Rust/SQLite storage gate before packaged macOS compatibility. Historical Electron plan and 15 unaccepted authored files/probes preserved; no permanent production runtime decision, migration/live sync/paid requests. Commit/archive/journal retain later exact file-plan gate.",
+  "meta": {
+    "runtime_candidate": "tauri-2",
+    "planning_review": "approved-2026-10-11",
+    "work_packages": [
+      "native-storage",
+      "packaged-compatibility"
+    ],
+    "current_work_package": "packaged-compatibility",
+    "storage_gate": "independently-accepted-A1-A5",
+    "packaged_gate": "implementation-starting"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/usr/bin/afconvert",
+    "-f",
+    "adts",
+    "-d",
+    "aac",
+    "-b",
+    "64000",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/tone.wav",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/tone.aac"
+  ],
+  "exitCode": 0,
+  "stdout": "",
+  "stderr": ""
+}

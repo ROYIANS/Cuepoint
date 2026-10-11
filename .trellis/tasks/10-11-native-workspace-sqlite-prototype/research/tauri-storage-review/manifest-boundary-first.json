@@ -1,0 +1,15 @@
+{
+  "args": [
+    "node",
+    "desktop/tauri/scripts/tools.mjs",
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "completion_publication"
+  ],
+  "exitCode": 101,
+  "log": "manifest-boundary-first.log"
+}

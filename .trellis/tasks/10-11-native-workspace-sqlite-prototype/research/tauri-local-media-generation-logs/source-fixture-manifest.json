@@ -1,0 +1,26 @@
+{
+  "tone.aac": {
+    "bytes": 8900,
+    "sha256": "9e3ec7c7e1a24b4c76730c12fe4737695cf8413fb00a6f9139b50325273d48b6"
+  },
+  "tone.wav": {
+    "bytes": 192044,
+    "sha256": "34ca5acf48489e2dca1c236155d6b36a4daf84c615ce9ffff681dc4acfed2819"
+  },
+  "tone.m4a": {
+    "bytes": 12324,
+    "sha256": "2493423bb0a6636b1da138a5c2db6c258d788841a30f8e5e8a28860436ed5f6f"
+  },
+  "silent.mp4": {
+    "bytes": 2769,
+    "sha256": "b45027c1f884c9d50908b6089e4d0e934eee692c195bfd6f10c3fe60b3e953c7"
+  },
+  "generate.swift": {
+    "bytes": 7127,
+    "sha256": "e1b4cb5f25a81b107dc1ffa59e0b7f1380ca224a222cbec694934b52a8e180e8"
+  },
+  "movie.mp4": {
+    "bytes": 11940,
+    "sha256": "91f3d0a1a72de8355add6814fa4ed8b47bc3cac5ebb02c62dcd8b5b7a5a32341"
+  }
+}

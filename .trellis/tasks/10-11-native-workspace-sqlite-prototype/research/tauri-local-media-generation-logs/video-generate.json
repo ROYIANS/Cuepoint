@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/media-probe",
+    "video",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/silent.mp4"
+  ],
+  "exitCode": 0,
+  "stdout": "{\"bytes\":2769,\"durationSec\":2,\"path\":\"\\/Users\\/xiaomengdao\\/WebstormProjects\\/aifenjing\\/.trellis\\/tasks\\/10-11-native-workspace-sqlite-prototype\\/research\\/media-preflight-temp\\/silent.mp4\",\"tracks\":[{\"codecs\":[\"avc1\"],\"decodeCompleted\":true,\"decodedBuffers\":24,\"decodedSamples\":24,\"fps\":12,\"height\":48,\"kind\":\"vide\",\"width\":64}]}\n",
+  "stderr": ""
+}

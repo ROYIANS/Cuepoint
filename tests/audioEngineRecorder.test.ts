@@ -12,7 +12,7 @@ function harness() {
     start: vi.fn(() => { recorder.state = "recording"; }),
     stop: vi.fn(() => { recorder.state = "inactive"; }),
   };
-  const context = { state: "running", resume: vi.fn(async () => undefined), close: vi.fn(async () => undefined), createAnalyser: () => ({ fftSize: 1024, disconnect: vi.fn(), getFloatTimeDomainData: (data: Float32Array) => data.fill(0.5) }), createMediaStreamSource: () => ({ connect: vi.fn(), disconnect: vi.fn() }) };
+  const context = { state: "running", resume: vi.fn(async () => undefined), close: vi.fn(async () => { context.state = "closed"; }), createAnalyser: () => ({ fftSize: 1024, disconnect: vi.fn(), getFloatTimeDomainData: (data: Float32Array) => data.fill(0.5) }), createMediaStreamSource: () => ({ connect: vi.fn(), disconnect: vi.fn() }) };
   const deps: RecorderDependencies = { devices: { getUserMedia: vi.fn(async () => stream) }, isTypeSupported: () => true, createRecorder: () => recorder as unknown as MediaRecorder, createContext: () => context as unknown as AudioContext, now: () => 1000 };
   return { track, stream, recorder, context, deps };
 }
@@ -23,7 +23,7 @@ describe("microphone recorder lifecycle", () => {
     const capture = new MicrophoneRecorder({}, test.deps);
     await capture.start("microphone");
     expect(capture.state).toBe("recording"); expect(capture.readLevel()).toBe(0.5);
-    expect(test.deps.devices.getUserMedia).toHaveBeenCalledWith({ audio: { deviceId: { exact: "microphone" }, echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    expect(test.deps.devices.getUserMedia).toHaveBeenCalledWith({ audio: { deviceId: { exact: "microphone" } } });
     test.recorder.ondataavailable?.({ data: new Blob(["first"]) });
     let resolved = false;
     const completed = capture.stop().then((blob) => { resolved = true; return blob; });

@@ -1,0 +1,18 @@
+{
+  "args": [
+    "node",
+    "desktop/tauri/scripts/tools.mjs",
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--features",
+    "test-hooks",
+    "--test",
+    "storage_review",
+    "journal_alias_added_after_open"
+  ],
+  "exitCode": 101,
+  "log": "journal-alias-first.log"
+}

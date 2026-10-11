@@ -1,0 +1,268 @@
+{
+  "scope": "Independent work package A only; final source frozen after self-fixes",
+  "baseRevision": "c06f454c3a7382f240c2e18106ecb73ccb676e30",
+  "sources": {
+    ".gitignore": "f72e2fe7f72fcd2d25793661c2c62e568da6b55c57b4acebe3c10fff825fb732",
+    "README.md": "5aee78dcf61ef0f7f27bb267979db43840c77ac7c87f7225f72cde2b829136b0",
+    "eslint.config.mjs": "756d03aeb77c244199c30a17cb08d9931658f18871df105525d1f4af8d6b5fa2",
+    "fixtures/portable-contract-v1.json": "9368ed1b759240113b2f76e7a679f3c3cc169e121c443c3c0e623e1b6d709235",
+    "knip.json": "2e02769372e3df3f2aba8dc586a30806ad0ba723db59fbef2a666d76dcfabb4b",
+    "package.json": "3d53e00762419bfff07a32f5d6a9cf508dec4b14f607e707b57c587f49c415e3",
+    "rust-toolchain.toml": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228",
+    "scripts/contract-oracle.ts": "b16d44fa4146cdf4b0edf2826306ad0ce8ba6b966de92adfade73bc76ac0b9ae",
+    "scripts/generate-contract-fixture.mjs": "9a8532d875bcf663356e40d35144fe62c8e03a8fb5855e146a2fed40c703ddc9",
+    "scripts/native-regression.mjs": "06531f7c5ee59032400808e421b4ea350bfc97e94509a47910f215b4c0f74798",
+    "scripts/tools.mjs": "28bd645b1281fd396d2977bad3f67a58edc60bf588b4e5de32e814363369a557",
+    "src-tauri/Cargo.lock": "2931e24ffbf07f06c7a04fc3f7cf82f17714232bcec81b0fa24e2c2010f8fe25",
+    "src-tauri/Cargo.toml": "2ec7a0bdd619185ebc319b073bec7d9ea5aee2bdc2c522f08f387a73c4065ce0",
+    "src-tauri/src/backup.rs": "7fc06ed3554ffcd4b7e7ddc32af936c41111c623679f8095c5a63cc8948cddda",
+    "src-tauri/src/bin/workspace_probe.rs": "87d2307291e407b1ee8bb4410474bb47c220e6703e305884c5cf736c24decc4c",
+    "src-tauri/src/contracts.rs": "b1bac700f9c9b423604f0a9b1de8886240763236ad1990a6c8a24c0c6192c517",
+    "src-tauri/src/database.rs": "0b5b9fcaccec77e10e0f05c83321401e6b371d23f6d44bc2389e3b4d23de4a4c",
+    "src-tauri/src/error.rs": "34ed94b0be0f2d38936c04ddf7730c6a90a52ff6b64018aa2a97149e3a40c604",
+    "src-tauri/src/hooks.rs": "2f963855ae3d5bd1eab16199a372d924ee97053b029c94c6f2e9c8183dab9c61",
+    "src-tauri/src/import.rs": "e021888a64db615b2c74dfff3a6393a8f9825b412ab1e51a7ae5f9ef204f5c81",
+    "src-tauri/src/lib.rs": "e702f247660b0a2dbc533179f3547defe51bee905a1c2e22116a32130a8c0b40",
+    "src-tauri/src/paths.rs": "ff181711264b903e87f5d599c02afcd84b5d0e7f4a536fff72e4a3cc6ef68fe5",
+    "src-tauri/src/worker.rs": "6bb5f65adedcac2b824e90ab216ee7a9bf158f43bc50399d22c90b37d53b429c",
+    "src-tauri/src/workspace.rs": "43a8ea13cb223d2197bc683261297a503b3f507df6824e6a1ff6772f48ece0c4",
+    "src-tauri/tests/native_workspace.rs": "1c18ca1f7d918220509bb6bbcc1612ac7677c14a9efd41a98174c4d6392443a2",
+    "src-tauri/tests/portable_contract.rs": "96a4623f6f363f9538f413cc0e09d97d9c1ae6e247ef14045af402a049c5fdf3",
+    "src-tauri/tests/storage_review.rs": "7bd6b170fb9dccc5bffe4f5be677af9e8f23d196a8fe3c8c1f944bda1ed516d9",
+    "src-tauri/tests/support/mod.rs": "2c4236150088b38a65b565f80b96618e8ec79b3f909d6ae0f6d0ff51570bc505",
+    "tsconfig.json": "e23dbfd50fceb0a17cafcdc496877852aad2e3e82ac674e0c4ad50cbe05e90ae"
+  },
+  "binaries": {
+    ".tools/target/debug/workspace_probe": "45089e544899cc4e27f8aea97a2bcb466d16368845293a24b3c841c7a3a53e8e",
+    ".tools/target/release/workspace_probe": "ea67d5d2e83fbdc137d7d5ad5d4898d1a6e5dc91b2d16e7998b3345739c23bae"
+  },
+  "coverage": [
+    {
+      "path": "desktop/tauri/.gitignore",
+      "sha256": "f72e2fe7f72fcd2d25793661c2c62e568da6b55c57b4acebe3c10fff825fb732",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/README.md",
+      "sha256": "5aee78dcf61ef0f7f27bb267979db43840c77ac7c87f7225f72cde2b829136b0",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/eslint.config.mjs",
+      "sha256": "756d03aeb77c244199c30a17cb08d9931658f18871df105525d1f4af8d6b5fa2",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/fixtures/portable-contract-v1.json",
+      "sha256": "9368ed1b759240113b2f76e7a679f3c3cc169e121c443c3c0e623e1b6d709235",
+      "status": "generated-verified",
+      "note": "Golden corpus byte-exact regenerated from actual TypeScript source with matching provenance and Rust parity.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/knip.json",
+      "sha256": "2e02769372e3df3f2aba8dc586a30806ad0ba723db59fbef2a666d76dcfabb4b",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/package.json",
+      "sha256": "3d53e00762419bfff07a32f5d6a9cf508dec4b14f607e707b57c587f49c415e3",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/rust-toolchain.toml",
+      "sha256": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/scripts/contract-oracle.ts",
+      "sha256": "b16d44fa4146cdf4b0edf2826306ad0ce8ba6b966de92adfade73bc76ac0b9ae",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/scripts/generate-contract-fixture.mjs",
+      "sha256": "9a8532d875bcf663356e40d35144fe62c8e03a8fb5855e146a2fed40c703ddc9",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/scripts/native-regression.mjs",
+      "sha256": "06531f7c5ee59032400808e421b4ea350bfc97e94509a47910f215b4c0f74798",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": [
+        "A-Q1"
+      ]
+    },
+    {
+      "path": "desktop/tauri/scripts/tools.mjs",
+      "sha256": "28bd645b1281fd396d2977bad3f67a58edc60bf588b4e5de32e814363369a557",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/Cargo.lock",
+      "sha256": "2931e24ffbf07f06c7a04fc3f7cf82f17714232bcec81b0fa24e2c2010f8fe25",
+      "status": "generated-verified",
+      "note": "Generated Cargo graph validated by locked metadata/compile/tests.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/Cargo.toml",
+      "sha256": "2ec7a0bdd619185ebc319b073bec7d9ea5aee2bdc2c522f08f387a73c4065ce0",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/backup.rs",
+      "sha256": "7fc06ed3554ffcd4b7e7ddc32af936c41111c623679f8095c5a63cc8948cddda",
+      "status": "reviewed",
+      "note": "Full copy/snapshot/manifest/restore flow reviewed; final target closure rechecked with shared verifier.",
+      "findings": [
+        "A-F1",
+        "A-F2"
+      ]
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/bin/workspace_probe.rs",
+      "sha256": "87d2307291e407b1ee8bb4410474bb47c220e6703e305884c5cf736c24decc4c",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/contracts.rs",
+      "sha256": "b1bac700f9c9b423604f0a9b1de8886240763236ad1990a6c8a24c0c6192c517",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/database.rs",
+      "sha256": "0b5b9fcaccec77e10e0f05c83321401e6b371d23f6d44bc2389e3b4d23de4a4c",
+      "status": "reviewed",
+      "note": "Full tables/integrity/identity/owner/refs validation reviewed; explicit index and DB auxiliary link checks fixed.",
+      "findings": [
+        "A-F3",
+        "A-F4"
+      ]
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/error.rs",
+      "sha256": "34ed94b0be0f2d38936c04ddf7730c6a90a52ff6b64018aa2a97149e3a40c604",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/hooks.rs",
+      "sha256": "2f963855ae3d5bd1eab16199a372d924ee97053b029c94c6f2e9c8183dab9c61",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/import.rs",
+      "sha256": "e021888a64db615b2c74dfff3a6393a8f9825b412ab1e51a7ae5f9ef204f5c81",
+      "status": "reviewed",
+      "note": "Full durable intent/bounded copy/exclusive link/actual commit/recovery reviewed with real child kills.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/lib.rs",
+      "sha256": "e702f247660b0a2dbc533179f3547defe51bee905a1c2e22116a32130a8c0b40",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/paths.rs",
+      "sha256": "ff181711264b903e87f5d599c02afcd84b5d0e7f4a536fff72e4a3cc6ef68fe5",
+      "status": "reviewed",
+      "note": "Full exact UTF8 refs/native static paths/bounded hashes/exclusive publication reviewed; stream budget tested.",
+      "findings": [
+        "A-F7"
+      ]
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/worker.rs",
+      "sha256": "6bb5f65adedcac2b824e90ab216ee7a9bf158f43bc50399d22c90b37d53b429c",
+      "status": "reviewed",
+      "note": "Full lifecycle/queue/cancel/close/Drop flow reviewed; admission and close barriers regression verified.",
+      "findings": [
+        "A-F5",
+        "A-F6"
+      ]
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/workspace.rs",
+      "sha256": "43a8ea13cb223d2197bc683261297a503b3f507df6824e6a1ff6772f48ece0c4",
+      "status": "reviewed",
+      "note": "Full ready/open/create/runtime boundary/availability/read/close flow reviewed; journal boundary enforced.",
+      "findings": [
+        "A-F4"
+      ]
+    },
+    {
+      "path": "desktop/tauri/src-tauri/tests/native_workspace.rs",
+      "sha256": "1c18ca1f7d918220509bb6bbcc1612ac7677c14a9efd41a98174c4d6392443a2",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/tests/portable_contract.rs",
+      "sha256": "96a4623f6f363f9538f413cc0e09d97d9c1ae6e247ef14045af402a049c5fdf3",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/src-tauri/tests/storage_review.rs",
+      "sha256": "7bd6b170fb9dccc5bffe4f5be677af9e8f23d196a8fe3c8c1f944bda1ed516d9",
+      "status": "reviewed",
+      "note": "Eight independent adversarial and read/corrupt-state regressions; seven defect assertions demonstrated failing against prior source.",
+      "findings": [
+        "A-F1",
+        "A-F2",
+        "A-F3",
+        "A-F4",
+        "A-F5",
+        "A-F6"
+      ]
+    },
+    {
+      "path": "desktop/tauri/src-tauri/tests/support/mod.rs",
+      "sha256": "2c4236150088b38a65b565f80b96618e8ec79b3f909d6ae0f6d0ff51570bc505",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    },
+    {
+      "path": "desktop/tauri/tsconfig.json",
+      "sha256": "e23dbfd50fceb0a17cafcdc496877852aad2e3e82ac674e0c4ad50cbe05e90ae",
+      "status": "reviewed",
+      "note": "Full authored source/config/test/document read and reviewed; applicable strict native/frontend gate passed.",
+      "findings": []
+    }
+  ],
+  "nativeGateReceipt": "tauri-storage-review/native-final-gates/receipt.json",
+  "frontendGateReceipt": "tauri-storage-review/frontend-final.json"
+}

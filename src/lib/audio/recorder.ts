@@ -95,24 +95,32 @@ export class MicrophoneRecorder {
         // Device failure may occur before the UI calls stop; retain rejection for that call.
         void this.completion.catch(() => undefined);
         try {
-            this.context = deps.createContext();
-            const resume = this.context.resume();
+            const context = deps.createContext();
+            this.context = context;
+            const resume = context.resume();
             void resume.catch(() => undefined);
+            // Keep the capture request to the Web standard baseline. WebKit's
+            // desktop implementation rejects optional processing constraints
+            // (`echoCancellation`, `noiseSuppression`, `autoGainControl`) with
+            // OverconstrainedError even when a microphone is available.
             const stream = await deps.devices.getUserMedia({
-                audio: {
-                    ...(deviceId ? {deviceId: {exact: deviceId}} : {}),
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false
-                }
+                audio: deviceId ? {deviceId: {exact: deviceId}} : true
             });
             if (epoch !== this.epoch || this.disposed) {
                 stream.getTracks().forEach((track) => track.stop());
+                // A dispose may have attempted close() while resume() was still
+                // pending. WebKit can leave that context open, so close this
+                // same instance again after the permission promise settles.
+                await resume.catch(() => undefined);
+                await this.closeContext(context);
                 return;
             }
             this.stream = stream;
             await resume;
-            if (epoch !== this.epoch || this.disposed) return;
+            if (epoch !== this.epoch || this.disposed) {
+                await this.closeContext(context);
+                return;
+            }
             const mimeType = RECORDING_MIME_TYPES.find((mime) => deps.isTypeSupported(mime));
             const recorder = deps.createRecorder(stream, mimeType ? {mimeType} : {});
             this.recorder = recorder;
@@ -233,8 +241,18 @@ export class MicrophoneRecorder {
         this.analysisSource = undefined;
         this.analyser = undefined;
         this.meterData = undefined;
-        if (this.context && this.context.state !== "closed") void this.context.close().catch(() => undefined);
+        if (this.context && this.context.state !== "closed") void this.closeContext(this.context);
         this.context = undefined;
+    }
+
+    private async closeContext(context: AudioContext) {
+        if (context.state === "closed") return;
+        try {
+            await context.close();
+        } catch {
+            // The browser may reject a close racing with resume; the caller
+            // that owns the pending resume retries after it settles.
+        }
     }
 
     private fail(error: Error) {

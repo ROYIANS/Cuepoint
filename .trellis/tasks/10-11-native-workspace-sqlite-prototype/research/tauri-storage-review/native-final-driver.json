@@ -1,0 +1,10 @@
+{
+  "args": [
+    "node",
+    "desktop/tauri/scripts/native-regression.mjs"
+  ],
+  "exitCode": 0,
+  "elapsedMs": 12467,
+  "log": "native-final-driver.log",
+  "gateReceipt": "native-final-gates/receipt.json"
+}

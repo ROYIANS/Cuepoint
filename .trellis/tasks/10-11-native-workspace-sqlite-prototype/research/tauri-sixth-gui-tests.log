@@ -1,0 +1,18 @@
+   Compiling cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+error[E0618]: expected function, found `std::sync::Arc<worker::StorageWorker>`
+    --> src/desktop.rs:1088:17
+     |
+ 248 | fn worker(bridge: &Bridge, generation: u64) -> Result<Arc<StorageWorker>> {
+     | ------------------------------------------------------------------------- this function of the same name is available here, but it's shadowed by the local binding
+...
+1064 |         let worker = Arc::new(StorageWorker::create(&root, hooks).unwrap());
+     |             ------ `worker` has type `std::sync::Arc<worker::StorageWorker>`
+...
+1088 |         assert!(worker(&bridge, 1).is_err());
+     |                 ^^^^^^------------
+     |                 |
+     |                 call expression requires function
+
+For more information about this error, try `rustc --explain E0618`.
+error: could not compile `cuepoint-native-storage` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

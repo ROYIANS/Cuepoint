@@ -1,0 +1,22 @@
+{
+  "acceptedAt": "2026-10-10T17:35:54.388555+00:00",
+  "gates": {
+    "A1": "PASS",
+    "A2": "PASS",
+    "A3": "PASS",
+    "A4": "PASS",
+    "A5": "PASS"
+  },
+  "independentReport": "research/tauri-storage-review/report.md",
+  "finalSourceManifest": "research/tauri-storage-review/final-source-manifest.json",
+  "finalSourceFiles": 29,
+  "coordinatorFinalProbe": "research/coordinator-native-probe-final.log",
+  "releaseCliSha256": "ea67d5d2e83fbdc137d7d5ad5d4898d1a6e5dc91b2d16e7998b3345739c23bae",
+  "actualSqlite": "3.53.2",
+  "normalTests": 13,
+  "featureTests": 29,
+  "nextWorkPackage": "B packaged compatibility",
+  "packagedAcceptance": false,
+  "productionMigration": false,
+  "liveSync": false
+}

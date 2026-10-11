@@ -1,0 +1,74 @@
+    Checking cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+error: large size difference between variants
+  --> src/worker.rs:14:1
+   |
+14 | /  enum Message {
+15 | |/     Run {
+16 | ||         id: String,
+17 | ||         job: Job,
+18 | ||         cancel: Arc<AtomicBool>,
+19 | ||         reply: Reply,
+20 | ||     },
+   | ||_____- the largest variant contains at least 264 bytes
+21 | |      Close(mpsc::Sender<Result<()>>),
+   | |      ------------------------------- the second-largest variant contains at least 16 bytes
+22 | |  }
+   | |__^ the entire enum is at least 264 bytes
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#large_enum_variant
+   = note: `-D clippy::large-enum-variant` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::large_enum_variant)]`
+help: consider boxing the large fields or introducing indirection in some other way to reduce the total size of the enum
+   |
+17 -         job: Job,
+17 +         job: Box<Job>,
+   |
+
+error: this `if` statement can be collapsed
+   --> src/worker.rs:222:9
+    |
+222 | /         if let Ok(handle) = self.thread.get_mut() {
+223 | |             if let Some(thread) = handle.take() {
+224 | |                 let _ = thread.join();
+225 | |             }
+226 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+222 ~         if let Ok(handle) = self.thread.get_mut()
+223 ~             && let Some(thread) = handle.take() {
+224 |                 let _ = thread.join();
+225 ~             }
+    |
+
+error: this `if` statement can be collapsed
+  --> src/workspace.rs:87:9
+   |
+87 | /         if let Some(marker) = ready {
+88 | |             if marker.format != "cuepoint.workspace.ready.v1"
+89 | |                 || marker.schema != SCHEMA
+90 | |                 || marker.workspace_id != state.workspace_id
+...  |
+97 | |         }
+   | |_________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+87 ~         if let Some(marker) = ready
+88 ~             && (marker.format != "cuepoint.workspace.ready.v1"
+89 |                 || marker.schema != SCHEMA
+90 ~                 || marker.workspace_id != state.workspace_id)
+91 |             {
+...
+95 |                 ));
+96 ~             }
+   |
+
+error: could not compile `cuepoint-native-storage` (lib test) due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `cuepoint-native-storage` (lib) due to 3 previous errors

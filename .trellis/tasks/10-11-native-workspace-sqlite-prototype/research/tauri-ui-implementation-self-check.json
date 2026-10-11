@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "date": "2026-10-11",
+  "status": "non-final source self-check; actual packaged gates pending",
+  "owner": "native_tauri_ui",
+  "gates": [
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri types",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-11-native-workspace-sqlite-prototype/research/tauri-ui-implementation-final-types.log",
+      "logSha256": "6f46de1c6f4487e33d41a122d74a08f3c92a6a67ff880a9a5293b0c6ab8af60d"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri lint",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-11-native-workspace-sqlite-prototype/research/tauri-ui-implementation-final-lint.log",
+      "logSha256": "032c836532bb5b8949c83c124a9353d0b6727efc6efc50358eef31d43c218b6a"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri quality",
+      "exitCode": 0,
+      "log": ".trellis/tasks/10-11-native-workspace-sqlite-prototype/research/tauri-ui-implementation-final-quality.log",
+      "logSha256": "fdd444fe6e9a40f8a8f6d372ab8a72163b5ccb7c8745e443c2137dbbb788dab8"
+    }
+  ],
+  "files": {
+    "desktop/tauri/ui/acceptance.tsx": "031cdbeeb939277b8f94787b71b6cb504f5f0851dc77f124fc3306f58d6c6056",
+    "desktop/tauri/ui/acceptanceAudio.ts": "008e32f79d3c4fd997ab8f2a2fd2233e9fa10bc390c0923b0988a501c062321c",
+    "desktop/tauri/ui/acceptanceEvidence.ts": "1273ef7f7b7c02d592eed811ee890485b4ba6843685b33dc7cc98dbe8a4eab84",
+    "desktop/tauri/ui/acceptanceMedia.ts": "c1a3fd462c5e9e3ffaed4fbe7cbe7fcd32e615d0f81e6a645b86c03a873f64e2",
+    "desktop/tauri/ui/acceptancePrint.tsx": "eee6ea5aa168cd10ecfbd79c2e3821ab647b047fe88cfa49c615cdcd384d2928",
+    "desktop/tauri/ui/acceptanceRecorder.ts": "5ec1aec9ba1f60c94202130f24a4d191eed82b74be2d45f8581a2295444bec34",
+    "desktop/tauri/ui/acceptanceStream.ts": "f00145070a5c51944b0d932530a8aba3db0360baa0d6ff3b4eff5e486224224a",
+    "desktop/tauri/ui/bridge.ts": "cb3a0dfe21dc1a9a571cbd21f3c7154c292417fb8b90ca5609cd5f25a2d042c4",
+    "desktop/tauri/ui/env.d.ts": "fb73bf67da5101ad7c82f5e5d4f52f74778a3d9bfa2faa7757a360923555535a",
+    "desktop/tauri/ui/index.html": "8bdf26b739feed1aeb80553454a9cd2ed5bc323c6fec274245f16acbb2b58841",
+    "desktop/tauri/ui/main.tsx": "bac31eae404e41038192ef3e74f1ef6570d97362e0e8daa5785bcaffa437f9b8",
+    "desktop/tauri/ui/prototype.css": "dda6667061a6c6759b648b496853f12bc20a3a92399e4348ca32a082d34f41ad"
+  },
+  "firstFailures": [
+    "tauri-ui-implementation-first-lint.log",
+    "tauri-ui-implementation-quality.log",
+    "tauri-second-packaged-lint.log"
+  ],
+  "notRun": [
+    "CUA",
+    "OS dialogs",
+    "native app launch",
+    "microphone capture",
+    "print",
+    "SSE server",
+    "paid calls",
+    "Git"
+  ],
+  "productScope": "desktop/tauri/ui/** only"
+}

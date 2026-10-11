@@ -1,0 +1,59 @@
+[
+  {
+    "name": "rustc",
+    "args": [
+      "node",
+      "desktop/tauri/scripts/tools.mjs",
+      "rustc",
+      "-Vv"
+    ],
+    "exitCode": 0,
+    "log": "rustc.log"
+  },
+  {
+    "name": "cargo",
+    "args": [
+      "node",
+      "desktop/tauri/scripts/tools.mjs",
+      "cargo",
+      "--version"
+    ],
+    "exitCode": 0,
+    "log": "cargo.log"
+  },
+  {
+    "name": "metadata",
+    "args": [
+      "node",
+      "desktop/tauri/scripts/tools.mjs",
+      "cargo",
+      "metadata",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--format-version",
+      "1",
+      "--no-deps"
+    ],
+    "exitCode": 0,
+    "log": "metadata.log"
+  },
+  {
+    "name": "probe-debug-build",
+    "args": [
+      "node",
+      "desktop/tauri/scripts/tools.mjs",
+      "cargo",
+      "build",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--features",
+      "test-hooks",
+      "--bin",
+      "workspace_probe"
+    ],
+    "exitCode": 0,
+    "log": "probe-debug-build.log"
+  }
+]

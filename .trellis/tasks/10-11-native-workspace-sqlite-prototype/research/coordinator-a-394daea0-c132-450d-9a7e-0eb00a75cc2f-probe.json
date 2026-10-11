@@ -1,0 +1,780 @@
+{
+  "passed": true,
+  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7",
+  "sqliteVersion": "3.53.2",
+  "binarySha256": "ec0beaea010fb83a514a267ec23f7e825e8373e4178b86ac3a092664cf4f0594",
+  "disposableRoot": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/coordinator-a-394daea0-c132-450d-9a7e-0eb00a75cc2f",
+  "events": [
+    {
+      "event": "started",
+      "mode": "create",
+      "pid": 26082
+    },
+    {
+      "request": "saveProject",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "project",
+          "value": {
+            "id": "项目/Case",
+            "title": "原生验收"
+          }
+        }
+      }
+    },
+    {
+      "request": "import",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "asset",
+          "value": {
+            "byteLength": 786688,
+            "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+            "displayName": "same.bin",
+            "id": "take-A",
+            "kind": "media",
+            "mimeType": "application/octet-stream",
+            "projectId": "项目/Case",
+            "reference": {
+              "projectId": "项目/Case",
+              "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d41",
+              "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": "import",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "asset",
+          "value": {
+            "byteLength": 786688,
+            "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+            "displayName": "same.bin",
+            "id": "take-a",
+            "kind": "output",
+            "mimeType": "application/octet-stream",
+            "projectId": "项目/Case",
+            "reference": {
+              "projectId": "项目/Case",
+              "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d61",
+              "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": "import",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "asset",
+          "value": {
+            "byteLength": 786688,
+            "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+            "displayName": "same.bin",
+            "id": "声音",
+            "kind": "media",
+            "mimeType": "application/octet-stream",
+            "projectId": "studio",
+            "reference": {
+              "projectId": "studio",
+              "relativePath": "studio/assets/id-e5a3b0e99fb3",
+              "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": "state",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "state",
+          "value": {
+            "assets": [
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-A",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d41",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-a",
+                "kind": "output",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d61",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "声音",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "studio",
+                "reference": {
+                  "projectId": "studio",
+                  "relativePath": "studio/assets/id-e5a3b0e99fb3",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              }
+            ],
+            "projects": [
+              {
+                "id": "项目/Case",
+                "title": "原生验收"
+              }
+            ],
+            "references": [
+              {
+                "assetId": "take-A",
+                "durationSec": 3.0,
+                "id": "clip-take-A",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              },
+              {
+                "assetId": "take-a",
+                "durationSec": 3.0,
+                "id": "clip-take-a",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              }
+            ],
+            "schema": 1,
+            "sqliteVersion": "3.53.2",
+            "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+          }
+        }
+      }
+    },
+    {
+      "event": "source-independent",
+      "originalSha256": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f"
+    },
+    {
+      "request": "backup",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "backup",
+          "value": {
+            "assets": [
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-A",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d41",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-a",
+                "kind": "output",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d61",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "声音",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "studio",
+                "reference": {
+                  "projectId": "studio",
+                  "relativePath": "studio/assets/id-e5a3b0e99fb3",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              }
+            ],
+            "databaseBytes": 61440,
+            "databaseHash": "608bc29e1ec1dfec8b932a199079d167bdd1114fe099e4f544e82ed9317bfd7c",
+            "format": "cuepoint.native-backup.v1",
+            "schema": 1,
+            "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+          }
+        }
+      }
+    },
+    {
+      "event": "started",
+      "mode": "restore",
+      "pid": 26088
+    },
+    {
+      "request": "state",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "state",
+          "value": {
+            "assets": [
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-A",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d41",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-a",
+                "kind": "output",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d61",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "声音",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "studio",
+                "reference": {
+                  "projectId": "studio",
+                  "relativePath": "studio/assets/id-e5a3b0e99fb3",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              }
+            ],
+            "projects": [
+              {
+                "id": "项目/Case",
+                "title": "原生验收"
+              }
+            ],
+            "references": [
+              {
+                "assetId": "take-A",
+                "durationSec": 3.0,
+                "id": "clip-take-A",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              },
+              {
+                "assetId": "take-a",
+                "durationSec": 3.0,
+                "id": "clip-take-a",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              }
+            ],
+            "schema": 1,
+            "sqliteVersion": "3.53.2",
+            "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+          }
+        }
+      }
+    },
+    {
+      "request": "close",
+      "response": {
+        "ok": true,
+        "value": {
+          "closed": true
+        }
+      }
+    },
+    {
+      "event": "rejected-start",
+      "mode": "restore",
+      "exitCode": 1,
+      "elapsedSec": 0.040785249999999995,
+      "stdout": "",
+      "stderr": "io: File exists (os error 17)\n"
+    },
+    {
+      "event": "rejected-start",
+      "mode": "restore",
+      "exitCode": 1,
+      "elapsedSec": 0.02184637500000003,
+      "stdout": "",
+      "stderr": "io: File exists (os error 17)\n"
+    },
+    {
+      "event": "rejected-start",
+      "mode": "open",
+      "exitCode": 1,
+      "elapsedSec": 0.18302850000000004,
+      "stdout": "",
+      "stderr": "sqlite: database is locked\n"
+    },
+    {
+      "request": "close",
+      "response": {
+        "ok": true,
+        "value": {
+          "closed": true
+        }
+      }
+    },
+    {
+      "event": "started",
+      "mode": "open",
+      "pid": 26108
+    },
+    {
+      "request": "state",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "state",
+          "value": {
+            "assets": [
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-A",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d41",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-a",
+                "kind": "output",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d61",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "声音",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "studio",
+                "reference": {
+                  "projectId": "studio",
+                  "relativePath": "studio/assets/id-e5a3b0e99fb3",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              }
+            ],
+            "projects": [
+              {
+                "id": "项目/Case",
+                "title": "原生验收"
+              }
+            ],
+            "references": [
+              {
+                "assetId": "take-A",
+                "durationSec": 3.0,
+                "id": "clip-take-A",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              },
+              {
+                "assetId": "take-a",
+                "durationSec": 3.0,
+                "id": "clip-take-a",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              }
+            ],
+            "schema": 1,
+            "sqliteVersion": "3.53.2",
+            "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+          }
+        }
+      }
+    },
+    {
+      "request": "availability",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "availability",
+          "value": [
+            {
+              "assetId": "take-A",
+              "status": "missing"
+            },
+            {
+              "assetId": "take-a",
+              "status": "corrupt"
+            },
+            {
+              "assetId": "声音",
+              "status": "present"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request": "state",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "state",
+          "value": {
+            "assets": [
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-A",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d41",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-a",
+                "kind": "output",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d61",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "声音",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "studio",
+                "reference": {
+                  "projectId": "studio",
+                  "relativePath": "studio/assets/id-e5a3b0e99fb3",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              }
+            ],
+            "projects": [
+              {
+                "id": "项目/Case",
+                "title": "原生验收"
+              }
+            ],
+            "references": [
+              {
+                "assetId": "take-A",
+                "durationSec": 3.0,
+                "id": "clip-take-A",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              },
+              {
+                "assetId": "take-a",
+                "durationSec": 3.0,
+                "id": "clip-take-a",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              }
+            ],
+            "schema": 1,
+            "sqliteVersion": "3.53.2",
+            "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+          }
+        }
+      }
+    },
+    {
+      "request": "backup",
+      "response": {
+        "error": {
+          "code": "io",
+          "message": "No such file or directory (os error 2)"
+        },
+        "ok": false
+      }
+    },
+    {
+      "request": "close",
+      "response": {
+        "ok": true,
+        "value": {
+          "closed": true
+        }
+      }
+    },
+    {
+      "event": "started",
+      "mode": "open",
+      "pid": 26110
+    },
+    {
+      "event": "genuine-sigkill",
+      "point": "precommit",
+      "pid": 26110,
+      "exitCode": -9
+    },
+    {
+      "event": "started",
+      "mode": "open",
+      "pid": 26113
+    },
+    {
+      "request": "state",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "state",
+          "value": {
+            "assets": [
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-A",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d41",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-a",
+                "kind": "output",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d61",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "声音",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "studio",
+                "reference": {
+                  "projectId": "studio",
+                  "relativePath": "studio/assets/id-e5a3b0e99fb3",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              }
+            ],
+            "projects": [
+              {
+                "id": "项目/Case",
+                "title": "原生验收"
+              }
+            ],
+            "references": [
+              {
+                "assetId": "take-A",
+                "durationSec": 3.0,
+                "id": "clip-take-A",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              },
+              {
+                "assetId": "take-a",
+                "durationSec": 3.0,
+                "id": "clip-take-a",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              }
+            ],
+            "schema": 1,
+            "sqliteVersion": "3.53.2",
+            "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+          }
+        }
+      }
+    },
+    {
+      "request": "close",
+      "response": {
+        "ok": true,
+        "value": {
+          "closed": true
+        }
+      }
+    },
+    {
+      "event": "started",
+      "mode": "open",
+      "pid": 26125
+    },
+    {
+      "request": "state",
+      "response": {
+        "ok": true,
+        "value": {
+          "kind": "state",
+          "value": {
+            "assets": [
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-A",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d41",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "take-a",
+                "kind": "output",
+                "mimeType": "application/octet-stream",
+                "projectId": "项目/Case",
+                "reference": {
+                  "projectId": "项目/Case",
+                  "relativePath": "projects/id-e9a1b9e79bae2f43617365/assets/id-74616b652d61",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              },
+              {
+                "byteLength": 786688,
+                "contentHash": "1d5f47bf91c09ab5a64787f2c224f7fa7bf289f66234db2022fa05cb8ad1ad7f",
+                "displayName": "same.bin",
+                "id": "声音",
+                "kind": "media",
+                "mimeType": "application/octet-stream",
+                "projectId": "studio",
+                "reference": {
+                  "projectId": "studio",
+                  "relativePath": "studio/assets/id-e5a3b0e99fb3",
+                  "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+                }
+              }
+            ],
+            "projects": [
+              {
+                "id": "项目/Case",
+                "title": "原生验收"
+              }
+            ],
+            "references": [
+              {
+                "assetId": "take-A",
+                "durationSec": 3.0,
+                "id": "clip-take-A",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              },
+              {
+                "assetId": "take-a",
+                "durationSec": 3.0,
+                "id": "clip-take-a",
+                "projectId": "项目/Case",
+                "startSec": 1.25
+              }
+            ],
+            "schema": 1,
+            "sqliteVersion": "3.53.2",
+            "workspaceId": "0fe943c1-d8be-4672-b62f-ee5171c6d1f7"
+          }
+        }
+      }
+    },
+    {
+      "request": "close",
+      "response": {
+        "ok": true,
+        "value": {
+          "closed": true
+        }
+      }
+    },
+    {
+      "event": "recovery-idempotent",
+      "sourceSha256": "f1c50dd838e3f55277d36273e436a0a70d46aedfcb482efe17977d9d136ce8f0",
+      "unknownFilePreserved": true,
+      "logicalStateUnchanged": true
+    }
+  ],
+  "scope": "native CLI coordinator probe; no packaged compatibility claim"
+}

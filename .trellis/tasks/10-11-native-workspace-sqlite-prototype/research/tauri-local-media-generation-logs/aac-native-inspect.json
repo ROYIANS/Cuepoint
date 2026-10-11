@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/media-probe",
+    "inspect",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/tone.aac",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/tone.m4a"
+  ],
+  "exitCode": 0,
+  "stdout": "{\"bytes\":8900,\"durationSec\":2.048,\"path\":\"\\/Users\\/xiaomengdao\\/WebstormProjects\\/aifenjing\\/.trellis\\/tasks\\/10-11-native-workspace-sqlite-prototype\\/research\\/media-preflight-temp\\/tone.aac\",\"tracks\":[{\"codecs\":[\"aac \"],\"decodeCompleted\":true,\"decodedBuffers\":12,\"decodedSamples\":98304,\"fps\":0,\"height\":0,\"kind\":\"soun\",\"width\":0}]}\n{\"bytes\":12324,\"durationSec\":2,\"path\":\"\\/Users\\/xiaomengdao\\/WebstormProjects\\/aifenjing\\/.trellis\\/tasks\\/10-11-native-workspace-sqlite-prototype\\/research\\/media-preflight-temp\\/tone.m4a\",\"tracks\":[{\"codecs\":[\"aac \"],\"decodeCompleted\":true,\"decodedBuffers\":12,\"decodedSamples\":96000,\"fps\":46.875,\"height\":0,\"kind\":\"soun\",\"width\":0}]}\n",
+  "stderr": ""
+}

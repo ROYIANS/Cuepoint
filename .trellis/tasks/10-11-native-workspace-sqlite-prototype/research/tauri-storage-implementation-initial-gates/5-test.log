@@ -1,0 +1,50 @@
+   Compiling cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.28s
+     Running unittests src/lib.rs (.tools/target/debug/deps/cuepoint_native_storage-23070be61b7c1086)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/workspace_probe.rs (.tools/target/debug/deps/workspace_probe-4f732ef7820e0857)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/native_workspace.rs (.tools/target/debug/deps/native_workspace-9ec814f9595c9347)
+
+running 16 tests
+test lifecycle_close_after_actual_commit_reports_committed_asset ... ok
+test owner_is_rechecked_at_real_commit_and_fresh_publication_never_overwrites ... ok
+test cancellation_is_independent_queued_inputs_frozen_and_commit_wins_late_abort ... ok
+test missing_and_corrupt_keep_exact_logical_state ... ok
+test queued_backup_excludes_later_writes_and_lifecycle_close_cancels_before_commit ... ok
+test real_writer_contention_and_new_root_no_overwrite ... ok
+test persistent_owned_media_output_studio_timing_and_source_independence ... ok
+test live_second_process_refuses_and_actual_death_releases_writer ... ok
+test schema_identity_owner_and_incomplete_roots_reject ... ok
+test symlink_hardlink_target_and_ancestor_boundaries_preserve_external_bytes ... ok
+test managed_bytes_changed_during_stage_or_actual_commit_are_not_ready ... ok
+test recovery_refuses_external_inode_alias_and_foreign_intent_paths_without_deletion ... ok
+test source_change_injected_io_error_and_precommit_abort_leave_no_ready_asset ... ok
+test snapshot_backup_restore_exact_and_strict_corruption ... ok
+test genuine_backup_and_restore_process_kills_follow_completion_authority ... ok
+test genuine_process_kills_import_recovery_is_idempotent_and_preserves_unknown_sources ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.69s
+
+     Running tests/portable_contract.rs (.tools/target/debug/deps/portable_contract-1746597c16d2c970)
+
+running 2 tests
+test malformed_wire_extra_fields_and_native_lengths_reject ... ok
+test actual_typescript_oracle_is_exact_in_rust ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests cuepoint_native_storage
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

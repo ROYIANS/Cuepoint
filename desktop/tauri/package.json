@@ -1,0 +1,28 @@
+{
+  "name": "cuepoint-tauri-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.15.0",
+  "dependencies": {
+    "@tauri-apps/api": "2.12.2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.1",
+    "lamejs": "1.2.1"
+  },
+  "scripts": {
+    "types": "node ../../node_modules/typescript/bin/tsc --project tsconfig.json --noEmit",
+    "lint": "node ../../node_modules/eslint/bin/eslint.js --config eslint.config.mjs scripts ui --max-warnings 0",
+    "quality": "node ../../node_modules/knip/bin/knip.js --config knip.json --no-progress",
+    "test:parity": "node scripts/generate-contract-fixture.mjs --check && node scripts/tools.mjs cargo test --manifest-path src-tauri/Cargo.toml --locked --test portable_contract",
+    "test:native": "node scripts/tools.mjs cargo test --manifest-path src-tauri/Cargo.toml --locked --features test-hooks",
+    "test:native-gates": "node scripts/native-regression.mjs",
+    "build:native": "node scripts/tools.mjs cargo build --manifest-path src-tauri/Cargo.toml --locked --release",
+    "build:frontend": "node scripts/build-frontend.mjs",
+    "build:app": "node scripts/build-app.mjs",
+    "test:packaged": "node scripts/packaged-regression.mjs",
+    "measure": "node scripts/measure.mjs",
+    "fixtures:generate": "node scripts/generate-fixtures.mjs"
+  }
+}

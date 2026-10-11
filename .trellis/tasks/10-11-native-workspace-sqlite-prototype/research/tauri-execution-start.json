@@ -1,0 +1,37 @@
+{
+  "recordedAt": "2026-10-10T17:04:32.134487+00:00",
+  "root": {
+    "src/lib/workspace.ts": {
+      "sha256": "bef1650cee404e8cf50460edf3fd90315dbeb64ffb5125c0be621734d0f69df9",
+      "matchesOriginal": true
+    },
+    "src/lib/sha256.ts": {
+      "sha256": "639e86426c7ba06930e5820c9fa13fc1d565f15b16dde58783a011139f7b5dc4",
+      "matchesOriginal": true
+    },
+    "src/lib/checkpoint.ts": {
+      "sha256": "dbcac932a95b2531801083c7b5926fba68f6346aae86cf82e78d17cca5c5b834",
+      "matchesOriginal": true
+    },
+    "src/lib/syncProvider.ts": {
+      "sha256": "d2b9d745a20d6aacd3f915621230125756a221a821d020a845615fb0b7d045dd",
+      "matchesOriginal": true
+    },
+    "package.json": {
+      "sha256": "379862f2756f560c6743dea83e47cbdb5a8948f7b5c88b1404541a0ba11ceaf9",
+      "matchesOriginal": true
+    },
+    "pnpm-lock.yaml": {
+      "sha256": "d1d2dfb81cc0a1d6e65cda0a8ba98073096b9642c60592f3eac0167111561eeb",
+      "matchesOriginal": true
+    },
+    "src/routeTree.gen.ts": {
+      "sha256": "0df423ad2603ed30010d0c28c127b7b7d5a59c3bb0a1c24ddc39f55933cd4efd",
+      "matchesOriginal": true
+    }
+  },
+  "status": " M .trellis/tasks/10-10-desktop-storage-sync/task.json\n M src/routeTree.gen.ts\n?? .trellis/tasks/10-11-native-workspace-sqlite-prototype/\n?? desktop/\n",
+  "taskStatus": "in_progress",
+  "authoredScope": "desktop/tauri prototype + child task evidence; source/locks outside scope unchanged",
+  "nativeAcceptance": "pending implementation and independent review"
+}

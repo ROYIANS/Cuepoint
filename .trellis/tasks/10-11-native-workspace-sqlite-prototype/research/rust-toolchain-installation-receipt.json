@@ -1,0 +1,34 @@
+{
+  "recordedAt": "2026-10-10T17:17:50.898983+00:00",
+  "executionSession": 32808,
+  "exitCode": 0,
+  "runtime": "Rust 1.99.0",
+  "host": "aarch64-apple-darwin",
+  "rustupHome": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup",
+  "cargoHome": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/cargo",
+  "targetDir": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/target",
+  "shellProfileModified": false,
+  "scope": "project-local development tooling only; no packaged app size or WebView acceptance claim",
+  "sourceReceipts": [
+    "rustup-download-receipt.json",
+    "rust-toolchain-manifest-receipt.json"
+  ],
+  "logs": {
+    "rustup-install.log": {
+      "sha256": "5b0156e392aaa2290a7e765e9d67bbaade8c25584b05c84fcba1651b4397f9bd",
+      "text": "info: profile set to minimal\ninfo: setting default host tuple to aarch64-apple-darwin\ninfo: syncing channel updates for 1.99.0-aarch64-apple-darwin\ninfo: latest update on 2026-10-01 for version 1.99.0 (b940084d7 2026-09-28)\ninfo: downloading 5 components\ninfo: default toolchain set to 1.99.0-aarch64-apple-darwin\n\n  1.99.0-aarch64-apple-darwin installed - rustc 1.99.0 (b940084d7 2026-09-28)\n\n\nRust is installed now. Great!\n\nTo get started you need Cargo's bin directory \n(/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/cargo/bin) \nin your PATH\nenvironment variable. This has not been done automatically.\n\nTo configure your current shell, you need to source\nthe corresponding env file under \n/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/cargo.\n\nConsider running the right command for your shell (note the leading DOT):\n. \n\"/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/cargo/env\" \n# For sh/ash/dash/pdksh/bash/zsh\nsource \n\"/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/cargo/env.tcsh\"\n# For tcsh\n"
+    },
+    "rustc-actual-version.log": {
+      "sha256": "352d6857968e80a6357a926ac685b9b07f77c479aaafde33e73a53945e802909",
+      "text": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n"
+    },
+    "cargo-actual-version.log": {
+      "sha256": "1f88eaf7fe1aaec83184752cf4c944cd22f00184136ff36a3e4c318cc60ef566",
+      "text": "cargo 1.99.0 (5f94df478 2026-08-27)\n"
+    },
+    "rustup-local-state.log": {
+      "sha256": "fca6f58b15390af152e8c5127dbabbd4400ae7bb384e7e1747fe8868af8d16e9",
+      "text": "Default host: aarch64-apple-darwin\nrustup home:  /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup\n\ninstalled toolchains\n--------------------\n1.99.0-aarch64-apple-darwin (active, default)\n\nactive toolchain\n----------------\nname: 1.99.0-aarch64-apple-darwin\nactive because: it's the default toolchain\ninstalled targets:\n  aarch64-apple-darwin\n"
+    }
+  }
+}

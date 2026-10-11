@@ -1,0 +1,252 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling libc v0.2.190
+   Compiling serde_core v1.0.229
+   Compiling siphasher v1.0.4
+   Compiling icu_normalizer_data v2.3.0
+   Compiling icu_properties_data v2.3.0
+   Compiling fastrand v2.5.0
+   Compiling cfg-if v1.0.5
+   Compiling stable_deref_trait v1.2.1
+   Compiling memchr v2.8.3
+   Compiling phf_shared v0.13.1
+   Compiling serde v1.0.229
+   Compiling phf_generator v0.13.1
+   Compiling smallvec v1.16.3
+   Compiling itoa v1.0.18
+   Compiling thiserror v2.0.21
+   Compiling typeid v1.0.3
+   Compiling time-core v0.1.9
+   Compiling num-conv v0.2.2
+   Compiling phf_codegen v0.13.1
+   Compiling strsim v0.11.1
+   Compiling writeable v0.6.4
+   Compiling litemap v0.8.3
+   Compiling serde_json v1.0.151
+   Compiling ident_case v1.0.1
+   Compiling zmij v1.0.23
+   Compiling parking_lot_core v0.9.12
+   Compiling bitflags v2.13.2
+   Compiling utf8_iter v1.0.4
+   Compiling erased-serde v0.4.10
+   Compiling scopeguard v1.2.0
+   Compiling new_debug_unreachable v1.0.6
+   Compiling lock_api v0.4.14
+   Compiling anyhow v1.0.104
+   Compiling precomputed-hash v0.1.1
+   Compiling syn v3.0.7
+   Compiling syn v2.0.119
+   Compiling string_cache_codegen v0.6.1
+   Compiling objc2-exception-helper v0.1.1
+   Compiling parking_lot v0.12.5
+   Compiling winnow v1.0.4
+   Compiling getrandom v0.4.3
+   Compiling web_atoms v0.2.6
+   Compiling string_cache v0.9.0
+   Compiling autocfg v1.5.1
+   Compiling toml_parser v1.1.5+spec-1.1.0
+   Compiling toml_writer v1.1.3+spec-1.1.0
+   Compiling percent-encoding v2.3.2
+   Compiling log v0.4.34
+   Compiling dtoa v1.0.11
+   Compiling indexmap v1.9.3
+   Compiling dtoa-short v0.3.5
+   Compiling form_urlencoded v1.2.2
+   Compiling tendril v0.5.1
+   Compiling selectors v0.38.0
+   Compiling aho-corasick v1.1.5
+   Compiling semver v1.0.28
+   Compiling serde_spanned v1.1.2
+   Compiling toml_datetime v1.1.2+spec-1.1.0
+   Compiling uuid v1.28.0
+   Compiling camino v1.2.6
+   Compiling toml v1.1.8+spec-1.1.0
+   Compiling alloc-no-stdlib v3.0.0
+   Compiling regex-syntax v0.8.11
+   Compiling objc2 v0.6.5
+   Compiling alloc-stdlib v0.3.0
+   Compiling servo_arc v0.4.3
+   Compiling schemars v0.8.22
+   Compiling bit-vec v0.8.0
+   Compiling powerfmt v0.2.1
+   Compiling deranged v0.5.8
+   Compiling equivalent v1.0.2
+   Compiling web-time v1.1.0
+   Compiling hashbrown v0.12.3
+   Compiling rustc-hash v2.1.3
+    Checking objc2-encode v4.1.0
+   Compiling hashbrown v0.17.1
+   Compiling version_check v0.9.5
+   Compiling fnv v1.0.7
+   Compiling cfb v0.14.0
+   Compiling serde_derive_internals v0.29.1
+   Compiling bit-set v0.8.0
+   Compiling synstructure v0.14.0
+   Compiling darling_core v0.24.1
+   Compiling regex-automata v0.4.18
+   Compiling indexmap v2.14.2
+   Compiling time v0.3.55
+   Compiling brotli-decompressor v6.0.1
+   Compiling quick-xml v0.42.0
+   Compiling foldhash v0.2.0
+   Compiling dyn-clone v1.0.20
+   Compiling base64 v0.21.7
+   Compiling dunce v1.0.5
+   Compiling same-file v1.0.6
+   Compiling base64 v0.23.1
+   Compiling bytes v1.12.1
+   Compiling phf_macros v0.13.1
+   Compiling derive_more-impl v2.1.1
+   Compiling schemars_derive v0.8.22
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling zerovec-derive v0.11.6
+   Compiling serde_derive v1.0.229
+   Compiling displaydoc v0.2.7
+   Compiling thiserror-impl v2.0.21
+   Compiling phf v0.13.1
+   Compiling cssparser-macros v0.7.1
+   Compiling zerofrom v0.1.8
+   Compiling derive_more v2.1.1
+   Compiling regex v1.13.1
+   Compiling http v1.5.0
+   Compiling darling_macro v0.24.1
+   Compiling cssparser v0.37.0
+   Compiling yoke v0.8.3
+   Compiling darling v0.24.1
+   Compiling brotli v9.0.0
+   Compiling walkdir v2.5.0
+   Compiling serde-untagged v0.1.9
+   Compiling markup5ever v0.39.0
+   Compiling infer v0.22.0
+    Checking zerovec v0.11.8
+   Compiling zerotrie v0.2.5
+   Compiling serde_with_macros v3.24.0
+   Compiling html5ever v0.39.0
+   Compiling ctor v1.0.13
+   Compiling glob v0.3.4
+   Compiling serde_with v3.24.0
+    Checking tinystr v0.8.4
+    Checking potential_utf v0.1.6
+    Checking block2 v0.6.2
+   Compiling crc32fast v1.5.2
+    Checking icu_locale_core v2.3.0
+   Compiling icu_collections v2.3.0
+   Compiling dom_query v0.28.0
+    Checking objc2-core-foundation v0.3.2
+   Compiling swift-rs v1.0.9
+   Compiling cargo-platform v0.1.9
+   Compiling jsonptr v0.7.1
+   Compiling plist v1.10.1
+   Compiling cargo_metadata v0.19.2
+   Compiling icu_provider v2.3.1
+   Compiling json-patch v4.2.0
+   Compiling icu_normalizer v2.3.0
+   Compiling icu_properties v2.3.0
+    Checking objc2-foundation v0.3.2
+   Compiling rustc_version v0.4.1
+   Compiling simd-adler32 v0.3.10
+   Compiling option-ext v0.2.0
+   Compiling embed-resource v3.0.12
+   Compiling generic-array v0.14.7
+   Compiling dirs-sys v0.5.0
+   Compiling adler2 v2.0.1
+   Compiling heck v0.5.0
+   Compiling tauri-winres v0.3.6
+   Compiling dirs v7.0.0
+   Compiling cargo_toml v1.0.1
+   Compiling time-macros v0.2.32
+   Compiling typenum v1.20.1
+   Compiling miniz_oxide v0.9.1
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling url v2.5.8
+   Compiling crossbeam-utils v0.8.23
+   Compiling urlpattern v0.6.0
+    Checking raw-window-handle v0.6.2
+   Compiling flate2 v1.1.10
+   Compiling miniz_oxide v0.8.9
+   Compiling fdeflate v0.3.7
+    Checking dpi v0.1.2
+   Compiling cookie v0.18.2
+    Checking core-foundation-sys v0.8.7
+    Checking core-foundation v0.10.1
+   Compiling tauri-utils v2.10.1
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+    Checking objc2-quartz-core v0.3.2
+   Compiling foreign-types-macros v0.2.4
+    Checking foreign-types-shared v0.3.1
+   Compiling bitflags v1.3.2
+   Compiling png v0.17.16
+    Checking objc2-app-kit v0.3.2
+    Checking foreign-types v0.5.0
+   Compiling digest v0.10.7
+    Checking crossbeam-channel v0.5.17
+   Compiling wry v0.57.0
+    Checking core-graphics-types v0.2.0
+    Checking dispatch2 v0.3.1
+   Compiling cpufeatures v0.2.17
+   Compiling byteorder v1.5.0
+   Compiling tauri-runtime v2.12.1
+    Checking once_cell v1.21.4
+   Compiling ico v0.5.0
+   Compiling sha2 v0.10.9
+    Checking core-graphics v0.25.0
+   Compiling png v0.18.1
+   Compiling base64 v0.22.1
+   Compiling getrandom v0.3.4
+   Compiling tauri-runtime-wry v2.12.1
+   Compiling muda v0.20.0
+    Checking keyboard-types v0.8.3
+   Compiling serialize-to-javascript-impl v0.1.2
+    Checking pin-project-lite v0.2.17
+   Compiling serde_repr v0.1.21
+    Checking tokio v1.53.2
+    Checking mime v0.3.17
+    Checking serialize-to-javascript v0.1.2
+    Checking embed_plist v1.2.2
+   Compiling rfd v0.16.0
+    Checking cpufeatures v0.3.1
+    Checking rusqlite v0.40.2
+    Checking sha2 v0.11.0
+    Checking objc2-web-kit v0.3.2
+    Checking tao v0.37.1
+    Checking window-vibrancy v0.8.1
+   Compiling tauri-build v2.7.1
+   Compiling tauri-plugin v2.7.1
+   Compiling tauri-codegen v2.7.1
+   Compiling tauri v2.12.2
+   Compiling tauri-plugin-fs v2.7.0
+   Compiling tauri-macros v2.7.1
+   Compiling tauri-plugin-dialog v2.8.1
+   Compiling cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+error: unused `std::result::Result` that must be used
+   --> src/desktop.rs:275:13
+    |
+275 |             worker.cancel(&operation.id);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `-D unused-must-use` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(unused_must_use)]`
+help: use `let _ = ...` to ignore the resulting value
+    |
+275 |             let _ = worker.cancel(&operation.id);
+    |             +++++++
+
+error: unused `std::result::Result` that must be used
+   --> src/desktop.rs:793:9
+    |
+793 |         worker.cancel(id);
+    |         ^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+    |
+793 |         let _ = worker.cancel(id);
+    |         +++++++
+
+error: could not compile `cuepoint-native-storage` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `cuepoint-native-storage` (lib test) due to 2 previous errors

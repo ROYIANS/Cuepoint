@@ -1,0 +1,53 @@
+   Compiling cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+error[E0505]: cannot move out of `metadata.asset_id` because it is borrowed
+   --> src/desktop.rs:758:31
+    |
+711 |             metadata,
+    |             -------- binding `metadata` declared here
+...
+715 |             let (name, mime) = generated(&metadata, &bytes)?;
+    |                                          --------- borrow of `metadata` occurs here
+...
+758 |                     asset_id: metadata.asset_id,
+    |                               ^^^^^^^^^^^^^^^^^ move out of `metadata.asset_id` occurs here
+...
+762 |                     mime_type: mime.into(),
+    |                                ---- borrow later used here
+    |
+note: if `GeneratedMetadata` implemented `Clone`, you could clone the value
+   --> src/desktop.rs:105:1
+    |
+105 | struct GeneratedMetadata {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^ consider implementing `Clone` for this type
+...
+715 |             let (name, mime) = generated(&metadata, &bytes)?;
+    |                                           -------- you could clone this value
+
+error[E0505]: cannot move out of `metadata.project_id` because it is borrowed
+   --> src/desktop.rs:759:33
+    |
+711 |             metadata,
+    |             -------- binding `metadata` declared here
+...
+715 |             let (name, mime) = generated(&metadata, &bytes)?;
+    |                                          --------- borrow of `metadata` occurs here
+...
+759 |                     project_id: metadata.project_id,
+    |                                 ^^^^^^^^^^^^^^^^^^^ move out of `metadata.project_id` occurs here
+...
+762 |                     mime_type: mime.into(),
+    |                                ---- borrow later used here
+    |
+note: if `GeneratedMetadata` implemented `Clone`, you could clone the value
+   --> src/desktop.rs:105:1
+    |
+105 | struct GeneratedMetadata {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^ consider implementing `Clone` for this type
+...
+715 |             let (name, mime) = generated(&metadata, &bytes)?;
+    |                                           -------- you could clone this value
+
+For more information about this error, try `rustc --explain E0505`.
+error: could not compile `cuepoint-native-storage` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `cuepoint-native-storage` (lib test) due to 2 previous errors

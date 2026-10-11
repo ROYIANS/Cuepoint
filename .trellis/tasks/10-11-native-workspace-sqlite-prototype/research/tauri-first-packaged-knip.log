@@ -1,0 +1,17 @@
+
+> cuepoint-tauri-prototype@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node ../../node_modules/knip/bin/knip.js --config knip.json --no-progress
+
+Unused files (5)
+ui/acceptanceAudio.ts   
+ui/acceptanceEvidence.ts
+ui/acceptanceMedia.ts   
+ui/acceptancePrint.tsx  
+ui/acceptanceStream.ts  
+Unused exports (3)
+NativeWorkspace    class     ui/bridge.ts:42:14 
+sha256             function  ui/bridge.ts:95:23 
+acceptanceRequest  function  ui/bridge.ts:107:23
+Unused exported types (1)
+NativeAsset  type  ui/bridge.ts:32:13
+ ELIFECYCLE  Command failed with exit code 1.

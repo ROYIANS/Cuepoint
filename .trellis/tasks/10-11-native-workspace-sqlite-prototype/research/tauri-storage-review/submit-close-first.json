@@ -1,0 +1,20 @@
+{
+  "args": [
+    "node",
+    "desktop/tauri/scripts/tools.mjs",
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--features",
+    "test-hooks",
+    "--test",
+    "storage_review",
+    "submit_close_race"
+  ],
+  "exitCode": 101,
+  "log": "submit-close-first.log",
+  "finiteRaceIterations": 32,
+  "parallelCallers": 16
+}

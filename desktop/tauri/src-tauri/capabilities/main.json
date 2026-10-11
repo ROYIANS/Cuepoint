@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main",
+  "description": "Only the bundled main window may call the closed workspace domain bridge and print its own document.",
+  "windows": ["main"],
+  "permissions": ["allow-workspace-request", "allow-workspace-cancel", "core:webview:allow-print"]
+}

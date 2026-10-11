@@ -1,0 +1,22 @@
+   Compiling cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.96s
+     Running unittests src/lib.rs (.tools/target/debug/deps/cuepoint_native_storage-534812340ff0e84d)
+
+running 1 test
+test paths::tests::completion_publication_cannot_exceed_its_reader_boundary ... FAILED
+
+failures:
+
+---- paths::tests::completion_publication_cannot_exceed_its_reader_boundary stdout ----
+
+thread 'paths::tests::completion_publication_cannot_exceed_its_reader_boundary' (1490930) panicked at src/paths.rs:316:9:
+publisher accepted a manifest its own reader rejects
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    paths::tests::completion_publication_cannot_exceed_its_reader_boundary
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+
+error: test failed, to rerun pass `--lib`

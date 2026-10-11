@@ -1,0 +1,23 @@
+{
+  "args": [
+    "node",
+    "desktop/tauri/scripts/tools.mjs",
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--features",
+    "test-hooks",
+    "--test",
+    "storage_review"
+  ],
+  "exitCode": 101,
+  "elapsedMs": 232,
+  "expectedFailure": true,
+  "tests": [
+    "backup destination mutation before completion",
+    "unknown schema index"
+  ],
+  "log": "adversarial-first-failing.log"
+}

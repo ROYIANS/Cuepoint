@@ -1,0 +1,5 @@
+# UI implementation boundary
+
+The current scaffold has no packaged compatibility checks, usable verified previews or observable normal bridge validation. Add compact prototype controls and an acceptance-only real-helper harness under desktop/tauri/ui. Keep strict bridge DTO decoding, bounded hash/read authority and URL cleanup. Reuse real reference workers, audio owners, Chat/Responses readers, CSV/ZIP generators and StoryboardPrintPage. Native owner retains all filesystem/SQLite/dialog/config/script/fixture/build ownership. Root alone requests OS UI, microphone and printing. No production data, dependencies/routes/spec/lifecycle/Git, paid transport, broad runtime port or copied print implementation is introduced.
+
+Expected files: bridge.ts for bounded actual hash and strict acceptance envelope; main.tsx/prototype.css for usable normal controls; acceptance.tsx for explicit gesture/lifecycle/evidence orchestration; acceptanceEvidence.ts, acceptanceMedia.ts, acceptanceAudio.ts, acceptanceStream.ts, acceptancePrint.tsx for bounded single-purpose real compatibility checks. Existing app-owned helpers remain unchanged.

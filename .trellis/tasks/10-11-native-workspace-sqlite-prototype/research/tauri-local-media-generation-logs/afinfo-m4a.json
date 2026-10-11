@@ -1,0 +1,9 @@
+{
+  "command": [
+    "/usr/bin/afinfo",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/tone.m4a"
+  ],
+  "exitCode": 0,
+  "stdout": "File:           /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/tone.m4a\nFile type ID:   m4af\nNum Tracks:     1\n----\nData format:     1 ch,  48000 Hz, aac  (0x00000000) 0 bits/channel, 0 bytes/packet, 1024 frames/packet, 0 bytes/frame\n                no channel layout.\nestimated duration: 2.000000 sec\naudio bytes: 8228\naudio packets: 96\nbit rate: 32140 bits per second\npacket size upper bound: 155\nmaximum packet size: 155\naudio data file offset: 4096\noptimized\naudio 96000 valid frames + 2112 priming + 192 remainder = 98304\nsource bit depth: I16\nformat list:\n[ 0] format:\t  1 ch,  48000 Hz, aac  (0x00000000) 0 bits/channel, 0 bytes/packet, 1024 frames/packet, 0 bytes/frame\nChannel layout: Mono\n----\n",
+  "stderr": ""
+}

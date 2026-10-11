@@ -1,0 +1,36 @@
+{
+  "recordedAt": "2026-10-10T17:47:23.672950+00:00",
+  "reason": "Clean non-overlapping Stage B UI handoff after native owner acknowledgement; approved behavior and gate order unchanged",
+  "nativeOwner": "/root/native_tauri_storage",
+  "nativeScope": [
+    "desktop/tauri/src-tauri/**",
+    "desktop/tauri/configuration outside ui",
+    "desktop/tauri/scripts/**",
+    "desktop/tauri/fixtures/**",
+    "desktop/tauri/package.json",
+    "desktop/tauri/pnpm-lock.yaml",
+    "aggregate builds"
+  ],
+  "uiOwner": "/root/native_tauri_ui",
+  "uiScope": [
+    "desktop/tauri/ui/**",
+    "own task research UI report/logs"
+  ],
+  "coordinatorScope": [
+    "task lifecycle/evidence/spec/Git decisions",
+    "sole native CUA/OS interaction",
+    "microphone/print observation",
+    "final full-scope independent review"
+  ],
+  "handoffAcknowledged": true,
+  "nativeOwnerStoppedUiEdits": true,
+  "newApprovalRequired": false,
+  "constraints": [
+    "No nested implement/check agents",
+    "Do not revert others edits",
+    "No root product/dependency/generated-route edits",
+    "No paid network requests",
+    "No production data migration",
+    "No commit or push"
+  ]
+}

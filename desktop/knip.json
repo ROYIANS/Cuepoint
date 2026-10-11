@@ -1,0 +1,6 @@
+{
+  "entry": ["src/main.ts", "src/preload.ts", "renderer/renderer.ts", "tests/*.test.mjs", "tests/worker.mjs", "scripts/*.mjs", "build.mjs"],
+  "project": ["src/**/*.ts", "renderer/**/*.ts", "scripts/*.mjs", "tests/*.mjs", "build.mjs"],
+  "includeEntryExports": true,
+  "paths": {"@/*": ["../src/*"]}
+}

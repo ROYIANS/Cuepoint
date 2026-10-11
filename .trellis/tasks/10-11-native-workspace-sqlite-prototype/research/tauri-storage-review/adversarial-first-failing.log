@@ -1,0 +1,28 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running tests/storage_review.rs (.tools/target/debug/deps/storage_review-4e2d63755c9a46bf)
+
+running 2 tests
+test backup_rejects_destination_bytes_changed_before_completion ... FAILED
+test strict_snapshot_rejects_unknown_index_and_duplicate_manifest_keys ... FAILED
+
+failures:
+
+---- backup_rejects_destination_bytes_changed_before_completion stdout ----
+
+thread 'backup_rejects_destination_bytes_changed_before_completion' (1478908) panicked at tests/storage_review.rs:23:5:
+corrupt destination cannot report a complete backup
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- strict_snapshot_rejects_unknown_index_and_duplicate_manifest_keys stdout ----
+
+thread 'strict_snapshot_rejects_unknown_index_and_duplicate_manifest_keys' (1478909) panicked at tests/storage_review.rs:47:5:
+an unknown index changes the versioned schema
+
+
+failures:
+    backup_rejects_destination_bytes_changed_before_completion
+    strict_snapshot_rejects_unknown_index_and_duplicate_manifest_keys
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+error: test failed, to rerun pass `--test storage_review`

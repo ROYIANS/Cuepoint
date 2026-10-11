@@ -1,0 +1,39 @@
+   Compiling cuepoint-native-storage v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.16s
+     Running unittests src/lib.rs (.tools/target/debug/deps/cuepoint_native_storage-534812340ff0e84d)
+
+running 1 test
+test paths::tests::completion_publication_cannot_exceed_its_reader_boundary ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.76s
+
+     Running tests/native_workspace.rs (.tools/target/debug/deps/native_workspace-c705300493a5697a)
+
+running 6 tests
+test symlink_hardlink_target_and_ancestor_boundaries_preserve_external_bytes ... ok
+test schema_identity_owner_and_incomplete_roots_reject ... ok
+test real_writer_contention_and_new_root_no_overwrite ... ok
+test missing_and_corrupt_keep_exact_logical_state ... ok
+test persistent_owned_media_output_studio_timing_and_source_independence ... ok
+test snapshot_backup_restore_exact_and_strict_corruption ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+
+     Running tests/portable_contract.rs (.tools/target/debug/deps/portable_contract-ebd9499ebeda29b0)
+
+running 2 tests
+test malformed_wire_extra_fields_and_native_lengths_reject ... ok
+test actual_typescript_oracle_is_exact_in_rust ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/storage_review.rs (.tools/target/debug/deps/storage_review-bd5b5ac67e9bc0f7)
+
+running 4 tests
+test journal_alias_added_after_open_cannot_modify_external_file ... ok
+test wrong_ready_fields_and_corrupt_database_are_not_initialized_over ... ok
+test bounded_managed_read_verifies_complete_bytes_and_retains_corrupt_refs ... ok
+test strict_snapshot_rejects_unknown_index_and_duplicate_manifest_keys ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+
