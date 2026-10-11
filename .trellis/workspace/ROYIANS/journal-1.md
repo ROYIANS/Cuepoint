@@ -1399,3 +1399,43 @@ Implemented and independently accepted browser managed-copy and bounded partial 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 53: 共享产品界面与原生桌面适配收尾
+<!-- trellis-session: v=2 fp=88c62b9ca8654cba -->
+
+**Date**: 2026-10-11
+**Task**: 共享产品界面与原生桌面适配收尾
+**Branch**: `codex/shared-product-ui-native-adapters`
+
+### Summary
+
+完成 Web/Tauri 共享视频产品界面、schema 4 原生适配和黑底图标；按用户批准完成三笔工作提交、归档本子任务，父存储/同步任务继续，不推送、不合并 main。
+
+### Main Changes
+
+- 项目、集数、故事/场次、分镜共用产品页面；浏览器 Dexie 与原生 SQLite/托管文件差异集中在 typed repository。
+- 补齐闭合 DTO/action/result、基线冲突、原子新增、持久撤销、ISO 时间、完整 settings/filter 队列和 native hash routing；保留已有原生素材库入口与系统文件复制。
+- 原生图标统一为不透明 #0c0c0c，Web 品牌资源保持原样；规范、原始门禁日志、实际 UI/SQLite/图标证据随任务归档。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `86463f135e97bf69eea846e83a475efa2612047b` | feat(desktop): share product video UI across runtimes |
+| `fe81a9aef045b6208aff4534a28a32528dcfdcca` | fix(desktop): use opaque dark application icons |
+| `617185a22e64749da5504845961b5cea78ac5ef7` | docs(desktop): record shared UI contracts and acceptance |
+
+### Testing
+
+- [OK] 最终 root: 196 files / 3400 passed / 1 skipped；Rust combined acceptance,test-hooks: 51 passed；types/lint/quality、88-case quality self-test、local model-bank verify 均通过。
+- [OK] 最终 root/normal/acceptance frontend 与 normal/isolated macOS app 构建通过；浏览器实际 UI 12 项通过，macOS 实际编辑、设置、筛选、复制撤销、素材内部复制和重开通过。
+- [OK] 59 个受审产品/测试/原生资源/配置路径在最终构建验收后无漂移。代码/规范/任务文本暂存空白检查通过；原始日志末尾空行按原样保留，单独允许 blank-at-eof。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 父任务 10-10-desktop-storage-sync 继续进行；后续接入原生世界、生成/媒体槽、音频/音乐和同步，不自动迁移旧数据。
