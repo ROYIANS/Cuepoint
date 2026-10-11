@@ -1332,3 +1332,26 @@ Implemented and independently accepted browser managed-copy and bounded partial 
 - Choose and pin a bounded native desktop prototype/runtime, then verify durable workspace identity, owned filesystem staging, SQLite/credential ports, backup/reopen and failure recovery with disposable data.
 - Review all 49 production table codecs and original tool-history fields, prove dormant imported execution, and complete binary/reference closure before real full-workspace synchronization.
 - Keep managed service accounts/quotas/billing, native production migration and user-facing handoff/history/restore as separately validated parent deliverables.
+
+
+## Session 50: 归档 Tauri 原型并确定全新开发策略
+<!-- trellis-session: v=2 fp=6584fe062797daa1 -->
+
+**Date**: 2026-10-11
+**Task**: 归档 Tauri 原型并确定全新开发策略
+**Branch**: `main`
+
+### Summary
+
+完成并合并 Tauri 2 原生工作区与 SQLite 隔离验证 Demo；记录 macOS 打包媒体、文档、音频、录音、流式回复与打印验收证据。按用户决定，后续产品开发默认从全新数据和当前 schema 开始，不实现旧 IndexedDB 迁移或历史兼容，除非任务明确要求。归档 native-workspace-sqlite-prototype，父任务继续保留为进行中。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `6161e409` | feat(tauri): add native workspace sqlite prototype |
+| `ce05aa8a` | docs(trellis): record fresh-development data policy |
+
+### Status
+
+[OK] **Completed**
