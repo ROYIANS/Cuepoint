@@ -6,7 +6,7 @@
 
 ## Overview
 
-Quality gate is TypeScript build + Vitest. There is no ESLint config; `pnpm lint` runs `tsc -b`. Tests cover pure lib helpers and business command owners in `src/db/` with `fake-indexeddb`, not React component RTL.
+Required gates include TypeScript, full Vitest, formal `quality`, its self-test, model verification and production build; the E07/QG contract below governs lint/architecture/unused evidence. `pnpm lint` still means `tsc -b`, not the formal ESLint gate. Current tests exercise pure helpers, business commands, production callback hosts and actual storage adapters. Read [Shared Product Storage](./shared-product-storage.md) for native transactions/binaries and acceptance boundaries.
 
 ---
 
@@ -16,17 +16,22 @@ Quality gate is TypeScript build + Vitest. There is no ESLint config; `pnpm lint
 | --- | --- |
 | `pnpm lint` | `tsc -b --pretty false` (typecheck) |
 | `pnpm test` | `vitest run` |
+| `pnpm test:storage:native --evidence-dir <empty-directory>` | Rebuild the locked real Rust probe, run shared core/business suites on SQLite and record source/tool/table evidence |
 | `pnpm build` | `vite build` |
+| `pnpm quality` | Formal ESLint, architecture and full-scope unused checks |
+| `pnpm quality:self-test` | Regression of the quality gate and evidence identities |
 | `pnpm dev` | Vite dev server |
 
-Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets Dexie via `fake-indexeddb` each test.
+Use the explicit approved machine pnpm path from AGENTS.md. Vitest defaults to the shared browser adapter and fresh `fake-indexeddb` lifecycle. The explicit `CUEPOINT_STORAGE_TEST_OWNER=sqlite` lane resolves both alias and relative database imports to an actual disposable Rust probe facade and resets its workspace per test. An explicit native acceptance run must fail when the real executable is missing. Historical original/current comparisons select an isolated raw browser comparator; immutable snapshot bytes must remain unchanged.
+
+The permanent native runner supports `--suite core|business|all`; `all` is the complete gate. It rejects a nonempty evidence directory, forces actual native capabilities, verifies unchanged source identities and records the current probe hash. Tool instrumentation calls the original recipes and records method/test outcomes; table instrumentation records confirmed commits without row values or tool arguments. Counts alone do not replace the assertions in those suites or actual packaged acceptance.
 
 ---
 
 ## Required Patterns
 
 - Durable mutations only through business command owners in `src/db/` (see the D02 map in state-management), `src/db/productionProposals.ts` and the `src/db/agent*.ts` repositories (`add*` / `patch*` / `delete*` / `set*Slot` / reorder helpers).
-- Live reads with `useLiveQuery`; detail `get` queries use `?? null` (see hook-guidelines).
+- Live reads with `useProductQuery(tx => ...)`; detail `get` queries use `?? null`. Propagate readonly context to nested readers (see hook-guidelines).
 - Shot picture / generation data through `parseShotPictureSlots` / `parseGenerationSlot` so legacy fields stay readable.
 - Filter, reorder, undo, draft, delivery, and shortcut-gating logic live in `src/lib/` and are shared — UI calls helpers, does not reimplement:
   - `shotFilters`, `reorderIds`, `undo`, `debouncedDraft`, `episodeDelivery`, `formFieldFocus`, `shotKeyboard`
@@ -41,12 +46,12 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 | Forbidden | Why / do this instead |
 | --- | --- |
 | Studio create → project picker or `/p/$projectId/...` | Navigate to `/characters\|scenes\|props\|styles/$id` |
-| `useEffect` + one-shot `db.*.get` for live detail pages | `useLiveQuery` + `?? null` |
-| Global Redux/Zustand/etc. for Dexie tables | `useLiveQuery` + repo mutations |
+| `useEffect` + one-shot `db.*.get` for live detail pages | `useProductQuery(tx => ...)` + `?? null` |
+| Global Redux/Zustand/etc. for durable tables | Shared query hook + repo mutations |
 | Duplicating reorder/filter logic in the page | `reorderBeats` / `reorderShots` / shared filter helpers |
 | Enabling export before live queries finish | Disable CSV/print until loaded (delivery-export) |
 | Component RTL / Playwright as the default new test | Prefer `tests/*.test.ts` on lib + repo |
-| Adding ESLint-only “fixes” without satisfying `tsc` | `pnpm lint` is the lint gate |
+| Adding ESLint-only “fixes” without satisfying `tsc` | Both formal quality and TypeScript must pass |
 | `window.prompt` / `alert` / `confirm` | In-app `Dialog` (input) / `AlertDialog` (destructive) from `src/components/ui/` |
 | `scrollIntoView({ behavior: "smooth" })` on Agent messages | `snapChatToBottom` on `.agent-message-list` (see chat-performance) |
 
@@ -55,7 +60,7 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 ## Testing Requirements
 
 - Place tests under `tests/` as `*.test.ts`.
-- Repo / IndexedDB behavior: use the shared setup that deletes and reopens `db` (`tests/setup.ts`, see `tests/repo.test.ts`).
+- Repo / adapter behavior: use shared fresh setup. Transaction-bound table handles require actual backend or bound-table fault injection; root-table spies may never reach the write. Retain fault-reached, rollback and uncommitted-read assertions. Browser scope tests may inspect the actual underlying Dexie/IDB transaction; native cases inspect the real bridge/SQLite, not fabricated completed replies.
 - Pure helpers: unit-test without mounting React (`tests/undo.test.ts`, `debouncedDraft.test.ts`, `shotFilters.test.ts`, `formFieldFocus.test.ts`, `reorderIds.test.ts`, `episodeDelivery.test.ts`, `projectPackage.test.ts`).
 - Cover invariants called out in other specs when touching those areas: studio `touchProject`, snapshot copy reject-on-duplicate, episode-scoped reorder ownership, delivery CSV quoting, form-field shortcut gating, agent chat `snapChatToBottom` / `CHAT_AT_BOTTOM_PX`.
 - Do not require new component snapshot/RTL tests unless the change is untestable at the lib/repo layer.
@@ -73,9 +78,9 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 
 ## Code Review Checklist
 
-- [ ] `pnpm lint` and `pnpm test` pass for the change set
+- [ ] TypeScript, full tests and formal quality pass for the final frozen scope
 - [ ] Mutations go through their concrete business command owner; no ad-hoc `db.table.put` in components unless matching existing rare patterns
-- [ ] Detail liveQuery uses `get(id) ?? null`; missing id shows 找不到, not infinite 加载中
+- [ ] Detail shared query uses `get(id) ?? null`; missing id shows 找不到, not infinite 加载中
 - [ ] Studio vs project ownership and `back` discriminants are correct
 - [ ] Shot/episode scoping preserved (filters, reorder, delete, delivery)
 - [ ] Shared helpers reused for filter/reorder/draft/undo/shortcuts
@@ -95,7 +100,7 @@ Vitest setup: `vitest.config.ts` aliases `@` → `src`; `tests/setup.ts` resets 
 
 ## Anti-patterns
 
-- Treating “no ESLint” as no quality bar — unused locals/params and strict nulls still fail `tsc`.
+- Treating the TypeScript-only `lint` script as complete formal quality proof.
 - Adding a second state library “just for this page.”
 - Copy-pasting reorder or filter code into `ShotEditorPage` instead of extending `src/lib/`.
 - Shipping package-import changes without updating `tests/projectPackage.test.ts`.
@@ -219,7 +224,7 @@ Mutation/owner transfer, changed multiplicity, duplicated JSON keys, stale remov
 
 ### 5. Good / Base / Bad Cases
 
-Good: narrow unknown values at actual boundaries and remove unused internal exports without changing bodies. Base: thirteen reviewed diagnostics preserve five sanitized wrappers, seven original failure/cancellation transports and one guarded every-render draft reconciliation. Seven unused contracts retain two stylesheet imports, one TypeScript companion declaration, two explicit native runtime/virtual imports and two documented audio deletion APIs without current UI callers. Bad: blanket ignores, automatic import of all baseline errors, every-src-as-entry reachability, arbitrary test deletion or assertions that hide unsafe inputs.
+Good: narrow unknown values at actual boundaries and remove unused internal exports without changing bodies. The original baseline had thirteen reviewed diagnostics. Shared-storage certainty handling removed the cause-discarding ambiguous-tool node in runChat, so its stale exact allowance was removed; the current twelve retain four sanitized wrappers, seven original failure/cancellation transports and one guarded every-render draft reconciliation. Seven unused contracts retain two stylesheet imports, one TypeScript companion declaration, two explicit native runtime/virtual imports and two documented audio deletion APIs without current UI callers. Bad: blanket ignores, automatic import of all baseline errors, every-src-as-entry reachability, arbitrary test deletion or assertions that hide unsafe inputs.
 
 ### 6. Required Tests
 

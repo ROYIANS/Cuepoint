@@ -4,11 +4,10 @@
 
 Apply to the shared project gallery, video project home, episode list, story
 editor and shot workbench. The same React pages and route outlet serve browser
-and native runtimes. The approved complete-product desktop stage uses existing
-`src/db/` commands and Dexie transactions in its fixed fresh app namespace, just
-as browser uses its own namespace. `usesSqliteProductStorage()` explicitly selects
-the retained reference adapter where closed Tauri commands own SQLite/filesystem
-transactions; Tauri presence alone cannot select it. Read
+and native runtimes. Both complete-product adapters use existing `src/db/`
+commands through ProductStore and explicit StoreTx. The fixed startup profile
+selects persistence; it does not select reduced video-only features. The retained
+schema-4 prototype is separately constructed for reference tests. Read
 [Native Product Runtime](./native-product-runtime.md). Fresh development is the
 default; no migration, compatibility reader or data mirror is implicit.
 
@@ -21,7 +20,8 @@ default; no migration, compatibility reader or data mirror is implicit.
 typed `capabilities`.
 
 The repository's project/episode/story/shot command methods retain the existing
-IndexedDB command argument semantics. SQLite reference mutations return committed receipts
+shared command argument semantics, with a transaction-bound repository created
+by `withStore(tx)` for observed snapshots. SQLite prototype mutations return committed receipts
 for operations whose inverse must be registered by the page. A
 `VideoWorkspaceUndoAction` exposes `restore(): Promise<void>`; capture this
 operation's receipt rather than rebuilding an inverse from a render snapshot.
@@ -31,24 +31,22 @@ operation's receipt rather than rebuilding an inverse from a render snapshot.
 - `ProjectGalleryPage`, `ProjectHomePage`, `EpisodeListPage`, `StoryPage` and
   `ShotEditorPage` are shared. `WorkspaceChrome` supplies one AppFrame/header and
   nested route outlet. Do not replace it with a simplified native editor.
-- Browser and normal desktop queries remain Dexie live queries. SQLite reference queries subscribe to native
-  invalidation and never execute a Dexie callback. A native read error must
-  expose recovery and retain an existing editor draft.
+- Both complete-product adapters use shared reactive queries and explicit
+  readonly snapshot contexts. Native read errors expose recovery and retain
+  existing editor drafts. Prototype reads retain their separate invalidation
+  lane; do not confuse its tests with full-product SQLite evidence.
 - Durable writes select exactly one fixed storage owner. SQLite validation failure is an
   error, never a fallback to IndexedDB; IndexedDB failure never opens SQLite.
-- Only the explicit SQLite reference lane's capabilities describe unavailable world entities, generation and media
-  slots. Keep the shared page tree and disable unsupported controls or render a
-  clear capability state. Empty fake entity lists are not successful writes.
-  SQLite Studio route gating must still allow `/assets`: the existing native managed
-  library owns file copying and must remain reachable even while media slots
-  and world entities are unavailable. The normal desktop IndexedDB stage exposes
-  the same implemented full product routes/controls as Web, including Agent,
-  global/IP/material libraries, world, audio/music and generation. Do not retain
-  a native-runtime-only capability gate over those shared IndexedDB features.
+- Only the explicit prototype's capabilities describe unavailable world,
+  generation, relations and media slots. Complete browser and SQLite products
+  expose the same implemented routes/controls, including Agent, global/IP/material
+  libraries, world, audio/music and generation. Sync remains unavailable on both
+  until its provider is implemented. Empty fake entity lists are not successful
+  writes; neither Tauri presence nor SQLite ownership may hide shared features.
 - Field baselines describe only the intended patch. Reject same-field conflicts;
   preserve unrelated concurrent changes. Undo follows the same ownership and
   field checks. Two operations on the same IDs require distinct receipts.
-- SQLite baseline conflicts carry typed current/expected/requested field values.
+- Prototype SQLite baseline conflicts carry typed current/expected/requested field values.
   Numeric scalars compare by value (`0` and `0.0` agree); absent nullable fields
   compare as `null`. Never stringify a floating number as a different baseline.
   Read-modify-write settings operations serialize the complete read and patch,
@@ -69,18 +67,18 @@ operation's receipt rather than rebuilding an inverse from a render snapshot.
 | Same field changed since draft baseline | Keep draft; show conflict and recovery |
 | Different field changed since baseline | Apply intended patch; preserve other field |
 | Invalid owner, order, duration or UTF-16 range | Atomic rejection, no partial mutation |
-| Unsupported domain/slot in explicit SQLite lane | Explicit capability state; no Dexie fallback |
-| Normal desktop IndexedDB owner | Full shared implemented features; no workspace ensure/state IPC |
-| SQLite reference read fails | Visible retry; no fabricated empty successful state |
+| Unsupported domain/slot in explicit prototype | Explicit capability state; no Dexie fallback |
+| Either complete-product owner | Full shared implemented features; no schema-4 fallback |
+| Full SQLite read fails | Visible retry; retain draft; no fabricated empty successful state |
 | Undo receipt is stale/consumed or its target changed | Reject safely; do not overwrite newer edits |
 
 ## 5. Good / Base / Bad Cases
 
-- Good: edit shot content in the same workbench through the selected IndexedDB
+- Good: edit shot content in the same workbench through the selected shared
   command owner; the Agent tool uses the same durable records/transaction rules.
-- Base: explicitly select SQLite, send the content baseline, receive its committed
-  result and invalidate native reads; its world route shows the capability state under the same
-  workspace header, with a working route back to the core editor.
+- Base: full SQLite persists the existing story/shot/world/Agent records in one
+  owner; precise committed invalidation updates the same workbench. Explicit
+  prototype tests separately exercise its native baseline/receipt protocol.
 - Bad: pass the whole stale shot record for a one-field edit, retry in Dexie
   after native rejection, or use a second native-only story page.
 
@@ -88,16 +86,17 @@ operation's receipt rather than rebuilding an inverse from a render snapshot.
 
 - Existing browser draft, baseline, reorder, bulk, undo, filter and shortcut
   behavior tests continue to pass.
-- Explicit SQLite adapter tests reject malformed replies without advancing generation;
-  shared consumer tests prove SQLite callbacks never reach IndexedDB owners.
-- `productStorage`/`productStorageQueries` tests prove normal desktop selects
-  fresh IndexedDB, retains full media queries and never invokes workspace IPC.
+- Full adapter tests reject malformed replies and preserve commit certainty;
+  shared consumer tests prove SQLite callbacks never reach an IndexedDB owner.
+- `productStorage`/`productStorageQueries` tests prove fixed fresh identity,
+  full media queries and complete features; reference selection remains separate.
 - Rust tests exercise fresh schema, field conflicts/merge, distinct inverse
   receipts, atomic multi-add/bulk failure, complete reorder and reopen closure.
 - Isolated browser and actual normal packaged native smoke follow project →
-  episode → story/beat → shot edit, including reload/reopen and full normal
-  IndexedDB capabilities. Capability-unavailable checks belong to the explicit
-  SQLite reference lane. Label fixture/mock evidence accurately.
+  episode → story/beat → shot/world/media/Agent edit, including reload/reopen.
+  Actual isolated proof precedes normal packaged SQLite activation.
+  Capability-unavailable checks belong to the explicit prototype. Label
+  fixture/mock evidence accurately.
 
 ## 7. Wrong vs Correct
 

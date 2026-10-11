@@ -4,17 +4,21 @@
 
 Read before changing product storage selection, Tauri packaging, default provider
 transport, shared exports/external links or Agent execution in a native WebView.
-The user-approved delivery stage runs the existing complete React product,
-business commands, Agent loop/tools/approvals and media in application-internal
-IndexedDB first. Central SQLite replacement and sync are subsequent work. Do
-not reconstruct per-domain native pages, commands or an alternate Agent loop.
+The complete React product, business commands and Agent loop/tools/approvals
+remain shared. Current persistence uses the all-table ProductStore interface;
+browser IndexedDB and full native SQLite/files implement the same commands.
+Normal packaged SQLite activation requires actual isolated full-product
+acceptance. Synchronization remains subsequent work. Do not reconstruct
+per-domain native pages, commands or an alternate Agent loop.
 Fresh development is the default; no old-data migration/backfill/import reader
 or compatibility strategy is authorized without an explicit request.
 
 The retained SQLite schema-4/filesystem adapter is an explicit reference/test
-lane governed by native-workspace.md/video-workspace.md. It is not a fallback or
-a mirror for the normal IndexedDB desktop. Browser behavior/namespace remain
-shared source code with a separate data identity.
+lane governed by native-workspace.md/video-workspace.md. It is not the full
+SQLite product, a fallback, or a mirror. Browser behavior/namespace remain
+shared source code with a separate data identity. Read
+[Shared Product Storage](./shared-product-storage.md) before adapting commands,
+explicit transaction contexts, reactive queries or managed binary consumers.
 
 This document records executable source contracts, not acceptance status. Unit
 or fixture proof alone never establishes actual packaged/provider/system-dialog
@@ -81,15 +85,19 @@ same normal root frontend, desktop backend/CSP/services. Its archived app receip
 records identifier/storage/store ID. Historical `--acceptance` remains a separate
 SQLite/probe frontend and cannot substitute for normal product evidence.
 
-Storage gates in routes/gallery/world/material/media hooks/repository use the
-fixed owner. Genuine runtime detection remains authoritative for hash history,
-trusted IPC and system services. Normal IndexedDB startup never calls workspace
-ensure/state, reads an old browser/native store or fabricates SQLite projects.
-Imports persist independent internal Blob copies, not external source paths.
+The full product exposes the same routes, world/material/media features and
+Agent on either adapter; no owner-dependent reduced feature gate belongs in
+those pages. Genuine runtime detection remains authoritative for hash history,
+trusted IPC and system services. IndexedDB startup never calls the native worker;
+full SQLite startup opens its own all-table worker, not schema-4 ensure/state
+to fabricate a catalog. Neither owner reads old profiles. Imports keep internal
+Blobs or managed files, never external source authority.
 
-The same existing Dexie transaction commits Agent business writes and completed
-tool result/ledger/receipt atomically. HTTP stays outside that transaction.
+One explicit ProductStore transaction commits Agent business writes and original
+completed tool result/ledger/receipt atomically. HTTP stays outside that transaction.
 Completed tool replay must reuse saved results; reopen never resends paid work.
+Lost/malformed native commit acknowledgement requires durable outcome lookup;
+an unresolved outcome is not a known rollback and must not authorize replay.
 Keep ThreadLockManager/Web Locks and audio/task lock guards. Actual packaged
 lock exclusivity/release needs proof; no bypass or unverified native fallback.
 
@@ -240,7 +248,7 @@ paper/orientation; CSS presence alone cannot prove the system preview's geometry
 | --- | --- |
 | Tauri missing/malformed/extra-field profile | Startup error; no browser/SQLite fallback |
 | Profile mutates after module construction | Existing fixed owner/namespace remain |
-| Normal desktop product query/write | Existing shared IndexedDB command; no workspace ensure/state |
+| Complete product query/write on either adapter | Existing shared command with explicit StoreTx; no schema-4 fallback |
 | Removed connector / exhausted origin grants | Reject before native request; no fallback/retry |
 | Result request carries auth/body or unconfigured HTTP | Reject; no credential forwarding |
 | Redirect to unconfigured origin / more than five hops | Cancel discarded body and reject before next send |
@@ -258,14 +266,14 @@ paper/orientation; CSS presence alone cannot prove the system preview's geometry
 
 ## 5. Good / Base / Bad Cases
 
-Good: normal Tauri Agent writes a project through the existing tool transaction,
-retains history in the same IndexedDB owner, streams using the native transport,
-and exports the resulting Blob through independent native Save. Browser uses
-the same page/command code in its original namespace.
+Good: Tauri Agent writes a project through the existing shared tool transaction,
+retains original history in the same fixed owner, streams using native transport,
+and exports verified internal bytes through independent native Save. Browser
+uses the same page/command code in its original namespace.
 
-Base: explicit SQLite tests use their closed adapter and unsupported capability
-states without reaching Dexie. An isolated normal product uses full IndexedDB
-features, distinct profile/store identity and the same compiled services.
+Base: an isolated full SQLite product uses all shared features with distinct
+profile/store identity and the same compiled services. Schema-4 prototype
+capability tests remain separate from full-product evidence.
 
 Bad: infer SQLite from Tauri, hide full Agent routes, mirror projects for exports,
 copy old keys/data, globally widen fetch/CSP, retry native failures through WebView,
@@ -279,11 +287,14 @@ as “export failed” and encourages saving already-published bytes again.
 
 ## 6. Tests Required: assertion points
 
-- productStorage/productStorageQueries: real fresh Dexie namespaces, owner fixed
-  before construction, profile validation/isolation, full media query behavior,
-  unexpected SQLite IPC throws, and browser sentinel remains unread.
-- videoWorkspaceRepository/shared page tests: declared explicit SQLite selection
-  retains adapter generation/CAS/undo; normal Tauri uses existing commands.
+- productStorage/productStorageQueries: owner fixed before construction, fresh
+  profile isolation, full media queries, browser sentinel unread, visible native
+  open failure without fallback and no eager IndexedDB construction for SQLite.
+- videoWorkspaceRepository/shared page tests: both full adapters use existing
+  commands/capabilities; explicit prototype retains separate generation/CAS
+  reference tests. Sync remains unavailable until implemented.
+- sharedStorageContract/sharedNativeStorageContract plus actual native business,
+  binary and acknowledgement regressions in the shared storage contract.
 - runtimeFetch/runtimeFetchIntegration/runtimeFetchLifecycle: native/default and
   injected fetch selection, FormData bytes/two-slot shared queue/20 MiB file,
   larger domain-authorized JSON, redirect rules/credential stripping/scopes,
@@ -316,7 +327,7 @@ as “export failed” and encourages saving already-published bytes again.
   chunk/order limits, stage expiry/cancel/dialog capacity, empty/nonempty/raced
   target protection, truthful injected post-publication failure and closed DTOs.
 - Actual normal isolated product: profile/WK store/namespace independence and
-  reopen of text/Blobs/chat/tool history; native no-CORS HTTP/SSE/upload/CDN/Stop
+  reopen of text/managed bytes/original chat/tool history; native no-CORS HTTP/SSE/upload/CDN/Stop
   fixtures; user-configured real suppliers; genuine imports/Save/external browser,
   baseline microphone, media/documents and white A4-landscape print. Record exact
   build/source identities and do not replace actual evidence with the fixture

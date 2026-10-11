@@ -6,9 +6,11 @@
 
 ## Overview
 
-Durable state in browser and the approved complete-product Tauri stage lives in Dexie IndexedDB (`src/db/database.ts` plus the D02 business command owners below). Both use existing `useLiveQuery`, transaction/Agent command and Blob behavior; ephemeral UI stays in React `useState`. Browser database identity remains `aifenjing`; normal Tauri uses the fixed fresh `cuepoint-desktop:<profileId>:v1` namespace installed before database construction. Runtime presence alone never selects SQLite. Shared video pages select repositories through `usesSqliteProductStorage()`. The explicit SQLite reference lane retains fresh schema 4 and managed files through `src/lib/nativeWorkspace.ts`; its rows are never mirrored into a second Dexie owner. See [Native Product Runtime](./native-product-runtime.md), [Shared Video Workspace](./video-workspace.md) and [Native Workspace](./native-workspace.md).
+Durable state uses the shared `ProductStore` facade in `src/db/database.ts` and the D02 command owners below. Browser IndexedDB and complete native SQLite/files share those commands, Agent and React pages; ephemeral UI remains in React `useState`. Current reads use `useProductQuery(tx => ...)`. One trusted fixed startup profile selects the owner before routes mount; actual isolated acceptance precedes normal packaged SQLite activation. Browser identity remains `aifenjing`, separate from native profiles. The retained schema-4 prototype under `nativeWorkspace.ts` is an explicit reference/test lane. Read [Shared Product Storage](./shared-product-storage.md), [Native Product Runtime](./native-product-runtime.md) and [Shared Video Workspace](./video-workspace.md).
 
-Fresh development is the default: do not import old browser/native data or add migration, backfill, compatibility-reader or preservation work unless explicitly requested. Historical schema/import descriptions below document existing Web behavior; they do not authorize new legacy-data work. The later centralized SQLite replacement is a separate stage, not a second owner alongside the current desktop Agent.
+Fresh development is the default: do not import old browser/native data or add migration, backfill, compatibility-reader or preservation work unless explicitly requested. Historical schema descriptions below document isolated browser history; they do not authorize native legacy-data work. SQLite is one full-product owner, never a second catalog alongside Agent records.
+
+Every command may accept an optional final `ProductStore`; pass the callback's `StoreTx` through previews, nested commands, dynamic table loops and receipt/evidence reads. A parameter added without propagating it through the actual callback does not establish atomicity. Business writes and completed tool ledger/results commit together. Unknown commit certainty blocks replay; only a confirmed rollback is safely retryable. Details and required real-adapter tests are in the shared storage contract.
 
 ---
 
@@ -16,11 +18,11 @@ Fresh development is the default: do not import old browser/native data or add m
 
 | Kind | Where | Examples |
 | --- | --- | --- |
-| Durable | Dexie tables via business command owners in `src/db/` | Project, Episode, Character, Scene, Prop, VisualStyle, Shot, Media |
+| Durable | ProductStore tables via business command owners in `src/db/` | Project, Episode, Character, Scene, Prop, VisualStyle, Shot, Media |
 | URL | TanStack Router | `/characters/$characterId`, `/p/$projectId/world` |
 | Local UI | `useState` | library search, sort, pending delete |
 
-Do not introduce a global client store for records that already have a Dexie table.
+Do not introduce a global client store for records that already have a durable product table.
 
 ---
 
@@ -487,7 +489,7 @@ registerUndo({ label: "已删除镜头", restore: async () => restoreDeletedShot
 
 ## Reliability contract (2026-09-18)
 
-- Read/merge/write operations must read the current entity inside a Dexie write transaction. Independent field and nested slot updates cannot overwrite one another. Asset update timestamps use field updates, not a stale project snapshot.
+- Read/merge/write operations must read the current entity inside an explicit ProductStore write transaction. Pass that context to nested helpers. Independent field and nested slot updates cannot overwrite one another. Asset update timestamps use field updates, not a stale project snapshot.
 - Last-episode deletion count and delete share one transaction. Slot replacement and orphan checks operate on committed references across all owner types; cleanup never deletes shared media.
 - `updateEpisodeShotFilters` writes only that episode. Prune deleted beats, preserve the unassigned sentinel, remap IDs on package import, and reveal a deep-linked shot by clearing obstructing filters with feedback.
 - `useDebouncedDraft` accepts project `scope` and stable entity-field `draftKey`. Failed/unmounted drafts remain recoverable in the running app; reopening a key must resume it instead of creating an older competing writer. Active editors request browser beforeunload protection while dirty/in-flight/failed and attempt a best-effort flush; pagehide also flushes. Forced termination or confirming leave is not durable persistence. Detached failed drafts are protected by the in-app backup barrier, not a permanent browser unload handler.

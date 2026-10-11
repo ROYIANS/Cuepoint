@@ -17,7 +17,7 @@ Routes are thin. Feature pages under `src/components/{studio,assets,shots,story,
 | Route | Params + discriminant props only | `src/routes/_studio.characters.$characterId.tsx` → `CharacterDetailPage` with `back={{ kind: "studio" }}` |
 | Feature page | Live queries, layout, mutations | `src/components/assets/CharacterDetailPage.tsx` |
 | Shared feature widget | Reused editors/tiles | `EditableGenerationSlot` in `src/components/slots/GenerationSlotCard.tsx` |
-| UI primitive | Presentational, no Dexie | `src/components/ui/button.tsx`, `field.tsx` |
+| UI primitive | Presentational, no ProductStore or adapter access | `src/components/ui/button.tsx`, `field.tsx` |
 
 Do not put library grids and detail editors in the same route file. Do not put durable writes in route files — call the concrete business command owner in `src/db/` from the feature page / widget (see the D02 owner map in state-management).
 
@@ -28,7 +28,7 @@ Do not put library grids and detail editors in the same route file. Do not put d
 Typical feature page shape (see `CharacterDetailPage`):
 
 1. Props with route discriminants (`characterId`, `back`).
-2. `useLiveQuery` with `get(id) ?? null`.
+2. `useProductQuery` with an explicit readonly context, query identity and `get(id) ?? null`.
 3. Loading / missing early returns (Chinese: 加载中… / 找不到这个角色).
 4. Ownership check for both contexts: project IDs must match `back.projectId`; studio routes require `STUDIO_LIBRARY_ID`.
 5. Layout + `Field` / `EditableGenerationSlot` / inline `void patch*(...)`.
@@ -41,10 +41,13 @@ export function CharacterDetailPage({
   characterId: string;
   back: { kind: "studio" } | { kind: "project"; projectId: string };
 }) {
-  const character = useLiveQuery(
-    async () => (await db.characters.get(characterId)) ?? null,
-    [characterId],
+  const ownerId = back.kind === "project" ? back.projectId : STUDIO_LIBRARY_ID;
+  const result = useProductQuery(
+    async tx => ({ownerId, id: characterId, value: (await tx.characters.get(characterId)) ?? null}),
+    [ownerId, characterId],
   );
+  const character = result?.ownerId === ownerId && result.id === characterId
+    ? result.value : undefined;
   // loading / missing / render…
 }
 ```

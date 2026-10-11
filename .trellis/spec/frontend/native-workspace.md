@@ -2,11 +2,11 @@
 
 ## 1. Scope / Trigger
 
-Apply when changing the Tauri 2 shell, retained Rust SQLite workspace bridge, packaged compatibility checks or platform-sensitive browser APIs. The approved normal full-product Tauri stage uses fresh app-internal IndexedDB and existing shared business/Agent code; see [Native Product Runtime](./native-product-runtime.md). SQLite/filesystem persistence contracts below apply only to an explicitly selected reference/test lane; navigation, trusted IPC, microphone and truthful evidence rules still govern normal desktop. Runtime detection chooses native services/hash history, not the product database. No browser-to-native migration, legacy reader, compatibility alias or dual-owner mirror is implied.
+Apply when changing the Tauri 2 shell, retained Rust SQLite workspace bridge, packaged compatibility checks or platform-sensitive browser APIs. The complete current product uses the shared UI/business/Agent and ProductStore boundary described in [Shared Product Storage](./shared-product-storage.md) and [Native Product Runtime](./native-product-runtime.md). The new full-product SQLite owner must pass actual isolated packaged acceptance before normal activation; pending validation keeps the accepted normal owner unchanged. The prototype persistence signatures below belong only to their explicit reference/test lane; navigation, trusted IPC, microphone and truthful evidence rules also govern the full product. Runtime detection chooses native services/hash history, while trusted startup selects one product database. No browser-to-native migration, legacy reader, compatibility alias or dual-owner mirror is implied.
 
 ## 2. Signatures
 
-The explicit SQLite/prototype renderer owns the closed `workspace_request` envelope through `desktop/tauri/ui/bridge.ts` and the shared native adapter. Normal desktop IndexedDB does not ensure/open this worker for products, Agent, imports or independent exports:
+The retained prototype renderer owns the closed `workspace_request` envelope through `desktop/tauri/ui/bridge.ts`. Full-product storage uses the separate closed `product_store_request` protocol and the shared adapter; it never routes Agent/business commands through the prototype video API. Independent exports use the system Save service:
 
 ```ts
 nativeWorkspace.ensure(): Promise<NativeWorkspaceState>

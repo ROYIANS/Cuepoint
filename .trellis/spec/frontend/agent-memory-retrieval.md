@@ -115,7 +115,7 @@ Wrong: mutate `agentSnapshot.instructions` with newly retrieved body and rewrite
 Correct: replace the validated independent effective-base segment, preserve original request
 and old per-step snapshots, then record the next snapshot at its dispatch checkpoint.
 
-Wrong: render `useLiveQuery(..., [projectId])` result immediately as the new project's preview.
+Wrong: render a retained `useProductQuery(..., [projectId])` result immediately as the new project's preview.
 Correct: return a query identity with the result, compare it to the current input identity,
 and hide retained results while the new query resolves; scope compaction details too.
 

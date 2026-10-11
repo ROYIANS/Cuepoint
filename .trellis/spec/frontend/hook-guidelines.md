@@ -6,20 +6,20 @@
 
 ## Overview
 
-Data reads go through Dexie `useLiveQuery`. Mutations go through the concrete business command owner under `src/db/` (for example `shots.ts`, `assets.ts`, `chat.ts`, or `cascadeCommands.ts`); the D02 ownership table is in [State Management](./state-management.md). Do not fetch records with one-shot `useEffect` + `db.*.get` if the page should update after edits.
+Current product data reads use `useProductQuery(tx => ...)` or `useProductQueryState` from `src/lib/storage/hooks.ts`. The explicit readonly transaction must also reach nested readers. Dexie live-query observation stays inside the browser adapter. Mutations use the concrete business command owner under `src/db/`; the D02 map remains in [State Management](./state-management.md). Read the complete [shared storage contract](./shared-product-storage.md). Do not fetch live records with one-shot `useEffect` + `db.*.get`.
 
 ---
 
 ## Data Fetching
 
-### Dexie `get()` vs liveQuery loading
+### `get()` vs query loading
 
-`Table.get(id)` returns `undefined` when the row is missing. `useLiveQuery` also returns `undefined` while the query has not resolved.
+`StoreTable.get(id)` returns `undefined` when the row is missing. `useProductQuery` also returns `undefined` while the initial query has not resolved.
 
 If you write:
 
 ```ts
-const row = useLiveQuery(() => db.characters.get(id), [id]);
+const row = useProductQuery(tx => tx.characters.get(id), [id]);
 if (row === undefined) return <Loading />;
 if (!row) return <NotFound />;
 ```
@@ -29,8 +29,8 @@ the not-found branch never runs. Missing ids stay on 加载中 forever.
 **Contract**: coerce missing rows to `null` inside the query.
 
 ```ts
-const character = useLiveQuery(
-  async () => (await db.characters.get(characterId)) ?? null,
+const character = useProductQuery(
+  async tx => (await tx.characters.get(characterId)) ?? null,
   [characterId],
 );
 
@@ -40,7 +40,7 @@ if (character === null) return <div>找不到这个角色</div>;
 
 | Query result | Meaning |
 | --- | --- |
-| `undefined` | liveQuery still loading |
+| `undefined` | Initial query still loading |
 | `null` | loaded, no row |
 | object | loaded row |
 
@@ -48,7 +48,9 @@ This applies to `characters`, `scenes`, `props`, `styles`, `episodes`, `projects
 
 ### Changed query dependencies
 
-`useLiveQuery` can retain its previous result while a new dependency set loads. If downstream actions rely on loading being complete, include the dependency identity in the query result and return `undefined` until it matches the current identity. `useShotMedia` keys its result by the sorted result-media IDs so gap filters and locate-shot navigation cannot treat the previous episode's media collection as loaded.
+`useProductQuery` retains its previous successful result while a new dependency set loads. If downstream actions rely on loading being complete, include dependency identity in the result and return `undefined` until it matches the current identity. `useShotMedia` keys its result by sorted result-media IDs so gap filters and locate-shot navigation cannot treat the previous episode's collection as loaded. Native file availability is a separate check from logical media metadata.
+
+`useProductQueryState` exposes an error while retaining the previous value; use it when the owning view provides visible recovery. `useProductQuery` throws a read error for the owning boundary. Never turn a failed read into an empty successful inventory. Disposal/remount suppresses obsolete completions; subscriptions reconcile committed changes only. Preserve exact selected-owner/current-kind reads and E04 negative invalidation assertions below on both adapters.
 
 Identity belongs to the query result even when it contains `null` or an empty array. A returned row's `id` alone cannot distinguish an old missing/empty read from a newly requested read. Tag owner/project and entity/episode dependencies in the querier, then gate navigation, repair effects, mutation controls and export until the envelope matches. Validate returned ownership as well; matching requested envelope identity does not authorize a foreign row.
 
@@ -66,7 +68,7 @@ A key can destroy manual drafts. Install dirty/pending route and unload protecti
 
 ---
 
-## Common Mistake: Dexie get loading collapse
+## Common Mistake: get loading collapse
 
 **Symptom**: `/characters/chr_does-not-exist` shows 加载中… forever.
 
