@@ -1,228 +1,527 @@
-import {useCallback, useEffect, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
+import { DraftConflictError } from "@/lib/draftConflict";
+import type { Shot, StoryBeat, ShotFilters } from "@/domain/types";
 
-export type NativeProject = {id: string; title: string};
-export type NativeAsset = {
-    id: string;
-    projectId: string;
-    kind: "media" | "output";
-    displayName: string;
-    mimeType: string;
-    byteLength: number;
-    contentHash: string;
-    reference: {workspaceId: string; projectId: string; relativePath: string};
+import {
+  nativeProductReplySchema,
+  type NativeResult,
+} from "@/lib/nativeWorkspaceContract";
+import type {
+  NativeProject,
+  NativeVideoProject,
+  NativeEpisode,
+  NativeBeat,
+  NativeShot,
+  NativeAsset,
+  NativeAvailability,
+  NativeWorkspaceState,
+  NativeVideoWorkspaceState,
+} from "@/lib/nativeWorkspaceContract";
+export type {
+  NativeProject,
+  NativeVideoProject,
+  NativeEpisode,
+  NativeBeat,
+  NativeShot,
+  NativeAsset,
+  NativeAvailability,
+  NativeWorkspaceState,
+  NativeVideoWorkspaceState,
+  NativeUndoReceipt,
+} from "@/lib/nativeWorkspaceContract";
+type NativeShotPatch = Partial<
+  Pick<
+    Shot,
+    | "status"
+    | "durationSec"
+    | "content"
+    | "notes"
+    | "category"
+    | "sceneCloseup"
+    | "sound"
+    | "emotion"
+    | "cameraAngle"
+    | "cameraGear"
+    | "focalLength"
+    | "shotNumber"
+    | "characterIds"
+    | "propIds"
+  >
+> & {
+  beatId?: string | null;
+  sceneId?: string | null;
+  styleId?: string | null;
 };
-export type NativeAvailability = {assetId: string; status: "present" | "missing" | "corrupt"};
-export type NativeVideoProject = {projectId: string; mode: "film" | "series"; logline: string; updatedAt: string};
-export type NativeEpisode = {id: string; projectId: string; order: number; title: string; logline: string; script: string; createdAt: string; updatedAt: string};
-export type NativeBeat = {id: string; episodeId: string; order: number; title: string; content: string; timeOfDay: string; scriptStart?: number; scriptEnd?: number};
-export type NativeShot = {id: string; projectId: string; episodeId: string; order: number; shotNumber: number; beatId?: string; status: "draft" | "ready" | "framed" | "clipped" | "approved"; durationSec: number; content: string; notes: string; sceneCloseup: string; sound: string; emotion: string; cameraAngle: string; cameraGear: string; focalLength: string};
-export type NativeVideoWorkspaceState = {project: NativeProject; video: NativeVideoProject; episodes: NativeEpisode[]; beats: NativeBeat[]; shots: NativeShot[]; referencedAssetIds: string[]};
-export type NativeWorkspaceState = {
-    schema: 3;
-    workspaceId: string;
-    projects: NativeProject[];
-    assets: NativeAsset[];
-    references: Array<{id: string; projectId: string; assetId: string; startSec: number; durationSec: number}>;
-    sqliteVersion: string;
-    videoProjects: NativeVideoProject[];
-    episodes: NativeEpisode[];
-    beats: NativeBeat[];
-    shots: NativeShot[];
-};
-type NativeResult =
-    | {type: "state"; value: NativeWorkspaceState | null}
-    | {type: "outcome"; value: {kind: "state"; value: NativeWorkspaceState} | {kind: "project"; value: NativeProject} | {kind: "asset"; value: NativeAsset} | {kind: "availability"; value: NativeAvailability[]} | {kind: "videoProject"; value: NativeVideoProject} | {kind: "episode"; value: NativeEpisode} | {kind: "beat"; value: NativeBeat} | {kind: "shot"; value: NativeShot} | {kind: "videoState"; value: NativeVideoWorkspaceState}}
-    | {type: "canceled"}
-    | {type: "closed"};
-type NativeAction =
-    | {type: "ensure" | "state" | "availability"}
-    | {type: "project"; project: NativeProject}
-    | {type: "videoState"; projectId: string}
-    | {type: "videoProject"; video: NativeVideoProject}
-    | {type: "episode"; episode: NativeEpisode}
-    | {type: "reorderEpisodes"; projectId: string; orderedIds: string[]}
-    | {type: "beat"; beat: NativeBeat}
-    | {type: "reorderBeats"; episodeId: string; orderedIds: string[]}
-    | {type: "shot"; shot: NativeShot}
-    | {type: "reorderShots"; episodeId: string; orderedIds: string[]}
-    | {type: "import"; metadata: {projectId: string; assetId: string; kind: "media" | "output"; displayName: string; mimeType: string}};
+type NativeBeatPatch = Partial<
+  Pick<StoryBeat, "title" | "content" | "timeOfDay" | "characterIds">
+> & { sceneId?: string | null; scriptRange?: StoryBeat["scriptRange"] | null };
+type NativeBaseline = { fields: Array<{ field: string; value: string }> };
+export type NativeAction =
+  | { type: "ensure" | "state" | "availability" }
+  | { type: "project"; project: NativeProject }
+  | {
+      type: "createVideoProject";
+      project: NativeProject;
+      video: NativeVideoProject;
+    }
+  | {
+      type: "addShots";
+      projectId: string;
+      episodeId: string;
+      count: number;
+      atOrder?: number;
+      beatId?: string;
+    }
+  | { type: "deleteProject"; projectId: string }
+  | { type: "videoState"; projectId: string }
+  | {
+      type: "videoProject";
+      video: NativeVideoProject;
+      baseline?: NativeBaseline;
+    }
+  | {
+      type: "patchVideoProject";
+      projectId: string;
+      patch: Partial<
+        Pick<
+          NativeVideoProject,
+          | "mode"
+          | "aspectPreset"
+          | "outputWidth"
+          | "outputHeight"
+          | "archivedAt"
+          | "brief"
+          | "genre"
+          | "audience"
+          | "tone"
+          | "logline"
+          | "columnSettings"
+          | "shotSettings"
+        >
+      > & { title?: string };
+      baseline?: NativeBaseline;
+    }
+  | { type: "episode"; episode: NativeEpisode }
+  | {
+      type: "patchEpisode";
+      episodeId: string;
+      patch: {
+        title?: string;
+        logline?: string;
+        script?: string;
+        shotFilters?: ShotFilters;
+      };
+      baseline?: NativeBaseline;
+    }
+  | { type: "reorderEpisodes"; projectId: string; orderedIds: string[] }
+  | { type: "deleteEpisode"; episodeId: string }
+  | { type: "beat"; beat: NativeBeat }
+  | {
+      type: "patchBeat";
+      episodeId: string;
+      beatId: string;
+      patch: NativeBeatPatch;
+      baseline?: NativeBaseline;
+    }
+  | { type: "reorderBeats"; episodeId: string; orderedIds: string[] }
+  | { type: "deleteBeat"; episodeId: string; beatId: string }
+  | {
+      type: "duplicateBeat";
+      episodeId: string;
+      beatId: string;
+      includeShots: boolean;
+    }
+  | { type: "shot"; shot: NativeShot }
+  | {
+      type: "patchShot";
+      shotId: string;
+      patch: NativeShotPatch;
+      baseline?: NativeBaseline;
+    }
+  | { type: "reorderShots"; episodeId: string; orderedIds: string[] }
+  | { type: "deleteShots"; episodeId: string; shotIds: string[] }
+  | { type: "duplicateShot"; episodeId: string; shotId: string }
+  | {
+      type: "bulkShots";
+      episodeId: string;
+      shotIds: string[];
+      patch: NativeShotPatch;
+    }
+  | {
+      type: "videoUndo";
+      receipt: { token: string; resource: string; ids: string[] };
+    }
+  | {
+      type: "import";
+      metadata: {
+        projectId: string;
+        assetId: string;
+        kind: "media" | "output";
+        displayName: string;
+        mimeType: string;
+      };
+    };
+
+function baselineValue(value: unknown): string {
+  if (value === undefined || value === null) return "";
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  )
+    return String(value);
+  return JSON.stringify(value);
+}
+
+export function nativeBaseline(
+  patch: object,
+  baseline: object | undefined,
+): NativeBaseline | undefined {
+  if (!baseline) return undefined;
+  return {
+    fields: Object.keys(patch).map((field) => ({
+      field,
+      value: baselineValue((baseline as { [key: string]: unknown })[field]),
+    })),
+  };
+}
 
 declare global {
-    interface Window {
-        __TAURI_INTERNALS__?: {invoke: (command: string, args?: unknown) => Promise<unknown>};
-    }
+  interface Window {
+    __TAURI_INTERNALS__?: {
+      invoke: (command: string, args?: unknown) => Promise<unknown>;
+    };
+  }
 }
 
 export function isNativeWorkspaceRuntime(): boolean {
-    return typeof window !== "undefined" && typeof window.__TAURI_INTERNALS__?.invoke === "function";
+  return (
+    typeof window !== "undefined" &&
+    typeof window.__TAURI_INTERNALS__?.invoke === "function"
+  );
 }
 
-function assertResult(value: unknown): NativeResult {
-    if (!value || typeof value !== "object" || !("result" in value)) throw new Error("原生工作区返回格式无效");
-    return (value as {result: NativeResult}).result;
+function assertActionResult(action: NativeAction, result: NativeResult): void {
+  if (result.type === "outcome" && result.value.kind === "conflict")
+    throw new DraftConflictError();
+  if (action.type === "ensure" || action.type === "state") {
+    if (
+      result.type === "state" ||
+      (result.type === "outcome" && result.value.kind === "state") ||
+      (action.type === "ensure" && result.type === "canceled")
+    )
+      return;
+  } else if (action.type === "import" && result.type === "canceled") return;
+  else {
+    const expected: {
+      [K in Exclude<NativeAction["type"], "ensure" | "state">]: Extract<
+        NativeResult,
+        { type: "outcome" }
+      >["value"]["kind"];
+    } = {
+      project: "project",
+      createVideoProject: "project",
+      deleteProject: "state",
+      videoState: "videoState",
+      videoProject: "videoProject",
+      patchVideoProject: "videoProject",
+      episode: "episode",
+      patchEpisode: "episode",
+      reorderEpisodes: "undo",
+      deleteEpisode: "undo",
+      beat: "beat",
+      patchBeat: "beat",
+      reorderBeats: "undo",
+      deleteBeat: "undo",
+      duplicateBeat: "duplicateBeat",
+      shot: "shot",
+      addShots: "shots",
+      patchShot: "shot",
+      reorderShots: "undo",
+      deleteShots: "undo",
+      duplicateShot: "duplicateShot",
+      bulkShots: "undo",
+      videoUndo: "state",
+      availability: "availability",
+      import: "asset",
+    };
+    if (
+      result.type === "outcome" &&
+      result.value.kind === expected[action.type]
+    )
+      return;
+  }
+  throw new Error("原生工作区返回了与操作不符的结果，修改未确认保存");
+}
+function nativeError(cause: unknown): Error {
+  const code =
+    cause && typeof cause === "object" && "code" in cause
+      ? cause.code
+      : undefined;
+  if (code === "conflict") return new DraftConflictError();
+  const messages: Record<string, string> = {
+    bridge: "原生工作区连接失败，请重新打开应用",
+    untrusted: "原生工作区连接失败，请重新打开应用",
+    busy: "原生工作区正在处理其他操作，请稍后重试",
+    closed: "原生工作区已关闭，请重新打开",
+    canceled: "操作已取消，修改未保存",
+    missing: "内容已不存在，修改未保存",
+    ownership: "内容不属于当前项目，修改未保存",
+    order: "顺序已发生变化，请读取最新内容后重试",
+    range: "剧本范围无效，请重新选择",
+    invalid: "数据未通过校验，修改未保存",
+    schema: "工作区格式不符合当前版本，请使用新的工作区",
+    undo: "无法撤销此操作，后续修改已保留",
+    corrupt: "工作区数据校验失败，请检查工作区",
+    sqlite: "本地数据库操作失败，请稍后重试",
+    containment: "工作区文件校验失败，请重新打开工作区",
+  };
+  return new Error(
+    typeof code === "string" && messages[code]
+      ? messages[code]
+      : "原生工作区操作失败，请重试或重新打开应用",
+  );
 }
 
 export class NativeWorkspaceAdapter {
-    private generation = 0;
+  private generation = 0;
+  private queue: Promise<void> = Promise.resolve();
+  private opening?: Promise<NativeWorkspaceState>;
+  private opened = false;
 
-    async request(action: NativeAction): Promise<NativeResult> {
-        const invoke = window.__TAURI_INTERNALS__?.invoke;
-        if (!invoke) throw new Error("当前运行环境没有原生工作区");
-        const value = await invoke("workspace_request", {
-            request: {version: 1, operationId: crypto.randomUUID(), expectedGeneration: this.generation, action},
-        });
-        const reply = value as {generation?: unknown};
-        if (typeof reply.generation !== "number") throw new Error("原生工作区响应缺少 generation");
-        if (reply.generation < this.generation) throw new Error("原生工作区已切换，忽略旧响应");
-        this.generation = reply.generation;
-        return assertResult(value);
-    }
+  async request(action: NativeAction): Promise<NativeResult> {
+    const operation = this.queue.then(() => this.performRequest(action));
+    this.queue = operation.then(
+      () => undefined,
+      () => undefined,
+    );
+    return operation;
+  }
 
-    async ensure(): Promise<NativeWorkspaceState> {
-        const result = await this.request({type: "ensure"});
-        if (result.type === "canceled") throw new Error("原生工作区初始化已取消");
-        if (result.type === "state") return result.value ?? await this.state();
-        if (result.type === "outcome" && result.value.kind === "state") return result.value.value;
-        throw new Error("原生工作区初始化未返回状态");
-    }
-
-    async state(): Promise<NativeWorkspaceState> {
-        const result = await this.request({type: "state"});
-        if (result.type === "state" && result.value) return result.value;
-        if (result.type === "outcome" && result.value.kind === "state") return result.value.value;
-        throw new Error("原生工作区尚未打开");
-    }
-
-    async createProject(title: string): Promise<NativeProject> {
-        const project = {id: crypto.randomUUID(), title: title.trim() || "未命名项目"};
-        const result = await this.request({type: "project", project});
-        if (result.type === "outcome" && result.value.kind === "project") return result.value.value;
-        throw new Error("原生项目创建未返回项目");
+  private async performRequest(action: NativeAction): Promise<NativeResult> {
+    const invoke = window.__TAURI_INTERNALS__?.invoke;
+    if (!invoke) throw new Error("当前运行环境没有原生工作区");
+    let value: unknown;
+    try {
+      value = await invoke("workspace_request", {
+        request: {
+          version: 1,
+          operationId: crypto.randomUUID(),
+          expectedGeneration: this.generation,
+          action,
+        },
+      });
+    } catch (cause) {
+      throw nativeError(cause);
     }
 
-    async importAsset(projectId: string, displayName: string, mimeType: string): Promise<NativeAsset | null> {
-        const result = await this.request({type: "import", metadata: {projectId, assetId: crypto.randomUUID(), kind: "media", displayName, mimeType}});
-        if (result.type === "canceled") return null;
-        if (result.type === "outcome" && result.value.kind === "asset") return result.value.value;
-        throw new Error("原生素材导入未返回素材");
-    }
+    const reply = nativeProductReplySchema.parse(value);
+    if (reply.generation < this.generation)
+      throw new Error("原生工作区已切换，忽略旧响应");
+    assertActionResult(action, reply.result);
+    this.generation = reply.generation;
+    return reply.result;
+  }
 
-    async videoState(projectId: string): Promise<NativeVideoWorkspaceState> {
-        const result = await this.request({type: "videoState", projectId});
-        if (result.type === "outcome" && result.value.kind === "videoState") return result.value.value;
-        throw new Error("原生视频项目状态未返回");
+  async command(action: NativeAction): Promise<NativeResult> {
+    try {
+      const result = await this.request(action);
+      if (result.type === "outcome" && result.value.kind === "conflict")
+        throw new DraftConflictError();
+      return result;
+    } catch (cause) {
+      if (
+        cause &&
+        typeof cause === "object" &&
+        "code" in cause &&
+        cause.code === "conflict"
+      )
+        throw new DraftConflictError();
+      throw cause;
     }
-    async saveVideoProject(video: NativeVideoProject): Promise<NativeVideoProject> {
-        const result = await this.request({type: "videoProject", video});
-        if (result.type === "outcome" && result.value.kind === "videoProject") return result.value.value;
-        throw new Error("原生视频项目保存未返回结果");
-    }
-    async saveEpisode(episode: NativeEpisode): Promise<NativeEpisode> {
-        const result = await this.request({type: "episode", episode});
-        if (result.type === "outcome" && result.value.kind === "episode") return result.value.value;
-        throw new Error("原生集保存未返回结果");
-    }
-    async createEpisode(projectId: string, input: Partial<Pick<NativeEpisode, "title" | "logline" | "script">> = {}): Promise<NativeEpisode> {
-        const current = await this.videoState(projectId);
-        const now = String(Date.now());
-        const episode: NativeEpisode = {id: crypto.randomUUID(), projectId, order: current.episodes.length, title: input.title?.trim() || `第${current.episodes.length + 1}集`, logline: input.logline ?? "", script: input.script ?? "", createdAt: now, updatedAt: now};
-        return this.saveEpisode(episode);
-    }
-    async updateEpisode(id: string, patch: Partial<Omit<NativeEpisode, "id" | "projectId" | "order">>, baseline?: Partial<NativeEpisode>): Promise<NativeEpisode> {
-        void baseline;
-        // The ID is resolved against the native snapshot, keeping ownership in the bridge.
-        const state = await this.state();
-        const current = state.episodes.find(item => item.id === id);
-        if (!current) throw new Error("集不存在");
-        return this.saveEpisode({...current, ...patch, updatedAt: String(Date.now())});
-    }
-    async reorderEpisodes(projectId: string, orderedIds: string[]): Promise<void> {
-        const result = await this.request({type: "reorderEpisodes", projectId, orderedIds});
-        if (result.type !== "outcome" || result.value.kind !== "videoState") throw new Error("原生集排序未返回结果");
-    }
-    async saveBeat(beat: NativeBeat): Promise<NativeBeat> {
-        const result = await this.request({type: "beat", beat});
-        if (result.type === "outcome" && result.value.kind === "beat") return result.value.value;
-        throw new Error("原生节拍保存未返回结果");
-    }
-    async createBeat(episodeId: string, input: Partial<Pick<NativeBeat, "title" | "content" | "timeOfDay">> = {}): Promise<NativeBeat> {
-        const current = await this.state();
-        const order = current.beats.filter(item => item.episodeId === episodeId).length;
-        return this.saveBeat({id: crypto.randomUUID(), episodeId, order, title: input.title?.trim() || `节拍 ${order + 1}`, content: input.content ?? "", timeOfDay: input.timeOfDay ?? ""});
-    }
-    async updateBeat(episodeId: string, id: string, patch: Partial<Omit<NativeBeat, "id" | "episodeId" | "order">>, baseline?: Partial<NativeBeat>): Promise<NativeBeat> {
-        void baseline;
-        const current = (await this.state()).beats.find(item => item.id === id && item.episodeId === episodeId);
-        if (!current) throw new Error("节拍不存在");
-        return this.saveBeat({...current, ...patch});
-    }
-    async reorderBeats(episodeId: string, orderedIds: string[]): Promise<void> {
-        const result = await this.request({type: "reorderBeats", episodeId, orderedIds});
-        if (result.type !== "outcome" || result.value.kind !== "videoState") throw new Error("原生节拍排序未返回结果");
-    }
-    async saveShot(shot: NativeShot): Promise<NativeShot> {
-        const result = await this.request({type: "shot", shot});
-        if (result.type === "outcome" && result.value.kind === "shot") return result.value.value;
-        throw new Error("原生镜头保存未返回结果");
-    }
-    async createShot(episodeId: string, input: Partial<Omit<NativeShot, "id" | "projectId" | "episodeId" | "order" | "shotNumber">> = {}): Promise<NativeShot> {
-        const owner = (await this.state()).episodes.find(item => item.id === episodeId)?.projectId;
-        if (!owner) throw new Error("集不存在");
-        const current = await this.videoState(owner);
-        const order = current.shots.filter(item => item.episodeId === episodeId).length;
-        const projectId = current.project.id;
-        return this.saveShot({id: crypto.randomUUID(), projectId, episodeId, order, shotNumber: order + 1, status: "draft", durationSec: 0, content: "", notes: "", sceneCloseup: "", sound: "", emotion: "", cameraAngle: "", cameraGear: "", focalLength: "", ...input});
-    }
-    async updateShot(episodeId: string, id: string, patch: Partial<Omit<NativeShot, "id" | "projectId" | "episodeId" | "order">>, baseline?: Partial<NativeShot>): Promise<NativeShot> {
-        void baseline;
-        const current = (await this.state()).shots.find(item => item.id === id && item.episodeId === episodeId);
-        if (!current) throw new Error("镜头不存在");
-        return this.saveShot({...current, ...patch});
-    }
-    async reorderShots(episodeId: string, orderedIds: string[]): Promise<void> {
-        const result = await this.request({type: "reorderShots", episodeId, orderedIds});
-        if (result.type !== "outcome" || result.value.kind !== "videoState") throw new Error("原生镜头排序未返回结果");
-    }
+  }
 
-    async availability(): Promise<NativeAvailability[]> {
-        const result = await this.request({type: "availability"});
-        if (result.type === "outcome" && result.value.kind === "availability") return result.value.value;
-        throw new Error("原生素材检查未返回结果");
-    }
+  ensure(): Promise<NativeWorkspaceState> {
+    if (this.opening) return this.opening;
+    if (this.opened) return this.state();
+    this.opening = this.request({ type: "ensure" })
+      .then((result) => {
+        if (result.type === "canceled")
+          throw new Error("原生工作区初始化已取消");
+        let state: NativeWorkspaceState;
+        if (result.type === "state" && result.value) state = result.value;
+        else if (result.type === "outcome" && result.value.kind === "state")
+          state = result.value.value;
+        else throw new Error("原生工作区初始化未返回状态");
+        this.opened = true;
+        return state;
+      })
+      .finally(() => {
+        this.opening = undefined;
+      });
+    return this.opening;
+  }
+
+  async state(): Promise<NativeWorkspaceState> {
+    if (!this.opened) await this.ensure();
+    const result = await this.request({ type: "state" });
+    if (result.type === "state" && result.value) return result.value;
+    if (result.type === "outcome" && result.value.kind === "state")
+      return result.value.value;
+    throw new Error("原生工作区尚未打开");
+  }
+
+  async createProject(title: string): Promise<NativeProject> {
+    const project = {
+      id: crypto.randomUUID(),
+      title: title.trim() || "未命名项目",
+    };
+    const result = await this.request({ type: "project", project });
+    if (result.type === "outcome" && result.value.kind === "project")
+      return result.value.value;
+    throw new Error("原生项目创建未返回项目");
+  }
+
+  async importAsset(
+    projectId: string,
+    displayName: string,
+    mimeType: string,
+  ): Promise<NativeAsset | null> {
+    const result = await this.request({
+      type: "import",
+      metadata: {
+        projectId,
+        assetId: crypto.randomUUID(),
+        kind: "media",
+        displayName,
+        mimeType,
+      },
+    });
+    if (result.type === "canceled") return null;
+    if (result.type === "outcome" && result.value.kind === "asset")
+      return result.value.value;
+    throw new Error("原生素材导入未返回素材");
+  }
+
+  async videoState(projectId: string): Promise<NativeVideoWorkspaceState> {
+    if (!this.opened) await this.ensure();
+    const result = await this.request({ type: "videoState", projectId });
+    if (result.type === "outcome" && result.value.kind === "videoState")
+      return result.value.value;
+    throw new Error("原生视频项目状态未返回");
+  }
+  async saveVideoProject(
+    video: NativeVideoProject,
+  ): Promise<NativeVideoProject> {
+    const result = await this.request({ type: "videoProject", video });
+    if (result.type === "outcome" && result.value.kind === "videoProject")
+      return result.value.value;
+    throw new Error("原生视频项目保存未返回结果");
+  }
+  async saveEpisode(episode: NativeEpisode): Promise<NativeEpisode> {
+    const result = await this.request({ type: "episode", episode });
+    if (result.type === "outcome" && result.value.kind === "episode")
+      return result.value.value;
+    throw new Error("原生集保存未返回结果");
+  }
+  async createEpisode(
+    projectId: string,
+    input: Partial<Pick<NativeEpisode, "title" | "logline" | "script">> = {},
+  ): Promise<NativeEpisode> {
+    const current = await this.videoState(projectId);
+    const now = new Date().toISOString();
+    const episode: NativeEpisode = {
+      id: crypto.randomUUID(),
+      projectId,
+      order: current.episodes.length,
+      title: input.title?.trim() || `第${current.episodes.length + 1}集`,
+      logline: input.logline ?? "",
+      script: input.script ?? "",
+      createdAt: now,
+      updatedAt: now,
+      shotFilters: { statuses: [], beatIds: [], gaps: [] },
+    };
+    return this.saveEpisode(episode);
+  }
+
+  async saveBeat(beat: NativeBeat): Promise<NativeBeat> {
+    const result = await this.request({ type: "beat", beat });
+    if (result.type === "outcome" && result.value.kind === "beat")
+      return result.value.value;
+    throw new Error("原生节拍保存未返回结果");
+  }
+  async createBeat(
+    episodeId: string,
+    input: Partial<Pick<NativeBeat, "title" | "content" | "timeOfDay">> = {},
+  ): Promise<NativeBeat> {
+    const current = await this.state();
+    const order = current.beats.filter(
+      (item) => item.episodeId === episodeId,
+    ).length;
+    return this.saveBeat({
+      id: crypto.randomUUID(),
+      episodeId,
+      order,
+      title: input.title?.trim() || `节拍 ${order + 1}`,
+      content: input.content ?? "",
+      timeOfDay: input.timeOfDay ?? "",
+      characterIds: [],
+      sceneId: null,
+      scriptRange: null,
+    });
+  }
+
+  async saveShot(shot: NativeShot): Promise<NativeShot> {
+    const result = await this.request({ type: "shot", shot });
+    if (result.type === "outcome" && result.value.kind === "shot")
+      return result.value.value;
+    throw new Error("原生镜头保存未返回结果");
+  }
+
+  async availability(): Promise<NativeAvailability[]> {
+    const result = await this.request({ type: "availability" });
+    if (result.type === "outcome" && result.value.kind === "availability")
+      return result.value.value;
+    throw new Error("原生素材检查未返回结果");
+  }
 }
 
 export function createNativeWorkspaceAdapter(): NativeWorkspaceAdapter {
-    return new NativeWorkspaceAdapter();
+  return new NativeWorkspaceAdapter();
 }
 
 export const nativeWorkspace = createNativeWorkspaceAdapter();
 
 export function useNativeWorkspaceState(): {
-    state: NativeWorkspaceState | null | undefined;
-    availability: NativeAvailability[];
-    error: string | undefined;
-    busy: boolean;
-    refresh: () => Promise<void>;
+  state: NativeWorkspaceState | null | undefined;
+  availability: NativeAvailability[];
+  error: string | undefined;
+  busy: boolean;
+  refresh: () => Promise<void>;
 } {
-    const native = isNativeWorkspaceRuntime();
-    const [state, setState] = useState<NativeWorkspaceState | null | undefined>(undefined);
-    const [availability, setAvailability] = useState<NativeAvailability[]>([]);
-    const [error, setError] = useState<string>();
-    const [busy, setBusy] = useState(false);
-    const refresh = useCallback(async () => {
-        if (!native) return;
-        setBusy(true);
-        try {
-            const nextState = await nativeWorkspace.ensure();
-            setState(nextState);
-            setAvailability(await nativeWorkspace.availability());
-            setError(undefined);
-        } catch (cause) {
-            setError(cause instanceof Error ? cause.message : "原生工作区初始化失败");
-        } finally {
-            setBusy(false);
-        }
-    }, [native]);
-    useEffect(() => { void refresh(); }, [refresh]);
-    return {state, availability, error, busy, refresh};
+  const native = isNativeWorkspaceRuntime();
+  const [state, setState] = useState<NativeWorkspaceState | null | undefined>(
+    undefined,
+  );
+  const [availability, setAvailability] = useState<NativeAvailability[]>([]);
+  const [error, setError] = useState<string>();
+  const [busy, setBusy] = useState(false);
+  const refresh = useCallback(async () => {
+    if (!native) return;
+    setBusy(true);
+    try {
+      const nextState = await nativeWorkspace.ensure();
+      setState(nextState);
+      setAvailability(await nativeWorkspace.availability());
+      setError(undefined);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "原生工作区初始化失败");
+    } finally {
+      setBusy(false);
+    }
+  }, [native]);
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
+  return { state, availability, error, busy, refresh };
 }

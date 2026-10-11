@@ -1,21 +1,11 @@
+import {VideoWorkspaceReadNotice} from "@/components/workspace/VideoWorkspaceReadNotice";
 import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
 import {BeatTextField} from "./BeatTextField";
 import {type TextDraftStatusChange, useTextDraftRetention} from "@/lib/useTextDraftRetention";
 import {changedDraftFields} from "@/lib/draftConflict";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
 import {ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2} from "lucide-react";
 import {useEffect, useMemo, useRef, useState} from "react";
-import {db} from "@/db/database";
-import {
-    addStoryBeat,
-    deleteStoryBeat,
-    duplicateBeat,
-    patchStoryBeat,
-    reorderBeats,
-    restoreStoryBeat,
-    updateEpisodeDraft
-} from "@/db/episodes";
-import {deleteShots} from "@/db/shots";
 import {type Episode, normalizeEpisodeStory, type StoryBeat} from "@/domain/types";
 import {Button} from "@/components/ui/button";
 import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";
@@ -27,6 +17,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/
 import {Textarea} from "@/components/ui/textarea";
 import {useDebouncedDraft} from "@/lib/debouncedDraft";
 import {useUndo} from "@/lib/undo";
+import {toast} from "sonner";
 import {cn} from "@/lib/utils";
 
 function isScriptFile(file: File): boolean {
@@ -40,18 +31,20 @@ export function StoryPage(props: { projectId: string; episodeId: string }) {
 }
 
 function StoryScope({projectId, episodeId}: { projectId: string; episodeId: string }) {
-    const loadedProject = useLiveQuery(async () => (await db.projects.get(projectId)) ?? null, [projectId]);
-    const loadedEpisode = useLiveQuery(
-        async () => (await db.episodes.get(episodeId)) ?? null,
+    const repository = useVideoWorkspaceRepository();
+    const readStatus = useVideoWorkspaceReadStatus();
+    const loadedProject = useVideoWorkspaceQuery(async () => await repository.project(projectId), [projectId]);
+    const loadedEpisode = useVideoWorkspaceQuery(
+        async () => await repository.episode(episodeId),
         [episodeId],
     );
     const characters =
-        useLiveQuery(
-            () => db.characters.where("projectId").equals(projectId).toArray(),
+        useVideoWorkspaceQuery(
+            () => repository.characters(projectId),
             [projectId],
         ) ?? [];
     const scenes =
-        useLiveQuery(() => db.scenes.where("projectId").equals(projectId).toArray(), [projectId]) ?? [];
+        useVideoWorkspaceQuery(() => repository.scenes(projectId), [projectId]) ?? [];
     const loadedBeats = useMemo(() => loadedEpisode?.projectId === projectId
         ? normalizeEpisodeStory(loadedEpisode.story).beats : undefined, [loadedEpisode, projectId]);
     const beatText = useTextDraftRetention(loadedBeats);
@@ -64,7 +57,7 @@ function StoryScope({projectId, episodeId}: { projectId: string; episodeId: stri
     const unavailable = !loadedProject || !loadedEpisode || beatText.retainedCount > 0;
     const textNavigationGuard = useManualDraftGuard(false, beatText.pending, () => undefined);
     if (episode === undefined || project === undefined) {
-        return <PageContent><PageState kind="loading" title="正在读取故事…"/></PageContent>;
+        return <PageContent><PageState kind={readStatus.error ? "error" : "loading"} title={readStatus.error ? "读取工作区失败" : "正在读取故事…"} description={readStatus.error} action={readStatus.error ? <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/></PageContent>;
     }
     if (project === null || episode === null || episode.projectId !== projectId) {
         return <PageContent><PageState kind="missing" title="找不到这一集"/></PageContent>;
@@ -72,6 +65,7 @@ function StoryScope({projectId, episodeId}: { projectId: string; episodeId: stri
 
     return (
         <>
+            <VideoWorkspaceReadNotice {...readStatus}/>
             {textNavigationGuard}
             <StoryEditor
                 key={JSON.stringify([episode.projectId, episode.id])}
@@ -107,6 +101,8 @@ function StoryEditor({
     characters: { id: string; name: string }[];
     scenes: { id: string; name: string }[];
 }) {
+    const repository = useVideoWorkspaceRepository();
+    const relationsAvailable = repository.capabilities().some(item => item.id === "relations" && item.status === "available");
     const initialStory = normalizeEpisodeStory(episode.story);
     const {draft, setDraft, status, error, retry, useLatest: adoptLatestDraft, flush} = useDebouncedDraft({
         draftKey: `episode:${episode.id}:story`,
@@ -116,14 +112,18 @@ function StoryEditor({
             logline: initialStory.logline,
             script: initialStory.script,
         },
-        persist: (value, baseline) => updateEpisodeDraft(episode.id, changedDraftFields(value, baseline), baseline),
+        persist: (value, baseline) => repository.updateEpisodeDraft(episode.id, changedDraftFields(value, baseline), baseline),
     });
     const [dragging, setDragging] = useState(false);
     const scriptRef = useRef<HTMLTextAreaElement>(null);
     const {registerUndo} = useUndo();
 
+    function reportCommandError(error: unknown) {
+        toast.error(error instanceof Error ? error.message : "保存失败，请重试");
+    }
+
     function updateBeat(id: string, change: Partial<StoryBeat>) {
-        void patchStoryBeat(episode.id, id, change);
+        void repository.patchStoryBeat(episode.id, id, change).catch(reportCommandError);
     }
 
     const mounted = useRef(true);
@@ -209,7 +209,7 @@ function StoryEditor({
         const excerpt = draft.script.slice(start, end);
         if (!excerpt) return;
         await flush();
-        await addStoryBeat(episode.id, {scriptRange: {start, end, excerpt}});
+        await repository.addStoryBeat(episode.id, {scriptRange: {start, end, excerpt}});
     }
 
     async function moveBeat(index: number, offset: -1 | 1) {
@@ -218,32 +218,32 @@ function StoryEditor({
         const previous = beats.map((beat) => beat.id);
         const next = [...previous];
         [next[index], next[target]] = [next[target], next[index]];
-        await reorderBeats(episode.id, next);
+        const committed = await repository.reorderBeats(episode.id, next);
         registerUndo({
             label: "已调整场次顺序",
-            restore: () => reorderBeats(episode.id, previous),
+            restore: committed?.restore ?? (async () => {await repository.reorderBeats(episode.id, previous);}),
         });
     }
 
     async function removeBeat(beat: StoryBeat, index: number) {
-        const shotIds = (await db.shots.where("episodeId").equals(episode.id).toArray())
+        const shotIds = (await repository.shots(episode.id))
             .filter((shot) => shot.beatId === beat.id)
             .map((shot) => shot.id);
-        await deleteStoryBeat(episode.id, beat.id);
+        const committed = await repository.deleteStoryBeat(episode.id, beat.id);
         registerUndo({
             label: "已删除场次",
-            restore: () => restoreStoryBeat(episode.id, beat, index, shotIds),
+            restore: committed?.restore ?? (() => repository.restoreStoryBeat(episode.id, beat, index, shotIds)),
         });
     }
 
     async function copyBeat(beatId: string, copyShots: boolean) {
-        const copy = await duplicateBeat(episode.id, beatId, {includeShots: copyShots});
+        const copy = await repository.duplicateBeat(episode.id, beatId, {includeShots: copyShots});
         registerUndo({
             label: copyShots ? "已复制场次及镜头" : "已复制场次",
-            restore: async () => {
-                await deleteShots(copy.shots.map((shot) => shot.id));
-                await deleteStoryBeat(episode.id, copy.beat.id);
-            },
+            restore: copy.undo?.restore ?? (async () => {
+                await repository.deleteShots(copy.shots.map((shot) => shot.id));
+                await repository.deleteStoryBeat(episode.id, copy.beat.id);
+            }),
         });
     }
 
@@ -326,17 +326,19 @@ function StoryEditor({
                     <div className="flex flex-wrap items-center justify-between gap-3">
                         <h2 className="text-base leading-6 font-semibold">场次</h2>
                         <div className="flex flex-wrap gap-2">
-                            <Button size="sm" variant="outline" onClick={() => void addBeatFromSelection()}>
+                            <Button size="sm" variant="outline" disabled={unavailable}
+                                onClick={() => void addBeatFromSelection().catch(reportCommandError)}>
                                 从选中内容建场
                             </Button>
-                            <Button size="sm" variant="outline" onClick={() => void addStoryBeat(episode.id)}>
+                            <Button size="sm" variant="outline" disabled={unavailable}
+                                onClick={() => void repository.addStoryBeat(episode.id).catch(reportCommandError)}>
                                 <Plus/>
                                 加一场
                             </Button>
                         </div>
                     </div>
                     <p className="text-muted-foreground mt-1 text-xs leading-5">
-                        加一场，分镜里就会出现对应的空场。出场角色和地点从本戏世界选。
+                        {relationsAvailable ? "加一场，分镜里就会出现对应的空场。出场角色和地点从本戏世界选。" : "加一场，分镜里就会出现对应的空场。原生世界与角色关系尚未接入。"}
                     </p>
                     <ul className="mt-4 space-y-3">
                         {beats.length === 0 ? (
@@ -354,8 +356,8 @@ function StoryEditor({
                                             size="icon-sm"
                                             variant="ghost"
                                             aria-label="上移场次"
-                                            disabled={index === 0}
-                                            onClick={() => void moveBeat(index, -1)}
+                                            disabled={unavailable || index === 0}
+                                            onClick={() => void moveBeat(index, -1).catch(reportCommandError)}
                                         >
                                             <ArrowUp/>
                                         </Button>
@@ -363,32 +365,35 @@ function StoryEditor({
                                             size="icon-sm"
                                             variant="ghost"
                                             aria-label="下移场次"
-                                            disabled={index === beats.length - 1}
-                                            onClick={() => void moveBeat(index, 1)}
+                                            disabled={unavailable || index === beats.length - 1}
+                                            onClick={() => void moveBeat(index, 1).catch(reportCommandError)}
                                         >
                                             <ArrowDown/>
                                         </Button>
                                         <Button
                                             size="icon-sm"
                                             variant="ghost"
+                                            disabled={unavailable}
                                             aria-label="复制场次"
-                                            onClick={() => void copyBeat(beat.id, false)}
+                                            onClick={() => void copyBeat(beat.id, false).catch(reportCommandError)}
                                         >
                                             <Copy/>
                                         </Button>
                                         <Button
                                             size="icon-sm"
                                             variant="ghost"
+                                            disabled={unavailable}
                                             aria-label="复制场次及其镜头"
-                                            onClick={() => void copyBeat(beat.id, true)}
+                                            onClick={() => void copyBeat(beat.id, true).catch(reportCommandError)}
                                         >
                                             <CopyPlus/>
                                         </Button>
                                         <Button
                                             size="icon-sm"
                                             variant="ghost"
+                                            disabled={unavailable}
                                             aria-label="删除场次"
-                                            onClick={() => void removeBeat(beat, index)}
+                                            onClick={() => void removeBeat(beat, index).catch(reportCommandError)}
                                         >
                                             <Trash2/>
                                         </Button>
@@ -424,6 +429,7 @@ function StoryEditor({
                                         <div>
                                             <Label htmlFor={`beat-scene-${beat.id}`} className="text-xs">地点</Label>
                                             <Select
+                                                disabled={!relationsAvailable || unavailable}
                                                 value={beat.sceneId ?? "none"}
                                                 onValueChange={(value) =>
                                                     updateBeat(beat.id, {sceneId: value === "none" ? undefined : value})

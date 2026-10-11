@@ -10,7 +10,8 @@
     "tests/fixtures/*/index.html",
     "tests/fixtures/*/harness.{ts,tsx}",
     "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx",
-    "scripts/e07-draft-rebase-browser.mjs"
+    "scripts/e07-draft-rebase-browser.mjs",
+    "desktop/tauri/ui/bridge.ts!"
   ],
   "project": [
     "src/**/*.{ts,tsx}!",

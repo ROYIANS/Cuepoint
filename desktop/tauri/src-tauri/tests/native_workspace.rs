@@ -15,6 +15,183 @@ fn project(worker: &StorageWorker, id: &str) {
 }
 
 #[test]
+fn wire_numeric_baselines_compare_integer_and_float_values_semantically() {
+    let fixture = Fixture::new();
+    let worker = StorageWorker::create(fixture.path("workspace"), Hooks::default()).unwrap();
+    project(&worker, "video");
+    let episode = state(&worker).episodes[0].id.clone();
+    let mut shot = match worker
+        .run(Job::AddShots {
+            project_id: "video".into(),
+            episode_id: episode,
+            count: 1,
+            at_order: None,
+            beat_id: None,
+        })
+        .unwrap()
+    {
+        Outcome::Shots(mut shots) => shots.remove(0),
+        _ => panic!("committed shots"),
+    };
+    for duration in [0, 3, 5] {
+        shot.duration_sec = f64::from(duration);
+        worker.run(Job::SaveShot(shot.clone())).unwrap();
+        let patch = serde_json::from_value(serde_json::json!({"durationSec": 3.5})).unwrap();
+        let baseline = serde_json::from_value(serde_json::json!({
+            "fields": [{"field": "durationSec", "value": duration.to_string()}]
+        }))
+        .unwrap();
+        worker
+            .run(Job::PatchShot {
+                shot_id: shot.id.clone(),
+                patch,
+                baseline: Some(baseline),
+            })
+            .unwrap();
+        assert_eq!(state(&worker).shots[0].duration_sec, 3.5);
+    }
+    let settings = serde_json::json!({
+        "defaultDurationSec": 3, "autoIncrementShotNumber": true,
+        "workspaceView": "design", "filters": {"statuses": [], "beatIds": [], "gaps": []}
+    });
+    let mut next_settings = settings.clone();
+    next_settings["defaultDurationSec"] = serde_json::json!(4.5);
+    worker
+        .run(Job::UpdateVideoProject {
+            project_id: "video".into(),
+            patch: serde_json::from_value(serde_json::json!({"shotSettings": next_settings}))
+                .unwrap(),
+            baseline: Some(
+                serde_json::from_value(serde_json::json!({
+                    "fields": [{"field": "shotSettings", "value": settings.to_string()}]
+                }))
+                .unwrap(),
+            ),
+        })
+        .unwrap();
+    assert_eq!(
+        state(&worker).video_projects[0]
+            .shot_settings
+            .default_duration_sec,
+        4.5
+    );
+    worker.close().unwrap();
+}
+
+#[test]
+fn multi_add_uses_scene_order_numbering_and_duration_settings_atomically() {
+    let fixture = Fixture::new();
+    let worker = StorageWorker::create(fixture.path("workspace"), Hooks::default()).unwrap();
+    project(&worker, "video");
+    let episode = state(&worker).episodes[0].id.clone();
+    for (order, id) in ["first", "second"].iter().enumerate() {
+        worker
+            .run(Job::SaveBeat(
+                serde_json::from_value(serde_json::json!({
+                    "id": id, "episodeId": episode, "order": order,
+                    "title": id, "content": "", "timeOfDay": "", "characterIds": [],
+                    "sceneId": null, "scriptRange": null
+                }))
+                .unwrap(),
+            ))
+            .unwrap();
+    }
+    for id in ["second", "first"] {
+        worker
+            .run(Job::AddShots {
+                project_id: "video".into(),
+                episode_id: episode.clone(),
+                count: 1,
+                at_order: None,
+                beat_id: Some(id.into()),
+            })
+            .unwrap();
+    }
+    let initial = state(&worker);
+    assert_eq!(initial.shots[0].beat_id.as_deref(), Some("first"));
+    assert_eq!(initial.shots[0].shot_number, "2");
+    assert_eq!(initial.shots[1].beat_id.as_deref(), Some("second"));
+    assert_eq!(initial.shots[1].shot_number, "1");
+    worker
+        .run(Job::UpdateVideoProject {
+            project_id: "video".into(),
+            baseline: None,
+            patch: serde_json::from_value(serde_json::json!({"shotSettings": {
+                "defaultDurationSec": 1.25, "autoIncrementShotNumber": false,
+                "workspaceView": "design", "filters": {"statuses": [], "beatIds": [], "gaps": []}
+            }}))
+            .unwrap(),
+        })
+        .unwrap();
+    worker
+        .run(Job::AddShots {
+            project_id: "video".into(),
+            episode_id: episode.clone(),
+            count: 2,
+            at_order: None,
+            beat_id: Some("first".into()),
+        })
+        .unwrap();
+    let current = state(&worker);
+    assert_eq!(
+        current.shots.iter().map(|s| s.order).collect::<Vec<_>>(),
+        vec![0, 1, 2, 3]
+    );
+    assert_eq!(current.shots[1].shot_number, "2");
+    assert_eq!(current.shots[2].shot_number, "3");
+    assert_eq!(current.shots[1].duration_sec, 1.25);
+    assert_eq!(current.shots[2].duration_sec, 1.25);
+    assert_eq!(current.shots[3].beat_id.as_deref(), Some("second"));
+
+    // A user may enter an arbitrary shot label with a large numeric prefix.
+    // Turning automatic numbering back on must neither panic nor alter it.
+    let mut shot = current.shots[0].clone();
+    shot.shot_number = "9".repeat(120);
+    worker.run(Job::SaveShot(shot.clone())).unwrap();
+    let mut settings = current.video_projects[0].shot_settings.clone();
+    settings.auto_increment_shot_number = true;
+    worker
+        .run(Job::UpdateVideoProject {
+            project_id: "video".into(),
+            baseline: None,
+            patch: serde_json::from_value(serde_json::json!({"shotSettings": settings})).unwrap(),
+        })
+        .unwrap();
+    let created = match worker
+        .run(Job::AddShots {
+            project_id: "video".into(),
+            episode_id: episode,
+            count: 2,
+            at_order: None,
+            beat_id: None,
+        })
+        .unwrap()
+    {
+        Outcome::Shots(shots) => shots,
+        _ => panic!("committed shots"),
+    };
+    assert_eq!(created.len(), 2);
+    assert!(
+        created
+            .iter()
+            .all(|s| s.shot_number.parse::<f64>().unwrap().is_finite())
+    );
+    assert_eq!(
+        state(&worker)
+            .shots
+            .iter()
+            .find(|s| s.id == shot.id)
+            .unwrap()
+            .shot_number,
+        shot.shot_number
+    );
+    worker.close().unwrap();
+    let reopened = StorageWorker::open(fixture.path("workspace"), Hooks::default()).unwrap();
+    assert_eq!(state(&reopened).shots.len(), 6);
+    reopened.close().unwrap();
+}
+
+#[test]
 fn video_domain_reopens_with_stable_order_and_checkpoint_boundary() {
     let fixture = Fixture::new();
     let worker = StorageWorker::create(fixture.path("workspace"), Hooks::default()).unwrap();
@@ -30,6 +207,11 @@ fn video_domain_reopens_with_stable_order_and_checkpoint_boundary() {
         .run(Job::SaveEpisode(cuepoint_native_storage::Episode {
             script: "进入房间".into(),
             updated_at: "2".into(),
+            shot_filters: cuepoint_native_storage::ShotFilters {
+                statuses: vec![],
+                beat_ids: vec![],
+                gaps: vec![],
+            },
             ..episode.clone()
         }))
         .unwrap();
@@ -41,8 +223,13 @@ fn video_domain_reopens_with_stable_order_and_checkpoint_boundary() {
             title: "开场".into(),
             content: "进入房间".into(),
             time_of_day: "day".into(),
-            script_start: Some(0),
-            script_end: Some(4),
+            character_ids: vec![],
+            scene_id: None,
+            script_range: Some(cuepoint_native_storage::ScriptRange {
+                start: 0,
+                end: 4,
+                excerpt: "进入房间".into(),
+            }),
         }))
         .unwrap();
     worker
@@ -51,7 +238,7 @@ fn video_domain_reopens_with_stable_order_and_checkpoint_boundary() {
             project_id: "video".into(),
             episode_id: episode.id.clone(),
             order: 0,
-            shot_number: 1,
+            shot_number: "1".into(),
             beat_id: Some("beat-1".into()),
             status: "draft".into(),
             duration_sec: 2.5,
@@ -63,6 +250,11 @@ fn video_domain_reopens_with_stable_order_and_checkpoint_boundary() {
             camera_angle: "".into(),
             camera_gear: "".into(),
             focal_length: "".into(),
+            category: "".into(),
+            character_ids: vec![],
+            scene_id: None,
+            prop_ids: vec![],
+            style_id: None,
         }))
         .unwrap();
     let before = state(&worker);
@@ -97,22 +289,22 @@ fn reopen_rejects_orphaned_video_rows() {
         match kind {
             "episode" => {
                 db.execute(
-                    "INSERT INTO episodes (id,project_id,item_order,title,logline,script,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)",
-                    rusqlite::params!["orphan-episode", "missing-project", 1_i64, "孤立集", "", "", "1", "1"],
+                    "INSERT INTO episodes (id,project_id,item_order,title,logline,script,created_at,updated_at,shot_filter_statuses,shot_filter_beats,shot_filter_gaps) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                    rusqlite::params!["orphan-episode", "missing-project", 1_i64, "孤立集", "", "", "1", "1","","",""],
                 )
                 .unwrap();
             }
             "beat" => {
                 db.execute(
-                    "INSERT INTO beats (id,episode_id,item_order,title,content,time_of_day,script_start,script_end) VALUES (?,?,?,?,?,?,?,?)",
-                    rusqlite::params!["orphan-beat", "missing-episode", 0_i64, "孤立节拍", "", "", Option::<i64>::None, Option::<i64>::None],
+                    "INSERT INTO beats (id,episode_id,item_order,title,content,time_of_day,script_start,script_end,character_ids,scene_id,script_excerpt) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                    rusqlite::params!["orphan-beat", "missing-episode", 0_i64, "孤立节拍", "", "", Option::<i64>::None, Option::<i64>::None, "",Option::<String>::None,""],
                 )
                 .unwrap();
             }
             "shot" => {
                 db.execute(
-                    "INSERT INTO shots (id,project_id,episode_id,item_order,shot_number,beat_id,status,duration_sec,content,notes,scene_closeup,sound,emotion,camera_angle,camera_gear,focal_length) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                    rusqlite::params!["orphan-shot", "video", "missing-episode", 0_i64, 1_i64, Option::<String>::None, "draft", 1.0_f64, "", "", "", "", "", "", "", ""],
+                    "INSERT INTO shots (id,project_id,episode_id,item_order,shot_number,beat_id,status,duration_sec,content,notes,scene_closeup,sound,emotion,camera_angle,camera_gear,focal_length,category,character_ids,scene_id,prop_ids,style_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    rusqlite::params!["orphan-shot", "video", "missing-episode", 0_i64, "1", Option::<String>::None, "draft", 1.0_f64, "", "", "", "", "", "", "", "","","",Option::<String>::None,"",Option::<String>::None],
                 )
                 .unwrap();
             }

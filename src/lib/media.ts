@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
+import {isNativeWorkspaceRuntime} from "@/lib/nativeWorkspace";
 import {db} from "@/db/database";
 import {putMedia} from "@/db/media";
 import {kindFromMime} from "@/domain/slot";
@@ -18,7 +19,7 @@ export interface MediaView {
 
 export function useMedia(mediaId: Id | undefined): MediaView | undefined {
     const [view, setView] = useState<{ id: Id; record: MediaRecord; media: MediaView }>();
-    const record = useLiveQuery(async () => mediaId ? (await db.media.get(mediaId)) ?? null : null, [mediaId]);
+    const record = useLiveQuery(async () => isNativeWorkspaceRuntime() ? null : mediaId ? (await db.media.get(mediaId)) ?? null : null, [mediaId]);
 
     useEffect(() => {
         if (!mediaId || !record || record.id !== mediaId) {
@@ -45,6 +46,7 @@ export async function uploadMediaFile(projectId: Id, file: File, signal?: AbortS
     id: Id;
     kind: MediaKind;
 }> {
+    if (isNativeWorkspaceRuntime()) throw new Error("原生媒体槽尚未支持上传");
     if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
         throw new Error("请选择图片或视频文件");
     }

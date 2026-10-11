@@ -1,7 +1,8 @@
 //! Closed renderer domain bridge. Paths are selected by native dialogs only.
 use crate::{
-    Asset, AssetKind, Beat, Episode, Error, Hooks, ImportRequest, Job, Outcome, Project, Result,
-    Shot, State, StorageWorker, VideoProject, paths,
+    Asset, AssetKind, Baseline, Beat, BeatPatch, Episode, EpisodePatch, Error, Hooks,
+    ImportRequest, Job, Outcome, Project, Result, Shot, ShotPatch, State, StorageWorker,
+    VideoProject, paths,
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -53,7 +54,12 @@ pub struct Envelope {
     action: Action,
 }
 #[derive(Deserialize)]
-#[serde(tag = "type", rename_all = "camelCase", deny_unknown_fields)]
+#[serde(
+    tag = "type",
+    rename_all = "camelCase",
+    rename_all_fields = "camelCase",
+    deny_unknown_fields
+)]
 enum Action {
     Ensure {},
     State {},
@@ -65,15 +71,37 @@ enum Action {
     Project {
         project: Project,
     },
+    CreateVideoProject {
+        project: Project,
+        video: VideoProject,
+    },
+    DeleteProject {
+        project_id: String,
+    },
     VideoState {
         #[serde(rename = "projectId")]
         project_id: String,
     },
     VideoProject {
         video: VideoProject,
+        #[serde(default)]
+        baseline: Option<Baseline>,
+    },
+    PatchVideoProject {
+        project_id: String,
+        patch: crate::VideoProjectPatch,
+        baseline: Option<Baseline>,
+    },
+    PatchEpisode {
+        episode_id: String,
+        patch: EpisodePatch,
+        baseline: Option<Baseline>,
     },
     Episode {
         episode: Episode,
+    },
+    DeleteEpisode {
+        episode_id: String,
     },
     ReorderEpisodes {
         #[serde(rename = "projectId")]
@@ -84,6 +112,21 @@ enum Action {
     Beat {
         beat: Beat,
     },
+    PatchBeat {
+        episode_id: String,
+        beat_id: String,
+        patch: BeatPatch,
+        baseline: Option<Baseline>,
+    },
+    DuplicateBeat {
+        episode_id: String,
+        beat_id: String,
+        include_shots: bool,
+    },
+    DeleteBeat {
+        episode_id: String,
+        beat_id: String,
+    },
     ReorderBeats {
         #[serde(rename = "episodeId")]
         episode_id: String,
@@ -92,6 +135,34 @@ enum Action {
     },
     Shot {
         shot: Shot,
+    },
+    AddShots {
+        project_id: String,
+        episode_id: String,
+        count: u32,
+        at_order: Option<u32>,
+        beat_id: Option<String>,
+    },
+    PatchShot {
+        shot_id: String,
+        patch: ShotPatch,
+        baseline: Option<Baseline>,
+    },
+    DuplicateShot {
+        episode_id: String,
+        shot_id: String,
+    },
+    DeleteShots {
+        episode_id: String,
+        shot_ids: Vec<String>,
+    },
+    BulkShots {
+        episode_id: String,
+        shot_ids: Vec<String>,
+        patch: ShotPatch,
+    },
+    VideoUndo {
+        receipt: crate::UndoReceipt,
     },
     ReorderShots {
         #[serde(rename = "episodeId")]
@@ -197,7 +268,7 @@ pub struct Reply {
 #[serde(tag = "type", content = "value", rename_all = "camelCase")]
 enum Value {
     State(Option<State>),
-    Outcome(Outcome),
+    Outcome(Box<Outcome>),
     Canceled,
     Closed,
     Read(ReadDescription),
@@ -205,6 +276,11 @@ enum Value {
     Released,
     Saved(Saved),
     Exported(Exported),
+}
+impl Value {
+    fn outcome(value: Outcome) -> Self {
+        Self::Outcome(Box::new(value))
+    }
 }
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -303,6 +379,7 @@ fn execute(
 ) -> Result<Outcome> {
     checked(bridge, generation, cancel)?;
     let worker = worker(bridge, generation)?;
+    let conflict_job = job.clone();
     let operation = worker.submit(job)?;
     {
         let mut inner = lock(bridge)?;
@@ -316,7 +393,18 @@ fn execute(
             worker.cancel(&operation.id)?;
         }
     }
-    operation.wait()
+    match operation.wait() {
+        Err(error) if error.code == "conflict" => {
+            checked(bridge, generation, cancel)?;
+            let state = state_of(&worker)?;
+            checked(bridge, generation, cancel)?;
+            match crate::workspace::conflict_for_job(&state, &conflict_job)? {
+                Some(conflict) => Ok(Outcome::Conflict(conflict)),
+                None => Err(error),
+            }
+        }
+        result => result,
+    }
 }
 fn state_of(worker: &StorageWorker) -> Result<State> {
     match worker.run(Job::State)? {
@@ -662,28 +750,79 @@ fn handle(
                 ))
             })
         }
-        Action::Project { project } => Ok(Value::Outcome(execute(
+        Action::Project { project } => Ok(Value::outcome(execute(
             bridge,
             generation,
             operation_id,
             cancel,
             Job::SaveProject(project),
         )?)),
-        Action::VideoState { project_id } => Ok(Value::Outcome(execute(
+        Action::CreateVideoProject { project, video } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::CreateVideoProject { project, video },
+        )?)),
+        Action::DeleteProject { project_id } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::DeleteProject { project_id },
+        )?)),
+        Action::VideoState { project_id } => Ok(Value::outcome(execute(
             bridge,
             generation,
             operation_id,
             cancel,
             Job::VideoState(project_id),
         )?)),
-        Action::VideoProject { video } => Ok(Value::Outcome(execute(
+        Action::VideoProject { video, baseline } => Ok(Value::outcome(execute(
             bridge,
             generation,
             operation_id,
             cancel,
-            Job::SaveVideoProject(video),
+            Job::PatchVideoProject { video, baseline },
         )?)),
-        Action::Episode { episode } => Ok(Value::Outcome(execute(
+        Action::PatchVideoProject {
+            project_id,
+            patch,
+            baseline,
+        } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::UpdateVideoProject {
+                project_id,
+                patch,
+                baseline,
+            },
+        )?)),
+        Action::PatchEpisode {
+            episode_id,
+            patch,
+            baseline,
+        } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::PatchEpisode {
+                episode_id,
+                patch,
+                baseline,
+            },
+        )?)),
+        Action::DeleteEpisode { episode_id } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::DeleteEpisode { episode_id },
+        )?)),
+        Action::Episode { episode } => Ok(Value::outcome(execute(
             bridge,
             generation,
             operation_id,
@@ -693,7 +832,7 @@ fn handle(
         Action::ReorderEpisodes {
             project_id,
             ordered_ids,
-        } => Ok(Value::Outcome(execute(
+        } => Ok(Value::outcome(execute(
             bridge,
             generation,
             operation_id,
@@ -703,17 +842,62 @@ fn handle(
                 ordered_ids,
             },
         )?)),
-        Action::Beat { beat } => Ok(Value::Outcome(execute(
+        Action::Beat { beat } => Ok(Value::outcome(execute(
             bridge,
             generation,
             operation_id,
             cancel,
             Job::SaveBeat(beat),
         )?)),
+        Action::PatchBeat {
+            episode_id,
+            beat_id,
+            patch,
+            baseline,
+        } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::PatchBeat {
+                episode_id,
+                beat_id,
+                patch,
+                baseline,
+            },
+        )?)),
+        Action::DuplicateBeat {
+            episode_id,
+            beat_id,
+            include_shots,
+        } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::DuplicateBeat {
+                episode_id,
+                beat_id,
+                include_shots,
+            },
+        )?)),
+        Action::DeleteBeat {
+            episode_id,
+            beat_id,
+        } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::DeleteBeat {
+                episode_id,
+                beat_id,
+            },
+        )?)),
         Action::ReorderBeats {
             episode_id,
             ordered_ids,
-        } => Ok(Value::Outcome(execute(
+        } => Ok(Value::outcome(execute(
             bridge,
             generation,
             operation_id,
@@ -723,17 +907,99 @@ fn handle(
                 ordered_ids,
             },
         )?)),
-        Action::Shot { shot } => Ok(Value::Outcome(execute(
+        Action::Shot { shot } => Ok(Value::outcome(execute(
             bridge,
             generation,
             operation_id,
             cancel,
             Job::SaveShot(shot),
         )?)),
+        Action::AddShots {
+            project_id,
+            episode_id,
+            count,
+            at_order,
+            beat_id,
+        } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::AddShots {
+                project_id,
+                episode_id,
+                count,
+                at_order,
+                beat_id,
+            },
+        )?)),
+        Action::PatchShot {
+            shot_id,
+            patch,
+            baseline,
+        } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::PatchShot {
+                shot_id,
+                patch,
+                baseline,
+            },
+        )?)),
+        Action::DuplicateShot {
+            episode_id,
+            shot_id,
+        } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::DuplicateShot {
+                episode_id,
+                shot_id,
+            },
+        )?)),
+        Action::DeleteShots {
+            episode_id,
+            shot_ids,
+        } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::DeleteShots {
+                episode_id,
+                shot_ids,
+            },
+        )?)),
+        Action::BulkShots {
+            episode_id,
+            shot_ids,
+            patch,
+        } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::BulkShots {
+                episode_id,
+                shot_ids,
+                patch,
+            },
+        )?)),
+        Action::VideoUndo { receipt } => Ok(Value::outcome(execute(
+            bridge,
+            generation,
+            operation_id,
+            cancel,
+            Job::VideoUndo { receipt },
+        )?)),
         Action::ReorderShots {
             episode_id,
             ordered_ids,
-        } => Ok(Value::Outcome(execute(
+        } => Ok(Value::outcome(execute(
             bridge,
             generation,
             operation_id,
@@ -762,7 +1028,7 @@ fn handle(
                 return Ok(Value::Canceled);
             };
             checked(bridge, generation, cancel)?;
-            Ok(Value::Outcome(execute(
+            Ok(Value::outcome(execute(
                 bridge,
                 generation,
                 operation_id,
@@ -778,7 +1044,7 @@ fn handle(
                 }),
             )?))
         }
-        Action::Availability {} => Ok(Value::Outcome(execute(
+        Action::Availability {} => Ok(Value::outcome(execute(
             bridge,
             generation,
             operation_id,
@@ -792,7 +1058,7 @@ fn handle(
                 return Ok(Value::Canceled);
             };
             checked(bridge, generation, cancel)?;
-            Ok(Value::Outcome(execute(
+            Ok(Value::outcome(execute(
                 bridge,
                 generation,
                 operation_id,
@@ -1094,6 +1360,52 @@ pub fn run() {
 mod tests {
     use super::*;
     #[test]
+    fn typed_baseline_diagnostic_contains_live_expected_requested_without_writing() {
+        let root = std::env::temp_dir().join(format!("cuepoint-conflict-{}", uuid::Uuid::new_v4()));
+        let worker = StorageWorker::create(&root, Hooks::default()).unwrap();
+        worker
+            .run(Job::SaveProject(Project {
+                id: "video".into(),
+                title: "Original".into(),
+            }))
+            .unwrap();
+        worker
+            .run(Job::UpdateVideoProject {
+                project_id: "video".into(),
+                patch: serde_json::from_value(serde_json::json!({"brief": "Live value"})).unwrap(),
+                baseline: None,
+            })
+            .unwrap();
+        let job = Job::UpdateVideoProject {
+            project_id: "video".into(),
+            patch: serde_json::from_value(serde_json::json!({"brief": "Requested value"})).unwrap(),
+            baseline: Some(
+                serde_json::from_value(serde_json::json!({
+                    "fields": [{"field": "brief", "value": "Original value"}]
+                }))
+                .unwrap(),
+            ),
+        };
+        let before = state_of(&worker).unwrap();
+        assert_eq!(worker.run(job.clone()).unwrap_err().code, "conflict");
+        let conflict = crate::workspace::conflict_for_job(&before, &job)
+            .unwrap()
+            .unwrap();
+        assert_eq!(conflict.fields.len(), 1);
+        assert_eq!(conflict.resource, "project");
+        assert_eq!(conflict.id, "video");
+        assert_eq!(conflict.fields[0].field, "brief");
+        assert_eq!(conflict.fields[0].current, "Live value");
+        assert_eq!(conflict.fields[0].expected, "Original value");
+        assert_eq!(conflict.fields[0].requested, "Requested value");
+        let encoded = serde_json::to_value(Outcome::Conflict(conflict)).unwrap();
+        assert_eq!(encoded["kind"], "conflict");
+        assert_eq!(state_of(&worker).unwrap(), before);
+        worker.close().unwrap();
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
     fn packaged_entry_accepts_tauri_root_without_widening_navigation() {
         assert!(is_entry_path(""));
         assert!(is_entry_path("/"));
@@ -1158,14 +1470,16 @@ mod tests {
             1,
             1,
             false,
-            Value::Outcome(Outcome::Project(Project {
+            Value::outcome(Outcome::Project(Project {
                 id: "owned".into(),
                 title: "committed".into(),
             })),
         )
         .unwrap();
         assert_eq!(result.generation, 1);
-        assert!(matches!(result.result, Value::Outcome(Outcome::Project(_))));
+        assert!(
+            matches!(result.result, Value::Outcome(value) if matches!(*value, Outcome::Project(_)))
+        );
         assert_eq!(
             finish_reply(&inner, 1, 2, false, Value::Closed)
                 .unwrap()
@@ -1240,7 +1554,7 @@ mod tests {
             std::thread::sleep(Duration::from_millis(2));
         }
         assert!(lock(&bridge).unwrap().closing);
-        assert!(worker(&bridge, 1).is_err());
+        assert!(super::worker(&bridge, 1).is_err());
         assert!(
             transition(&bridge, 1, &AtomicBool::new(false), || panic!(
                 "Closing must reject before creating any root"

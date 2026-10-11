@@ -1,16 +1,17 @@
 import {useState} from "react";
 import {toast} from "sonner";
-import {patchShot} from "@/db/shots";
+import {useVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
 import {useDebouncedDraft} from "@/lib/debouncedDraft";
 import {parseDurationInput} from "@/lib/durationInput";
 import {DraftStatus} from "@/components/ui/draft-status";
 import {Input} from "@/components/ui/input";
 
 export function DurationInput({projectId, shotId, value}: { projectId: string; shotId: string; value?: number }) {
+    const repository = useVideoWorkspaceRepository();
     const [raw, setRaw] = useState<string | null>(null);
     const {draft, setDraft, status, error, retry, useLatest} = useDebouncedDraft({
         initialValue: value ?? 0,
-        persist: (durationSec, baseline) => patchShot(shotId, {durationSec}, {durationSec: baseline}),
+        persist: (durationSec, baseline) => repository.patchShot(shotId, {durationSec}, {durationSec: baseline}),
         scope: projectId,
         draftKey: `shot:${shotId}:durationSec`,
     });

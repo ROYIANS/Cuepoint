@@ -5,7 +5,7 @@ import {type CSSProperties, useCallback} from "react";
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 import {ArrowDown, ArrowUp, ChevronDown, CopyPlus, GripVertical, Plus} from "lucide-react";
-import {addShot, patchShot, setShotCharacterSelected, setShotSlot} from "@/db/shots";
+import {useVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
 import {type ColumnDef, SHOT_COLUMNS} from "@/domain/columns";
 import {emptySlot} from "@/domain/slot";
 import {
@@ -101,6 +101,10 @@ function AssetStill({
     );
 }
 
+function MediaSlotCapability({reason}: {reason?: string}) {
+    return <div role="status" className="flex h-full w-full items-center justify-center px-2 text-center text-xs text-muted-foreground">{reason ?? "媒体槽尚未接入"}</div>;
+}
+
 const FLUSH_SELECT_TRIGGER =
     `${DESIGN_CELL_CHROME} w-full rounded-none border-0 bg-transparent shadow-none focus-visible:ring-2 focus-visible:ring-inset data-[size=default]:h-full dark:bg-transparent dark:hover:bg-transparent`;
 
@@ -158,6 +162,7 @@ export function ShotRow({
     onSlotOpenChange: (open: boolean) => void;
     onEditRelations: () => void;
 }) {
+    const repository = useVideoWorkspaceRepository();
     const {
         attributes,
         listeners,
@@ -178,6 +183,9 @@ export function ShotRow({
         rowRef(element);
     }, [setNodeRef, rowRef]);
     const renderContents = nearViewport || active || isDragging || textPending;
+    const reportCommandError = (error: unknown) => toast.error(error instanceof Error ? error.message : "保存失败，请重试");
+    const mediaCapability = repository.capability("mediaSlots");
+    const relationsAvailable = repository.capabilities().some(item => item.id === "relations" && item.status === "available");
     const selectedScene = scenes.find((scene) => scene.id === shot.sceneId);
     const selectedCharacters = characters.filter((character) =>
         shot.characterIds.includes(character.id),
@@ -204,10 +212,10 @@ export function ShotRow({
                     size="icon-sm"
                     className="absolute top-0 left-3.5 z-10 size-6 -translate-y-1/2 rounded-full opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 focus-visible:opacity-100"
                     onClick={() =>
-                        void addShot(projectId, episodeId, {
+                        void repository.addShot(projectId, episodeId, {
                             atOrder: shot.order,
                             beatId: beatId ?? shot.beatId,
-                        })
+                        }).catch(reportCommandError)
                     }
                     aria-label="在上方插入镜头"
                 >
@@ -287,7 +295,7 @@ export function ShotRow({
                         <Select
                             value={normalizeShotStatus(shot.status)}
                             onValueChange={(value) =>
-                                void patchShot(shot.id, {status: normalizeShotStatus(value)})
+                                void repository.patchShot(shot.id, {status: normalizeShotStatus(value)}).catch(reportCommandError)
                             }
                         >
                             <SelectTrigger
@@ -307,7 +315,7 @@ export function ShotRow({
                     {workspaceView === "media" ? (
                         <>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full")}>
-                                <EditableGenerationSlot
+                                {mediaCapability.status === "unavailable" ? <MediaSlotCapability reason={mediaCapability.reason}/> : <EditableGenerationSlot
                                     unavailable={unavailable}
                                     onEditorOpenChange={onSlotOpenChange}
                                     projectId={projectId}
@@ -316,11 +324,11 @@ export function ShotRow({
                                     variant="frame"
                                     size="row"
                                     title={`镜头 ${shot.shotNumber} · 首帧`}
-                                    onSave={(slot, baseline) => setShotSlot(shot.id, "firstFrame", slot, baseline)}
-                                />
+                                    onSave={(slot, baseline) => repository.setShotSlot(shot.id, "firstFrame", slot, baseline)}
+                                />}
                             </div>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
-                                <EditableGenerationSlot
+                                {mediaCapability.status === "unavailable" ? <MediaSlotCapability reason={mediaCapability.reason}/> : <EditableGenerationSlot
                                     unavailable={unavailable}
                                     onEditorOpenChange={onSlotOpenChange}
                                     projectId={projectId}
@@ -329,11 +337,11 @@ export function ShotRow({
                                     variant="frame"
                                     size="row"
                                     title={`镜头 ${shot.shotNumber} · 尾帧`}
-                                    onSave={(slot, baseline) => setShotSlot(shot.id, "lastFrame", slot, baseline)}
-                                />
+                                    onSave={(slot, baseline) => repository.setShotSlot(shot.id, "lastFrame", slot, baseline)}
+                                />}
                             </div>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
-                                <EditableGenerationSlot
+                                {mediaCapability.status === "unavailable" ? <MediaSlotCapability reason={mediaCapability.reason}/> : <EditableGenerationSlot
                                     unavailable={unavailable}
                                     onEditorOpenChange={onSlotOpenChange}
                                     projectId={projectId}
@@ -342,8 +350,8 @@ export function ShotRow({
                                     variant="clip"
                                     size="row"
                                     title={`镜头 ${shot.shotNumber} · 成片`}
-                                    onSave={(slot, baseline) => setShotSlot(shot.id, "clip", slot, baseline)}
-                                />
+                                    onSave={(slot, baseline) => repository.setShotSlot(shot.id, "clip", slot, baseline)}
+                                />}
                             </div>
                             <div className="flex h-full min-w-0 border-l">
                                 <ShotTextField shot={shot} field="content" onDraftStatus={onDraftStatus}
@@ -368,6 +376,7 @@ export function ShotRow({
                                     <DropdownMenuTrigger asChild>
                                         <button
                                             type="button"
+                                            disabled={!relationsAvailable || unavailable}
                                             aria-label="选择角色"
                                             className={cn(
                                                 FLUSH_SELECT_TRIGGER,
@@ -424,7 +433,7 @@ export function ShotRow({
                                                     onSelect={(event) => {
                                                         event.preventDefault();
                                                         onActivate();
-                                                        void patchShot(shot.id, {characterIds: []});
+                                                        void repository.patchShot(shot.id, {characterIds: []}).catch(reportCommandError);
                                                     }}
                                                 >
                                                     清除
@@ -439,7 +448,7 @@ export function ShotRow({
                                                             onSelect={(event) => event.preventDefault()}
                                                             onCheckedChange={(checked) => {
                                                                 onActivate();
-                                                                void setShotCharacterSelected(shot.id, character.id, checked === true)
+                                                                void repository.setShotCharacterSelected(shot.id, character.id, checked === true)
                                                                     .catch(() => toast.error("保存角色失败，请重试"));
                                                             }}
                                                         >
@@ -458,11 +467,12 @@ export function ShotRow({
                                 </DropdownMenu>
                             ) : id === "scene" ? (
                                 <Select
+                                    disabled={!relationsAvailable || unavailable}
                                     value={shot.sceneId ?? "none"}
                                     onValueChange={(value) =>
-                                        void patchShot(shot.id, {
+                                        void repository.patchShot(shot.id, {
                                             sceneId: value === "none" ? undefined : value,
-                                        })
+                                        }).catch(reportCommandError)
                                     }
                                     onOpenChange={(open) => {
                                         if (open) onActivate();
@@ -522,7 +532,7 @@ export function ShotRow({
                         variant="outline"
                         size="icon-sm"
                         className="absolute bottom-0 left-3.5 z-10 size-6 translate-y-1/2 rounded-full opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 focus-visible:opacity-100"
-                        onClick={() => void addShot(projectId, episodeId, {beatId})}
+                        onClick={() => void repository.addShot(projectId, episodeId, {beatId}).catch(reportCommandError)}
                         aria-label="在末尾添加镜头"
                     >
                         <Plus/>

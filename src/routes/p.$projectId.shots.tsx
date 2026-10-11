@@ -1,9 +1,9 @@
 import {createFileRoute, redirect} from "@tanstack/react-router";
-import {firstEpisode} from "@/db/episodes";
+import {getVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
 
 export const Route = createFileRoute("/p/$projectId/shots")({
     beforeLoad: async ({params}) => {
-        const episode = await firstEpisode(params.projectId);
+        const episode = (await getVideoWorkspaceRepository().episodes(params.projectId))[0];
         if (!episode) {
             throw redirect({to: "/p/$projectId", params});
         }

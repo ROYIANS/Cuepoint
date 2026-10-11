@@ -1,9 +1,7 @@
 import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
 import {type ReactNode, useEffect, useRef, useState} from "react";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useVideoWorkspaceQuery, useVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
 import {toast} from "sonner";
-import {db} from "@/db/database";
-import {patchProjectDetails} from "@/db/projects";
 import {ASPECT_PRESET_IDS, type AspectPresetId, getProjectKind, type Project} from "@/domain/types";
 import {
     APIMART_IMAGE_MODELS,
@@ -64,13 +62,14 @@ export function ProjectSettingsPanel({project, onOutputState, unavailable = fals
     unavailable?: boolean;
     onOutputState: (state: { dirty: boolean; saving: boolean }) => void
 }) {
-    const styles = useLiveQuery(() => db.styles.where("projectId").equals(project.id).sortBy("name"), [project.id]);
+    const repository = useVideoWorkspaceRepository();
+    const styles = useVideoWorkspaceQuery(() => repository.styles(project.id), [project.id]);
     const [stylePending, setStylePending] = useState(false);
 
     async function setStyle(value: string) {
         setStylePending(true);
         try {
-            await patchProjectDetails(project.id, {defaultStyleId: value === "none" ? undefined : value}, {defaultStyleId: project.defaultStyleId});
+            await repository.patchProjectDetails(project.id, {defaultStyleId: value === "none" ? undefined : value}, {defaultStyleId: project.defaultStyleId});
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "风格保存失败");
         } finally {
@@ -82,11 +81,11 @@ export function ProjectSettingsPanel({project, onOutputState, unavailable = fals
         <div className="space-y-4">
             <AssetTextField key={`${project.id}:name`} draftKey={`${project.id}:name`} projectId={project.id}
                             label="项目名称" value={project.name}
-                            persist={(name, baseline) => patchProjectDetails(project.id, {name}, {name: baseline})}/>
+                            persist={(name, baseline) => repository.patchProjectDetails(project.id, {name}, {name: baseline})}/>
             <AssetTextField key={`${project.id}:brief`} draftKey={`${project.id}:brief`} projectId={project.id}
                             label="创作简述" value={project.brief ?? ""} multiline
                             placeholder="想表达什么，希望作品带来什么感受"
-                            persist={(brief, baseline) => patchProjectDetails(project.id, {brief}, {brief: baseline})}/>
+                            persist={(brief, baseline) => repository.patchProjectDetails(project.id, {brief}, {brief: baseline})}/>
             <details className="rounded-xl border p-4">
                 <summary className="cursor-pointer text-sm font-medium">补充创作信息 <span
                     className="text-muted-foreground text-xs font-normal">· 可选</span></summary>
@@ -101,7 +100,7 @@ export function ProjectSettingsPanel({project, onOutputState, unavailable = fals
                                                                                      label={label}
                                                                                      placeholder={placeholder}
                                                                                      value={project[field] ?? ""}
-                                                                                     persist={(value, baseline) => patchProjectDetails(project.id, {[field]: value}, {[field]: baseline})}/>)}
+                                                                                     persist={(value, baseline) => repository.patchProjectDetails(project.id, {[field]: value}, {[field]: baseline})}/>)}
                 </div>
             </details>
         </div>
@@ -109,7 +108,7 @@ export function ProjectSettingsPanel({project, onOutputState, unavailable = fals
             <Section title="默认视觉风格"
                      description="镜头默认跟随这里的风格；镜头中单独选择的风格会保留。可先在世界 → 风格中建立本项目的风格。">
                 <SettingSelect label="项目风格" value={project.defaultStyleId ?? "none"}
-                               disabled={unavailable || styles === undefined || stylePending}
+                               disabled={unavailable || styles === undefined || stylePending || !repository.capabilities().some(item => item.id === "world" && item.status === "available")}
                                options={[{
                                    value: "none",
                                    label: "暂不设置"
@@ -138,6 +137,8 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
     unavailable?: boolean;
     onOutputState: (state: { dirty: boolean; saving: boolean }) => void
 }) {
+    const repository = useVideoWorkspaceRepository();
+    const generationAvailable = repository.capabilities().some(item => item.id === "generation" && item.status === "available");
     const [output, setOutput] = useState<ProjectOutputDraft>(() => {
         const value = projectOutputValue(project);
         return {value, baseline: structuredClone(value), observed: value};
@@ -204,8 +205,8 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
         setSaveError(undefined);
         try {
             const patch = outputDraftPatch(output);
-            await patchProjectDetails(project.id, patch, output.baseline);
-            const currentProject = await db.projects.get(project.id);
+            await repository.patchProjectDetails(project.id, patch, output.baseline);
+            const currentProject = await repository.project(project.id);
             if (!currentProject) throw new Error("项目不存在，无法确认输出配置");
             const latest = projectOutputValue(latestProject.current);
             const authoritative = projectOutputValue(currentProject);
@@ -221,10 +222,11 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
 
     return <>{navigationGuard}<Section title="画幅与生成默认值"
                                        description="画幅表达作品的目标。图片和视频可分别选择模型参数，也可以保持手动制作；保存配置不会发起生成。">
+        {!generationAvailable && <p role="status" className="text-muted-foreground text-xs">原生生成配置尚未接入，可先设置项目画幅。</p>}
         <fieldset disabled={saving || unavailable} className="min-w-0 space-y-5">
             <SettingSelect label="项目目标画幅" value={ratio} options={ASPECT_PRESET_IDS}
                            onChange={(value) => setRatio(value as AspectPresetId)}/>
-            <div className="rounded-xl border p-4 space-y-4">
+            <fieldset disabled={!generationAvailable} className="rounded-xl border p-4 space-y-4">
                 <h4 className="text-sm font-medium">图片默认值</h4>
                 <SettingSelect label="图片模型" value={!image ? "manual" : imageKnown ? image.model : "unsupported"}
                                options={[{
@@ -264,8 +266,8 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
                         1
                         张图片。{imageModel && isApimartImage25(imageModel) ? " auto 会按最高档预扣，完成后再按实际用量结算。" : ""}</p>
                 </>}
-            </div>
-            <div className="rounded-xl border p-4 space-y-4">
+            </fieldset>
+            <fieldset disabled={!generationAvailable} className="rounded-xl border p-4 space-y-4">
                 <h4 className="text-sm font-medium">视频默认值</h4>
                 <SettingSelect label="视频模型" value={!video ? "manual" : videoKnown ? "MiniMax-H3" : "unsupported"}
                                options={[{value: "manual", label: "不设置生成默认值"}, {
@@ -304,7 +306,7 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
                     <p className="text-muted-foreground text-xs leading-5">支持 4–15
                         秒整数。已有镜头的分镜时长保持原值。{video.mode === "frames" ? "首尾帧决定视频比例，项目画幅不会覆盖输入图片。" : "生成时仍需检查素材尺寸和角色，避免首尾帧与参考素材混用。"}</p>
                 </>}
-            </div>
+            </fieldset>
         </fieldset>
         {errors.length > 0 &&
             <ul role="alert" className="text-destructive list-inside list-disc text-xs leading-5">{errors.map((error) =>

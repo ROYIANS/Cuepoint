@@ -1,128 +1,284 @@
-import {invoke} from '@tauri-apps/api/core';
-import {z} from 'zod';
-import {Sha256} from '@/lib/sha256';
+import { invoke } from "@tauri-apps/api/core";
+import { z } from "zod";
+import { Sha256 } from "@/lib/sha256";
+import type { NativeAction } from "@/lib/nativeWorkspace";
+import {
+  nativeProjectSchema as project,
+  nativeVideoProjectSchema as videoProject,
+  nativeEpisodeSchema as episode,
+  nativeBeatSchema as beat,
+  nativeShotSchema as shot,
+  nativeWorkspaceStateSchema as state,
+  nativeAssetSchema as asset,
+  nativeAvailabilitySchema as availability,
+  nativeUndoSchema,
+  nativeConflictSchema,
+  nativeVideoStateSchema,
+  nativeDuplicateBeatSchema,
+  nativeDuplicateShotSchema,
+} from "@/lib/nativeWorkspaceContract";
 
-const id=z.string().min(1).max(4096);
-const digest=z.string().regex(/^[a-f0-9]{64}$/);
-const reference=z.object({workspaceId:id,projectId:id,relativePath:z.string().max(1024)}).strict();
-const project=z.object({id,title:z.string().max(16384)}).strict();
-const videoProject=z.object({projectId:id,mode:z.enum(['film','series']),logline:z.string().max(16384),updatedAt:z.string().min(1).max(128)}).strict();
-const episode=z.object({id,projectId:id,order:z.number().int().nonnegative(),title:z.string().max(16384),logline:z.string().max(16384),script:z.string().max(2000000),createdAt:z.string().min(1).max(128),updatedAt:z.string().min(1).max(128)}).strict();
-const beat=z.object({id,episodeId:id,order:z.number().int().nonnegative(),title:z.string().max(16384),content:z.string().max(1000000),timeOfDay:z.string().max(128),scriptStart:z.number().int().nonnegative().optional(),scriptEnd:z.number().int().nonnegative().optional()}).strict();
-const shot=z.object({id,projectId:id,episodeId:id,order:z.number().int().nonnegative(),shotNumber:z.number().int().nonnegative(),beatId:id.optional(),status:z.enum(['draft','ready','framed','clipped','approved']),durationSec:z.number().finite().nonnegative().max(86400),content:z.string().max(1000000),notes:z.string().max(1000000),sceneCloseup:z.string(),sound:z.string(),emotion:z.string(),cameraAngle:z.string(),cameraGear:z.string(),focalLength:z.string()}).strict();
-const asset=z.object({id,projectId:id,kind:z.enum(['media','output']),displayName:z.string().max(4096),mimeType:z.string().max(256),byteLength:z.number().int().positive().max(16*1024**3),contentHash:digest,reference}).strict();
-const timing=z.object({id,projectId:id,assetId:id,startSec:z.number().finite().nonnegative(),durationSec:z.number().finite().positive()}).strict();
-const state=z.object({schema:z.literal(3),workspaceId:id,projects:z.array(project).max(10000),assets:z.array(asset).max(10000),references:z.array(timing).max(10000),sqliteVersion:z.string(),videoProjects:z.array(videoProject).max(10000),episodes:z.array(episode).max(10000),beats:z.array(beat).max(10000),shots:z.array(shot).max(10000)}).strict();
-const availability=z.object({assetId:id,status:z.enum(['present','missing','corrupt'])}).strict();
-const backup=z.object({format:z.literal('cuepoint.native-backup.v1'),schema:z.literal(3),workspaceId:id,databaseBytes:z.number().int().positive(),databaseHash:digest,assets:z.array(asset).max(10000)}).strict();
-const outcome=z.discriminatedUnion('kind',[
-    z.object({kind:z.literal('state'),value:state}).strict(),
-    z.object({kind:z.literal('project'),value:project}).strict(),
-    z.object({kind:z.literal('asset'),value:asset}).strict(),
-    z.object({kind:z.literal('availability'),value:z.array(availability).max(10000)}).strict(),
-    z.object({kind:z.literal('videoProject'),value:videoProject}).strict(),
-    z.object({kind:z.literal('episode'),value:episode}).strict(),
-    z.object({kind:z.literal('beat'),value:beat}).strict(),
-    z.object({kind:z.literal('shot'),value:shot}).strict(),
-    z.object({kind:z.literal('videoState'),value:z.object({project,video:videoProject,episodes:z.array(episode),beats:z.array(beat),shots:z.array(shot),referencedAssetIds:z.array(id)}).strict()}).strict(),
-    z.object({kind:z.literal('backup'),value:backup}).strict(),
+const id = z.string().min(1).max(4096);
+const digest = z.string().regex(/^[a-f0-9]{64}$/);
+const backup = z
+  .object({
+    format: z.literal("cuepoint.native-backup.v1"),
+    schema: z.literal(4),
+    workspaceId: id,
+    databaseBytes: z.number().int().positive(),
+    databaseHash: digest,
+    assets: z.array(asset).max(10000),
+  })
+  .strict();
+const outcome = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("state"), value: state }).strict(),
+  z.object({ kind: z.literal("project"), value: project }).strict(),
+  z.object({ kind: z.literal("asset"), value: asset }).strict(),
+  z
+    .object({
+      kind: z.literal("availability"),
+      value: z.array(availability).max(10000),
+    })
+    .strict(),
+  z.object({ kind: z.literal("videoProject"), value: videoProject }).strict(),
+  z.object({ kind: z.literal("episode"), value: episode }).strict(),
+  z.object({ kind: z.literal("beat"), value: beat }).strict(),
+  z.object({ kind: z.literal("shot"), value: shot }).strict(),
+  z
+    .object({ kind: z.literal("shots"), value: z.array(shot).max(10000) })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("duplicateBeat"),
+      value: nativeDuplicateBeatSchema,
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("duplicateShot"),
+      value: nativeDuplicateShotSchema,
+    })
+    .strict(),
+  z.object({ kind: z.literal("undo"), value: nativeUndoSchema }).strict(),
+  z
+    .object({
+      kind: z.literal("conflict"),
+      value: nativeConflictSchema,
+    })
+    .strict(),
+  z
+    .object({ kind: z.literal("videoState"), value: nativeVideoStateSchema })
+    .strict(),
+  z.object({ kind: z.literal("backup"), value: backup }).strict(),
 ]);
-const result=z.discriminatedUnion('type',[
-    z.object({type:z.literal('state'),value:state.nullable()}).strict(),
-    z.object({type:z.literal('outcome'),value:outcome}).strict(),
-    z.object({type:z.literal('canceled')}).strict(),z.object({type:z.literal('closed')}).strict(),z.object({type:z.literal('released')}).strict(),
-    z.object({type:z.literal('read'),value:z.object({session:id,asset,chunkBytes:z.literal(262144)}).strict()}).strict(),
-    z.object({type:z.literal('chunk'),value:z.array(z.number().int().min(0).max(255)).max(262144)}).strict(),
-    z.object({type:z.literal('saved'),value:z.object({asset,exported:z.boolean(),byteLength:z.number().int().positive().max(32*1024**2),contentHash:digest}).strict()}).strict(),
-    z.object({type:z.literal('exported'),value:z.object({byteLength:z.number().int().positive().max(32*1024**2),contentHash:digest}).strict()}).strict(),
+const result = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("state"), value: state.nullable() }).strict(),
+  z.object({ type: z.literal("outcome"), value: outcome }).strict(),
+  z.object({ type: z.literal("canceled") }).strict(),
+  z.object({ type: z.literal("closed") }).strict(),
+  z.object({ type: z.literal("released") }).strict(),
+  z
+    .object({
+      type: z.literal("read"),
+      value: z
+        .object({ session: id, asset, chunkBytes: z.literal(262144) })
+        .strict(),
+    })
+    .strict(),
+  z
+    .object({
+      type: z.literal("chunk"),
+      value: z.array(z.number().int().min(0).max(255)).max(262144),
+    })
+    .strict(),
+  z
+    .object({
+      type: z.literal("saved"),
+      value: z
+        .object({
+          asset,
+          exported: z.boolean(),
+          byteLength: z
+            .number()
+            .int()
+            .positive()
+            .max(32 * 1024 ** 2),
+          contentHash: digest,
+        })
+        .strict(),
+    })
+    .strict(),
+  z
+    .object({
+      type: z.literal("exported"),
+      value: z
+        .object({
+          byteLength: z
+            .number()
+            .int()
+            .positive()
+            .max(32 * 1024 ** 2),
+          contentHash: digest,
+        })
+        .strict(),
+    })
+    .strict(),
 ]);
-const reply=z.object({version:z.literal(1),generation:z.number().int().nonnegative(),result}).strict();
-export type NativeState=z.infer<typeof state>;
-type Action=
-    | {type:'state'|'create'|'open'|'reopen'|'close'|'restore'|'availability'|'backup'}
-    | {type:'project';project:{id:string;title:string}}
-    | {type:'videoState';projectId:string}
-    | {type:'videoProject';video:{projectId:string;mode:'film'|'series';logline:string;updatedAt:string}}
-    | {type:'episode';episode:z.infer<typeof episode>}
-    | {type:'reorderEpisodes';projectId:string;orderedIds:string[]}
-    | {type:'beat';beat:z.infer<typeof beat>}
-    | {type:'reorderBeats';episodeId:string;orderedIds:string[]}
-    | {type:'shot';shot:z.infer<typeof shot>}
-    | {type:'reorderShots';episodeId:string;orderedIds:string[]}
-    | {type:'import';metadata:{projectId:string;assetId:string;kind:'media'|'output';displayName:string;mimeType:string}}
-    | {type:'readStart'|'export';assetId:string}
-    | {type:'readChunk';session:string;offset:number;length:number}
-    | {type:'readClose';session:string}
-    | {type:'saveGenerated';metadata:{projectId:string;assetId:string;format:'csv'|'zip'|'wav'|'microphone';recordedMime?:string};mode:'retain'|'export';bytes:number[]};
+const reply = z
+  .object({
+    version: z.literal(1),
+    generation: z.number().int().nonnegative(),
+    result,
+  })
+  .strict();
+export type NativeState = z.infer<typeof state>;
+type Action =
+  | NativeAction
+  | { type: "create" | "open" | "reopen" | "close" | "restore" | "backup" }
+  | { type: "readStart" | "export"; assetId: string }
+  | { type: "readChunk"; session: string; offset: number; length: number }
+  | { type: "readClose"; session: string }
+  | {
+      type: "saveGenerated";
+      metadata: {
+        projectId: string;
+        assetId: string;
+        format: "csv" | "zip" | "wav" | "microphone";
+        recordedMime?: string;
+      };
+      mode: "retain" | "export";
+      bytes: number[];
+    };
 
 class NativeWorkspace {
-    generation=0;
-    active=new Set<string>();
-    async request(action:Action) {
-        const operationId=crypto.randomUUID();
-        const expectedGeneration=this.generation;
-        this.active.add(operationId);
-        try {
-            const unknown:unknown=await invoke('workspace_request',{request:{version:1,operationId,expectedGeneration,action}});
-            const parsed=reply.parse(unknown);
-            // A late committed outcome is still returned; an older reply cannot move the current generation backward.
-            if(parsed.generation<this.generation&&(parsed.result.type==='state'||(parsed.result.type==='outcome'&&parsed.result.value.kind==='state')))throw new Error('工作区已切换，忽略旧状态');
-            this.generation=Math.max(this.generation,parsed.generation);
-            return parsed.result;
-        } finally {this.active.delete(operationId);}
+  generation = 0;
+  active = new Set<string>();
+  async request(action: Action) {
+    const operationId = crypto.randomUUID();
+    const expectedGeneration = this.generation;
+    this.active.add(operationId);
+    try {
+      const unknown: unknown = await invoke("workspace_request", {
+        request: { version: 1, operationId, expectedGeneration, action },
+      });
+      const parsed = reply.parse(unknown);
+      // A late committed outcome is still returned; an older reply cannot move the current generation backward.
+      if (
+        parsed.generation < this.generation &&
+        (parsed.result.type === "state" ||
+          (parsed.result.type === "outcome" &&
+            parsed.result.value.kind === "state"))
+      )
+        throw new Error("工作区已切换，忽略旧状态");
+      this.generation = Math.max(this.generation, parsed.generation);
+      return parsed.result;
+    } finally {
+      this.active.delete(operationId);
     }
-    async cancel() {
-        await Promise.all([...this.active].map(async operationId=>{
-            const value:unknown=await invoke('workspace_cancel',{request:{version:1,expectedGeneration:this.generation,operationId}});
-            z.boolean().parse(value);
-        }));
+  }
+  async cancel() {
+    await Promise.all(
+      [...this.active].map(async (operationId) => {
+        const value: unknown = await invoke("workspace_cancel", {
+          request: {
+            version: 1,
+            expectedGeneration: this.generation,
+            operationId,
+          },
+        });
+        z.boolean().parse(value);
+      }),
+    );
+  }
+  async read(assetId: string) {
+    const started = await this.request({ type: "readStart", assetId });
+    if (started.type !== "read") throw new Error("原生读取未建立");
+    const { session, asset } = started.value;
+    const generation = this.generation;
+    try {
+      if (asset.byteLength > 32 * 1024 ** 2) throw new Error("预览最多 32 MiB");
+      const bytes = new Uint8Array(asset.byteLength);
+      for (let offset = 0; offset < bytes.length; offset += 262144) {
+        if (this.generation !== generation) throw new Error("工作区已切换");
+        const length = Math.min(262144, bytes.length - offset);
+        const chunk = await this.request({
+          type: "readChunk",
+          session,
+          offset,
+          length,
+        });
+        if (chunk.type !== "chunk" || chunk.value.length !== length)
+          throw new Error("原生分块长度不符");
+        bytes.set(chunk.value, offset);
+      }
+      const contentHash = await sha256(bytes);
+      if (this.generation !== generation || contentHash !== asset.contentHash)
+        throw new Error("素材校验失败或工作区已切换");
+      return { asset, blob: new Blob([bytes], { type: asset.mimeType }) };
+    } finally {
+      await this.request({ type: "readClose", session });
     }
-    async read(assetId:string) {
-        const started=await this.request({type:'readStart',assetId});
-        if(started.type!=='read') throw new Error('原生读取未建立');
-        const {session,asset}=started.value;
-        const generation=this.generation;
-        try {
-            if(asset.byteLength>32*1024**2) throw new Error('预览最多 32 MiB');
-            const bytes=new Uint8Array(asset.byteLength);
-            for(let offset=0;offset<bytes.length;offset+=262144) {
-                if(this.generation!==generation) throw new Error('工作区已切换');
-                const length=Math.min(262144,bytes.length-offset);
-                const chunk=await this.request({type:'readChunk',session,offset,length});
-                if(chunk.type!=='chunk'||chunk.value.length!==length) throw new Error('原生分块长度不符');
-                bytes.set(chunk.value,offset);
-            }
-            const contentHash=await sha256(bytes);
-            if(this.generation!==generation||contentHash!==asset.contentHash)throw new Error('素材校验失败或工作区已切换');
-            return {asset,blob:new Blob([bytes],{type:asset.mimeType})};
-        } finally {await this.request({type:'readClose',session});}
-    }
-    async save(blob:Blob,projectId:string,format:'csv'|'zip'|'wav'|'microphone',mode:'retain'|'export'='export',recordedMime?:string) {
-        if(blob.size===0||blob.size>32*1024**2) throw new Error('成果最多 32 MiB');
-        const generation=this.generation;
-        const buffer=await blob.arrayBuffer();
-        if(this.generation!==generation) throw new Error('工作区已切换');
-        const result=await this.request({type:'saveGenerated',metadata:{projectId,assetId:crypto.randomUUID(),format,...(recordedMime===undefined?{}:{recordedMime})},mode,bytes:[...new Uint8Array(buffer)]});
-        if(result.type==='canceled')return result;
-        if((result.type!=='saved'&&result.type!=='exported')||result.value.byteLength!==blob.size||result.value.contentHash!==await sha256(buffer)) throw new Error('原生成果保存校验失败');
-        return result;
-    }
+  }
+  async save(
+    blob: Blob,
+    projectId: string,
+    format: "csv" | "zip" | "wav" | "microphone",
+    mode: "retain" | "export" = "export",
+    recordedMime?: string,
+  ) {
+    if (blob.size === 0 || blob.size > 32 * 1024 ** 2)
+      throw new Error("成果最多 32 MiB");
+    const generation = this.generation;
+    const buffer = await blob.arrayBuffer();
+    if (this.generation !== generation) throw new Error("工作区已切换");
+    const result = await this.request({
+      type: "saveGenerated",
+      metadata: {
+        projectId,
+        assetId: crypto.randomUUID(),
+        format,
+        ...(recordedMime === undefined ? {} : { recordedMime }),
+      },
+      mode,
+      bytes: [...new Uint8Array(buffer)],
+    });
+    if (result.type === "canceled") return result;
+    if (
+      (result.type !== "saved" && result.type !== "exported") ||
+      result.value.byteLength !== blob.size ||
+      result.value.contentHash !== (await sha256(buffer))
+    )
+      throw new Error("原生成果保存校验失败");
+    return result;
+  }
 }
-export async function sha256(input:ArrayBuffer|Uint8Array) {
-    const bytes=input instanceof Uint8Array?input:new Uint8Array(input);
-    const hash=new Sha256();
-    for(let offset=0;offset<bytes.length;offset+=262144) {
-        hash.update(bytes.subarray(offset,offset+262144));
-        await new Promise<void>(resolve=>setTimeout(resolve,0));
-    }
-    return hash.digest();
+export async function sha256(input: ArrayBuffer | Uint8Array) {
+  const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
+  const hash = new Sha256();
+  for (let offset = 0; offset < bytes.length; offset += 262144) {
+    hash.update(bytes.subarray(offset, offset + 262144));
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+  }
+  return hash.digest();
 }
-export const native=new NativeWorkspace();
+export const native = new NativeWorkspace();
 
-const acceptanceReply=z.object({version:z.literal(1),generation:z.number().int().nonnegative(),state:state.nullable(),reportSaved:z.boolean()}).strict();
-export async function acceptanceRequest(action:{type:'setup'|'ready'|'report'|'openDeniedProbe';json?:string}) {
-    const unknown:unknown=await invoke('acceptance_request',{request:{version:1,action}});
-    const value=acceptanceReply.parse(unknown);
-    native.generation=Math.max(native.generation,value.generation);
-    return value;
+const acceptanceReply = z
+  .object({
+    version: z.literal(1),
+    generation: z.number().int().nonnegative(),
+    state: state.nullable(),
+    reportSaved: z.boolean(),
+  })
+  .strict();
+export async function acceptanceRequest(action: {
+  type: "setup" | "ready" | "report" | "openDeniedProbe";
+  json?: string;
+}) {
+  const unknown: unknown = await invoke("acceptance_request", {
+    request: { version: 1, action },
+  });
+  const value = acceptanceReply.parse(unknown);
+  native.generation = Math.max(native.generation, value.generation);
+  return value;
 }

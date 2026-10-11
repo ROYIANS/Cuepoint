@@ -1,3 +1,4 @@
+import {VideoWorkspaceReadNotice} from "@/components/workspace/VideoWorkspaceReadNotice";
 import {BeatTextField} from "@/components/story/BeatTextField";
 import {type TextDraftStatusChange, useTextDraftRetention} from "@/lib/useTextDraftRetention";
 import {gridColumns} from "./shotColumnFields";
@@ -26,7 +27,7 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
 import {
     CheckSquare,
     ChevronDown,
@@ -54,10 +55,7 @@ import {
     useRef,
     useState,
 } from "react";
-import {db} from "@/db/database";
-import {addShot, addShots, deleteShots, duplicateShot, type EpisodeShotBulkPatch,} from "@/db/shots";
-import {addStoryBeat, deleteStoryBeat, reorderBeats, restoreStoryBeat, updateEpisodeShotFilters} from "@/db/episodes";
-import {setVisibleColumns, updateShotSettings} from "@/db/projects";
+import {type EpisodeShotBulkPatch} from "@/db/shots";
 import {type ColumnDef, normalizeVisibleColumns, SHOT_COLUMNS} from "@/domain/columns";
 import {
     type Character,
@@ -125,22 +123,24 @@ function ShotEditorPageContent({
     episodeId: string;
     focusShotId?: string;
 }) {
-    const projectResult = useLiveQuery(
-        async () => ({projectId, project: (await db.projects.get(projectId)) ?? null}),
+    const repository = useVideoWorkspaceRepository();
+    const readStatus = useVideoWorkspaceReadStatus();
+    const projectResult = useVideoWorkspaceQuery(
+        async () => ({projectId, project: await repository.project(projectId)}),
         [projectId],
     );
-    const episodeResult = useLiveQuery(
-        async () => ({projectId, episodeId, episode: (await db.episodes.get(episodeId)) ?? null}),
+    const episodeResult = useVideoWorkspaceQuery(
+        async () => ({projectId, episodeId, episode: await repository.episode(episodeId)}),
         [projectId, episodeId],
     );
-    const shotsResult = useLiveQuery(async () => ({
+    const shotsResult = useVideoWorkspaceQuery(async () => ({
         projectId, episodeId,
-        shots: await db.shots.where("episodeId").equals(episodeId).sortBy("order"),
+        shots: await repository.shots(episodeId),
     }), [projectId, episodeId]);
-    const assetsResult = useLiveQuery(async () => ({
+    const assetsResult = useVideoWorkspaceQuery(async () => ({
         projectId,
-        characters: await db.characters.where("projectId").equals(projectId).toArray(),
-        scenes: await db.scenes.where("projectId").equals(projectId).toArray(),
+        characters: await repository.characters(projectId),
+        scenes: await repository.scenes(projectId),
     }), [projectId]);
     const workspaceUnavailable = useWorkspaceUnavailable();
     const loadedProject = projectResult?.projectId === projectId ? projectResult.project : undefined;
@@ -153,10 +153,10 @@ function ShotEditorPageContent({
     const characters = useMemo(() => loadedCharacters ?? [], [loadedCharacters]);
     const scenes = useMemo(() => loadedScenes ?? [], [loadedScenes]);
 
-    const relationAssets = useLiveQuery(async () => ({
+    const relationAssets = useVideoWorkspaceQuery(async () => ({
         projectId,
-        props: await db.props.where("projectId").equals(projectId).toArray(),
-        styles: await db.styles.where("projectId").equals(projectId).toArray(),
+        props: await repository.props(projectId),
+        styles: await repository.styles(projectId),
     }), [projectId]);
     const props = relationAssets?.projectId === projectId ? relationAssets.props : undefined;
     const styles = relationAssets?.projectId === projectId ? relationAssets.styles : undefined;
@@ -276,7 +276,7 @@ function ShotEditorPageContent({
         if (revealedFocus.current === focusKey || !mediaLoaded || !focusContextLoaded) return;
         if (!focusExists) return;
         if (!focusVisible) {
-            void updateEpisodeShotFilters(episodeId, {statuses: [], beatIds: [], gaps: []})
+            void repository.updateEpisodeShotFilters(episodeId, {statuses: [], beatIds: [], gaps: []})
                 .then(() => toast.info("已清除当前集筛选，显示定位镜头"))
                 .catch(() => toast.error("无法显示定位镜头，请重试"));
             return;
@@ -294,7 +294,7 @@ function ShotEditorPageContent({
             window.cancelAnimationFrame(frame);
             window.clearTimeout(timeout);
         };
-    }, [focusShotId, episodeId, focusExists, focusVisible, mediaLoaded, focusContextLoaded]);
+    }, [focusShotId, episodeId, focusExists, focusVisible, mediaLoaded, focusContextLoaded, repository]);
 
     useEffect(() => {
         if (activeShotId && !visibleShotIds.includes(activeShotId)) {
@@ -317,8 +317,13 @@ function ShotEditorPageContent({
             ?.scrollIntoView({block: "nearest"});
     }, [activeShotId]);
 
+    function reportCommandError(error: unknown) {
+        toast.error(error instanceof Error ? error.message : "保存失败，请重试");
+    }
+
     async function commitShotReorder(groupIds: string[], activeId: string, overId: string) {
         const action = await reorderShotGroupCommand({
+            repository,
             episodeId,
             fullOrder: shots.map(shot => shot.id),
             groupIds,
@@ -331,7 +336,7 @@ function ShotEditorPageContent({
     function moveShotByOffset(shotId: string, offset: -1 | 1) {
         const group = beatGroupIds(visibleShots, shotId, beatIdList);
         const targetId = group[group.indexOf(shotId) + offset];
-        if (targetId) void commitShotReorder(group, shotId, targetId);
+        if (targetId) void commitShotReorder(group, shotId, targetId).catch(reportCommandError);
     }
 
     useShotEditorKeyboard({
@@ -351,13 +356,13 @@ function ShotEditorPageContent({
         },
         onReorder: moveShotByOffset,
         onAdd: () => {
-            void addShot(projectId, episodeId, {beatId: shots.find(shot => shot.id === activeShotId)?.beatId});
+            void repository.addShot(projectId, episodeId, {beatId: shots.find(shot => shot.id === activeShotId)?.beatId}).catch(reportCommandError);
         },
         onDelete: () => setConfirmDelete(true),
     });
 
     async function persistFilters(next: ShotFilters) {
-        await updateEpisodeShotFilters(episodeId, next).catch((error: unknown) => {
+        await repository.updateEpisodeShotFilters(episodeId, next).catch((error: unknown) => {
             toast.error(error instanceof Error ? error.message : "筛选保存失败");
         });
     }
@@ -384,7 +389,7 @@ function ShotEditorPageContent({
     }
 
     if (project === undefined || episode === undefined || loadedShots === undefined || loadedCharacters === undefined || loadedScenes === undefined || props === undefined || styles === undefined) {
-        return <PageContent><PageState kind="loading" title="正在读取分镜…"/></PageContent>;
+        return <PageContent><PageState kind={readStatus.error ? "error" : "loading"} title={readStatus.error ? "读取工作区失败" : "正在读取分镜…"} description={readStatus.error} action={readStatus.error ? <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/></PageContent>;
     }
     if (project === null) {
         return <PageContent><PageState kind="missing" title="找不到这个项目"/></PageContent>;
@@ -396,7 +401,7 @@ function ShotEditorPageContent({
     async function toggleColumn(id: ShotColumnId, next: boolean) {
         const current = visible.includes(id);
         if (next === current) return;
-        await setVisibleColumns(
+        await repository.setVisibleColumns(
             projectId,
             next ? [...visible, id] : visible.filter((item) => item !== id),
         );
@@ -408,22 +413,22 @@ function ShotEditorPageContent({
         const previous = beats.map((beat) => beat.id);
         const next = moveIdToPosition(previous, String(active.id), String(over.id));
         if (!next || sameIdOrder(previous, next)) return;
-        await reorderBeats(episodeId, next);
+        const committed = await repository.reorderBeats(episodeId, next);
         registerUndo({
             label: "已调整场次顺序",
-            restore: () => reorderBeats(episodeId, previous),
+            restore: committed?.restore ?? (async () => {await repository.reorderBeats(episodeId, previous);}),
         });
     }
 
     async function removeSelectedShots() {
-        const action = await deleteShotSelectionCommand({episodeId, selectedIds: [...selected]});
+        const action = await deleteShotSelectionCommand({repository, episodeId, selectedIds: [...selected]});
         if (!action) return;
         registerUndo(action);
         setSelected(new Set());
     }
 
     async function applyBulkPatch(label: string, patch: EpisodeShotBulkPatch) {
-        const action = await applyShotBulkCommand({episodeId, selectedIds: [...selected], patch, label});
+        const action = await applyShotBulkCommand({repository, episodeId, selectedIds: [...selected], patch, label});
         if (action) registerUndo(action);
     }
 
@@ -474,7 +479,7 @@ function ShotEditorPageContent({
     }
 
     async function setWorkspaceView(next: ShotWorkspaceView) {
-        await updateShotSettings(projectId, {workspaceView: next});
+        await repository.updateShotSettings(projectId, {workspaceView: next});
     }
 
     async function removeBeat(beatId: string) {
@@ -482,24 +487,25 @@ function ShotEditorPageContent({
         const beat = beats[index];
         if (!beat) return;
         const shotIds = shots.filter((shot) => shot.beatId === beatId).map((shot) => shot.id);
-        await deleteStoryBeat(episodeId, beatId);
+        const committed = await repository.deleteStoryBeat(episodeId, beatId);
         registerUndo({
             label: "已删除场次",
-            restore: () => restoreStoryBeat(episodeId, beat, index, shotIds),
+            restore: committed?.restore ?? (() => repository.restoreStoryBeat(episodeId, beat, index, shotIds)),
         });
         setPendingBeatId(undefined);
     }
 
     async function copyShot(shotId: string) {
-        const copy = await duplicateShot(shotId);
+        const copy = await repository.duplicateShot(shotId);
         registerUndo({
             label: "已复制镜头",
-            restore: () => deleteShots([copy.id]),
+            restore: copy.undo?.restore ?? (() => repository.deleteShots([copy.id])),
         });
     }
 
     return (
         <>
+            <VideoWorkspaceReadNotice {...readStatus}/>
             {relationNavigationGuard}
             <div className="flex h-full min-h-0 min-w-0 flex-col">
                 {unavailable && <p role="alert" className="p-4">当前项目、故事或镜头已不可用，未完成的修改仍保留。</p>}
@@ -513,20 +519,20 @@ function ShotEditorPageContent({
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start" className="w-48">
-                                <DropdownMenuItem onClick={() => void addShot(projectId, episodeId)}>
+                                <DropdownMenuItem onClick={() => void repository.addShot(projectId, episodeId).catch(reportCommandError)}>
                                     <Plus/>
                                     创建分镜
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => void addShots(projectId, episodeId, 5)}>
+                                <DropdownMenuItem onClick={() => void repository.addShots(projectId, episodeId, 5).catch(reportCommandError)}>
                                     <CopyPlus/>
                                     创建5个分镜
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => void addShots(projectId, episodeId, 10)}>
+                                <DropdownMenuItem onClick={() => void repository.addShots(projectId, episodeId, 10).catch(reportCommandError)}>
                                     <CopyPlus/>
                                     创建10个分镜
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator/>
-                                <DropdownMenuItem onClick={() => void addStoryBeat(episodeId)}>
+                                <DropdownMenuItem onClick={() => void repository.addStoryBeat(episodeId).catch(reportCommandError)}>
                                     <SquareStack/>
                                     创建场
                                 </DropdownMenuItem>
@@ -547,7 +553,7 @@ function ShotEditorPageContent({
                                 size="sm"
                                 variant={workspaceView === "design" ? "secondary" : "ghost"}
                                 aria-pressed={workspaceView === "design"}
-                                onClick={() => void setWorkspaceView("design")}
+                                onClick={() => void setWorkspaceView("design").catch(reportCommandError)}
                             >
                                 <LayoutList/>
                                 设计
@@ -556,7 +562,7 @@ function ShotEditorPageContent({
                                 size="sm"
                                 variant={workspaceView === "media" ? "secondary" : "ghost"}
                                 aria-pressed={workspaceView === "media"}
-                                onClick={() => void setWorkspaceView("media")}
+                                onClick={() => void setWorkspaceView("media").catch(reportCommandError)}
                             >
                                 <Images/>
                                 素材
@@ -702,9 +708,9 @@ function ShotEditorPageContent({
                                         className="h-8 w-20"
                                         value={shotSettings.defaultDurationSec}
                                         onChange={(event) =>
-                                            void updateShotSettings(projectId, {
+                                            void repository.updateShotSettings(projectId, {
                                                 defaultDurationSec: Math.max(0, Number(event.target.value) || 0),
-                                            })
+                                            }).catch(reportCommandError)
                                         }
                                     />
                                 </div>
@@ -714,9 +720,9 @@ function ShotEditorPageContent({
                                         id="auto-shot-number"
                                         checked={shotSettings.autoIncrementShotNumber}
                                         onCheckedChange={(checked) =>
-                                            void updateShotSettings(projectId, {
+                                            void repository.updateShotSettings(projectId, {
                                                 autoIncrementShotNumber: checked === true,
-                                            })
+                                            }).catch(reportCommandError)
                                         }
                                     />
                                 </div>
@@ -736,7 +742,7 @@ function ShotEditorPageContent({
                                         type="button"
                                         className="text-muted-foreground hover:text-foreground text-xs font-normal"
                                         onClick={() =>
-                                            void setVisibleColumns(
+                                            void repository.setVisibleColumns(
                                                 projectId,
                                                 SHOT_COLUMNS.map((column) => column.id),
                                             )
@@ -753,7 +759,7 @@ function ShotEditorPageContent({
                                         <DropdownMenuCheckboxItem
                                             key={column.id}
                                             checked={visible.includes(column.id)}
-                                            onCheckedChange={(checked) => void toggleColumn(column.id, checked)}
+                                            onCheckedChange={(checked) => void toggleColumn(column.id, checked).catch(reportCommandError)}
                                         >
                                             <Icon className="text-muted-foreground"/>
                                             {column.label}
@@ -781,7 +787,7 @@ function ShotEditorPageContent({
                             value={bulkStatus}
                             onValueChange={(value) => {
                                 setBulkStatus(value);
-                                void assignSelectedStatus(normalizeShotStatus(value));
+                                void assignSelectedStatus(normalizeShotStatus(value)).catch(reportCommandError);
                             }}
                         >
                             <SelectTrigger aria-label="批量状态" className="h-8 w-32 bg-background">
@@ -800,7 +806,7 @@ function ShotEditorPageContent({
                             value={bulkBeatValue}
                             onValueChange={(value) => {
                                 setBulkBeatValue(value);
-                                void assignSelectedBeat(value === "none" ? undefined : value);
+                                void assignSelectedBeat(value === "none" ? undefined : value).catch(reportCommandError);
                             }}
                         >
                             <SelectTrigger aria-label="批量调整场次" className="h-8 w-40 bg-background">
@@ -820,7 +826,7 @@ function ShotEditorPageContent({
                             value={bulkSceneValue}
                             onValueChange={(value) => {
                                 setBulkSceneValue(value);
-                                void assignSelectedScene(value === "none" ? undefined : value);
+                                void assignSelectedScene(value === "none" ? undefined : value).catch(reportCommandError);
                             }}
                         >
                             <SelectTrigger aria-label="批量场景" className="h-8 w-40 bg-background">
@@ -869,7 +875,7 @@ function ShotEditorPageContent({
                                     size="sm"
                                     className="w-full"
                                     disabled={selected.size === 0}
-                                    onClick={() => void assignSelectedCharacters()}
+                                    onClick={() => void assignSelectedCharacters().catch(reportCommandError)}
                                 >
                                     应用角色
                                 </Button>
@@ -885,14 +891,14 @@ function ShotEditorPageContent({
                             disabled={selected.size === 0}
                             onChange={(event) => setBulkDuration(event.target.value)}
                             onKeyDown={(event) => {
-                                if (event.key === "Enter" && bulkDuration !== "") void setSelectedDuration();
+                                if (event.key === "Enter" && bulkDuration !== "") void setSelectedDuration().catch(reportCommandError);
                             }}
                         />
                         <Button
                             size="sm"
                             variant="outline"
                             disabled={selected.size === 0 || bulkDuration === ""}
-                            onClick={() => void setSelectedDuration()}
+                            onClick={() => void setSelectedDuration().catch(reportCommandError)}
                         >
                             应用时长
                         </Button>
@@ -904,14 +910,14 @@ function ShotEditorPageContent({
                             disabled={selected.size === 0}
                             onChange={(event) => setBulkNotes(event.target.value)}
                             onKeyDown={(event) => {
-                                if (event.key === "Enter") void assignSelectedNotes();
+                                if (event.key === "Enter") void assignSelectedNotes().catch(reportCommandError);
                             }}
                         />
                         <Button
                             size="sm"
                             variant="outline"
                             disabled={selected.size === 0}
-                            onClick={() => void assignSelectedNotes()}
+                            onClick={() => void assignSelectedNotes().catch(reportCommandError)}
                         >
                             应用备注
                         </Button>
@@ -948,7 +954,7 @@ function ShotEditorPageContent({
                             <DndContext
                                 sensors={sensors}
                                 collisionDetection={closestCenter}
-                                onDragEnd={(event) => void onBeatDragEnd(event)}
+                                onDragEnd={(event) => void onBeatDragEnd(event).catch(reportCommandError)}
                             >
                                 <SortableContext
                                     items={visibleGrouped.map(({beat}) => beat.id)}
@@ -981,7 +987,7 @@ function ShotEditorPageContent({
                                             pendingShotIds={shots.filter(shot => shotText.isPending(shot.id)).map(shot => shot.id)}
                                             onSlotOpenChange={onSlotOpenChange}
                                             onEditRelations={setRelationShotId}
-                                            onDuplicateShot={(shotId) => void copyShot(shotId)}
+                                            onDuplicateShot={(shotId) => void copyShot(shotId).catch(reportCommandError)}
                                         />
                                     ))}
                                 </SortableContext>
@@ -1013,7 +1019,7 @@ function ShotEditorPageContent({
                                     pendingShotIds={shots.filter(shot => shotText.isPending(shot.id)).map(shot => shot.id)}
                                     onSlotOpenChange={onSlotOpenChange}
                                     onEditRelations={setRelationShotId}
-                                    onDuplicateShot={(shotId) => void copyShot(shotId)}
+                                    onDuplicateShot={(shotId) => void copyShot(shotId).catch(reportCommandError)}
                                 />
                             ) : null}
                         </div>
@@ -1081,7 +1087,7 @@ function ShotEditorPageContent({
                             <AlertDialogAction
                                 className="bg-destructive hover:bg-destructive/90"
                                 onClick={() => {
-                                    void removeSelectedShots();
+                                    void removeSelectedShots().catch(reportCommandError);
                                 }}
                             >
                                 删除
@@ -1104,9 +1110,10 @@ function ShotEditorPageContent({
                             <AlertDialogCancel>取消</AlertDialogCancel>
                             <AlertDialogAction
                                 className="bg-destructive hover:bg-destructive/90"
-                                onClick={() => {
+                                onClick={event => {
+                                    event.preventDefault();
                                     if (!pendingBeatId) return;
-                                    void removeBeat(pendingBeatId);
+                                    void removeBeat(pendingBeatId).catch(reportCommandError);
                                 }}
                             >
                                 删除场
@@ -1191,6 +1198,8 @@ function BeatBlockView({
                        }: BeatBlockProps & {
     sortableState?: ReturnType<typeof useSortable>;
 }) {
+    const repository = useVideoWorkspaceRepository();
+    const reportCommandError = (error: unknown) => toast.error(error instanceof Error ? error.message : "保存失败，请重试");
     const duration = shots.reduce((sum, shot) => sum + (Number(shot.durationSec) || 0), 0);
     const shotIds = shots.map((shot) => shot.id);
     const style: CSSProperties | undefined = sortableState
@@ -1255,7 +1264,7 @@ function BeatBlockView({
                     <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => void addShot(projectId, episodeId, {beatId: beat.id})}
+                        onClick={() => void repository.addShot(projectId, episodeId, {beatId: beat.id}).catch(reportCommandError)}
                     >
                         <Plus/>
                         添加镜头
@@ -1265,7 +1274,7 @@ function BeatBlockView({
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
-                    onDragEnd={(event) => void onShotDragEnd(event)}
+                    onDragEnd={(event) => void onShotDragEnd(event).catch(reportCommandError)}
                 >
                     <SortableContext items={shotIds} strategy={verticalListSortingStrategy}>
                         {shots.map((shot, index) => (
@@ -1297,7 +1306,7 @@ function BeatBlockView({
                                 canMoveDown={index < shots.length - 1}
                                 onMove={(offset) => {
                                     const target = shots[index + offset];
-                                    if (target) void onReorderShots(shotIds, shot.id, target.id);
+                                    if (target) void onReorderShots(shotIds, shot.id, target.id).catch(reportCommandError);
                                 }}
                                 unavailable={unavailable}
                                 onSlotOpenChange={(open) => onSlotOpenChange(shot.id, open)}

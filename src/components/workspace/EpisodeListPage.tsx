@@ -1,5 +1,6 @@
+import {VideoWorkspaceReadNotice} from "@/components/workspace/VideoWorkspaceReadNotice";
 import {useNavigate} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
 import {useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
 import {Plus} from "lucide-react";
@@ -19,9 +20,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import {Input} from "@/components/ui/input";
 import {DraftStatus} from "@/components/ui/draft-status";
-import {db} from "@/db/database";
-import {addEpisode, deleteEpisode, reorderEpisodes, restoreEpisode} from "@/db/episodes";
-import {updateSeriesLogline} from "@/db/projects";
 import {episodeLabel, normalizeSeriesStory, type Shot} from "@/domain/types";
 import {useDebouncedDraft} from "@/lib/debouncedDraft";
 import {formatUpdatedAt} from "@/lib/format";
@@ -39,6 +37,8 @@ export function EpisodeListPage({projectId}: { projectId: string }) {
 }
 
 function EpisodeList({projectId}: { projectId: string }) {
+    const repository = useVideoWorkspaceRepository();
+    const readStatus = useVideoWorkspaceReadStatus();
     const navigate = useNavigate();
     const activeRef = useRef(true);
     useEffect(() => {
@@ -50,23 +50,23 @@ function EpisodeList({projectId}: { projectId: string }) {
     const writingRef = useRef(false);
     const [pending, setPending] = useState<"add" | "move" | "delete">();
     const [deleteError, setDeleteError] = useState("");
-    const project = useLiveQuery(
-        async () => (await db.projects.get(projectId)) ?? null,
+    const project = useVideoWorkspaceQuery(
+        async () => await repository.project(projectId),
         [projectId],
     );
     const loadedEpisodes =
-        useLiveQuery(
-            () => db.episodes.where("projectId").equals(projectId).sortBy("order"),
+        useVideoWorkspaceQuery(
+            () => repository.episodes(projectId),
             [projectId],
         );
     const episodes = loadedEpisodes ?? [];
     const shots =
-        useLiveQuery(() => db.shots.where("projectId").equals(projectId).toArray(), [projectId]) ?? [];
+        useVideoWorkspaceQuery(() => repository.projectShots(projectId), [projectId]) ?? [];
     const [deleteId, setDeleteId] = useState<string>();
     const {registerUndo} = useUndo();
 
     if (project === undefined) {
-        return <PageContent><PageState kind="loading" title="正在读取集列表…"/></PageContent>;
+        return <PageContent><PageState kind={readStatus.error ? "error" : "loading"} title={readStatus.error ? "读取工作区失败" : "正在读取集列表…"} description={readStatus.error} action={readStatus.error ? <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/></PageContent>;
     }
     if (project === null) {
         return <PageContent><PageState kind="missing" title="找不到这个项目"/></PageContent>;
@@ -87,10 +87,10 @@ function EpisodeList({projectId}: { projectId: string }) {
         writingRef.current = true;
         setPending("move");
         try {
-            await reorderEpisodes(projectId, next);
+            const committed = await repository.reorderEpisodes(projectId, next);
             if (activeRef.current) registerUndo({
                 label: "已调整分集顺序",
-                restore: () => reorderEpisodes(projectId, previous),
+                restore: committed?.restore ?? (async () => {await repository.reorderEpisodes(projectId, previous);}),
             });
         } catch (error) {
             if (activeRef.current) toast.error(error instanceof Error && error.message ? error.message : "调整顺序失败，请重试");
@@ -105,7 +105,7 @@ function EpisodeList({projectId}: { projectId: string }) {
         writingRef.current = true;
         setPending("add");
         try {
-            await addEpisode(projectId);
+            await repository.addEpisode(projectId);
         } catch (error) {
             if (activeRef.current) toast.error(error instanceof Error && error.message ? error.message : "创建失败，请重试");
         } finally {
@@ -121,11 +121,11 @@ function EpisodeList({projectId}: { projectId: string }) {
         setPending("delete");
         setDeleteError("");
         try {
-            const snapshot = await deleteEpisode(id);
+            const snapshot = await repository.deleteEpisode(id);
             if (activeRef.current) {
                 if (snapshot) registerUndo({
                     label: "已删除分集",
-                    restore: () => restoreEpisode(snapshot),
+                    restore: () => repository.restoreEpisode(snapshot),
                 });
                 setDeleteId((current) => current === id ? undefined : current);
             }
@@ -139,6 +139,7 @@ function EpisodeList({projectId}: { projectId: string }) {
 
     return (
         <div className="app-scroll h-full overflow-auto">
+            <VideoWorkspaceReadNotice {...readStatus}/>
             <PageContent mode="collection">
                 <PageHeader title="集" description="按集整理故事与分镜，各集共用项目世界。"
                             actions={<Button disabled={Boolean(pending)} onClick={() => void createEpisode()}><Plus aria-hidden/>{pending === "add" ? "创建中…" : `新建第 ${episodes.length + 1} 集`}</Button>}/>
@@ -151,7 +152,7 @@ function EpisodeList({projectId}: { projectId: string }) {
 
                 {pending && <p role="status" className="text-muted-foreground mt-4 text-sm">{pendingLabel}</p>}
                 <div className="mt-6">
-                    {loadedEpisodes === undefined ? <PageState kind="loading" title="正在读取集列表…"/> : !episodes.length ?
+                    {loadedEpisodes === undefined ? <PageState kind={readStatus.error ? "error" : "loading"} title={readStatus.error ? "读取工作区失败" : "正在读取集列表…"} description={readStatus.error} action={readStatus.error ? <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/> : !episodes.length ?
                         <PageState title="暂无分集" description="新建第一集，开始整理故事与分镜。"/> :
                     <LibraryGrid>
                         {episodes.map((episode, index) => (
@@ -228,11 +229,12 @@ function SeriesLoglineEditor({
     projectId: string;
     initialValue: string;
 }) {
+    const repository = useVideoWorkspaceRepository();
     const {draft, setDraft, status, error, retry, useLatest} = useDebouncedDraft({
         draftKey: `project:${projectId}:logline`,
         scope: projectId,
         initialValue,
-        persist: (value, baseline) => updateSeriesLogline(projectId, value, baseline),
+        persist: (value, baseline) => repository.updateSeriesLogline(projectId, value, baseline),
     });
     return (
         <>

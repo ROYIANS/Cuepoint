@@ -1,5 +1,5 @@
 import {useRef, useState} from "react";
-import {patchShot} from "@/db/shots";
+import {useVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
 import type {Project, Prop, Shot, VisualStyle} from "@/domain/types";
 import {shotRelations} from "@/lib/shotRelations";
 import {Button} from "@/components/ui/button";
@@ -17,6 +17,8 @@ export function ShotRelationsEditor({project, shot, props, styles, unavailable, 
     unavailable: boolean;
     onStatusChange: (status: "saved" | "saving" | "error") => void;
 }) {
+    const repository = useVideoWorkspaceRepository();
+    const relationsAvailable = repository.capabilities().some(item => item.id === "relations" && item.status === "available");
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string>();
     const pending = useRef(false);
@@ -34,7 +36,7 @@ export function ShotRelationsEditor({project, shot, props, styles, unavailable, 
         setError(undefined);
         retryPatch.current = patch;
         try {
-            await patchShot(shot.id, patch);
+            await repository.patchShot(shot.id, patch);
             retryPatch.current = undefined;
             onStatusChange("saved");
         } catch (reason) {
@@ -48,9 +50,10 @@ export function ShotRelationsEditor({project, shot, props, styles, unavailable, 
 
     return (
         <div className="space-y-5">
+            {!relationsAvailable && <p role="status" className="text-muted-foreground text-sm">原生道具、风格与关系库尚未接入。</p>}
             <div className="space-y-2">
                 <Label htmlFor={`shot-style-${shot.id}`}>镜头风格</Label>
-                <Select value={styleValue} disabled={saving || unavailable}
+                <Select value={styleValue} disabled={saving || unavailable || !relationsAvailable}
                         onValueChange={(value) => void save({styleId: value === "inherit" ? undefined : value === "none" ? null : value})}>
                     <SelectTrigger id={`shot-style-${shot.id}`} className="w-full"><SelectValue/></SelectTrigger>
                     <SelectContent>
@@ -65,7 +68,7 @@ export function ShotRelationsEditor({project, shot, props, styles, unavailable, 
                 </Select>
                 <p className="text-muted-foreground text-xs">当前生效：{relations.style} · {relations.styleSource}</p>
             </div>
-            <fieldset disabled={saving || unavailable} className="space-y-2">
+            <fieldset disabled={saving || unavailable || !relationsAvailable} className="space-y-2">
                 <legend className="mb-2 text-sm font-medium">镜头道具（可多选）</legend>
                 {props.length === 0 ?
                     <p className="text-muted-foreground text-xs">先在世界的道具库中添加道具，再关联到镜头。</p> : (
@@ -73,7 +76,7 @@ export function ShotRelationsEditor({project, shot, props, styles, unavailable, 
                             {props.map((prop) => (
                                 <label key={prop.id}
                                        className="hover:bg-muted flex cursor-pointer items-center gap-3 rounded px-2 py-2 text-sm">
-                                    <Checkbox disabled={saving || unavailable}
+                                    <Checkbox disabled={saving || unavailable || !relationsAvailable}
                                               checked={(shot.propIds ?? []).includes(prop.id)}
                                               onCheckedChange={(checked) => {
                                                   const ids = new Set(shot.propIds ?? []);
@@ -87,7 +90,7 @@ export function ShotRelationsEditor({project, shot, props, styles, unavailable, 
                     )}
                 {missingPropIds.length > 0 ? <div className="text-destructive text-xs">
                     有 {missingPropIds.length} 个道具关联已失效。
-                    <Button size="sm" variant="ghost" disabled={saving || unavailable}
+                    <Button size="sm" variant="ghost" disabled={saving || unavailable || !relationsAvailable}
                             onClick={() => void save({propIds: (shot.propIds ?? []).filter((id) => !missingPropIds.includes(id))})}>移除失效关联</Button>
                 </div> : null}
                 <p className="text-muted-foreground text-xs">已关联：{relations.props || "无道具"}</p>

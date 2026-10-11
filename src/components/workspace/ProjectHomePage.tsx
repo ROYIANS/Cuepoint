@@ -1,21 +1,23 @@
+import {VideoWorkspaceReadNotice} from "@/components/workspace/VideoWorkspaceReadNotice";
 import {AudioWorkspacePage} from "@/components/audio/AudioWorkspacePage";
 import {MusicWorkspacePage} from "@/components/music/MusicWorkspacePage";
 import {Navigate} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
 import {useEffect, useState} from "react";
 import {EpisodeListPage} from "@/components/workspace/EpisodeListPage";
+import {WorkspaceCapabilityState} from "@/components/workspace/WorkspaceCapabilityState";
 import {Button} from "@/components/ui/button";
-import {db} from "@/db/database";
-import {ensureFirstEpisode} from "@/db/episodes";
 import {normalizeProjectMode} from "@/domain/types";
 
 export function ProjectHomePage({projectId}: { projectId: string }) {
-    const projectResult = useLiveQuery(
-        async () => ({projectId, project: (await db.projects.get(projectId)) ?? null}),
+    const repository = useVideoWorkspaceRepository();
+    const readStatus = useVideoWorkspaceReadStatus();
+    const projectResult = useVideoWorkspaceQuery(
+        async () => ({projectId, project: await repository.project(projectId)}),
         [projectId],
     );
-    const episodeResult = useLiveQuery(async () => {
-        const rows = await db.episodes.where("projectId").equals(projectId).sortBy("order");
+    const episodeResult = useVideoWorkspaceQuery(async () => {
+        const rows = await repository.episodes(projectId);
         return {projectId, episode: rows[0] ?? null};
     }, [projectId]);
     const project = projectResult?.projectId === projectId ? projectResult.project : undefined;
@@ -36,17 +38,21 @@ export function ProjectHomePage({projectId}: { projectId: string }) {
             return;
         }
         setRepairing(true);
-        void ensureFirstEpisode(projectId)
+        void repository.ensureFirstEpisode(projectId)
             .catch((error) => {
                 setRepairError(error instanceof Error ? error.message : "无法创建内部集");
             })
             .finally(() => setRepairing(false));
-    }, [episode, project, projectId, repairError, repairing]);
+    }, [episode, project, projectId, repairError, repairing, repository]);
 
+    if (readStatus.error && (project === undefined || episode === undefined)) return <VideoWorkspaceReadNotice {...readStatus}/>;
     if (project === undefined || episode === undefined) return <div
         className="text-muted-foreground p-8 text-sm">加载项目…</div>;
     if (project === null) return <div className="text-muted-foreground p-8 text-sm">找不到这个项目</div>;
 
+    if (repository.runtime === "native" && project.kind !== undefined && project.kind !== "video") {
+        return <WorkspaceCapabilityState title="此项目类型尚未接入原生工作区"/>;
+    }
     if (project?.kind === "audio") return <AudioWorkspacePage key={projectId} projectId={projectId}/>;
     if (project?.kind === "music") return <MusicWorkspacePage key={projectId} projectId={projectId}/>;
     if (project?.kind !== undefined && project.kind !== "video") return <div role="alert"

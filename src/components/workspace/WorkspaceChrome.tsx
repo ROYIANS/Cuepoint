@@ -1,3 +1,4 @@
+import {VideoWorkspaceReadNotice} from "@/components/workspace/VideoWorkspaceReadNotice";
 import {WorkspaceUnavailableContext} from "@/lib/workspaceAvailability";
 import {
     AlertDialog,
@@ -12,15 +13,13 @@ import {
 import {ProjectSettingsPanel} from "./ProjectSettingsPanel";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {Link, Navigate, Outlet, useNavigate, useRouterState} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
 import {ChevronLeft, Download, Library, Settings2} from "lucide-react";
 import {useRef, useState} from "react";
 import {toast} from "sonner";
 import {Still} from "@/components/studio/Still";
 import {Button} from "@/components/ui/button";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
-import {db} from "@/db/database";
-import {patchProjectOutput} from "@/db/projects";
 import {episodeLabel, normalizeProjectMode,} from "@/domain/types";
 import {IMAGE_ACCEPT, pickMediaFile, uploadMediaFile} from "@/lib/media";
 import {downloadBlob, exportProjectZip} from "@/lib/projectPackage";
@@ -30,8 +29,7 @@ import {AppFrame} from "@/components/layout/AppFrame";
 import {PageState} from "@/components/layout/PageLayout";
 import {importStudioProject} from "@/components/studio/importStudioProject";
 import {pickZipFile} from "@/lib/library";
-import {isNativeWorkspaceRuntime} from "@/lib/nativeWorkspace";
-import {NativeProjectWorkspacePage} from "./NativeProjectWorkspacePage";
+import {WorkspaceCapabilityState} from "./WorkspaceCapabilityState";
 
 const SERIES_STEPS = [
     {id: "episodes", label: "集", to: "/p/$projectId" as const, exact: true},
@@ -51,28 +49,25 @@ function episodeIdFromPath(pathname: string, projectId: string): string | undefi
 }
 
 export function WorkspaceChrome({projectId}: { projectId: string }) {
-    if (isNativeWorkspaceRuntime()) return NativeProjectWorkspacePage({projectId});
-    return BrowserWorkspaceChrome({projectId});
-}
-
-function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
+    const repository = useVideoWorkspaceRepository();
+    const readStatus = useVideoWorkspaceReadStatus();
     const navigate = useNavigate();
     const pathname = useRouterState({select: (state) => state.location.pathname});
     const episodeId = episodeIdFromPath(pathname, projectId);
-    const projectResult = useLiveQuery(
-        async () => ({projectId, project: (await db.projects.get(projectId)) ?? null}),
+    const projectResult = useVideoWorkspaceQuery(
+        async () => ({projectId, project: await repository.project(projectId)}),
         [projectId],
     );
-    const currentEpisodeResult = useLiveQuery(
+    const currentEpisodeResult = useVideoWorkspaceQuery(
         async () => {
             if (!episodeId) return {projectId, episodeId, episode: null};
-            const row = await db.episodes.get(episodeId);
+            const row = await repository.episode(episodeId);
             return {projectId, episodeId, episode: row?.projectId === projectId ? row : null};
         },
         [episodeId, projectId],
     );
-    const firstEpisodeResult = useLiveQuery(async () => {
-        const rows = await db.episodes.where("projectId").equals(projectId).sortBy("order");
+    const firstEpisodeResult = useVideoWorkspaceQuery(async () => {
+        const rows = await repository.episodes(projectId);
         return {projectId, episode: rows[0] ?? null};
     }, [projectId]);
     const loadedProject = projectResult?.projectId === projectId ? projectResult.project : undefined;
@@ -106,7 +101,7 @@ function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
         project === undefined ||
         (project && normalizeProjectMode(project.mode) === "film" && firstProjectEpisode === undefined)
     ) {
-        return <AppFrame><PageState kind="loading" title="加载项目…"/></AppFrame>;
+        return <AppFrame><PageState kind={readStatus.error ? "error" : "loading"} title={readStatus.error ? "读取工作区失败" : "加载项目…"} description={readStatus.error} action={readStatus.error ? <Button variant="outline" onClick={readStatus.retry}>重新读取</Button> : undefined}/></AppFrame>;
     }
 
     if (project === null) {
@@ -123,6 +118,8 @@ function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
     const kind = project.kind ?? "video";
     if (!["video", "audio", "music"].includes(kind)) return <AppFrame><PageState kind="error" title="不支持的项目类型"/></AppFrame>;
     const mode = normalizeProjectMode(project.mode);
+    const native = repository.runtime === "native";
+    const corePath = pathname === `/p/${projectId}` || pathname === `/p/${projectId}/` || Boolean(episodeId && (pathname === `/p/${projectId}/e/${episodeId}` || pathname === `/p/${projectId}/e/${episodeId}/` || pathname === `/p/${projectId}/e/${episodeId}/shots`));
     const projectHome = pathname === `/p/${projectId}` || pathname === `/p/${projectId}/`;
 
     if (!unavailable && shouldRedirectAudioMusicChild(kind, projectId, pathname)) return <Navigate to="/p/$projectId"
@@ -155,7 +152,7 @@ function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
             const file = await pickMediaFile(IMAGE_ACCEPT);
             if (!file) return;
             const uploaded = await uploadMediaFile(projectId, file);
-            await patchProjectOutput(projectId, {coverMediaId: uploaded.id});
+            await repository.patchProjectOutput(projectId, {coverMediaId: uploaded.id});
         } catch (err) {
             toast.error(err instanceof Error ? err.message : "上传封面失败");
         }
@@ -163,7 +160,7 @@ function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
 
     async function clearCover() {
         try {
-            await patchProjectOutput(projectId, {coverMediaId: null});
+            await repository.patchProjectOutput(projectId, {coverMediaId: null});
         } catch (err) {
             toast.error(err instanceof Error ? err.message : "清除封面失败");
         }
@@ -171,7 +168,7 @@ function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
 
     return (
         <WorkspaceUnavailableContext value={unavailable}>
-            <AppFrame contentScroll="hidden" onImport={() => {
+            <AppFrame contentScroll="hidden" onImport={native ? undefined : () => {
                 void (async () => {
                     const file = await pickZipFile();
                     if (!file) return;
@@ -180,6 +177,7 @@ function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
                 })();
             }}>
             <div className="workspace-shell flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-background">
+                <VideoWorkspaceReadNotice {...readStatus}/>
                 {unavailable && <div className="p-4">
                     <p role="alert">{projectMissing ? "找不到这个项目" : "找不到这一集"}。已打开的修改仍保留，可复制或关闭；当前内容不能保存。</p>
                     <Button className="mt-3" variant="outline"
@@ -317,7 +315,8 @@ function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
                         <Button
                             variant="outline"
                             size="sm"
-                            disabled={backingUp}
+                            disabled={backingUp || native}
+                            title={native ? "原生工作区备份将在后续接入" : undefined}
                             aria-label={backingUp ? "正在保存并备份…" : "备份项目"}
                             className="px-2"
                             onClick={() => {
@@ -340,7 +339,7 @@ function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
                     </div>
                 </header>
                 <div className={cn("app-scroll min-h-0 min-w-0 flex-1", kind === "video" ? "overflow-auto" : "overflow-hidden")} inert={unavailable}>
-                    <Outlet/>
+                    {native && !corePath ? <WorkspaceCapabilityState projectId={projectId} title="此工作区能力尚未接入"/> : <Outlet/>}
                 </div>
 
                 <Dialog open={settingsOpen && (!unavailable || outputProtected)} onOpenChange={changeSettingsOpen}>
@@ -359,8 +358,8 @@ function BrowserWorkspaceChrome({projectId}: { projectId: string }) {
                                     <Still mediaId={project.coverMediaId} title={project.name}/>
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <Button variant="outline" size="sm" disabled={unavailable}
-                                            onClick={() => void uploadCover()}>
+                                    <Button variant="outline" size="sm" disabled={unavailable || native}
+                                    onClick={() => void uploadCover()}>
                                         {project.coverMediaId ? "更换封面" : "上传封面"}
                                     </Button>
                                     {project.coverMediaId ? (

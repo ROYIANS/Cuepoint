@@ -1,8 +1,9 @@
+import {VideoWorkspaceReadNotice} from "@/components/workspace/VideoWorkspaceReadNotice";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Checkbox} from "@/components/ui/checkbox";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {useNavigate} from "@tanstack/react-router";
-import {useLiveQuery} from "dexie-react-hooks";
+import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import {CoverCard, LibraryGrid} from "@/components/studio/CoverCard";
@@ -27,29 +28,20 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
-import {db} from "@/db/database";
-import {createAudioMusicProject, createProject, renameProject} from "@/db/projects";
-import {deleteProject, setProjectArchived} from "@/db/cascadeCommands";
 import {formatUpdatedAt} from "@/lib/format";
 import {filterAndSortLibrary, type LibrarySort} from "@/lib/library";
 import {downloadBlob, exportProjectZip,} from "@/lib/projectPackage";
 import {ASPECT_PRESET_IDS, ASPECT_PRESETS, type AspectPresetId, type ProjectMode,} from "@/domain/types";
-import {bindProjectIp} from "@/db/ipProfiles";
 import {ProjectIpPicker} from "./ProjectIpPicker";
 import {Plus} from "lucide-react";
 import {PROJECT_KINDS, type ProjectKindId, ProjectKindPlaceholder} from "./projectKinds";
 import {cn} from "@/lib/utils";
-import {readProjectCoverIds} from "@/lib/studioLibraryQueries";
 import {PageContent, PageState, PageToolbar} from "@/components/layout/PageLayout";
-import {isNativeWorkspaceRuntime} from "@/lib/nativeWorkspace";
-import {NativeProjectGalleryPage} from "./NativeProjectGalleryPage";
 
 export function ProjectGalleryPage() {
-    if (isNativeWorkspaceRuntime()) return NativeProjectGalleryPage();
-    return BrowserProjectGalleryPage();
-}
-
-function BrowserProjectGalleryPage() {
+    const repository = useVideoWorkspaceRepository();
+    const readStatus = useVideoWorkspaceReadStatus();
+    const native = repository.runtime === "native";
     const navigate = useNavigate();
     const activeRef = useRef(true);
     useEffect(() => {
@@ -58,9 +50,9 @@ function BrowserProjectGalleryPage() {
             activeRef.current = false;
         };
     }, []);
-    const projects = useLiveQuery(() => db.projects.toArray(), []);
-    const profiles = useLiveQuery(() => db.ipProfiles.toArray(), []) ?? [];
-    const ipLinks = useLiveQuery(() => db.projectIpLinks.toArray(), []);
+    const projects = useVideoWorkspaceQuery(() => repository.projects(), []);
+    const profiles = useVideoWorkspaceQuery(() => repository.ipProfiles(), []) ?? [];
+    const ipLinks = useVideoWorkspaceQuery(() => repository.projectIpLinks(), []);
     const [ipFilter, setIpFilter] = useState("all");
     const [showArchived, setShowArchived] = useState(false);
     const [createIpId, setCreateIpId] = useState<string | null>(null);
@@ -77,7 +69,8 @@ function BrowserProjectGalleryPage() {
     const [submitting, setSubmitting] = useState(false);
     const creatingRef = useRef(false);
     const selectedKind = PROJECT_KINDS.find((kind) => kind.id === createKind)!;
-    let createLabel = selectedKind.available ? "创建项目" : "即将推出";
+    const creationAvailable = selectedKind.available && (!native || createKind === "video");
+    let createLabel = creationAvailable ? "创建项目" : "即将推出";
     if (submitting) createLabel = "创建中…";
     const filteredKind = PROJECT_KINDS.find((kind) => kind.id === kindFilter);
     const [creating, setCreating] = useState(false);
@@ -105,21 +98,21 @@ function BrowserProjectGalleryPage() {
     // Stable set identity: sorting/searching may reorder cards without changing this query.
     const coverProjectIds = visible.filter(project => project.coverMediaId == null).map(project => project.id).sort();
     const coverQueryKey = JSON.stringify(coverProjectIds);
-    const coverView = useLiveQuery(async () => ({
+    const coverView = useVideoWorkspaceQuery(async () => ({
         key: coverQueryKey,
-        covers: await readProjectCoverIds(coverProjectIds),
+        covers: await repository.projectCoverIds(coverProjectIds),
     }), [coverQueryKey]);
     // useLiveQuery retains its prior result while a new scope is loading.
     const covers = coverView?.key === coverQueryKey ? coverView.covers : undefined;
 
     async function handleCreate() {
-        if (!selectedKind.available || !name.trim() || creatingRef.current) return;
+        if (!creationAvailable || !name.trim() || creatingRef.current) return;
         creatingRef.current = true;
         setSubmitting(true);
         try {
             const project = createKind === "audio" || createKind === "music"
-                ? await createAudioMusicProject(name.trim(), createKind, createIpId)
-                : await createProject(name.trim(), mode, aspectPreset, createIpId);
+                ? await repository.createAudioMusicProject(name.trim(), createKind, createIpId)
+                : await repository.createProject(name.trim(), mode, aspectPreset, createIpId);
             if (!activeRef.current) return;
             setCreating(false);
             setName("未命名项目");
@@ -142,7 +135,7 @@ function BrowserProjectGalleryPage() {
         setRenaming(true);
         setRenameError("");
         try {
-            await renameProject(id, value);
+            await repository.renameProject(id, value);
             if (activeRef.current) setRenameId((current) => current === id ? undefined : current);
         } catch (error) {
             if (activeRef.current) setRenameError(error instanceof Error && error.message ? error.message : "保存失败，请重试");
@@ -159,7 +152,7 @@ function BrowserProjectGalleryPage() {
         setDeleting(true);
         setDeleteError("");
         try {
-            await deleteProject(id);
+            await repository.deleteProject(id);
             if (activeRef.current) setDeleteId((current) => current === id ? undefined : current);
         } catch (error) {
             if (activeRef.current) setDeleteError(error instanceof Error && error.message ? error.message : "删除失败，请重试");
@@ -176,7 +169,7 @@ function BrowserProjectGalleryPage() {
         setBindingBusy(true);
         setBindingError("");
         try {
-            await bindProjectIp(target.projectId, target.ipId);
+            await repository.bindProjectIp(target.projectId, target.ipId);
             if (activeRef.current) setBinding((current) => current === target ? undefined : current);
         } catch (error) {
             if (activeRef.current) setBindingError(error instanceof Error && error.message ? error.message : "保存失败，请重试");
@@ -191,7 +184,7 @@ function BrowserProjectGalleryPage() {
         archiveRef.current = id;
         setArchivingId(id);
         try {
-            await setProjectArchived(id, archived);
+            await repository.setProjectArchived(id, archived);
         } catch (error) {
             if (activeRef.current) toast.error(error instanceof Error && error.message ? error.message : "操作失败，请重试");
         } finally {
@@ -202,6 +195,7 @@ function BrowserProjectGalleryPage() {
 
     return (
         <PageContent>
+            <VideoWorkspaceReadNotice {...readStatus}/>
             <LibraryHeader title="项目" query={query} onQuery={setQuery} sort={sort} onSort={setSort}
                            description="管理视频、音频与音乐项目。"
                            extra={<Button onClick={() => {
@@ -219,7 +213,7 @@ function BrowserProjectGalleryPage() {
                                    onClick={() => setKindFilter(kind.id)}
                                    className={cn("flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-ring", kindFilter === kind.id ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50")}>
                         <Icon className="size-4" aria-hidden/>{kind.label}
-                        {!kind.available && <span className="text-muted-foreground text-[10px]">即将推出</span>}
+                        {(!kind.available || native && kind.id !== "video") && <span className="text-muted-foreground text-[10px]">即将推出</span>}
                     </button>;
                 })}
             </div>
@@ -237,7 +231,7 @@ function BrowserProjectGalleryPage() {
             </PageToolbar>
             <div className="mt-4">
                 {filteredKind && !filteredKind.available ? <ProjectKindPlaceholder kind={filteredKind}/> : <>
-                    {projects === undefined && <PageState kind="loading" title="加载项目中…"/>}
+                    {projects === undefined && !readStatus.error && <PageState kind="loading" title="加载项目中…"/>}
                     {projects !== undefined && !visible.length &&
                         <PageState title={query.trim() || ipFilter !== "all" || showArchived ? "没有找到匹配的项目" : "还没有项目"}
                             description={query.trim() ? "试试其他关键词，或清除搜索。" : "选择视频、音频或音乐类型，新建项目开始制作。"}
@@ -265,7 +259,7 @@ function BrowserProjectGalleryPage() {
                                         label: "项目素材",
                                         onSelect: () => void navigate({to: "/assets", search: {project: project.id}}),
                                     },
-                                    {
+                                    ...(!native ? [{
                                         label: "所属 IP",
                                         onSelect: () => {
                                             if (bindingRef.current) return;
@@ -276,7 +270,7 @@ function BrowserProjectGalleryPage() {
                                                 ipId: ipLinks?.find((link) => link.projectId === project.id)?.ipId ?? null
                                             });
                                         },
-                                    },
+                                    }] : []),
                                     {
                                         label: archiveLabel,
                                         onSelect: () => {
@@ -292,7 +286,7 @@ function BrowserProjectGalleryPage() {
                                             setRenameValue(project.name);
                                         },
                                     },
-                                    {
+                                    ...(!native ? [{
                                         label: "备份项目（zip）",
                                         onSelect: () => {
                                             void flushPendingDrafts(project.id)
@@ -302,7 +296,7 @@ function BrowserProjectGalleryPage() {
                                                     error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试",
                                                 ));
                                         },
-                                    },
+                                    }] : []),
                                     {
                                         label: "删除",
                                         tone: "danger",
@@ -337,12 +331,12 @@ function BrowserProjectGalleryPage() {
                                                onClick={() => setCreateKind(kind.id)}
                                                className={cn("flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl border px-2 py-3 text-sm focus-visible:outline-2 focus-visible:outline-ring", createKind === kind.id ? "border-brand bg-brand/5" : "text-muted-foreground hover:bg-muted/50")}>
                                     <Icon className="size-5" aria-hidden/><span>{kind.label}</span>
-                                    <span className="text-[10px]">{kind.available ? "已开放" : "即将推出"}</span>
+                                    <span className="text-[10px]">{kind.available && (!native || kind.id === "video") ? "已开放" : "即将推出"}</span>
                                 </button>;
                             })}
                         </div>
                     </fieldset>
-                    {!selectedKind.available ? <ProjectKindPlaceholder kind={selectedKind}/> : <>
+                    {!selectedKind.available ? <ProjectKindPlaceholder kind={selectedKind}/> : !creationAvailable ? <PageState compact title={`${selectedKind.label}尚未接入`} description="原生工作区当前支持视频项目。"/> : <>
                         <label htmlFor="new-project-name" className="text-sm font-medium">项目名称</label>
                         <Input
                             id="new-project-name"
@@ -406,8 +400,8 @@ function BrowserProjectGalleryPage() {
                                 </p>
                             </fieldset>
                         </>}
-                        <div className="space-y-2"><span className="text-sm font-medium">所属 IP</span><ProjectIpPicker
-                            value={createIpId} onChange={setCreateIpId} disabled={submitting}/></div>
+                        {!native && <div className="space-y-2"><span className="text-sm font-medium">所属 IP</span><ProjectIpPicker
+                            value={createIpId} onChange={setCreateIpId} disabled={submitting}/></div>}
                         <p className="text-muted-foreground text-xs leading-5">项目类型创建后固定。可选择所属
                             IP，也可以独立创作。</p>
                     </>}
@@ -416,9 +410,9 @@ function BrowserProjectGalleryPage() {
                         <Button disabled={submitting} variant="outline" onClick={() => {
                             if (!creatingRef.current) setCreating(false);
                         }}>
-                            {selectedKind.available ? "取消" : "关闭"}
+                            {creationAvailable ? "取消" : "关闭"}
                         </Button>
-                        <Button disabled={!selectedKind.available || !name.trim() || submitting} variant="brand"
+                        <Button disabled={!creationAvailable || !name.trim() || submitting} variant="brand"
                                 onClick={() => void handleCreate()}>
                             {createLabel}
                         </Button>
@@ -431,9 +425,9 @@ function BrowserProjectGalleryPage() {
             }}>
                 <DialogContent><DialogHeader><DialogTitle>项目所属 IP</DialogTitle><DialogDescription>{binding?.name} ·
                     关联仅整理项目归属，不会改写已有内容。</DialogDescription></DialogHeader>
-                    <ProjectIpPicker value={binding?.ipId ?? null}
+                    {!native && <ProjectIpPicker value={binding?.ipId ?? null}
                                      onChange={(ipId) => setBinding((value) => value ? {...value, ipId} : value)}
-                                     disabled={bindingBusy}/>
+                                     disabled={bindingBusy}/>}
                     {bindingError && <p role="alert" className="text-destructive text-sm">{bindingError}</p>}
                     <DialogFooter><Button variant="outline" disabled={bindingBusy}
                                           onClick={() => {
@@ -481,7 +475,7 @@ function BrowserProjectGalleryPage() {
                     <AlertDialogHeader>
                         <AlertDialogTitle>删除项目</AlertDialogTitle>
                         <AlertDialogDescription>
-                            删除后无法恢复（除非你已经备份过项目）。
+                            {native ? "删除后，项目记录及素材关联无法恢复。已复制到工作区的文件副本会暂时保留，此操作不会释放它们占用的磁盘空间。" : "删除后无法恢复（除非你已经备份过项目）。"}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     {deleteError && <p role="alert" className="text-destructive text-sm">{deleteError}</p>}
