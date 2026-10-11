@@ -1377,3 +1377,25 @@ Implemented and independently accepted browser managed-copy and bounded partial 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 52: 桌面端视频制作核心原生切片
+<!-- trellis-session: v=2 fp=f33d493344b28f21 -->
+
+**Date**: 2026-10-11
+**Task**: 桌面端视频制作核心原生切片
+**Branch**: `codex/desktop-product-domain-expansion`
+
+### Summary
+
+实现 schema 3 原生视频制作域：项目、集数、节拍、镜头的 SQLite 存储、校验、重开闭包、排序与 typed bridge；接入原生项目工作区 UI，浏览器 Dexie 运行时保持不变。完成 Rust、前端、打包应用和验收门禁。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `9051c198` | feat(desktop): add native video production domain |
+
+### Status
+
+[OK] **Completed**
