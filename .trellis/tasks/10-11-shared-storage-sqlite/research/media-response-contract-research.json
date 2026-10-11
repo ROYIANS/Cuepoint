@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "finding": "SB07",
+  "source": "desktop/tauri/src-tauri/src/product_media.rs",
+  "knownBehavior": "Large GET with no Range was truncated to one256KiB response marked206; HEAD applied Range and partial Content-Length",
+  "primarySources": [
+    {
+      "title": "RFC9110 section14.2 Range",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html#section-14.2",
+      "supports": "Only GET defines range handling; other request methods ignore Range."
+    },
+    {
+      "title": "RFC9110 section15.3.7 Partial Content",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.3.7",
+      "supports": "206 is a range-response; a self-descriptive subset of an actual range request is allowed and may require follow-up requests."
+    }
+  ],
+  "inference": "The pinned one-body custom-protocol API does not establish streaming. No-Range truncation cannot be treated as complete playback merely because its buffer is bounded. Actual WK playback/seek is separate from the correct raw transport semantics.",
+  "approvedRepair": "App-owned127.0.0.1 random-port media byte service with closed capability/session, complete streamed GET200, truthful206range and HEAD200fullLengthzeroBody; no external service/sync/provider proxy",
+  "currentStatus": "Frozen repair has actual Rust/disk/raw HTTP proof: complete94371857byte GET200,3seeks,4HEAD,zero additional full-hash bytes per later request,67idlecaps retaining zero descriptors,physical failures permanently retire. Independent focused review and actual WK/package gate remain pending.",
+  "completionClaim": false,
+  "actualEvidence": [
+    "worker-media-stream-checks.json",
+    "worker-media-stream-handoff.md",
+    "native-media-http-review.md",
+    "engine-media-stream-native-all-targets-frozen.log"
+  ],
+  "limits": [
+    "Raw HTTP fixture bytes are deterministic video/mp4-labelled bytes, not a playable decode.",
+    "Actual WK playback/seek and rebuilt bundle ATS merge require separate evidence.",
+    "Dedicated stream-mid-generation/root replacement tests were not added; per-chunk code checks, pre-request failures, warm replacement/recovery410, stream revoke/disconnect have actual proof."
+  ]
+}

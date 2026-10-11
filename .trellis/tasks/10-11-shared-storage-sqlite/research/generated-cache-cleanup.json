@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "stage": "task-owned generated compiler cache cleanup",
+  "reason": "Actual native >32MiB and identity tests failed ENOSPC, disk had about160MiB free",
+  "removedPath": "desktop/tauri/.tools/target/debug/incremental",
+  "removedKind": "reproducible Rust incremental compilation cache",
+  "freeBytesAfter": 4315095040,
+  "preserved": [
+    "Rust/Cargo runtimes and dependency caches",
+    "target/debug/deps,build and all release artifacts",
+    "application bundles and evidence",
+    "all user data/profile/recording/source files"
+  ],
+  "coordination": "All three implementation owners notified; ps showed no cargo/rustc before deletion",
+  "nativeRetryStatus": "running; original failed logs retained",
+  "completionClaim": false
+}

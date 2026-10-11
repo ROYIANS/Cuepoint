@@ -1,0 +1,31 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/projectPackageRelations.test.ts (20 tests | 1 failed) 2193ms
+   ❯ modern ZIP original episode and beat relationships (18)
+     × rolls back every imported row and media on a storage failure after parent insertion 98ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/projectPackageRelations.test.ts > modern ZIP original episode and beat relationships > rolls back every imported row and media on a storage failure after parent insertion
+AssertionError: expected [Function] to throw error including '工作区存储操作失败' but got '导入失败：injected imported shot failure'
+
+Expected: "工作区存储操作失败"
+Received: "导入失败：injected imported shot failure"
+
+ ❯ tests/projectPackageRelations.test.ts:123:42
+    121|     const injection = interceptStoreTable(db,"shots","bulkAdd",async t…
+    122|     try {
+    123|       await expect(importProjectZip(blob)).rejects.toThrow("工作区存储操作失败"…
+       |                                          ^
+    124|       expect(fail).toHaveBeenCalled();
+    125|     } finally {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 passed (20)
+   Start at  01:11:56
+   Duration  2.55s (tests 88%, transform 8%, setup 3%, import 1%)
+

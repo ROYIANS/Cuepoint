@@ -1,0 +1,52 @@
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_search","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_search","method":"execute","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_read","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_read","method":"execute","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_search","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_search","method":"execute","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_read","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_read","method":"execute","outcome":"fulfilled","test":"actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > retains ask approval over reopen, refuses changed config before HTTP and never silently re-prepares"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > retains ask approval over reopen, refuses changed config before HTTP and never silently re-prepares"}
+{"owner":"sqlite","name":"web_search","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > retains ask approval over reopen, refuses changed config before HTTP and never silently re-prepares"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > retains ask approval over reopen, refuses changed config before HTTP and never silently re-prepares"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > retains ask approval over reopen, refuses changed config before HTTP and never silently re-prepares"}
+{"owner":"sqlite","name":"web_search","method":"execute","outcome":"fulfilled","test":"actual durable web tool lifecycle > retains ask approval over reopen, refuses changed config before HTTP and never silently re-prepares"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > allows assist network tools but rejected ask requests never dispatch"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > allows assist network tools but rejected ask requests never dispatch"}
+{"owner":"sqlite","name":"web_search","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > allows assist network tools but rejected ask requests never dispatch"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > allows assist network tools but rejected ask requests never dispatch"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > allows assist network tools but rejected ask requests never dispatch"}
+{"owner":"sqlite","name":"web_search","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > allows assist network tools but rejected ask requests never dispatch"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > allows assist network tools but rejected ask requests never dispatch"}
+{"owner":"sqlite","name":"web_search","method":"execute","outcome":"fulfilled","test":"actual durable web tool lifecycle > allows assist network tools but rejected ask requests never dispatch"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > saves stopped results and resumes after reopen without repeating the service request"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > saves stopped results and resumes after reopen without repeating the service request"}
+{"owner":"sqlite","name":"web_search","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > saves stopped results and resumes after reopen without repeating the service request"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > saves stopped results and resumes after reopen without repeating the service request"}
+{"owner":"sqlite","name":"web_search","method":"execute","outcome":"fulfilled","test":"actual durable web tool lifecycle > saves stopped results and resumes after reopen without repeating the service request"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > does not resurrect deleted thread/calls when fetch finishes"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > does not resurrect deleted thread/calls when fetch finishes"}
+{"owner":"sqlite","name":"web_search","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > does not resurrect deleted thread/calls when fetch finishes"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > does not resurrect deleted thread/calls when fetch finishes"}
+{"owner":"sqlite","name":"web_search","method":"execute","outcome":"rejected","test":"actual durable web tool lifecycle > does not resurrect deleted thread/calls when fetch finishes"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > keeps a post-service persistence failure unknown and blocks resubmission"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > keeps a post-service persistence failure unknown and blocks resubmission"}
+{"owner":"sqlite","name":"web_search","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > keeps a post-service persistence failure unknown and blocks resubmission"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > keeps a post-service persistence failure unknown and blocks resubmission"}
+{"owner":"sqlite","name":"web_search","method":"execute","outcome":"fulfilled","test":"actual durable web tool lifecycle > keeps a post-service persistence failure unknown and blocks resubmission"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > prepares an accepted 2048-char URL with bounded display while retaining exact arguments"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"fulfilled","test":"actual durable web tool lifecycle > prepares an accepted 2048-char URL with bounded display while retaining exact arguments"}
+{"owner":"sqlite","name":"web_read","method":"prepare","outcome":"fulfilled","test":"actual durable web tool lifecycle > prepares an accepted 2048-char URL with bounded display while retaining exact arguments"}

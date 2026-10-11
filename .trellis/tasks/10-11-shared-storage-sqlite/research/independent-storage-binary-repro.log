@@ -1,0 +1,6 @@
+{"test":"dense-native-read-start","requested":12,"fulfilled":8,"rejections":[{"code":"busy","message":"Too many active binary read leases"},{"code":"busy","message":"Too many active binary read leases"},{"code":"busy","message":"Too many active binary read leases"},{"code":"busy","message":"Too many active binary read leases"}]}
+{"test":"native-post-commit-listener","callerError":"Error: review subscriber fault","committedRow":{"id":"review-notified-commit","name":"actually committed"}}
+{"test":"read-lease-parent-symlink-after-open","result":"accepted","bytes":[1,2,3,4]}
+{"test":"cleanup","result":"disposable-workspace-removed"}
+{"test":"browser-post-commit-listener","callerError":"Error: review browser subscriber fault","committedRowId":"review-browser-notified"}
+{"test":"large-unpaired-object-key","result":"rejected","error":"RangeError: Maximum call stack size exceeded"}

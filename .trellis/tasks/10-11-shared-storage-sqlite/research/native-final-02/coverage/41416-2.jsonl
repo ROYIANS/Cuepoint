@@ -1,0 +1,14 @@
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > keeps encrypted state and paired results across a model-budget pause"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > keeps encrypted state and paired results across a model-budget pause"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > keeps encrypted state and paired results across a model-budget pause"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > atomically saves encrypted envelope before approval, resumes once with paired outputs"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > atomically saves encrypted envelope before approval, resumes once with paired outputs"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > atomically saves encrypted envelope before approval, resumes once with paired outputs"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > atomically saves encrypted envelope before approval, resumes once with paired outputs"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > does not replay a completed tool if the next response failed, and refuses missing envelopes"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > does not replay a completed tool if the next response failed, and refuses missing envelopes"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > does not replay a completed tool if the next response failed, and refuses missing envelopes"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > continues a rejected call with a durable result without performing its edit"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > continues a rejected call with a durable result without performing its edit"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > refuses side effects before replay when the saved envelope no longer matches"}
+{"owner":"sqlite","name":"workspace_overview","method":"parse","outcome":"fulfilled","test":"durable Responses tool loop > refuses side effects before replay when the saved envelope no longer matches"}

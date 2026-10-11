@@ -1,0 +1,71 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/sharedRegisteredToolSuccess.test.ts (10 tests | 2 failed) 206ms
+   ❯ indexeddb registered tool successful business paths (10)
+     × apply_generation commits the real downloaded media, original shot text and completed ledger 51ms
+     × task_record_read returns actual append-only history with bounded text and completes its ledger atomically 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sharedRegisteredToolSuccess.test.ts > indexeddb registered tool successful business paths > apply_generation commits the real downloaded media, original shot text and completed ledger
+AssertionError: expected { …(20) } to deeply equal { …(21) }
+
+- Expected
++ Received
+
+@@ -33,7 +33,6 @@
+    "projectId": "prj_077d62b0-db9e-4318-96f4-5e2a73f17d76",
+    "sceneCloseup": "",
+    "shotNumber": "1",
+    "sound": "",
+    "status": "draft",
+-   "updatedAt": Any<String>,
+  }
+
+ ❯ tests/sharedRegisteredToolSuccess.test.ts:118:47
+    116|         expect(operation.context.preview?.changes).toContain(`结果素材：${f…
+    117|         expect(await operation.execute()).toMatchObject({jobId: f.job.…
+    118|         expect(await db.shots.get(f.shot.id)).toEqual({...f.shot, firs…
+       |                                               ^
+    119|         expect((await db.agentGenerationJobs.get(f.job.id))?.status).t…
+    120|         expect(await operation.execute()).toMatchObject({jobId: f.job.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/sharedRegisteredToolSuccess.test.ts > indexeddb registered tool successful business paths > task_record_read returns actual append-only history with bounded text and completes its ledger atomically
+AssertionError: expected { record: { …(14) }, …(3) } to match object { record: { …(3) }, …(3) }
+
+- Expected
++ Received
+
+@@ -2,11 +2,11 @@
+    "record": {
+      "body": "版完整正",
+      "id": "trec_38bcefc0-d7c5-4b1f-a11b-fec31e6cd01a",
+      "revision": 1,
+    },
+-   "totalLength": 8,
++   "totalLength": 7,
+    "versionCount": 2,
+    "versions": [
+      {
+        "revision": 1,
+      },
+
+ ❯ tests/sharedRegisteredToolSuccess.test.ts:251:43
+    249|         await invoke(run, "task_record_write", {kind: "approach", clai…
+    250|         const operation = await prepared(run, "task_record_read", {id:…
+    251|         expect(await operation.execute()).toMatchObject({record: {id: …
+       |                                           ^
+    252|         expect((await db.agentTaskRecords.get(first.record.id))?.body)…
+    253|         expect(await db.agentTaskRecordVersions.where("recordId").equa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  00:59:04
+   Duration  799ms (transform 58%, tests 27%, import 9%, setup 6%)
+

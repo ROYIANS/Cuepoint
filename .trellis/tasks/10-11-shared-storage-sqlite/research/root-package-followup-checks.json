@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "owner": "root",
+  "scope": [
+    "tests/projectPackage.test.ts",
+    "tests/projectPackageRelations.test.ts"
+  ],
+  "sourceIdentities": {
+    "tests/projectPackage.test.ts": "30608444b0339cd9c55b62e8cab80f51d0e3824eecfb48321f798ed2bc45677a",
+    "tests/projectPackageRelations.test.ts": "689959bd869f6449a4ec84f15593604cf23687d7a215d633dd7e1337a130f77c"
+  },
+  "changes": [
+    "Replace old raw browser snapshot hook with actual shared backend hook; require concurrent edit to have started and retain same before-snapshot/after-row assertions.",
+    "Use shared verified binary reader for imported cover; retain exact byte-content check.",
+    "Inject actual explicit shots.bulkAdd failure after staged parent insertion; assert parent count2 inside same uncommitted context, failure exactlyonce and unchanged full table snapshots."
+  ],
+  "checks": [
+    {
+      "command": "explicit machine pnpm exec vitest run tests/projectPackage.test.ts tests/projectPackageRelations.test.ts",
+      "log": "package-browser-root-pass.log",
+      "exitCode": 0,
+      "tests": 38
+    },
+    {
+      "command": "CUEPOINT_STORAGE_TEST_OWNER=sqlite CUEPOINT_NATIVE_STORAGE_ACCEPTANCE=1 explicit machine pnpm exec vitest run tests/projectPackage.test.ts tests/projectPackageRelations.test.ts tests/projectMemoryPackage.test.ts",
+      "log": "package-native-root-followup.log",
+      "exitCode": 0,
+      "tests": 48,
+      "native": "Actual Rust/SQLite/managed files; same current commands and assertions"
+    },
+    {
+      "command": "explicit machine pnpm exec eslint <two owned files> -f json",
+      "log": "package-root-eslint-final.json",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 2
+    }
+  ],
+  "failedPredecessors": [
+    "package-relations-browser-followup.log",
+    "package-relations-native-followup.log",
+    "package-native-expanded-diagnostic.log"
+  ],
+  "limits": [
+    "Focused current-source checkpoint; not frozen whole-repository or actual packaged product acceptance.",
+    "Production import/export bodies remain shared; fixture adapters preserve actual callbacks/bytes and fault reachability."
+  ],
+  "completionClaim": false
+}

@@ -1,0 +1,9 @@
+
+> cuepoint@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing
+> node scripts/quality-check.mjs --only lint --report .trellis/tasks/10-11-shared-storage-sqlite/research/wave2-quality-lint-recheck.json
+
+lint: 13 errors, 586 review warnings, 13 reviewed allowances; 0 failures
+warning rules: {"complexity":150,"sonarjs/cognitive-complexity":105,"no-nested-ternary":327,"max-depth":4}
+{"kind":"inputs-changed-during-run","files":["src/components/music/switchMusicVariant.ts"]}
+quality: FAIL (lint)
+ ELIFECYCLE  Command failed with exit code 1.

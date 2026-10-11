@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/e07DraftRebase.test.ts",
+  "environment": {
+    "E07_PLAYWRIGHT_PATH": "/Users/xiaomengdao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "E07_CHROMIUM_PATH": "/Users/xiaomengdao/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+    "E07_DRAFT_REBASE_TEST_OUTPUT_DIR": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-shared-storage-sqlite/research/e07-draft-final"
+  },
+  "exitCode": 0,
+  "files": 1,
+  "tests": 2,
+  "elapsedSeconds": 5.58,
+  "sourceReceipt": "code-gates-03/acceptance.json",
+  "currentChangedInputs": [],
+  "logSha256": "ddc06ea8eb7ebb398e7cd7ffc82d8fe388e632c1cbfce88738a612da9f1c4015",
+  "defaultSkipAccounting": {
+    "nativeBinaryProduct": 6,
+    "actualReplacement": "native-final-02/selfHostedNative-tests.log,6actualRust/file cases passed",
+    "e07DraftRebase": 1,
+    "actualReplacementDom": "this2case run includes opt-in realReactDOM current PASS plus exact old counterexample expected FAIL"
+  },
+  "limits": "Real headless Chromium ReactDOM evidence; not WebKit/macOS UI. Reused already installed browser dependency with explicit machine pnpm, no installation or source change.",
+  "regression": {
+    "status": "FAIL",
+    "unchanged": true,
+    "sha256": "f75f7a4bc6b0dd9085ac90d75f76a6862d0f357630bfaae56f85809965c19843"
+  },
+  "current": {
+    "status": "PASS",
+    "unchanged": true,
+    "sha256": "72d59c36eac027d8d7fcf61292f195580dfb4689f328cda9474298b7b6be8f4e"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-10-11T18:13:28Z",
+  "reviewer": "/root/storage_binary_review",
+  "task": "10-11-shared-storage-sqlite",
+  "status": "conditional_code_checkpoint_pass",
+  "sourceCount": 1122,
+  "sourceScopeCanonicalSha256": "e9bed94f523a8b5ae646dd60f62a4789083238967901551c717e58479f59e72b",
+  "sourceScopeCanonicalEncoding": "UTF8 JSON sorted keys separators comma/colon of code-gates02 sourceAfter",
+  "currentSourceMismatches": [],
+  "evidenceSha256": {
+    "code-gates-02/acceptance.json": "6364dc216d7e471ebe14abe966a9f7419fc66bca7afe8208ce513a94b89fa6b8",
+    "code-gates-03/acceptance.json": "1a94747b18516a716bab0de4a373fb1d3fd9a67707df09d6ae559d781e305566",
+    "native-final-02/acceptance.json": "9c0958251f00a53d3a1d80c38bceb3f5b1f9c9cf6072473f9ae389550b4367d1",
+    "native-final-02/tool-and-table-coverage.json": "ec3d66c6e9fb60fd3d0ff19198a44c27de7533227d68f11e954238fb1ec7df86",
+    "worker-media-stream-checks.json": "f499728e2ec60bce96feddd46f0c02aea2aaf54c1dc0cc095eaade03a271829f",
+    "final-packaged-build.json": "05f152f79485212ae760b6822523a3805e5a1f61089214b76a076b85db063963",
+    "final-isolated-bundle.json": "c429d4dd5da79dfd2c285cb19e652a3e0498cb6b2915715d1403cc0e0b7f05b5",
+    "final-packaged-ui-block.json": "dc40f69c6ad033df54bee1ed17521072d3640699b5c7dd0a5d13462ca1959cce",
+    "independent-final-code-gate02-comparison.json": "107a7bb4c5c5d39728009baa61c54c10c2e0387b98b1eb59181d5607ffee6e46",
+    "independent-final-browser03-comparison.json": "d40fe851208380575b6f3e7c34e54f8a9d4c5ea4f52beb274555036cf23aac20",
+    "independent-final-native02-comparison.json": "a4bbb3d380068782ac30d5915972fbb099d0df7dc97c33972254db4a59cabcd3",
+    "independent-final-native-default-comparison.json": "8d4d4cd0ab1299c72a961e0f9ad1d6cb865dd7d88a871918b9701e59f85005a6",
+    "independent-final-media-manifest-comparison.json": "2b4421c99b35afb824603e9ec56150cfff6d81730ae54c99c4c66ee6c064b1d4",
+    "independent-final-media-rerun-checks.json": "f2c73bec35278907c9988cc28108a6fd46fd91013e2255120f56ec0bf758db8f",
+    "independent-final-bundle-comparison.json": "7533b8d5e5604ea276d4ea1bbef22b0fa72f95ae6a1c26c528c04e12cd8ef9a5",
+    "independent-final-signoff.md": "30260cb5596073502d55b3251409103a3666cfb9ee0ed02bbb65e8aac429d168",
+    "e07-draft-final-checks.json": "59492b881e3fa8ed4a300f45534193f658cb733317875e58895828eb5cafa0de",
+    "e07-draft-final/current/report.json": "72d59c36eac027d8d7fcf61292f195580dfb4689f328cda9474298b7b6be8f4e",
+    "e07-draft-final/regression/report.json": "f75f7a4bc6b0dd9085ac90d75f76a6862d0f357630bfaae56f85809965c19843",
+    "independent-final-e07-comparison.json": "c1b9e64d685adbbaea41dea30e0d5807a7b39d4bcbd8726895e39ec542e3e375"
+  },
+  "reuseQualification": "Ten passing code-gates02 commands reused at identical1122 input identity; browser03 is browser-only rerun. Native/default/desktop/focused/build feature qualifications remain distinct. No aggregate timing or duplicated child test count.",
+  "knownProductCodeFindingsRemaining": [],
+  "normalOwnerActivated": false,
+  "actualPackagedStartupPassed": false,
+  "actualWKPassed": false,
+  "completionClaim": false,
+  "archiveAllowedByThisReview": false,
+  "pending": [
+    "AC8 actual packaged full product/Agent/managed media/WebKit/system/relaunch on unlocked Mac",
+    "Normal SQLite owner activation/rebuild/focused regression after isolated acceptance",
+    "Dedicated actual midstream session-generation/root switch proof not completed",
+    "Windows/Linux actual-host acceptance"
+  ],
+  "report": "independent-final-signoff.md",
+  "defaultSkipAccounting": {
+    "nativeBinaryProduct6": "actual native-final02 selfHosted6 pass",
+    "e07DraftRebase1": "e07 explicit real Chromium ReactDOM one-file/two-case pass incl old-source counterexample; no WK claim"
+  }
+}

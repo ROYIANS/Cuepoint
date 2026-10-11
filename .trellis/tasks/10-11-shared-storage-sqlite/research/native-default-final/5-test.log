@@ -1,0 +1,153 @@
+    Blocking waiting for file lock on build directory
+   Compiling cuepoint-prototype v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.61s
+     Running unittests src/lib.rs (.tools/target/debug/deps/cuepoint_native_storage-84d42b352c329dc0)
+
+running 50 tests
+test file_transfer::tests::dialogs_are_bounded_and_do_not_idle_expire ... ok
+test file_transfer::tests::cancel_bounds_order_and_failed_hash_never_publish ... ok
+test file_transfer::tests::published_failure_is_truthful_and_abandonment_cleans_stages ... ok
+test file_transfer::tests::existing_or_raced_destinations_are_preserved ... ok
+test full_product_store::tests::encoded_metadata_envelopes_are_bounded_even_for_control_heavy_chunks ... ok
+test full_product_store::tests::durable_operation_identity_never_replays_a_known_or_pending_result ... ok
+test full_product_store::tests::closed_dtos_readonly_scope_unknown_indexes_and_binary_bags_reject ... ok
+test full_product_store::tests::committed_changes_contain_indexes_only_and_indexed_table_epoch_is_monotonic ... ok
+test full_product_store::tests::lost_commit_reply_durable_lookup_reopen_and_changed_payload_id_reject ... ok
+test native_print::tests::a4_dimensions_and_ten_mm_margin_use_points_not_pixels ... ok
+test full_product_store::tests::failed_final_ledger_rolls_back_all_business_rows_and_receipt ... ok
+test native_print::tests::landscape_has_a_positive_content_area_after_both_margins ... ok
+test full_product_store::tests::optional_compound_unique_constraints_and_index_tie_order_are_real_sqlite ... ok
+test full_product_store::tests::chunked_large_row_and_paged_epoch_no_whole_database_preload ... ok
+test full_product_store::tests::point_absence_phantom_and_delete_recreate_aba_all_conflict ... ok
+test full_product_store::tests::indexed_limit_and_aggregate_count_preserve_total_order_bytes_and_phantom_guard ... ok
+test product_binary::tests::cached_read_playback_and_claim_handles_reject_parent_symlink_and_stay_retired ... ok
+test product_binary::tests::changed_between_hash_and_sql_commit_rejects_all_claims ... ok
+test product_binary::tests::duplicate_forged_and_foreign_claims_reject_before_commit ... ok
+test product_binary::tests::idle_or_canceled_stages_have_no_claimed_rows ... ok
+test full_product_store::tests::utf16_primary_identity_and_indexes_have_no_new_user_cap ... ok
+test product_binary::tests::missing_and_corrupt_material_preserve_catalog_and_reject_stale_read_lease ... ok
+test product_binary::tests::ordered_chunks_checksum_and_no_ready_partial_data ... ok
+test product_binary::tests::playback_is_verified_bounded_and_revoked_by_missing_or_changed_bytes ... ok
+test product_binary::tests::publication_never_overwrites_even_empty_destination ... ok
+test product_binary::tests::private_playback_authority_opens_lazily_without_hashing_and_rejects_rewritten_identity ... ok
+test full_product_store::tests::all_current_tables_keys_and_own_undefined_reopen_losslessly ... ok
+test product_binary::tests::managed_claim_and_domain_result_share_actual_sqlite_rollback ... ok
+test product_binary::tests::private_playback_authority_rejects_moved_parent_and_replaced_root_with_same_file ... ok
+test product_binary::tests::recovery_handles_death_between_publication_link_and_unlink ... ok
+test product_binary::tests::recovery_partial_known_stages_is_idempotent_and_retains_unknown_files ... ok
+test product_binary::tests::replaced_stage_parent_is_neither_written_nor_unlinked_and_handle_is_retired ... ok
+test file_transfer::tests::zero_and_large_exports_keep_byte_identity_without_sqlite ... ok
+test product_binary::tests::replaced_complete_stage_parent_rejects_finish_discard_and_claim_without_touching_external_bytes ... ok
+test product_binary::tests::request_shapes_are_closed_and_ranges_are_bounded ... ok
+test product_binary::tests::replacing_workspace_root_cannot_reuse_a_verified_open_file ... ok
+test product_binary::tests::replacement_during_final_verification_retires_read_without_publishing_a_result ... ok
+test product_media::tests::exact_ranges_keep_full_selected_response_not_a_transport_chunk ... ok
+test product_binary::tests::zero_byte_carrier_is_lossless_and_storage_does_not_invent_domain_limits ... ok
+test product_media::tests::conditional_range_and_unknown_units_keep_rfc_complete_responses ... ok
+test product_media::tests::current_session_revocation_missing_and_symlink_containment_fail_closed ... ok
+test product_media::tests::warm_http_capabilities_retire_on_parent_or_root_replacement_without_touching_outside ... ok
+test product_media::tests::actual_http_rejects_foreign_host_origin_paths_body_and_methods ... ok
+test product_media::tests::warm_capability_rewrite_replacement_and_restoration_never_reauthorize_or_rescan ... ok
+test full_product_store::tests::oversized_read_request_is_closed_bound_consumed_and_lossless ... ok
+test product_media::tests::sixty_five_idle_capabilities_hold_no_file_descriptor_or_reader_slot ... ok
+test product_binary::tests::actual_large_file_streams_past_fixture_cap_and_reopens_without_full_file_cache ... ok
+test paths::tests::completion_publication_cannot_exceed_its_reader_boundary ... ok
+test product_media::tests::active_stream_revoke_disconnect_and_admission_release_real_readers ... ok
+test product_media::tests::actual_http_streams_complete_ninety_mib_and_exact_seek_ranges ... ok
+
+test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.93s
+
+     Running unittests src/bin/product_store_probe.rs (.tools/target/debug/deps/product_store_probe-51c3b323b9f69edc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/workspace_probe.rs (.tools/target/debug/deps/workspace_probe-f87bcf0752f25186)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/full_product_process.rs (.tools/target/debug/deps/full_product_process-b702a25c5e6d91a6)
+
+running 4 tests
+test unknown_files_and_unsupported_roots_are_not_overwritten ... ok
+test actual_process_death_after_commit_preserves_receipt_without_replay ... ok
+test actual_process_death_before_commit_leaves_no_ready_rows_or_false_rollback ... ok
+test actual_second_process_exclusive_lock_and_release_barrier ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+
+     Running tests/native_workspace.rs (.tools/target/debug/deps/native_workspace-20fe67870297cc70)
+
+running 22 tests
+test lifecycle_close_after_actual_commit_reports_committed_asset ... ok
+test multi_add_uses_scene_order_numbering_and_duration_settings_atomically ... ok
+test cancellation_is_independent_queued_inputs_frozen_and_commit_wins_late_abort ... ok
+test owner_is_rechecked_at_real_commit_and_fresh_publication_never_overwrites ... ok
+test missing_and_corrupt_keep_exact_logical_state ... ok
+test live_second_process_refuses_and_actual_death_releases_writer ... ok
+test owner_removed_before_publication_rejects_at_actual_metadata_boundary ... ok
+test real_writer_contention_and_new_root_no_overwrite ... ok
+test managed_bytes_changed_during_stage_or_actual_commit_are_not_ready ... ok
+test queued_backup_excludes_later_writes_and_lifecycle_close_cancels_before_commit ... ok
+test schema_identity_owner_and_incomplete_roots_reject ... ok
+test persistent_owned_media_output_studio_timing_and_source_independence ... ok
+test canceled_backup_has_no_completion_and_successful_publication_wins_late_cancel ... ok
+test symlink_hardlink_target_and_ancestor_boundaries_preserve_external_bytes ... ok
+test reopen_rejects_orphaned_video_rows ... ok
+test video_domain_reopens_with_stable_order_and_checkpoint_boundary ... ok
+test recovery_refuses_external_inode_alias_and_foreign_intent_paths_without_deletion ... ok
+test wire_numeric_baselines_compare_integer_and_float_values_semantically ... ok
+test source_change_injected_io_error_and_precommit_abort_leave_no_ready_asset ... ok
+test snapshot_backup_restore_exact_and_strict_corruption ... ok
+test genuine_backup_and_restore_process_kills_follow_completion_authority ... ok
+test genuine_process_kills_import_recovery_is_idempotent_and_preserves_unknown_sources ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.49s
+
+     Running tests/portable_contract.rs (.tools/target/debug/deps/portable_contract-7689b75b04d617c4)
+
+running 2 tests
+test malformed_wire_extra_fields_and_native_lengths_reject ... ok
+test actual_typescript_oracle_is_exact_in_rust ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/shared_video_contract.rs (.tools/target/debug/deps/shared_video_contract-8c8ddb15b50654ba)
+
+running 10 tests
+test serialized_null_is_a_clear_and_missing_is_unchanged ... ok
+test editing_script_clears_stale_utf16_associations_without_losing_scene_text ... ok
+test nullable_string_baselines_conflict_and_converge_after_unassignment ... ok
+test invalid_multi_add_and_bulk_leave_every_row_unchanged ... ok
+test child_edits_and_inverse_touch_iso_project_time_without_reverting_later_metadata ... ok
+test duplicate_scene_returns_its_rows_and_inverse_preserves_source_edits ... ok
+test scalar_baselines_conflict_merge_converge_and_reject_invalid_fields ... ok
+test project_delete_removes_logical_assets_and_reopens_while_retaining_owned_bytes ... ok
+test committed_bulk_inverse_survives_reopen_and_preserves_unrelated_edits ... ok
+test duration_baselines_compare_numbers_across_javascript_and_rust_serialization ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+
+     Running tests/storage_review.rs (.tools/target/debug/deps/storage_review-cf574d36b937b713)
+
+running 8 tests
+test journal_alias_added_after_open_cannot_modify_external_file ... ok
+test wrong_ready_fields_and_corrupt_database_are_not_initialized_over ... ok
+test bounded_managed_read_verifies_complete_bytes_and_retains_corrupt_refs ... ok
+test every_close_caller_waits_until_writer_is_released ... ok
+test backup_rejects_destination_bytes_changed_before_completion ... ok
+test strict_snapshot_rejects_unknown_index_and_duplicate_manifest_keys ... ok
+test restore_rechecks_copied_target_before_ready_marker ... ok
+test submit_close_race_never_leaves_completed_operations_cancelable ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.99s
+
+   Doc-tests cuepoint_native_storage
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

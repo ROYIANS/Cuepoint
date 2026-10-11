@@ -1,0 +1,1566 @@
+{
+  "schemaVersion": 1,
+  "stage": "complete browser checkpoint; source still under coordinated edits",
+  "suiteLog": "wave4-browser-diagnostic.log",
+  "suiteExitCode": 0,
+  "suite": "222passedfiles/3830passedtests;1native-onlyfile/7native-onlytests skipped in default browser lane",
+  "coverageDirectory": "/tmp/cuepoint-tool-coverage/browser-root-wave4",
+  "executionUsesOriginalRecipe": true,
+  "capturesPayloads": false,
+  "metrics": {
+    "registry": 95,
+    "executeAny": 95,
+    "executeFulfilled": 95,
+    "events": 3349
+  },
+  "rows": [
+    {
+      "name": "workspace_overview",
+      "family": "foundation",
+      "executeCount": 7,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "bounded unfinished-plan finishing checkpoint > parks at the existing budget when the finishing request uses the last step for a tool",
+        "durable bounded tool loop > passes complete assistant/tool chains, saves plan atomically, and finishes",
+        "public tool-round activity persistence > preserves chronological public output through final answer for chat-completions",
+        "public tool-round activity persistence > preserves chronological public output through final answer for responses",
+        "thread policy and request layers > refreshes the actual second HTTP request after a memory correction without replaying settled tool calls"
+      ]
+    },
+    {
+      "name": "update_run_plan",
+      "family": "foundation",
+      "executeCount": 13,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "bounded unfinished-plan finishing checkpoint > allows a second plain answer to finish an advice plan under chat-completions",
+        "bounded unfinished-plan finishing checkpoint > allows a second plain answer to finish an advice plan under responses",
+        "bounded unfinished-plan finishing checkpoint > continues plan → premature text → real write → final once with chat-completions",
+        "bounded unfinished-plan finishing checkpoint > continues plan → premature text → real write → final once with responses",
+        "bounded unfinished-plan finishing checkpoint > never adds a finishing request at the last segment step for chat-completions",
+        "bounded unfinished-plan finishing checkpoint > never adds a finishing request at the last segment step for responses",
+        "bounded unfinished-plan finishing checkpoint > preserves explicit tool approval after a finishing check, even in full mode",
+        "durable bounded tool loop > passes complete assistant/tool chains, saves plan atomically, and finishes",
+        "durable reasoning configuration > keeps frozen effort through tool rounds, approval resume and the finishing checkpoint",
+        "legacy plan pending survives recovery and executes once",
+        "legacy plan running survives recovery and executes once",
+        "legacy plan unknown survives recovery and executes once",
+        "unified task workspace > shares tool plans with the task and future turns but preserves old run snapshots"
+      ]
+    },
+    {
+      "name": "ip_search",
+      "family": "ip",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "IP tools with approval, scope and current facts > rejects stale revisions and cross-project/IP detail or mutation while allowing the name catalog",
+        "measures startup, loaded groups and complete deterministic IP-search request chain"
+      ]
+    },
+    {
+      "name": "ip_read",
+      "family": "ip",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "IP tools with approval, scope and current facts > confirms a new project association, refreshes IP facts and permits bounded field reads afterward"
+      ]
+    },
+    {
+      "name": "ip_create",
+      "family": "ip",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "IP tools with approval, scope and current facts > always confirms IP creation with readable fields, commits once and never replays after a failed next request"
+      ]
+    },
+    {
+      "name": "ip_update",
+      "family": "ip",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > ip_update approves the real preview, updates the shared IP and preserves existing project content"
+      ]
+    },
+    {
+      "name": "ip_set_archived",
+      "family": "ip",
+      "executeCount": 5,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "shared registered tools used by the full desktop product > chat-completions approves ip_set_archived, records the real effect, and does not repeat it after a failed next request",
+        "shared registered tools used by the full desktop product > responses approves ip_set_archived, records the real effect, and does not repeat it after a failed next request",
+        "shared registered tools used by the full desktop product > restores an archived IP through the same registered entry and re-enables its project facts"
+      ]
+    },
+    {
+      "name": "project_bind_ip",
+      "family": "ip",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "IP tools with approval, scope and current facts > confirms a new project association, refreshes IP facts and permits bounded field reads afterward"
+      ]
+    },
+    {
+      "name": "audio_read",
+      "family": "audio",
+      "executeCount": 29,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "audio/music Agent local tools > creates and clears a reusable MiMo speaker profile through the tool ledger",
+        "audio/music Agent local tools > paginates real script text and never exposes full large text through indexes",
+        "audio/music Agent local tools > recovers from an explicit wrong audio project ID without reopening the conversation",
+        "audio/music Agent local tools > resolves omitted audio project IDs from durable binding in lists and text pages",
+        "bound sound project execution readiness > reads then writes actual audio content in one chat-completions execution without a second user turn",
+        "bound sound project execution readiness > reads then writes actual audio content in one responses execution without a second user turn",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one chat-completions execution",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one responses execution"
+      ]
+    },
+    {
+      "name": "audio_create",
+      "family": "audio",
+      "executeCount": 18,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "audio/music Agent local tools > creates MiMo voices by default while preserving explicit APIMart profiles",
+        "audio/music Agent local tools > creates and clears a reusable MiMo speaker profile through the tool ledger",
+        "audio/music Agent local tools > creates script and ledger atomically, and replay does not duplicate records",
+        "audio/music Agent local tools > persists a receipt with real script changes and replays it without a second write",
+        "bound sound project execution readiness > reads then writes actual audio content in one chat-completions execution without a second user turn",
+        "bound sound project execution readiness > reads then writes actual audio content in one responses execution without a second user turn",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one chat-completions execution",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one responses execution"
+      ]
+    },
+    {
+      "name": "audio_update",
+      "family": "audio",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "audio/music Agent local tools > creates and clears a reusable MiMo speaker profile through the tool ledger",
+        "audio/music Agent local tools > recovers from an explicit wrong audio project ID without reopening the conversation",
+        "sound editing defaults and effect certainty > resolves omitted audio write project IDs without changing saved arguments"
+      ]
+    },
+    {
+      "name": "audio_place_take",
+      "family": "audio",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "shared registered tools used by the full desktop product > chat-completions approves audio_place_take, records the real effect, and does not repeat it after a failed next request",
+        "shared registered tools used by the full desktop product > responses approves audio_place_take, records the real effect, and does not repeat it after a failed next request"
+      ]
+    },
+    {
+      "name": "audio_edit_clip",
+      "family": "audio",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "shared registered tools used by the full desktop product > chat-completions approves audio_edit_clip, records the real effect, and does not repeat it after a failed next request",
+        "shared registered tools used by the full desktop product > responses approves audio_edit_clip, records the real effect, and does not repeat it after a failed next request"
+      ]
+    },
+    {
+      "name": "audio_split_clip",
+      "family": "audio",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "shared registered tools used by the full desktop product > chat-completions approves audio_split_clip, records the real effect, and does not repeat it after a failed next request",
+        "shared registered tools used by the full desktop product > responses approves audio_split_clip, records the real effect, and does not repeat it after a failed next request"
+      ]
+    },
+    {
+      "name": "audio_remove_clip",
+      "family": "audio",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "shared registered tools used by the full desktop product > chat-completions approves audio_remove_clip, records the real effect, and does not repeat it after a failed next request",
+        "shared registered tools used by the full desktop product > responses approves audio_remove_clip, records the real effect, and does not repeat it after a failed next request"
+      ]
+    },
+    {
+      "name": "music_read",
+      "family": "music",
+      "executeCount": 19,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "C02 history remains readable and repairable > preserves fractional flowmusic draft/work history through actual ZIP and permits repair/metadata",
+        "C02 history remains readable and repairable > preserves fractional suno draft/work history through actual ZIP and permits repair/metadata",
+        "audio/music Agent local tools > recovers from an explicit wrong music project ID without reopening the conversation",
+        "audio/music Agent local tools > returns music project identity for optional list, detail and lyric reads",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one chat-completions execution",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one responses execution"
+      ]
+    },
+    {
+      "name": "music_save_draft",
+      "family": "music",
+      "executeCount": 30,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "C02 integer music settings across real consumers > accepts flowmusic boundary 1 at repository, tools, generation and wire",
+        "C02 integer music settings across real consumers > accepts flowmusic boundary 240 at repository, tools, generation and wire",
+        "C02 integer music settings across real consumers > accepts suno boundary 10 at repository, tools, generation and wire",
+        "C02 integer music settings across real consumers > accepts suno boundary 360 at repository, tools, generation and wire",
+        "C02 integer music settings across real consumers > keeps incomplete flowmusic drafts without a duration saveable, while generation requires text",
+        "C02 integer music settings across real consumers > keeps incomplete suno drafts without a duration saveable, while generation requires text",
+        "audio/music Agent local tools > recovers from an explicit wrong music project ID without reopening the conversation",
+        "audio/music Agent local tools > saves a real music draft without generating work and protects engine scope",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one chat-completions execution",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one responses execution",
+        "sound editing defaults and effect certainty > resolves omitted music write project IDs without changing saved arguments"
+      ]
+    },
+    {
+      "name": "music_update_work",
+      "family": "music",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "C02 history remains readable and repairable > preserves fractional flowmusic draft/work history through actual ZIP and permits repair/metadata",
+        "C02 history remains readable and repairable > preserves fractional suno draft/work history through actual ZIP and permits repair/metadata"
+      ]
+    },
+    {
+      "name": "music_reuse_work",
+      "family": "music",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > music_reuse_work creates a new exact-parameter draft and receipt while retaining the work and media"
+      ]
+    },
+    {
+      "name": "audio_generation_capabilities",
+      "family": "soundGeneration",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "paid audio/music Agent approval and recovery > advertises configured MiMo as default without silently falling back"
+      ]
+    },
+    {
+      "name": "audio_generate_speech",
+      "family": "soundGeneration",
+      "executeCount": 13,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "paid audio/music Agent approval and recovery > saves approved speech as one take and preserves the completed result across continuation failure",
+        "paid audio/music Agent approval and recovery > submits approved MiMo design once and keeps optimized speech separate from manuscript",
+        "paid audio/music Agent approval and recovery > uses default inherited speaker for generation and recovers after that speaker is deleted"
+      ]
+    },
+    {
+      "name": "music_generate",
+      "family": "soundGeneration",
+      "executeCount": 14,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "paid audio/music Agent approval and recovery > recovers a submitted call through GET after a changed draft without replaying the POST",
+        "paid audio/music Agent approval and recovery > requires review for both music and speech before effects in ask mode",
+        "paid audio/music Agent approval and recovery > requires review for both music and speech before effects in assist mode",
+        "paid audio/music Agent approval and recovery > requires review for both music and speech before effects in full mode"
+      ]
+    },
+    {
+      "name": "audio_generation_check",
+      "family": "soundGeneration",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > audio_generation_check verifies the saved take and real retained bytes without another paid POST"
+      ]
+    },
+    {
+      "name": "prepare_audio_generation_batch",
+      "family": "audioBatch",
+      "executeCount": 47,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent batch preparation, evidence and completion > keeps all pending batch items in completion blockers even when one sibling result is saved",
+        "Agent batch preparation, evidence and completion > preserves outputs after chat deletion as dormant project history",
+        "Agent batch preparation, evidence and completion > rejects forged chapter source linkage",
+        "Agent batch preparation, evidence and completion > rejects forged confirmed source linkage",
+        "Agent batch preparation, evidence and completion > rejects forged intent source linkage",
+        "Agent batch preparation, evidence and completion > rejects forged membership source linkage",
+        "Agent batch preparation, evidence and completion > rejects forged origin source linkage",
+        "Agent batch preparation, evidence and completion > rejects forged segment source linkage",
+        "Agent batch preparation, evidence and completion > rejects forged state source linkage",
+        "Agent batch preparation, evidence and completion > rejects newer execution and disabled/conversation scope before batch confirmation",
+        "Agent batch preparation, evidence and completion > uses confirmed origin and per-item output proof, never preparation as generation evidence",
+        "Agent batch preparation, evidence and completion > writes preparation and its real ledger result atomically, without granting paid approval",
+        "shared batch provenance in final reply review > bounds origin traversal and leaves an excessively long retry history unverified",
+        "shared batch provenance in final reply review > invalidates completed review freshness when either durable batch or item progress changes",
+        "shared batch provenance in final reply review > observes only a confirmed saved output for task ownership=false",
+        "shared batch provenance in final reply review > observes only a confirmed saved output for task ownership=true",
+        "shared batch provenance in final reply review > rejects an invalid retry origin chain: cycle",
+        "shared batch provenance in final reply review > rejects an invalid retry origin chain: foreign-chapter",
+        "shared batch provenance in final reply review > rejects an invalid retry origin chain: foreign-owner",
+        "shared batch provenance in final reply review > rejects an invalid retry origin chain: foreign-project",
+        "shared batch provenance in final reply review > rejects an invalid retry origin chain: missing-source",
+        "shared batch provenance in final reply review > rejects an invalid retry origin chain: self-cycle",
+        "shared batch provenance in final reply review > rejects an invalid retry origin chain: wrong-result",
+        "shared batch provenance in final reply review > rejects batch-owner corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects call-atomic corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects call-effect corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects call-name corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects call-run corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects call-status corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects chapter corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects confirmation corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects confirmed-membership corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects connector corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects dormant-batch corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects dormant-job corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects explicit-origin-with-retry corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects included corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects input corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects intent corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects job corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects linked corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects membership corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects run-project corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects segment corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects task-project corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > rejects thread-project corruption before reporting generation evidence",
+        "shared batch provenance in final reply review > retains original preparation provenance for an actually reviewed failed-only retry"
+      ]
+    },
+    {
+      "name": "audio_read_generation_batch",
+      "family": "audioBatch",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent batch preparation, evidence and completion > writes preparation and its real ledger result atomically, without granting paid approval"
+      ]
+    },
+    {
+      "name": "audio_read_arrangement",
+      "family": "audioArrangement",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "reviewed arrangement Agent adapters > chat-completions performs separately approved selection and arrangement with actual receipts",
+        "reviewed arrangement Agent adapters > responses performs separately approved selection and arrangement with actual receipts"
+      ]
+    },
+    {
+      "name": "audio_select_takes",
+      "family": "audioArrangement",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "reviewed arrangement Agent adapters > chat-completions performs separately approved selection and arrangement with actual receipts",
+        "reviewed arrangement Agent adapters > responses performs separately approved selection and arrangement with actual receipts"
+      ]
+    },
+    {
+      "name": "audio_arrange_selected",
+      "family": "audioArrangement",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "reviewed arrangement Agent adapters > chat-completions performs separately approved selection and arrangement with actual receipts",
+        "reviewed arrangement Agent adapters > responses performs separately approved selection and arrangement with actual receipts"
+      ]
+    },
+    {
+      "name": "audio_revert_arrangement",
+      "family": "audioArrangement",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "shared registered tools used by the full desktop product > chat-completions approves audio_revert_arrangement, records the real effect, and does not repeat it after a failed next request",
+        "shared registered tools used by the full desktop product > responses approves audio_revert_arrangement, records the real effect, and does not repeat it after a failed next request"
+      ]
+    },
+    {
+      "name": "material_search",
+      "family": "material",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent material scope and bounded reads > bound searches and reads expose only shared, own project and current linked IP"
+      ]
+    },
+    {
+      "name": "material_read",
+      "family": "material",
+      "executeCount": 9,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent material scope and bounded reads > hides setting contents when its ip owner is archived but retains metadata",
+        "Agent material scope and bounded reads > hides setting contents when its project owner is archived but retains metadata",
+        "Agent material scope and bounded reads > refuses to pretend audio/video metadata is content"
+      ]
+    },
+    {
+      "name": "material_read_text",
+      "family": "material",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent material scope and bounded reads > reads immutable document versions with actual text, pagination, provenance and no Blob"
+      ]
+    },
+    {
+      "name": "material_read_image",
+      "family": "material",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > material_read_image queues the immutable real pixels, then sends those exact bytes using its actual ledger provenance"
+      ]
+    },
+    {
+      "name": "material_update_metadata",
+      "family": "material",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > material_update_metadata creates the next immutable version while preserving an adopted copy and original file bytes"
+      ]
+    },
+    {
+      "name": "material_promote",
+      "family": "material",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent material writes preserve immutable approval and project copies > forces confirmation for formal IP promotion even in full mode, snapshots exactly once"
+      ]
+    },
+    {
+      "name": "material_use",
+      "family": "material",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent material writes preserve immutable approval and project copies > adopts and explicitly adds new copy without changing old file, refusing another project destination"
+      ]
+    },
+    {
+      "name": "material_update_use",
+      "family": "material",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent material writes preserve immutable approval and project copies > adopts and explicitly adds new copy without changing old file, refusing another project destination"
+      ]
+    },
+    {
+      "name": "material_archive",
+      "family": "material",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent material writes preserve immutable approval and project copies > adopts and explicitly adds new copy without changing old file, refusing another project destination"
+      ]
+    },
+    {
+      "name": "material_release",
+      "family": "material",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent material writes preserve immutable approval and project copies > release removes idle copies but actual project references remain protected",
+        "Agent material writes preserve immutable approval and project copies > releases its own unused copy after IP unlink without reopening source or foreign-project access"
+      ]
+    },
+    {
+      "name": "load_tool_groups",
+      "family": "discovery",
+      "executeCount": 15,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "bound sound project execution readiness > does not count tool loading on chat-completions as creative work",
+        "bound sound project execution readiness > does not count tool loading on responses as creative work",
+        "bounded project references and native same-model vision > pairs read_project_image result with next chat-completions same-model image input and preserves opaque reasoning",
+        "bounded project references and native same-model vision > pairs read_project_image result with next responses same-model image input and preserves opaque reasoning",
+        "measures startup, loaded groups and complete deterministic IP-search request chain",
+        "natural-language discovery to actual current-model pixels > sends exact target pixels via chat-completions without attachment or rebinding and pairs only once",
+        "natural-language discovery to actual current-model pixels > sends exact target pixels via responses without attachment or rebinding and pairs only once",
+        "progressive tool loading > dispatches only loaded definitions and replaces guidance on chat-completions",
+        "progressive tool loading > dispatches only loaded definitions and replaces guidance on responses",
+        "progressive tool loading > pins same-round approved tools when switching groups and executes each once",
+        "progressive tool loading > restores loaded state and approval without replaying loading or completed effects"
+      ]
+    },
+    {
+      "name": "task_read",
+      "family": "task",
+      "executeCount": 28,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / detail / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / detail / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / detail / withdrawn",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / index / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / index / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / index / withdrawn",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / nested / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / nested / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / nested / withdrawn",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / detail / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / detail / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / detail / withdrawn",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / index / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / index / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / index / withdrawn",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / nested / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / nested / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / nested / withdrawn",
+        "sound task generation evidence > makes owned sound sources discoverable and pageable through task_read",
+        "sound task generation evidence > uses the exact resultKey through actual task_read and ledger-atomic task_record_write, retaining legacy aggregate reads",
+        "task orchestration independent boundaries > pages full owned source text, rejects foreign sources and bounds artifact previews"
+      ]
+    },
+    {
+      "name": "task_create",
+      "family": "task",
+      "executeCount": 17,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "AI owned task orchestration > bounds context, rejects foreign record IDs and cascades records/history on deletion",
+        "AI owned task orchestration > keeps append-only versions, enforces stale edits and deduplicates redelivered records",
+        "AI owned task orchestration > links exactly one task atomically, preserves protocol inputs and reuses different repeated creates",
+        "AI owned task orchestration > manual edits are safe, versioned and reflected only in subsequent snapshots",
+        "AI owned task orchestration > preserves opaque Responses envelopes when task creation binds a running conversation",
+        "AI owned task orchestration > rejects task changes on stale revisions and keeps before/after source-backed history",
+        "AI owned task orchestration > requires actual owned evidence and does not launder unknown or bookkeeping into completed result",
+        "AI owned task orchestration > runs actual model tool loop to bind task and save a proposal without creation approval",
+        "AI owned task orchestration > validates record bounds, Todo references and rolls back a failed version write",
+        "indexeddb registered tool successful business paths > task_record_read returns actual append-only history with bounded text and completes its ledger atomically"
+      ]
+    },
+    {
+      "name": "task_update",
+      "family": "task",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "AI owned task orchestration > rejects task changes on stale revisions and keeps before/after source-backed history"
+      ]
+    },
+    {
+      "name": "task_record_write",
+      "family": "task",
+      "executeCount": 29,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "AI owned task orchestration > bounds context, rejects foreign record IDs and cascades records/history on deletion",
+        "AI owned task orchestration > keeps append-only versions, enforces stale edits and deduplicates redelivered records",
+        "AI owned task orchestration > requires actual owned evidence and does not launder unknown or bookkeeping into completed result",
+        "AI owned task orchestration > runs actual model tool loop to bind task and save a proposal without creation approval",
+        "indexeddb registered tool successful business paths > task_record_read returns actual append-only history with bounded text and completes its ledger atomically",
+        "sound task generation evidence > uses the exact resultKey through actual task_read and ledger-atomic task_record_write, retaining legacy aggregate reads"
+      ]
+    },
+    {
+      "name": "task_record_read",
+      "family": "task",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > task_record_read returns actual append-only history with bounded text and completes its ledger atomically"
+      ]
+    },
+    {
+      "name": "business_search",
+      "family": "business",
+      "executeCount": 7,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "business reads and media reuse > pages scoped searches and long text without exposing blobs/extensions/credentials",
+        "durable contextual business ownership > defaults business lists, detail and text pages while retaining explicit studio reads",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one chat-completions execution",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one responses execution"
+      ]
+    },
+    {
+      "name": "business_detail",
+      "family": "business",
+      "executeCount": 14,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "business reads and media reuse > pages scoped searches and long text without exposing blobs/extensions/credentials",
+        "business reads and media reuse > reuses only correct-owner real media, preserves shared references and deletes only orphans",
+        "business review regressions > reports proposal and generation retention before orphan deletion approval",
+        "business review regressions > returns all supported scalar reference IDs rather than truncating at 50",
+        "complete manual creative workflow through real repository tools > includes project reference ownership before approving media cleanup",
+        "durable contextual business ownership > defaults business lists, detail and text pages while retaining explicit studio reads",
+        "image quality/version are visible in detail, text reads and incremental context",
+        "project-bound execution and factual context > rejects foreign reads/writes, studio writes and forged context; allows read and independent explicit studio copy"
+      ]
+    },
+    {
+      "name": "business_read_relations",
+      "family": "business",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "business review regressions > returns all supported scalar reference IDs rather than truncating at 50"
+      ]
+    },
+    {
+      "name": "business_read_text",
+      "family": "business",
+      "executeCount": 5,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "business reads and media reuse > pages scoped searches and long text without exposing blobs/extensions/credentials",
+        "durable contextual business ownership > defaults business lists, detail and text pages while retaining explicit studio reads",
+        "image quality/version are visible in detail, text reads and incremental context",
+        "tool argument diagnostics > returns actionable error to chat-completions and executes only a new corrected read",
+        "tool argument diagnostics > returns actionable error to responses and executes only a new corrected read"
+      ]
+    },
+    {
+      "name": "project_create",
+      "family": "business",
+      "executeCount": 82,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent creates every supported project kind > advertises video/audio/music and retains legacy video defaults",
+        "Agent creates every supported project kind > creates seeded audio with an atomic replayable result and bound conversation",
+        "Agent creates every supported project kind > creates seeded music with an atomic replayable result and bound conversation",
+        "bounded final reply requests > continues a no-plan promise to a real saved action with chat-completions",
+        "bounded final reply requests > continues a no-plan promise to a real saved action with responses",
+        "bounded unfinished-plan finishing checkpoint > continues plan → premature text → real write → final once with chat-completions",
+        "bounded unfinished-plan finishing checkpoint > continues plan → premature text → real write → final once with responses",
+        "business isolation, versioned approval and atomic outcomes > flushes pending drafts before capture and before applying, and blocks failed drafts",
+        "business isolation, versioned approval and atomic outcomes > rejects missing/studio/foreign ownership and rolls back invalid references",
+        "business isolation, versioned approval and atomic outcomes > replays completed create results once and rolls back if the result ledger cannot commit",
+        "business isolation, versioned approval and atomic outcomes > revalidates target and delete cascade after approval without overwriting user changes",
+        "business reads and media reuse > pages scoped searches and long text without exposing blobs/extensions/credentials",
+        "business reads and media reuse > reuses only correct-owner real media, preserves shared references and deletes only orphans",
+        "business review regressions > binds studio-copy media metadata and enforces new IDs for physical replacement",
+        "business review regressions > rejects foreign studio media before approval and at the repository copy boundary",
+        "business review regressions > rejects missing studio media before approval and at the repository copy boundary",
+        "business review regressions > rejects wrong-kind studio media before approval and at the repository copy boundary",
+        "business review regressions > reports proposal and generation retention before orphan deletion approval",
+        "business review regressions > returns all supported scalar reference IDs rather than truncating at 50",
+        "committed business write receipts > bounds a full 20-shot result including exact receipts and preserves saved full text",
+        "committed business write receipts > leaves no receipt or business effect after a failed ledger, foreign scope or rejected call",
+        "committed business write receipts > records actual audio project seeds and replays the exact saved receipt",
+        "committed business write receipts > records actual music project seeds and replays the exact saved receipt",
+        "committed business write receipts > records actual video project seeds and replays the exact saved receipt",
+        "committed business write receipts > records only direct targets for cascading deletes, with no unsupported-tool evidence",
+        "committed business write receipts > returns stored shot associations and distinguishes inherited, explicit and disabled style",
+        "complete manual creative workflow through real repository tools > copies studio character with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > copies studio prop with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > copies studio scene with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > copies studio style with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion",
+        "durable contextual business ownership > uses the newly created project's durable binding at the next tool boundary",
+        "generation retention lifecycle integration > deleting a thread removes its jobs and recycles only media no longer retained elsewhere",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one chat-completions execution",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one responses execution",
+        "one-time Agent project creation continuity > keeps create-only opt-out unbound and permits multiple creations",
+        "one-time Agent project creation continuity > keeps old runs and request envelopes frozen, preserves binding when stopped after creation",
+        "one-time Agent project creation continuity > preloads only the frozen allowed matching group and does not enable disabled tools",
+        "one-time Agent project creation continuity > rechecks scope for already approved siblings and a second default creation",
+        "one-time Agent project creation continuity > rejects scope-bound audit reference inputs before creation and preserves create-only fallback",
+        "one-time Agent project creation continuity > rejects scope-bound continuation reference inputs before creation and preserves create-only fallback",
+        "one-time Agent project creation continuity > rejects scope-bound request reference inputs before creation and preserves create-only fallback",
+        "one-time Agent project creation continuity > rejects scope-bound responses reference inputs before creation and preserves create-only fallback",
+        "one-time Agent project creation continuity > rejects scope-bound selected reference inputs before creation and preserves create-only fallback",
+        "one-time Agent project creation continuity > retains exact completed replay and rejects modified arguments/deleted owner"
+      ]
+    },
+    {
+      "name": "project_update",
+      "family": "business",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > returns stored shot associations and distinguishes inherited, explicit and disabled style",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "project_delete",
+      "family": "business",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "business review regressions > reports proposal and generation retention before orphan deletion approval",
+        "committed business write receipts > records only direct targets for cascading deletes, with no unsupported-tool evidence",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "episode_create",
+      "family": "business",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > records only direct targets for cascading deletes, with no unsupported-tool evidence",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "episode_update",
+      "family": "business",
+      "executeCount": 19,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "atomic film script source-range impact > bounds range and shot IDs at 40 while retaining exact deterministic totals and omissions",
+        "atomic film script source-range impact > does not claim script impact for a scalar-only patch {\"logline\":\"New logline\"}",
+        "atomic film script source-range impact > does not claim script impact for a scalar-only patch {\"title\":\"New title\"}",
+        "atomic film script source-range impact > does not let a retained range mask another invalidated legacy beat with the same explicit ID",
+        "atomic film script source-range impact > reports only newly invalidated valid ranges and preserves every shot byte and revision",
+        "atomic film script source-range impact > reports zero invalidations for an unchanged script and does not count already malformed ranges",
+        "atomic film script source-range impact > returns the exact historical saved impact after reload and later manual edits",
+        "atomic film script source-range impact > uses the committed transaction's current retained-shot set after a manual shot edit or addition",
+        "committed business write receipts > bounds a full 20-shot result including exact receipts and preserves saved full text",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion",
+        "film impact actual protocol continuation > supplies the committed historical impact and ordinary write receipt on chat-completions",
+        "film impact actual protocol continuation > supplies the committed historical impact and ordinary write receipt on responses",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one chat-completions execution",
+        "one-time Agent project creation continuity > creates, reads and writes audio/music/video in one responses execution"
+      ]
+    },
+    {
+      "name": "episode_delete",
+      "family": "business",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > records only direct targets for cascading deletes, with no unsupported-tool evidence",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "beat_create",
+      "family": "business",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > records only direct targets for cascading deletes, with no unsupported-tool evidence",
+        "committed business write receipts > returns stored shot associations and distinguishes inherited, explicit and disabled style",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion",
+        "durable contextual business ownership > requires a selected episode and rejects foreign episodes without inferring the first"
+      ]
+    },
+    {
+      "name": "beat_update",
+      "family": "business",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > records only direct targets for cascading deletes, with no unsupported-tool evidence",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "beat_delete",
+      "family": "business",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > records only direct targets for cascading deletes, with no unsupported-tool evidence",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "shot_create",
+      "family": "business",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > bounds a full 20-shot result including exact receipts and preserves saved full text",
+        "committed business write receipts > records only direct targets for cascading deletes, with no unsupported-tool evidence",
+        "committed business write receipts > returns stored shot associations and distinguishes inherited, explicit and disabled style",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "shot_update",
+      "family": "business",
+      "executeCount": 6,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > returns stored shot associations and distinguishes inherited, explicit and disabled style",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "shot_delete",
+      "family": "business",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "E04 media retention batch > rolls back batched shot media and its actual business receipt",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "character_create",
+      "family": "business",
+      "executeCount": 17,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "business isolation, versioned approval and atomic outcomes > flushes pending drafts before capture and before applying, and blocks failed drafts",
+        "business isolation, versioned approval and atomic outcomes > rejects missing/studio/foreign ownership and rolls back invalid references",
+        "business isolation, versioned approval and atomic outcomes > revalidates target and delete cascade after approval without overwriting user changes",
+        "business reads and media reuse > pages scoped searches and long text without exposing blobs/extensions/credentials",
+        "business reads and media reuse > reuses only correct-owner real media, preserves shared references and deletes only orphans",
+        "committed business write receipts > receipts character writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio character with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion",
+        "durable contextual business ownership > defaults character creation without altering original arguments or saved envelopes",
+        "durable contextual business ownership > requires explicit projectless owners and preserves standalone studio creation",
+        "durable contextual business ownership > uses the newly created project's durable binding at the next tool boundary"
+      ]
+    },
+    {
+      "name": "character_update",
+      "family": "business",
+      "executeCount": 10,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "E07 owned tool result boundaries > executes a reviewed write on a corrupt display field with exact raw revision and replay",
+        "committed business write receipts > receipts character writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio character with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "character_delete",
+      "family": "business",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > receipts character writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio character with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "scene_create",
+      "family": "business",
+      "executeCount": 5,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > receipts scene writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio scene with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion",
+        "durable contextual business ownership > defaults scene creation without altering original arguments or saved envelopes"
+      ]
+    },
+    {
+      "name": "scene_update",
+      "family": "business",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > receipts scene writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio scene with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "scene_delete",
+      "family": "business",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > receipts scene writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio scene with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "prop_create",
+      "family": "business",
+      "executeCount": 5,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > receipts prop writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio prop with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion",
+        "durable contextual business ownership > defaults prop creation without altering original arguments or saved envelopes"
+      ]
+    },
+    {
+      "name": "prop_update",
+      "family": "business",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > receipts prop writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio prop with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "prop_delete",
+      "family": "business",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > receipts prop writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio prop with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "style_create",
+      "family": "business",
+      "executeCount": 5,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > receipts style writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio style with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion",
+        "durable contextual business ownership > defaults style creation without altering original arguments or saved envelopes"
+      ]
+    },
+    {
+      "name": "style_update",
+      "family": "business",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > receipts style writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio style with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "style_delete",
+      "family": "business",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > receipts style writes with only whitelisted saved fields and a direct-target deletion",
+        "complete manual creative workflow through real repository tools > copies studio style with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "asset_copy_from_studio",
+      "family": "business",
+      "executeCount": 10,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "complete manual creative workflow through real repository tools > copies studio character with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > copies studio prop with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > copies studio scene with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > copies studio style with independent fields/media and rejects duplicate source",
+        "project-bound execution and factual context > rejects foreign reads/writes, studio writes and forged context; allows read and independent explicit studio copy"
+      ]
+    },
+    {
+      "name": "creative_duplicate",
+      "family": "business",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "creative_reorder",
+      "family": "business",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "committed business write receipts > records only direct targets for cascading deletes, with no unsupported-tool evidence",
+        "complete manual creative workflow through real repository tools > creates project → assets → beat → shots, edits/duplicates/reorders and cleans relations on deletion"
+      ]
+    },
+    {
+      "name": "slot_update",
+      "family": "business",
+      "executeCount": 19,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "business reads and media reuse > reuses only correct-owner real media, preserves shared references and deletes only orphans",
+        "complete manual creative workflow through real repository tools > copies studio character with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > copies studio prop with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > copies studio scene with independent fields/media and rejects duplicate source",
+        "complete manual creative workflow through real repository tools > copies studio style with independent fields/media and rejects duplicate source",
+        "keeps all five supported kind parsers and real slot writes with committed ledgers"
+      ]
+    },
+    {
+      "name": "media_delete_orphan",
+      "family": "business",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "E04 media retention batch > rolls back the actual orphan tool deletion and receipt ledger together",
+        "business reads and media reuse > reuses only correct-owner real media, preserves shared references and deletes only orphans"
+      ]
+    },
+    {
+      "name": "prepare_generation_batch",
+      "family": "generation",
+      "executeCount": 4,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > read_generation_batch reads real prepared candidates without submitting or selecting them",
+        "local batch preparation recovery > repairs a parked historical unknown on startup and resumes its original conversation",
+        "local batch preparation recovery > returns image parameter guidance to the model and accepts a corrected call in the same run"
+      ]
+    },
+    {
+      "name": "read_generation_batch",
+      "family": "generation",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > read_generation_batch reads real prepared candidates without submitting or selecting them"
+      ]
+    },
+    {
+      "name": "generation_capabilities",
+      "family": "generation",
+      "executeCount": 3,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "reviewed generation submission > discovers independent global/project recommendations without exposing credentials or changing the AI draft"
+      ]
+    },
+    {
+      "name": "submit_generation",
+      "family": "generation",
+      "executeCount": 8,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "generation confirmation persistence > survives database reopen after confirmation and executes the saved user request exactly once",
+        "indexeddb registered tool successful business paths > apply_generation commits the real downloaded media, original shot text and completed ledger",
+        "indexeddb registered tool successful business paths > list_generation_jobs returns actual current-thread states and excludes another thread",
+        "reviewed generation submission > allows video provider/model changes with validated native parameters",
+        "reviewed generation submission > chat-completions retains original envelopes while executing and reporting reviewed parameters once",
+        "reviewed generation submission > responses retains original envelopes while executing and reporting reviewed parameters once"
+      ]
+    },
+    {
+      "name": "check_generation",
+      "family": "generation",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > check_generation resumes a known remote task through GET, downloads genuine bytes and never resubmits"
+      ]
+    },
+    {
+      "name": "apply_generation",
+      "family": "generation",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > apply_generation commits the real downloaded media, original shot text and completed ledger"
+      ]
+    },
+    {
+      "name": "list_generation_jobs",
+      "family": "generation",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "indexeddb registered tool successful business paths > list_generation_jobs returns actual current-thread states and excludes another thread"
+      ]
+    },
+    {
+      "name": "memory_search",
+      "family": "memory",
+      "executeCount": 8,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "scoped memory and historical source tools > searches only eligible owned memories, respects exclusions, limits and relevance, and returns stale reads without body"
+      ]
+    },
+    {
+      "name": "memory_read",
+      "family": "memory",
+      "executeCount": 10,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "scoped memory and historical source tools > pages memory bodies and retains active independent memory when its source task is deleted",
+        "scoped memory and historical source tools > searches only eligible owned memories, respects exclusions, limits and relevance, and returns stale reads without body"
+      ]
+    },
+    {
+      "name": "project_history_search",
+      "family": "memory",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "scoped memory and historical source tools > searches past-task indices only and excludes foreign/current tasks and unconfirmed summaries"
+      ]
+    },
+    {
+      "name": "project_history_read",
+      "family": "memory",
+      "executeCount": 21,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "scoped memory and historical source tools > cannot replay withdrawn reference text through historical tool-result reads",
+        "scoped memory and historical source tools > pages confirmed summary/working record content with exact version and source ownership checks",
+        "scoped memory and historical source tools > rejects spoofed source run ownership and late reads after source/project deletion",
+        "scoped memory and historical source tools > returns public complete messages and settled tool results without reasoning, arguments or nested credential fields",
+        "scoped memory and historical source tools > searches past-task indices only and excludes foreign/current tasks and unconfirmed summaries"
+      ]
+    },
+    {
+      "name": "discover_project_images",
+      "family": "reference",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "natural-language discovery to actual current-model pixels > sends exact target pixels via chat-completions without attachment or rebinding and pairs only once",
+        "natural-language discovery to actual current-model pixels > sends exact target pixels via responses without attachment or rebinding and pairs only once"
+      ]
+    },
+    {
+      "name": "project_reference_search",
+      "family": "reference",
+      "executeCount": 1,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "bounded project references and native same-model vision > scopes search/read and prevents cross-owner generated image access"
+      ]
+    },
+    {
+      "name": "project_reference_read",
+      "family": "reference",
+      "executeCount": 20,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / detail / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / detail / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / detail / withdrawn",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / index / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / index / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / index / withdrawn",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / nested / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / nested / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: chat / nested / withdrawn",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / detail / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / detail / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / detail / withdrawn",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / index / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / index / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / index / withdrawn",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / nested / foreign",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / nested / revised",
+        "Agent audit boundary regressions > task_read blocks cached source body: responses / nested / withdrawn",
+        "bounded project references and native same-model vision > scopes search/read and prevents cross-owner generated image access"
+      ]
+    },
+    {
+      "name": "read_project_image",
+      "family": "reference",
+      "executeCount": 18,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "bounded project references and native same-model vision > allows an explicitly re-added image source while preserving rejection of old descriptors",
+        "bounded project references and native same-model vision > pairs read_project_image result with next chat-completions same-model image input and preserves opaque reasoning",
+        "bounded project references and native same-model vision > pairs read_project_image result with next responses same-model image input and preserves opaque reasoning",
+        "bounded project references and native same-model vision > rejects the eleventh queued tool image before poisoning the next request",
+        "natural-language discovery to actual current-model pixels > sends exact target pixels via chat-completions without attachment or rebinding and pairs only once",
+        "natural-language discovery to actual current-model pixels > sends exact target pixels via responses without attachment or rebinding and pairs only once",
+        "project image discovery and source identity > blocks media during asynchronous materialization before dispatch",
+        "project image discovery and source identity > blocks project during asynchronous materialization before dispatch",
+        "project image discovery and source identity > blocks replacement during asynchronous materialization before dispatch",
+        "project image discovery and source identity > blocks same-id-bytes during asynchronous materialization before dispatch",
+        "project image discovery and source identity > blocks slot replacement during the final asynchronous digest validation",
+        "project image discovery and source identity > blocks thread during asynchronous materialization before dispatch",
+        "project image discovery and source identity > blocks withdrawal during asynchronous materialization before dispatch",
+        "project image discovery and source identity > requires the completed read envelope, exact image identity and same run before pixels"
+      ]
+    },
+    {
+      "name": "web_search",
+      "family": "web",
+      "executeCount": 7,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "actual durable web tool lifecycle > allows assist network tools but rejected ask requests never dispatch",
+        "actual durable web tool lifecycle > keeps a post-service persistence failure unknown and blocks resubmission",
+        "actual durable web tool lifecycle > retains ask approval over reopen, refuses changed config before HTTP and never silently re-prepares",
+        "actual durable web tool lifecycle > saves stopped results and resumes after reopen without repeating the service request",
+        "actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials",
+        "actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"
+      ]
+    },
+    {
+      "name": "web_read",
+      "family": "web",
+      "executeCount": 2,
+      "executed": true,
+      "fulfilled": true,
+      "fulfilledTests": [
+        "actual durable web tool lifecycle > searches then reads via chat-completions and preserves sources without credentials",
+        "actual durable web tool lifecycle > searches then reads via responses and preserves sources without credentials"
+      ]
+    }
+  ],
+  "rawFiles": [
+    {
+      "file": "7230-1.jsonl",
+      "sha256": "df9ed992994a87d89fe7811d408753a44162d3440a9672a47c03939889794522",
+      "bytes": 52671
+    },
+    {
+      "file": "7236-7.jsonl",
+      "sha256": "a14b7897d2bb4307f9f4d9d4b6dbfb2576aef752bf92bcd099f4b4d4054bd18d",
+      "bytes": 15722
+    },
+    {
+      "file": "7237-8.jsonl",
+      "sha256": "6ccb7163d4466499bc77afb7201faeaecab1815c12b70b853aa8b9037626e060",
+      "bytes": 40704
+    },
+    {
+      "file": "7238-9.jsonl",
+      "sha256": "978d60ab80a23e0b58c89e8047d98c58462b6bfb7357e74518055a90ee44c99c",
+      "bytes": 5752
+    },
+    {
+      "file": "7243-2.jsonl",
+      "sha256": "4d50be84bafcdebd09d599eb5b3c79b8d126a2d7bf877d1b7258ea74ccd16286",
+      "bytes": 114905
+    },
+    {
+      "file": "7301-9.jsonl",
+      "sha256": "4bd5423892ae789dc8718588a10f4ea7f50e42d19cb2e91d05975f4da042f4fc",
+      "bytes": 18933
+    },
+    {
+      "file": "7303-6.jsonl",
+      "sha256": "664f5ac358fb189294447bf92aca506abd6d1aa42c2391bbeb639106fa2b0f14",
+      "bytes": 1623
+    },
+    {
+      "file": "7312-2.jsonl",
+      "sha256": "c730f4d064f699e7cf226fce858eb00f3150e5ca11d4c223d6a8c253e5ed1fd8",
+      "bytes": 22100
+    },
+    {
+      "file": "7320-5.jsonl",
+      "sha256": "e155847a72d69f07f698bb61a33da2b7ebe3c878505302560990eda6b3d88e5a",
+      "bytes": 40224
+    },
+    {
+      "file": "7329-2.jsonl",
+      "sha256": "114b4833cee1c9a048e1ce226bc06bc557f24705a8d2db5de3b0865ba1d6d798",
+      "bytes": 26587
+    },
+    {
+      "file": "7332-8.jsonl",
+      "sha256": "5c5df5ac35e3773731b5ee693c5982623b89f6b9974c0ead799c4e88376a7b0e",
+      "bytes": 9299
+    },
+    {
+      "file": "7334-6.jsonl",
+      "sha256": "473786d0e3e8c13c6793af7a808c996f2cc10e3e4cda29f29f76a0581aedbed0",
+      "bytes": 1066
+    },
+    {
+      "file": "7336-1.jsonl",
+      "sha256": "e9d4268b0b8c28877ed34a94eeea395d2cf741b2f28eb9e64448d8ca7c83646e",
+      "bytes": 1909
+    },
+    {
+      "file": "7337-4.jsonl",
+      "sha256": "e0ce8e37fe8c3d14bbba1cc27938451e53c4c84b05be4102034d1b40abaf2b11",
+      "bytes": 24606
+    },
+    {
+      "file": "7349-4.jsonl",
+      "sha256": "e7f8089b0ac12e73e708a9d2c9d3890a12cbaeacfe5dbbc422a7fd9fb83d5135",
+      "bytes": 8561
+    },
+    {
+      "file": "7352-5.jsonl",
+      "sha256": "c3c2b771d5b6bb6b75978adc67eb8cce3525f880b2277b57a78eb1cc3fc0b6cf",
+      "bytes": 19676
+    },
+    {
+      "file": "7354-8.jsonl",
+      "sha256": "a13e681435b20b034b23838cac26a6b72ebd263c00fde82c3e84f867fec3aa3b",
+      "bytes": 8746
+    },
+    {
+      "file": "7355-6.jsonl",
+      "sha256": "6e890ec021b0a818a9d843f728dde33b251dea0fbbb59df8e60ff4321a341e61",
+      "bytes": 1953
+    },
+    {
+      "file": "7356-2.jsonl",
+      "sha256": "e6b8e8a88a4cce0adf72c6a88ce3e66d90ffb8e91f33005adc76c3284db56f88",
+      "bytes": 10274
+    },
+    {
+      "file": "7358-7.jsonl",
+      "sha256": "096eda5c702e120ae32ce768dfd8ed369453e6ea15907d5f17699621451e2b6a",
+      "bytes": 5860
+    },
+    {
+      "file": "7360-4.jsonl",
+      "sha256": "4435086ee5e6c94971106e8a49bc8919dd1c9b44d05bc5678765dd73347c6fde",
+      "bytes": 12841
+    },
+    {
+      "file": "7363-9.jsonl",
+      "sha256": "628230f3c4bdbb1bcc89403f7bd6f6c7a1c0ced8cefa87c4064173bc25ad4504",
+      "bytes": 600
+    },
+    {
+      "file": "7364-6.jsonl",
+      "sha256": "76b2f2e39bac0697d8f3fcdbcb25720be0d34d73bf201929d8940fbcd88a8666",
+      "bytes": 24773
+    },
+    {
+      "file": "7367-2.jsonl",
+      "sha256": "aea5ef1c46b6a3edf45a312f4351ba098d4b6d831e4ccd892ed15179b9e0cfe4",
+      "bytes": 10661
+    },
+    {
+      "file": "7368-8.jsonl",
+      "sha256": "9084425c87dd708c1587797263668c62916c51c96e34d034dd370508fc161d3d",
+      "bytes": 10729
+    },
+    {
+      "file": "7376-5.jsonl",
+      "sha256": "10d8feb8d1ff686ad75880e2ab0e011aca910b45bdca118d370b5ed67309df31",
+      "bytes": 21062
+    },
+    {
+      "file": "7379-4.jsonl",
+      "sha256": "b02a0f4f491b6aec39a9a277a0e67b44bddc211b0c4e61dbb0e96d2a4b0a6961",
+      "bytes": 6518
+    },
+    {
+      "file": "7402-5.jsonl",
+      "sha256": "8a38b9b34bf9d2785b63cd5bf63f78581dc5bbdf5c8a3f3282954630f8daa7e0",
+      "bytes": 8504
+    },
+    {
+      "file": "7403-9.jsonl",
+      "sha256": "f4912e80c048332217c46b7af1c0ee5cfa688fd345f9fc4bc0d9633fa0d12d97",
+      "bytes": 579
+    },
+    {
+      "file": "7404-1.jsonl",
+      "sha256": "ce6042bf28eaf7ab6b0b00694f9f2e79038fc371dff5d74c62e078162c1b48d0",
+      "bytes": 21341
+    },
+    {
+      "file": "7405-6.jsonl",
+      "sha256": "21c7c1599447cf7b41c3fb81c447db7de0a2b31fdf96c790af13800c75b82410",
+      "bytes": 950
+    },
+    {
+      "file": "7407-2.jsonl",
+      "sha256": "1a5e24da1e4474fa9768b6351baf1089df5944aef7dd03c60936c5152eaf6c95",
+      "bytes": 17881
+    },
+    {
+      "file": "7409-4.jsonl",
+      "sha256": "357754b630c398fa5f380f63333eeca21bc9eb094c7b94ec1b75eced219d1eac",
+      "bytes": 2925
+    },
+    {
+      "file": "7422-5.jsonl",
+      "sha256": "6071fb1802bf31887c714e25894815bd1d553387eb4ebeb3824ff21161aa96f7",
+      "bytes": 806
+    },
+    {
+      "file": "7425-7.jsonl",
+      "sha256": "953afb050a1e095e25a5d03f77fd3081f23a07aec3f74f67ee3b91d333d0454d",
+      "bytes": 5202
+    },
+    {
+      "file": "7426-9.jsonl",
+      "sha256": "3c26d6358b04f4b56e12a34a66a390502ec06c8b840b5f0cf3e40725f8a4a34a",
+      "bytes": 2741
+    },
+    {
+      "file": "7427-6.jsonl",
+      "sha256": "b143a2a9f36664c37f30e7ffd2fea4490a5de92903738bf9bed88ae91e985f1d",
+      "bytes": 11530
+    },
+    {
+      "file": "7432-4.jsonl",
+      "sha256": "8ec108760fe5d9074d1436369c23cd3ff82882afe7dabc70ad6b2a1a970b8379",
+      "bytes": 3969
+    },
+    {
+      "file": "7433-8.jsonl",
+      "sha256": "3de3428f79ed0d1df21dc9cc23980b8131c99fb3f4e1d239e6d30b655a6287ab",
+      "bytes": 2064
+    },
+    {
+      "file": "7442-2.jsonl",
+      "sha256": "02cc0090b6abe18a2b3477d13ff243342b0f1642fa6c0e967e6a4dd1ef890168",
+      "bytes": 2607
+    },
+    {
+      "file": "7444-7.jsonl",
+      "sha256": "fe1a51d0ed75179fa5bde5ea443dbbae50b85e7db39e46ee6934b3ddaf161694",
+      "bytes": 5683
+    },
+    {
+      "file": "7447-1.jsonl",
+      "sha256": "86f07aa41364ab8ca82160ee5c050cc74075fa1b8ff9c2c8a77b00aaf348d144",
+      "bytes": 2383
+    },
+    {
+      "file": "7452-5.jsonl",
+      "sha256": "e159a0ca8f5c8f9ad6d1642ef082dafd4459a89d2938d04e8ff6a4c9f6517ee6",
+      "bytes": 4951
+    },
+    {
+      "file": "7455-7.jsonl",
+      "sha256": "293f15bb99470fd9f30ed0379000eee4b38b454637bb7c26c1d7ce0e04a7d345",
+      "bytes": 882
+    },
+    {
+      "file": "7464-1.jsonl",
+      "sha256": "c52cd04d42cf78f779159bc2b17534059f8b8ff48ecc2bfb2315230c2fcafdca",
+      "bytes": 1734
+    },
+    {
+      "file": "7492-7.jsonl",
+      "sha256": "85c41fbbfec4bc8c433126d4adc17e53a60fb23b19ce8885f6d282f3cf673350",
+      "bytes": 3456
+    },
+    {
+      "file": "7495-1.jsonl",
+      "sha256": "78183d086e8a0fd1d9adadbd1c1a9c42273fb82e9d74b7745182be4f5b0e6f24",
+      "bytes": 1669
+    },
+    {
+      "file": "7504-8.jsonl",
+      "sha256": "f9c5220f19e6ed1f57d6e7ff8719ddc849619980a011c1b96a946206a7bb7009",
+      "bytes": 1408
+    },
+    {
+      "file": "7559-8.jsonl",
+      "sha256": "52f7eb9b02639b8820d72e826afe3291070c2d28d039aef85d37d0c395de0c91",
+      "bytes": 103805
+    },
+    {
+      "file": "7567-1.jsonl",
+      "sha256": "05599af82edc10c4cf952deb6caa53c87091665924375fa42e73f4d8ec0f6531",
+      "bytes": 220
+    }
+  ],
+  "limits": [
+    "Method-fulfilled instrumentation maps actual recipes to tests; test assertions supply semantic acceptance, not this tally alone.",
+    "Native-only binary tests were independently run with explicit acceptance env; final strict native lane remains required.",
+    "This suite is not the actual packaged macOS gate or frozen full quality pass."
+  ],
+  "completionClaim": false
+}

@@ -1,0 +1,33 @@
+{
+  "id": "shared-storage-sqlite",
+  "name": "shared-storage-sqlite",
+  "title": "共享存储接口与 SQLite 接入",
+  "description": "Centralize shared product persistence for all existing UI, business commands and Agent tools; integrate native SQLite and workspace-owned files while retaining the browser IndexedDB adapter, with fresh data and no historical migration.",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "frontend-and-native-storage",
+  "package": "single-repo",
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-10-11",
+  "completedAt": null,
+  "branch": "codex/shared-storage-sqlite",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-10-desktop-storage-sync",
+  "relatedFiles": [
+    "src/db",
+    "src/lib/productStorage.ts",
+    "src/lib/media.ts",
+    "src/lib/agent",
+    "src/components",
+    "desktop/tauri/src-tauri/src"
+  ],
+  "notes": "2026-10-11: task creation/research approved, then user explicitly delegated full responsibility/automatic approval. Final concrete PRD/design/implement scope displayed for review and independent findings corrected before start. Active implementation on codex/shared-storage-sqlite. One shared UI/business/Agent; fresh full native SQLite/files and browser IndexedDB adapter. No old migration/secret-profile import/cloud sync. Three workers own shared TS contract, Rust metadata engine and native binary sessions. Full isolated coverage before normal owner switch. Baseline49tables/219tx/96queries are source counts, not executed coverage. Local submission/archive allowed under automatic approval after concrete gates; push/main merge/deployment remain outside scope. 2026-10-12: frozen shared code/probe checkpoint accepted: browser227files3941tests; actual native108files1900 plus binary6/browser5; all95 recipe/49table/49owner gates; fullfeature Rust108 and independent media9+authority2. Final isolated SQLite app built with exact ATS merge. Actual final CUA is still blocked by Mac lock. Normal owner unchanged, task in_progress, no archive/main merge/push. Local checkpoint submission covered by explicit autonomous approval.",
+  "meta": {}
+}

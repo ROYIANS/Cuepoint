@@ -1,0 +1,33 @@
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on chat-completions"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on chat-completions"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on chat-completions"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"execute","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on chat-completions"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on chat-completions"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on chat-completions"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on chat-completions"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"execute","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on chat-completions"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on responses"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on responses"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on responses"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"execute","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on responses"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on responses"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on responses"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on responses"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"execute","outcome":"fulfilled","test":"progressive tool loading > dispatches only loaded definitions and replaces guidance on responses"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > rejects disabled groups atomically without broadening authority"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > rejects disabled groups atomically without broadening authority"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > rejects disabled groups atomically without broadening authority"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"execute","outcome":"rejected","test":"progressive tool loading > rejects disabled groups atomically without broadening authority"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > restores loaded state and approval without replaying loading or completed effects"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > restores loaded state and approval without replaying loading or completed effects"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > restores loaded state and approval without replaying loading or completed effects"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"execute","outcome":"fulfilled","test":"progressive tool loading > restores loaded state and approval without replaying loading or completed effects"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > pins same-round approved tools when switching groups and executes each once"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > pins same-round approved tools when switching groups and executes each once"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > pins same-round approved tools when switching groups and executes each once"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"execute","outcome":"fulfilled","test":"progressive tool loading > pins same-round approved tools when switching groups and executes each once"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > pins same-round approved tools when switching groups and executes each once"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > pins same-round approved tools when switching groups and executes each once"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > pins same-round approved tools when switching groups and executes each once"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"parse","outcome":"fulfilled","test":"progressive tool loading > pins same-round approved tools when switching groups and executes each once"}
+{"owner":"indexeddb","name":"load_tool_groups","method":"execute","outcome":"fulfilled","test":"progressive tool loading > pins same-round approved tools when switching groups and executes each once"}

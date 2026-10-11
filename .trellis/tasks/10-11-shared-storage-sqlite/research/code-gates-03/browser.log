@@ -1,0 +1,13 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  227 passed | 1 skipped (228)
+      Tests  3941 passed | 7 skipped (3948)
+   Start at  02:05:37
+   Duration  35.57s (tests 78%, setup 8%, import 7%, transform 7%)
+

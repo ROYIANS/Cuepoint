@@ -1,0 +1,52 @@
+   Compiling cuepoint-prototype v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+warning: unused variable: `app`
+   --> vendor/tauri-plugin-http/src/lib.rs:136:20
+    |
+136 |         .on_event(|app, event| {
+    |                    ^^^ help: if this is intentional, prefix it with an underscore: `_app`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `event`
+   --> vendor/tauri-plugin-http/src/lib.rs:136:25
+    |
+136 |         .on_event(|app, event| {
+    |                         ^^^^^ help: if this is intentional, prefix it with an underscore: `_event`
+
+warning: `tauri-plugin-http` (lib) generated 2 warnings (run `cargo fix --lib -p tauri-plugin-http` to apply 2 suggestions)
+warning: use of deprecated method `std::sync::atomic::Atomic::<usize>::fetch_update`: renamed to `try_update` for consistency
+  --> src/product_media/server.rs:71:34
+   |
+71 | ...                   .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |n| {
+   |                        ^^^^^^^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+   |
+71 -                                 .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |n| {
+71 +                                 .try_update(Ordering::SeqCst, Ordering::SeqCst, |n| {
+   |
+
+warning: `cuepoint-prototype` (lib test) generated 1 warning (1 duplicate)
+warning: `cuepoint-prototype` (lib) generated 1 warning (run `cargo fix --lib -p cuepoint-prototype` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.37s
+     Running unittests src/lib.rs (.tools/target/debug/deps/cuepoint_native_storage-aa91c08f7b2e1831)
+
+running 1 test
+media transport test boundary: io
+
+thread 'product_media::tests::actual_http_streams_complete_ninety_mib_and_exact_seek_ranges' (1163450) panicked at src/product_media/tests.rs:230:9:
+assertion `left == right` failed
+  left: 327043
+ right: 94371857
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test product_media::tests::actual_http_streams_complete_ninety_mib_and_exact_seek_ranges ... FAILED
+
+failures:
+
+failures:
+    product_media::tests::actual_http_streams_complete_ninety_mib_and_exact_seek_ranges
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 56 filtered out; finished in 3.31s
+
+error: test failed, to rerun pass `--lib`

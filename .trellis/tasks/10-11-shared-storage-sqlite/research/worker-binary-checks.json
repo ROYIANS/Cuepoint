@@ -1,0 +1,51 @@
+[
+  {
+    "log": "worker-binary-rust.log",
+    "command": "node desktop/tauri/scripts/tools.mjs cargo test --manifest-path src-tauri/Cargo.toml --locked --lib product_binary::tests -- --nocapture",
+    "exitCode": 0,
+    "result": "13/13 Rust tests pass; real disk files, actual SQL rollback, >33MiB actual deterministic byte file, bounded playback primitive. Desktop custom protocol wiring not included in this Rust filter."
+  },
+  {
+    "log": "worker-binary-native-product.log",
+    "command": "CUEPOINT_NATIVE_STORAGE_ACCEPTANCE=1 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/nativeBinaryProduct.test.ts",
+    "exitCode": 0,
+    "durationSeconds": 42.58,
+    "result": "2/2 actual TypeScript->Rust process->SQLite/managed file tests pass. Probe is pinned desktop/tauri/.tools/target/debug/product_store_probe. Fresh disposable workspaces, cleaned after each test. Imported deterministic 33MiB+123 byte fixture is a binary storage proof, not valid PNG playback proof. All three carrier paths exercised via existing putMedia/createFileMaterial/promoteLegacyMaterial commands, original source deletion, independent snapshot, missing logical refs, actual warm-cache corruption/deletion/reopen rejection."
+  },
+  {
+    "log": "worker-binary-native-product-initial-failure.log",
+    "command": "CUEPOINT_NATIVE_STORAGE_ACCEPTANCE=1 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/nativeBinaryProduct.test.ts",
+    "exitCode": 1,
+    "result": "First actual test detected StoreTx handle/operationId extension leaking into strict NativeSession envelope. Fixed with explicit closed sessionDto projection in nativeBinary prepare/discard; successful rerun above."
+  },
+  {
+    "log": "worker-binary-consumers.log",
+    "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/nativeBinaryAccess.test.ts tests/productionHandoff.test.ts tests/projectPackage.test.ts tests/projectPackageRelations.test.ts tests/references.test.ts tests/materialReferenceWire.test.ts tests/shotFilters.test.ts tests/episodeDelivery.test.ts",
+    "exitCode": 0,
+    "result": "8 files,76 tests pass. Browser fault injection uses actual raw browserDatabase hooks only in test fixture, product commands still shared adapter."
+  },
+  {
+    "log": "worker-binary-expanded-consumers.log",
+    "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/productStorageQueries.test.ts tests/projectPackage.test.ts tests/nativeBinaryAccess.test.ts tests/shotFilters.test.ts tests/musicDurationContract.test.ts",
+    "exitCode": 0,
+    "result": "5 files,73 tests pass; includes actual music variant ZIP ID remapping/dangling validation, opaque URL transport validation, metadata-preserving shot availability gap semantics."
+  },
+  {
+    "log": "worker-binary-query.log",
+    "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/productStorageQueries.test.ts tests/nativeBinaryAccess.test.ts",
+    "exitCode": 0,
+    "result": "2 files,11 tests pass after shared useProductQueryState engine hook contract changed. React query seam fixture is not actual WKWebView/react-dom acceptance."
+  },
+  {
+    "log": "worker-binary-tsc-wip.log",
+    "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+    "exitCode": 0,
+    "result": "Whole-repository TypeScript build passed at this snapshot (confirmed exec session exitCode 0). Peers were still editing; main session must retain final whole-project quality gate after source freeze."
+  },
+  {
+    "log": "worker-binary-eslint.json",
+    "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec eslint src/lib/storage/binary.ts src/lib/storage/nativeBinary.ts src/lib/media.ts src/lib/useShotMedia.ts src/lib/shotMedia.ts src/lib/audio/buffers.ts src/lib/ai/referenceWire.ts src/lib/projectPackage.ts src/lib/audioProjectPackage.ts src/lib/productionHandoff.ts src/lib/references/import.ts src/lib/references/package.ts src/lib/packages/projectPackageCodec.ts src/components/agent/ReferenceAttachments.tsx src/components/agent/ReferenceLibrary.tsx src/components/audio/AudioExports.tsx src/components/audio/AudioSources.tsx src/components/audio/VoiceReferencePicker.tsx src/components/audioMusic/shared.tsx src/components/music/MusicWorkspacePage.tsx src/components/slots/GenerationSlotCard.tsx src/components/studio/materials/MaterialPreview.tsx --format json",
+    "exitCode": 1,
+    "result": "Raw eslint: 1 existing reviewed error,53 warnings. Existing src/lib/references/import.ts prefer-promise-reject-errors is explicit quality/debt.json allowance preserving exact AbortSignal.reason; untouched worker finish closure. No new direct ESLint errors in owned code. Formal debt/baseline gate belongs main session."
+  }
+]

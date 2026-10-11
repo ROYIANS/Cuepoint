@@ -1,0 +1,656 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/shotDeleteUndo.test.ts (16 tests | 5 failed) 534ms
+   ❯ episode shot deletion snapshots (16)
+     × captures media under the same production transaction that deletes the shot 19ms
+     × returns no successful snapshot and rolls back every change on second delete failure 25ms
+     × returns no successful snapshot and rolls back every change on reindex failure 14ms
+     × returns no successful snapshot and rolls back every change on project touch failure 14ms
+     × returns no successful snapshot and rolls back every change on media cleanup failure 10ms
+ ❯ tests/materialIntegration.test.ts (5 tests | 1 failed) 262ms
+   ❯ IP and material integration with legacy projects (5)
+     × upgrades v21 with no IP/material tables without changing existing projects 33ms
+ ❯ tests/materialLibrary.test.ts (21 tests | 1 failed) 577ms
+   ❯ material snapshots and references (8)
+     × rolls back cloned media and project changes when adoption persistence fails 19ms
+ ❯ tests/audioOutputEvidence.test.ts (12 tests | 1 failed) 759ms
+   ❯ current local sound output evidence (12)
+     × surfaces storage failures during placement validation instead of certifying a partial inventory 57ms
+ ❯ tests/e04MemoryTransactions.test.ts (30 tests | 11 failed) 786ms
+   ❯ E04 manual memory transaction closure (30)
+     × create uses exactly three actual IndexedDB stores 47ms
+     × update uses exactly three actual IndexedDB stores 37ms
+     × status uses exactly three actual IndexedDB stores 70ms
+     × replace uses exactly three actual IndexedDB stores 26ms
+     × delete uses exactly three actual IndexedDB stores 33ms
+     × create rolls back after a real history insertion 22ms
+     × update rolls back after a real history insertion 12ms
+     × status rolls back after a real history insertion 9ms
+     × create rolls back the superseded row/history when later replacement persistence fails 11ms
+     × replace rolls back the superseded row/history when later replacement persistence fails 14ms
+     × delete rolls back the actual current-row deletion on a later history delete fault 11ms
+stderr | tests/useShotMedia.test.ts > shot media query identity > does not expose retained media from a previous result collection while the next query loads
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+ ❯ tests/useShotMedia.test.ts (1 test | 1 failed) 28ms
+   ❯ shot media query identity (1)
+     × does not expose retained media from a previous result collection while the next query loads 27ms
+ ❯ tests/connectorMigration.test.ts (1 test | 1 failed) 21ms
+   × deduplicates legacy connections without changing historical IDs, and rotates/revokes every alias 20ms
+ ❯ tests/mimoRuntime.test.ts (5 tests | 1 failed) 435ms
+   ❯ MiMo durable speech generation (5)
+     × freezes clone bytes and blocks a changed reference before any POST 41ms
+ ❯ tests/repoReliability.test.ts (9 tests | 1 failed) 373ms
+   ❯ episode filter ownership (2)
+     × migrates version-5 legacy filters within each episode without stale IDs 95ms
+ ❯ tests/d02CascadeTransactions.test.ts (3 tests | 3 failed) 383ms
+   ❯ extracted lifecycle commands (3)
+     × rolls back a late project delete and preserves independent sources on success 106ms
+     × rolls back thread orphan cleanup and retains production/material media on success 178ms
+     × restores a released copy when its final event fails, then releases it on retry 99ms
+ ❯ tests/agentTools.test.ts (22 tests | 1 failed) 5444ms
+   ❯ durable bounded tool loop (20)
+     × reports checkpoint persistence failure distinctly from user Stop 36ms
+ ❯ tests/productStorage.test.ts (12 tests | 1 failed) 304ms
+   ❯ fixed shared product storage ownership (12)
+     × opens only a fresh desktop database and keeps one owner despite later profile mutation 75ms
+ ❯ tests/productStorageQueries.test.ts (4 tests | 1 failed) 64ms
+   ❯ runtime-independent shared queries and media (4)
+     × resolves existing internal Blob previews in Tauri and revokes the same URL on cleanup 16ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 29 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/agentTools.test.ts > durable bounded tool loop > reports checkpoint persistence failure distinctly from user Stop
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ tests/agentTools.test.ts:283:133
+    281|     persist.mockRejectedValueOnce(new Error("quota"));
+    282|     try {
+    283|       await expect(executeChatRun(run, connector.apiKey, new AbortCont…
+       |                                                                                                                                     ^
+    284|       expect((await db.agentRuns.get(run.id))?.status).toBe("failed");
+    285|       expect((await db.chatMessages.get(run.assistantMessageId))?.erro…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/29]⎯
+
+ FAIL  tests/audioOutputEvidence.test.ts > current local sound output evidence > surfaces storage failures during placement validation instead of certifying a partial inventory
+AssertionError: promise resolved "{ …(15) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "checkedAt": undefined,
++   "error": undefined,
++   "id": "agj_992593ce-bbd0-4ac4-8399-eee147ee3e82",
++   "inspectedAt": "2026-10-11T16:43:23.097Z",
++   "note": "这是该任务的状态快照；source 表示原始提交来源，查询不代表本轮新提交。服务商状态以 taskObservations 的查询时间为准；历史 lastVerified 不代表当前状态。远端完成、本地保存与实际试听是不同阶段，未试听。",
++   "outputs": {
++     "allAvailable": true,
++     "availableCount": 1,
++     "included": 1,
++     "note": "仅核对当前作品归属、音频文件与保存时的解码元信息；未重新解码、播放或试听。数量只覆盖已列出的结果，不能证明远端所有任务完成。selected 表示稿件选用，timelineClipCount 表示有效时间线片段，均不代表可听效果已验收。",
++     "omitted": 0,
++     "results": [
++       {
++         "availability": "available",
++         "available": true,
++         "key": "agj_992593ce-bbd0-4ac4-8399-eee147ee3e82:speech",
++         "media": {
++           "channels": 2,
++           "durationSec": 2,
++           "mimeType": "audio/wav",
++           "sampleRate": 48000,
++           "size": 4,
++         },
++         "mediaId": "med_4253d967-5cae-45c5-b618-a67eb04238c1",
++         "outputFingerprint": "sha256-v1:7f06323efe52e7151974ee0b9e360d874276a247c682f35997608baad580192e",
++         "outputRevision": 1,
++         "placementRevision": "sha256-v1:86ecbaf9a3276a561e67d9552ae0cb62ff70aedce589037668f011b68f5c254d",
++         "selected": false,
++         "takeId": "atk_a35ec641-cd28-4c55-9dae-2bab272d81a6",
++         "timelineClipCount": 1,
++         "timelineClipIds": [
++           "acl_8be6db69-d4be-49df-8c25-4acc23f51867",
++         ],
++         "title": "你好",
++         "workId": undefined,
++       },
++     ],
++     "selectedCount": 0,
++     "timelineClipCount": 1,
++     "total": 1,
++   },
++   "projectId": "prj_6f4710f5-520e-40eb-90df-55567eb7878e",
++   "results": [
++     {
++       "deleted": undefined,
++       "error": undefined,
++       "mediaId": "med_4253d967-5cae-45c5-b618-a67eb04238c1",
++       "takeId": "atk_a35ec641-cd28-4c55-9dae-2bab272d81a6",
++       "title": "你好",
++       "workId": undefined,
++     },
++   ],
++   "revision": 6,
++   "source": {
++     "kind": "manual",
++   },
++   "status": "saved",
++   "statusLabel": "已保存到项目",
++   "taskCounts": {
++     "completed": 0,
++     "failed": 0,
++     "pending": 0,
++     "processing": 0,
++     "queryFailed": 0,
++     "unknown": 0,
++     "unobserved": 0,
++   },
++   "taskIds": [],
++   "taskObservations": [],
+  }
+
+ ❯ tests/audioOutputEvidence.test.ts:83:32
+     81|     await addAudioClip(f.project.id, { chapterId: f.chapter!.id, track…
+     82|     const readTrack = vi.spyOn(db.audioTracks, "get").mockRejectedValu…
+     83|     try { await expect(f.read()).rejects.toThrow("storage unavailable"…
+       |                                ^
+     84|     finally { readTrack.mockRestore(); }
+     85|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/29]⎯
+
+ FAIL  tests/connectorMigration.test.ts > deduplicates legacy connections without changing historical IDs, and rotates/revokes every alias
+TypeError: Cannot read properties of undefined (reading 'primKey')
+ ❯ tests/connectorMigration.test.ts:8:46
+      6| it("deduplicates legacy connections without changing historical IDs, a…
+      7|   const schema = Object.fromEntries(db.tables.filter(table => table.na…
+      8|     .map(table => [table.name, [table.schema.primKey.src, ...table.sch…
+       |                                              ^
+      9|   schema.connectors = "id, definitionId, updatedAt";
+     10|   await db.delete();
+ ❯ tests/connectorMigration.test.ts:8:6
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/29]⎯
+
+ FAIL  tests/d02CascadeTransactions.test.ts > extracted lifecycle commands > rolls back a late project delete and preserves independent sources on success
+TypeError: db.projects.hook is not a function
+ ❯ runProjectCascadeBoundary tests/fixtures/d02/harness.ts:60:17
+     58|         throw new Error("D02 late project delete fault");
+     59|     };
+     60|     db.projects.hook("deleting", fail);
+       |                 ^
+     61|     try {await rejected(() => deleteProject(project.id), "D02 late pro…
+     62|     finally {db.projects.hook("deleting").unsubscribe(fail); db.projec…
+ ❯ tests/d02CascadeTransactions.test.ts:6:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/29]⎯
+
+ FAIL  tests/d02CascadeTransactions.test.ts > extracted lifecycle commands > rolls back thread orphan cleanup and retains production/material media on success
+TypeError: db.media.hook is not a function
+ ❯ runThreadCascadeBoundary tests/fixtures/d02/harness.ts:111:14
+    109|         throw new Error("D02 orphan cleanup fault");
+    110|     };
+    111|     db.media.hook("deleting", fail);
+       |              ^
+    112|     try {await rejected(() => deleteChatThread(thread.id), "D02 orphan…
+    113|     finally {db.media.hook("deleting").unsubscribe(fail); db.media.del…
+ ❯ tests/d02CascadeTransactions.test.ts:9:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/29]⎯
+
+ FAIL  tests/d02CascadeTransactions.test.ts > extracted lifecycle commands > restores a released copy when its final event fails, then releases it on retry
+TypeError: db.materialEvents.hook is not a function
+ ❯ runMaterialReleaseBoundary tests/fixtures/d02/harness.ts:143:23
+    141|         throw new Error("D02 release event fault");
+    142|     };
+    143|     db.materialEvents.hook("creating", fail);
+       |                       ^
+    144|     try {await rejected(() => releaseMaterialUse(use.id), "D02 release…
+    145|     finally {db.materialEvents.hook("creating").unsubscribe(fail); db.…
+ ❯ tests/d02CascadeTransactions.test.ts:12:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/29]⎯
+
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > create uses exactly three actual IndexedDB stores
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > update uses exactly three actual IndexedDB stores
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > status uses exactly three actual IndexedDB stores
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > replace uses exactly three actual IndexedDB stores
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > delete uses exactly three actual IndexedDB stores
+TypeError: db.projects.hook is not a function
+ ❯ tests/e04MemoryTransactions.test.ts:50:17
+     48|       return row;
+     49|     };
+     50|     db.projects.hook("reading", observe);
+       |                 ^
+     51|     try { await run(name, s); }
+     52|     finally { db.projects.hook("reading").unsubscribe(observe); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/29]⎯
+
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > create rolls back after a real history insertion
+AssertionError: promise resolved "{ memory: { …(14) }, duplicate: false }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "duplicate": false,
++   "memory": {
++     "applicability": "Flashback scenes",
++     "body": "Replacement",
++     "category": "convention",
++     "createdAt": "2026-10-11T16:43:23.035Z",
++     "id": "pm_f23e9464-9945-474c-b781-0d89cd71aaa4",
++     "projectId": "prj_4d2da006-ae62-48d4-ae1d-f92c82a8913f",
++     "reviewedAt": "2026-10-11T16:43:23.035Z",
++     "revision": 1,
++     "source": {
++       "kind": "manual",
++     },
++     "status": "active",
++     "tags": [
++       "visual",
++     ],
++     "title": "Memory",
++     "topicKey": "visual",
++     "updatedAt": "2026-10-11T16:43:23.035Z",
++   },
+  }
+
+ ❯ tests/e04MemoryTransactions.test.ts:98:36
+     96|       throw new Error("fault after actual history insertion");
+     97|     }));
+     98|     try { await expect(run(name, s)).rejects.toThrow("fault after actu…
+       |                                    ^
+     99|     finally { spy.mockRestore(); }
+    100|     expect(observed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/29]⎯
+
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > update rolls back after a real history insertion
+AssertionError: promise resolved "{ category: 'convention', …(13) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "applicability": "Flashback scenes",
++   "body": "Revised",
++   "category": "convention",
++   "createdAt": "2026-10-11T16:43:23.049Z",
++   "id": "pm_dd60561f-e273-47a6-ada8-bdba2a2d0aa6",
++   "projectId": "prj_9a5d9705-05ce-4fb7-8bec-e077154c1d1d",
++   "reviewedAt": "2026-10-11T16:43:23.052Z",
++   "revision": 2,
++   "source": {
++     "kind": "manual",
++   },
++   "status": "active",
++   "tags": [
++     "visual",
++   ],
++   "title": "Memory",
++   "topicKey": "visual",
++   "updatedAt": "2026-10-11T16:43:23.052Z",
+  }
+
+ ❯ tests/e04MemoryTransactions.test.ts:98:36
+     96|       throw new Error("fault after actual history insertion");
+     97|     }));
+     98|     try { await expect(run(name, s)).rejects.toThrow("fault after actu…
+       |                                    ^
+     99|     finally { spy.mockRestore(); }
+    100|     expect(observed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/29]⎯
+
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > status rolls back after a real history insertion
+AssertionError: promise resolved "{ category: 'convention', …(14) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "applicability": "Flashback scenes",
++   "body": "Warm palette",
++   "category": "convention",
++   "createdAt": "2026-10-11T16:43:23.060Z",
++   "id": "pm_6e56e195-2270-4b72-be90-457189dea710",
++   "projectId": "prj_7bb9cda5-2f79-4e59-bf38-b0a7638e06f3",
++   "reviewedAt": "2026-10-11T16:43:23.060Z",
++   "revision": 2,
++   "source": {
++     "kind": "manual",
++   },
++   "status": "disabled",
++   "supersededBy": undefined,
++   "tags": [
++     "visual",
++   ],
++   "title": "Memory",
++   "topicKey": "visual",
++   "updatedAt": "2026-10-11T16:43:23.062Z",
+  }
+
+ ❯ tests/e04MemoryTransactions.test.ts:98:36
+     96|       throw new Error("fault after actual history insertion");
+     97|     }));
+     98|     try { await expect(run(name, s)).rejects.toThrow("fault after actu…
+       |                                    ^
+     99|     finally { spy.mockRestore(); }
+    100|     expect(observed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/29]⎯
+
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > create rolls back the superseded row/history when later replacement persistence fails
+AssertionError: promise resolved "{ memory: { …(14) }, duplicate: false }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "duplicate": false,
++   "memory": {
++     "applicability": "Flashback scenes",
++     "body": "Replacement",
++     "category": "convention",
++     "createdAt": "2026-10-11T16:43:23.073Z",
++     "id": "pm_e44d9059-3f56-4aa1-814f-d9c4f6f9f0de",
++     "projectId": "prj_ec465fbd-4155-4208-9a99-523abcca8303",
++     "reviewedAt": "2026-10-11T16:43:23.073Z",
++     "revision": 1,
++     "source": {
++       "kind": "manual",
++     },
++     "status": "active",
++     "tags": [
++       "visual",
++     ],
++     "title": "Memory",
++     "topicKey": "visual",
++     "updatedAt": "2026-10-11T16:43:23.073Z",
++   },
+  }
+
+ ❯ tests/e04MemoryTransactions.test.ts:121:36
+    119|       return original(row);
+    120|     }));
+    121|     try { await expect(run(name, s)).rejects.toThrow("fault at later r…
+       |                                    ^
+    122|     finally { spy.mockRestore(); }
+    123|     expect(observed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/29]⎯
+
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > replace rolls back the superseded row/history when later replacement persistence fails
+AssertionError: promise resolved "{ category: 'convention', …(14) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "applicability": "Flashback scenes",
++   "body": "Cool palette",
++   "category": "convention",
++   "createdAt": "2026-10-11T16:43:23.084Z",
++   "id": "pm_246449c5-a3b4-40e7-bd66-9f20b8622ef3",
++   "projectId": "prj_9556362c-a2b5-4597-9409-eaccaee9a9cd",
++   "reviewedAt": "2026-10-11T16:43:23.087Z",
++   "revision": 2,
++   "source": {
++     "kind": "manual",
++   },
++   "status": "active",
++   "supersededBy": undefined,
++   "tags": [
++     "visual",
++   ],
++   "title": "Memory",
++   "topicKey": "other",
++   "updatedAt": "2026-10-11T16:43:23.087Z",
+  }
+
+ ❯ tests/e04MemoryTransactions.test.ts:121:36
+    119|       return original(row);
+    120|     }));
+    121|     try { await expect(run(name, s)).rejects.toThrow("fault at later r…
+       |                                    ^
+    122|     finally { spy.mockRestore(); }
+    123|     expect(observed).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/29]⎯
+
+ FAIL  tests/e04MemoryTransactions.test.ts > E04 manual memory transaction closure > delete rolls back the actual current-row deletion on a later history delete fault
+TypeError: db.projectMemoryVersions.hook is not a function
+ ❯ tests/e04MemoryTransactions.test.ts:142:59
+    140|     }));
+    141|     try { await expect(run("delete", s)).rejects.toThrow("history dele…
+    142|     finally { spy.mockRestore(); db.projectMemoryVersions.hook("deleti…
+       |                                                           ^
+    143|     expect(observed).toBe(true);
+    144|     expect(await snapshot()).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/29]⎯
+
+ FAIL  tests/materialIntegration.test.ts > IP and material integration with legacy projects > upgrades v21 with no IP/material tables without changing existing projects
+TypeError: Cannot read properties of undefined (reading 'primKey')
+ ❯ tests/materialIntegration.test.ts:19:50
+
+ ❯ tests/materialIntegration.test.ts:19:8
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/29]⎯
+
+ FAIL  tests/materialLibrary.test.ts > material snapshots and references > rolls back cloned media and project changes when adoption persistence fails
+AssertionError: promise resolved "{ …(9) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": "2026-10-11T16:43:22.396Z",
++   "id": "mus_4ad0f23e-d8bb-428f-8fb4-40ecc9831ac0",
++   "materialId": "mat_8db0ffa5-1e70-4646-9913-fbab75a95fea",
++   "mediaIds": [
++     "med_5ff30def-54b5-4c9e-9fb4-1f8c623707e6",
++   ],
++   "projectId": "prj_da37a56e-18a7-4da6-850b-54279182b632",
++   "revision": 1,
++   "targetId": "med_5ff30def-54b5-4c9e-9fb4-1f8c623707e6",
++   "targetKind": "media",
++   "updatedAt": "2026-10-11T16:43:22.396Z",
+  }
+
+ ❯ tests/materialLibrary.test.ts:137:71
+    135|     const project = await createProject('Target');
+    136|     const failure = vi.spyOn(db.materialUses, 'add').mockRejectedValue…
+    137|     try { await expect(adoptMaterialInProject(material.id, project.id)…
+       |                                                                       ^
+    138|     expect(await db.media.count()).toBe(0);
+    139|     expect(await db.materialUses.count()).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/29]⎯
+
+ FAIL  tests/mimoRuntime.test.ts > MiMo durable speech generation > freezes clone bytes and blocks a changed reference before any POST
+StorageError: Transaction is closed
+ ❯ BrowserTransaction.assertOpen src/lib/storage/browser.ts:21:65
+     19|     constructor(private readonly tx:Transaction,readonly mode:"r"|"rw"…
+     20|     close():void {this.open=false;}
+     21|     assertOpen():void {if (!this.open || !this.tx.active) throw new St…
+       |                                                                 ^
+     22|     async get(table:TableName,keys:readonly string[]):Promise<Array<ob…
+     23|         this.assertOpen();
+ ❯ TableHandle.access src/lib/storage/store.ts?fixture-original:130:29
+ ❯ TableHandle.save src/lib/storage/store.ts?fixture-original:85:21
+ ❯ TableHandle.add src/lib/storage/store.ts?fixture-original:95:45
+ ❯ src/db/audioGeneration.ts:60:38
+ ❯ Transaction.<anonymous> src/lib/storage/browser.ts:61:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/29]⎯
+
+ FAIL  tests/productStorage.test.ts > fixed shared product storage ownership > opens only a fresh desktop database and keeps one owner despite later profile mutation
+TypeError: { mockRestore: [Function mockRestore] } is not a spy or a call to a spy!
+ ❯ tests/productStorage.test.ts:84:31
+     82|             const lateWrite = failStoreTableOnce(db, "episodes", "add"…
+     83|             await expect(repository.createProject("Must roll back")).r…
+     84|             expect(lateWrite).toHaveBeenCalled();
+       |                               ^
+     85|             expect((await repository.projects()).map(row => row.name))…
+     86|             expect(browserRead).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/29]⎯
+
+ FAIL  tests/productStorageQueries.test.ts > runtime-independent shared queries and media > resolves existing internal Blob previews in Tauri and revokes the same URL on cleanup
+AssertionError: expected { url: 'blob:owned-preview', …(3) } to deeply equal { url: 'blob:owned-preview', …(2) }
+
+- Expected
++ Received
+
+  {
+    "kind": "image",
+    "mimeType": "image/png",
++   "onError": [Function onError],
+    "url": "blob:owned-preview",
+  }
+
+ ❯ tests/productStorageQueries.test.ts:72:51
+     70|         render(() => useMedia(record.id));
+     71|         const cleanup = host.effects[0]() as () => void;
+     72|         expect(render(() => useMedia(record.id))).toEqual({url: "blob:…
+       |                                                   ^
+     73|         expect(createUrl.mock.calls[0][0]).toMatchObject({size: 6, typ…
+     74|         cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/29]⎯
+
+ FAIL  tests/repoReliability.test.ts > episode filter ownership > migrates version-5 legacy filters within each episode without stale IDs
+TypeError: Cannot read properties of undefined (reading 'primKey')
+ ❯ tests/repoReliability.test.ts:151:91
+    149|     episodes.forEach((episode) => { delete episode.shotFilters; });
+    150|     project.shotSettings.filters = { statuses: ["ready"], gaps: ["miss…
+    151|     const stores = Object.fromEntries(db.tables.map((table) => [table.…
+       |                                                                                           ^
+    152|     await db.delete();
+    153|     const legacy = new Dexie(db.name);
+ ❯ tests/repoReliability.test.ts:151:49
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/29]⎯
+
+ FAIL  tests/shotDeleteUndo.test.ts > episode shot deletion snapshots > captures media under the same production transaction that deletes the shot
+TypeError: db.media.hook is not a function
+ ❯ tests/shotDeleteUndo.test.ts:98:14
+     96|     };
+     97|     const onDelete = () => { deleteTransaction = rootTransaction(Dexie…
+     98|     db.media.hook("reading", onRead);
+       |              ^
+     99|     db.shots.hook("deleting", onDelete);
+    100|     try {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/29]⎯
+
+ FAIL  tests/shotDeleteUndo.test.ts > episode shot deletion snapshots > returns no successful snapshot and rolls back every change on second delete failure
+TypeError: db.shots.hook is not a function
+ ❯ tests/shotDeleteUndo.test.ts:191:49
+    189|       const failDelete = (key: unknown) => { if (key === shots[1].id) …
+    190|       const failWrite = () => { throw new Error("delete storage failur…
+    191|       if (failure === "second delete") db.shots.hook("deleting", failD…
+       |                                                 ^
+    192|       if (failure === "reindex") db.shots.hook("updating", failWrite);
+    193|       if (failure === "project touch") db.projects.hook("updating", fa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/29]⎯
+
+ FAIL  tests/shotDeleteUndo.test.ts > episode shot deletion snapshots > returns no successful snapshot and rolls back every change on reindex failure
+TypeError: db.shots.hook is not a function
+ ❯ tests/shotDeleteUndo.test.ts:192:43
+    190|       const failWrite = () => { throw new Error("delete storage failur…
+    191|       if (failure === "second delete") db.shots.hook("deleting", failD…
+    192|       if (failure === "reindex") db.shots.hook("updating", failWrite);
+       |                                           ^
+    193|       if (failure === "project touch") db.projects.hook("updating", fa…
+    194|       if (failure === "media cleanup") db.media.hook("deleting", failW…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/29]⎯
+
+ FAIL  tests/shotDeleteUndo.test.ts > episode shot deletion snapshots > returns no successful snapshot and rolls back every change on project touch failure
+TypeError: db.projects.hook is not a function
+ ❯ tests/shotDeleteUndo.test.ts:193:52
+    191|       if (failure === "second delete") db.shots.hook("deleting", failD…
+    192|       if (failure === "reindex") db.shots.hook("updating", failWrite);
+    193|       if (failure === "project touch") db.projects.hook("updating", fa…
+       |                                                    ^
+    194|       if (failure === "media cleanup") db.media.hook("deleting", failW…
+    195|       let resolved = false;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/29]⎯
+
+ FAIL  tests/shotDeleteUndo.test.ts > episode shot deletion snapshots > returns no successful snapshot and rolls back every change on media cleanup failure
+TypeError: db.media.hook is not a function
+ ❯ tests/shotDeleteUndo.test.ts:194:49
+    192|       if (failure === "reindex") db.shots.hook("updating", failWrite);
+    193|       if (failure === "project touch") db.projects.hook("updating", fa…
+    194|       if (failure === "media cleanup") db.media.hook("deleting", failW…
+       |                                                 ^
+    195|       let resolved = false;
+    196|       try {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/29]⎯
+
+ FAIL  tests/useShotMedia.test.ts > shot media query identity > does not expose retained media from a previous result collection while the next query loads
+TypeError: Cannot read properties of null (reading 'useRef')
+ ❯ process.env.NODE_ENV.exports.useRef node_modules/.pnpm/react@19.3.0/node_modules/react/cjs/react.development.js:1306:33
+ ❯ useProductQueryState src/lib/storage/hooks.ts:8:20
+      6|  * The query receives its explicit readonly snapshot, including nested…
+      7| export function useProductQueryState<T>(query:(tx:StoreTx)=>Promise<T>…
+      8|     const queryRef=useRef(query);
+       |                    ^
+      9|     const dependencyRef=useRef<{values:DependencyList;token:object}>({…
+     10|     if (dependencies.length !== dependencyRef.current.values.length ||…
+ ❯ useProductQuery src/lib/storage/hooks.ts:28:17
+ ❯ Module.useShotMedia src/lib/useShotMedia.ts:12:20
+ ❯ tests/useShotMedia.test.ts:16:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/29]⎯
+
+
+ Test Files  13 failed | 206 passed | 1 skipped (220)
+      Tests  29 failed | 3775 passed | 3 skipped (3807)
+   Start at  00:43:21
+   Duration  23.58s (tests 75%, setup 9%, transform 8%, import 8%)
+
+    Isolate  220 workers spawned · ~71ms startup each (spawn + environment, per file)
+             at least ~1.68s faster with isolate: false — reuses workers across files instead of one per file
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -1,0 +1,41 @@
+{"test":"source-before","identity":{"src/db/agentGenerationBatches.ts":"8a9be0009e52ba76f4b3ec41814275bb09f38143dea0f5a8dad8335e22b14595","src/lib/agent/generationRuntime.ts":"31430f3b9e72193f6a81a605651661dfaa7fd4b32592c31af45b5850b123ec2e","src/lib/agent/businessTools.ts":"ffec20f2d6117ce9ac302b798ce132cd01aeaf631bb61341578ff3fa23c7fa85","src/lib/agent/libraryToolHelpers.ts":"4accd6c999c6ee9d8732dd4bec006e0c58e6536306b7d56a7a9c5d189cb3379a","src/lib/agent/audioGenerationTools.ts":"ee8a4f85c07e68c2b037a73b66011e8010ed6eb3512d4ed814aa60a719b95351"}}
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/lib/references/import.ts:21:58:
+      21 │ ...r(new URL("./docx.worker.ts", import.meta.url), {type: "module"});
+         ╵                                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/lib/references/pdf.ts:6:19:
+      6 │ const cmapAssets = import.meta.glob<string>("../../../node_modules/...
+        ╵                    ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/lib/references/pdf.ts:11:19:
+      11 │ const fontAssets = import.meta.glob<string>("../../../node_modules...
+         ╵                    ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{"test":"wrapper-unknown-commit","scenario":"batch","commits":1,"classifiedRollback":false,"preservedUnknown":true,"errorClass":"UnknownCommitError","causeClass":"Error","network":0}
+{"test":"durable-reopen","scenario":"batch","projectName":"review project","callStatus":"completed","batches":1,"items":1,"generationJobs":[],"audioJobs":[],"network":0}
+{"test":"cleanup","scenario":"batch","result":"disposable-workspace-removed"}
+{"test":"wrapper-unknown-commit","scenario":"claim","commits":1,"classifiedRollback":true,"preservedUnknown":false,"errorClass":"AtomicToolRollbackError","network":0}
+{"test":"durable-reopen","scenario":"claim","projectName":"review project","callStatus":"running","batches":0,"items":0,"generationJobs":[{"status":"submitting"}],"audioJobs":[],"network":0}
+{"test":"cleanup","scenario":"claim","result":"disposable-workspace-removed"}
+{"test":"wrapper-unknown-commit","scenario":"business-flush","commits":1,"classifiedRollback":false,"preservedUnknown":true,"errorClass":"UnknownCommitError","causeClass":"Error","network":0}
+{"test":"durable-reopen","scenario":"business-flush","projectName":"review draft actually saved","callStatus":"running","batches":0,"items":0,"generationJobs":[],"audioJobs":[],"network":0}
+{"test":"cleanup","scenario":"business-flush","result":"disposable-workspace-removed"}
+{"test":"wrapper-unknown-commit","scenario":"library-flush","commits":1,"classifiedRollback":false,"preservedUnknown":true,"errorClass":"UnknownCommitError","causeClass":"Error","network":0}
+{"test":"durable-reopen","scenario":"library-flush","projectName":"review draft actually saved","callStatus":"running","batches":0,"items":0,"generationJobs":[],"audioJobs":[],"network":0}
+{"test":"cleanup","scenario":"library-flush","result":"disposable-workspace-removed"}
+{"test":"wrapper-unknown-commit","scenario":"audio-prepare","commits":1,"classifiedRollback":false,"preservedUnknown":true,"errorClass":"UnknownCommitError","causeClass":"Error","network":0}
+{"test":"durable-reopen","scenario":"audio-prepare","projectName":"review audio","callStatus":"running","batches":0,"items":0,"generationJobs":[],"audioJobs":[{"status":"prepared","intentId":"agent-audio:call"}],"network":0}
+{"test":"cleanup","scenario":"audio-prepare","result":"disposable-workspace-removed"}
+{"test":"source-after","identity":{"src/db/agentGenerationBatches.ts":"8a9be0009e52ba76f4b3ec41814275bb09f38143dea0f5a8dad8335e22b14595","src/lib/agent/generationRuntime.ts":"31430f3b9e72193f6a81a605651661dfaa7fd4b32592c31af45b5850b123ec2e","src/lib/agent/businessTools.ts":"ffec20f2d6117ce9ac302b798ce132cd01aeaf631bb61341578ff3fa23c7fa85","src/lib/agent/libraryToolHelpers.ts":"4accd6c999c6ee9d8732dd4bec006e0c58e6536306b7d56a7a9c5d189cb3379a","src/lib/agent/audioGenerationTools.ts":"ee8a4f85c07e68c2b037a73b66011e8010ed6eb3512d4ed814aa60a719b95351"},"unchanged":true}

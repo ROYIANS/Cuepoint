@@ -1,0 +1,1513 @@
+{
+  "status": "draft location grouping, not worker authorization; root assigns exact files when shared API is ready",
+  "groups": {
+    "database-command-owners": [
+      {
+        "file": "src/db/agentContextPreview.ts",
+        "transactionLines": [
+          83
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agents,chatThreads,chatMessages,agentRuns,contextCompactions,agentTasks,agentTaskRecords,projectMemories,projectReferences,referenceChunks,media,projects",
+        "references": 19
+      },
+      {
+        "file": "src/db/agentFinalReview.ts",
+        "transactionLines": [
+          28,
+          73
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "chatThreads,chatMessages,projects,agentTasks,agentRuns",
+        "references": 16
+      },
+      {
+        "file": "src/db/agentFinishingCheck.ts",
+        "transactionLines": [
+          42
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,chatThreads,chatMessages,projects,agentTasks,agentToolCalls",
+        "references": 10
+      },
+      {
+        "file": "src/db/agentGeneration.ts",
+        "transactionLines": [
+          10,
+          32,
+          54
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentGenerationJobs,agentRuns,agentToolCalls,chatThreads,projects,agentGenerationBatches,media",
+        "references": 24
+      },
+      {
+        "file": "src/db/agentGenerationBatches.ts",
+        "transactionLines": [
+          73,
+          187,
+          215,
+          251,
+          274,
+          304,
+          338,
+          351,
+          380,
+          454,
+          500
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "media,agentGenerationBatches,chatThreads,agentRuns,agentToolCalls,projects,agentTasks,agentGenerationBatchItems,agentGenerationJobs",
+        "references": 55
+      },
+      {
+        "file": "src/db/agentGenerationTarget.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "shots,characters,scenes,props,styles,episodes,projects",
+        "references": 7
+      },
+      {
+        "file": "src/db/agentProjectCreation.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,chatThreads,agentToolCalls,chatMessages,agentGenerationJobs,agentGenerationBatches,audioGenerationJobs,projects",
+        "references": 13
+      },
+      {
+        "file": "src/db/agentRuns.ts",
+        "transactionLines": [
+          68,
+          206,
+          218,
+          239,
+          271
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "chatThreads,projects,agentTaskWrapups,agentRuns,chatMessages,agentTasks,contextCompactions,agentToolCalls",
+        "references": 34
+      },
+      {
+        "file": "src/db/agentSettings.ts",
+        "transactionLines": [
+          10,
+          59
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agents",
+        "references": 6
+      },
+      {
+        "file": "src/db/agentTaskGuards.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentTasks,chatThreads,projects,agentTaskWrapups,agentRuns",
+        "references": 5
+      },
+      {
+        "file": "src/db/agentTaskRecords.ts",
+        "transactionLines": [
+          126,
+          170
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentTaskRecords,agentTaskRecordVersions,chatMessages,agentToolCalls,agentRuns,agentTasks,audioGenerationJobs,agentGenerationJobs",
+        "references": 17
+      },
+      {
+        "file": "src/db/agentTaskWrapups.ts",
+        "transactionLines": [
+          42,
+          113,
+          156,
+          172,
+          195,
+          212
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentTasks,chatThreads,projects,agentRuns,agentTaskWrapups,agentTaskWrapupVersions,audioGenerationJobs,audioGenerationBatches,agentGenerationBatches,agentGenerationBatchItems,agentGenerationJobs,agentToolCalls",
+        "references": 35
+      },
+      {
+        "file": "src/db/agentTasks.ts",
+        "transactionLines": [
+          37,
+          66,
+          82,
+          103,
+          116,
+          137
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "chatThreads,projects,agentTasks,agentRuns,chatMessages",
+        "references": 20
+      },
+      {
+        "file": "src/db/agentToolRecovery.ts",
+        "transactionLines": [
+          16,
+          70
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentGenerationBatchItems,agentGenerationJobs,agentRuns,agentToolCalls,agentGenerationBatches",
+        "references": 14
+      },
+      {
+        "file": "src/db/agentTools.ts",
+        "transactionLines": [
+          51,
+          72,
+          106,
+          154,
+          165,
+          175,
+          191,
+          216,
+          261,
+          289,
+          314,
+          330,
+          348,
+          392,
+          404
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,chatThreads,chatMessages,projects,agentToolCalls,agentTasks,agentGenerationJobs,agentTaskRecords,agentTaskRecordVersions,agentGenerationBatches,agentGenerationBatchItems",
+        "references": 71
+      },
+      {
+        "file": "src/db/assetReuse.ts",
+        "transactionLines": [
+          18,
+          61
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "materialUses,characters,scenes,props,styles,media,materialEvents,projects",
+        "references": 34
+      },
+      {
+        "file": "src/db/assets.ts",
+        "transactionLines": [
+          29,
+          44,
+          60,
+          75,
+          106,
+          121,
+          137,
+          150,
+          177,
+          192,
+          208,
+          221,
+          235,
+          250,
+          266,
+          279
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "characters,shots,episodes,scenes,props,styles,projects",
+        "references": 56
+      },
+      {
+        "file": "src/db/audio.ts",
+        "transactionLines": [
+          111,
+          142,
+          200,
+          223,
+          250,
+          278
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "audioChapters,audioSpeakers,audioTakes,audioSegments,audioTracks,media,audioClips,audioExports,audioGenerationBatches,audioGenerationBatchItems,audioArrangementProposals,musicWorks",
+        "references": 68
+      },
+      {
+        "file": "src/db/audioArrangement.ts",
+        "transactionLines": [
+          33,
+          52,
+          66,
+          75,
+          87,
+          121
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "audioChapters,audioSegments,audioTakes,audioTracks,audioClips,media,audioArrangementProposals",
+        "references": 21
+      },
+      {
+        "file": "src/db/audioGeneration.ts",
+        "transactionLines": [
+          40,
+          64,
+          98
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "audioSegments,musicDrafts,audioGenerationJobs,media,audioTakes,musicWorks",
+        "references": 16
+      },
+      {
+        "file": "src/db/audioGenerationBatches.ts",
+        "transactionLines": [
+          43,
+          78,
+          103,
+          114,
+          126,
+          149,
+          165,
+          180,
+          190
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "audioGenerationBatches,audioChapters,agentRuns,chatThreads,agentToolCalls,agentTasks,chatMessages,audioGenerationBatchItems,audioGenerationJobs",
+        "references": 35
+      },
+      {
+        "file": "src/db/audioShared.ts",
+        "transactionLines": [
+          52
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "audioChapters,audioSpeakers,audioSegments,audioTakes,audioTracks,audioClips,audioExports,musicDrafts,musicWorks,audioGenerationJobs,audioGenerationBatches,audioGenerationBatchItems,audioArrangementProposals,projects,media",
+        "references": 20
+      },
+      {
+        "file": "src/db/cascadeCommands.ts",
+        "transactionLines": [
+          10,
+          32,
+          89
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,libraryMaterials,materialEvents,projectIpLinks,materialUses,projectReferences,referenceChunks,projectMemories,projectMemoryVersions,characters,scenes,props,styles,episodes,shots,media,productionProposals,agentGenerationJobs,agentGenerationBatches,agentGenerationBatchItems,audioGenerationBatches,audioGenerationBatchItems,audioGenerationJobs,contextCompactions,agentTasks,agentTaskWrapups,agentTaskWrapupVersions,agentTaskRecords,agentTaskRecordVersions,agentToolCalls,agentRuns,chatMessages,chatThreads",
+        "references": 70
+      },
+      {
+        "file": "src/db/chat.ts",
+        "transactionLines": [
+          34,
+          45,
+          85,
+          97
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,chatThreads,chatMessages,agentRuns,agentTasks",
+        "references": 17
+      },
+      {
+        "file": "src/db/connectors.ts",
+        "transactionLines": [
+          31,
+          57
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "connectors,connectorAliases",
+        "references": 10
+      },
+      {
+        "file": "src/db/contextSettings.ts",
+        "transactionLines": [
+          12,
+          33,
+          40
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "chatThreads,agents",
+        "references": 7
+      },
+      {
+        "file": "src/db/episodes.ts",
+        "transactionLines": [
+          39,
+          53,
+          70,
+          84,
+          110,
+          134,
+          161,
+          178,
+          221,
+          252,
+          286,
+          342,
+          364,
+          384
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "episodes,projects,shots,media",
+        "references": 65
+      },
+      {
+        "file": "src/db/generationPreferences.ts",
+        "transactionLines": [
+          15,
+          31
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agents,connectors",
+        "references": 6
+      },
+      {
+        "file": "src/db/ipProfiles.ts",
+        "transactionLines": [
+          42,
+          52,
+          61
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "ipProfiles,projects,projectIpLinks",
+        "references": 13
+      },
+      {
+        "file": "src/db/materials.ts",
+        "transactionLines": [
+          175,
+          179,
+          200,
+          212,
+          220,
+          240,
+          247,
+          259,
+          349,
+          364
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,ipProfiles,projectIpLinks,libraryMaterials,materialVersions,materialUses,materialEvents,media,characters,scenes,props,styles",
+        "references": 60
+      },
+      {
+        "file": "src/db/media.ts",
+        "transactionLines": [
+          57,
+          95
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,characters,scenes,props,styles,shots,projectReferences,materialUses,media,audioTakes,musicWorks,audioExports,audioGenerationJobs,audioSpeakers,audioGenerationBatchItems,productionProposals,agentGenerationJobs,agentGenerationBatches,agentGenerationBatchItems",
+        "references": 37
+      },
+      {
+        "file": "src/db/memoryRetrieval.ts",
+        "transactionLines": [
+          20,
+          29,
+          46,
+          65
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,chatThreads,projectMemories",
+        "references": 18
+      },
+      {
+        "file": "src/db/music.ts",
+        "transactionLines": [
+          70,
+          82,
+          100
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "musicDrafts,media,musicWorks",
+        "references": 10
+      },
+      {
+        "file": "src/db/productionProposals.ts",
+        "transactionLines": [
+          99,
+          140
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,shots,characters,scenes,props,styles,episodes,media,productionProposals",
+        "references": 13
+      },
+      {
+        "file": "src/db/productionShared.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "projects,episodes,characters,scenes,props,styles,shots,media,materialUses,productionProposals,agentGenerationJobs,agentGenerationBatches,agentGenerationBatchItems,projectReferences,referenceChunks",
+        "references": 23
+      },
+      {
+        "file": "src/db/projectMemories.ts",
+        "transactionLines": [
+          158,
+          173,
+          186,
+          200,
+          245,
+          344,
+          356,
+          369,
+          403,
+          441,
+          486
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,projectMemories,projectMemoryVersions,agentTasks,chatThreads,agentTaskWrapups,agentTaskWrapupVersions",
+        "references": 32
+      },
+      {
+        "file": "src/db/projects.ts",
+        "transactionLines": [
+          35,
+          48,
+          76,
+          122,
+          141,
+          171,
+          186,
+          203,
+          225
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "ipProfiles,projectIpLinks,projects,episodes,styles,audioChapters,audioTracks,musicDrafts",
+        "references": 34
+      },
+      {
+        "file": "src/db/references.ts",
+        "transactionLines": [
+          16,
+          57,
+          79
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,projectReferences,media,referenceChunks",
+        "references": 15
+      },
+      {
+        "file": "src/db/searchConnections.ts",
+        "transactionLines": [
+          12
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "searchConnections,agents",
+        "references": 6
+      },
+      {
+        "file": "src/db/shots.ts",
+        "transactionLines": [
+          72,
+          136,
+          156,
+          216,
+          255,
+          291,
+          309,
+          339,
+          375,
+          388,
+          419
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "shots,episodes,projects,characters,media",
+        "references": 50
+      },
+      {
+        "file": "src/db/taskAudioGenerationEvidence.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentTasks,agentRuns,agentToolCalls,audioGenerationJobs",
+        "references": 4
+      },
+      {
+        "file": "src/db/taskGenerationEvidence.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentTasks,agentRuns,agentGenerationBatches,shots,episodes,projects,characters,scenes,props,styles,media,agentGenerationJobs",
+        "references": 13
+      }
+    ],
+    "agent-and-workflow-helpers": [
+      {
+        "file": "src/lib/agent/audioArrangementTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "audioClips,audioSegments",
+        "references": 2
+      },
+      {
+        "file": "src/lib/agent/audioBatchTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns",
+        "references": 1
+      },
+      {
+        "file": "src/lib/agent/audioGenerationTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "audioSpeakers,audioSegments,musicDrafts,projects,agentToolCalls,agentRuns,audioGenerationJobs,connectors",
+        "references": 15
+      },
+      {
+        "file": "src/lib/agent/audioProjectContext.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "audioChapters,audioSpeakers,audioSegments,audioTracks,audioTakes,audioClips,musicDrafts,musicWorks,audioGenerationJobs,projectIpLinks,ipProfiles",
+        "references": 11
+      },
+      {
+        "file": "src/lib/agent/audioTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "projects,audioChapters,audioSpeakers,audioSegments,audioTracks,audioClips",
+        "references": 7
+      },
+      {
+        "file": "src/lib/agent/businessStore.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "projects,episodes,characters,scenes,props,styles,media,shots,projectReferences,productionProposals,agentGenerationBatches,agentGenerationBatchItems,agentGenerationJobs",
+        "references": 30
+      },
+      {
+        "file": "src/lib/agent/businessTools.ts",
+        "transactionLines": [
+          223,
+          289,
+          557
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,audioChapters,audioTracks,musicDrafts,agentToolCalls,agentRuns,shots,agentGenerationJobs,media",
+        "references": 16
+      },
+      {
+        "file": "src/lib/agent/businessWriteReceipt.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "projects,styles,audioChapters,audioTracks,musicDrafts",
+        "references": 5
+      },
+      {
+        "file": "src/lib/agent/contextCompaction.ts",
+        "transactionLines": [
+          36,
+          119
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,contextCompactions,chatThreads,agentToolCalls",
+        "references": 13
+      },
+      {
+        "file": "src/lib/agent/finalReviewEvidence.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,agentToolCalls,chatThreads,chatMessages,agentTasks,projects,audioGenerationJobs,audioTakes,musicWorks,media,audioSegments,audioChapters,audioTracks,audioClips,agentGenerationJobs,shots,episodes,characters,scenes,props,styles,audioGenerationBatches,audioGenerationBatchItems",
+        "references": 30
+      },
+      {
+        "file": "src/lib/agent/generationBatchRuntime.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentGenerationJobs",
+        "references": 2
+      },
+      {
+        "file": "src/lib/agent/generationPreparation.ts",
+        "transactionLines": [
+          53
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,episodes,shots,characters,scenes,props,styles,media",
+        "references": 10
+      },
+      {
+        "file": "src/lib/agent/generationRuntime.ts",
+        "transactionLines": [
+          207
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentGenerationJobs,chatThreads,agentRuns,agentToolCalls,media",
+        "references": 12
+      },
+      {
+        "file": "src/lib/agent/generationTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "projects,connectors,agentGenerationJobs",
+        "references": 3
+      },
+      {
+        "file": "src/lib/agent/imageDiscovery.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "episodes,projectReferences,agentGenerationJobs,media,projects,agentRuns,agentToolCalls,chatThreads",
+        "references": 20
+      },
+      {
+        "file": "src/lib/agent/imageQueue.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,agentToolCalls",
+        "references": 2
+      },
+      {
+        "file": "src/lib/agent/ipTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "projectIpLinks,ipProfiles,projects",
+        "references": 12
+      },
+      {
+        "file": "src/lib/agent/libraryToolHelpers.ts",
+        "transactionLines": [
+          39,
+          102
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "",
+        "references": 2
+      },
+      {
+        "file": "src/lib/agent/materialContent.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "projectIpLinks,ipProfiles,projects,libraryMaterials,materialVersions",
+        "references": 5
+      },
+      {
+        "file": "src/lib/agent/materialImageInput.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,agentToolCalls",
+        "references": 2
+      },
+      {
+        "file": "src/lib/agent/materialTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "characters,scenes,props,styles,libraryMaterials,ipProfiles,projects,projectIpLinks,materialUses,media,materialVersions",
+        "references": 28
+      },
+      {
+        "file": "src/lib/agent/memoryContext.ts",
+        "transactionLines": [
+          9
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,agentToolCalls,agentTasks",
+        "references": 5
+      },
+      {
+        "file": "src/lib/agent/memoryTools.ts",
+        "transactionLines": [
+          74
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,agentToolCalls,agentTasks,chatThreads,agentTaskWrapups,agentTaskRecords,agentTaskWrapupVersions,agentTaskRecordVersions,chatMessages",
+        "references": 16
+      },
+      {
+        "file": "src/lib/agent/musicGenerationReview.ts",
+        "transactionLines": [
+          63,
+          68
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentToolCalls,agentRuns,chatThreads,chatMessages,audioGenerationJobs",
+        "references": 10
+      },
+      {
+        "file": "src/lib/agent/musicTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "musicDrafts,musicWorks",
+        "references": 6
+      },
+      {
+        "file": "src/lib/agent/projectContext.ts",
+        "transactionLines": [
+          13,
+          122
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,episodes,characters,scenes,props,styles,shots,ipProfiles,projectIpLinks,agentRuns,chatThreads,agentToolCalls",
+        "references": 26
+      },
+      {
+        "file": "src/lib/agent/projectScope.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,chatThreads,projects",
+        "references": 4
+      },
+      {
+        "file": "src/lib/agent/referenceContext.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "projects,media,projectReferences",
+        "references": 3
+      },
+      {
+        "file": "src/lib/agent/referenceEvidence.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "projectReferences,media",
+        "references": 2
+      },
+      {
+        "file": "src/lib/agent/referenceTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,media,projectReferences",
+        "references": 3
+      },
+      {
+        "file": "src/lib/agent/runChat.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentToolCalls,agentRuns,chatMessages",
+        "references": 7
+      },
+      {
+        "file": "src/lib/agent/runOwnership.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,agentGenerationBatches,agentToolCalls",
+        "references": 3
+      },
+      {
+        "file": "src/lib/agent/taskContext.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "chatThreads,projects,agentTasks",
+        "references": 3
+      },
+      {
+        "file": "src/lib/agent/taskTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,agentToolCalls,chatThreads,agentTasks,chatMessages,agentTaskRecords",
+        "references": 13
+      },
+      {
+        "file": "src/lib/agent/taskWrapup.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentTasks,chatThreads,agentTaskWrapups",
+        "references": 4
+      },
+      {
+        "file": "src/lib/agent/toolLoading.ts",
+        "transactionLines": [
+          118
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,agentToolCalls",
+        "references": 8
+      },
+      {
+        "file": "src/lib/agent/tools.ts",
+        "transactionLines": [
+          65
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,characters,scenes,props,styles",
+        "references": 12
+      },
+      {
+        "file": "src/lib/agent/webTools.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,agentToolCalls",
+        "references": 3
+      },
+      {
+        "file": "src/lib/agent/wrapupEvidence.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,chatMessages,agentToolCalls,agentTaskRecords,agentGenerationJobs,agentGenerationBatches,agentGenerationBatchItems,audioGenerationBatches,audioGenerationBatchItems,audioGenerationJobs,projects",
+        "references": 11
+      },
+      {
+        "file": "src/lib/audioGeneration/batchEvidence.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "audioGenerationBatches,audioGenerationBatchItems,agentRuns,agentToolCalls,chatThreads,agentTasks",
+        "references": 7
+      },
+      {
+        "file": "src/lib/audioGeneration/batchPreparation.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "audioChapters,audioSegments,audioSpeakers,connectors",
+        "references": 4
+      },
+      {
+        "file": "src/lib/audioGeneration/batchRuntime.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "audioGenerationJobs",
+        "references": 1
+      },
+      {
+        "file": "src/lib/audioGeneration/outputEvidence.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "projects,audioTakes,musicWorks,media,audioSegments,audioChapters,audioClips,audioTracks",
+        "references": 10
+      },
+      {
+        "file": "src/lib/audioGeneration/reference.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "media",
+        "references": 1
+      },
+      {
+        "file": "src/lib/audioGeneration/runtime.ts",
+        "transactionLines": [
+          102,
+          230,
+          371
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "audioGenerationJobs,audioSegments,musicDrafts,audioGenerationBatches,audioChapters,media",
+        "references": 14
+      }
+    ],
+    "binary-and-package-consumers": [
+      {
+        "file": "src/lib/ai/referenceWire.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,chatThreads,media",
+        "references": 3
+      },
+      {
+        "file": "src/lib/audio/buffers.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "media",
+        "references": 1
+      },
+      {
+        "file": "src/lib/audio/scriptImport.ts",
+        "transactionLines": [
+          16,
+          45
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "audioSegments",
+        "references": 5
+      },
+      {
+        "file": "src/lib/audioProjectPackage.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "audioGenerationBatches,audioGenerationJobs,audioGenerationBatchItems,audioArrangementProposals,audioChapters,audioSpeakers,audioSegments,audioTakes,audioTracks,audioClips,audioExports,musicDrafts,musicWorks,media",
+        "references": 23
+      },
+      {
+        "file": "src/lib/media.ts",
+        "transactionLines": [],
+        "liveQueryLines": [
+          22
+        ],
+        "tableReferences": "media",
+        "references": 1
+      },
+      {
+        "file": "src/lib/productionHandoff.ts",
+        "transactionLines": [
+          102
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,episodes,shots,characters,scenes,props,styles,media",
+        "references": 17
+      },
+      {
+        "file": "src/lib/projectPackage.ts",
+        "transactionLines": [
+          89,
+          302
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,characters,scenes,props,styles,episodes,shots,media,materialUses,projectMemories,projectMemoryVersions,projectReferences,referenceChunks",
+        "references": 51
+      },
+      {
+        "file": "src/lib/references/import.ts",
+        "transactionLines": [
+          73,
+          106,
+          164,
+          174
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projectReferences,projects,referenceChunks,media",
+        "references": 23
+      }
+    ],
+    "reactive-ui-and-routes": [
+      {
+        "file": "src/components/agent/AgentChatPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          60,
+          61,
+          62,
+          76,
+          77,
+          129,
+          164,
+          172,
+          173
+        ],
+        "tableReferences": "chatThreads,agentTasks,agentRuns,connectors,projects,chatMessages,contextCompactions",
+        "references": 9
+      },
+      {
+        "file": "src/components/agent/AgentComposerAttention.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          20
+        ],
+        "tableReferences": "agentToolCalls,agentGenerationBatches,agentGenerationBatchItems,agentGenerationJobs,agentTasks",
+        "references": 5
+      },
+      {
+        "file": "src/components/agent/AgentControls.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          39,
+          133
+        ],
+        "tableReferences": "agents,projects",
+        "references": 2
+      },
+      {
+        "file": "src/components/agent/AgentGenerationBatches.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          112,
+          148,
+          554,
+          575,
+          597
+        ],
+        "tableReferences": "agentGenerationBatches,agentTasks,media,connectors,projects",
+        "references": 5
+      },
+      {
+        "file": "src/components/agent/AgentGenerationResults.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          20
+        ],
+        "tableReferences": "agentGenerationJobs",
+        "references": 1
+      },
+      {
+        "file": "src/components/agent/ContextParameters.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          34
+        ],
+        "tableReferences": "chatThreads,agents",
+        "references": 2
+      },
+      {
+        "file": "src/components/agent/ContextUsagePanel.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          63
+        ],
+        "tableReferences": "",
+        "references": 0
+      },
+      {
+        "file": "src/components/agent/CreatedEntityLinks.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          45
+        ],
+        "tableReferences": "chatThreads,agentRuns,projects",
+        "references": 4
+      },
+      {
+        "file": "src/components/agent/GenerationReview.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          81,
+          82,
+          83,
+          197
+        ],
+        "tableReferences": "connectors,projects",
+        "references": 3
+      },
+      {
+        "file": "src/components/agent/MemoryContextDetails.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          65
+        ],
+        "tableReferences": "projects",
+        "references": 1
+      },
+      {
+        "file": "src/components/agent/MessageList.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          173
+        ],
+        "tableReferences": "agentToolCalls",
+        "references": 1
+      },
+      {
+        "file": "src/components/agent/ModelSelectTrigger.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          31
+        ],
+        "tableReferences": "",
+        "references": 0
+      },
+      {
+        "file": "src/components/agent/MusicGenerationReview.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          41
+        ],
+        "tableReferences": "",
+        "references": 0
+      },
+      {
+        "file": "src/components/agent/ReferenceAttachments.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          31,
+          87,
+          160
+        ],
+        "tableReferences": "projectReferences,projects,media",
+        "references": 3
+      },
+      {
+        "file": "src/components/agent/ReferenceLibrary.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          36,
+          43
+        ],
+        "tableReferences": "media",
+        "references": 1
+      },
+      {
+        "file": "src/components/agent/TaskRecords.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          56,
+          57,
+          65,
+          90
+        ],
+        "tableReferences": "agentRuns,agentToolCalls",
+        "references": 2
+      },
+      {
+        "file": "src/components/agent/TaskWrapup.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          141
+        ],
+        "tableReferences": "",
+        "references": 0
+      },
+      {
+        "file": "src/components/agent/chatExecutionFlows.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "agentRuns,agentToolCalls",
+        "references": 3
+      },
+      {
+        "file": "src/components/assets/AssetLibraryPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          110,
+          116,
+          122,
+          128,
+          361
+        ],
+        "tableReferences": "characters,scenes,props,styles",
+        "references": 8
+      },
+      {
+        "file": "src/components/assets/CharacterDetailPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          27
+        ],
+        "tableReferences": "characters",
+        "references": 1
+      },
+      {
+        "file": "src/components/assets/PropDetailPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          27
+        ],
+        "tableReferences": "props",
+        "references": 1
+      },
+      {
+        "file": "src/components/assets/SceneDetailPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          27
+        ],
+        "tableReferences": "scenes",
+        "references": 1
+      },
+      {
+        "file": "src/components/assets/StyleDetailPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          27
+        ],
+        "tableReferences": "styles",
+        "references": 1
+      },
+      {
+        "file": "src/components/assets/WorldSettingPanel.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          34
+        ],
+        "tableReferences": "projects",
+        "references": 1
+      },
+      {
+        "file": "src/components/audio/AudioExports.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "media",
+        "references": 1
+      },
+      {
+        "file": "src/components/audio/AudioGenerationBatches.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          26,
+          121,
+          126
+        ],
+        "tableReferences": "audioGenerationBatches",
+        "references": 3
+      },
+      {
+        "file": "src/components/audio/AudioInspector.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "audioSegments",
+        "references": 1
+      },
+      {
+        "file": "src/components/audio/AudioSources.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          226
+        ],
+        "tableReferences": "projectIpLinks,libraryMaterials,media",
+        "references": 3
+      },
+      {
+        "file": "src/components/audio/AudioWorkspacePage.tsx",
+        "transactionLines": [
+          191
+        ],
+        "liveQueryLines": [
+          64
+        ],
+        "tableReferences": "projects,audioChapters,audioSegments",
+        "references": 4
+      },
+      {
+        "file": "src/components/audio/ScriptDocument.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "audioSegments",
+        "references": 3
+      },
+      {
+        "file": "src/components/audio/SpeechControls.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          21
+        ],
+        "tableReferences": "connectors,audioSegments,audioSpeakers",
+        "references": 4
+      },
+      {
+        "file": "src/components/audio/VoiceLibrary.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          199
+        ],
+        "tableReferences": "connectors",
+        "references": 1
+      },
+      {
+        "file": "src/components/audio/VoiceReferencePicker.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          27
+        ],
+        "tableReferences": "media",
+        "references": 2
+      },
+      {
+        "file": "src/components/audioMusic/shared.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          82,
+          123,
+          155
+        ],
+        "tableReferences": "connectors,media,audioGenerationJobs",
+        "references": 4
+      },
+      {
+        "file": "src/components/media/MediaPicker.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          20
+        ],
+        "tableReferences": "media",
+        "references": 1
+      },
+      {
+        "file": "src/components/memory/MemoryEditor.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          89,
+          118
+        ],
+        "tableReferences": "",
+        "references": 0
+      },
+      {
+        "file": "src/components/memory/ProjectMemoryPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          42,
+          200,
+          205,
+          211
+        ],
+        "tableReferences": "",
+        "references": 0
+      },
+      {
+        "file": "src/components/music/MusicCreation.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "musicDrafts",
+        "references": 2
+      },
+      {
+        "file": "src/components/music/MusicWorkspacePage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          41,
+          229
+        ],
+        "tableReferences": "projects,musicDrafts,musicWorks,media",
+        "references": 6
+      },
+      {
+        "file": "src/components/music/switchMusicVariant.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "musicDrafts",
+        "references": 2
+      },
+      {
+        "file": "src/components/produce/ProducePage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          87,
+          91,
+          95,
+          99,
+          103,
+          108
+        ],
+        "tableReferences": "projects,episodes,shots,characters,scenes,props,styles",
+        "references": 7
+      },
+      {
+        "file": "src/components/produce/ProductionProposalsPanel.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          52
+        ],
+        "tableReferences": "productionProposals",
+        "references": 1
+      },
+      {
+        "file": "src/components/produce/StoryboardPrintPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          26,
+          30,
+          34,
+          38,
+          54
+        ],
+        "tableReferences": "projects,episodes,shots,characters,scenes,props,styles",
+        "references": 7
+      },
+      {
+        "file": "src/components/studio/AssetLibraryPages.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          153
+        ],
+        "tableReferences": "characters,scenes,props,styles",
+        "references": 4
+      },
+      {
+        "file": "src/components/studio/ConnectorsPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          36
+        ],
+        "tableReferences": "connectors",
+        "references": 1
+      },
+      {
+        "file": "src/components/studio/IpProfilesPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          55,
+          115
+        ],
+        "tableReferences": "ipProfiles,projectIpLinks,libraryMaterials,projects",
+        "references": 8
+      },
+      {
+        "file": "src/components/studio/MaterialLibraryPage.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          45,
+          133
+        ],
+        "tableReferences": "libraryMaterials,ipProfiles,projects,materialVersions",
+        "references": 7
+      },
+      {
+        "file": "src/components/studio/ProjectIpPicker.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          11
+        ],
+        "tableReferences": "ipProfiles",
+        "references": 1
+      },
+      {
+        "file": "src/components/studio/SearchConnection.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          21
+        ],
+        "tableReferences": "",
+        "references": 0
+      },
+      {
+        "file": "src/components/studio/materials/LegacyMaterialSources.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          41
+        ],
+        "tableReferences": "media,characters,scenes,props,styles,projects",
+        "references": 11
+      },
+      {
+        "file": "src/components/studio/materials/MaterialControls.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          69
+        ],
+        "tableReferences": "ipProfiles,projects",
+        "references": 2
+      },
+      {
+        "file": "src/components/studio/materials/MaterialDetailPanel.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          51,
+          117
+        ],
+        "tableReferences": "libraryMaterials,materialVersions,materialUses,materialEvents,projects,ipProfiles,projectIpLinks",
+        "references": 8
+      }
+    ],
+    "remaining-shared-readers": [
+      {
+        "file": "src/lib/ai/tavily.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "searchConnections",
+        "references": 2
+      },
+      {
+        "file": "src/lib/generationIntent.ts",
+        "transactionLines": [
+          131
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,shots,characters,scenes,props,styles,episodes,media",
+        "references": 9
+      },
+      {
+        "file": "src/lib/productionContext.ts",
+        "transactionLines": [
+          30
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "projects,episodes,shots,characters,scenes,props,styles,media",
+        "references": 9
+      },
+      {
+        "file": "src/lib/runtimeHttpPolicy.ts",
+        "transactionLines": [],
+        "liveQueryLines": [],
+        "tableReferences": "connectors,searchConnections",
+        "references": 2
+      },
+      {
+        "file": "src/lib/studioLibraryQueries.ts",
+        "transactionLines": [
+          9
+        ],
+        "liveQueryLines": [],
+        "tableReferences": "",
+        "references": 1
+      },
+      {
+        "file": "src/lib/useShotMedia.ts",
+        "transactionLines": [],
+        "liveQueryLines": [
+          13
+        ],
+        "tableReferences": "media",
+        "references": 1
+      },
+      {
+        "file": "src/lib/videoWorkspaceRepository.tsx",
+        "transactionLines": [],
+        "liveQueryLines": [
+          860
+        ],
+        "tableReferences": "projects,episodes,shots,characters,scenes,props,styles,ipProfiles,projectIpLinks",
+        "references": 11
+      }
+    ]
+  }
+}

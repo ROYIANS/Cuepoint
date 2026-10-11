@@ -8,7 +8,9 @@ The user explicitly prioritized Agent/AI and rapid complete desktop parity throu
 
 During this stage, one internal IndexedDB store owns the complete product, including media Blob copies. Tauri still owns trusted IPC, hash navigation and native system/network/file services. The accepted SQLite prototype/video code remains isolated reference/test infrastructure rather than a second concurrent product catalog. No old records are imported, mirrored or migrated. Internal Blob copies are not described as completed filesystem-workspace storage.
 
-Current planning child `10-11-native-world-shot-relations` retains its initial directory name but is titled shared business layer and native Agent integration. Its revised PRD/design/execution plan owns this stage; implementation approval follows final review. Historical world-only research is not the selected delivery boundary.
+The full-product child `10-11-native-world-shot-relations` (title: shared business layer and native Agent integration) is accepted, locally committed and archived under `archive/2026-10/` on 2026-10-11. Historical world-only research is not the selected delivery boundary. Seven children are now complete.
+
+The user approved creation/research of `10-11-shared-storage-sqlite`, the eighth child, then explicitly delegated full responsibility and automatic approval. Its concrete scope was reviewed and it is now in progress on `codex/shared-storage-sqlite`: centralized storage for every existing domain and Agent tool, keeping the same UI/business implementation, browser IndexedDB and fresh normal desktop SQLite/managed files. Production portable codecs and actual synchronization remain later work.
 
 ## Decision update — fresh product development (2026-10-11)
 

@@ -8,9 +8,9 @@ The next product task starts from a fresh native workspace. Do not implement Dex
 
 ## Current product checkpoint — 2026-10-11
 
-All six earlier children are accepted and archived, including the native product foundation, video core and shared product UI/native adapters. The normal product uses one React page tree with browser Dexie and native SQLite/file repositories; fresh schema 4 includes the accepted video workflow. World entities, generation/media slots, audio/music and full history/synchronization coverage are later domain slices.
+Seven earlier children are accepted and archived, including the full shared product/business/Agent integration. The normal browser and Tauri product use the same complete React/business/Agent tree and separate IndexedDB stores. The schema-4 SQLite video repository remains isolated reference/test infrastructure; it is not the normal full-product owner. All original domains have been reused in the native product; centralized persistence and real synchronization are still pending.
 
-`10-11-native-world-shot-relations` is a planning child whose stable directory predates the latest priority correction. Its current title is shared business layer and native Agent integration. The user did not select the project-local world candidate: they want rapid native feature parity by reusing existing Web UI/business logic, with Agent/AI first. They explicitly selected the complete-feature-first Tauri stage using app-internal IndexedDB and centralized SQLite replacement later. This changes the earlier SQLite-first delivery order; the normal product stage must have one IndexedDB owner while retaining native OS/IPC services. Final design/execution review is pending, and historical migration remains excluded.
+`10-11-native-world-shot-relations`, titled shared business layer and native Agent integration, is now archived after the user-approved local commits/journal. The complete-feature-first stage is accepted. The next child, `10-11-shared-storage-sqlite`, was approved for task creation/research on 2026-10-11; after concrete artifacts were prepared, the user delegated full responsibility/automatic approval. Final scope review and independent plan corrections preceded activation. The child is in progress: all 49 tables, nested business/Agent transactions, reactive queries and managed binaries move behind one shared persistence boundary. Historical data migration remains excluded.
 
 The work is intentionally staged so the core can be verified without a real account or user data. Each phase produces a reviewable artifact and can be tested with disposable fixtures.
 
@@ -18,6 +18,7 @@ The work is intentionally staged so the core can be verified without a real acco
 
 - `10-10-storage-workspace-foundation`: first child, workspace-relative identity, managed copy and read-only binary-owner fixture. It preserves the browser/Dexie adapter; native SQLite migration is later work.
 - `10-10-storage-checkpoint-plugin-foundation`: depends on accepted workspace copy/identity primitives. Its protocol-only fixture does not require complete per-table codecs; actual full-workspace export/application remains gated on those codecs and reference closure.
+- `10-11-shared-storage-sqlite`: follows the accepted full shared native product. Complete local SQLite/file replacement uses fresh data and shared business/Agent owners. It does not implement the full portable codec, provider or device handoff; those remain later children.
 - Official managed transport and handoff: depends on the checkpoint/plugin contract and approved concrete service choices.
 - History/conflict/restore: depends on core checkpoint application and handoff evidence.
 - Optional adapters/native packaging: depend on stable core contracts and per-adapter/runtime decisions.

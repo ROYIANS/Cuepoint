@@ -1,0 +1,7 @@
+
+> cuepoint-tauri-prototype@0.1.0 types /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node ../../node_modules/typescript/bin/tsc --project tsconfig.json --noEmit
+
+ui/acceptancePrint.tsx(50,58): error TS2339: Property 'arrayBuffer' does not exist on type 'BinaryContent'.
+  Property 'arrayBuffer' does not exist on type 'ManagedBinaryRef'.
+ ELIFECYCLE  Command failed with exit code 2.

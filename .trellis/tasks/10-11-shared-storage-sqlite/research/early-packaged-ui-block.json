@@ -1,0 +1,15 @@
+{
+  "stage": "early isolated SQLite packaged feedback",
+  "build": "early-packaged-build.json",
+  "actualComputerUse": "blocked",
+  "tool": "cua.getApp exact isolated bundle path",
+  "message": "The Mac is locked and automatic unlock could not unlock it. Ask the user to unlock the Mac manually before continuing.",
+  "userState": "User explicitly asleep and delegated autonomy; independent implementation/check work continues. No lock bypass or fabricated UI acceptance.",
+  "normalOwnerActivation": "pending, unchanged",
+  "requiredFollowup": [
+    "Unlock Mac when user returns",
+    "Run actual isolated full-product SQLite flows and large video range playback/seek",
+    "Only after complete isolated acceptance activate normal SQLite profile and rebuild/focused smoke"
+  ],
+  "completionClaim": false
+}

@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Fresh current data; no migration or legacy reader"}
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Fixed shared-product owner and retained trusted runtime boundaries"}
+{"file": ".trellis/spec/frontend/workspace-storage.md", "reason": "Managed independent binary copies and missing-material contracts"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Required type/quality/test/build and evidence gates"}
+{"file": ".trellis/tasks/10-11-shared-storage-sqlite/research/context-brief.md", "reason": "Complete integration constraints plus mandatory untruncated role-directed owning reads"}
+{"file": ".trellis/tasks/10-11-shared-storage-sqlite/research/storage-seams.md", "reason": "Complete operation/index grammar and explicit root/nested transaction design"}
+{"file": ".trellis/tasks/10-11-shared-storage-sqlite/research/architecture-decisions.md", "reason": "Chosen architecture, external primary sources and explicit deferrals"}

@@ -1,0 +1,19 @@
+{
+  "kind": "synthetic local playable large-file fixture",
+  "source": "large-playback-fixture.swift derived from committed desktop/tauri/scripts/generate-video.swift; generator changes restricted to dimensions/rate/deterministic noise/frame count",
+  "sourceSha256": "b4f69572e908561cd7698291dd0898147a8649aa9f4fba2997c224871fb47e41",
+  "byteLength": 89613670,
+  "sha256": "6f361344b18c5aac5b7ea8706d2783fa450907e788d3e19dd325ada3617fdee7",
+  "durationSec": 30,
+  "frames": 900,
+  "codec": "avc1 H264",
+  "size": [
+    640,
+    360
+  ],
+  "fps": 30,
+  "actualAppleDecodeCompleted": true,
+  "generatorExit": 0,
+  "evidence": "large-playback-fixture-generation.log",
+  "limits": "Synthetic source fixture/AVFoundation decode only; not WK playback or managed workspace acceptance. Fixture binary is ignored, not committed."
+}

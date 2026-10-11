@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "action": "remove stale exact allowance after actual source repair",
+  "removed": {
+    "rule": "preserve-caught-error",
+    "file": "src/lib/agent/runChat.ts",
+    "signature": "5317adafe058b544b846faa0bc32b8aa47ed585ea6fcc26ccdff2c6cdc298533",
+    "count": 1,
+    "reason": "Ambiguous external side effects expose the fixed safe uncertainty diagnostic. Raw cause may contain credentials, provider payloads or implementation details and cannot imply rollback.",
+    "owner": "Agent execution"
+  },
+  "beforeSha256": "f569482c91ff63820aadfa3e8aded0e68df9c825ce03eba40fc7de5ec72e9ec3",
+  "afterSha256": "ed05e66f1089e1125dad5137a26082700970ae696ceda0adc1e6422fb186e799",
+  "allowanceCountBefore": 13,
+  "allowanceCountAfter": 12,
+  "evidence": "wave6-quality-integration.json: actual matching diagnostic count0, other lint/architecture/unused failures0",
+  "sourceReview": "Unknown tool outcome wrappers now retain internal typed cause in UnresolvedToolOutcomeError; the prior cause-discarding new Error node no longer exists. Public error messages remain bounded/sanitized; this does not authorize logging or synchronizing raw causes.",
+  "addedAllowances": [],
+  "completionClaim": false
+}

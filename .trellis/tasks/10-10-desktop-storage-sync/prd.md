@@ -1,6 +1,10 @@
 # Desktop persistence and synchronization exploration
 
-Status: in progress. The user approved the complete planning summary on 2026-10-10. Implementation is staged through independently verifiable children; live service integration and real-user migration require their later concrete scope gates.
+Status: in progress. The user approved the complete planning summary on 2026-10-10. Implementation is staged through independently verifiable children; live service integration retains later concrete scope gates. The later fresh-development decision excludes historical migration by default.
+
+## Current delivery checkpoint — 2026-10-11
+
+Seven children are accepted and archived, including complete native reuse of the existing product/business/Agent with independent internal IndexedDB. The older schema-4 SQLite video lane is reference/test infrastructure. The eighth child, `10-11-shared-storage-sqlite`, is now in progress after research, concrete review and the user's full-responsibility/automatic-approval instruction: complete shared-storage and native SQLite/file replacement, without old-data migration. Browser remains IndexedDB; both runtimes retain the same UI/business/Agent. This child does not implement actual sync or full portable history codecs.
 
 ## Goal and user value
 
@@ -27,7 +31,7 @@ Determine a durable, approachable local-first storage and multi-device synchroni
 - The user confirmed the first-release extension/version scope: an internal provider contract, one official managed sync provider and basic immutable checkpoints with inspection/restoration. Plugin distribution/marketplace, arbitrary native code, Git/SVN integration and advanced branching/merge interfaces are deferred.
 - On 2026-10-11 the user chose complete original tool-history retention and accepted field-by-field review and additional implementation work. Production history codecs must preserve reviewed original tool arguments/results and their historical associations rather than reducing them to summaries; device credentials, provider continuation tokens and active execution authority remain excluded under the existing contract.
 
-## Repository facts
+## Repository facts — initial 2026-10-10 research baseline
 
 - Dexie IndexedDB is the current system of record, with migrations through v24: `src/db/database.ts:56` and `src/db/database.ts:310`.
 - There are 49 declared durable tables. Media bytes occur both in `MediaRecord.blob` and in material-version payloads: `src/domain/types.ts:362`, `src/db/media.ts:56`, `src/domain/materials.ts:47`. A migration cannot serialize only the `media` table and assume all binaries are covered.

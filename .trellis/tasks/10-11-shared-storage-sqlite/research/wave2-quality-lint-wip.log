@@ -1,0 +1,15 @@
+lint: 25 errors, 587 review warnings, 13 reviewed allowances; 12 failures
+warning rules: {"complexity":149,"sonarjs/cognitive-complexity":105,"no-nested-ternary":329,"max-depth":4}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/unbound-method\",\"src/lib/media.ts\",\"09b197e9349c71af00b972f890971b66d3018357baba5606304d3e3e074df5ef\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/switch-exhaustiveness-check\",\"src/lib/media.ts\",\"65604553aebde73dfd161602ccca151a143cd79f95e38a2ad45cf771f9703c60\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/no-unnecessary-type-assertion\",\"src/lib/packages/projectPackageCodec.ts\",\"96272eee1dfd2b90d86c5d3f5415c73665d1c5e303cf8115554f3c89706beb5f\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/no-unnecessary-type-assertion\",\"src/lib/packages/projectPackageCodec.ts\",\"a94377d664f6618aab18b87807fd9c6af1ce5b88c3d259d33e46c1ef8bc86275\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/no-unnecessary-type-assertion\",\"src/lib/packages/projectPackageCodec.ts\",\"60e1b676bcfab1488d9465c53dfbb3c87c05ee395e652f0272d283c4b95206ed\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/require-await\",\"src/lib/storage/binary.ts\",\"9e365a963d95899e1902ebe63474c8bcf7e36b0af868b25b4ddda89cd2ee4747\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/require-await\",\"src/lib/storage/binary.ts\",\"c1a6210014c6cdd429d1ff18ab832e6f50cec7d6798e4f32d6215d454cf55bc3\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/unbound-method\",\"src/lib/storage/binary.ts\",\"786f934dc484fee53571d08e677b2212ab58f5084f9eb24292658ba9dacf41d7\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"no-control-regex\",\"src/lib/storage/nativeBinary.ts\",\"ca33169b8af63fb1ab3d020f8cfce9f69a49e5f1c3ab6a01e2b5aa7b34c18dd3\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/no-unsafe-member-access\",\"src/lib/storage/nativeBridge.ts\",\"d75dced94cd9426b981652575eba393fb73457f5bcc8f57b5fcf664496cc81a3\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/only-throw-error\",\"src/lib/storage/nativeBridge.ts\",\"7a7cb5463198cfcf8e447cc7c59753ded28a2815134eca7e6f95f5f8052728f3\"]","count":1}
+{"section":"lint","kind":"unallowed","key":"[\"@typescript-eslint/no-unnecessary-type-assertion\",\"src/lib/storage/nativeBridge.ts\",\"d591ccf2d035c3a86264a1ce4229930a6b73253b2ce6f59b086c3a7312ca5e00\"]","count":1}
+quality: FAIL (lint)

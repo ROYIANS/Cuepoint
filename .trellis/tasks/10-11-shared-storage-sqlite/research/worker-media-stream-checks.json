@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-10-11T17:53:21.284750+00:00",
+  "stage": "Frozen engine media repair handoff; actual packaged WK acceptance and normal owner activation remain gated",
+  "sourceHashesCapturedAfterChecks": {
+    "desktop/tauri/src-tauri/src/product_media.rs": "98fa0e0005f6091c44e209f89465077d5f10f43407b9d482ac903105de2c988e",
+    "desktop/tauri/src-tauri/src/product_media/server.rs": "62bafcee0e2fb14422f3b4fa13f4cb87418e164822f62114abe0bb008f916f25",
+    "desktop/tauri/src-tauri/src/product_media/tests.rs": "5295dada3924b2fc475715e796676f0887f83ca5df6da2576485a77910054e4d",
+    "desktop/tauri/src-tauri/src/product_binary.rs": "e64fd0dfde2666544dbf0b4206b96c0c5ea5ae556e0d35e9c3edb77caa2c90cc",
+    "desktop/tauri/src-tauri/src/product_binary/tests.rs": "ddf73ef5758c26cc9edb014c43a6e80032545521e0c95c84daea3208f67f13b6",
+    "desktop/tauri/src-tauri/src/desktop.rs": "e691f6f18de3d1bc88a23d112bb47fddbdf5196edae76445e79ca78d1a6432dd",
+    "desktop/tauri/src-tauri/src/worker.rs": "ee022926dcb83d68986a6f4772c925cc7a14349d688d43d7acafe2ff1934f183",
+    "desktop/tauri/src-tauri/src/lib.rs": "f6fbe94a071b1e20ac203896735b52cd88f76b59d68b9e6383a85a2228a4eba6",
+    "desktop/tauri/src-tauri/src/bin/product_store_probe.rs": "c182b09cf8e25a08e089cd9937dd83f32d51aa4088690f7bc26d97558654e529",
+    "desktop/tauri/src-tauri/Cargo.toml": "2b7741d1fbf5226f7690d5239536b77c1551d3f80ebabc3718fb6e6f53e839fa",
+    "desktop/tauri/src-tauri/Cargo.lock": "f6bd8f9b381c5207f326b1be5f07a907e8feecedf9832a2ed83615eef40baf8f",
+    "desktop/tauri/src-tauri/tauri.conf.json": "42211a0d329dff6a67597ecd37d5acb17072a1ab2dec65e6e95bcd1615ba3031",
+    "desktop/tauri/src-tauri/Info.plist": "d60887d991de4d1a67f150ee1b3c1790daee0adacd3ee4271ab6bf46ba4c1dd4",
+    "desktop/tauri/scripts/build-app.mjs": "5ce4ca71f17633289f52097b140b9efc657245d85eb286830f189a4058031dd2",
+    "src/lib/storage/nativeBinary.ts": "e648a16ab45f933721ee6eec89988cd66f25f208d73a3cf7cf8186bf672910cb",
+    "src/lib/storage/protocol.ts": "53f3b90c3ab5e8bd80d144dd827d117b32cb9e2dd1d80a20d89d48d1a9b5abf5",
+    "src/lib/storage/nativeBridge.ts": "53d00a8e8aeb64d2f331c013042a1fc22eee0e8642ef8a5113c82bc249426bf1",
+    "src/lib/storage/native.ts": "635cca7b57a13c281e335ba36e76e33ce0a2831ec2dac209904ffee4a14d4282",
+    "src/lib/storage/binary.ts": "9bf76b645553b82069f9df090d76f461c31a5ae45fb1c8f57bf1fb0e4267f9c8",
+    "src/lib/storage/hooks.ts": "b4059aa5259cad2db6d84b741774f9d08c3bd505a41bbefb8ba54486a87a0a28",
+    "src/db/database.ts": "4b41d9a8455d0e81b8035d35cd1417710faf0571e23935c7efa6a6c7153feb12",
+    "tests/nativeBinaryAccess.test.ts": "273a6c87362193034e9d5c88ce9e5c923998517e5ad60d7019181062645177b0",
+    "tests/e04LibraryQueries.test.ts": "96336e177e246f2dc161b74e3febd2b1fd282c51cf9f7ebd60a1873224dab204",
+    "tests/productStorageQueries.test.ts": "5a6ac42fc26be9a5f9f6081014258f50d1077a0500c906ab4667b9f8daa35913",
+    "tests/fixtures/shared-storage/nativeDatabase.ts": "c76ac28ee143d3a3a68bb31fc6af0957da88781b0290bc27c92e384f57037f98",
+    "tests/helpers/nativeProductProbe.ts": "9a85ef9be4c0f14551e560732c8e9a82f7a0d48ffefd513436f0e62c48859453",
+    "tests/helpers/storeBackendFaults.ts": "415a22fc390a68680b97d4bdd288e88c18822965fa8391037ec0776e7b72cd52",
+    "vitest.config.ts": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a",
+    "desktop/tauri/src-tauri/src/full_product_store/mod.rs": "7b8d7925979e88b690734d3003df41e794025a95c8cd314afa738f4156e58b19",
+    "desktop/tauri/src-tauri/src/full_product_store/protocol.rs": "45c39f3739d49fb1f540dd8c3fc8220a7068538a57b3c05f5a3fc754bc11f4e7",
+    "desktop/tauri/src-tauri/src/full_product_store/query.rs": "03820365d6b94b19c7b010cef0913f3905948a445e0ce53689cd71186f1515c7",
+    "desktop/tauri/src-tauri/src/full_product_store/registry.rs": "deb2f48c4fb6e296e30d99801f19e39ccd50f1eeec0a060fc449c8f9ee50a71f",
+    "desktop/tauri/src-tauri/src/full_product_store/tests.rs": "efefe1f46b6a34c50b944ca8ebd606c3371e908e1f7bbb06ce033011dfc4ef13"
+  },
+  "checks": [
+    {
+      "log": "engine-media-stream-native-all-targets-frozen.log",
+      "logSha256": "1d7fdc4ff7285e01ec84b8d0bb9a50360e5bfa427329dc7e52d9d0fcf3527d72",
+      "exitCode": 0,
+      "passedTests": 108,
+      "description": "Final frozen full-feature Rust all-targets",
+      "command": "CARGO_INCREMENTAL=0 node scripts/tools.mjs cargo test --locked --manifest-path src-tauri/Cargo.toml --features desktop,product-sqlite,test-hooks --all-targets -- --nocapture",
+      "cwd": "desktop/tauri",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    },
+    {
+      "log": "engine-media-stream-native-clippy-frozen.log",
+      "logSha256": "d5d9c06624bfb1e5e23b37ee2e240d7a549b9e57ecaa30248f058485cecde7d1",
+      "exitCode": 0,
+      "passedTests": null,
+      "description": "Final frozen full-feature Clippy",
+      "command": "CARGO_INCREMENTAL=0 node scripts/tools.mjs cargo clippy --locked --manifest-path src-tauri/Cargo.toml --features desktop,product-sqlite,test-hooks --all-targets -- -D warnings",
+      "cwd": "desktop/tauri",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    },
+    {
+      "log": "engine-media-stream-preview-ts.log",
+      "logSha256": "23754c129b688090d42c02103f492946fb7cea557c7de66d2ff83ccb875cf656",
+      "exitCode": 0,
+      "passedTests": 18,
+      "description": "Closed preview URL, cancellation and release unit tests",
+      "command": null,
+      "cwd": ".",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    },
+    {
+      "log": "engine-media-stream-e04-browser.log",
+      "logSha256": "0558fc2617ff876712afad08f68d76734b1829d3df6113fd1a359dd8ce16336a",
+      "exitCode": 0,
+      "passedTests": 8,
+      "description": "E04 scoped query fixture, browser owner",
+      "command": null,
+      "cwd": ".",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    },
+    {
+      "log": "engine-media-stream-e04-sqlite.log",
+      "logSha256": "fab6171dce979ccbcdd6aebb94f7f4cecdb4786cce00cf6e3cf724983bcb209a",
+      "exitCode": 0,
+      "passedTests": 8,
+      "description": "E04 scoped query fixture, actual compiled Rust SQLite owner",
+      "command": null,
+      "cwd": ".",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    },
+    {
+      "log": "engine-media-stream-query-browser.log",
+      "logSha256": "6b8bb9e89f6c0b29c451c511570cbe73e3f944e44cae2f457279b3f8a5b47eb5",
+      "exitCode": 0,
+      "passedTests": 4,
+      "description": "Mounted media hooks, browser actual bytes",
+      "command": null,
+      "cwd": ".",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    },
+    {
+      "log": "engine-media-stream-query-sqlite.log",
+      "logSha256": "32d6bc976492b55fd604d342b0db985ad4c76c806df0a62afdd8907dabcf51ea",
+      "exitCode": 0,
+      "passedTests": 4,
+      "description": "Mounted media hooks, actual Rust SQLite managed bytes",
+      "command": null,
+      "cwd": ".",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    },
+    {
+      "log": "engine-media-stream-diffcheck.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exitCode": 0,
+      "passedTests": null,
+      "description": "Owned source diff whitespace check",
+      "command": null,
+      "cwd": ".",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    },
+    {
+      "log": "engine-media-stream-plist-lint.log",
+      "logSha256": "53545a0552e96e876d9542611c84d25157d417a2d2007d91402e924ea011cdb8",
+      "exitCode": 0,
+      "passedTests": null,
+      "description": "Source plist syntax only; merged bundle still pending",
+      "command": "plutil -lint desktop/tauri/src-tauri/Info.plist",
+      "cwd": ".",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    },
+    {
+      "log": "engine-media-stream-eslint.log",
+      "logSha256": "00cda4f993831c51b1b387847e85f9519b3cf63b23cb244318d4aa904fe9ddae",
+      "exitCode": 0,
+      "passedTests": null,
+      "description": "Targeted source ESLint; test files are ignored and not claimed checked",
+      "command": null,
+      "cwd": ".",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    },
+    {
+      "log": "engine-media-stream-targeted-probe-build.log",
+      "logSha256": "0b53209db424367e80c52cd8cde8b75e37af110438a0efde777104a1463956de",
+      "exitCode": 0,
+      "passedTests": null,
+      "description": "Targeted dual-owner probe build before final media test changes",
+      "command": null,
+      "cwd": "desktop/tauri",
+      "sourceIdentityQualification": "Final full-feature Rust checks ran after agreed source freeze. Earlier targeted TS/dual-owner checks are supplemented by root final immutable lanes; this captured-after manifest alone does not assert pre/post global input equality."
+    }
+  ],
+  "diagnosticAttempts": [
+    {
+      "log": "media-stream-diagnostic-loopback-tests-first.log",
+      "logSha256": "036602cfd16ec4244d47f5bbfeead5b10d2030fb4808e8eac50c29cdaca7d31f",
+      "retained": true,
+      "qualified": "Development/diagnostic only, not final acceptance source identity or performance."
+    },
+    {
+      "log": "media-stream-diagnostic-loopback-debug.log",
+      "logSha256": "eddf515bd99b31dba25e9655f0cbc07d2858697f90f31cf459495c98a28f9a8c",
+      "retained": true,
+      "qualified": "Development/diagnostic only, not final acceptance source identity or performance."
+    },
+    {
+      "log": "media-stream-diagnostic-loopback-debug2.log",
+      "logSha256": "28bddf43da4c2f538aa557ed919d2e7d30b5764b86efe36463579bf2b568e46f",
+      "retained": true,
+      "qualified": "Development/diagnostic only, not final acceptance source identity or performance."
+    },
+    {
+      "log": "media-stream-diagnostic-loopback-tests-second.log",
+      "logSha256": "4bd3809ed45d09c8ef235ce515d1d06a7f21eaad39f3e57cc0dac109d78e41cd",
+      "retained": true,
+      "qualified": "Development/diagnostic only, not final acceptance source identity or performance."
+    },
+    {
+      "log": "media-stream-diagnostic-loopback-tests-third.log",
+      "logSha256": "2fcdf39455f4379b9199b1827bedbf9d14e43bac41e4c6e7680c1d90e1bb063a",
+      "retained": true,
+      "qualified": "Development/diagnostic only, not final acceptance source identity or performance."
+    },
+    {
+      "log": "media-stream-diagnostic-loopback-authority-tests-first.log",
+      "logSha256": "11e051f9347a44afc6dbb10948a451627f52d00ec1a7d2156cb2afa24cfeff4e",
+      "retained": true,
+      "qualified": "Development/diagnostic only, not final acceptance source identity or performance."
+    },
+    {
+      "log": "media-stream-diagnostic-loopback-native-all-targets.log",
+      "logSha256": "8ac38233ed4e79569799ca9e41502f5581599d9afec9596c28ea70aad89fa2c3",
+      "retained": true,
+      "qualified": "Development/diagnostic only, not final acceptance source identity or performance."
+    },
+    {
+      "log": "media-stream-diagnostic-loopback-native-all-targets-final.log",
+      "logSha256": "2e0e69748329f5d24f3fca22b1bcbd37cac8262c8d2f1debf74cfeb06486b335",
+      "retained": true,
+      "qualified": "Development/diagnostic only, not final acceptance source identity or performance."
+    },
+    {
+      "log": "media-stream-diagnostic-loopback-native-clippy-final.log",
+      "logSha256": "154224e1e06d266126433bfdbf87b6621fdabc3f0f0cfc620f65845b28336293",
+      "retained": true,
+      "qualified": "Development/diagnostic only, not final acceptance source identity or performance."
+    }
+  ],
+  "fullRustCount": {
+    "unitTests": 62,
+    "actualProcess": 4,
+    "nativeWorkspace": 22,
+    "portableContract": 2,
+    "sharedVideoContract": 10,
+    "storageReview": 8,
+    "total": 108,
+    "nestedFdChildCase": "The child-process exact test is a sub-proof of one of the 62 unit tests, not an additional test counted toward total."
+  },
+  "actualHttpMeasurements": {
+    "representationBytes": 94371857,
+    "completeNoRangeStatus": 200,
+    "completeNoRangeExactBytes": true,
+    "seekRangeResponses": 3,
+    "headVariants": 4,
+    "headStatus": 200,
+    "headBodyBytes": 0,
+    "initialWholeHashBytes": 283115571,
+    "extraWholeHashBytesAcrossHttpRequests": 0,
+    "fixtureContent": "Deterministic disk bytes tagged video/mp4, not a playable decoding fixture."
+  },
+  "actualIdleCapacityMeasurement": {
+    "capabilities": 67,
+    "descriptorCountBefore": 6,
+    "descriptorCountAfter": 6,
+    "activeReaders": 0,
+    "method": "Isolated current Rust unittest child process; actual disk/SQLite, own /dev/fd or /proc/self/fd count. Metadata capabilities minted and served through real localhost sockets."
+  },
+  "proofBoundaries": [
+    "No actual packaged WK decoding/playback/seek/RSS gate while Mac remains locked.",
+    "No dedicated actual HTTP test switching session generation or replacing workspace root during an already-started stream. Per-chunk source checks, current session invalid before request, warm root/parent failure-and-restore permanent410 and actual stream revoke/disconnect are independently covered.",
+    "Socket/file streaming is bounded by per-chunk code and backpressure; whole app or WK memory is not measured by these unit tests.",
+    "Info.plist syntax and narrow exception source are checked. Root final bundle must verify merged plist and genuine WK loading.",
+    "Windows/Linux host playback and platform network policy are not exercised.",
+    "Targeted dual-owner Vitest checks used the actual compiled Rust probe available at that earlier checkpoint. Root shared owner is rebuilding all current frozen sources for final native manifest."
+  ],
+  "nativeWarningsReviewed": [
+    "Pinned vendor tauri-plugin-http emits its two existing unused app/event callback-variable warnings; no dependency edits. Project all-feature Clippy exits0."
+  ],
+  "normalOwnerActivated": false,
+  "commitsOrPushes": false
+}

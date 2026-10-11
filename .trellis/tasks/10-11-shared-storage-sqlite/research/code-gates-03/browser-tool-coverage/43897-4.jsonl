@@ -1,0 +1,101 @@
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / withdrawn"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / revised"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / revised"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / detail / foreign"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / withdrawn"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / revised"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / revised"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / index / foreign"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / withdrawn"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / revised"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / revised"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: chat / nested / foreign"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / withdrawn"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / revised"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / revised"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / detail / foreign"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / withdrawn"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / revised"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / revised"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / index / foreign"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / withdrawn"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / withdrawn"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / revised"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / revised"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / revised"}
+{"owner":"indexeddb","name":"project_reference_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"parse","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / foreign"}
+{"owner":"indexeddb","name":"task_read","method":"execute","outcome":"fulfilled","test":"Agent audit boundary regressions > task_read blocks cached source body: responses / nested / foreign"}
+{"owner":"indexeddb","name":"update_run_plan","method":"parse","outcome":"fulfilled","test":"legacy plan pending survives recovery and executes once"}
+{"owner":"indexeddb","name":"update_run_plan","method":"parse","outcome":"fulfilled","test":"legacy plan pending survives recovery and executes once"}
+{"owner":"indexeddb","name":"update_run_plan","method":"execute","outcome":"fulfilled","test":"legacy plan pending survives recovery and executes once"}
+{"owner":"indexeddb","name":"update_run_plan","method":"parse","outcome":"fulfilled","test":"legacy plan running survives recovery and executes once"}
+{"owner":"indexeddb","name":"update_run_plan","method":"parse","outcome":"fulfilled","test":"legacy plan running survives recovery and executes once"}
+{"owner":"indexeddb","name":"update_run_plan","method":"execute","outcome":"fulfilled","test":"legacy plan running survives recovery and executes once"}
+{"owner":"indexeddb","name":"update_run_plan","method":"parse","outcome":"fulfilled","test":"legacy plan unknown survives recovery and executes once"}
+{"owner":"indexeddb","name":"update_run_plan","method":"parse","outcome":"fulfilled","test":"legacy plan unknown survives recovery and executes once"}
+{"owner":"indexeddb","name":"update_run_plan","method":"execute","outcome":"fulfilled","test":"legacy plan unknown survives recovery and executes once"}
+{"owner":"indexeddb","name":"business_detail","method":"execute","outcome":"fulfilled","test":"image quality/version are visible in detail, text reads and incremental context"}
+{"owner":"indexeddb","name":"business_read_text","method":"execute","outcome":"fulfilled","test":"image quality/version are visible in detail, text reads and incremental context"}

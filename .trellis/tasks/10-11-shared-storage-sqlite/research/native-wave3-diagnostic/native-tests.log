@@ -1,0 +1,61 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/productStorageQueries.test.ts (4 tests | 2 failed) 284ms
+   ❯ runtime-independent shared queries and media (4)
+     × resolves existing internal Blob previews in Tauri and revokes the same URL on cleanup 71ms
+     × loads the same referenced shot media projection in Tauri instead of returning an empty native index 100ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/productStorageQueries.test.ts > runtime-independent shared queries and media > resolves existing internal Blob previews in Tauri and revokes the same URL on cleanup
+AssertionError: expected undefined to deeply equal { url: 'blob:owned-preview', …(3) }
+
+- Expected:
+{
+  "kind": "image",
+  "mimeType": "image/png",
+  "onError": Any<Function>,
+  "url": "blob:owned-preview",
+}
+
++ Received:
+undefined
+
+ ❯ tests/productStorageQueries.test.ts:76:51
+     74|         render(() => useMedia(record.id));
+     75|         const cleanup = host.effects[0]() as () => void;
+     76|         expect(render(() => useMedia(record.id))).toEqual({url: "blob:…
+       |                                                   ^
+     77|         expect(createUrl.mock.calls[0][0]).toMatchObject({size: 6, typ…
+     78|         cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/productStorageQueries.test.ts > runtime-independent shared queries and media > loads the same referenced shot media projection in Tauri instead of returning an empty native index
+AssertionError: expected undefined to match object { size: 4 }
+
+- Expected:
+{
+  "size": 4,
+}
+
++ Received:
+undefined
+
+ ❯ tests/productStorageQueries.test.ts:100:44
+     98|         await Promise.resolve();
+     99|         const loaded = render(() => useShotMedia([shot]));
+    100|         expect(loaded?.get(used.id)?.blob).toMatchObject({size: 4});
+       |                                            ^
+    101|         expect(loaded?.has("unused-result")).toBe(false);
+    102|         expect(render(() => useShotMedia([]))).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 105 passed (106)
+      Tests  2 failed | 1888 passed (1890)
+   Start at  01:32:26
+   Duration  246.59s (tests 97%, setup 2%, import 1%, transform 1%)
+

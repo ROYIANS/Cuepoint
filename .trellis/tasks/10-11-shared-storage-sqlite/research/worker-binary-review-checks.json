@@ -1,0 +1,64 @@
+[
+  {
+    "command": "node desktop/tauri/scripts/tools.mjs cargo test --manifest-path src-tauri/Cargo.toml --locked --lib product_binary -- --nocapture",
+    "log": "worker-binary-review-rust.log",
+    "exitCode": 0,
+    "result": "18/18 actual Rust file/SQLite tests, including five new containment/retirement regressions and prior 33MiB+123 real-file case."
+  },
+  {
+    "command": "node desktop/tauri/scripts/tools.mjs cargo build --manifest-path src-tauri/Cargo.toml --locked --features test-hooks --bin product_store_probe",
+    "log": "worker-binary-review-probe-build.log",
+    "exitCode": 0,
+    "result": "Actual probe rebuilt with fixed Rust source."
+  },
+  {
+    "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/nativeBinaryAccess.test.ts tests/mediaPreviewFailure.test.ts tests/useShotMedia.test.ts tests/productStorageQueries.test.ts tests/audioMusicSaveFeedback.test.ts tests/materialPreviewSave.test.ts",
+    "log": "worker-binary-review-focused.log",
+    "exitCode": 0,
+    "result": "6 files / 48 tests. Production preview/element callbacks exercised in deterministic mounted hook host; no real DOM/WK claim. FIFO lease/preparation, cancellation, all read failure/close paths, malformed acknowledgement handle cleanup and unchanged Save feedback covered."
+  },
+  {
+    "command": "CUEPOINT_NATIVE_STORAGE_ACCEPTANCE=1 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/nativeBinaryProduct.test.ts",
+    "log": "worker-binary-review-native-four.log",
+    "exitCode": 0,
+    "durationSeconds": 45.61,
+    "result": "Earlier 4/4 real TS→Rust-process→SQLite/disk cases pass. Includes original >32MiB and three carriers/warm cache, plus actual read lease symlink replacement and 12 concurrent real reads. Subsequent source only added acknowledgement cleanup/shared two-slot preparation bound and extra fixtures."
+  },
+  {
+    "command": "CUEPOINT_NATIVE_STORAGE_ACCEPTANCE=1 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/nativeBinaryProduct.test.ts -t 'queues twelve actual raw'",
+    "log": "worker-binary-review-native-write.log",
+    "exitCode": 0,
+    "result": "1 actual native case passed, other four intentionally filtered. Twelve unique actual stages complete under two-slot limit; hashes/files checked and explicit discard leaves no media rows."
+  },
+  {
+    "command": "CUEPOINT_NATIVE_STORAGE_ACCEPTANCE=1 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/nativeBinaryProduct.test.ts",
+    "log": "worker-binary-review-native-final-enospc.log",
+    "exitCode": 1,
+    "result": "Final six-case source: 5 passed; >32MiB case failed with actual ENOSPC (os error28). This is NOT an all-pass gate. Newly added actual write/finish/discard parent replacement also passed. Workspace finally cleanup completed; root informed disk had only160MiB available and pinned target18GiB. Retry after root-coordinated known build-artifact cleanup. Resolved by separate successful six-case retry below (43.53s), old failure retained."
+  },
+  {
+    "command": "CUEPOINT_NATIVE_STORAGE_ACCEPTANCE=1 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/nativeBinaryProduct.test.ts",
+    "log": "worker-binary-review-native-final-success.log",
+    "exitCode": 0,
+    "durationSeconds": 43.53,
+    "result": "Final 6/6 actual TS→Rust process→SQLite/managed file tests pass after root removed only regenerable pinned debug/incremental cache. Preserves previous ENOSPC log independently. All three carriers/>32MiB, warm-cache corrupt/missing, cached read lease containment,12 concurrent reads,12 raw preparations, partial/complete stage write/finish/discard containment and permanent retirement are covered. No actual Tauri IPC/WK proof is claimed."
+  },
+  {
+    "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm lint",
+    "log": "worker-binary-review-types.log",
+    "exitCode": 0,
+    "result": "Whole repository tsc build pass at this snapshot; root still owns consolidated freeze gate."
+  },
+  {
+    "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec eslint src/lib/storage/binary.ts src/lib/storage/nativeBinary.ts src/lib/media.ts src/components/media/MediaThumb.tsx src/components/agent/ReferenceAttachments.tsx src/components/agent/ReferenceLibrary.tsx src/components/studio/materials/MaterialPreview.tsx src/components/audioMusic/controls.tsx src/components/audioMusic/shared.tsx src/components/audio/AudioExports.tsx src/components/audio/ScriptDocument.tsx -f json",
+    "log": "worker-binary-review-eslint.json",
+    "exitCode": 0,
+    "result": "0 errors,22 warnings across touched product sources. No new suppressions/allowances. Root owns formal baseline/debt gate."
+  },
+  {
+    "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run tests/mediaPreviewFailure.test.ts tests/useShotMedia.test.ts tests/productStorageQueries.test.ts",
+    "log": "worker-binary-review-fixture-initial.log",
+    "exitCode": 1,
+    "result": "Initial fixture edit incorrectly called nonexistent readonlyTx. Corrected to actual db.transaction(\"r\",[\"media\"],callback); final48/48 above retains production readonly bound context."
+  }
+]

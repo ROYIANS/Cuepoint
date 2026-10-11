@@ -1,0 +1,17 @@
+PASS gallery before/current native reads, projection bytes and independent derivation counters
+PASS original independent owner reads use N native readonly transactions; final exact ranges share one
+PASS an unselected owner insertion inside selected ID gaps does not rerun the cover subscription
+PASS filtered-out, archived and explicit-owner shot writes avoid fallback subscription work
+PASS explicit-cover-only search performs no shot read, while project metadata and explicit cover refresh
+PASS clearing an explicit project cover starts its fallback query; restoring it drops that shot scope
+PASS relevant first-frame writes and removal refresh fallback without changing missing-media semantics
+PASS held intersecting fallback query cannot expose prior scope covers; newer filter wins after old release
+PASS gallery IP/archive/search/sort transitions retain the visible-owner contract
+PASS character: actual before/current typed covers; only current table reads; unrelated writes do not rerun
+PASS scene: actual before/current typed covers; only current table reads; unrelated writes do not rerun
+PASS prop: actual before/current typed covers; only current table reads; unrelated writes do not rerun
+PASS style: actual before/current typed covers; only current table reads; unrelated writes do not rerun
+PASS held character result cannot populate the keyed scene owner
+PASS current-kind deletion removes its row; empty search remains a settled missing result
+PASS native selected media pixels and narrow page remain renderable
+E04 library: 16 scenarios; PASS; evidence /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/e04-library-evidence-4AbblK

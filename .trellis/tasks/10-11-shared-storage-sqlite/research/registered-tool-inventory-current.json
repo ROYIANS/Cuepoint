@@ -1,0 +1,1564 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-11T16:07:24.874Z",
+  "generatedFrom": "Current actual BUILTIN_TOOLS registry via Vite SSR; no business command or database read invoked",
+  "count": 95,
+  "previousCount": 95,
+  "newNames": [],
+  "removedNames": [],
+  "limits": "Previous source test anchors are a mapping seed, not evidence that current browser/native contracts ran. Current acceptance cells remain pending.",
+  "tools": [
+    {
+      "name": "workspace_overview",
+      "title": "查看工作区概览",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "foundation",
+      "sourceContractTests": [
+        "tests/agentActivityPersistence.test.ts",
+        "tests/agentFinalReview.test.ts",
+        "tests/agentFinishingCheck.test.ts",
+        "tests/agentRuns.test.ts",
+        "tests/agentSettings.test.ts",
+        "tests/agentTools.test.ts",
+        "tests/agentToolsReview.test.ts",
+        "tests/contextManagement.test.ts",
+        "tests/d05ToolCatalog.test.ts",
+        "tests/memoryRetrieval.test.ts",
+        "tests/reasoningPolicy.test.ts",
+        "tests/responsesStream.test.ts",
+        "tests/runPresentation.test.ts",
+        "tests/toolLoading.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "update_run_plan",
+      "title": "更新执行计划",
+      "effect": "bookkeeping",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "foundation",
+      "sourceContractTests": [
+        "tests/agentAuditRemediation.test.ts",
+        "tests/agentExecutionSummary.test.ts",
+        "tests/agentFinishingCheck.test.ts",
+        "tests/agentFinishingCheckPrompt.test.ts",
+        "tests/agentSettings.test.ts",
+        "tests/agentTaskOrchestration.test.ts",
+        "tests/agentTaskOrchestrationReview.test.ts",
+        "tests/agentTasks.test.ts",
+        "tests/agentTools.test.ts",
+        "tests/e07TypedBoundariesFinishing.test.ts",
+        "tests/reasoningPolicy.test.ts",
+        "tests/toolLoading.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "ip_search",
+      "title": "查找 IP",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "ip",
+      "sourceContractTests": [
+        "tests/agentIpTools.test.ts",
+        "tests/toolLoadingMeasurement.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "ip_read",
+      "title": "读取 IP 档案",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "ip",
+      "sourceContractTests": [
+        "tests/agentIpTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "ip_create",
+      "title": "创建 IP 档案",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": true,
+      "family": "ip",
+      "sourceContractTests": [
+        "tests/agentIpTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "ip_update",
+      "title": "修改 IP 档案",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": true,
+      "family": "ip",
+      "sourceContractTests": [
+        "tests/agentIpTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "ip_set_archived",
+      "title": "归档或恢复 IP",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": true,
+      "family": "ip",
+      "sourceContractTests": [
+        "tests/nativeRegisteredToolParity.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "project_bind_ip",
+      "title": "关联项目 IP",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": true,
+      "family": "ip",
+      "sourceContractTests": [
+        "tests/agentIpTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_read",
+      "title": "读取音频项目",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "audio",
+      "sourceContractTests": [
+        "tests/agentExecutionSummary.test.ts",
+        "tests/agentProjectCreation.test.ts",
+        "tests/audioAgentExecution.test.ts",
+        "tests/audioBatchFinalReview.test.ts",
+        "tests/audioMusicAgentTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_create",
+      "title": "组织配音项目",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "audio",
+      "sourceContractTests": [
+        "tests/agentProjectCreation.test.ts",
+        "tests/audioAgentExecution.test.ts",
+        "tests/audioMusicAgentTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_update",
+      "title": "修改配音内容",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "audio",
+      "sourceContractTests": [
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/audioMusicAgentTools.test.ts",
+        "tests/runWriteOutcomes.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_place_take",
+      "title": "将配音放入时间线",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "audio",
+      "sourceContractTests": [
+        "tests/nativeRegisteredToolParity.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_edit_clip",
+      "title": "编辑声音片段",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "audio",
+      "sourceContractTests": [
+        "tests/nativeRegisteredToolParity.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_split_clip",
+      "title": "分割声音片段",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "audio",
+      "sourceContractTests": [
+        "tests/nativeRegisteredToolParity.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_remove_clip",
+      "title": "移除时间线片段",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "audio",
+      "sourceContractTests": [
+        "tests/nativeRegisteredToolParity.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "music_read",
+      "title": "读取音乐作品",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "music",
+      "sourceContractTests": [
+        "tests/agentProjectCreation.test.ts",
+        "tests/audioAgentExecution.test.ts",
+        "tests/audioMusicAgentTools.test.ts",
+        "tests/musicDurationContract.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "music_save_draft",
+      "title": "保存音乐创作草稿",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "music",
+      "sourceContractTests": [
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/agentFinishingCheckPrompt.test.ts",
+        "tests/agentProjectCreation.test.ts",
+        "tests/audioMusicAgentTools.test.ts",
+        "tests/musicDurationContract.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "music_update_work",
+      "title": "整理音乐作品",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "music",
+      "sourceContractTests": [
+        "tests/musicDurationContract.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "music_reuse_work",
+      "title": "复用音乐参数",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "music",
+      "sourceContractTests": [
+        "tests/musicDurationContract.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_generation_capabilities",
+      "title": "查看声音生成能力",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "soundGeneration",
+      "sourceContractTests": [
+        "tests/audioGenerationAgent.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_generate_speech",
+      "title": "生成配音",
+      "effect": "network",
+      "atomic": false,
+      "recovery": "repeatable",
+      "requiresConfirmation": true,
+      "family": "soundGeneration",
+      "sourceContractTests": [
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/audioAgentExecution.test.ts",
+        "tests/audioGenerationAgent.test.ts",
+        "tests/audioTaskEvidence.test.ts",
+        "tests/musicGenerationReview.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "music_generate",
+      "title": "生成音乐",
+      "effect": "network",
+      "atomic": false,
+      "recovery": "repeatable",
+      "requiresConfirmation": true,
+      "family": "soundGeneration",
+      "sourceContractTests": [
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/agentFinalReview.test.ts",
+        "tests/agentFinishingCheckPrompt.test.ts",
+        "tests/audioGenerationAgent.test.ts",
+        "tests/audioTaskEvidence.test.ts",
+        "tests/musicGenerationReview.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_generation_check",
+      "title": "查询声音生成结果",
+      "effect": "network",
+      "atomic": false,
+      "recovery": "repeatable",
+      "requiresConfirmation": false,
+      "family": "soundGeneration",
+      "sourceContractTests": [
+        "tests/audioTaskEvidence.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "prepare_audio_generation_batch",
+      "title": "准备批量配音",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "audioBatch",
+      "sourceContractTests": [
+        "tests/audioBatchFinalReview.test.ts",
+        "tests/audioGenerationBatch.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_read_generation_batch",
+      "title": "读取批量配音进度",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "audioBatch",
+      "sourceContractTests": [
+        "tests/audioBatchFinalReview.test.ts",
+        "tests/audioGenerationBatch.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_read_arrangement",
+      "title": "读取选用与排列记录",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "audioArrangement",
+      "sourceContractTests": [
+        "tests/audioArrangementAgent.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_select_takes",
+      "title": "批量选用配音版本",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": true,
+      "family": "audioArrangement",
+      "sourceContractTests": [
+        "tests/audioArrangementAgent.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_arrange_selected",
+      "title": "排列已选声音",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": true,
+      "family": "audioArrangement",
+      "sourceContractTests": [
+        "tests/audioArrangementAgent.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "audio_revert_arrangement",
+      "title": "撤销一次声音排列",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": true,
+      "family": "audioArrangement",
+      "sourceContractTests": [
+        "tests/nativeRegisteredToolParity.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "material_search",
+      "title": "查找素材",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "material",
+      "sourceContractTests": [
+        "tests/agentMaterialTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "material_read",
+      "title": "读取素材详情与用途",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "material",
+      "sourceContractTests": [
+        "tests/agentMaterialTools.test.ts",
+        "tests/agentProjectCreation.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "material_read_text",
+      "title": "读取素材文档片段",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "material",
+      "sourceContractTests": [
+        "tests/agentMaterialTools.test.ts",
+        "tests/materialReferenceWire.test.ts",
+        "tests/providerCacheUsage.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "material_read_image",
+      "title": "查看版本素材图片",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "material",
+      "sourceContractTests": [
+        "tests/materialImageQueue.test.ts",
+        "tests/materialReferenceWire.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "material_update_metadata",
+      "title": "整理素材名称、标签和备注",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": true,
+      "family": "material",
+      "sourceContractTests": [
+        "tests/agentMaterialTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "material_promote",
+      "title": "保存独立版本素材",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": true,
+      "family": "material",
+      "sourceContractTests": [
+        "tests/agentMaterialTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "material_use",
+      "title": "将素材副本加入项目",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "material",
+      "sourceContractTests": [
+        "tests/agentMaterialTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "material_update_use",
+      "title": "向项目加入新版素材副本",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "material",
+      "sourceContractTests": [
+        "tests/agentMaterialTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "material_archive",
+      "title": "归档或恢复素材",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": true,
+      "family": "material",
+      "sourceContractTests": [
+        "tests/agentMaterialTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "material_release",
+      "title": "移除未使用的项目素材副本",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "material",
+      "sourceContractTests": [
+        "tests/agentMaterialTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "load_tool_groups",
+      "title": "加载创作工具",
+      "effect": "bookkeeping",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "discovery",
+      "sourceContractTests": [
+        "tests/agentReferences.test.ts",
+        "tests/audioAgentExecution.test.ts",
+        "tests/imageDiscovery.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "task_read",
+      "title": "读取任务工作区",
+      "effect": "bookkeeping",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "task",
+      "sourceContractTests": [
+        "tests/agentAuditRemediation.test.ts",
+        "tests/agentReferences.test.ts",
+        "tests/agentTaskOrchestrationReview.test.ts",
+        "tests/audioTaskEvidence.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "task_create",
+      "title": "建立创作任务",
+      "effect": "bookkeeping",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "task",
+      "sourceContractTests": [
+        "tests/agentTaskOrchestration.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "task_update",
+      "title": "更新任务要求",
+      "effect": "bookkeeping",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "task",
+      "sourceContractTests": [
+        "tests/agentTaskOrchestration.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "task_record_write",
+      "title": "保存任务工作记录",
+      "effect": "bookkeeping",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "task",
+      "sourceContractTests": [
+        "tests/agentTaskOrchestration.test.ts",
+        "tests/audioTaskEvidence.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "task_record_read",
+      "title": "读取任务记录",
+      "effect": "bookkeeping",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "task",
+      "sourceContractTests": [
+        "tests/agentTaskOrchestration.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "business_search",
+      "title": "查询创作资料",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/agentProjectCreation.test.ts",
+        "tests/toolLoading.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "business_detail",
+      "title": "查看创作详情",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentAuditRemediation.test.ts",
+        "tests/agentBusiness.test.ts",
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/agentProjectContext.test.ts",
+        "tests/agentTaskOrchestrationReview.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "business_read_relations",
+      "title": "分段读取关联标识",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "business_read_text",
+      "title": "分段读取创作文本",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentAuditRemediation.test.ts",
+        "tests/agentBusiness.test.ts",
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/toolValidationDiagnostics.test.ts",
+        "tests/toolValidationSafety.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "project_create",
+      "title": "创建项目",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/agentFinalReview.test.ts",
+        "tests/agentFinishingCheck.test.ts",
+        "tests/agentProjectContext.test.ts",
+        "tests/agentProjectCreation.test.ts",
+        "tests/d05ToolCatalog.test.ts",
+        "tests/runWriteOutcomes.test.ts",
+        "tests/toolLoading.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "project_update",
+      "title": "修改项目资料",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentProjectCreation.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "project_delete",
+      "title": "删除项目及内容",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "episode_create",
+      "title": "创建分集",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "episode_update",
+      "title": "修改分集故事",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentFilmScriptImpact.test.ts",
+        "tests/agentProjectCreation.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "episode_delete",
+      "title": "删除分集",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "beat_create",
+      "title": "创建故事场次",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentContextualOwnerRecovery.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "beat_update",
+      "title": "修改故事场次",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "beat_delete",
+      "title": "删除故事场次",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "shot_create",
+      "title": "创建镜头",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/e07TypedBoundaries.test.ts",
+        "tests/runWriteOutcomes.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "shot_update",
+      "title": "修改镜头",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/runWriteOutcomes.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "shot_delete",
+      "title": "删除镜头",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/runWriteOutcomes.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "character_create",
+      "title": "创建角色",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/agentMemoryTools.test.ts",
+        "tests/agentProjectContext.test.ts",
+        "tests/agentTaskOrchestration.test.ts",
+        "tests/agentTaskWrapup.test.ts",
+        "tests/toolLoading.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "character_update",
+      "title": "修改角色",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentContextualOwnerRecovery.test.ts",
+        "tests/agentProjectContext.test.ts",
+        "tests/e07TypedBoundaries.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "character_delete",
+      "title": "删除角色",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentTaskWrapup.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "scene_create",
+      "title": "创建场景",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "scene_update",
+      "title": "修改场景",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "scene_delete",
+      "title": "删除场景",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "prop_create",
+      "title": "创建道具",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "prop_update",
+      "title": "修改道具",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "prop_delete",
+      "title": "删除道具",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "style_create",
+      "title": "创建风格",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "style_update",
+      "title": "修改风格",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "style_delete",
+      "title": "删除风格",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "asset_copy_from_studio",
+      "title": "复用工作室资产",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentProjectContext.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "creative_duplicate",
+      "title": "复制场次或镜头",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "creative_reorder",
+      "title": "调整创作顺序",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "slot_update",
+      "title": "修改素材槽位",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts",
+        "tests/agentGenerationBatchSafety.test.ts",
+        "tests/d05BusinessBranches.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "media_delete_orphan",
+      "title": "清理未引用素材",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "business",
+      "sourceContractTests": [
+        "tests/agentBusiness.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "prepare_generation_batch",
+      "title": "准备批量生成",
+      "effect": "bookkeeping",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "generation",
+      "sourceContractTests": [
+        "tests/agentBatchPreparationRecovery.test.ts",
+        "tests/agentGeneration.test.ts",
+        "tests/agentGenerationBatch.test.ts",
+        "tests/agentGenerationBatchSafety.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "read_generation_batch",
+      "title": "读取批量结果",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "generation",
+      "sourceContractTests": [
+        "tests/agentGeneration.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "generation_capabilities",
+      "title": "查看生成能力",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "generation",
+      "sourceContractTests": [
+        "tests/agentGeneration.test.ts",
+        "tests/agentGenerationReview.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "submit_generation",
+      "title": "生成图片或视频",
+      "effect": "network",
+      "atomic": false,
+      "recovery": "generation",
+      "requiresConfirmation": true,
+      "family": "generation",
+      "sourceContractTests": [
+        "tests/agentAuditRemediation.test.ts",
+        "tests/agentBatchPreparationRecovery.test.ts",
+        "tests/agentGeneration.test.ts",
+        "tests/agentGenerationEvidence.test.ts",
+        "tests/agentGenerationReview.test.ts",
+        "tests/agentGenerationReviewTransactions.test.ts",
+        "tests/agentTaskOrchestrationReview.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "check_generation",
+      "title": "继续查询生成任务",
+      "effect": "network",
+      "atomic": false,
+      "recovery": "repeatable",
+      "requiresConfirmation": false,
+      "family": "generation",
+      "sourceContractTests": [
+        "tests/agentGeneration.test.ts",
+        "tests/agentGenerationEvidence.test.ts",
+        "tests/agentTaskOrchestrationReview.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "apply_generation",
+      "title": "写入生成素材",
+      "effect": "write",
+      "atomic": true,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "generation",
+      "sourceContractTests": [
+        "tests/agentGeneration.test.ts",
+        "tests/agentGenerationEvidence.test.ts",
+        "tests/agentTaskOrchestrationReview.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "list_generation_jobs",
+      "title": "查看生成记录",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "generation",
+      "sourceContractTests": [
+        "tests/agentGeneration.test.ts",
+        "tests/agentGenerationEvidence.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "memory_search",
+      "title": "搜索项目记忆",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "memory",
+      "sourceContractTests": [
+        "tests/agentMemoryTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "memory_read",
+      "title": "读取项目记忆",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "memory",
+      "sourceContractTests": [
+        "tests/agentMemoryTools.test.ts",
+        "tests/imageDiscovery.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "project_history_search",
+      "title": "搜索项目历史任务",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "memory",
+      "sourceContractTests": [
+        "tests/agentMemoryTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "project_history_read",
+      "title": "读取项目历史来源",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "memory",
+      "sourceContractTests": [
+        "tests/agentAuditRemediation.test.ts",
+        "tests/agentMemoryTools.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "discover_project_images",
+      "title": "查找项目图片",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "reference",
+      "sourceContractTests": [
+        "tests/imageDiscovery.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "project_reference_search",
+      "title": "查找项目参考资料",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "reference",
+      "sourceContractTests": [
+        "tests/agentReferences.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "project_reference_read",
+      "title": "读取参考资料片段",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "reference",
+      "sourceContractTests": [
+        "tests/agentAuditRemediation.test.ts",
+        "tests/agentReferences.test.ts",
+        "tests/imageDiscovery.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "read_project_image",
+      "title": "查看项目图片",
+      "effect": "read",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "reference",
+      "sourceContractTests": [
+        "tests/agentReferences.test.ts",
+        "tests/imageDiscovery.test.ts",
+        "tests/materialImageQueue.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "web_search",
+      "title": "搜索网络资料",
+      "effect": "network",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "web",
+      "sourceContractTests": [
+        "tests/webResearch.test.ts",
+        "tests/webResearchRuntime.test.ts",
+        "tests/tavilyNativeProbe.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    },
+    {
+      "name": "web_read",
+      "title": "读取网页正文",
+      "effect": "network",
+      "atomic": false,
+      "recovery": null,
+      "requiresConfirmation": false,
+      "family": "web",
+      "sourceContractTests": [
+        "tests/webResearch.test.ts",
+        "tests/webResearchRuntime.test.ts",
+        "tests/tavilyNativeProbe.test.ts"
+      ],
+      "currentBrowserExecution": "pending",
+      "currentRealNativeExecution": "pending",
+      "packagedFamilyEvidence": "pending"
+    }
+  ]
+}

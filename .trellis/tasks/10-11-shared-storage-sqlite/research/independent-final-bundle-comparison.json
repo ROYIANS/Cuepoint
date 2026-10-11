@@ -1,0 +1,51 @@
+{
+  "capturedAt": "2026-10-11T18:09:00Z",
+  "buildReceiptSha256": "05f152f79485212ae760b6822523a3805e5a1f61089214b76a076b85db063963",
+  "sourceReceiptIdentityMatch": true,
+  "sourceCount": 1122,
+  "sourceBeforeAfterDifferences": [],
+  "sourceDifferenceFromWholeCodeFreeze": [],
+  "currentSourceMismatches": [],
+  "actualBundle": {
+    "app": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791741979680-isolated-sqlite-product/Cuepoint Product Review.app",
+    "identifier": "dev.cuepoint.review.sqlite20261012final",
+    "identifierMatches": true,
+    "storageDeclaration": "sqlite",
+    "webkitStoreId": "49c5fa378662ccbac5440b2e85767e62",
+    "executable": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791741979680-isolated-sqlite-product/Cuepoint Product Review.app/Contents/MacOS/cuepoint-prototype",
+    "executableExists": true,
+    "executableSize": 31044288,
+    "executableSha256": "3d2e0346d2879d8410c37d09e649a59e3ce2b3aaa437a852d2115ddd653846a9",
+    "executableIdentityMatches": true,
+    "plistSha256": "fc370341002b11fe7faecc8a54a1d718e19df8c409a63cc02afd59759892324a",
+    "plistIdentityMatches": true,
+    "evidencePlistIdentical": true,
+    "scopedATSExact": true,
+    "transportSecurity": {
+      "NSExceptionDomains": {
+        "127.0.0.1": {
+          "NSExceptionAllowsInsecureHTTPLoads": true
+        }
+      }
+    },
+    "microphonePurpose": "由你点击录音后，为项目录制声音并保存到本机应用内部。"
+  },
+  "rawLogs": {
+    ".trellis/tasks/10-11-shared-storage-sqlite/research/final-packaged-build.log": {
+      "sha256": "a584afbb10fa801c4505193a5f126bf4043d4cdd423af78a3f5616d9384987e4",
+      "size": 456
+    },
+    "desktop/tauri/.acceptance/builds/1791741979680-isolated-sqlite-product/frontend.log": {
+      "sha256": "38dbd96be6357599ee7165dd7ee069596d64a9f40469fcd7df173039948e369b",
+      "size": 79992
+    },
+    "desktop/tauri/.acceptance/builds/1791741979680-isolated-sqlite-product/native-bundle.log": {
+      "sha256": "2a7ec76ab73c9d9038f3d948746e8e43c43aea06c2271525a66f0604cf2fcb49",
+      "size": 2347
+    }
+  },
+  "buildExitCode": 0,
+  "normalOwnerActivated": false,
+  "proofLimit": "Static built bundle and merged plist identity verified. Actual app startup, full SQLite UI, WebKit decode/playback/seek, dialogs, recording, printing and relaunch are still blocked by locked Mac. No normal owner activation or task completion/archival.",
+  "allStaticChecksPass": true
+}

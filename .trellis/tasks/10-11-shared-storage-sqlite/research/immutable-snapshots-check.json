@@ -1,0 +1,7 @@
+{
+  "base": "61b928ed7b3b4ca94da5591ebba91ee6cff71f03",
+  "comparedFiles": 85,
+  "byteChanged": [],
+  "pass": true,
+  "scope": "all committed immutable sourceSnapshots; current mutable test harnesses excluded intentionally"
+}

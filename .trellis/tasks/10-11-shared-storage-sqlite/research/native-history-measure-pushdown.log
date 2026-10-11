@@ -1,0 +1,5 @@
+{"kind":"seed","rows":2048,"seedMs":27820.563417}
+{"kind":"limit20","resultCount":20,"elapsedMs":52.4979170000006,"nativePages":3,"nativeReturnedRows":20,"jsonReplyBytes":169710,"nodeHeapDeltaBytes":1309528,"limits":"JSON-line disposable probe; heap delta is not peak/native/WK memory or user latency"}
+{"kind":"first","resultCount":1,"elapsedMs":10.113125000003492,"nativePages":1,"nativeReturnedRows":1,"jsonReplyBytes":8511,"nodeHeapDeltaBytes":100216,"limits":"JSON-line disposable probe; heap delta is not peak/native/WK memory or user latency"}
+{"kind":"count","resultCount":2048,"elapsedMs":0.6817499999997381,"nativePages":0,"nativeReturnedRows":0,"jsonReplyBytes":0,"nodeHeapDeltaBytes":35296,"limits":"JSON-line disposable probe; heap delta is not peak/native/WK memory or user latency"}
+{"kind":"cleanup","result":"fresh workspace removed"}

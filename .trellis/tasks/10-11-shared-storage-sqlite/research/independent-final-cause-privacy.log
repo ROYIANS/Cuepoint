@@ -1,0 +1,32 @@
+{"test":"source-before","identity":{"src/lib/agent/runChat.ts":"cfb3161e7eee2e2edcbb8f69bf2796e60e6e62a782e3e9c83ba025147bed595b","src/db/agentRuns.ts":"18e684d601758767a6f3c4f74da726ff193a8ead85dbedd7c6e2abc4c3f0f1f1"}}
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/lib/references/import.ts:21:58:
+      21 │ ...r(new URL("./docx.worker.ts", import.meta.url), {type: "module"});
+         ╵                                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/lib/references/pdf.ts:6:19:
+      6 │ const cmapAssets = import.meta.glob<string>("../../../node_modules/...
+        ╵                    ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/lib/references/pdf.ts:11:19:
+      11 │ const fontAssets = import.meta.glob<string>("../../../node_modules...
+         ╵                    ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{"test":"durable-cause-privacy","scenario":"execute-cause","executions":1,"providerCalls":0,"injected":false,"rawCauseExcluded":true,"runStatus":"failed","runError":"操作结果尚不确定，请先核实，不能自动重跑。","callStatus":"unknown","callError":"操作结果尚不确定，请先核实，不能自动重跑。"}
+{"test":"cleanup","scenario":"execute-cause","result":"disposable-workspace-removed"}
+{"test":"durable-cause-privacy","scenario":"lookup-cause","executions":1,"providerCalls":0,"injected":true,"rawCauseExcluded":true,"runStatus":"failed","runError":"无法核实已保存的工具结果，不能自动重跑。","callStatus":"unknown","callError":"操作结果尚不确定，不能自动重跑。"}
+{"test":"cleanup","scenario":"lookup-cause","result":"disposable-workspace-removed"}
+{"test":"durable-cause-privacy","scenario":"status-save-cause","executions":1,"providerCalls":0,"injected":true,"rawCauseExcluded":true,"runStatus":"failed","runError":"操作结果尚不确定，请先核实，不能自动重跑。","callStatus":"unknown","callError":"操作结果尚不确定，不能自动重跑。"}
+{"test":"cleanup","scenario":"status-save-cause","result":"disposable-workspace-removed"}
+{"test":"source-after","identity":{"src/lib/agent/runChat.ts":"cfb3161e7eee2e2edcbb8f69bf2796e60e6e62a782e3e9c83ba025147bed595b","src/db/agentRuns.ts":"18e684d601758767a6f3c4f74da726ff193a8ead85dbedd7c6e2abc4c3f0f1f1"},"unchanged":true}

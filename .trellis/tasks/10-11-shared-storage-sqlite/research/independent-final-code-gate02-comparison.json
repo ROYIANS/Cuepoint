@@ -1,0 +1,81 @@
+{
+  "status": "frozen source checkpoint with one failed browser timeout; no whole-product PASS",
+  "rootEvidence": "code-gates-02/acceptance.json",
+  "rootPass": false,
+  "checkedSources": 1122,
+  "currentMismatches": [],
+  "logs": [
+    {
+      "command": "quality",
+      "exit": 0,
+      "logHashMatches": true,
+      "changedInputs": []
+    },
+    {
+      "command": "browser",
+      "exit": 1,
+      "logHashMatches": true,
+      "changedInputs": []
+    },
+    {
+      "command": "quality-self-test",
+      "exit": 0,
+      "logHashMatches": true,
+      "changedInputs": []
+    },
+    {
+      "command": "checkpoint-types",
+      "exit": 0,
+      "logHashMatches": true,
+      "changedInputs": []
+    },
+    {
+      "command": "types",
+      "exit": 0,
+      "logHashMatches": true,
+      "changedInputs": []
+    },
+    {
+      "command": "agent-types",
+      "exit": 0,
+      "logHashMatches": true,
+      "changedInputs": []
+    },
+    {
+      "command": "model-bank",
+      "exit": 0,
+      "logHashMatches": true,
+      "changedInputs": []
+    },
+    {
+      "command": "desktop-lint",
+      "exit": 0,
+      "logHashMatches": true,
+      "changedInputs": []
+    },
+    {
+      "command": "desktop-types",
+      "exit": 0,
+      "logHashMatches": true,
+      "changedInputs": []
+    },
+    {
+      "command": "desktop-quality",
+      "exit": 0,
+      "logHashMatches": true,
+      "changedInputs": []
+    },
+    {
+      "command": "frontend-build",
+      "exit": 0,
+      "logHashMatches": true,
+      "changedInputs": []
+    }
+  ],
+  "browserFailure": "actual native oversized read identity case timed out at original30000ms while separate complete native lane also ran",
+  "limits": [
+    "The ten passed commands may be reused only at matching identity; failed browser must rerun under original timeout after heavy native work ends",
+    "Actual WK and merged bundle transport policy remain pending",
+    "This is independent source/log verification of root evidence, not a new full suite execution"
+  ]
+}

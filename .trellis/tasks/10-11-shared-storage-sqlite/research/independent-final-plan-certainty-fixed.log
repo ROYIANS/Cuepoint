@@ -1,0 +1,29 @@
+{"test":"source-before","path":"src/db/agentTools.ts","sha256":"dde83b3abd72f12b82e258bd404dd07d4469df99b0a17f55bd6c3368591c69ca"}
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/lib/references/import.ts:21:58:
+      21 │ ...r(new URL("./docx.worker.ts", import.meta.url), {type: "module"});
+         ╵                                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/lib/references/pdf.ts:6:19:
+      6 │ const cmapAssets = import.meta.glob<string>("../../../node_modules/...
+        ╵                    ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/lib/references/pdf.ts:11:19:
+      11 │ const fontAssets = import.meta.glob<string>("../../../node_modules...
+         ╵                    ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{"test":"plan-unknown-commit-classification","commits":1,"errorClass":"UnknownCommitError","classifiedRollback":false,"preservedUnknown":true,"causeClass":"Error"}
+{"test":"plan-durable-reopen","call":{"id":"review-call","threadId":"review-thread","runId":"review-run","name":"update_run_plan","status":"completed","result":"{\"plan\":[{\"id\":\"review-step\",\"title\":\"durably committed plan\",\"status\":\"pending\"}]}","updatedAt":"2026-10-11T17:15:00.489Z"},"plan":[{"id":"review-step","title":"durably committed plan","status":"pending"}]}
+{"test":"cleanup","result":"disposable-workspace-removed"}
+{"test":"source-after","path":"src/db/agentTools.ts","sha256":"dde83b3abd72f12b82e258bd404dd07d4469df99b0a17f55bd6c3368591c69ca","unchanged":true}

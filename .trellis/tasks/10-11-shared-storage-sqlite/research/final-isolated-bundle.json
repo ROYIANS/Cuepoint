@@ -1,0 +1,8 @@
+{
+  "profile": "isolated-sqlite-product",
+  "identifier": "dev.cuepoint.review.sqlite20261012final",
+  "storage": "sqlite",
+  "webkitStoreId": "49c5fa378662ccbac5440b2e85767e62",
+  "app": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791741979680-isolated-sqlite-product/Cuepoint Product Review.app",
+  "evidence": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791741979680-isolated-sqlite-product"
+}

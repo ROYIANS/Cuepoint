@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "stage": "mutable integration diagnostics",
+  "frozenSourceClaim": false,
+  "completionClaim": false,
+  "runs": [
+    {
+      "command": "explicit local pnpm test",
+      "log": "wave2-full-tests-diagnostic.log",
+      "exitCode": 1,
+      "result": "37 failed files,83 failed tests,3546 passed; implementation/test integration defects assigned to actual owners"
+    },
+    {
+      "command": "CUEPOINT_TOOL_COVERAGE_DIR=/tmp/cuepoint-tool-coverage/browser-root-diagnostic explicit local pnpm test",
+      "log": "wave3-browser-coverage-diagnostic.log",
+      "exitCode": 1,
+      "result": "13 failed files,29 failed tests,3775 passed; actual original recipe wrapper yielded executeAny89/95,executeFulfilled85/95; uncovered names assigned for meaningful cases"
+    },
+    {
+      "command": "explicit local pnpm quality --only lint --report <task research JSON>",
+      "log": "wave2-quality-lint-recheck.log",
+      "report": "wave2-quality-lint-recheck.json",
+      "exitCode": 1,
+      "result": "no unallowed lint nodes at snapshot; source changed during run, so gate properly failed"
+    },
+    {
+      "command": "explicit local pnpm quality --report <task research JSON>",
+      "log": "wave2-quality-full-diagnostic.log",
+      "report": "wave2-quality-full-diagnostic.json",
+      "exitCode": 2,
+      "result": "four introduced unbound-method nodes; architecture zero failures; unused halted on changed exact audio API source identity"
+    },
+    {
+      "command": "explicit local pnpm quality:self-test",
+      "log": "quality-self-test.log",
+      "exitCode": 0,
+      "result": "88 cases passed"
+    },
+    {
+      "command": "explicit local pnpm exec tsc --project tests/typecheck/tsconfig.agent-tools.json --noEmit",
+      "log": "typecheck-agent-tools-wip.log",
+      "exitCode": 0
+    },
+    {
+      "command": "explicit local pnpm exec tsc --project tests/typecheck/tsconfig.checkpoint.json --noEmit",
+      "log": "typecheck-checkpoint-wip.log",
+      "exitCode": 0
+    },
+    {
+      "command": "explicit local pnpm model-bank:verify",
+      "log": "model-bank-verify.log",
+      "exitCode": 0
+    },
+    {
+      "command": "explicit local pnpm build",
+      "log": "frontend-build-diagnostic.log",
+      "exitCode": 0,
+      "result": "Vite production build passed; existing large-chunk warnings remain visible"
+    },
+    {
+      "command": "explicit local Node native-history-measure.mjs",
+      "log": "native-history-measure-initial.log",
+      "exitCode": 0,
+      "result": "actual measurement collected, exposed selected-row hydration defect; exit0 is not performance acceptance"
+    },
+    {
+      "command": "explicit local pnpm --dir desktop/tauri types",
+      "log": "desktop-types-check.log",
+      "exitCode": 2,
+      "result": "BinaryContent arrayBuffer access in acceptancePrint; assigned repair"
+    },
+    {
+      "command": "explicit local pnpm --dir desktop/tauri lint",
+      "log": "desktop-lint-diagnostic.log",
+      "exitCode": 1,
+      "result": "same acceptancePrint unsafe access; assigned repair"
+    },
+    {
+      "command": "explicit local pnpm --dir desktop/tauri quality",
+      "log": "desktop-quality-diagnostic.log",
+      "exitCode": 0
+    },
+    {
+      "command": "explicit local pnpm quality --report <task research JSON>",
+      "log": "wave3-quality-full-diagnostic.log",
+      "report": "wave3-quality-full-diagnostic.json",
+      "exitCode": 1,
+      "result": "lint/architecture/unused section failures all zero; sources changed during run, so not a frozen passing gate"
+    },
+    {
+      "command": "explicit local Node native-history-measure.mjs",
+      "log": "native-history-measure-pushdown.log",
+      "exitCode": 0,
+      "result": "actual same2048 rows: limit20 hydrates20rows/3pages; first1row/1page; count native aggregate no row pages. Measurement excludes aggregate response bytes; not WK/user benchmark"
+    },
+    {
+      "command": "CUEPOINT_TOOL_COVERAGE_DIR=/tmp/cuepoint-tool-coverage/browser-root-wave4 explicit local pnpm test",
+      "log": "wave4-browser-diagnostic.log",
+      "report": "browser-tool-coverage-wave4.json",
+      "exitCode": 0,
+      "result": "222files/3830tests pass, native-only1file/7tests skipped; actual original execute recipes 95/95 fulfilled; not final frozen/native/package acceptance"
+    },
+    {
+      "command": "explicit local pnpm lint",
+      "log": "wave5-types-diagnostic.log",
+      "exitCode": 0,
+      "result": "current shared scheduler/package/core TS snapshot passes; media Rust stream implementation still in progress"
+    },
+    {
+      "command": "explicit local pnpm exec eslint native runner and3 current actual regression files -f json",
+      "log": "native-runner-eslint-recheck.json",
+      "exitCode": 0,
+      "result": "0errors; preceding diagnostic had nonexistent test filename and exited2; no acceptance claimed from it"
+    },
+    {
+      "command": "explicit local Node final-code-gates.mjs code-gates-01; each actual argv in receipt",
+      "report": "code-gates-01/acceptance.json",
+      "exitCode": 0,
+      "result": "11 commands all0/source unchanged; browser227files3941tests, full quality0fail12 exact allowances, types/selftest/model/build/desktop gates; final all-scope pending later preview fixture/ATS/native changes"
+    }
+  ],
+  "limits": [
+    "Logs represent executed diagnostics, not final frozen gates.",
+    "Source remains actively edited by coordinated owners.",
+    "Early isolated app build passed but actual CUA macOS acceptance was blocked by screen lock.",
+    "No normal owner activation, paid supplier access, push or main merge."
+  ]
+}

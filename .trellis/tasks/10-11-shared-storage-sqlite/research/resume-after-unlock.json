@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-12",
+  "branch": "codex/shared-storage-sqlite",
+  "baseRevision": "61b928ed7b3b4ca94da5591ebba91ee6cff71f03",
+  "task": "10-11-shared-storage-sqlite",
+  "status": "in_progress",
+  "completedCodeGate": "final-code-checkpoint.json",
+  "finalApplication": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791741979680-isolated-sqlite-product/Cuepoint Product Review.app",
+  "identifier": "dev.cuepoint.review.sqlite20261012final",
+  "owner": "isolated SQLite + managed workspace files",
+  "normalProductOwner": "unchanged IndexedDB",
+  "userAuthorization": "User explicitly delegated full responsibility and automatic approval for this task. Do not request routine implementation/commit approval again. Do not read/copy previous user profiles or keys. No push/main merge is in scope.",
+  "actualBlock": "Final CUA getApp returned locked Mac; no actual application-window/startup/WebKit/relaunch proof. User asleep, no lock bypass.",
+  "resume": [
+    "Use trellis-continue and read actual packaged-acceptance-checklist.md,final-code-checkpoint.json,independent-final-review.md,independent-final-signoff.json.",
+    "Check Git current branch/status/local work commits and exact1122 input identities before reusing any evidence. Any required product change must rerun affected checks and rebuild the isolated final app.",
+    "When the user unlocks Mac, use CUA (root sole owner) on the recorded exact final app; follow current computer-use docs. Verify full existing product/Agent/system Save/managed bytes/playback/seek/relaunch. No previous connection/profile/key import.",
+    "Use isolated fixture-provider approval/reject/Stop/error/original results/explicitresume checks; label provider fixtures. Real model smoke needs fresh locally configured isolated connection.",
+    "Only after complete isolated host acceptance activate normal SQLite owner, build the normal app and verify focusedstartup/routes/reopen. No silent storage fallback.",
+    "Update R/AC evidence, complete independent scope gate for any follow-up, local concrete commit plan and journal; only then finish/archive child. Parent storage/sync continues."
+  ],
+  "limits": [
+    "Windows/Linux actual host acceptance deferred.",
+    "No synchronization/plugin/provider server implementation, old-data migration, paid automatic replay or physicalGC.",
+    "Media rawHTTP90MiB labelled bytes are not playable decode; actualWKgate still needed.",
+    "Dedicated stream-mid-root/session-switch tests not added; current source/actual covered scenarios are documented separately."
+  ]
+}

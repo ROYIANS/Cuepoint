@@ -1,0 +1,14 @@
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects unsafe URL file:///etc/passwd"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects unsafe URL javascript:alert(1)"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects unsafe URL https://u:p@example.com"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects unsafe URL http://localhost"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects unsafe URL http://127.1"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects unsafe URL http://0x7f000001"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects unsafe URL http://192.168.1.1"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects unsafe URL http://169.254.169.254"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects unsafe URL http://[::1]"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects unsafe URL http://[::ffff:127.0.0.1]"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects extra fields and numeric limits, accepts a full 2048-character public URL"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects extra fields and numeric limits, accepts a full 2048-character public URL"}
+{"owner":"sqlite","name":"web_search","method":"parse","outcome":"rejected","test":"strict web arguments and safe persisted links > rejects extra fields and numeric limits, accepts a full 2048-character public URL"}
+{"owner":"sqlite","name":"web_read","method":"parse","outcome":"fulfilled","test":"strict web arguments and safe persisted links > rejects extra fields and numeric limits, accepts a full 2048-character public URL"}
