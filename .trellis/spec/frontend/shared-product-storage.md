@@ -131,11 +131,16 @@ the limit or count the wrong rows. Actual query/byte counters must distinguish
 SQL count from full-row reduction; a correct small result alone does not prove
 bounded history reads.
 
-One native driver admits concurrent root readonly snapshots, serializes root
-read/write units of work fairly, and keeps later readers behind a queued writer.
+One native driver admits at most **32 concurrent root readonly snapshots** in
+FIFO order, serializes root read/write units of work fairly, and keeps later
+readers behind a queued writer. Rust retains its independent 64-context guard;
+large thumbnail grids must queue rather than raise that guard or fail the page.
 An explicit nested StoreTx joins its existing unit of work without entering that
 root queue. Settlement, cancellation and callback failures release admission;
-callbacks run once. This matches local browser write scheduling while retaining
+callbacks run once. Disposing an observation cancels its not-yet-admitted query;
+if admission already began, recheck the observation owner before calling its
+selector and finish the context without publishing stale results. This matches
+local browser write scheduling while retaining
 point/predicate/CAS guards against independently admitted external drivers.
 Supplier/network work remains outside storage admission. Do not repair a local
 sibling conflict by replaying a transaction callback or paid request.
@@ -202,6 +207,7 @@ internal results; published warnings do not trigger rerender or paid replay.
 | Foreign/stale/forged binary reference | Reject actual access; no renderer path authority |
 | Managed bytes absent or altered | Missing/corrupt state; retain logical records |
 | Late read after dispose or scope switch | Suppress publication / reject held foreign identity |
+| More than 32 root readonly units on one native driver | Queue in FIFO order; keep writer fairness and Rust's 64-context guard |
 | Native storage open fails | Truthful recovery; no silent second owner |
 
 ## 5. Good / Base / Bad Cases
@@ -230,6 +236,12 @@ transaction and loses atomicity.
   inventory or fabricated completed result is not execution evidence.
 - Shared query hook races, disposal, precise invalidation and scope identity,
   plus retained E04 actual-browser negative invalidation matrix.
+- Actual Rust admission regression (`tests/sharedNativeAdmission.test.ts`):
+  three rounds of 70 compound material-version queries return correct rows,
+  bounded contexts settle to zero, disposed queued observations never run,
+  callback failures release slots, and a queued writer precedes later readers.
+  Verify the packaged 70-item grid, navigation away/back and subsequent save;
+  row counts or an initially visible grid do not prove lifecycle stability.
 - Actual isolated packaged macOS full UI/Agent/files/range/reopen proof before
   normal activation. Source/unit/probe evidence cannot replace a locked-screen
   or pending system window check. Other operating systems need their own proof.

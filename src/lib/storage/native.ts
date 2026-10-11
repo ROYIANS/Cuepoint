@@ -19,6 +19,10 @@ export interface BinaryAdapterServices {
 }
 type Mutation=Parameters<TransactionBackend["mutate"]>[0];
 type ReadDependency={table:TableName;keys:readonly string[]}|{table:TableName;query:NativeQuery};
+type RootWaiter={mode:"r"|"rw";signal?:AbortSignal;resolve:(release:()=>void)=>void;cancel:()=>void};
+// The native owner rejects more than 64 live contexts. Keep one driver's reads
+// below that boundary instead of starting a context for every mounted thumbnail.
+const ROOT_READ_CAPACITY=32;
 
 function matches(row:object,query:NativeQuery):boolean {
     const definition=tableDefinition(query.table);
@@ -198,9 +202,9 @@ export class NativeStoreDriver implements StoreDriver {
     private sessionPromise:Promise<NativeSession>|undefined;
     private readonly listeners=new Set<(change:StoreChange)=>void>();
     private lastSequence=0;
-    private writeTail:Promise<void>=Promise.resolve();
     private readers=0;
-    private readonly readersFinished=new Set<()=>void>();
+    private writer=false;
+    private readonly rootQueue:RootWaiter[]=[];
     constructor(private readonly bridge:NativeStoreBridge,private readonly binaries:BinaryAdapterServices) {}
     getSession():Promise<NativeSession> {
         this.sessionPromise ??=this.bridge.open().then(session=> {this.lastSequence=session.changeSequence;return {version:1,session:session.session,workspaceId:session.workspaceId,generation:session.generation};});
@@ -228,20 +232,44 @@ export class NativeStoreDriver implements StoreDriver {
         const event={generation:session.generation,sequence:commit.changeSequence,tables:commit.tables,changes};
         for (const listener of this.listeners) deliverStorageNotification(listener,event);
     }
-    async transaction<T>(mode:"r"|"rw",scope:readonly TableName[],callback:(backend:TransactionBackend)=>Promise<T>):Promise<T> {
-        if (mode === "r") {
-            await this.writeTail;
-            this.readers++;
-            try {return await this.runTransaction(mode,scope,callback);}finally {
-                if (--this.readers === 0) {for (const resolve of this.readersFinished) resolve();this.readersFinished.clear();}
-            }
+    private drainRoots():void {
+        while (!this.writer && this.rootQueue.length) {
+            const next=this.rootQueue[0];
+            if ((next.mode === "rw" && this.readers > 0) || this.readers >= ROOT_READ_CAPACITY) return;
+            this.rootQueue.shift();
+            next.signal?.removeEventListener("abort",next.cancel);
+            if (next.mode === "rw") this.writer=true;else this.readers++;
+            let released=false;
+            next.resolve(()=> {
+                if (released) return;
+                released=true;
+                if (next.mode === "rw") this.writer=false;else this.readers--;
+                this.drainRoots();
+            });
         }
-        const previous=this.writeTail;
-        let release!:()=>void;
-        this.writeTail=new Promise<void>(resolve=>release=resolve);
-        await previous;
-        if (this.readers > 0) await new Promise<void>(resolve=>this.readersFinished.add(resolve));
-        try {return await this.runTransaction(mode,scope,callback);}finally {release();}
+    }
+    private acquireRoot(mode:"r"|"rw",signal?:AbortSignal):Promise<()=>void> {
+        const cancellation=():Error=>signal?.reason instanceof Error ? signal.reason : new DOMException("Storage query was canceled","AbortError");
+        return new Promise((resolve,reject)=> {
+            if (signal?.aborted) {reject(cancellation());return;}
+            const waiter:RootWaiter={mode,signal,resolve,cancel:()=> {
+                const index=this.rootQueue.indexOf(waiter);
+                if (index < 0) return;
+                this.rootQueue.splice(index,1);
+                reject(cancellation());
+                this.drainRoots();
+            }};
+            this.rootQueue.push(waiter);
+            signal?.addEventListener("abort",waiter.cancel,{once:true});
+            this.drainRoots();
+        });
+    }
+    async transaction<T>(mode:"r"|"rw",scope:readonly TableName[],callback:(backend:TransactionBackend)=>Promise<T>):Promise<T> {
+        return this.admittedTransaction(mode,scope,callback);
+    }
+    private async admittedTransaction<T>(mode:"r"|"rw",scope:readonly TableName[],callback:(backend:TransactionBackend)=>Promise<T>,signal?:AbortSignal):Promise<T> {
+        const release=await this.acquireRoot(mode,signal);
+        try {signal?.throwIfAborted();return await this.runTransaction(mode,scope,callback);}finally {release();}
     }
     private async runTransaction<T>(mode:"r"|"rw",scope:readonly TableName[],callback:(backend:TransactionBackend)=>Promise<T>):Promise<T> {
         const session=await this.getSession(),operationId=crypto.randomUUID();
@@ -277,6 +305,7 @@ export class NativeStoreDriver implements StoreDriver {
     waitFor<T>(promise:Promise<T>):Promise<T> {return Promise.resolve(promise);}
     observe<T>(query:(backend:TransactionBackend)=>Promise<T>,observer:StoreObserver<T>):()=>void {
         let disposed=false,running=false,dirty=true;
+        const controller=new AbortController();
         let retryTimer:ReturnType<typeof setTimeout>|undefined;
         let conflicts=0;
         let dependencies:ReadDependency[]=[];
@@ -286,7 +315,7 @@ export class NativeStoreDriver implements StoreDriver {
             while (dirty && !disposed) {
                 dirty=false;
                 try {
-                    const result=await this.transaction("r",TABLE_NAMES,async backend=> {dependencies=(backend as NativeTransaction).dependencies;return query(backend);});
+                    const result=await this.admittedTransaction("r",TABLE_NAMES,async backend=> {controller.signal.throwIfAborted();dependencies=(backend as NativeTransaction).dependencies;return query(backend);},controller.signal);
                     if (!disposed && !dirty) deliverStorageNotification(value=>observer.next(value),result);
                     conflicts=0;
                 }catch(error) {
@@ -306,7 +335,7 @@ export class NativeStoreDriver implements StoreDriver {
             if (!change.changes || dependencies.some(dependency=>change.changes!.some(row=>affected(dependency,row)))) {dirty=true;void run();}
         });
         void run();
-        return ()=> {disposed=true;if (retryTimer !== undefined) clearTimeout(retryTimer);unsubscribe();};
+        return ()=> {disposed=true;controller.abort();if (retryTimer !== undefined) clearTimeout(retryTimer);unsubscribe();};
     }
     async receiveChangeSequence(sequence:number):Promise<void> {
         if (sequence <= this.lastSequence) return;
