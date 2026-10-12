@@ -187,6 +187,28 @@ unknown extras or changed bytes stop. Reverify the full remote asset set before
 marking complete. Owner publication follows completion; REST read-before-write
 checks do not prevent concurrent external publication.
 
+`githubApi(token, fetchImpl).upload(url, path)` streams raw installer bytes to
+the validated GitHub upload URL with `Content-Type: application/octet-stream`
+and an explicit decimal `Content-Length`. Open the file once, obtain its size
+with that FileHandle's `stat()` and stream that same descriptor; a Node file
+stream alone sends chunked transfer encoding without the length GitHub requires.
+Retain `duplex: half` and destroy/close the stream and descriptor in `finally`
+after success, HTTP rejection or transport rejection. JSON requests and binary
+downloads keep their separate behavior. A local HTTP fixture establishes request
+framing, not the cause recorded in an unavailable GitHub response body or hosted
+upload success.
+
+A publisher-only repair can resume the original sealed set using the corrected
+local publisher and original `GITHUB_REPOSITORY`, `GITHUB_SHA`, `GITHUB_REF`,
+`GITHUB_EVENT_NAME=push`, `GITHUB_RUN_ID` and `GITHUB_RUN_ATTEMPT`. Preserve the
+original manifest, receipt bytes, source/tag and payload identity; retain the
+usual policy, tag, ownership and remote-asset checks. The package verifier does
+not require the publisher's current Git HEAD to equal the package source.
+Verify that policy/collection semantics are unchanged before choosing this
+recovery. Re-running an old Actions job checks out its original SHA/ref and
+does not load a later publisher correction. No tag movement, artifact rewrite
+or remote mutation is implied by local implementation approval.
+
 ## 4. Validation & Error Matrix
 
 | Trigger | Required result |
@@ -205,6 +227,8 @@ checks do not prevent concurrent external publication.
 | Manual/branch mode | Build-only; no tag/Release mutation |
 | Existing published/immutable/unowned/duplicate release | Reject without mutation |
 | Upload interrupted / identical original retry | Incomplete owned draft / exact conservative resume |
+| File stream without explicit byte length | Invalid upload framing; send the opened file's exact Content-Length |
+| Upload HTTP/transport rejection | Propagate failure and close file resources; keep the draft incomplete |
 | Changed payload or unknown remote asset | Stop; owner recovery/new version needed |
 | Successful package build | Record packaged-only state; owner runtime validation remains separate |
 | Frontend default heap OOM / percentage option conflict | Dedicated bounded child budget / explicit conflict error; no global CI relaxation |
@@ -228,6 +252,12 @@ manifests to exercise collector rejection. Controlled fake GitHub API tests must
 exercise paginated drafts, published/unowned/duplicate rejection, partial upload,
 identical resume and changed/unknown assets. These are protocol tests, not real
 GitHub delivery. Verify tool paths, Windows argument handling and exact policy.
+Upload-adapter regressions must use actual Node fetch and a loopback HTTP server:
+reproduce the former chunked request's HTTP rejection, then assert explicit
+length, no chunked framing and full multichunk binary parity. Cover encoded
+asset names, zero/missing files, early HTTP rejection, actual socket failure,
+closed file resources and unchanged JSON/download behavior. Do not substitute a
+high-level fake `upload` method for this wire boundary.
 External SQLite verifier regressions must include production-encoded ASCII and
 Unicode row keys, malformed encodings, and valid encodings with mismatched IDs.
 

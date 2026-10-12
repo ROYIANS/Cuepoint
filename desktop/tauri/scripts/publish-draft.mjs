@@ -1,4 +1,4 @@
-import {createReadStream} from 'node:fs';
+import {open} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {fileDigest,regularFile,verifyReleaseDirectory} from './release-artifacts.mjs';
@@ -7,10 +7,10 @@ import {parseOptions,runContext,sha256} from './release-policy.mjs';
 const API='https://api.github.com';
 export function githubApi(token,fetchImpl=globalThis.fetch) {
     if (!token) throw new Error('GITHUB_TOKEN is required');
-    async function request(method,path,body,raw=false) {
+    async function request(method,path,body,raw=false,byteLength) {
         const url=new URL(path,API);
         if (!['api.github.com','uploads.github.com'].includes(url.hostname) || url.protocol !== 'https:') throw new Error('Untrusted GitHub API URL');
-        const response=await fetchImpl(url,{method,headers:{Authorization:`Bearer ${token}`,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28',...(raw ? {'Content-Type':'application/octet-stream'} : body ? {'Content-Type':'application/json'} : {})},body:raw ? body : body ? JSON.stringify(body) : undefined,...(raw ? {duplex:'half'} : {})});
+        const response=await fetchImpl(url,{method,headers:{Authorization:`Bearer ${token}`,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28',...(raw ? {'Content-Type':'application/octet-stream','Content-Length':String(byteLength)} : body ? {'Content-Type':'application/json'} : {})},body:raw ? body : body ? JSON.stringify(body) : undefined,...(raw ? {duplex:'half'} : {})});
         if (!response.ok) throw new Error(`GitHub ${method} ${url.pathname} failed (${response.status})`);
         if (raw === 'download') return Buffer.from(await response.arrayBuffer());
         if (response.status === 204) return null;
@@ -18,7 +18,18 @@ export function githubApi(token,fetchImpl=globalThis.fetch) {
     }
     return {
         json:(method,path,body)=>request(method,path,body),
-        upload:(url,path)=>request('POST',url,createReadStream(path),true),
+        upload:async (url,path)=> {
+            const file=await open(path,'r');
+            let body;
+            try {
+                const {size}=await file.stat();
+                body=file.createReadStream();
+                return await request('POST',url,body,true,size);
+            } finally {
+                body?.destroy();
+                await file.close();
+            }
+        },
         download:async path=> {
             const url=new URL(path,API);
             if (url.hostname !== 'api.github.com') throw new Error('Untrusted asset API');
