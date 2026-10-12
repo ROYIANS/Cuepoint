@@ -7,14 +7,20 @@ const receiptSchema = z.discriminatedUnion("type", [
     z.object({type: z.literal("canceled")}).strict(),
     z.object({type: z.literal("ready"), session: z.string().uuid(), chunkBytes: z.literal(CHUNK_BYTES)}).strict(),
     z.object({type: z.literal("saved"), byteLength: z.number().int().nonnegative().safe(), contentHash: z.string().regex(/^[a-f0-9]{64}$/)}).strict(),
-    z.object({type: z.literal("publishedWithError"), byteLength: z.number().int().nonnegative().safe(), contentHash: z.string().regex(/^[a-f0-9]{64}$/), code: z.enum(["directorySync", "stageCleanup"])}).strict(),
+    z.object({type: z.literal("publishedWithError"), byteLength: z.number().int().nonnegative().safe(), contentHash: z.string().regex(/^[a-f0-9]{64}$/), code: z.enum(["directorySync", "stageCleanup", "fileSync"])}).strict(),
 ]);
+type PublishedSaveCode = "directorySync" | "stageCleanup" | "fileSync";
+const publishedSaveMessages: Record<PublishedSaveCode, string> = {
+    directorySync: "文件已保存，但系统未能确认最后的保存步骤。请检查已保存的文件。",
+    stageCleanup: "文件已保存，但系统未能确认最后的保存步骤。请检查已保存的文件。",
+    fileSync: "文件已保存，但系统未能确认内容已写入磁盘。请检查已保存的文件。",
+};
 
 /** The native file exists; callers must not display cancellation or retry this export automatically. */
 class NativeSavePublishedError extends Error {
     readonly published = true;
-    constructor(readonly byteLength: number, readonly contentHash: string, readonly code: string) {
-        super("文件已保存，但系统未能确认最后的保存步骤。请检查已保存的文件。");
+    constructor(readonly byteLength: number, readonly contentHash: string, readonly code: PublishedSaveCode) {
+        super(publishedSaveMessages[code]);
         this.name = "NativeSavePublishedError";
     }
 }

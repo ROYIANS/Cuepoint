@@ -273,12 +273,8 @@ async fn product_media_preview(
         if server.is_none() {
             let validator_worker=Arc::clone(&worker);
             let validator_window=window.clone();
-            #[cfg(target_os="windows")]
-            let origin="http://tauri.localhost";
-            #[cfg(not(target_os="windows"))]
-            let origin="tauri://localhost";
             *server=Some(crate::product_media::MediaServer::start(
-                Arc::clone(&bridge.previews),origin.into(),
+                Arc::clone(&bridge.previews),crate::bundled_origin::origin().into(),
                 Arc::new(move|session|{
                     trusted(&validator_window)?;
                     validator_worker.run_product(crate::ProductJob::Validate(session.clone()))?;
@@ -602,20 +598,11 @@ fn lock(bridge: &Bridge) -> Result<std::sync::MutexGuard<'_, Inner>> {
         .lock()
         .map_err(|_| Error::new("bridge", "Bridge state poisoned"))
 }
-fn is_entry_path(path: &str) -> bool {
-    matches!(path, "" | "/" | "/index.html")
-}
-fn packaged_url(url: &tauri::Url) -> bool {
-    url.scheme() == "tauri"
-        && url.host_str() == Some("localhost")
-        && url.port().is_none()
-        && url.username().is_empty()
-        && url.password().is_none()
-        && url.query().is_none()
-        && is_entry_path(url.path())
-}
 fn packaged(window: &WebviewWindow) -> bool {
-    window.label() == "main" && window.url().is_ok_and(|u| packaged_url(&u))
+    window.label() == "main"
+        && window
+            .url()
+            .is_ok_and(|u| crate::bundled_origin::accepts(&u))
 }
 pub(crate) fn trusted(window: &WebviewWindow) -> Result<()> {
     if packaged(window) {
@@ -837,6 +824,14 @@ fn read_asset(
     Ok((asset, bytes))
 }
 fn publish_bytes(path: &Path, bytes: &[u8], check: impl Fn() -> Result<()>) -> Result<String> {
+    publish_bytes_with_flush(path, bytes, check, paths::flush_published_file)
+}
+fn publish_bytes_with_flush(
+    path: &Path,
+    bytes: &[u8],
+    check: impl Fn() -> Result<()>,
+    flush: impl FnOnce(&Path, (u64, u64), u64, u64) -> Result<()>,
+) -> Result<String> {
     use sha2::Digest;
     check()?;
     if !path.is_absolute() || path.exists() {
@@ -849,12 +844,34 @@ fn publish_bytes(path: &Path, bytes: &[u8], check: impl Fn() -> Result<()>) -> R
         path.parent()
             .ok_or_else(|| Error::new("containment", "Missing export parent"))?,
     )?;
+    #[cfg(windows)]
+    let _directory_guards = paths::pin_ancestors(&parent)?;
+    let parent_identity = paths::ordinary_directory(&parent)?.identity();
     let destination = parent.join(
         path.file_name()
             .ok_or_else(|| Error::new("containment", "Missing export name"))?,
     );
     let stage = parent.join(format!("{}.tmp", uuid::Uuid::new_v4()));
     let mut file = paths::exclusive(&stage)?;
+    let stage_identity = paths::stat_file(&file)?.identity();
+    let verify_stage = |file: &fs::File, links: u64, length: u64| -> Result<()> {
+        let current_parent = paths::ordinary_directory(&parent)?.identity();
+        let named = paths::ordinary(&stage, links)?;
+        let opened = paths::stat_file(file)?;
+        if (current_parent.0, current_parent.1) != (parent_identity.0, parent_identity.1)
+            || named.identity() != (stage_identity.0, stage_identity.1, links)
+            || opened.identity() != named.identity()
+            || named.len() != length
+            || opened.len() != length
+        {
+            return Err(Error::new(
+                "changed",
+                "Export stage or parent identity changed",
+            ));
+        }
+        Ok(())
+    };
+    let mut published = false;
     let result = (|| {
         for chunk in bytes.chunks(crate::CHUNK) {
             check()?;
@@ -862,14 +879,61 @@ fn publish_bytes(path: &Path, bytes: &[u8], check: impl Fn() -> Result<()>) -> R
         }
         file.sync_all()?;
         check()?;
+        verify_stage(&file, 1, bytes.len() as u64)?;
         fs::hard_link(&stage, &destination)?; // Atomic no-overwrite publication, including empty existing files.
-        paths::sync_dir(&parent)?;
+        published = true;
+        flush(
+            &destination,
+            (stage_identity.0, stage_identity.1),
+            bytes.len() as u64,
+            2,
+        )
+        .map_err(|_| published_export_error("fileSync"))?;
+        paths::namespace_checkpoint(&parent)
+            .map_err(|_| published_export_error("directorySync"))?;
         Ok(paths::hex_digest(sha2::Sha256::digest(bytes)))
     })();
+    let cleanup_authority = (|| -> Result<()> {
+        let length = paths::stat_file(&file)?.len();
+        verify_stage(&file, if published { 2 } else { 1 }, length)?;
+        if published {
+            let target = paths::ordinary(&destination, 2)?;
+            if target.identity() != (stage_identity.0, stage_identity.1, 2)
+                || target.len() != bytes.len() as u64
+                || length != bytes.len() as u64
+            {
+                return Err(Error::new("changed", "Published export identity changed"));
+            }
+        }
+        Ok(())
+    })();
     drop(file);
-    fs::remove_file(&stage)?;
-    paths::sync_dir(&parent)?;
-    result
+    let cleanup = cleanup_authority.and_then(|()| {
+        fs::remove_file(&stage)?;
+        paths::namespace_checkpoint(&parent)?;
+        Ok(())
+    });
+    match result {
+        Err(error) => Err(error), // Cleanup must not erase a reached publication result.
+        Ok(hash) => {
+            cleanup.map_err(|error| {
+                if published {
+                    published_export_error("stageCleanup")
+                } else {
+                    error
+                }
+            })?;
+            Ok(hash)
+        }
+    }
+}
+fn published_export_error(phase: &str) -> Error {
+    Error::new(
+        "published",
+        format!(
+            "File already saved; {phase} confirmation failed. Check the saved file before another export."
+        ),
+    )
 }
 fn generated<'a>(metadata: &'a GeneratedMetadata, bytes: &[u8]) -> Result<(&'static str, &'a str)> {
     if matches!(metadata.format, GeneratedFormat::Microphone) {
@@ -1628,16 +1692,18 @@ pub fn run() {
             });
             let builder =
                 tauri::WebviewWindowBuilder::from_config(app, &app.config().app.windows[0])?
-                    .data_store_identifier(store)
                     .initialization_script(script);
+            #[cfg(target_os = "macos")]
+            let builder = builder.data_store_identifier(store);
+            #[cfg(not(target_os = "macos"))]
+            let builder = builder.data_directory(webview_profile_directory(
+                &app.path()
+                    .app_data_dir()
+                    .map_err(|_| Error::new("profile", "Application data directory unavailable"))?,
+                store,
+            )?);
             builder
-                .on_navigation(|url| {
-                    url.scheme() == "tauri"
-                        && url.host_str() == Some("localhost")
-                        && url.port().is_none()
-                        && url.query().is_none()
-                        && is_entry_path(url.path())
-                })
+                .on_navigation(crate::bundled_origin::accepts)
                 .build()?;
             Ok(())
         })
@@ -1656,7 +1722,10 @@ pub fn run() {
             }
         })
         .on_permission_request(|window, kind| {
-            let trusted = window.label() == "main" && window.url().is_ok_and(|u| packaged_url(&u));
+            let trusted = window.label() == "main"
+                && window
+                    .url()
+                    .is_ok_and(|url| crate::bundled_origin::accepts(&url));
             if trusted && matches!(kind, tauri::webview::PermissionKind::Microphone) {
                 tauri::webview::PermissionResponse::Default
             } else {
@@ -1777,15 +1846,6 @@ mod tests {
     }
 
     #[test]
-    fn packaged_entry_accepts_tauri_root_without_widening_navigation() {
-        assert!(is_entry_path(""));
-        assert!(is_entry_path("/"));
-        assert!(is_entry_path("/index.html"));
-        for path in ["/assets/app.js", "/other", "?query"] {
-            assert!(!is_entry_path(path));
-        }
-    }
-    #[test]
     fn fresh_product_ensure_action_is_closed_and_generation_aware() {
         let request = serde_json::json!({
             "version": 1,
@@ -1827,6 +1887,61 @@ mod tests {
         let hash = publish_bytes(&path, b"new", || Ok(())).unwrap();
         assert_eq!(hash.len(), 64);
         assert_eq!(fs::read(&path).unwrap(), b"new");
+        fs::remove_dir_all(root).unwrap();
+    }
+    #[test]
+    fn retained_export_final_flush_failure_preserves_published_file_and_warning() {
+        let root = std::env::temp_dir().join(format!("cuepoint-export-{}", uuid::Uuid::new_v4()));
+        fs::create_dir(&root).unwrap();
+        let path = root.join("output");
+        let error = publish_bytes_with_flush(
+            &path,
+            b"already saved",
+            || Ok(()),
+            |destination, _, size, links| {
+                assert_eq!(destination, fs::canonicalize(&path).unwrap());
+                assert_eq!(fs::read(destination).unwrap(), b"already saved");
+                assert_eq!((size, links), (13, 2));
+                Err(Error::new("io", "Injected final-file flush failure"))
+            },
+        )
+        .unwrap_err();
+        assert_eq!(error.code, "published");
+        assert!(error.message.contains("File already saved"));
+        assert!(error.message.contains("fileSync"));
+        assert_eq!(fs::read(&path).unwrap(), b"already saved");
+        assert_eq!(fs::read_dir(&root).unwrap().count(), 1);
+        fs::remove_dir_all(root).unwrap();
+    }
+    #[test]
+    fn retained_export_flush_failure_never_deletes_a_stage_with_unowned_links() {
+        let root = std::env::temp_dir().join(format!("cuepoint-export-{}", uuid::Uuid::new_v4()));
+        fs::create_dir(&root).unwrap();
+        let path = root.join("output");
+        let alias = root.join("unowned-link");
+        let error = publish_bytes_with_flush(
+            &path,
+            b"saved",
+            || Ok(()),
+            |destination, _, _, _| {
+                fs::hard_link(destination, &alias)?;
+                Err(Error::new(
+                    "changed",
+                    "Injected unowned alias after publication",
+                ))
+            },
+        )
+        .unwrap_err();
+        assert_eq!(error.code, "published");
+        assert_eq!(fs::read(&path).unwrap(), b"saved");
+        assert_eq!(fs::read(&alias).unwrap(), b"saved");
+        let stages = fs::read_dir(&root)
+            .unwrap()
+            .map(|entry| entry.unwrap().path())
+            .filter(|path| path.extension().is_some_and(|extension| extension == "tmp"))
+            .collect::<Vec<_>>();
+        assert_eq!(stages.len(), 1, "Unproven stage must remain untouched");
+        assert_eq!(fs::read(&stages[0]).unwrap(), b"saved");
         fs::remove_dir_all(root).unwrap();
     }
     #[test]

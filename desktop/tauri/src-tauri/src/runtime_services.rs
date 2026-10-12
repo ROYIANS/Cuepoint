@@ -14,6 +14,27 @@ use tauri::{Manager, WebviewWindow, ipc::CapabilityBuilder};
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_opener::OpenerExt;
 
+/// The native owner chooses this directory; no renderer value selects a path.
+#[cfg(any(not(target_os = "macos"), test))]
+pub(crate) fn webview_profile_directory(
+    app_data: &std::path::Path,
+    store: [u8; 16],
+) -> Result<std::path::PathBuf> {
+    std::fs::create_dir_all(app_data)?;
+    let root = crate::paths::canonical_root(app_data)?;
+    let profiles = root.join("webview-profiles-v1");
+    let selected = profiles.join(crate::paths::hex_digest(store));
+    for directory in [&profiles, &selected] {
+        match std::fs::create_dir(directory) {
+            Ok(()) => {}
+            Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {}
+            Err(error) => return Err(error.into()),
+        }
+        crate::paths::ordinary_directory(directory)?;
+    }
+    Ok(selected)
+}
+
 #[derive(Default)]
 pub(crate) struct RuntimeServices {
     origins: Mutex<HashSet<String>>,
@@ -349,6 +370,40 @@ mod tests {
         assert!(normal.0.contains("indexeddb"));
         assert!(normal.0.contains("Object.freeze"));
         assert!(profile("evil';global()", false).is_err());
+    }
+    #[test]
+    fn webview_directories_are_fixed_isolated_and_ordinary() {
+        let root = std::env::temp_dir().join(format!("cuepoint-webview-{}", uuid::Uuid::new_v4()));
+        let normal = profile("dev.cuepoint.prototype.offline", true).unwrap().1;
+        let review = profile("dev.cuepoint.review.smoke", true).unwrap().1;
+        let path = webview_profile_directory(&root, normal).unwrap();
+        assert_eq!(path, webview_profile_directory(&root, normal).unwrap());
+        assert_ne!(path, webview_profile_directory(&root, review).unwrap());
+        assert_ne!(
+            path,
+            webview_profile_directory(
+                &root,
+                profile("dev.cuepoint.prototype.offline", false).unwrap().1
+            )
+            .unwrap()
+        );
+        assert!(path.starts_with(std::fs::canonicalize(&root).unwrap()));
+        std::fs::remove_dir(&path).unwrap();
+        std::fs::write(&path, b"not a directory").unwrap();
+        assert!(webview_profile_directory(&root, normal).is_err());
+        std::fs::remove_dir_all(root).unwrap();
+    }
+    #[cfg(unix)]
+    #[test]
+    fn webview_directory_rejects_symlink_namespace() {
+        let root =
+            std::env::temp_dir().join(format!("cuepoint-webview-link-{}", uuid::Uuid::new_v4()));
+        let outside = root.join("outside");
+        std::fs::create_dir_all(&outside).unwrap();
+        std::os::unix::fs::symlink(&outside, root.join("webview-profiles-v1")).unwrap();
+        assert!(webview_profile_directory(&root, [1; 16]).is_err());
+        assert_eq!(std::fs::read_dir(outside).unwrap().count(), 0);
+        std::fs::remove_dir_all(root).unwrap();
     }
     #[test]
     fn export_envelopes_are_closed_and_bounded_before_io() {

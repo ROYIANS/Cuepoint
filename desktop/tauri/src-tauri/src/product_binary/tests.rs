@@ -390,6 +390,195 @@ fn recovery_partial_known_stages_is_idempotent_and_retains_unknown_files() {
 }
 
 #[test]
+fn changed_stage_after_final_flush_is_not_unlinked_or_claimed() {
+    for alias in [false, true] {
+        let mut fixture = Fixture::new();
+        let bytes = b"published bytes";
+        let (stage_id, binary_id) = fixture.prepare(bytes.len() as u64);
+        fixture.store.write_raw(&stage_id, 0, bytes).unwrap();
+        let content_hash = paths::hex_digest(Sha256::digest(bytes));
+        let target = fixture.root.join(binary_relative(&binary_id).unwrap());
+        let source = fixture.root.join(stage_relative(&stage_id).unwrap());
+        let foreign = fixture.root.join("foreign-link");
+        let reached = std::cell::Cell::new(false);
+        let error = fixture
+            .store
+            .seal_with_flush(
+                &fixture.db,
+                &stage_id,
+                &content_hash,
+                &mut || Ok(()),
+                |path, identity, length, links| {
+                    paths::flush_published_file(path, identity, length, links)?;
+                    reached.set(true);
+                    if alias {
+                        fs::hard_link(&source, &foreign)?;
+                    } else {
+                        fs::remove_file(&source)?;
+                        fs::write(&source, b"foreign stage bytes")?;
+                    }
+                    Ok(())
+                },
+            )
+            .expect_err("changed cleanup authority must reject sealing");
+        assert!(reached.get());
+        assert!(matches!(error.code, "containment" | "changed"));
+        assert_eq!(fixture.count("product_binary_intents"), 1);
+        assert_eq!(fixture.count("product_binaries"), 0);
+        assert_eq!(fs::read(&target).unwrap(), bytes);
+        assert_eq!(
+            fs::read(&source).unwrap(),
+            if alias {
+                &bytes[..]
+            } else {
+                &b"foreign stage bytes"[..]
+            }
+        );
+        assert!(recover(&fixture.root, &fixture.db, &fixture.workspace_id).is_err());
+        assert_eq!(fixture.count("product_binary_intents"), 1);
+        assert_eq!(
+            fs::read(&source).unwrap(),
+            if alias {
+                &bytes[..]
+            } else {
+                &b"foreign stage bytes"[..]
+            }
+        );
+        if alias {
+            assert_eq!(fs::read(&foreign).unwrap(), bytes);
+        }
+    }
+}
+
+#[test]
+fn recovery_flush_cannot_authorize_deleting_a_changed_stage() {
+    for alias in [false, true] {
+        let mut fixture = Fixture::new();
+        let bytes = b"published bytes";
+        let (stage_id, binary_id) = fixture.prepare(bytes.len() as u64);
+        fixture.store.write_raw(&stage_id, 0, bytes).unwrap();
+        let content_hash = paths::hex_digest(Sha256::digest(bytes));
+        fixture
+            .db
+            .execute(
+                "UPDATE product_binary_intents SET content_hash=? WHERE stage_id=?",
+                rusqlite::params![content_hash, stage_id],
+            )
+            .unwrap();
+        let target = fixture.root.join(binary_relative(&binary_id).unwrap());
+        let source = fixture.root.join(stage_relative(&stage_id).unwrap());
+        let foreign = fixture.root.join("foreign-link");
+        fs::hard_link(&source, &target).unwrap();
+        fixture.store.writes.clear();
+        let reached = std::cell::Cell::new(false);
+        let error = recover_intent_with_flush(
+            &fixture.store.root,
+            fixture.store.root_identity,
+            &fixture.db,
+            &stage_id,
+            true,
+            |path, identity, length, links| {
+                paths::flush_published_file(path, identity, length, links)?;
+                reached.set(true);
+                if alias {
+                    fs::hard_link(&source, &foreign)?;
+                } else {
+                    fs::remove_file(&source)?;
+                    fs::write(&source, b"foreign stage bytes")?;
+                }
+                Ok(())
+            },
+        )
+        .expect_err("changed recovery stage must not be erased");
+        assert!(reached.get());
+        assert!(matches!(error.code, "containment" | "changed"));
+        assert_eq!(fixture.count("product_binary_intents"), 1);
+        assert_eq!(fixture.count("product_binaries"), 0);
+        assert_eq!(fs::read(&target).unwrap(), bytes);
+        assert_eq!(
+            fs::read(&source).unwrap(),
+            if alias {
+                &bytes[..]
+            } else {
+                &b"foreign stage bytes"[..]
+            }
+        );
+        if alias {
+            assert_eq!(fs::read(foreign).unwrap(), bytes);
+        }
+    }
+}
+
+#[test]
+fn final_file_flush_failure_retains_intent_and_recovery_never_invents_a_claim() {
+    let mut fixture = Fixture::new();
+    let bytes = b"publication bytes";
+    let (stage_id, binary_id) = fixture.prepare(bytes.len() as u64);
+    fixture.store.write_raw(&stage_id, 0, bytes).unwrap();
+    let content_hash = paths::hex_digest(Sha256::digest(bytes));
+    let target = fixture.root.join(binary_relative(&binary_id).unwrap());
+    let source = fixture.root.join(stage_relative(&stage_id).unwrap());
+    let reached = std::cell::Cell::new(false);
+    let error = fixture
+        .store
+        .seal_with_flush(
+            &fixture.db,
+            &stage_id,
+            &content_hash,
+            &mut || Ok(()),
+            |path, identity, length, links| {
+                assert!(path.exists(), "failure hook ran before actual publication");
+                paths::flush_published_file(path, identity, length, links)?;
+                reached.set(true);
+                Err(Error::new(
+                    "fixtureFlush",
+                    "injected published file flush failure",
+                ))
+            },
+        )
+        .expect_err("final-file flush must reject sealing");
+    assert_eq!(error.code, "fixtureFlush");
+    assert!(reached.get());
+    assert_eq!(fixture.count("product_binaries"), 0);
+    assert_eq!(fixture.count("product_binary_intents"), 1);
+    assert_eq!(
+        fixture
+            .db
+            .query_row(
+                "SELECT state FROM product_binary_intents WHERE stage_id=?",
+                [&stage_id],
+                |r| r.get::<_, String>(0)
+            )
+            .unwrap(),
+        "writing"
+    );
+    assert_eq!(fs::read(&source).unwrap(), bytes);
+    assert_eq!(fs::read(&target).unwrap(), bytes);
+    recover(&fixture.root, &fixture.db, &fixture.workspace_id).unwrap();
+    recover(&fixture.root, &fixture.db, &fixture.workspace_id).unwrap();
+    assert!(!source.exists());
+    assert_eq!(fs::read(&target).unwrap(), bytes);
+    assert_eq!(
+        fixture.count("product_binaries"),
+        0,
+        "recovery manufactured a domain claim"
+    );
+    let claim = BinaryClaim {
+        stage_id,
+        reference: ManagedBinaryRef {
+            version: 1,
+            workspace_id: fixture.workspace_id.clone(),
+            binary_id,
+            byte_length: bytes.len() as u64,
+            mime_type: "application/octet-stream".into(),
+            content_hash,
+        },
+    };
+    fixture.claim(std::slice::from_ref(&claim));
+    assert_eq!(fixture.count("product_binaries"), 1);
+}
+
+#[test]
 fn recovery_handles_death_between_publication_link_and_unlink() {
     let mut fixture = Fixture::new();
     let bytes = b"publication bytes";

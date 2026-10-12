@@ -170,6 +170,21 @@ describe("native workspace renderer boundary", () => {
     await expect(adapter.ensure()).rejects.not.toThrow("/Users/private");
   });
 
+  it("preserves a reached publication warning without retrying or exposing paths", async () => {
+    const invoke = vi.fn().mockRejectedValue({
+      code: "published",
+      message: "File already saved; fileSync failed at /Users/private/export",
+    });
+    vi.stubGlobal("window", { __TAURI_INTERNALS__: { invoke } });
+    const adapter = createNativeWorkspaceAdapter();
+    await expect(adapter.request({ type: "state" })).rejects.toMatchObject({
+      published: true,
+      code: "published",
+      message: "文件已保存，但系统未能确认保存收尾。请检查已保存的文件。",
+    });
+    expect(invoke).toHaveBeenCalledTimes(1);
+  });
+
   it("rejects an older generation instead of accepting stale state", async () => {
     const invoke = vi
       .fn()

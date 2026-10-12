@@ -161,6 +161,8 @@ impl FullProductStore {
         } else {
             paths::canonical_root(&root)?
         };
+        #[cfg(windows)]
+        let _startup_directory_guards = paths::pin_ancestors(&root)?;
         let marker = if create {
             None
         } else {
@@ -179,7 +181,7 @@ impl FullProductStore {
                     fs::set_permissions(path, fs::Permissions::from_mode(0o700))?;
                 }
             }
-            paths::sync_dir(&root)?;
+            paths::namespace_checkpoint(&root)?;
         }
         let db_path = paths::managed(&root, ".local/state.sqlite", false)?;
         let writer_path = paths::managed(&root, ".local/writer.sqlite", false)?;
@@ -210,7 +212,7 @@ impl FullProductStore {
             }
             db.pragma_update(None, "user_version", SCHEMA)?;
             db.execute_batch("COMMIT")?;
-            paths::sync_dir(&root.join(".local"))?;
+            paths::namespace_checkpoint(&root.join(".local"))?;
         }
         let (id, schema, registry_hash): (String, u32, String) = db.query_row(
             "SELECT id,schema,registry_hash FROM product_workspace",

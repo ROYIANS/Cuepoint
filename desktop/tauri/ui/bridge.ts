@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { z } from "zod";
 import { Sha256 } from "@/lib/sha256";
 import type { NativeAction } from "@/lib/nativeWorkspace";
+import { nativeWorkspacePublishedError } from "@/lib/nativeWorkspace";
 import {
   nativeProjectSchema as project,
   nativeVideoProjectSchema as videoProject,
@@ -172,6 +173,11 @@ class NativeWorkspace {
         throw new Error("工作区已切换，忽略旧状态");
       this.generation = Math.max(this.generation, parsed.generation);
       return parsed.result;
+    } catch (cause) {
+      if (cause && typeof cause === "object" && "code" in cause && cause.code === "published") {
+        throw nativeWorkspacePublishedError();
+      }
+      throw cause;
     } finally {
       this.active.delete(operationId);
     }

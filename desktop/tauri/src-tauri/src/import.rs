@@ -21,9 +21,9 @@ struct Intent {
     device: Option<String>,
     inode: Option<String>,
 }
-fn optional(path: &Path) -> Result<Option<fs::Metadata>> {
+fn optional(path: &Path) -> Result<Option<paths::NativeStat>> {
     match fs::symlink_metadata(path) {
-        Ok(m) => Ok(Some(m)),
+        Ok(_) => Ok(Some(paths::stat_path(path)?)),
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
         Err(e) => Err(e.into()),
     }
@@ -75,7 +75,7 @@ impl Workspace {
             return Err(Error::new("size", "Source byte boundary"));
         }
         let mut input = fs::File::open(&request.source)?;
-        if paths::inode(&source_before)? != paths::inode(&input.metadata()?)? {
+        if source_before.identity() != paths::stat_file(&input)?.identity() {
             return Err(Error::new(
                 "changed",
                 "Selected source changed while opening",
@@ -119,8 +119,8 @@ impl Workspace {
         check()?;
         let mut stage = paths::exclusive(&stage_path)?;
         stage.sync_all()?;
-        paths::sync_dir(stage_path.parent().expect("stage parent"))?;
-        let (device, inode, _) = paths::inode(&stage.metadata()?)?;
+        paths::namespace_checkpoint(stage_path.parent().expect("stage parent"))?;
+        let (device, inode, _) = paths::stat_file(&stage)?.identity();
         self.db.execute(
             "UPDATE intents SET device=?,inode=? WHERE id=?",
             params![device.to_string(), inode.to_string(), id],
@@ -150,7 +150,7 @@ impl Workspace {
         check()?;
         let source_after = paths::ordinary(&request.source, 1)?;
         if copied != source_before.len()
-            || paths::inode(&source_before)? != paths::inode(&source_after)?
+            || source_before.identity() != source_after.identity()
             || source_before.modified()? != source_after.modified()?
         {
             return Err(Error::new("changed", "Selected source changed during copy"));
@@ -170,7 +170,7 @@ impl Workspace {
         database::owner(&self.db, &asset.project_id)?;
         let final_path = paths::managed(&self.root, &asset.reference.relative_path, false)?;
         let m = paths::ordinary(&stage_path, 1)?;
-        if paths::inode(&m)?.0 != device || paths::inode(&m)?.1 != inode {
+        if m.identity().0 != device || m.identity().1 != inode {
             return Err(Error::new("containment", "Stage identity changed"));
         }
         self.hooks.hit("before-publication")?;
@@ -184,10 +184,23 @@ impl Workspace {
             ));
         }
         fs::hard_link(&stage_path, &final_path)?; // Atomic no-overwrite publication on the same filesystem.
-        paths::sync_dir(final_path.parent().expect("final parent"))?;
+        paths::flush_published_file(&final_path, (device, inode), asset.byte_length, 2)?;
+        paths::namespace_checkpoint(final_path.parent().expect("final parent"))?;
         self.hooks.hit("link-before-unlink")?;
+        for metadata in [
+            paths::ordinary(&stage_path, 2)?,
+            paths::ordinary(&final_path, 2)?,
+            paths::stat_file(&stage)?,
+        ] {
+            if metadata.identity() != (device, inode, 2) || metadata.len() != asset.byte_length {
+                return Err(Error::new(
+                    "changed",
+                    "Import publication cleanup identity changed",
+                ));
+            }
+        }
         fs::remove_file(&stage_path)?;
-        paths::sync_dir(stage_path.parent().expect("stage parent"))?;
+        paths::namespace_checkpoint(stage_path.parent().expect("stage parent"))?;
         self.hooks.hit("published")?;
         check()?;
         let (verified_size, verified_hash) = paths::hash_file(&final_path, MAX_ASSET_BYTES, check)?;
@@ -202,7 +215,7 @@ impl Workspace {
         self.hooks.hit("precommit")?;
         self.boundary.validate()?;
         let commit_metadata = paths::ordinary(&final_path, 1)?;
-        if paths::inode(&commit_metadata)? != paths::inode(&verified_metadata)?
+        if commit_metadata.identity() != verified_metadata.identity()
             || commit_metadata.len() != asset.byte_length
             || commit_metadata.modified()? != verified_metadata.modified()?
         {
@@ -272,8 +285,8 @@ impl Workspace {
                 };
                 for metadata in [&stage_meta, &final_meta].into_iter().flatten() {
                     if !metadata.is_file()
-                        || metadata.file_type().is_symlink()
-                        || paths::inode(metadata)? != (dev, ino, links)
+                        || metadata.is_alias()
+                        || metadata.identity() != (dev, ino, links)
                     {
                         return Err(Error::new(
                             "recovery",
@@ -281,13 +294,29 @@ impl Workspace {
                         ));
                     }
                 }
-                if stage_meta.is_some() {
+                let check_cleanup_name =
+                    |path: &Path, before: &paths::NativeStat, links: u64| -> Result<()> {
+                        let current = paths::ordinary(path, links)?;
+                        if current.identity() != (dev, ino, links)
+                            || current.len() != before.len()
+                            || current.modified()? != before.modified()?
+                        {
+                            return Err(Error::new(
+                                "changed",
+                                "Pending cleanup identity changed; preserve bytes",
+                            ));
+                        }
+                        Ok(())
+                    };
+                if let Some(metadata) = &stage_meta {
+                    check_cleanup_name(&stage, metadata, links)?;
                     fs::remove_file(&stage)?;
-                    paths::sync_dir(stage.parent().expect("stage parent"))?;
+                    paths::namespace_checkpoint(stage.parent().expect("stage parent"))?;
                 }
-                if final_meta.is_some() {
+                if let Some(metadata) = &final_meta {
+                    check_cleanup_name(&final_path, metadata, 1)?;
                     fs::remove_file(&final_path)?;
-                    paths::sync_dir(final_path.parent().expect("final parent"))?;
+                    paths::namespace_checkpoint(final_path.parent().expect("final parent"))?;
                 }
             }
             self.db

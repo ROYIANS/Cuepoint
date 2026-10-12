@@ -125,7 +125,7 @@ pub async fn acceptance_request(
                 if object.keys().any(|k|!matches!(k.as_str(),"version"|"environment"|"events"|"finishedAt"))||object.get("version")!=Some(&serde_json::json!(1))||!object.get("events").is_some_and(serde_json::Value::is_array){return Err(Error::new("wire","Closed acceptance report schema"));}
                 // Own fixed sink may be replaced by later milestones; renderer cannot supply a destination.
                 let stage=root.join(format!("{}.report",uuid::Uuid::new_v4()));let mut file=paths::exclusive(&stage)?;file.write_all(json.as_bytes())?;file.sync_all()?;drop(file);
-                fs::rename(stage,root.join("report.json"))?;paths::sync_dir(&root)?;report_saved=true;
+                fs::rename(stage,root.join("report.json"))?;paths::namespace_checkpoint(&root)?;report_saved=true;
             }
             AcceptanceAction::Ready {}=>{fs::write(root.join("ready.json"),serde_json::to_vec(&serde_json::json!({"version":1,"atMillis":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_err(|e|Error::new("clock",e.to_string()))?.as_millis()}))?)?;}
         }

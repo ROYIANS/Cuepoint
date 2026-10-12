@@ -41,6 +41,10 @@ tauri-plugin-dialog = { version = "=2.8.1", optional = true }
 tauri-plugin-http = { version = "=2.8.2", optional = true, default-features = false, features = ["rustls-tls", "http2", "charset", "system-proxy"] }
 tauri-plugin-opener = { version = "=2.5.4", optional = true, default-features = false }
 
+[target.'cfg(windows)'.dependencies]
+# Stable handle APIs only; no unstable Windows MetadataExt identity methods.
+windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_WindowsProgramming", "Win32_System_SystemServices"] }
+
 [target.'cfg(target_os = "macos")'.dependencies]
 objc2 = { version = "=0.6.5", optional = true }
 objc2-foundation = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "NSObject", "NSGeometry"] }

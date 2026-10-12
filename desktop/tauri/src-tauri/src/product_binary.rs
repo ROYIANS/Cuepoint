@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::{
     collections::{HashMap, HashSet},
-    fs::{self, File, Metadata},
+    fs::{self, File},
     io::{Read, Seek, SeekFrom, Write},
     path::{Path, PathBuf},
     time::{Duration, Instant, SystemTime},
@@ -146,9 +146,9 @@ struct FileIdentity {
     modified: SystemTime,
 }
 impl FileIdentity {
-    fn of(metadata: &Metadata) -> Result<Self> {
-        let (device, inode, links) = paths::inode(metadata)?;
-        if !metadata.is_file() || metadata.file_type().is_symlink() || links != 1 {
+    fn of(metadata: &paths::NativeStat) -> Result<Self> {
+        let (device, inode, links) = metadata.identity();
+        if !metadata.is_file() || metadata.is_alias() || links != 1 {
             return Err(Error::new(
                 "containment",
                 "Binary must be an ordinary owned file",
@@ -162,7 +162,7 @@ impl FileIdentity {
         })
     }
     fn check(&self, path: &Path, file: &File) -> Result<()> {
-        if Self::of(&ordinary(path)?)? != *self || Self::of(&file.metadata()?)? != *self {
+        if Self::of(&ordinary(path)?)? != *self || Self::of(&paths::stat_file(file)?)? != *self {
             return Err(Error::new(
                 "changed",
                 "Managed bytes changed during the operation",
@@ -176,16 +176,15 @@ struct ManagedLocation {
     root: PathBuf,
     root_identity: (u64, u64),
     relative: String,
+    #[cfg(windows)]
+    directory_guards: std::sync::Arc<std::sync::Mutex<(Vec<paths::DirectoryGuard>, bool)>>,
 }
 impl ManagedLocation {
     fn resolve(&self, create_parents: bool) -> Result<PathBuf> {
         let validate_root = || -> Result<()> {
-            let metadata = fs::symlink_metadata(&self.root)?;
-            let (device, inode, _) = paths::inode(&metadata)?;
-            if !metadata.is_dir()
-                || metadata.file_type().is_symlink()
-                || (device, inode) != self.root_identity
-            {
+            let metadata = paths::ordinary_directory(&self.root)?;
+            let (device, inode, _) = metadata.identity();
+            if !metadata.is_dir() || metadata.is_alias() || (device, inode) != self.root_identity {
                 return Err(Error::new(
                     "containment",
                     "Binary workspace root identity changed",
@@ -194,7 +193,23 @@ impl ManagedLocation {
             Ok(())
         };
         validate_root()?;
+        #[cfg(windows)]
+        let mut held = self
+            .directory_guards
+            .lock()
+            .map_err(|_| Error::new("closed", "Managed ancestor guard is unavailable"))?;
+        #[cfg(windows)]
+        if held.0.is_empty() {
+            held.0 = paths::pin_ancestors(&self.root)?;
+        }
         let path = paths::managed(&self.root, &self.relative, create_parents)?;
+        #[cfg(windows)]
+        if !held.1 {
+            held.0.extend(paths::pin_ancestors(
+                path.parent().expect("managed parent"),
+            )?);
+            held.1 = true;
+        }
         validate_root()?;
         Ok(path)
     }
@@ -369,7 +384,7 @@ fn binary_relative(binary_id: &str) -> Result<String> {
         paths::hex_digest(binary_id.as_bytes())
     ))
 }
-fn ordinary(path: &Path) -> Result<Metadata> {
+fn ordinary(path: &Path) -> Result<paths::NativeStat> {
     match fs::symlink_metadata(path) {
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
             Err(Error::new("missing", "Managed material is missing"))
@@ -378,9 +393,9 @@ fn ordinary(path: &Path) -> Result<Metadata> {
         Ok(_) => paths::ordinary(path, 1),
     }
 }
-fn optional(path: &Path) -> Result<Option<Metadata>> {
+fn optional(path: &Path) -> Result<Option<paths::NativeStat>> {
     match fs::symlink_metadata(path) {
-        Ok(metadata) => Ok(Some(metadata)),
+        Ok(_) => Ok(Some(paths::stat_path(path)?)),
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
         Err(error) => Err(error.into()),
     }
@@ -470,7 +485,7 @@ impl BinaryStore {
             ));
         }
         let root = paths::canonical_root(root)?;
-        let (device, inode, _) = paths::inode(&fs::symlink_metadata(&root)?)?;
+        let (device, inode, _) = paths::ordinary_directory(&root)?.identity();
         Ok(Self {
             root,
             root_identity: (device, inode),
@@ -484,6 +499,8 @@ impl BinaryStore {
             root: self.root.clone(),
             root_identity: self.root_identity,
             relative,
+            #[cfg(windows)]
+            directory_guards: Default::default(),
         }
     }
     pub fn run(&mut self, db: &Connection, request: BinaryRequest) -> Result<BinaryReply> {
@@ -548,8 +565,8 @@ impl BinaryStore {
         // reopen refuses to erase any ambiguous bytes.
         let file = paths::exclusive(&path)?;
         file.sync_all()?;
-        paths::sync_dir(path.parent().expect("stage parent"))?;
-        let (device, inode, _) = paths::inode(&file.metadata()?)?;
+        paths::namespace_checkpoint(path.parent().expect("stage parent"))?;
+        let (device, inode, _) = paths::stat_file(&file)?.identity();
         db.execute(
             "UPDATE product_binary_intents SET device=?,inode=? WHERE stage_id=?",
             params![device.to_string(), inode.to_string(), stage_id],
@@ -603,9 +620,9 @@ impl BinaryStore {
         }
         let result = (|| {
             let current = ordinary(&stage.location.resolve(false)?)?;
-            let opened = stage.file.metadata()?;
-            if paths::inode(&current)? != (stage.device, stage.inode, 1)
-                || paths::inode(&opened)? != (stage.device, stage.inode, 1)
+            let opened = paths::stat_file(&stage.file)?;
+            if current.identity() != (stage.device, stage.inode, 1)
+                || opened.identity() != (stage.device, stage.inode, 1)
                 || current.len() != stage.written
                 || opened.len() != stage.written
             {
@@ -613,7 +630,7 @@ impl BinaryStore {
             }
             stage.file.write_all(bytes)?;
             let after = ordinary(&stage.location.resolve(false)?)?;
-            if paths::inode(&after)? != (stage.device, stage.inode, 1) {
+            if after.identity() != (stage.device, stage.inode, 1) {
                 return Err(Error::new(
                     "changed",
                     "Binary stage identity changed during write",
@@ -638,6 +655,22 @@ impl BinaryStore {
         stage_id: &str,
         content_hash: &str,
         check: &mut impl FnMut() -> Result<()>,
+    ) -> Result<BinaryReply> {
+        self.seal_with_flush(
+            db,
+            stage_id,
+            content_hash,
+            check,
+            paths::flush_published_file,
+        )
+    }
+    fn seal_with_flush(
+        &mut self,
+        db: &Connection,
+        stage_id: &str,
+        content_hash: &str,
+        check: &mut impl FnMut() -> Result<()>,
+        flush_file: impl Fn(&Path, (u64, u64), u64, u64) -> Result<()>,
     ) -> Result<BinaryReply> {
         if !hash_valid(content_hash) {
             return Err(Error::new("wire", "Invalid binary checksum"));
@@ -673,14 +706,33 @@ impl BinaryStore {
             stage.location.resolve(false)?;
             target_location.resolve(false)?;
             fs::hard_link(&stage.path, &target)?; // atomic no-overwrite publication
+            flush_file(&target, (stage.device, stage.inode), stage.byte_length, 2)?;
             target_location.resolve(false)?;
-            paths::sync_dir(target.parent().expect("binary parent"))?;
+            paths::namespace_checkpoint(target.parent().expect("binary parent"))?;
             stage.location.resolve(false)?;
             target_location.resolve(false)?;
+            // Retain the intent and both names if cleanup authority changed
+            // after publication/flush; resolving ancestors alone does not bind
+            // the stage name to its original open descriptor.
+            for stat in [
+                paths::ordinary(&stage.path, 2)?,
+                paths::ordinary(&target, 2)?,
+                paths::stat_file(&stage.file)?,
+            ] {
+                if stat.identity() != (stage.device, stage.inode, 2)
+                    || stat.len() != stage.byte_length
+                {
+                    return Err(Error::new(
+                        "changed",
+                        "Binary publication cleanup identity changed",
+                    ));
+                }
+            }
             fs::remove_file(&stage.path)?;
             stage.location.resolve(false)?;
-            paths::sync_dir(stage.path.parent().expect("stage parent"))?;
-            // Record publication only after both directory durability barriers.
+            paths::namespace_checkpoint(stage.path.parent().expect("stage parent"))?;
+            // Flush bytes/metadata before ready state; both namespace checkpoints
+            // retain Unix directory fsync or explicit Windows process-only policy.
             // Interrupted/untrusted paths retain their durable intent for recovery.
             db.execute(
                 "UPDATE product_binary_intents SET state='published' WHERE stage_id=?",
@@ -1035,6 +1087,23 @@ fn recover_intent(
     stage_id: &str,
     retain_published: bool,
 ) -> Result<bool> {
+    recover_intent_with_flush(
+        root,
+        root_identity,
+        db,
+        stage_id,
+        retain_published,
+        paths::flush_published_file,
+    )
+}
+fn recover_intent_with_flush(
+    root: &Path,
+    root_identity: (u64, u64),
+    db: &Connection,
+    stage_id: &str,
+    retain_published: bool,
+    flush: impl FnOnce(&Path, (u64, u64), u64, u64) -> Result<()>,
+) -> Result<bool> {
     let intent = db.query_row("SELECT binary_id,state,device,inode,byte_length,mime_type,content_hash FROM product_binary_intents WHERE stage_id=?", [stage_id], |row| Ok((row.get::<_,String>(0)?,row.get::<_,String>(1)?,row.get::<_,Option<String>>(2)?,row.get::<_,Option<String>>(3)?,sql_length(row, 4)?,row.get::<_,String>(5)?,row.get::<_,Option<String>>(6)?))).optional()?;
     let Some((binary_id, state, device, inode, _, _, _)) = intent else {
         return Ok(false);
@@ -1060,11 +1129,15 @@ fn recover_intent(
         root: root.into(),
         root_identity,
         relative: stage_relative(stage_id)?,
+        #[cfg(windows)]
+        directory_guards: Default::default(),
     };
     let final_location = ManagedLocation {
         root: root.into(),
         root_identity,
         relative: binary_relative(&binary_id)?,
+        #[cfg(windows)]
+        directory_guards: Default::default(),
     };
     let stage_path = stage_location.resolve(false)?;
     let final_path = final_location.resolve(false)?;
@@ -1082,8 +1155,8 @@ fn recover_intent(
             .ok_or_else(|| Error::new("recovery", "Unproven binary inode; preserve bytes"))?;
         for metadata in [&stage, &final_file].into_iter().flatten() {
             if !metadata.is_file()
-                || metadata.file_type().is_symlink()
-                || paths::inode(metadata)? != (device, inode, expected_links)
+                || metadata.is_alias()
+                || metadata.identity() != (device, inode, expected_links)
             {
                 return Err(Error::new(
                     "recovery",
@@ -1092,10 +1165,31 @@ fn recover_intent(
             }
         }
     }
+    let check_cleanup_name = |path: &Path, before: &paths::NativeStat, links: u64| -> Result<()> {
+        let current = paths::ordinary(path, links)?;
+        let identity = before.identity();
+        if current.identity() != (identity.0, identity.1, links)
+            || current.len() != before.len()
+            || current.modified()? != before.modified()?
+        {
+            return Err(Error::new(
+                "changed",
+                "Recovery cleanup identity changed; preserve bytes",
+            ));
+        }
+        Ok(())
+    };
     // A publication after the last saved journal phase may be interrupted
     // between link/unlink/update. Preserve proven complete published bytes as an
     // unclaimed stage; no domain row is invented. Explicit abort may discard it.
-    if retain_published && final_file.is_some() {
+    if retain_published && let Some(final_stat) = &final_file {
+        let identity = final_stat.identity();
+        flush(
+            &final_path,
+            (identity.0, identity.1),
+            final_stat.len(),
+            expected_links,
+        )?;
         let hash: Option<String> = db.query_row(
             "SELECT content_hash FROM product_binary_intents WHERE stage_id=?",
             [stage_id],
@@ -1107,15 +1201,18 @@ fn recover_intent(
                 "Unverified published binary intent; preserve bytes",
             ));
         }
-        if stage.is_some() {
+        if let Some(stage_stat) = &stage {
             stage_location.resolve(false)?;
             final_location.resolve(false)?;
+            check_cleanup_name(&stage_path, stage_stat, expected_links)?;
+            check_cleanup_name(&final_path, final_stat, expected_links)?;
             fs::remove_file(&stage_path)?;
             stage_location.resolve(false)?;
-            paths::sync_dir(stage_path.parent().expect("stage parent"))?;
+            paths::namespace_checkpoint(stage_path.parent().expect("stage parent"))?;
         }
         final_location.resolve(false)?;
-        paths::sync_dir(final_path.parent().expect("binary parent"))?;
+        check_cleanup_name(&final_path, final_stat, 1)?;
+        paths::namespace_checkpoint(final_path.parent().expect("binary parent"))?;
         if state != "published" {
             db.execute(
                 "UPDATE product_binary_intents SET state='published' WHERE stage_id=?",
@@ -1124,19 +1221,21 @@ fn recover_intent(
         }
         return Ok(true);
     }
-    if stage.is_some() {
+    if let Some(stage_stat) = &stage {
         stage_location.resolve(false)?;
         final_location.resolve(false)?;
+        check_cleanup_name(&stage_path, stage_stat, expected_links)?;
         fs::remove_file(&stage_path)?;
         stage_location.resolve(false)?;
-        paths::sync_dir(stage_path.parent().expect("stage parent"))?;
+        paths::namespace_checkpoint(stage_path.parent().expect("stage parent"))?;
     }
-    if final_file.is_some() {
+    if let Some(final_stat) = &final_file {
         stage_location.resolve(false)?;
         final_location.resolve(false)?;
+        check_cleanup_name(&final_path, final_stat, 1)?;
         fs::remove_file(&final_path)?;
         final_location.resolve(false)?;
-        paths::sync_dir(final_path.parent().expect("binary parent"))?;
+        paths::namespace_checkpoint(final_path.parent().expect("binary parent"))?;
     }
     db.execute(
         "DELETE FROM product_binary_intents WHERE stage_id=?",

@@ -34,6 +34,75 @@ fn backup_rejects_destination_bytes_changed_before_completion() {
     w.close().unwrap();
 }
 
+#[cfg(feature = "test-hooks")]
+#[test]
+fn retained_import_preserves_changed_stage_after_publication() {
+    use std::sync::{Arc, Mutex};
+    for alias in [false, true] {
+        let fixture = Fixture::new();
+        let workspace = fixture.path("workspace");
+        let workspace_for_hook = workspace.clone();
+        let foreign = fixture.path("foreign-link");
+        let foreign_for_hook = foreign.clone();
+        let reached = Arc::new(Mutex::new(None));
+        let observed = Arc::clone(&reached);
+        let hooks = Hooks::new(move |point| {
+            if point == "link-before-unlink" {
+                let stage = fs::read_dir(workspace_for_hook.join("staging"))?
+                    .next()
+                    .expect("one staged import")?
+                    .path();
+                if alias {
+                    fs::hard_link(&stage, &foreign_for_hook)?;
+                } else {
+                    fs::remove_file(&stage)?;
+                    fs::write(&stage, b"foreign stage bytes")?;
+                }
+                *observed.lock().unwrap() = Some(stage);
+            }
+            Ok(())
+        });
+        let worker = StorageWorker::create(workspace.clone(), hooks).unwrap();
+        worker
+            .run(Job::SaveProject(Project {
+                id: "project".into(),
+                title: "Fixture".into(),
+            }))
+            .unwrap();
+        let source = fixture.source();
+        let bytes = fs::read(&source).unwrap();
+        assert!(
+            worker
+                .run(Job::Import(request(source, "asset", "project")))
+                .is_err()
+        );
+        let stage = reached
+            .lock()
+            .unwrap()
+            .clone()
+            .expect("cleanup boundary reached");
+        let expected = if alias {
+            &bytes[..]
+        } else {
+            &b"foreign stage bytes"[..]
+        };
+        assert_eq!(fs::read(&stage).unwrap(), expected);
+        assert!(
+            state(&worker).assets.is_empty(),
+            "unverified import became ready"
+        );
+        worker.close().unwrap();
+        assert!(
+            StorageWorker::open(workspace, Hooks::default()).is_err(),
+            "ambiguous intent was silently recovered"
+        );
+        assert_eq!(fs::read(&stage).unwrap(), expected);
+        if alias {
+            assert_eq!(fs::read(foreign).unwrap(), bytes);
+        }
+    }
+}
+
 #[test]
 fn strict_snapshot_rejects_unknown_index_and_duplicate_manifest_keys() {
     let f = Fixture::new();
@@ -75,7 +144,6 @@ fn strict_snapshot_rejects_unknown_index_and_duplicate_manifest_keys() {
     assert_eq!(before.projects.len(), 1);
 }
 
-#[cfg(unix)]
 #[test]
 fn journal_alias_added_after_open_cannot_modify_external_file() {
     let f = Fixture::new();

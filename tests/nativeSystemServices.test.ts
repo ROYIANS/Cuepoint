@@ -1,6 +1,7 @@
-import {beforeEach, describe, expect, it, vi} from "vitest";
+import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {sha256Bytes} from "@/lib/sha256";
 import {saveNativeBlob, nativeOpenExternalUrl} from "@/lib/nativeSystemServices";
+import {downloadBlob, isPublishedSaveError} from "@/lib/runtimeSave";
 
 const invoke = vi.hoisted(() => vi.fn());
 vi.mock("@tauri-apps/api/core", () => ({invoke}));
@@ -9,6 +10,31 @@ const ready = {type: "ready", session, chunkBytes: 262144};
 
 describe("native Blob save lifecycle", () => {
     beforeEach(() => {invoke.mockReset();});
+    afterEach(() => vi.unstubAllGlobals());
+    it.each(["directorySync", "stageCleanup", "fileSync"])("preserves actual %s receipt through the common native Save wrapper without automatic retry", async code => {
+        vi.stubGlobal("window", {__TAURI_INTERNALS__: {invoke}});
+        const bytes = Uint8Array.of(1, 2, 3);
+        invoke.mockImplementation(async (command: string) => {
+            if (command === "product_save_begin") return ready;
+            if (command === "product_save_chunk") return bytes.length;
+            if (command === "product_save_finish") return {type: "publishedWithError", byteLength: bytes.length, contentHash: sha256Bytes(bytes), code};
+            throw new Error("Unexpected retry/cancel command");
+        });
+        const outcome = await downloadBlob(new Blob([bytes]), "fixture.bin").catch((error: unknown) => error);
+        expect(isPublishedSaveError(outcome)).toBe(true);
+        expect(outcome).toMatchObject({published: true, code, byteLength: 3, contentHash: sha256Bytes(bytes),
+            message: code === "fileSync" ? "文件已保存，但系统未能确认内容已写入磁盘。请检查已保存的文件。" : expect.stringContaining("文件已保存")});
+        expect(invoke.mock.calls.map(([command]) => command)).toEqual(["product_save_begin", "product_save_chunk", "product_save_finish"]);
+    });
+    it("keeps the published warning code schema closed", async () => {
+        invoke.mockResolvedValueOnce(ready).mockResolvedValueOnce(1).mockResolvedValueOnce({
+            type: "publishedWithError", byteLength: 1, contentHash: sha256Bytes(Uint8Array.of(1)), code: "anythingElse",
+        }).mockResolvedValue(true);
+        const outcome = await saveNativeBlob(new Blob([Uint8Array.of(1)]), "fixture.bin").catch((error: unknown) => error);
+        expect(isPublishedSaveError(outcome)).toBe(false);
+        expect(outcome).toBeInstanceOf(Error);
+        expect(invoke.mock.calls.filter(([command]) => command === "product_save_finish")).toHaveLength(1);
+    });
     it("streams ordered bounded chunks and verifies the final native digest", async () => {
         const bytes = new Uint8Array(262144 + 7).fill(89);
         const requests: {offset: number; bytes: number[]}[] = [];

@@ -1,4 +1,6 @@
 mod backup;
+#[cfg(feature = "desktop")]
+mod bundled_origin;
 mod contracts;
 mod database;
 #[cfg(feature = "desktop")]

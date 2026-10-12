@@ -139,15 +139,16 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe.each(callerKinds)("%s saves distinguish publication from failure", kind => {
-    it.each(["directorySync", "stageCleanup"])("shows a saved-file warning for %s without retrying or changing owned media", async code => {
+    it.each(["directorySync", "stageCleanup", "fileSync"])("shows a saved-file warning for %s without retrying or changing owned media", async code => {
         transport("publishedWithError", code);
         const view = await caller(kind);
         const mediaBefore = await db.media.get(view.mediaId);
         const clipsBefore = await db.audioClips.toArray(), worksBefore = await db.musicWorks.toArray();
         view.click();
         await vi.waitFor(() => {
-            if (kind === "timeline") expect(view.render().find(node => node.props.role === "status" && text(node.props.children).includes(warningMessage))).toBeDefined();
-            else expect(host.warning).toHaveBeenCalledExactlyOnceWith(warningMessage);
+            const expectedWarning = code === "fileSync" ? "文件已保存，但系统未能确认内容已写入磁盘。请检查已保存的文件。" : warningMessage;
+            if (kind === "timeline") expect(view.render().find(node => node.props.role === "status" && text(node.props.children).includes(expectedWarning))).toBeDefined();
+            else expect(host.warning).toHaveBeenCalledExactlyOnceWith(expectedWarning);
         });
         expect(view.render().some(node => node.props.role === "alert")).toBe(false);
         expect(host.error).not.toHaveBeenCalled();

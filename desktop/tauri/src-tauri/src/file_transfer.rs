@@ -59,16 +59,57 @@ struct Staged {
     stage: PathBuf,
     destination: PathBuf,
     parent: PathBuf,
+    parent_identity: (u64, u64),
+    stage_identity: (u64, u64),
+    published: bool,
+    #[cfg(windows)]
+    _directory_guards: Vec<paths::DirectoryGuard>,
     declared_length: u64,
     declared_hash: Option<String>,
     written: u64,
     hash: Sha256,
     progressed: Instant,
 }
+impl Staged {
+    fn check_identity(&self, links: u64) -> Result<()> {
+        let parent = paths::ordinary_directory(&self.parent)?.identity();
+        let named = paths::ordinary(&self.stage, links)?;
+        let identity = named.identity();
+        if (parent.0, parent.1) != self.parent_identity
+            || (identity.0, identity.1) != self.stage_identity
+            || named.len() != self.written
+        {
+            return Err(Error::new(
+                "changed",
+                "Export stage or directory identity changed",
+            ));
+        }
+        if let Some(file) = &self.file {
+            let opened = paths::stat_file(file)?;
+            if opened.identity() != identity || opened.len() != self.written {
+                return Err(Error::new(
+                    "changed",
+                    "Export stage handle identity changed",
+                ));
+            }
+        }
+        Ok(())
+    }
+}
 impl Drop for Staged {
     fn drop(&mut self) {
+        // A replaced stage/parent or unowned hard link is not ours to erase.
+        let proven = if self.published {
+            self.check_identity(2).is_ok()
+                && paths::ordinary(&self.destination, 2)
+                    .is_ok_and(|stat| (stat.identity().0, stat.identity().1) == self.stage_identity)
+        } else {
+            self.check_identity(1).is_ok()
+        };
         self.file.take();
-        let _ = fs::remove_file(&self.stage);
+        if proven {
+            let _ = fs::remove_file(&self.stage);
+        }
     }
 }
 enum Phase {
@@ -205,24 +246,45 @@ impl Saves {
             return Err(invalid("Export chunk order or length mismatch"));
         }
         // No retries: failed writes close this transfer; a partially written chunk cannot be reissued.
-        if let Err(error) = staged.file.as_mut().expect("staged file").write_all(bytes) {
+        let result = (|| -> Result<()> {
+            staged.check_identity(1)?;
+            staged
+                .file
+                .as_mut()
+                .expect("staged file")
+                .write_all(bytes)?;
+            staged.written += bytes.len() as u64;
+            staged.check_identity(1)
+        })();
+        if let Err(error) = result {
             *phase = Phase::Closed;
             self.remove(session);
-            return Err(error.into());
+            return Err(error);
         }
         staged.hash.update(bytes);
-        staged.written += bytes.len() as u64;
         staged.progressed = Instant::now();
         Ok(staged.written)
     }
     pub(crate) fn finish(&self, session: &str, expected_hash: &str) -> Result<SaveReceipt> {
-        self.finish_with(session, expected_hash, paths::sync_dir)
+        self.finish_with(session, expected_hash, |parent| {
+            paths::namespace_checkpoint(parent)?;
+            Ok(())
+        })
     }
     fn finish_with(
         &self,
         session: &str,
         expected_hash: &str,
         sync: impl Fn(&Path) -> Result<()>,
+    ) -> Result<SaveReceipt> {
+        self.finish_with_flush(session, expected_hash, sync, paths::flush_published_file)
+    }
+    fn finish_with_flush(
+        &self,
+        session: &str,
+        expected_hash: &str,
+        sync: impl Fn(&Path) -> Result<()>,
+        flush_file: impl Fn(&Path, (u64, u64), u64, u64) -> Result<()>,
     ) -> Result<SaveReceipt> {
         if !valid_hash(expected_hash) {
             return Err(invalid("Export checksum boundary"));
@@ -250,19 +312,47 @@ impl Saves {
             {
                 return Err(invalid("Export length or checksum mismatch"));
             }
+            staged.check_identity(1)?;
             staged.file.as_mut().expect("staged file").sync_all()?;
             if transfer.canceled.load(Ordering::Acquire) {
                 return Ok(SaveReceipt::Canceled);
             }
             fs::hard_link(&staged.stage, &staged.destination)?;
+            staged.published = true;
             // The destination now exists. No later abort/error may report rollback.
             let receipt = |code| SaveReceipt::PublishedWithError {
                 byte_length: staged.written,
                 content_hash: hash.clone(),
                 code,
             };
+            if flush_file(
+                &staged.destination,
+                staged.stage_identity,
+                staged.written,
+                2,
+            )
+            .is_err()
+            {
+                return Ok(receipt("fileSync"));
+            }
             if sync(&staged.parent).is_err() {
                 return Ok(receipt("directorySync"));
+            }
+            // Namespace confirmation may yield while another process changes
+            // a name. Never erase a replacement or an additionally linked stage.
+            let cleanup_authority = (|| -> Result<()> {
+                staged.check_identity(2)?;
+                let destination = paths::ordinary(&staged.destination, 2)?;
+                let identity = destination.identity();
+                if (identity.0, identity.1) != staged.stage_identity
+                    || destination.len() != staged.written
+                {
+                    return Err(Error::new("changed", "Published export identity changed"));
+                }
+                Ok(())
+            })();
+            if cleanup_authority.is_err() {
+                return Ok(receipt("stageCleanup"));
             }
             staged.file.take();
             if fs::remove_file(&staged.stage).is_err() {
@@ -337,13 +427,22 @@ fn stage(path: &Path, request: &SaveBegin) -> Result<Staged> {
         path.file_name()
             .ok_or_else(|| invalid("Missing export name"))?,
     );
+    #[cfg(windows)]
+    let directory_guards = paths::pin_ancestors(&parent)?;
+    let parent_stat = paths::ordinary_directory(&parent)?.identity();
     let stage = parent.join(format!(".cuepoint-export-{}.tmp", uuid::Uuid::new_v4()));
     let file = paths::exclusive(&stage)?;
+    let stage_stat = paths::stat_file(&file)?.identity();
     Ok(Staged {
         file: Some(file),
         stage,
         destination,
         parent,
+        parent_identity: (parent_stat.0, parent_stat.1),
+        stage_identity: (stage_stat.0, stage_stat.1),
+        published: false,
+        #[cfg(windows)]
+        _directory_guards: directory_guards,
         declared_length: request.byte_length,
         declared_hash: request.content_hash.clone(),
         written: 0,
@@ -376,6 +475,52 @@ mod tests {
             SaveReceipt::Ready { .. }
         ));
     }
+    #[test]
+    fn replaced_or_aliased_stage_is_never_written_published_or_unlinked() {
+        for alias in [false, true] {
+            let (saves, request, root) = setup(1);
+            let destination = root.join("out");
+            start(&saves, &request, &destination);
+            let transfer = saves.get(&request.operation_id).unwrap();
+            let stage = match &*transfer.phase.lock().unwrap() {
+                Phase::Staged(staged) => staged.stage.clone(),
+                _ => panic!("staged export"),
+            };
+            if alias {
+                fs::hard_link(&stage, root.join("external.bin")).unwrap();
+            } else {
+                fs::remove_file(&stage).unwrap();
+                fs::write(&stage, b"external bytes").unwrap();
+            }
+            let before = fs::read(&stage).unwrap();
+            assert!(saves.chunk(&request.operation_id, 0, b"a").is_err());
+            assert!(!destination.exists());
+            assert_eq!(
+                fs::read(&stage).unwrap(),
+                before,
+                "unproven stage was modified or erased"
+            );
+            assert!(!saves.cancel(&request.operation_id));
+            drop(transfer);
+            fs::remove_dir_all(root).unwrap();
+        }
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn active_export_directory_cannot_move_until_transfer_is_closed() {
+        let (saves, request, root) = setup(1);
+        let moved = root.with_extension("moved");
+        start(&saves, &request, &root.join("out"));
+        assert!(
+            fs::rename(&root, &moved).is_err(),
+            "active export directory was moved"
+        );
+        saves.cancel(&request.operation_id);
+        fs::rename(&root, &moved).unwrap();
+        fs::remove_dir_all(moved).unwrap();
+    }
+
     #[test]
     fn zero_and_large_exports_keep_byte_identity_without_sqlite() {
         for length in [0, 33 * 1024 * 1024 + 1] {
@@ -484,6 +629,108 @@ mod tests {
             fs::remove_dir_all(root).unwrap();
         }
     }
+    #[test]
+    fn changed_stage_after_publication_is_preserved_as_a_saved_file_warning() {
+        for alias in [false, true] {
+            let (saves, request, root) = setup(1);
+            let destination = root.join("out");
+            start(&saves, &request, &destination);
+            saves.chunk(&request.operation_id, 0, b"a").unwrap();
+            let transfer = saves.get(&request.operation_id).unwrap();
+            let stage = match &*transfer.phase.lock().unwrap() {
+                Phase::Staged(staged) => staged.stage.clone(),
+                _ => panic!("staged export"),
+            };
+            let reached = std::cell::Cell::new(false);
+            let receipt = saves
+                .finish_with(
+                    &request.operation_id,
+                    &paths::hex_digest(Sha256::digest(b"a")),
+                    |_| {
+                        if !reached.replace(true) {
+                            assert_eq!(fs::read(&destination).unwrap(), b"a");
+                            if alias {
+                                fs::hard_link(&stage, root.join("external.bin"))?;
+                            } else {
+                                fs::remove_file(&stage)?;
+                                fs::write(&stage, b"foreign stage bytes")?;
+                            }
+                        }
+                        Ok(())
+                    },
+                )
+                .unwrap();
+            assert!(reached.get());
+            assert!(matches!(
+                receipt,
+                SaveReceipt::PublishedWithError {
+                    code: "stageCleanup",
+                    ..
+                }
+            ));
+            assert_eq!(fs::read(&destination).unwrap(), b"a");
+            assert_eq!(
+                fs::read(&stage).unwrap(),
+                if alias {
+                    &b"a"[..]
+                } else {
+                    &b"foreign stage bytes"[..]
+                }
+            );
+            if alias {
+                assert_eq!(fs::read(root.join("external.bin")).unwrap(), b"a");
+            }
+            assert!(!saves.cancel(&request.operation_id));
+            drop(transfer);
+            fs::remove_dir_all(root).unwrap();
+        }
+    }
+
+    #[test]
+    fn final_file_flush_failure_is_reached_after_publication_and_never_retried() {
+        let (saves, request, root) = setup(1);
+        let destination = root.join("out");
+        start(&saves, &request, &destination);
+        saves.chunk(&request.operation_id, 0, b"a").unwrap();
+        let reached = std::cell::Cell::new(false);
+        let receipt = saves
+            .finish_with_flush(
+                &request.operation_id,
+                &paths::hex_digest(Sha256::digest(b"a")),
+                |_| Ok(()),
+                |path, identity, length, links| {
+                    assert!(path.exists(), "failure hook ran before actual publication");
+                    assert_eq!(path, fs::canonicalize(&destination).unwrap());
+                    assert_eq!(links, 2);
+                    paths::flush_published_file(path, identity, length, links)?;
+                    reached.set(true);
+                    Err(invalid("injected final file flush failure"))
+                },
+            )
+            .unwrap();
+        assert!(reached.get());
+        assert!(matches!(
+            receipt,
+            SaveReceipt::PublishedWithError {
+                code: "fileSync",
+                byte_length: 1,
+                ..
+            }
+        ));
+        assert_eq!(fs::read(&destination).unwrap(), b"a");
+        assert!(!saves.cancel(&request.operation_id));
+        assert!(
+            saves
+                .finish(
+                    &request.operation_id,
+                    &paths::hex_digest(Sha256::digest(b"a"))
+                )
+                .is_err()
+        );
+        assert_eq!(fs::read_dir(&root).unwrap().count(), 1);
+        fs::remove_dir_all(root).unwrap();
+    }
+
     #[test]
     fn published_failure_is_truthful_and_abandonment_cleans_stages() {
         let (saves, request, root) = setup(1);

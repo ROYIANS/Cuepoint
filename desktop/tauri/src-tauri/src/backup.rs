@@ -48,8 +48,7 @@ impl Workspace {
             return Err(Error::new("backup", "Snapshot is not a complete workspace"));
         }
         drop(destination);
-        paths::ordinary(&database_path, 1)?;
-        std::fs::File::open(&database_path)?.sync_all()?;
+        flush_snapshot_database(&database_path)?;
         for asset in &state.assets {
             check()?;
             let source = paths::managed(&self.root, &asset.reference.relative_path, false)?;
@@ -81,6 +80,14 @@ impl Workspace {
         // Completion publication succeeded: a later cancel reports success.
         Ok(manifest)
     }
+}
+
+fn flush_snapshot_database(path: &Path) -> Result<()> {
+    let snapshot = paths::ordinary(path, 1)?;
+    let identity = snapshot.identity();
+    // Windows FlushFileBuffers needs a writable ordinary-file descriptor;
+    // keep the copied database identity and bytes bound through this flush.
+    paths::flush_published_file(path, (identity.0, identity.1), snapshot.len(), 1)
 }
 
 fn verify(backup_root: &Path) -> Result<BackupManifest> {
@@ -169,4 +176,46 @@ pub(crate) fn restore(backup_root: &Path, destination: &Path, hooks: &Hooks) -> 
     )?;
     let _ = hooks.hit("restore-after-completion");
     Ok(root)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn closed_snapshot_database_flush_preserves_bytes_identity_and_single_name() {
+        struct Fixture(PathBuf);
+        impl Drop for Fixture {
+            fn drop(&mut self) {
+                std::fs::remove_dir_all(&self.0).unwrap();
+            }
+        }
+        let root =
+            std::env::temp_dir().join(format!("cuepoint-backup-flush-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir(&root).unwrap();
+        let fixture = Fixture(root);
+        let path = fixture.0.join("metadata.sqlite");
+        let database = database::connect(&path, true, false).unwrap();
+        database
+            .execute_batch(
+                "CREATE TABLE sample(value TEXT); INSERT INTO sample VALUES('snapshot');",
+            )
+            .unwrap();
+        drop(database);
+        let before = paths::ordinary(&path, 1).unwrap();
+        let bytes = std::fs::read(&path).unwrap();
+        // Runs the production closed-snapshot flush, including the writable
+        // no-follow Windows descriptor; a read-only Windows flush fails here.
+        flush_snapshot_database(&path).unwrap();
+        let after = paths::ordinary(&path, 1).unwrap();
+        assert_eq!(before.identity(), after.identity());
+        assert_eq!(before.len(), after.len());
+        assert_eq!(std::fs::read(&path).unwrap(), bytes);
+        let database = database::connect(&path, false, true).unwrap();
+        let value: String = database
+            .query_row("SELECT value FROM sample", [], |row| row.get(0))
+            .unwrap();
+        assert_eq!(value, "snapshot");
+        drop(database);
+    }
 }

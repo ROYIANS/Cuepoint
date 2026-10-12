@@ -705,6 +705,8 @@ pub(crate) struct Boundary {
     writer_inode: (u64, u64),
     database_path: PathBuf,
     writer_path: PathBuf,
+    #[cfg(windows)]
+    _directory_guards: Vec<paths::DirectoryGuard>,
 }
 impl Boundary {
     fn capture(root: &std::path::Path) -> Result<Self> {
@@ -719,13 +721,23 @@ impl Boundary {
         database: &std::path::Path,
         writer: &std::path::Path,
     ) -> Result<Self> {
-        let identity = |metadata: fs::Metadata| -> Result<(u64, u64)> {
-            let (dev, ino, _) = paths::inode(&metadata)?;
+        let identity = |metadata: paths::NativeStat| -> Result<(u64, u64)> {
+            let (dev, ino, _) = metadata.identity();
             Ok((dev, ino))
         };
+        #[cfg(windows)]
+        let directory_guards = {
+            let mut guards = paths::pin_ancestors(root)?;
+            for parent in [database.parent(), writer.parent()].into_iter().flatten() {
+                guards.extend(paths::pin_ancestors(parent)?);
+            }
+            guards
+        };
         Ok(Self {
+            #[cfg(windows)]
+            _directory_guards: directory_guards,
             root: root.to_path_buf(),
-            root_inode: identity(fs::symlink_metadata(root)?)?,
+            root_inode: identity(paths::ordinary_directory(root)?)?,
             database_inode: identity(paths::ordinary(database, 1)?)?,
             writer_inode: identity(paths::ordinary(writer, 1)?)?,
             database_path: database.to_owned(),
@@ -737,14 +749,14 @@ impl Boundary {
         database::check_files(&self.database_path)?;
         database::check_files(&self.writer_path)?;
         for (metadata, expected) in [
-            (fs::symlink_metadata(&self.root)?, self.root_inode),
+            (paths::ordinary_directory(&self.root)?, self.root_inode),
             (
                 paths::ordinary(&self.database_path, 1)?,
                 self.database_inode,
             ),
             (paths::ordinary(&self.writer_path, 1)?, self.writer_inode),
         ] {
-            let (dev, ino, _) = paths::inode(&metadata)?;
+            let (dev, ino, _) = metadata.identity();
             if (dev, ino) != expected {
                 return Err(Error::new(
                     "containment",
@@ -805,6 +817,8 @@ impl Workspace {
         } else {
             paths::canonical_root(&root)?
         };
+        #[cfg(windows)]
+        let _startup_directory_guards = paths::pin_ancestors(&root)?;
         let ready = if create {
             None
         } else {
@@ -823,7 +837,7 @@ impl Workspace {
         let db = database::connect(&root.join("metadata.sqlite"), create, false)?;
         if create {
             database::initialize(&db, &uuid::Uuid::new_v4().to_string())?;
-            paths::sync_dir(&root)?;
+            paths::namespace_checkpoint(&root)?;
         }
         let state = database::validate(&db)?;
         database::validate_state_closure(&state)?;
@@ -1782,5 +1796,93 @@ impl Workspace {
     pub fn close(&mut self) -> Result<()> {
         self.writer.execute_batch("ROLLBACK")?;
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod native_boundary_tests {
+    use super::*;
+    use std::time::{Duration, SystemTime};
+
+    struct Fixture(PathBuf);
+    impl Fixture {
+        fn new() -> Self {
+            let path =
+                std::env::temp_dir().join(format!("cuepoint-boundary-{}", uuid::Uuid::new_v4()));
+            fs::create_dir(&path).unwrap();
+            fs::write(path.join("database.sqlite"), b"ordinary database bytes").unwrap();
+            fs::write(path.join("writer.sqlite"), b"ordinary writer bytes").unwrap();
+            Self(path)
+        }
+        fn capture(&self) -> Boundary {
+            Boundary::capture_paths(
+                &self.0,
+                &self.0.join("database.sqlite"),
+                &self.0.join("writer.sqlite"),
+            )
+            .unwrap()
+        }
+    }
+    impl Drop for Fixture {
+        fn drop(&mut self) {
+            fs::remove_dir_all(&self.0).unwrap();
+        }
+    }
+
+    #[test]
+    fn named_database_and_writer_replacements_do_not_reuse_superficial_metadata() {
+        for name in ["database.sqlite", "writer.sqlite"] {
+            let fixture = Fixture::new();
+            let path = fixture.0.join(name);
+            let before = fs::read(&path).unwrap();
+            let modified = SystemTime::UNIX_EPOCH + Duration::from_secs(1_000_000);
+            let times = fs::FileTimes::new().set_modified(modified);
+            fs::OpenOptions::new()
+                .write(true)
+                .open(&path)
+                .unwrap()
+                .set_times(times)
+                .unwrap();
+            let boundary = fixture.capture();
+            let replacement = fixture.0.join("replacement.sqlite");
+            fs::write(&replacement, &before).unwrap();
+            fs::OpenOptions::new()
+                .write(true)
+                .open(&replacement)
+                .unwrap()
+                .set_times(times)
+                .unwrap();
+            fs::remove_file(&path).unwrap();
+            fs::rename(&replacement, &path).unwrap();
+            assert_eq!(boundary.validate().unwrap_err().code, "containment");
+            assert_eq!(fs::read(&path).unwrap(), before);
+        }
+    }
+
+    #[test]
+    fn database_sidecar_alias_is_rejected_without_changing_external_bytes() {
+        let fixture = Fixture::new();
+        let boundary = fixture.capture();
+        let external = fixture.0.join("external.bin");
+        fs::write(&external, b"external journal bytes").unwrap();
+        fs::hard_link(&external, fixture.0.join("database.sqlite-journal")).unwrap();
+        assert_eq!(boundary.validate().unwrap_err().code, "containment");
+        assert_eq!(fs::read(&external).unwrap(), b"external journal bytes");
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn active_workspace_boundary_blocks_root_replacement_and_releases_at_drop() {
+        let fixture = Fixture::new();
+        let moved = fixture.0.with_extension("moved");
+        let boundary = fixture.capture();
+        assert!(
+            fs::rename(&fixture.0, &moved).is_err(),
+            "active root was moved"
+        );
+        boundary.validate().unwrap();
+        drop(boundary);
+        fs::rename(&fixture.0, &moved).unwrap();
+        fs::rename(&moved, &fixture.0).unwrap();
     }
 }

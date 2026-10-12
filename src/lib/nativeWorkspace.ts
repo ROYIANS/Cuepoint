@@ -250,12 +250,25 @@ function assertActionResult(action: NativeAction, result: NativeResult): void {
   }
   throw new Error("原生工作区返回了与操作不符的结果，修改未确认保存");
 }
+export function nativeWorkspacePublishedError(): Error & {
+  published: true;
+  code: "published";
+} {
+  return Object.assign(
+    new Error("文件已保存，但系统未能确认保存收尾。请检查已保存的文件。"),
+    { published: true as const, code: "published" as const },
+  );
+}
+
 function nativeError(cause: unknown): Error {
   const code =
     cause && typeof cause === "object" && "code" in cause
       ? cause.code
       : undefined;
   if (code === "conflict") return new DraftConflictError();
+  if (code === "published") {
+    return nativeWorkspacePublishedError();
+  }
   const messages: Record<string, string> = {
     bridge: "原生工作区连接失败，请重新打开应用",
     untrusted: "原生工作区连接失败，请重新打开应用",
