@@ -1,20 +1,32 @@
-import {build} from '../../../node_modules/vite/dist/node/index.js';
-import react from '../../../node_modules/@vitejs/plugin-react/dist/index.js';
-import tailwind from '../../../node_modules/@tailwindcss/vite/dist/index.mjs';
+import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {resolve} from 'node:path';
 
-const base=fileURLToPath(new URL('../',import.meta.url));
-const projectRoot=resolve(base,'../..');
-const acceptance=process.argv.includes('--acceptance');
-const endpoint=acceptance ? process.env.CUEPOINT_STREAM_ENDPOINT : '';
-const token=acceptance ? process.env.CUEPOINT_STREAM_TOKEN : '';
-if(acceptance && (!endpoint || !/^http:\/\/127\.0\.0\.1:\d+\/v1$/.test(endpoint) || !token)) throw new Error('Acceptance build requires a reserved exact loopback endpoint and test token');
-// The normal bundle is the real product. The historical acceptance harness
-// remains a separate fixture so its locked selectors and evidence do not
-// silently change when product routes evolve.
-const frontendRoot=acceptance ? resolve(base,'ui') : projectRoot;
-const frontendAlias=acceptance ? resolve(base,'../../src') : resolve(projectRoot,'src');
-await build({configFile:false,root:frontendRoot,plugins:[react(),tailwind()],resolve:{alias:{'@':frontendAlias}},
-    define:{__ACCEPTANCE__:JSON.stringify(acceptance),__STREAM_ENDPOINT__:JSON.stringify(endpoint),__STREAM_TOKEN__:JSON.stringify(token)},
-    build:{outDir:resolve(base,'dist',acceptance?'acceptance':'normal'),emptyOutDir:true,assetsInlineLimit:0},worker:{format:'es'}});
+// Node's percentage option takes precedence over the numeric old-space budget.
+// Reject that conflict rather than silently changing the caller's NODE_OPTIONS.
+if (/(?:^|[\s"])--max[-_]old[-_]space[-_]size[-_]percentage(?=[=\s"]|$)/.test(process.env.NODE_OPTIONS ?? '')) {
+    throw new Error('Frontend build requires a fixed 4096 MiB old-space budget; remove the percentage heap option from NODE_OPTIONS');
+}
+
+// All normal/acceptance callers enter here. Heavy Vite imports run only in this
+// child; the budget does not affect Rust, Vitest or the calling process.
+const child=spawn(process.execPath,[
+    '--max-old-space-size=4096',
+    fileURLToPath(new URL('./build-frontend-worker.mjs',import.meta.url)),
+    ...process.argv.slice(2),
+],{cwd:process.cwd(),env:process.env,stdio:'inherit',shell:false});
+const interrupt=()=>child.kill('SIGINT');
+const terminate=()=>child.kill('SIGTERM');
+process.on('SIGINT',interrupt);
+process.on('SIGTERM',terminate);
+let result;
+try {
+    result=await new Promise((accept,reject)=> {
+        child.once('error',reject);
+        child.once('exit',(code,signal)=>accept({code,signal}));
+    });
+} finally {
+    process.off('SIGINT',interrupt);
+    process.off('SIGTERM',terminate);
+}
+if (result.signal) process.kill(process.pid,result.signal);
+else process.exitCode=result.code ?? 1;
