@@ -1,9 +1,22 @@
 use super::*;
 
+struct OwnedConnection(Option<Connection>);
+impl std::ops::Deref for OwnedConnection {
+    type Target = Connection;
+    fn deref(&self) -> &Self::Target {
+        self.0.as_ref().expect("Fixture connection is closed")
+    }
+}
+impl std::ops::DerefMut for OwnedConnection {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.0.as_mut().expect("Fixture connection is closed")
+    }
+}
+
 struct Fixture {
     root: PathBuf,
     workspace_id: String,
-    db: Connection,
+    db: OwnedConnection,
     store: BinaryStore,
 }
 impl Fixture {
@@ -22,7 +35,7 @@ impl Fixture {
         Self {
             root,
             workspace_id,
-            db,
+            db: OwnedConnection(Some(db)),
             store,
         }
     }
@@ -108,11 +121,83 @@ impl Fixture {
             })
             .unwrap()
     }
+    fn cleanup(&mut self) -> Result<()> {
+        let db =
+            self.db.0.as_ref().ok_or_else(|| {
+                Error::new("fixture", "Binary fixture connection is already closed")
+            })?;
+        self.store.close(db)?;
+        self.db
+            .0
+            .take()
+            .expect("Owned fixture connection")
+            .close()
+            .map_err(|(_, error)| error)?;
+        fs::remove_dir_all(&self.root)?;
+        Ok(())
+    }
 }
 impl Drop for Fixture {
     fn drop(&mut self) {
-        self.store.close(&self.db).unwrap();
-        fs::remove_dir_all(&self.root).unwrap();
+        if let Err(error) = self.cleanup() {
+            if std::thread::panicking() {
+                eprintln!(
+                    "Binary fixture cleanup during unwind failed: {} {}",
+                    error.code, error.message
+                );
+            } else {
+                panic!(
+                    "Binary fixture cleanup failed: {} {}",
+                    error.code, error.message
+                );
+            }
+        }
+    }
+}
+
+#[test]
+fn fixture_drop_closes_actual_sqlite_and_active_binary_leases_before_removing_root() {
+    let mut fixture = Fixture::new();
+    let claim = fixture.sealed(b"retained read bytes");
+    fixture.claim(std::slice::from_ref(&claim));
+    let lease = fixture.read_start(&claim.reference);
+    assert!(fixture.store.reads.contains_key(&lease));
+    let (stage, _) = fixture.prepare(2);
+    fixture.store.write_raw(&stage, 0, b"a").unwrap();
+    assert!(fixture.store.writes.contains_key(&stage));
+    let root = fixture.root.clone();
+    assert!(root.join("fixture.sqlite").exists());
+    drop(fixture);
+    assert!(
+        !root.exists(),
+        "Closed binary fixture left its private directory"
+    );
+}
+
+#[test]
+fn fixture_cleanup_errors_fail_normally_and_preserve_an_existing_body_panic() {
+    for body_panics in [false, true] {
+        let mut fixture = Fixture::new();
+        let root = fixture.root.clone();
+        fixture.root = root.join("absent-cleanup-directory");
+        let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(move || {
+            let _fixture = fixture;
+            if body_panics {
+                panic!("Original binary fixture body failure");
+            }
+        }));
+        let payload = outcome.expect_err("A failed fixture cleanup must remain observable");
+        let message = payload
+            .downcast_ref::<String>()
+            .map(String::as_str)
+            .or_else(|| payload.downcast_ref::<&str>().copied())
+            .expect("String panic payload");
+        if body_panics {
+            assert_eq!(message, "Original binary fixture body failure");
+        } else {
+            assert!(message.starts_with("Binary fixture cleanup failed:"));
+        }
+        fs::remove_dir_all(&root).unwrap();
     }
 }
 

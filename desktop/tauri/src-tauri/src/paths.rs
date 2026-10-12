@@ -859,6 +859,40 @@ mod tests {
 
     #[cfg(windows)]
     #[test]
+    fn empty_directory_guard_denies_delete_access_until_released() {
+        use std::os::windows::fs::OpenOptionsExt;
+        use windows_sys::Win32::Storage::FileSystem::{
+            DELETE, FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OPEN_REPARSE_POINT, FILE_SHARE_DELETE,
+            FILE_SHARE_READ, FILE_SHARE_WRITE,
+        };
+        let fixture = Fixture::new();
+        let directory = fixture.0.join("empty");
+        fs::create_dir(&directory).unwrap();
+        assert_eq!(fs::read_dir(&directory).unwrap().count(), 0);
+        let expected = ordinary_directory(&directory).unwrap().identity();
+        let open_for_delete = || {
+            OpenOptions::new()
+                .access_mode(DELETE)
+                .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE)
+                .custom_flags(FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT)
+                .open(&directory)
+        };
+        let guard = pin_directory(&directory).unwrap();
+        let denied = open_for_delete().expect_err("Pinned directory accepted DELETE authority");
+        assert_eq!(
+            denied.raw_os_error(),
+            Some(32),
+            "Expected Win32 sharing violation"
+        );
+        assert_eq!(ordinary_directory(&directory).unwrap().identity(), expected);
+        drop(guard);
+        drop(open_for_delete().expect("Released directory retained a DELETE conflict"));
+        fs::remove_dir(&directory).unwrap();
+        assert!(!directory.exists());
+    }
+
+    #[cfg(windows)]
+    #[test]
     fn windows_directory_flush_spike_records_real_access_and_result_without_claiming_a_barrier() {
         use std::os::windows::fs::OpenOptionsExt;
         use windows_sys::Win32::{

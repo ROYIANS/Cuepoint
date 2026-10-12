@@ -19,7 +19,7 @@ struct Disk {
 }
 struct Fixture {
     root: PathBuf,
-    disk: Arc<Mutex<Disk>>,
+    disk: Arc<Mutex<Option<Disk>>>,
     session: Session,
     reference: ManagedBinaryRef,
     previews: Arc<MediaPreviews>,
@@ -87,7 +87,7 @@ impl Fixture {
             .playback(&db, &claim.reference, &mut || Ok(()))
             .unwrap();
         let id = previews.insert(session.clone(), initial).unwrap();
-        let disk = Arc::new(Mutex::new(Disk { db, binaries }));
+        let disk = Arc::new(Mutex::new(Some(Disk { db, binaries })));
         let current = Arc::new(AtomicBool::new(true));
         let checked = Arc::clone(&current);
         let expected = session.clone();
@@ -149,14 +149,20 @@ impl Fixture {
         )
     }
     fn idle(&self) {
+        self.wait_idle().unwrap();
+    }
+    fn wait_idle(&self) -> Result<()> {
         let start = Instant::now();
         while self.server.active_connections() != 0 {
-            assert!(
-                start.elapsed() < Duration::from_secs(8),
-                "Readers retained after completion/cancel"
-            );
+            if start.elapsed() >= Duration::from_secs(8) {
+                return Err(Error::new(
+                    "fixture",
+                    "Readers retained after completion/cancel",
+                ));
+            }
             std::thread::sleep(Duration::from_millis(10));
         }
+        Ok(())
     }
     fn path(&self) -> PathBuf {
         let encoded: String = self
@@ -168,14 +174,94 @@ impl Fixture {
             .collect();
         self.root.join("assets").join(format!("id-{encoded}"))
     }
+    fn cleanup(&mut self) -> Result<()> {
+        self.server.stop();
+        self.wait_idle()?;
+        self.previews.clear();
+        if Arc::strong_count(&self.disk) != 1 {
+            return Err(Error::new(
+                "fixture",
+                "Media fixture disk still has another owner",
+            ));
+        }
+        let Disk { db, mut binaries } = self
+            .disk
+            .lock()
+            .map_err(|_| Error::new("fixture", "Media fixture disk lock is poisoned"))?
+            .take()
+            .ok_or_else(|| Error::new("fixture", "Media fixture disk is already closed"))?;
+        binaries.close(&db)?;
+        drop(binaries);
+        db.close().map_err(|(_, error)| error)?;
+        std::fs::remove_dir_all(&self.root)?;
+        Ok(())
+    }
 }
 impl Drop for Fixture {
     fn drop(&mut self) {
-        self.server.stop();
-        self.idle();
-        std::fs::remove_dir_all(&self.root).unwrap();
+        if let Err(error) = self.cleanup() {
+            if std::thread::panicking() {
+                eprintln!(
+                    "Media fixture cleanup during unwind failed: {} {}",
+                    error.code, error.message
+                );
+            } else {
+                panic!(
+                    "Media fixture cleanup failed: {} {}",
+                    error.code, error.message
+                );
+            }
+        }
     }
 }
+
+#[test]
+fn fixture_drop_revokes_idle_preview_authority_and_closes_disk_before_removing_root() {
+    let fixture = Fixture::new(33);
+    let root = fixture.root.clone();
+    let previews = Arc::clone(&fixture.previews);
+    assert_eq!(previews.leases.lock().unwrap().len(), 1);
+    assert_eq!(fixture.server.active_connections(), 0);
+    drop(fixture);
+    assert!(previews.leases.lock().unwrap().is_empty());
+    assert!(
+        !root.exists(),
+        "Closed media fixture left its private directory"
+    );
+}
+
+#[test]
+fn fixture_shared_disk_is_a_cleanup_failure_without_masking_an_existing_body_panic() {
+    for body_panics in [false, true] {
+        let fixture = Fixture::new(33);
+        let root = fixture.root.clone();
+        let other_owner = Arc::clone(&fixture.disk);
+        let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(move || {
+            let _fixture = fixture;
+            if body_panics {
+                panic!("Original media fixture body failure");
+            }
+        }));
+        let payload = outcome.expect_err("Shared disk ownership must fail fixture cleanup");
+        let message = payload
+            .downcast_ref::<String>()
+            .map(String::as_str)
+            .or_else(|| payload.downcast_ref::<&str>().copied())
+            .expect("String panic payload");
+        if body_panics {
+            assert_eq!(message, "Original media fixture body failure");
+        } else {
+            assert!(message.contains("Media fixture disk still has another owner"));
+        }
+        assert!(
+            root.exists(),
+            "Shared live disk was removed despite failed cleanup"
+        );
+        drop(other_owner);
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+}
+
 struct Outcome {
     status: u16,
     headers: HashMap<String, String>,
@@ -390,6 +476,7 @@ fn sixty_five_idle_capabilities_hold_no_file_descriptor_or_reader_slot() {
     let mut ids = Vec::new();
     for _ in 0..66 {
         let disk = fixture.disk.lock().unwrap();
+        let disk = disk.as_ref().expect("Owned media fixture disk");
         let file = disk
             .binaries
             .playback(&disk.db, &fixture.reference, &mut || Ok(()))
@@ -654,6 +741,7 @@ fn active_stream_revoke_disconnect_and_admission_release_real_readers() {
     fixture.idle();
     let id = {
         let disk = fixture.disk.lock().unwrap();
+        let disk = disk.as_ref().expect("Owned media fixture disk");
         fixture
             .previews
             .insert(
