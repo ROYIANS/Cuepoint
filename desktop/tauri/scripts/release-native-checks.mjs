@@ -1,9 +1,9 @@
-import {spawn} from 'node:child_process';
-import {mkdir,open,readFile,writeFile} from 'node:fs/promises';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {desktopRoot,nativeProbePath,resolveTools} from './tool-resolver.mjs';
 import {getTarget,parseOptions,runContext} from './release-policy.mjs';
 import {fileDigest,listedFiles} from './release-artifacts.mjs';
+import {runLoggedProcess} from './logged-process.mjs';
 
 const options=parseOptions(process.argv.slice(2),['--target','--evidence-dir']);
 const target=getTarget(options['--target']),context=runContext();
@@ -13,22 +13,18 @@ const root=resolve(desktopRoot,'../..'),tools=resolveTools();
 const env={...tools.env,CARGO_INCREMENTAL:'0',CUEPOINT_RUST_TARGET:target.triple};
 env.CUEPOINT_NATIVE_STORE_PROBE=nativeProbePath(env);
 async function run(args,path,cwd=desktopRoot) {
-    const log=await open(resolve(evidence,path),'wx');
-    try {
-        const code=await new Promise((accept,reject)=> {
-            const child=spawn(process.execPath,args,{cwd,env,stdio:['ignore',log.fd,log.fd],shell:false});
-            child.once('error',reject);child.once('exit',(code,signal)=>accept(signal ? 1 : code ?? 1));
-        });
-        if (code !== 0) throw new Error(`Required native check failed: ${path}`);
-    } finally {await log.close();}
+    console.log(`Native check started: ${path}`);
+    const {code,signal}=await runLoggedProcess(process.execPath,args,{cwd,env,logPath:resolve(evidence,path)});
+    console.log(`Native check finished: ${path}; exit=${code}; signal=${signal ?? 'none'}`);
+    if (code !== 0 || signal) throw new Error(`Required native check failed: ${path}; exit=${code}; signal=${signal ?? 'none'}`);
 }
 const commands=[
     ['fmt','--manifest-path','src-tauri/Cargo.toml','--all','--','--check'],
     ['clippy','--manifest-path','src-tauri/Cargo.toml','--locked','--all-targets','--features','test-hooks','--','-D','warnings'],
     ['clippy','--manifest-path','src-tauri/Cargo.toml','--locked','--all-targets','--features','product-sqlite,test-hooks','--','-D','warnings'],
-    ['test','--manifest-path','src-tauri/Cargo.toml','--locked','--all-targets','--features','test-hooks'],
-    ['test','--manifest-path','src-tauri/Cargo.toml','--locked','--all-targets','--features','product-sqlite,test-hooks'],
-    ['test','--manifest-path','src-tauri/Cargo.toml','--locked','--test','portable_contract'],
+    ['test','--manifest-path','src-tauri/Cargo.toml','--locked','--all-targets','--features','test-hooks','--','--nocapture'],
+    ['test','--manifest-path','src-tauri/Cargo.toml','--locked','--all-targets','--features','product-sqlite,test-hooks','--','--nocapture'],
+    ['test','--manifest-path','src-tauri/Cargo.toml','--locked','--test','portable_contract','--','--nocapture'],
 ];
 await run([resolve(desktopRoot,'scripts/build-frontend.mjs')],'normal-frontend.log');
 for (const [index,command] of commands.entries()) await run([resolve(desktopRoot,'scripts/tools.mjs'),'cargo',...command],`native-${index}.log`);

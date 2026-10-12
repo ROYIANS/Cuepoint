@@ -1,12 +1,11 @@
 #!/usr/bin/env node
-import {spawn} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {mkdir,readdir,readFile,stat,writeFile} from 'node:fs/promises';
-import {createWriteStream} from 'node:fs';
 import {dirname,join,relative,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createServer} from 'vite';
 import {nativeProbePath,nativeProbeBuildArguments} from '../desktop/tauri/scripts/tool-resolver.mjs';
+import {runLoggedProcess} from '../desktop/tauri/scripts/logged-process.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const node=process.execPath;
@@ -27,18 +26,13 @@ async function filesUnder(directory) {
 async function identity() {
     const files=[];
     for (const directory of ['src','tests','scripts','desktop/tauri/src-tauri/src','desktop/tauri/src-tauri/permissions','desktop/tauri/src-tauri/capabilities']) files.push(...await filesUnder(join(root,directory)));
-    for (const file of ['package.json','pnpm-lock.yaml','vitest.config.ts','desktop/tauri/src-tauri/Cargo.toml','desktop/tauri/src-tauri/Cargo.lock','desktop/tauri/src-tauri/build.rs']) files.push(join(root,file));
+    for (const file of ['package.json','pnpm-lock.yaml','vitest.config.ts','desktop/tauri/scripts/logged-process.mjs','desktop/tauri/src-tauri/Cargo.toml','desktop/tauri/src-tauri/Cargo.lock','desktop/tauri/src-tauri/build.rs']) files.push(join(root,file));
     return Object.fromEntries(await Promise.all([...new Set(files)].sort().map(async path=>[relative(root,path),hash(await readFile(path))])));
 }
 async function run(command,args,log,env) {
-    const output=createWriteStream(log);
-    const code=await new Promise((resolveExit,reject)=> {
-        const child=spawn(command,args,{cwd:root,env,stdio:['ignore','pipe','pipe']});
-        child.stdout.pipe(output,{end:false});child.stderr.pipe(output,{end:false});
-        child.on('error',reject);child.on('exit',(code,signal)=>resolveExit(signal ? 1 : code ?? 1));
-    });
-    await new Promise(resolveClose=>output.end(resolveClose));
-    return code;
+    const {code,signal}=await runLoggedProcess(command,args,{cwd:root,env,logPath:log});
+    console.log(`Native storage check finished: ${relative(evidenceDir,log)}; exit=${code}; signal=${signal ?? 'none'}`);
+    return signal ? 1 : code ?? 1;
 }
 async function currentRegistry() {
     // Inspect names from the current registered recipes without executing a tool or reading data.
