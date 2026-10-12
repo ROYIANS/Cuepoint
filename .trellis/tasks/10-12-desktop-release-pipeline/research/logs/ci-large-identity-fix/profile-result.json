@@ -1,0 +1,538 @@
+{
+  "schema": 1,
+  "node": "v22.21.1",
+  "platform": "darwin",
+  "arch": "arm64",
+  "currentPhase": "close",
+  "milliseconds": 4232.387250000001,
+  "phases": [
+    {
+      "name": "launch",
+      "milliseconds": 61.28400000000002,
+      "commands": {}
+    },
+    {
+      "name": "add-huge",
+      "milliseconds": 346.318084,
+      "commands": {
+        "open": {
+          "calls": 1,
+          "requestBytes": 40,
+          "nextMilliseconds": 2.3101669999999785,
+          "maxRequestBytes": 40
+        },
+        "begin": {
+          "calls": 1,
+          "requestBytes": 253,
+          "nextMilliseconds": 0.6154579999999896,
+          "maxRequestBytes": 253
+        },
+        "get": {
+          "calls": 1,
+          "requestBytes": 252311,
+          "nextMilliseconds": 19.69183400000003,
+          "maxRequestBytes": 252311
+        },
+        "prepare": {
+          "calls": 24,
+          "requestBytes": 763462,
+          "nextMilliseconds": 55.35683399999999,
+          "maxRequestBytes": 33086
+        },
+        "seal": {
+          "calls": 1,
+          "requestBytes": 366,
+          "nextMilliseconds": 0.5161249999999882,
+          "maxRequestBytes": 366
+        },
+        "commit": {
+          "calls": 1,
+          "requestBytes": 404,
+          "nextMilliseconds": 186.56883299999998,
+          "maxRequestBytes": 404
+        },
+        "changes": {
+          "calls": 1,
+          "requestBytes": 219,
+          "nextMilliseconds": 32.228583999999955,
+          "maxRequestBytes": 219
+        },
+        "readChangeTransfer": {
+          "calls": 24,
+          "requestBytes": 6472,
+          "nextMilliseconds": 12.751210999999557,
+          "maxRequestBytes": 270
+        }
+      }
+    },
+    {
+      "name": "add-40-mixed",
+      "milliseconds": 1218.468458,
+      "commands": {
+        "begin": {
+          "calls": 1,
+          "requestBytes": 253,
+          "nextMilliseconds": 0.7544579999999996,
+          "maxRequestBytes": 253
+        },
+        "get": {
+          "calls": 40,
+          "requestBytes": 812110,
+          "nextMilliseconds": 163.65037700000005,
+          "maxRequestBytes": 252311
+        },
+        "prepare": {
+          "calls": 80,
+          "requestBytes": 2433800,
+          "nextMilliseconds": 169.3327059999989,
+          "maxRequestBytes": 33096
+        },
+        "seal": {
+          "calls": 1,
+          "requestBytes": 366,
+          "nextMilliseconds": 0.3311670000000504,
+          "maxRequestBytes": 366
+        },
+        "commit": {
+          "calls": 1,
+          "requestBytes": 404,
+          "nextMilliseconds": 710.8877499999999,
+          "maxRequestBytes": 404
+        },
+        "changes": {
+          "calls": 40,
+          "requestBytes": 10086,
+          "nextMilliseconds": 118.42183000000023,
+          "maxRequestBytes": 253
+        }
+      }
+    },
+    {
+      "name": "get-huge",
+      "milliseconds": 77.866667,
+      "commands": {
+        "begin": {
+          "calls": 1,
+          "requestBytes": 252,
+          "nextMilliseconds": 0.13000000000010914,
+          "maxRequestBytes": 253
+        },
+        "get": {
+          "calls": 1,
+          "requestBytes": 252311,
+          "nextMilliseconds": 51.41662499999984,
+          "maxRequestBytes": 252311
+        },
+        "readTransfer": {
+          "calls": 24,
+          "requestBytes": 8752,
+          "nextMilliseconds": 18.185165999999754,
+          "maxRequestBytes": 365
+        },
+        "validate": {
+          "calls": 1,
+          "requestBytes": 273,
+          "nextMilliseconds": 0.3762499999997999,
+          "maxRequestBytes": 273
+        },
+        "abort": {
+          "calls": 1,
+          "requestBytes": 270,
+          "nextMilliseconds": 0.10775000000012369,
+          "maxRequestBytes": 270
+        }
+      }
+    },
+    {
+      "name": "equals-huge",
+      "milliseconds": 88.79787499999998,
+      "commands": {
+        "begin": {
+          "calls": 1,
+          "requestBytes": 252,
+          "nextMilliseconds": 0.11195900000006986,
+          "maxRequestBytes": 253
+        },
+        "readTransfer": {
+          "calls": 24,
+          "requestBytes": 8752,
+          "nextMilliseconds": 14.071793000000298,
+          "maxRequestBytes": 365
+        },
+        "validate": {
+          "calls": 1,
+          "requestBytes": 273,
+          "nextMilliseconds": 0.14541699999995217,
+          "maxRequestBytes": 273
+        },
+        "abort": {
+          "calls": 1,
+          "requestBytes": 270,
+          "nextMilliseconds": 0.09708299999988412,
+          "maxRequestBytes": 270
+        },
+        "query": {
+          "calls": 1,
+          "requestBytes": 252453,
+          "nextMilliseconds": 66.88616699999989,
+          "maxRequestBytes": 252453
+        }
+      }
+    },
+    {
+      "name": "bulkGet-40-mixed",
+      "milliseconds": 498.5373749999999,
+      "commands": {
+        "begin": {
+          "calls": 1,
+          "requestBytes": 252,
+          "nextMilliseconds": 0.10358399999995527,
+          "maxRequestBytes": 253
+        },
+        "readTransfer": {
+          "calls": 78,
+          "requestBytes": 28236,
+          "nextMilliseconds": 339.5540519999977,
+          "maxRequestBytes": 365
+        },
+        "validate": {
+          "calls": 1,
+          "requestBytes": 273,
+          "nextMilliseconds": 3.3928750000000036,
+          "maxRequestBytes": 273
+        },
+        "abort": {
+          "calls": 1,
+          "requestBytes": 270,
+          "nextMilliseconds": 0.08845900000005713,
+          "maxRequestBytes": 270
+        },
+        "requestStart": {
+          "calls": 1,
+          "requestBytes": 293,
+          "nextMilliseconds": 0.5180420000001504,
+          "maxRequestBytes": 293
+        },
+        "requestChunk": {
+          "calls": 25,
+          "requestBytes": 809444,
+          "nextMilliseconds": 19.255663000001277,
+          "maxRequestBytes": 33130
+        },
+        "requestFinish": {
+          "calls": 1,
+          "requestBytes": 330,
+          "nextMilliseconds": 124.22383299999956,
+          "maxRequestBytes": 330
+        }
+      }
+    },
+    {
+      "name": "anyOf-count-41",
+      "milliseconds": 200.75395900000012,
+      "commands": {
+        "begin": {
+          "calls": 1,
+          "requestBytes": 252,
+          "nextMilliseconds": 0.11495800000011513,
+          "maxRequestBytes": 253
+        },
+        "validate": {
+          "calls": 1,
+          "requestBytes": 273,
+          "nextMilliseconds": 0.24458399999957692,
+          "maxRequestBytes": 273
+        },
+        "abort": {
+          "calls": 1,
+          "requestBytes": 270,
+          "nextMilliseconds": 0.15391700000009223,
+          "maxRequestBytes": 270
+        },
+        "requestStart": {
+          "calls": 1,
+          "requestBytes": 295,
+          "nextMilliseconds": 0.12258299999984956,
+          "maxRequestBytes": 295
+        },
+        "requestChunk": {
+          "calls": 33,
+          "requestBytes": 1065763,
+          "nextMilliseconds": 21.31800000000021,
+          "maxRequestBytes": 33154
+        },
+        "requestFinish": {
+          "calls": 1,
+          "requestBytes": 330,
+          "nextMilliseconds": 166.35783300000003,
+          "maxRequestBytes": 330
+        }
+      }
+    },
+    {
+      "name": "anyOf-array-41",
+      "milliseconds": 881.2203749999999,
+      "commands": {
+        "begin": {
+          "calls": 1,
+          "requestBytes": 252,
+          "nextMilliseconds": 0.13095800000019153,
+          "maxRequestBytes": 253
+        },
+        "readTransfer": {
+          "calls": 24,
+          "requestBytes": 8752,
+          "nextMilliseconds": 13.002958000000945,
+          "maxRequestBytes": 365
+        },
+        "validate": {
+          "calls": 1,
+          "requestBytes": 273,
+          "nextMilliseconds": 0.13950000000022555,
+          "maxRequestBytes": 273
+        },
+        "abort": {
+          "calls": 1,
+          "requestBytes": 270,
+          "nextMilliseconds": 0.08516699999972843,
+          "maxRequestBytes": 270
+        },
+        "query": {
+          "calls": 41,
+          "requestBytes": 2633464,
+          "nextMilliseconds": 836.2399989999994,
+          "maxRequestBytes": 252453
+        }
+      }
+    },
+    {
+      "name": "reopen",
+      "milliseconds": 504.8805419999999,
+      "commands": {}
+    },
+    {
+      "name": "get-huge-after-reopen",
+      "milliseconds": 73.78900000000067,
+      "commands": {
+        "open": {
+          "calls": 1,
+          "requestBytes": 40,
+          "nextMilliseconds": 0.5264589999997042,
+          "maxRequestBytes": 40
+        },
+        "begin": {
+          "calls": 1,
+          "requestBytes": 252,
+          "nextMilliseconds": 0.11258300000008603,
+          "maxRequestBytes": 253
+        },
+        "get": {
+          "calls": 1,
+          "requestBytes": 252311,
+          "nextMilliseconds": 50.72375000000011,
+          "maxRequestBytes": 252311
+        },
+        "readTransfer": {
+          "calls": 24,
+          "requestBytes": 8752,
+          "nextMilliseconds": 16.255332999999155,
+          "maxRequestBytes": 365
+        },
+        "validate": {
+          "calls": 1,
+          "requestBytes": 273,
+          "nextMilliseconds": 0.27237499999955617,
+          "maxRequestBytes": 273
+        },
+        "abort": {
+          "calls": 1,
+          "requestBytes": 270,
+          "nextMilliseconds": 0.10220799999933661,
+          "maxRequestBytes": 270
+        }
+      }
+    },
+    {
+      "name": "delete-huge",
+      "milliseconds": 225.34820900000068,
+      "commands": {
+        "begin": {
+          "calls": 1,
+          "requestBytes": 253,
+          "nextMilliseconds": 0.7334590000000389,
+          "maxRequestBytes": 253
+        },
+        "get": {
+          "calls": 1,
+          "requestBytes": 252311,
+          "nextMilliseconds": 49.58570800000052,
+          "maxRequestBytes": 252311
+        },
+        "prepare": {
+          "calls": 8,
+          "requestBytes": 254508,
+          "nextMilliseconds": 19.20749799999976,
+          "maxRequestBytes": 33096
+        },
+        "seal": {
+          "calls": 1,
+          "requestBytes": 365,
+          "nextMilliseconds": 0.5436250000002474,
+          "maxRequestBytes": 366
+        },
+        "commit": {
+          "calls": 1,
+          "requestBytes": 404,
+          "nextMilliseconds": 80.24749999999949,
+          "maxRequestBytes": 404
+        },
+        "changes": {
+          "calls": 1,
+          "requestBytes": 219,
+          "nextMilliseconds": 31.434708999999202,
+          "maxRequestBytes": 253
+        },
+        "readChangeTransfer": {
+          "calls": 24,
+          "requestBytes": 6472,
+          "nextMilliseconds": 12.848336000000927,
+          "maxRequestBytes": 270
+        },
+        "readTransfer": {
+          "calls": 24,
+          "requestBytes": 8752,
+          "nextMilliseconds": 15.800710000000436,
+          "maxRequestBytes": 365
+        }
+      }
+    },
+    {
+      "name": "get-deleted",
+      "milliseconds": 23.467999999999847,
+      "commands": {
+        "begin": {
+          "calls": 1,
+          "requestBytes": 252,
+          "nextMilliseconds": 0.835041999999703,
+          "maxRequestBytes": 253
+        },
+        "get": {
+          "calls": 1,
+          "requestBytes": 252311,
+          "nextMilliseconds": 19.245041999999557,
+          "maxRequestBytes": 252311
+        },
+        "validate": {
+          "calls": 1,
+          "requestBytes": 273,
+          "nextMilliseconds": 0.2779999999993379,
+          "maxRequestBytes": 273
+        },
+        "abort": {
+          "calls": 1,
+          "requestBytes": 270,
+          "nextMilliseconds": 0.10512500000004366,
+          "maxRequestBytes": 270
+        }
+      }
+    },
+    {
+      "name": "close",
+      "milliseconds": 31.322416999999405,
+      "commands": {}
+    }
+  ],
+  "commands": {
+    "open": {
+      "calls": 2,
+      "requestBytes": 80,
+      "nextMilliseconds": 2.836625999999683,
+      "maxRequestBytes": 40
+    },
+    "begin": {
+      "calls": 10,
+      "requestBytes": 2523,
+      "nextMilliseconds": 3.642459000000258,
+      "maxRequestBytes": 253
+    },
+    "get": {
+      "calls": 45,
+      "requestBytes": 2073665,
+      "nextMilliseconds": 354.3133360000001,
+      "maxRequestBytes": 252311
+    },
+    "prepare": {
+      "calls": 112,
+      "requestBytes": 3451770,
+      "nextMilliseconds": 243.89703799999864,
+      "maxRequestBytes": 33096
+    },
+    "seal": {
+      "calls": 3,
+      "requestBytes": 1097,
+      "nextMilliseconds": 1.390917000000286,
+      "maxRequestBytes": 366
+    },
+    "commit": {
+      "calls": 3,
+      "requestBytes": 1212,
+      "nextMilliseconds": 977.7040829999994,
+      "maxRequestBytes": 404
+    },
+    "changes": {
+      "calls": 42,
+      "requestBytes": 10524,
+      "nextMilliseconds": 182.08512299999938,
+      "maxRequestBytes": 253
+    },
+    "readChangeTransfer": {
+      "calls": 48,
+      "requestBytes": 12944,
+      "nextMilliseconds": 25.599547000000484,
+      "maxRequestBytes": 270
+    },
+    "readTransfer": {
+      "calls": 198,
+      "requestBytes": 71996,
+      "nextMilliseconds": 416.87001199999827,
+      "maxRequestBytes": 365
+    },
+    "validate": {
+      "calls": 7,
+      "requestBytes": 1911,
+      "nextMilliseconds": 4.849000999998452,
+      "maxRequestBytes": 273
+    },
+    "abort": {
+      "calls": 7,
+      "requestBytes": 1890,
+      "nextMilliseconds": 0.7397089999992659,
+      "maxRequestBytes": 270
+    },
+    "query": {
+      "calls": 42,
+      "requestBytes": 2885917,
+      "nextMilliseconds": 903.1261659999993,
+      "maxRequestBytes": 252453
+    },
+    "requestStart": {
+      "calls": 2,
+      "requestBytes": 588,
+      "nextMilliseconds": 0.640625,
+      "maxRequestBytes": 295
+    },
+    "requestChunk": {
+      "calls": 58,
+      "requestBytes": 1875207,
+      "nextMilliseconds": 40.57366300000149,
+      "maxRequestBytes": 33154
+    },
+    "requestFinish": {
+      "calls": 2,
+      "requestBytes": 660,
+      "nextMilliseconds": 290.5816659999996,
+      "maxRequestBytes": 330
+    }
+  },
+  "limitations": "Local macOS Node22 observation against current production source. Exact historical workload and assertions; unchanged 30s deadline."
+}

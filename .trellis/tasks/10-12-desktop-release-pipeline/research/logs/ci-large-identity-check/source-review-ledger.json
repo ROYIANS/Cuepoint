@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "baseline": "db52aedb382f83bb49f24908131eeebf1eb3401d",
+  "checker": "/root/ci_probe_readiness_check",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "count-body-identical",
+      "passed": true,
+      "detail": "Complete count implementation is byte-identical to db52aedb."
+    },
+    {
+      "name": "query-before-group-identical",
+      "passed": true,
+      "detail": "Scope and dependency registration are preserved."
+    },
+    {
+      "name": "query-after-group-identical",
+      "passed": true,
+      "detail": "Limit, common epoch, cursors, row validation/dedup, overlay and global sort are byte-identical."
+    },
+    {
+      "name": "all-original-test-source-preserved",
+      "passed": true,
+      "detail": "Removing only new imports, new cases and additive assertions reconstructs the exact original complete test file, including every original fixture/assertion/30s deadline."
+    },
+    {
+      "name": "three-authored-inputs-match-freeze",
+      "passed": true,
+      "detail": {
+        "src/lib/storage/native.ts": "4532d47791ac0ad389a73ede820bb5c1cf38f695878fd308ac3ab232eb5948a6",
+        "tests/sharedNativeStorageContract.test.ts": "7b38de5b8c532fba42a096d38e181f23540d5ede39adfbee9aab8e3858f5d642",
+        "desktop/tauri/knip.json": "8a230e61dd2d05dfb7ca07427b493bd7cc46b9b8c88519dd3046620429558554"
+      }
+    },
+    {
+      "name": "protocol-rust-config-source-unchanged",
+      "passed": true,
+      "detail": "No protocol/Rust/bridge/worker/deadline/owner changes; both workflows remain the prior cold-probe implementation."
+    },
+    {
+      "name": "wire-encoded-utf8-json-budget",
+      "passed": true,
+      "detail": "The key is encoded through encodeWireKey, JSON-stringified, then UTF8-counted. List starts at 2 bytes, adds comma only after first key, and resets after group publication."
+    },
+    {
+      "name": "oversized-singleton-admission",
+      "passed": true,
+      "detail": "Flush condition requires a nonempty group; a single over-budget key is accepted, then separated from subsequent keys. Existing bridge request transfer remains authoritative."
+    },
+    {
+      "name": "count-key-cap",
+      "passed": true,
+      "detail": "Flush occurs at QUERY_PAGE_SIZE = 256 before adding the next key. Empty anyOf yields no groups and no rows."
+    },
+    {
+      "name": "dedup-and-global-limit",
+      "passed": true,
+      "detail": "Typed key dedup is unchanged. Every group contributes rows keyed by primary identity; original global comparator and reverse apply after overlay, then readonly limit. Top-k-per-group remains sufficient for global top-k."
+    },
+    {
+      "name": "epoch-authority",
+      "passed": true,
+      "detail": "Common epoch lives outside group/page loops. Actual native table guard may reject a changed epoch before a second response; new test checks two attempts, conflict, one callback and staged rollback."
+    },
+    {
+      "name": "rw-overlay",
+      "passed": true,
+      "detail": "RW reads do not push limit. Original dependency is retained once; staged removal, index changes and insertions are reconciled before collection filtering/limit."
+    },
+    {
+      "name": "positive-and-negative-evidence",
+      "passed": true,
+      "detail": "Actual 71-case real-probe focused receipt is green. Retained original source plus additive byte assertion fails at 43,732,895 > 4,194,304; no raised timeout or reduced fixture."
+    },
+    {
+      "name": "knip-authority",
+      "passed": true,
+      "detail": "Previously independently checked exact config, real root caller traces, root+desktop quality and disposable-copy unused-export/removal negative failures. No suppression or source widening."
+    },
+    {
+      "name": "spec-sync",
+      "passed": true,
+      "detail": "Two new spec sections correctly state real wire bytes, singleton admission, count preservation, full frozen lanes and separate root/desktop Knip authority."
+    },
+    {
+      "name": "profile-array-byte-ceiling",
+      "passed": true,
+      "detail": {
+        "totalBytes": 2643011,
+        "queryCalls": 41,
+        "requestChunkCalls": 0,
+        "milliseconds": 881.2203749999999
+      }
+    }
+  ],
+  "reviewSourceHashes": {
+    "src/lib/storage/native.ts": "4532d47791ac0ad389a73ede820bb5c1cf38f695878fd308ac3ab232eb5948a6",
+    "tests/sharedNativeStorageContract.test.ts": "7b38de5b8c532fba42a096d38e181f23540d5ede39adfbee9aab8e3858f5d642",
+    "desktop/tauri/knip.json": "8a230e61dd2d05dfb7ca07427b493bd7cc46b9b8c88519dd3046620429558554",
+    "src/lib/storage/protocol.ts": "53f3b90c3ab5e8bd80d144dd827d117b32cb9e2dd1d80a20d89d48d1a9b5abf5",
+    "src/lib/storage/wireText.ts": "92026c6a17b32a9d8848549025ea2f754391cc8cdd2d3e7c6c6acd81ed1b45ba",
+    "src/lib/storage/nativeBridge.ts": "53d00a8e8aeb64d2f331c013042a1fc22eee0e8642ef8a5113c82bc249426bf1",
+    "src/lib/storage/store.ts": "232506e5d08845bc3ed329a8b7c47ca446e19c1de73fbdaf100192328ec27e96",
+    "src/lib/storage/keys.ts": "be10d6336204f92afb6a65913dccedb2e2d6aed41c11bb290c8e56c3afb2ccdf",
+    "desktop/tauri/src-tauri/src/full_product_store/query.rs": "03820365d6b94b19c7b010cef0913f3905948a445e0ce53689cd71186f1515c7",
+    "desktop/tauri/src-tauri/src/full_product_store/mod.rs": "74a7ed4ef3ca596791b73ff65a065c7c70ec71f367f221c0a8bb08db00860fb0",
+    "vitest.config.ts": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a",
+    ".github/workflows/ghcr.yml": "68a135604a1e794a04f54f847c1e99eb37cd87be9ab1def36910d2bd1e60f26c",
+    ".github/workflows/desktop-release.yml": "fef06a00bd4c651cd303ce6e55b9258829c6989d3c405243254925866de259c9",
+    ".trellis/spec/frontend/shared-product-storage.md": "cc9adb2a90840f535bee083eb44fe18bc9e5bc304181a871a0171da0e75ce607",
+    ".trellis/spec/frontend/quality-guidelines.md": "77d8a305de636c94f541b94cbb4b8a8d116f71fa19604e91821b9103b019ac86"
+  },
+  "executionPolicy": "Read-only review during root final broad gates; no competing tests, builds or authored source edits. Final successful root/native/type/lint/quality/model/build receipts inspected against current frozen source; actual single-file ESLint current-vs-HEAD executed only after heavy gates completed.",
+  "finalGateInspection": "final-gate-inspection.json",
+  "nativeRecheckInspection": "native-recheck-inspection.json",
+  "reviewWarningInspection": "native-eslint-review.json",
+  "reportSha256": "e5adc7f7740fa9bc0ab45f0f7e04d10d53b8a1de7f1cab8e5c15d46c7af6da19"
+}

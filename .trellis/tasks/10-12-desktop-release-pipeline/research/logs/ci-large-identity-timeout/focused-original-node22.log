@@ -1,0 +1,13 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run tests/sharedNativeStorageContract.test.ts -t 'transfers arbitrary oversized'
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 68 skipped (69)
+   Start at  11:33:19
+   Duration  13.56s (tests 97%, transform 2%)
+

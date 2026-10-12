@@ -4,6 +4,9 @@ import {createNativeProbe} from "./helpers/nativeProductProbe";
 import {TABLE_NAMES,PRODUCT_SCHEMA} from "@/lib/storage/schema";
 import {targetRevision} from "@/lib/productionRevision";
 import {createNativeProductStore} from "@/lib/storage/native";
+import type {NativeQuery} from "@/lib/storage/protocol";
+import {requireKey} from "@/lib/storage/keys";
+import {encodeWireKey} from "@/lib/storage/wireText";
 
 registerSharedStorageCases("sqlite",createNativeProbe);
 
@@ -18,10 +21,94 @@ describe("actual shared TypeScript/Rust SQLite adapter",()=> {
             expect((await native.store.shots.where("projectId").equals(huge).first())?.id).toBe(huge);
             expect((await native.store.shots.bulkGet(mixed)).map(row=>row?.id)).toEqual(mixed);
             expect(await native.store.shots.where("projectId").anyOf([...mixed,huge]).count()).toBe(41);
+            const beforeArray=requestBytes.length;
             expect((await native.store.shots.where("projectId").anyOf([...mixed,huge]).toArray()).map(row=>row.id).sort()).toEqual([...mixed,huge].sort());
+            // Large selectors must not be retransmitted in full for every row page.
+            expect(requestBytes.slice(beforeArray).reduce((total,bytes)=>total+bytes,0)).toBeLessThan(4*1024*1024);
             expect(Math.max(...requestBytes)).toBeLessThanOrEqual(262144);
             await native.reopen();expect((await native.store.shots.get(huge))?.id).toBe(huge);
             await native.store.shots.delete(huge);expect(await native.store.shots.get(huge)).toBeUndefined();
+        } finally {await native.close();}
+    },30000);
+    it("preserves compound selector grouping, global ordering, limits and staged rows with oversized UTF16 keys",async ()=> {
+        const requests:string[]=[],requestBytes:number[]=[];
+        const native=await createNativeProbe({intercept:async (_command,args,next)=> {
+            requests.push((args.request as {type:string}).type);
+            requestBytes.push(new TextEncoder().encode(JSON.stringify(args)).byteLength);
+            return next();
+        }});
+        try {
+            const snow="雪".repeat(10000),escaped='"\\\0'.repeat(5000),lone="u".repeat(13000)+"\ud800",oversized="wide\0".repeat(16000)+"\ud800";
+            const selectors=[[snow,"p"],[oversized,"p"],[escaped,"p"],[lone,"p"],[snow,"p"],[escaped,"p"]];
+            await native.store.materialUses.bulkAdd([
+                {id:"snow",materialId:snow,projectId:"p"},
+                {id:"oversized",materialId:oversized,projectId:"p"},
+                {id:"escaped-z",materialId:escaped,projectId:"p"},
+                {id:"escaped-a",materialId:escaped,projectId:"p"},
+                {id:"lone",materialId:lone,projectId:"p"},
+            ] as never[]);
+            const groups:NativeQuery["selector"][]=[],query=native.bridge.query.bind(native.bridge);
+            native.bridge.query=async request=> {groups.push(request.query.selector);return query(request);};
+            const selected=()=>native.store.materialUses.where("[materialId+projectId]").anyOf(selectors);
+            requests.length=0;
+            expect((await selected().toArray()).map(row=>row.id)).toEqual(["escaped-a","escaped-z","lone","oversized","snow"]);
+            const uniqueGroups=[...new Map(groups.map(group=>[JSON.stringify(group),group])).values()];
+            expect(uniqueGroups.length).toBeGreaterThan(1);
+            expect(uniqueGroups.flatMap(group=>group.kind === "anyOf" ? group.keys : [])).toEqual(selectors.slice(0,4).map(requireKey));
+            for (const group of uniqueGroups) {
+                if (group.kind !== "anyOf") throw new Error("Expected the actual grouped selector");
+                expect(group.keys.length).toBeLessThanOrEqual(256);
+                const bytes=new TextEncoder().encode(JSON.stringify(group.keys.map(encodeWireKey))).byteLength;
+                if (bytes > 65536) expect(group.keys).toHaveLength(1);
+            }
+            // One selector still exceeds a whole IPC envelope and must be streamed.
+            expect(requests).toContain("requestStart");expect(requests).toContain("requestChunk");expect(requests).toContain("requestFinish");
+            expect((await selected().reverse().limit(2).toArray()).map(row=>row.id)).toEqual(["snow","oversized"]);
+            expect((await selected().limit(2).toArray()).map(row=>row.id)).toEqual(["escaped-a","escaped-z"]);
+            expect((await selected().reverse().first())?.id).toBe("snow");
+            expect(await selected().limit(0).toArray()).toEqual([]);
+            expect(await selected().limit(0).first()).toBeUndefined();
+            expect(await selected().count()).toBe(5);
+            await native.store.transaction("rw",["materialUses"],async tx=> {
+                await tx.materialUses.delete("escaped-z");
+                await tx.materialUses.update("lone",{materialId:"unselected"});
+                await tx.materialUses.update("snow",{materialId:escaped});
+                await tx.materialUses.add({id:"overlay",materialId:snow,projectId:"p"} as never);
+                const staged=tx.materialUses.where("[materialId+projectId]").anyOf(selectors);
+                expect((await staged.toArray()).map(row=>row.id)).toEqual(["escaped-a","snow","oversized","overlay"]);
+                expect((await staged.reverse().limit(2).toArray()).map(row=>row.id)).toEqual(["overlay","oversized"]);
+                expect((await staged.reverse().limit(2).sortBy("id")).map(row=>row.id)).toEqual(["oversized","overlay"]);
+                expect(await staged.limit(0).toArray()).toEqual([]);
+                expect(await staged.count()).toBe(4);
+            });
+            expect((await selected().toArray()).map(row=>row.id)).toEqual(["escaped-a","snow","oversized","overlay"]);
+            expect(Math.max(...requestBytes)).toBeLessThanOrEqual(262144);
+        } finally {await native.close();}
+    },30000);
+    it("rejects an epoch change between byte-sized selector groups without replaying a mutation callback",async ()=> {
+        const owners=["a".repeat(40000),"b".repeat(40000)];
+        const native=await createNativeProbe();
+        try {
+            await native.store.shots.bulkAdd(owners.map((projectId,index)=>({id:`s${index}`,projectId,episodeId:"e",order:index})) as never[]);
+            const outside=createNativeProductStore({...native.bridge,open:async ()=>({...await native.driver.getSession(),changeSequence:0})},native.binaries).store;
+            const query=native.bridge.query.bind(native.bridge),epochs:number[]=[],selectors:NativeQuery["selector"][]=[];
+            let changed=false,runs=0;
+            native.bridge.query=async request=> {
+                selectors.push(request.query.selector);
+                const reply=await query(request);epochs.push(reply.epoch);
+                if (!changed) {changed=true;await outside.shots.add({id:"external",projectId:owners[1],episodeId:"e",order:2} as never);}
+                return reply;
+            };
+            await expect(native.store.transaction("rw",["shots","projects"],async tx=> {
+                runs++;await tx.projects.add({id:"must-not-commit"} as never);
+                await tx.shots.where("projectId").anyOf(owners).toArray();
+            })).rejects.toMatchObject({code:"conflict"});
+            expect(runs).toBe(1);expect(changed).toBe(true);
+            // Rust's table guard rejects the changed epoch before returning group two.
+            expect(epochs).toHaveLength(1);expect(selectors).toHaveLength(2);
+            expect(new Set(selectors.map(selector=>JSON.stringify(selector))).size).toBe(2);
+            expect(await native.store.projects.get("must-not-commit")).toBeUndefined();
+            expect(await native.store.shots.get("external")).toMatchObject({projectId:owners[1]});
         } finally {await native.close();}
     },30000);
     it("returns bounded history pages and counts without hydrating original tool bodies",async ()=> {
@@ -88,7 +175,11 @@ describe("actual shared TypeScript/Rust SQLite adapter",()=> {
             await native.store.transaction("rw",["shots"],async tx=> {
                 for (let index=0;index<600;index++) await tx.shots.add({id:`s${String(index).padStart(4,"0")}`,episodeId:`e${index}`,order:1} as never);
             });
+            const firstGroups:NativeQuery["selector"][]=[],query=native.bridge.query.bind(native.bridge);
+            native.bridge.query=async request=> {if (request.query.cursor === null) firstGroups.push(request.query.selector);return query(request);};
             expect((await native.store.shots.where("episodeId").anyOf(Array.from({length:600},(_,index)=>`e${index}`)).toArray()).length).toBe(600);
+            expect(firstGroups.map(group=>group.kind === "anyOf" ? group.keys.length : 0)).toEqual([256,256,88]);
+            expect(firstGroups.flatMap(group=>group.kind === "anyOf" ? group.keys : [])).toEqual(Array.from({length:600},(_,index)=>requireKey(`e${index}`)));
             await native.reopen();expect((await native.store.chatMessages.get("large"))?.content).toBe(body);
         }finally {await native.close();}
     },30000);

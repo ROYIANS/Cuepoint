@@ -279,3 +279,66 @@ await db.transaction("rw", tables, async tx => {
 Wrong: catch a reply decode failure and mark the tool safely rolled back.
 Correct: query the durable outcome, retain committed evidence when confirmed,
 and block automatic replay while certainty remains unknown.
+
+## Query selector bytes across cursor pages
+
+### 1. Scope / Trigger
+
+Apply to `NativeTransaction.query` when arbitrary large `anyOf` identities share
+a selector group. Each cursor page carries its group's selector again; grouping
+only by key count can multiply a large selector by the number of row pages.
+
+### 2. Signatures / Owners
+
+Keep `query(query: NativeQuery): Promise<object[]>` and the existing bridge/Rust
+request protocol. Size keys through the existing `encodeWireKey` codec and
+`TextEncoder` over their serialized JSON. Do not estimate from string length.
+
+### 3. Contracts
+
+Deduplicate typed keys first. Query groups admit at most `QUERY_PAGE_SIZE` keys
+and target `IPC_CHUNK_BYTES / 4` (65536) encoded selector-array bytes, including
+brackets/separators. This is a scheduling budget: a single key exceeding it is
+accepted in its own group and existing bounded request transfer remains active.
+It is not a metadata/key admission cap or a different IPC envelope limit.
+
+Retain the original query dependency, the common epoch across all groups/pages,
+row deduplication, global indexed/primary-key ordering, reverse, readonly limit
+and staged overlay semantics. Aggregate `count` retains its separate existing
+256-key grouping: it has no row-page selector replay. Neither a new timeout nor
+fewer test identities substitutes for this correction.
+
+### 4. Validation / Error Matrix
+
+| Condition | Required behavior |
+| --- | --- |
+| Many large selectors with paged row bodies | Bound repeated selector upload by byte grouping; retain every result |
+| A single selector exceeds the scheduling/envelope budgets | Admit it and use existing ordered request chunks |
+| Duplicate selectors or rows across groups | Return each row once in global order |
+| Epoch changes between groups | Reject with conflict; do not replay the mutation callback |
+| Staged deletion, changed index or insertion | Reconcile overlay before final collection semantics |
+
+### 5. Good / Base / Bad Cases
+
+Good: large mixed selectors partition by their lossless wire bytes and retain
+all authored identities. Base: small selectors fit the existing count/byte
+budgets. Bad: repeat the complete large selector for each page, split UTF16
+identities, impose an arbitrary user key cap or raise the regression deadline.
+
+### 6. Tests Required
+
+Keep the actual 41-row oversized-identity fixture and its 30000ms deadline.
+Assert all get/equals/bulkGet/anyOf/count/reopen/delete results and the existing
+262144-byte request ceiling. The affected array read must use less than 4 MiB
+of total request envelopes; the original implementation must fail this bound.
+Use the actual Rust probe for compound multibyte/escaped/lone-surrogate keys,
+genuine oversized single-key transfer, duplicates, global order/reverse/limits,
+staged overlays and an external between-group epoch change. Run the full root
+suite and the permanent complete SQLite business/Agent lane on frozen source.
+Local timings do not establish hosted Linux latency or installer acceptance.
+
+### 7. Wrong vs Correct
+
+Wrong: put all 41 huge selectors in a count-only group and upload them on each
+of 41 row pages. Correct: schedule byte-sized selector groups without changing
+the selector identity, page authority or final collection semantics.

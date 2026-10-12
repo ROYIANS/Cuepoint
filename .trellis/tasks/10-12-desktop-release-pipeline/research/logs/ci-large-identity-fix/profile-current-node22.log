@@ -1,0 +1,13 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run --config .trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-large-identity-fix/profile-current.config.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  11:49:13
+   Duration  4.49s (tests 96%, transform 3%, setup 1%)
+

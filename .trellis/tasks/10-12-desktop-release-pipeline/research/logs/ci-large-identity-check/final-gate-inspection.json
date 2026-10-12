@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "rootReceipt": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-quality-followup-recheck/verification.json",
+  "rootReceiptSha256": "a45d700e1d5b991645a96b67749db4478c939fbe2ced0c025666e6645e9e9ceb",
+  "exitCode": 0,
+  "commands": [
+    {
+      "label": "complete-native-sqlite",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test:storage:native",
+        "--evidence-dir",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-quality-followup-recheck/native-all",
+        "--suite",
+        "all"
+      ],
+      "nodeBin": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin",
+      "realProbeOverride": null,
+      "exitCode": 0,
+      "seconds": 311.9602301120758,
+      "log": "complete-native-sqlite.log"
+    },
+    {
+      "label": "root-types",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "nodeBin": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin",
+      "realProbeOverride": null,
+      "exitCode": 0,
+      "seconds": 8.503211736679077,
+      "log": "root-types.log"
+    },
+    {
+      "label": "desktop-types",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "types"
+      ],
+      "nodeBin": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin",
+      "realProbeOverride": null,
+      "exitCode": 0,
+      "seconds": 3.4821510314941406,
+      "log": "desktop-types.log"
+    },
+    {
+      "label": "desktop-lint",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "lint"
+      ],
+      "nodeBin": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin",
+      "realProbeOverride": null,
+      "exitCode": 0,
+      "seconds": 3.1491053104400635,
+      "log": "desktop-lint.log"
+    },
+    {
+      "label": "root-quality",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "quality"
+      ],
+      "nodeBin": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin",
+      "realProbeOverride": null,
+      "exitCode": 0,
+      "seconds": 18.75571584701538,
+      "log": "root-quality.log"
+    },
+    {
+      "label": "desktop-quality",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "quality"
+      ],
+      "nodeBin": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin",
+      "realProbeOverride": null,
+      "exitCode": 0,
+      "seconds": 0.5722482204437256,
+      "log": "desktop-quality.log"
+    },
+    {
+      "label": "quality-self-test",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "quality:self-test",
+        "--output",
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-quality-followup-recheck/quality-self-test"
+      ],
+      "nodeBin": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin",
+      "realProbeOverride": null,
+      "exitCode": 0,
+      "seconds": 73.4702160358429,
+      "log": "quality-self-test.log"
+    },
+    {
+      "label": "model-verify",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "model-bank:verify"
+      ],
+      "nodeBin": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin",
+      "realProbeOverride": null,
+      "exitCode": 0,
+      "seconds": 0.7735500335693359,
+      "log": "model-verify.log"
+    },
+    {
+      "label": "production-build",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "build"
+      ],
+      "nodeBin": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin",
+      "realProbeOverride": null,
+      "exitCode": 0,
+      "seconds": 22.58796715736389,
+      "log": "production-build.log"
+    }
+  ],
+  "reusedOrdinaryRoot": {
+    "receipt": "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-quality-followup/verification.json",
+    "sourceUnchanged": true,
+    "command": {
+      "label": "ordinary-full-root-node22",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test"
+      ],
+      "nodeBin": "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin",
+      "realProbeOverride": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/ci-probe-readiness-node22-20261012/target/debug/product_store_probe",
+      "exitCode": 0,
+      "seconds": 38.9385187625885,
+      "log": "ordinary-full-root-node22.log"
+    }
+  },
+  "sourceInputCount": 1058,
+  "beforeAfterEqual": true,
+  "currentMismatch": [],
+  "changedInputs": [],
+  "reusedRootMatches1058Inputs": true,
+  "specHashes": {
+    ".trellis/spec/frontend/shared-product-storage.md": "cc9adb2a90840f535bee083eb44fe18bc9e5bc304181a871a0171da0e75ce607",
+    ".trellis/spec/frontend/quality-guidelines.md": "77d8a305de636c94f541b94cbb4b8a8d116f71fa19604e91821b9103b019ac86"
+  },
+  "specsUnchangedSinceIndependentContentReview": {
+    ".trellis/spec/frontend/shared-product-storage.md": true,
+    ".trellis/spec/frontend/quality-guidelines.md": true
+  },
+  "reviewWarnings": {
+    "sourceHash": "4532d47791ac0ad389a73ede820bb5c1cf38f695878fd308ac3ab232eb5948a6",
+    "errors": 0,
+    "existingCognitiveQueryScoreBefore": 23,
+    "existingCognitiveQueryScoreAfter": 32,
+    "addedRule": "complexity",
+    "addedMethod": "query",
+    "addedScore": 23,
+    "ruleThreshold": 20,
+    "severity": 1,
+    "disposition": "Reviewed scheduling conditions are necessary for both byte/count budgets and singleton admission. This is a quality review warning, not an error. No refactor, suppression or allowances change is made to frozen source."
+  }
+}

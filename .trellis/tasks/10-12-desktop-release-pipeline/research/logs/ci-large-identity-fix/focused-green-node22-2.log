@@ -1,0 +1,13 @@
+
+> cuepoint@0.1.0 test /Users/xiaomengdao/WebstormProjects/aifenjing
+> vitest run tests/sharedNativeStorageContract.test.ts
+
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+
+ Test Files  1 passed (1)
+      Tests  71 passed (71)
+   Start at  11:47:56
+   Duration  14.55s (tests 97%, transform 2%)
+

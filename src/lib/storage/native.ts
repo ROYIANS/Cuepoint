@@ -2,7 +2,7 @@ import {cloneStoredValue,decodeLocalValue,registerBinaryReference} from "./codec
 import {StorageError,UnknownCommitError} from "./errors";
 import {deliverStorageNotification} from "./notifications";
 import {compareKeys,indexKey,primaryKey,requireKey} from "./keys";
-import type {BinaryClaim,CommitResult,NativeQuery,NativeSession,NativeStoreBridge,RowChange,TransactionHandle,WireBatchEntry,WireRow,WireRowValue} from "./protocol";
+import type {BinaryClaim,CommitResult,NativeQuery,NativeSession,NativeStoreBridge,RowChange,StoreKey,TransactionHandle,WireBatchEntry,WireRow,WireRowValue} from "./protocol";
 import {IPC_CHUNK_BYTES,IPC_TEXT_CHUNK_BYTES,QUERY_PAGE_SIZE} from "./protocol";
 import {encodeProductRow} from "./rowCodec";
 import {TABLE_NAMES,tableDefinition} from "./schema";
@@ -10,7 +10,7 @@ import {createProductStore} from "./store";
 import type {TableName} from "./tableTypes";
 import type {ProductStore,StoreChange,StoreDriver,StoreObserver,TransactionBackend} from "./types";
 import {validateRowChange,validateWireRow} from "./validate";
-import {encodeWireText} from "./wireText";
+import {encodeWireKey,encodeWireText} from "./wireText";
 import {Sha256} from "@/lib/sha256";
 
 export interface BinaryAdapterServices {
@@ -109,7 +109,18 @@ class NativeTransaction implements TransactionBackend {
         const groups:NativeQuery[]=[];
         if (query.selector.kind === "anyOf") {
             const keys=[...new Map(query.selector.keys.map(key=>[JSON.stringify(key),key])).values()];
-            for (let offset=0;offset<keys.length;offset+=QUERY_PAGE_SIZE) groups.push({...query,selector:{kind:"anyOf",keys:keys.slice(offset,offset+QUERY_PAGE_SIZE)}});
+            let group:StoreKey[]=[],bytes=2;
+            const encoder=new TextEncoder();
+            for (const key of keys) {
+                const keyBytes=encoder.encode(JSON.stringify(encodeWireKey(key))).byteLength;
+                // Cursor pages resend their selectors. Bound that repeated work,
+                // while allowing one arbitrarily large key through bridge chunks.
+                if (group.length && (group.length === QUERY_PAGE_SIZE || bytes+1+keyBytes > IPC_CHUNK_BYTES/4)) {
+                    groups.push({...query,selector:{kind:"anyOf",keys:group}});group=[];bytes=2;
+                }
+                bytes+=keyBytes+(group.length ? 1 : 0);group.push(key);
+            }
+            if (group.length) groups.push({...query,selector:{kind:"anyOf",keys:group}});
         } else groups.push(query);
         const limit=this.mode === "r" ? query.limit : undefined;
         const readGroups=groups.map(group=>({...group,...(limit !== undefined ? {limit} : {limit:undefined})}));
