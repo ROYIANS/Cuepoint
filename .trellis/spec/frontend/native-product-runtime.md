@@ -76,7 +76,7 @@ profile and keeps `aifenjing`. Normal desktop uses
 `cuepoint-desktop:<profileId>:v1`, snapshots its owner once, and cannot change
 owner through later preferences, globals, URLs or failed writes.
 
-WKWebView's stable, nonprivate data-store ID is the first 16 SHA-256 bytes of
+On macOS, WKWebView's stable, nonprivate data-store ID is the first 16 SHA-256 bytes of
 `cuepoint-product-profile-v1:<bundle identifier>:<storage>`. Normal and isolated
 products require distinct bundle/profile IDs **and** distinct WK store IDs/DB
 namespaces. `build-app.mjs --isolated-product` requires
@@ -84,6 +84,20 @@ namespaces. `build-app.mjs --isolated-product` requires
 same normal root frontend, desktop backend/CSP/services. Its archived app receipt
 records identifier/storage/store ID. Historical `--acceptance` remains a separate
 SQLite/probe frontend and cannot substitute for normal product evidence.
+
+On Windows/Linux, Rust chooses a private ordinary data directory under
+`<app_data_dir>/webview-profiles-v1/<32-hex store ID>` using the same fixed
+bundle/storage digest. The renderer cannot supply it. Normal, review and
+IndexedDB reference identities remain separate. Do not call the macOS-only WK
+store API on those systems or enable private/incognito mode.
+
+`bundled_origin::origin/accepts` is the one packaged-entry boundary:
+`http://tauri.localhost` on Windows and `tauri://localhost` on macOS/Linux.
+Navigation, trusted main-window IPC, microphone permission and media CORS reuse
+it. Require the main label, canonical URL with no port/userinfo/query, and entry
+path empty, `/` or `/index.html`; hash routes remain allowed. Do not broaden
+trusted document paths to repair renderer routing. Corresponding-host startup
+and fixed-profile acceptance remain independent from helper unit tests.
 
 The official `pnpm --dir desktop/tauri build:app` entry point defaults normal
 packaging to `product-sqlite`. `--sqlite-product` is optional for that normal
@@ -207,11 +221,15 @@ there is no new 32 MiB/whole-ZIP cap. Staged transfers expire after two minutes
 without progress, checked every two seconds; an open dialog does not idle-expire.
 Cancel, window destruction and new page-load start release temporary state.
 
-Stage in the selected canonical directory, fsync bytes, publish by no-overwrite
-hard link, fsync directory and clean the stage. Existing empty/nonempty files,
+Stage in the selected canonical directory, flush ordinary-file bytes, publish by
+no-overwrite hard link, verify and flush the final same-identity writable file,
+perform the explicit platform namespace checkpoint and clean the stage. Unix
+returns DirectorySynced; the owner-reviewed Windows test contract returns
+ProcessRecoveryOnly after local-NTFS directory authority validation. Windows
+does not promise new namespace persistence after sudden OS crash/power loss. Existing empty/nonempty files,
 symlinks and a destination created during transfer remain untouched. `saved`
 includes byteLength/contentHash. `publishedWithError` includes those fields and
-code directorySync/stageCleanup: publication already occurred, so UI must show a
+code fileSync/directorySync/stageCleanup: publication already occurred, so UI must show a
 saved-file warning. `isPublishedSaveError` guards Error plus published:true;
 never use an ordinary failure toast or auto-retry that outcome. A late abort
 cannot turn a published file into canceled. Unknown finish failure remains an
@@ -280,7 +298,7 @@ paper/orientation; CSS presence alone cannot prove the system preview's geometry
 | 204/205/304 response | JS body null and native response resource already closed |
 | Save canceled or checksum/order invalid | No claimed success/publication; release stage |
 | Existing/raced target | Reject without modifying bytes |
-| Publication succeeds then directory sync or stage cleanup fails | Every caller shows saved-file warning/status; no generic failure, cancel, rollback or automatic retry |
+| Publication succeeds then final-file flush, namespace checkpoint or stage cleanup fails | Every caller shows saved-file warning/status; no generic failure, cancel, rollback or automatic retry |
 | Long native filename / browser download | Safe 240-byte suggestion / original browser name |
 | Print dispatch/unsupported/missing native handle or open sheet | Safe UI error; no default-print fallback or printed-success claim |
 | Print dialog initiated / canceled / no printer | No claim of printed or saved PDF bytes |
@@ -345,7 +363,7 @@ as “export failed” and encourages saving already-published bytes again.
   published warning, unknown finish errors, long Unicode/compound filenames,
   original browser names and OS-link interception.
 - audioMusicSaveFeedback: exercise the actual four audio/music UI callbacks with
-  directorySync/stageCleanup, unpublished failure and cancel receipts through
+  fileSync/directorySync/stageCleanup, unpublished failure and cancel receipts through
   runtimeSave/saveNativeBlob. Require warning/status without generic error, one
   begin/finish without retry/cancel after publication, and unchanged owned records
   and source bytes. About/material UI regressions retain the same classification.
@@ -404,3 +422,52 @@ try {
   else throw error; // Existing outer error owner handles unpublished failures.
 }
 ```
+
+## Platform file authority and namespace checkpoints
+
+`paths::NativeStat` reads actual path/opened-file identity rather than deriving
+a Windows identity from length or mtime. Unix uses device/inode/link count;
+Windows uses stable Win32 no-follow path handles and actual opened handles with
+volume/index/link/reparse classification, requiring local fixed NTFS. Reject
+reparse points, network volumes and unsupported identity results. Shared database
+Boundary, product binary readers/writers/recovery and retained prototype imports
+use the same seam. Windows holds ordinary ancestor directory handles without
+delete sharing for active boundaries/leases/exports; release them with owner
+lifecycle. Unix retains its repeated identity checks. Path-based APIs do not
+provide a general hostile-OS-user race defense; retain that finite limit.
+
+`namespace_checkpoint(path) -> Result<NamespaceCheckpoint>` distinguishes Unix
+DirectorySynced from Windows ProcessRecoveryOnly. This Windows contract was
+explicitly reviewed by the owner for first test packages: ordinary written file
+bytes/metadata are flushed, NTFS publication does not overwrite and process-death
+intent/SQLite recovery is tested. New directory/file names, unlink operations and
+completion-marker names have no sudden OS/power-loss persistence promise. Real
+file-flush failures remain errors, never a dummy namespace success.
+
+`flush_published_file(path, identity, byte_length, owned_links)` verifies named
+and actual handle identity, size and link count before/after the supported file
+flush. Windows needs writable no-follow handles; a read-only File::open handle
+cannot fulfill FlushFileBuffers. Preserve intents and ambiguous bytes if flush
+fails after link creation. Normal Save returns publishedWithError/fileSync,
+which every existing caller shows as a saved-file warning without retry. The
+retained schema-4 export transports a typed published error with the same truth,
+not a generic retry invitation; it is not a normal-product DTO redesign.
+
+Required regressions: distinct files with equal size/mtime, root/database/writer
+replacement, sidecar aliases, junction and ancestor replacement, stage alias or
+replacement cleanup refusal, reachable final-file-flush failure, saved warnings
+without replay, deterministic stage replacement at the post-publication namespace
+checkpoint, and actual process termination/reopen with exact bytes/rows.
+
+Immediately before successful-path stage unlink, revalidate the stage and final
+names against the original open descriptor, expected size and owned link count.
+Normal Save preserves a `stageCleanup` published warning on mismatch; binary or
+manifest publication keeps its intent and foreign stage bytes rather than
+manufacturing a sealed claim. Checking only before publication or in Drop is
+insufficient because neither protects the explicit success-path unlink.
+
+Unix helper tests do not execute Windows cfg branches; corresponding-host
+results are mandatory for that target. Process tests never prove power-loss
+survival. Wrong: manufacture a zero inode, ignore a flush error or erase an
+unproven stage during cancel. Correct: retain real identity/provenance, keep
+published status truthful and refuse ambiguous recovery.

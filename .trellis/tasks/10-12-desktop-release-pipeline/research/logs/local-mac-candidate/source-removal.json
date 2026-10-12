@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "exitObservedBeforeSourceRemoval": true,
+  "sourcePath": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/local-release-candidate-20261012a/release-smoke-046ef750-fedb-4349-8b95-5266680a86d5.txt",
+  "sourceSha256": "42164eec70a5b2005759b9b8ad2e18b075bc1b86580c6dd19bf9c45055f7f86a",
+  "removedOnlyDisposableCreatedSource": true,
+  "savedExportPreserved": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/local-release-candidate-20261012a/saved-original.txt",
+  "observedPreQuitPid": 9846,
+  "executable": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791770735874-isolated-sqlite-product/Cuepoint Product Review.app/Contents/MacOS/cuepoint-prototype",
+  "sourceAbsent": true
+}

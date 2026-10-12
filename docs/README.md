@@ -4,6 +4,7 @@
 
 | 文档 | 内容 |
 | --- | --- |
+| [desktop-distribution.md](./desktop-distribution.md) | Shared desktop product, installer targets, verification and draft release ownership |
 | [product/film-agent-workflow.md](./product/film-agent-workflow.md) | 模仿 Trellis 的「影视任务」工作流：聊天建任务、约定/经验、Skills |
 | [product/ai-connectors.md](./product/ai-connectors.md) | 全局 BYOK 连接器（OpenAI 兼容优先） |
 | [architecture/runtime-options.md](./architecture/runtime-options.md) | 纯静态 BYOK / 弱 Node / 桌面端 / P2P 能做什么 |

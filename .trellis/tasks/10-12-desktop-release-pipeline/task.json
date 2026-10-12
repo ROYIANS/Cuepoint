@@ -1,0 +1,33 @@
+{
+  "id": "desktop-release-pipeline",
+  "name": "desktop-release-pipeline",
+  "title": "桌面端跨平台打包与 GitHub Release",
+  "description": "Plan reproducible macOS, Windows and Linux installers for the shared SQLite product, GitHub Actions build verification and reviewable GitHub Release assets.",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "desktop-distribution",
+  "package": "single-repo",
+  "priority": "P2",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-10-12",
+  "completedAt": null,
+  "branch": "codex/desktop-release-pipeline",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    ".github/workflows/desktop-release.yml",
+    "desktop/tauri/scripts/tools.mjs",
+    "desktop/tauri/scripts/build-app.mjs",
+    "desktop/tauri/src-tauri/src/paths.rs",
+    "desktop/tauri/src-tauri/src/desktop.rs",
+    "desktop/tauri/src-tauri/tauri.conf.json"
+  ],
+  "notes": "2026-10-12: user approved the final reviewed four-target implementation plan with 开始吧. Task activated on codex/desktop-release-pipeline from main 92bb6d4120053453036fbdb1b3b8f23fb9c56385. Three disjoint implementation workstreams are active. Mac ARM64/Intel DMG, Windows x64 NSIS, Linux x64 AppImage+DEB; Mac ad-hoc/no notarization and Windows unsigned. Retain established internal identity/version and dark icons; normal product uses complete SQLite/files with shared React/Agent. Local approved pnpm resolves to 10.15.0. Owner explicitly approved the concrete Windows first-test persistence contract: supported regular-file bytes/metadata flush, local NTFS no-overwrite publication and intent/SQLite process-termination recovery, with no promise of newly created namespace persistence after sudden OS crash/power loss. Unix directory fsync remains unchanged. Native integration proceeds; actual Windows host evidence remains mandatory. Local commit review C0 and actual owner-activated hosted H1a/H1b remain required. No push, tag, hosted dispatch, Release mutation or public publication authorized/performed; no archive before hosted acceptance. Local pipeline/native independent review and frozen SQLite all gates now pass; current Mac normal and unique isolated SQLite candidate apps built. Manual Save was confirmed successful by the owner and exact export bytes/hash verified; observed close/source-removal/reopen UI and read-only SQLite/managed-file proof pass. The external verifier row-key codec defect reached on the real app was fixed without product/QA-data changes; corrected Python16 pass, all QA file hashes unchanged. C0 concrete 483-path (24/30/429) local work-commit review was approved by the owner with 行. Native work commit db5d1a5a62bb62f46511655cc6cff4a900f11b1a and release pipeline work commit 08078497462a7f52c99a2d9c5667aad2e8ca686d were created; the documentation/evidence group records this checkpoint. H1a/H1b remain pending owner activation, task stays active. No remote action or archival is included.",
+  "meta": {}
+}

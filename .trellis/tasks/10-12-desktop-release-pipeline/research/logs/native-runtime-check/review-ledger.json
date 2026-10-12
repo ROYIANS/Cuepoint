@@ -1,0 +1,186 @@
+{
+  "scope": "Native/runtime changed-code and reached-callsite review; not a claim of a full unchanged-codebase audit",
+  "baseRevision": "92bb6d4120053453036fbdb1b3b8f23fb9c56385",
+  "files": [
+    {
+      "path": "desktop/tauri/src-tauri/Cargo.toml",
+      "sha256": "eef34833e2cb0f67b4315ef61385527e8f055366b1a90432654eda430fc7bf6e",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/Cargo.lock",
+      "sha256": "e6eb8733a68c5e0418d4ce9946c9803edae738bb6e1b5cc217c0fef174aa4e60",
+      "status": "generated-verified",
+      "note": "Locked direct windows-sys 0.61.2 package/feature closure verified"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/backup.rs",
+      "sha256": "52b79c819cc6b62b933dc331782bf073240c5552dedb7dd51e3ad9f8e6e838f0",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/bundled_origin.rs",
+      "sha256": "e07ddc062a810f367ec9d13160e65248f7d8dd7d12767dc7db5ad119168061b7",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/desktop.rs",
+      "sha256": "648c16c82473dd0ad0834f18ef2b5c5370ef52f1472491ae6163b48702526cd1",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/desktop/acceptance.rs",
+      "sha256": "0d8f46534030493c2f7d78c6dd5c9d22f17994125ab3fba37a596d7f76c2f003",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/file_transfer.rs",
+      "sha256": "3081e05342ab2b93fce5bf519a446b9cd8f1e241c523f94f6c546f8341860624",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/full_product_store/mod.rs",
+      "sha256": "74a7ed4ef3ca596791b73ff65a065c7c70ec71f367f221c0a8bb08db00860fb0",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/import.rs",
+      "sha256": "bfa76c4d02ace7e3fd4890907209b9a8e9d67646a8344e735ba47a4f69ebdaa4",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/lib.rs",
+      "sha256": "79101ad25ea78fe960388c9aa7de022125bb290356efc3aa6ce29196a783641e",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/paths.rs",
+      "sha256": "bd9c38b2b5904a7b8e673cdf7967c017c6b3e5e6d102aa50ac542bdecf0b7ba0",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/paths/windows.rs",
+      "sha256": "17d004b704645a7581116934dd74c152b8ebc1396f622880c8dcbc43e4fe8655",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/product_binary.rs",
+      "sha256": "4cd2f7bd21430022d1bf2f0bbf22bc79a3deec7f2a730f6b3c99d69dbdc2a266",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/product_binary/tests.rs",
+      "sha256": "29f15448d002995d00a0d7dc92b24e6e8e3e1da6cb74685985d0fb307e089103",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/runtime_services.rs",
+      "sha256": "2d40088d66b6bdd9a06ca93b8b6f407ead77bd2f2597e9b49a97f9e71708e2b5",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/src/workspace.rs",
+      "sha256": "9048efc9517d749bc19b0b84b00087431e926ab1a58f3205bb03408002d6b622",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/src-tauri/tests/storage_review.rs",
+      "sha256": "44cea417e67bfbe31b3631ac4c383a8b51ae26d7dab541e18fe8059faf2dc558",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "src/lib/nativeSystemServices.ts",
+      "sha256": "17030c64663c68621616e1f68f41a5087a121587f18f8ef6670065048e431f2c",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "src/lib/nativeWorkspace.ts",
+      "sha256": "81ac4de25db2bf6b08f72cdd551565a06a66d0c143e6c34911bdc01ec0c9f0ad",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "desktop/tauri/ui/bridge.ts",
+      "sha256": "b60f1051d686714b3d716b95eb06bd23b21f8b5ddf393ea70f33a1fa10121237",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "tests/nativeSystemServices.test.ts",
+      "sha256": "1289e70bc128ae39a92711c5f9801edf1d1b9dcdc5af1a36ebfe8baa28ffccf2",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "tests/nativeWorkspace.test.ts",
+      "sha256": "fc99811be099ed8b8890c1f950df2b017e4ebd733441138736f9e6f0d6f7cfd1",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "tests/nativeWorkspacePublishedExport.test.ts",
+      "sha256": "2248c1a9b40d607de5775a875272760ec043414b8c1468618d3867fd1c81f07c",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "tests/audioMusicSaveFeedback.test.ts",
+      "sha256": "c963a0ffd220d3eee5bc204cc8ec430e829762cf741f01c35e7545bd5aecc226",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "scripts/release-product-smoke.mjs",
+      "sha256": "7bc973d402c07f8b0737aa3182791a13ec9cbd6fa6ce9c0adfd6b7a2570a1ebb",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "scripts/release-smoke-support.mjs",
+      "sha256": "bfcb9740522026585fd0361f553771a3877dcb2e5d0842de11fee82b3c20df08",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "scripts/release-smoke-support.test.mjs",
+      "sha256": "ee8c7b4f80a7b413faee48dbc637eb597dde62302579ea85974d5434646a0482",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "scripts/setup-release-driver.mjs",
+      "sha256": "07827bfc845eeab5f052ce50653cc9b4b3c38c2e6e3882325e66b740777aaf23",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "scripts/verify-release-smoke-store.py",
+      "sha256": "84859eea8aa14bb06beeb4dafa618fb7efc02451af0df8b6ad5c790d2894b084",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    },
+    {
+      "path": "scripts/verify-release-smoke-store.test.py",
+      "sha256": "8714228f498d77b0c63abcc716f68c5d8128433db06970fca7c1e38dab223ed8",
+      "status": "reviewed",
+      "note": "Task delta and reached production/failure callsites reviewed; unchanged unrelated portions outside review scope"
+    }
+  ]
+}

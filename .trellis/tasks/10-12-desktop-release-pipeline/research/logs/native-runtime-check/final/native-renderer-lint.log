@@ -1,0 +1,19 @@
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/nativeSystemServices.ts
+  29:8   warning  Async function 'saveNativeBlob' has a complexity of 27. Maximum allowed is 20        complexity
+  29:23  warning  Refactor this function to reduce its Cognitive Complexity from 22 to the 20 allowed  sonarjs/cognitive-complexity
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/tests/audioMusicSaveFeedback.test.ts
+  0:0  warning  File ignored because no matching configuration was supplied
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/tests/nativeSystemServices.test.ts
+  0:0  warning  File ignored because no matching configuration was supplied
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/tests/nativeWorkspace.test.ts
+  0:0  warning  File ignored because no matching configuration was supplied
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/tests/nativeWorkspacePublishedExport.test.ts
+  0:0  warning  File ignored because no matching configuration was supplied
+
+✖ 6 problems (0 errors, 6 warnings)
+

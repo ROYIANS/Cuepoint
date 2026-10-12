@@ -1,0 +1,107 @@
+{
+  "recordedAt": "2026-10-12T01:43:34.907658+00:00",
+  "host": "local macOS ARM64 / Unix filesystem",
+  "stage": "approved Windows process-recovery policy; source and Unix worker checks",
+  "ownerDecision": "2026-10-12: 采用这项保证，继续 Windows 测试包（推荐）",
+  "namespacePolicy": {
+    "unix": "DirectorySynced: actual directory sync_all after device/inode/type object proof",
+    "windows": "ProcessRecoveryOnly: local fixed NTFS/reparse/ancestor validation, no directory flush or sudden OS/power-loss namespace persistence claim"
+  },
+  "commands": [
+    {
+      "command": "node desktop/tauri/scripts/tools.mjs cargo check --manifest-path src-tauri/Cargo.toml --locked --features test-hooks",
+      "exitCode": 0,
+      "stage": "approved-policy integration before final extra tests"
+    },
+    {
+      "command": "node desktop/tauri/scripts/tools.mjs cargo test --manifest-path src-tauri/Cargo.toml --locked --features test-hooks --lib --test native_workspace --test storage_review -- --nocapture",
+      "exitCode": 0,
+      "testsPassed": {
+        "lib": 62,
+        "native_workspace": 22,
+        "storage_review": 8
+      },
+      "stage": "final shared helper plus deterministic directory-nlink correction"
+    },
+    {
+      "command": "node desktop/tauri/scripts/tools.mjs cargo test --manifest-path src-tauri/Cargo.toml --locked --features test-hooks --lib backup::tests -- --nocapture",
+      "exitCode": 0,
+      "testsPassed": 1,
+      "stage": "new production closed-SQLite-snapshot regression"
+    },
+    {
+      "command": "node desktop/tauri/scripts/tools.mjs cargo clippy --manifest-path src-tauri/Cargo.toml --locked --lib --tests --features test-hooks -- -D warnings",
+      "exitCode": 0,
+      "stage": "after backup regression and scoped formatting"
+    },
+    {
+      "command": "node desktop/tauri/scripts/tools.mjs rustfmt --edition 2024 --check src-tauri/src/paths.rs src-tauri/src/paths/windows.rs src-tauri/src/backup.rs src-tauri/src/product_binary.rs src-tauri/src/product_binary/tests.rs src-tauri/src/workspace.rs src-tauri/src/import.rs src-tauri/src/file_transfer.rs src-tauri/src/full_product_store/mod.rs src-tauri/tests/storage_review.rs",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "failedAttemptsPreserved": [
+    {
+      "group": "external Save7 focused tests",
+      "exitCode": 101,
+      "reason": "asserted noncanonical /var against actual /private/var; canonical expected path fixed"
+    },
+    {
+      "command": "node desktop/tauri/scripts/tools.mjs cargo clippy --manifest-path src-tauri/Cargo.toml --locked --lib --tests --features test-hooks -- -D warnings",
+      "exitCode": 101,
+      "reason": "unnecessary unwrap and err().expect style diagnostics corrected"
+    },
+    {
+      "command": "node desktop/tauri/scripts/tools.mjs cargo test --manifest-path src-tauri/Cargo.toml --locked --features test-hooks --lib paths::tests -- --nocapture",
+      "exitCode": 101,
+      "testsPassed": 5,
+      "testsFailed": 1,
+      "reason": "post-replacement ordinary() classified changed link count as containment; no-follow snapshot helper verification corrected"
+    },
+    {
+      "command": "node desktop/tauri/scripts/tools.mjs cargo test --manifest-path src-tauri/Cargo.toml --locked --features test-hooks --lib paths::tests -- --nocapture",
+      "exitCode": 101,
+      "testsPassed": 6,
+      "testsFailed": 1,
+      "reason": "new mutation test expected pre-link count1 instead of post-link count2; assertion corrected"
+    },
+    {
+      "command": "node desktop/tauri/scripts/tools.mjs cargo test --manifest-path src-tauri/Cargo.toml --locked --features test-hooks --lib --test native_workspace --test storage_review -- --nocapture",
+      "exitCode": 101,
+      "testsPassed": 57,
+      "testsFailed": 4,
+      "reason": "Unix namespace object proof compared mutable directory nlink on shared temp parent; device/inode/type proof plus deterministic child-create/replacement test corrected; integration batches did not run in this failed command"
+    }
+  ],
+  "uniqueFocusedTestsPassed": 93,
+  "testCountNote": "62 library plus one newly added backup case plus22 native_workspace plus8 storage_review across incremental snapshots. Media idle child repeats a library case and is not counted twice.",
+  "sourceAtReport": {
+    "desktop/tauri/src-tauri/Cargo.toml": "eef34833e2cb0f67b4315ef61385527e8f055366b1a90432654eda430fc7bf6e",
+    "desktop/tauri/src-tauri/Cargo.lock": "e6eb8733a68c5e0418d4ce9946c9803edae738bb6e1b5cc217c0fef174aa4e60",
+    "desktop/tauri/src-tauri/src/paths.rs": "f26e19871c30c30df8b6f683b82d352c72eadb426d576489f3581f189e425a1f",
+    "desktop/tauri/src-tauri/src/paths/windows.rs": "17d004b704645a7581116934dd74c152b8ebc1396f622880c8dcbc43e4fe8655",
+    "desktop/tauri/src-tauri/src/workspace.rs": "9048efc9517d749bc19b0b84b00087431e926ab1a58f3205bb03408002d6b622",
+    "desktop/tauri/src-tauri/src/product_binary.rs": "001e6d5d5f0d3177a618d6d11535d9d928b3866da170073a2b1ad1eb1c69b537",
+    "desktop/tauri/src-tauri/src/product_binary/tests.rs": "1d875a8870ae9dcf88b71875c6818216141e6c16d326f843002302c8a472e20d",
+    "desktop/tauri/src-tauri/src/import.rs": "67bc7c15ba2795ce87bfee30efe327778ee43b83291098f865688245f3a999b6",
+    "desktop/tauri/src-tauri/src/file_transfer.rs": "3b3bf160f2192595c1b0c5f2ee738fabb16f84a47b2428f23e1877442620a3f3",
+    "desktop/tauri/src-tauri/src/backup.rs": "52b79c819cc6b62b933dc331782bf073240c5552dedb7dd51e3ad9f8e6e838f0",
+    "desktop/tauri/src-tauri/src/full_product_store/mod.rs": "74a7ed4ef3ca596791b73ff65a065c7c70ec71f367f221c0a8bb08db00860fb0",
+    "desktop/tauri/src-tauri/src/desktop/acceptance.rs": "0d8f46534030493c2f7d78c6dd5c9d22f17994125ab3fba37a596d7f76c2f003",
+    "desktop/tauri/src-tauri/tests/storage_review.rs": "193a6395d8275f63033eaf128c673f59f03b67d3f080344af52a8f8f8d2f1e94"
+  },
+  "peerSource": [
+    "desktop/tauri/src-tauri/src/desktop.rs functional retained publication owned by runtime peer; only namespace call-name edits by this worker",
+    "frontend fileSync closed receipt/message/regressions owned by runtime peer"
+  ],
+  "limits": [
+    "Commands ran incrementally while peer source work continued; no globally frozen root quality gate.",
+    "Windows cfg bodies were not compiled/executed on this Mac; API/NTFS/junction/lease/SQLite/startup/runtime/process-kill H1a remain pending.",
+    "Windows process-only namespace validation is owner-approved; no sudden OS/power-loss namespace durability is claimed.",
+    "No cross-compilation, app/installer build, full root suite, remote action, secret/profile read, paid provider call, commit or push by this worker."
+  ],
+  "outputLocation": "Original command outputs are in the subagent tool transcript. This is a structured receipt, not a reconstructed raw output log."
+}

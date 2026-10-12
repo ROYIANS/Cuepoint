@@ -119,6 +119,23 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 
 `.github/workflows/ghcr.yml` runs locked dependency installation, TypeScript, the full Vitest suite, model snapshot verification and a production build on main pull requests, main pushes, release tags and manual runs. The Docker publication job depends on successful quality checks; pull requests never publish images. Only the publication job has package write permission. The pnpm setup uses the version pinned by `package.json`.
 
+## Desktop distribution gate
+
+`.github/workflows/desktop-release.yml` adds a separate four-host installer gate
+under [Desktop Distribution](./desktop-distribution.md). Root quality precedes
+native jobs. Hosted calls use explicit pinned pnpm/Rust paths; corresponding-host
+native tests include both no-GUI test-hooks and full product-sqlite/test-hooks
+runtime suites, followed by shared native storage `--suite all`. Normal shipping
+features remain product-sqlite only. Build/check receipt closure is mandatory;
+compiler exit alone never becomes a UI/storage or package-integrity pass.
+
+Actual Windows/Linux installer UI/import/source-removal/reopen proof and separate
+Mac integrity/signature/launch reports must precede complete collection. Unit
+collector/fake-GitHub retry tests are local protocol proof, not hosted delivery.
+Local preliminary work commits retain an active task until actual four-host and
+tag/draft gates pass. Bootstrap/manual builds cannot mutate Releases; the final
+tag-only owned draft publisher receives the only contents-write permission.
+
 ## Optional analytics deployment
 
 `VITE_UMAMI_SCRIPT_URL` and `VITE_UMAMI_WEBSITE_ID` are public build-time settings supplied by GitHub Actions repository variables. Keep the workflow's Vite build environment and Docker build arguments aligned. The Docker arguments belong only to the build stage; Compose and the Nginx runtime need no analytics environment variables. Local `.env` files are excluded from Git and Docker contexts, with `.env.example` as the documented template.

@@ -42,8 +42,8 @@ The SQLite/prototype generated export accepts `format: "csv" | "zip" | "wav" | "
 - Native workspace state is SQLite-backed and uses fresh-development `schema: 4`. It includes `workspaceId`, project summaries, managed asset summaries, reference timings and `sqliteVersion`, plus the native video spine (`videoProjects`, `episodes`, `beats`, and `shots`). Imported bytes are copied into the managed workspace; original source paths are not live authorities. A schema change rejects an older workspace explicitly; it does not add a migration or legacy reader. Use an isolated application identifier for fresh packaged verification rather than deleting an existing developer workspace implicitly.
 - `ensure` opens or creates `<app_data_dir>/workspace` and is idempotent while the current generation owns the worker. A first successful ensure creates the workspace identity and managed directories; a later ensure returns the existing state without changing generation. Product code must never choose an absolute root.
 - The normal Tauri frontend is the root React/Vite application. The historical acceptance fixture is built only with `--acceptance`; changing the normal build must not silently replace it with the fixture or make the packaged product depend on a development server.
-- `ProjectGalleryPage`, `WorkspaceChrome`, `ProjectHomePage`, `EpisodeListPage`, `StoryPage` and `ShotEditorPage` are the shared video product route tree. `videoWorkspaceRepository` selects Dexie or SQLite through the fixed storage profile; the simplified native gallery/workspace pages were removed. Normal desktop shares the full IndexedDB product/media/library/Agent owner. Only the explicit SQLite lane retains its managed-file library and capability states for unsupported domains; it never falls back or mirrors into Dexie. See [Shared Video Workspace](./video-workspace.md).
-- Tauri packaged entry navigation is restricted to `tauri://localhost` with no port or query and an entry path of `""`, `/` or `/index.html`. The empty path is required because packaged WebKit launches at `tauri://localhost`.
+- `ProjectGalleryPage`, `WorkspaceChrome`, `ProjectHomePage`, `EpisodeListPage`, `StoryPage` and `ShotEditorPage` are the shared video product route tree. `videoWorkspaceRepository` selects Dexie or SQLite through the fixed storage profile; the simplified native gallery/workspace pages were removed. Normal desktop shares the full ProductStore SQLite/files product/media/library/Agent owner. The schema-4 SQLite lane is a retained reference with its own limited capability states; those states never restrict the full product, fall back or mirror into Dexie. See [Shared Video Workspace](./video-workspace.md).
+- Tauri packaged entry navigation uses the shared `bundled_origin` boundary: `http://tauri.localhost` on Windows and `tauri://localhost` on macOS/Linux, with no canonical port, credentials or query and an entry path of `""`, `/` or `/index.html`. Hash routes are allowed. The empty path is required because packaged WebKit launches at `tauri://localhost`.
 - `createProductRouterHistory()` selects TanStack `createHashHistory()` in the
   native runtime and `createBrowserHistory()` in the browser. Native product
   routes such as `/projects` and `/p/:id/e/:episodeId/shots` live in the fragment,
@@ -87,14 +87,14 @@ The SQLite/prototype generated export accepts `format: "csv" | "zip" | "wav" | "
 ## 5. Good / Base / Bad Cases
 
 - Good: call `native.save` with a verified Blob, choose a fresh native destination, compare returned byte length and hash, then leave workspace state unchanged.
-- Good: in an explicitly selected SQLite reference lane, call `nativeWorkspace.ensure`, create a project, import through the native picker, refresh state, and navigate through the shared supported workspace. Reopening that lane reads SQLite state and reports missing managed bytes without deleting the row. Normal desktop instead uses its fixed shared IndexedDB owner and independent system services.
+- Good: in an explicitly selected SQLite reference lane, call `nativeWorkspace.ensure`, create a project, import through the native picker, refresh state, and navigate through the shared supported workspace. Reopening that lane reads SQLite state and reports missing managed bytes without deleting the row. Normal desktop instead uses the full shared ProductStore SQLite/files owner and independent system services.
 - Base: use an isolated acceptance identifier and SQLite fixture workspace, project the same fixture into a temporary Dexie database for storyboards, and shut the app down after the persisted report is complete.
 - Bad: allow `tauri://localhost/anything`, enable private WebKit mode, accept a client-supplied SQL/path field, overwrite an existing export, mirror native rows into Dexie, add a migration reader for the old IndexedDB schema, or mark a missing microphone as `NotAllowedError` evidence.
 
 ## 6. Tests Required
 
 - Rust unit/integration tests cover closed DTO/envelope rejection, generation checks, path containment, chunk limits, SQLite state/reopen, backup/restore, byte hashes, existing-target rejection and cancel behavior.
-- Explicit SQLite product tests cover idempotent `ensure`, project/asset round trips, source independence, missing-file reporting, duplicate managed targets and reopen identity. Renderer tests must cover the adapter's closed result handling, declared storage selection and generation regression without requiring a Tauri window. Normal full-product IndexedDB and independent services have the assertions in native-product-runtime.md.
+- Explicit SQLite product tests cover idempotent `ensure`, project/asset round trips, source independence, missing-file reporting, duplicate managed targets and reopen identity. Renderer tests must cover the adapter's closed result handling, declared storage selection and generation regression without requiring a Tauri window. Normal full-product SQLite/files and independent services have the assertions in native-product-runtime.md; explicitly isolated IndexedDB remains a separate reference lane.
 - Renderer tests cover `MicrophoneRecorder` lifecycle, final chunk handling, device loss, permission errors and the baseline `getUserMedia` shape.
 - Packaged acceptance must run the real `.app` and record automatic bridge/media/document/stream checks, user-gesture playback, native CSV/ZIP/WAV byte equality, cancel and existing-target flows, both storyboard DOM/image/full-text checks, and actual system print previews.
 - When no input device is available, the acceptance report must assert the explicit skip path and preserve the missing microphone checks in `pending`; it must not fabricate a Blob or denial result.
@@ -114,13 +114,11 @@ await migrateIndexedDbToSqlite();
 ### Correct
 
 ```ts
-// Product routes select the declared fixed storage owner, not runtime presence.
-if (usesSqliteProductStorage()) {
-    const state = await nativeWorkspace.ensure();
-    // Render state from the typed native DTO; never write a Dexie mirror.
-} else {
-    // Shared browser/normal-desktop Dexie, each in its own fixed namespace.
-}
+// Full-product routes use the same ProductStore command/query boundary.
+// Trusted startup has already selected native SQLite/files or browser IndexedDB.
+// Never route full-product Agent or pages through the schema-4 nativeWorkspace API.
+const project = await productStore.transaction('r', ['projects'],
+    tx => tx.projects.get(projectId));
 
 await navigator.mediaDevices.getUserMedia({audio: deviceId ? {deviceId: {exact: deviceId}} : true});
 // If there is no input device, record an explicit pending skip and preserve

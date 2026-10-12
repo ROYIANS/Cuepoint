@@ -1,0 +1,4 @@
+Test authoring attempt: cargo test --features test-hooks changed_stage_after -- --nocapture
+exit 101
+error[E0658]: use of unstable library feature str_as_str at src/product_binary/tests.rs:419:37
+Error.code is already &str; removed redundant .as_str() before behavioral red run.

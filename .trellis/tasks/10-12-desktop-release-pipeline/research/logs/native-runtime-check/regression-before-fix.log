@@ -1,0 +1,25 @@
+   Compiling cuepoint-prototype v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.73s
+     Running unittests src/lib.rs (.tools/target/debug/deps/cuepoint_native_storage-9db440b810d0598f)
+
+running 2 tests
+
+thread 'file_transfer::tests::changed_stage_after_publication_is_preserved_as_a_saved_file_warning' (1959059) panicked at src/file_transfer.rs:648:13:
+assertion failed: matches!(receipt, SaveReceipt::PublishedWithError
+    { code: "stageCleanup", .. })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test file_transfer::tests::changed_stage_after_publication_is_preserved_as_a_saved_file_warning ... FAILED
+
+thread 'product_binary::tests::changed_stage_after_final_flush_is_not_unlinked_or_claimed' (1959060) panicked at src/product_binary/tests.rs:417:11:
+changed cleanup authority must reject sealing: Sealed { claim: BinaryClaim { reference: ManagedBinaryRef { version: 1, workspace_id: "a282c635-7e0e-47a8-82b7-07cfa2cc17fd", binary_id: "865b8bb5-a36e-4c7d-bea7-7d56fb681e9a", byte_length: 15, mime_type: "application/octet-stream", content_hash: "79917366a2d55364e0380eba79304f6c4aad8dfcfdc30a968dacaa1f9f9a78f3" }, stage_id: "6c6c5899-e55c-404e-b283-18b6ae3ba972" } }
+test product_binary::tests::changed_stage_after_final_flush_is_not_unlinked_or_claimed ... FAILED
+
+failures:
+
+failures:
+    file_transfer::tests::changed_stage_after_publication_is_preserved_as_a_saved_file_warning
+    product_binary::tests::changed_stage_after_final_flush_is_not_unlinked_or_claimed
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 63 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--lib`

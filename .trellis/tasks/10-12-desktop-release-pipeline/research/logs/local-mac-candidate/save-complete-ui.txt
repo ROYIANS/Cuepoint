@@ -1,0 +1,70 @@
+Window: "小光点 · 完整产品验收", App: Cuepoint Product Review.
+0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: 小光点, URL: tauri://localhost/#/assets
+			3 container Notifications alt+T
+			4 container release-smoke-046ef750-fedb-4349-8b95-5266680a86d5.txt
+				5 text 文档 · 全局素材
+				6 heading release-smoke-046ef750-fedb-4349-8b95-5266680a86d5.txt, Value: 2
+					7 text release-smoke-046ef750-fedb-4349-8b95-5266680a86d5.txt
+				8 text 版本 1 · 可复用
+				9 button 关闭素材详情
+				10 text CUEPOINT_RELEASE_SMOKE_046ef750-fedb-4349-8b95-5266680a86d5
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixture
+0123456789 release managed fixtu
+				11 button 下载原文件
+				12 heading 素材信息, Value: 3
+					13 text 素材信息
+				14 container
+					15 text 名称
+					16 text field (settable) 名称, Value: release-smoke-046ef750-fedb-4349-8b95-5266680a86d5.txt
+				17 container
+					18 text 备注
+					19 text entry area (settable) 备注, Value: [text entry area], Placeholder: 用途、注意事项或创作背景
+						20 text 用途、注意事项或创作背景
+				21 container
+					22 text 标签
+					23 text field (settable) 标签, Placeholder: 用逗号分隔
+				24 heading 来源与版本, Value: 3
+					25 text 来源与版本
+				26 text 直接导入，原文件保存在素材版本中。
+				27 button 上传新版本
+				28 button 复制到其他位置
+				29 heading 用于项目, Value: 3
+					30 text 用于项目
+				31 text 创建项目专属副本并固定版本，后续更新需手动确认。媒体会进入项目素材，不会自动替换镜头。
+				32 combo box (collapsed, settable) 使用素材的目标项目, Value: 选择项目, Secondary Actions: Expand
+					33 text 选择项目
+				34 button (disabled) 用于项目
+				35 text 尚未用于项目。
+				36 heading 操作记录, Value: 3
+					37 text 操作记录
+				38 container
+					39 text 导入素材 2026/10/12 10:08:15
+				40 button 归档
+				41 button (disabled) 永久删除
+				42 text 需要永久删除时，请先归档素材。
+	43 close button
+	44 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	45 minimize button
+	46 text 小光点 · 完整产品验收
+47 menu bar
+	48 Cuepoint Product Review
+	49 File
+	50 Edit
+	51 View
+	52 Window
+	53 Help
+
+The focused UI element is 0 standard window 小光点 · 完整产品验收, Secondary Actions: Raise

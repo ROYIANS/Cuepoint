@@ -1,0 +1,33 @@
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"rejected","test":"rejects advertised unsupported project arguments before preparing or executing"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"rejected","test":"rejects advertised unsupported episode arguments before preparing or executing"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"rejected","test":"rejects advertised unsupported beat arguments before preparing or executing"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"rejected","test":"rejects advertised unsupported media arguments before preparing or executing"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"fulfilled","test":"retains the execution rejection/rollback for an unexpected owned project record"}
+{"owner":"sqlite","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"retains the execution rejection/rollback for an unexpected owned project record"}
+{"owner":"sqlite","name":"slot_update","method":"execute","outcome":"rejected","test":"retains the execution rejection/rollback for an unexpected owned project record"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"fulfilled","test":"retains the execution rejection/rollback for an unexpected owned episode record"}
+{"owner":"sqlite","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"retains the execution rejection/rollback for an unexpected owned episode record"}
+{"owner":"sqlite","name":"slot_update","method":"execute","outcome":"rejected","test":"retains the execution rejection/rollback for an unexpected owned episode record"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"fulfilled","test":"retains the execution rejection/rollback for an unexpected owned beat record"}
+{"owner":"sqlite","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"retains the execution rejection/rollback for an unexpected owned beat record"}
+{"owner":"sqlite","name":"slot_update","method":"execute","outcome":"rejected","test":"retains the execution rejection/rollback for an unexpected owned beat record"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"fulfilled","test":"retains the execution rejection/rollback for an unexpected owned media record"}
+{"owner":"sqlite","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"retains the execution rejection/rollback for an unexpected owned media record"}
+{"owner":"sqlite","name":"slot_update","method":"execute","outcome":"rejected","test":"retains the execution rejection/rollback for an unexpected owned media record"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"execute","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"execute","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"execute","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"execute","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"parse","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}
+{"owner":"sqlite","name":"slot_update","method":"execute","outcome":"fulfilled","test":"keeps all five supported kind parsers and real slot writes with committed ledgers"}

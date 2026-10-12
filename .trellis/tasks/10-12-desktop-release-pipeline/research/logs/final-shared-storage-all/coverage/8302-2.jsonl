@@ -1,0 +1,24 @@
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > explains the limit constraint, no-execution outcome and paginated recovery"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"fulfilled","test":"tool argument diagnostics > explains the limit constraint, no-execution outcome and paginated recovery"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > reports both screenshot errors together and strictly accepts only the corrected episode path"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"fulfilled","test":"tool argument diagnostics > reports both screenshot errors together and strictly accepts only the corrected episode path"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > reports both screenshot errors together and strictly accepts only the corrected episode path"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > reports both screenshot errors together and strictly accepts only the corrected episode path"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > never echoes string values, unrecognized keys or thrown schema messages"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > never echoes string values, unrecognized keys or thrown schema messages"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > never echoes string values, unrecognized keys or thrown schema messages"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > never echoes string values, unrecognized keys or thrown schema messages"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > supplements only exact legacy argument failures using current local constraints"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"fulfilled","test":"tool argument diagnostics > supplements only exact legacy argument failures using current local constraints"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > returns actionable error to chat-completions and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > returns actionable error to chat-completions and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"fulfilled","test":"tool argument diagnostics > returns actionable error to chat-completions and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"fulfilled","test":"tool argument diagnostics > returns actionable error to chat-completions and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"fulfilled","test":"tool argument diagnostics > returns actionable error to chat-completions and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"execute","outcome":"fulfilled","test":"tool argument diagnostics > returns actionable error to chat-completions and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > returns actionable error to responses and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"rejected","test":"tool argument diagnostics > returns actionable error to responses and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"fulfilled","test":"tool argument diagnostics > returns actionable error to responses and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"fulfilled","test":"tool argument diagnostics > returns actionable error to responses and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"parse","outcome":"fulfilled","test":"tool argument diagnostics > returns actionable error to responses and executes only a new corrected read"}
+{"owner":"sqlite","name":"business_read_text","method":"execute","outcome":"fulfilled","test":"tool argument diagnostics > returns actionable error to responses and executes only a new corrected read"}

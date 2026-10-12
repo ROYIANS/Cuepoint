@@ -1,11 +1,13 @@
 # Cuepoint desktop: shared product and native validation
 
-The normal Tauri application now loads the existing root React product, including
-its Agent, pages and business commands. Its current data owner is an independent,
-stable application-internal IndexedDB namespace. Native HTTP, file saving,
-external-browser links and storyboard printing are centralized runtime services.
-Centralized SQLite replacement and synchronization remain subsequent work; normal
-startup does not mirror or import the historical SQLite experiment.
+The normal Tauri application loads the existing root React product, including
+its Agent, pages and business commands. The normal product owns all shared
+ProductStore tables in SQLite and copies imported media into its internal file
+workspace. Native HTTP, file saving, external-browser links and storyboard
+printing are centralized runtime services. The browser uses the same React and
+business code with its own IndexedDB adapter. Synchronization remains subsequent
+work; normal startup does not import old browser data or the historical SQLite
+experiment.
 
 The current contracts are in
 [native-product-runtime.md](../../.trellis/spec/frontend/native-product-runtime.md).
@@ -15,6 +17,11 @@ Build the normal application with the local machine pnpm:
 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri build:app
 ```
 
+See [desktop distribution](../../docs/desktop-distribution.md) for the supported
+installer matrix, verification gates and owner-controlled GitHub Release flow.
+
+The `--isolated-product` lane without `--sqlite-product` is an explicitly
+separate IndexedDB reference. It is not the normal product storage owner.
 The `--acceptance` frontend, storage CLI, lock probe and dedicated Tavily probe are
 explicit test lanes. Their finite reports do not replace full product, live
 supplier or other-platform acceptance.
@@ -25,7 +32,7 @@ The following sections document the retained isolated Rust storage experiment
 and its test contracts. At that historical checkpoint, the crate had no GUI,
 renderer command surface, cloud provider or credentials; the later Tauri window
 work was gated on independent storage acceptance. These statements describe that
-storage test lane, not the current normal product or its IndexedDB owner.
+storage test lane, not the current normal product or its all-table SQLite owner.
 
 ## Local tools and gates
 

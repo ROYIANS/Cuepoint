@@ -1,0 +1,19 @@
+✔ driver source proof rejects missing, modified and linked consumed Cargo archives (4.28875ms)
+✔ driver compatibility uses the observed WebView2 first three version parts (0.434917ms)
+✔ actual PE/ELF architecture headers reject wrong target and malformed offsets (0.152958ms)
+✔ PE icon verification inspects installed resources and rejects replaced bytes/bad offsets (0.390875ms)
+✔ closed CLI rejects missing, duplicate and arbitrary options before operations (0.12675ms)
+✔ fixture is deterministic, multi-chunk and has a marker inside the real preview window (1.650666ms)
+✔ native read-only observation rejects wrong owner, mutable profile and startup error (0.15125ms)
+✔ installer and installed binary guards detect real bytes, receipt ambiguity and links (2.386625ms)
+✔ finite poll does not turn timeout or thrown assertion into success (6.830583ms)
+✔ WebDriver keeps last-window close separate from session disposal and preserves assertion failures (22.47175ms)
+✔ WebDriver disposal fails on native errors other than an already deleted session (0.080208ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105.060791

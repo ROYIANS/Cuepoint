@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "bundleExecutable": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791770735874-isolated-sqlite-product/Cuepoint Product Review.app/Contents/MacOS/cuepoint-prototype",
+  "profile": "dev.cuepoint.review.releasepipeline20261012a",
+  "projectObservedAfterReopen": "Release smoke 046ef750-fedb-4349-8b95-5266680a86d5",
+  "materialObservedAfterReopen": "release-smoke-046ef750-fedb-4349-8b95-5266680a86d5.txt",
+  "previewMarkerObservedAfterReopen": "CUEPOINT_RELEASE_SMOKE_046ef750-fedb-4349-8b95-5266680a86d5",
+  "reopenedProcessPid": 17154,
+  "exitObservedBeforeDiskVerification": true,
+  "sourceAbsentBeforeReopen": true,
+  "nativeSaveUserConfirmed": true,
+  "nativeSaveExactHashVerified": true,
+  "diskProof": "reopened-disk-proof.json",
+  "claim": "Local dirty-source ARM64 candidate only; isolated product-sqlite profile with shared product UI; not an eligible release installer or hosted acceptance."
+}

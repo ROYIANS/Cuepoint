@@ -1,0 +1,12 @@
+{
+  "pid": 9656,
+  "bundle": {
+    "profile": "isolated-sqlite-product",
+    "identifier": "dev.cuepoint.review.releasepipeline20261012a",
+    "storage": "sqlite",
+    "webkitStoreId": "b4e51b392b9779517caf35e11d6e8c8e",
+    "app": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791770735874-isolated-sqlite-product/Cuepoint Product Review.app",
+    "evidence": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791770735874-isolated-sqlite-product"
+  },
+  "stateAbsentBeforeLaunch": true
+}

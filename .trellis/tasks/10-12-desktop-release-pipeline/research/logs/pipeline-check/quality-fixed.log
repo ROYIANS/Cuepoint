@@ -1,0 +1,12 @@
+
+> cuepoint@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing
+> node scripts/quality-check.mjs
+
+lint: 12 errors, 584 review warnings, 12 reviewed allowances; 0 failures
+warning rules: {"complexity":149,"sonarjs/cognitive-complexity":105,"no-nested-ternary":326,"max-depth":4}
+architecture: 479 files, 1989 static value edges, 9 literal dynamic edges, 0 static cycles; 0 failures; 0 computed imports/requires outside static proof
+unused: 9 full-scope candidates, 7 reviewed contracts, 106 production-only review signals; 2 failures
+{"section":"unused","kind":"unallowed","key":"[\"exports\",\"scripts/release-smoke-support.mjs\",\"ordinaryFile\"]","count":1}
+{"section":"unused","kind":"unallowed","key":"[\"exports\",\"scripts/release-product-smoke.mjs\",\"main\"]","count":1}
+quality: FAIL (all)
+ ELIFECYCLE  Command failed with exit code 1.

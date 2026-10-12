@@ -4,9 +4,9 @@
 
 [简体中文](README.md) · **English**
 
-Cuepoint brings a creative assistant, film storyboarding, audio production, music generation, and reusable IP and material libraries into one browser workspace. Work directly in the editors, or ask the assistant to use project references, organize a task, and operate creative tools—then inspect the results saved in the workspace.
+Cuepoint brings a creative assistant, film storyboarding, audio production, music generation, and reusable IP and material libraries into one shared browser and desktop workspace. Work directly in the editors, or ask the assistant to use project references, organize a task, and operate creative tools—then inspect the results saved in the workspace.
 
-Project data lives in the current browser's IndexedDB. AI features use your own service connections and API keys (BYOK). Deploy Cuepoint as a static website or use the supplied Docker image; no Cuepoint application database is required on the server.
+The desktop product stores project data in an internal SQLite database and copies media into its managed file workspace. The browser uses the same interface, business commands and Agent with IndexedDB. AI features use your own service connections and API keys (BYOK). The browser can be deployed as a static website or with Docker; no application database is required on the server. See [desktop distribution](docs/desktop-distribution.md) for installer targets and the release verification process.
 
 > Video, audio, and music projects are available. Standalone image and copywriting workspaces are marked “coming soon”; image generation and text editing within existing video workflows are available. The application UI is primarily Chinese. This English README does not imply a fully localized English UI.
 
@@ -121,7 +121,7 @@ Model lists and capability hints combine provider metadata with the bundled Mode
 
 The generic OpenAI-compatible connection test first requests the model list. If the endpoint is unsupported or certain network errors occur, it may fall back to a minimal chat request, which can incur a small amount of provider usage. Dedicated connectors use their own test protocols.
 
-The browser calls providers directly, so those services must allow the necessary cross-origin requests (CORS). Configure your own compatible gateway if a proxy is needed; this repository does not include an application backend proxy. Use HTTPS provider endpoints when the application is served over HTTPS.
+The browser calls providers directly, so those services must allow the necessary cross-origin requests (CORS). The desktop product uses the official native HTTP transport while retaining the same configured-origin policy, cancellation and provider protocols. Configure your own compatible gateway if a proxy is needed; this repository does not include an application backend proxy. Use HTTPS provider endpoints when the application is served over HTTPS.
 
 ## Data, privacy, and backups
 
@@ -129,14 +129,16 @@ The browser calls providers directly, so those services must allow the necessary
 
 | Data or operation | Storage or destination |
 | --- | --- |
-| Projects, manuscripts, shots, materials, audio, conversations, tasks, and memory | The current browser's IndexedDB; some UI preferences use local storage |
-| AI and search credentials | Stored locally in the current browser; used to authenticate requests to the corresponding service |
+| Projects, manuscripts, shots, materials, audio, conversations, tasks, and memory | Desktop: internal SQLite and managed files. Browser: the current origin's IndexedDB; some UI preferences use local storage |
+| AI and search credentials | Stored locally in the current application profile; used to authenticate requests to the corresponding service |
 | AI conversations, generation descriptions, and selected reference text/images/audio | Sent to configured services when the relevant features are used |
 | Web research queries and extraction URLs | Sent to Tavily when research tools run |
 | Website resources | Loaded from the deployment; the page also requests Google Fonts |
 | Optional analytics | Standard pageview data is sent when Umami is configured in a production build |
 
 “Local-first” describes project storage. It does not mean every feature works offline, and browser storage is not an operating-system keychain. There is no built-in account service, automatic cross-device sync, or real-time collaborative backend.
+
+Desktop profiles and browser origins have separate data identities; automatic synchronization between them is not implemented. Imports copy files into the application workspace, so subsequent deletion of the original source does not remove the imported media.
 
 Browser profiles and origins isolate data. Changing the domain, scheme, or port, switching browsers, using private browsing, or clearing site data can make existing projects inaccessible or remove them. Server containers and volumes do not back up visitors' browser databases.
 
@@ -157,7 +159,7 @@ Import creates independent project and resource IDs. Imported memories require r
 
 ### Prerequisites
 
-Use **Node.js 22**, matching CI. Follow the `packageManager` entry in [`package.json`](package.json), currently **pnpm 10.15.0**. In an existing workspace, also follow [`AGENTS.md`](AGENTS.md) and machine-specific package-manager instructions to avoid rebuilding dependencies with an incompatible version.
+Browser/GHCR CI uses **Node.js 22**; desktop release CI pins **Node.js 24.11.0**, as described in the [desktop distribution guide](docs/desktop-distribution.md). Follow the `packageManager` entry in [`package.json`](package.json), currently **pnpm 10.15.0**. In an existing workspace, also follow [`AGENTS.md`](AGENTS.md) and machine-specific package-manager instructions to avoid rebuilding dependencies with an incompatible version.
 
 ```bash
 git clone https://github.com/ROYIANS/Cuepoint.git
@@ -267,10 +269,11 @@ After deployment, inspect the browser's Network panel for the script and collect
 | --- | --- |
 | Frontend | React 19, TypeScript, Vite 7 |
 | Routing | TanStack Router file routes and automatic code splitting |
-| Local data | Dexie / IndexedDB and reactive `dexie-react-hooks` queries |
+| Local data | Shared ProductStore commands and queries; desktop SQLite / managed files; browser Dexie / IndexedDB |
 | UI | Tailwind CSS 4, Radix UI, Ant Design, Lobe UI, Lucide, Motion |
-| AI | Browser-side provider adapters, Agent tools/runtime, Model Bank metadata |
+| AI | Shared provider adapters and Agent tools/runtime, native or browser HTTP, Model Bank metadata |
 | Documents and media | PDF.js, Mammoth, JSZip, Web Audio, MediaRecorder |
+| Desktop | Tauri 2 / Rust, SQLite, native HTTP and file/system services |
 | Verification and deployment | Vitest, fake-indexeddb, TypeScript, GitHub Actions, Docker / Nginx |
 
 ```text
@@ -356,7 +359,7 @@ Rebuild and redeploy the image, supply both values, and use a production build. 
 - [Frontend guidelines](.trellis/spec/frontend/index.md): conventions and module contracts.
 - [Third-party notices](THIRD_PARTY_NOTICES.md): dependency, snapshot, and document-parser licensing.
 
-The current delivery is a static browser application. A desktop shell, native MCP integration, server-hosted background Agent, automatic cross-device sync, and real-time collaboration are not implemented capabilities. Treat current code and working UI as authoritative.
+The shared product runs as a static browser application and a Tauri desktop application with full SQLite/file storage. Cross-platform installer acceptance is tracked separately from implementation and local macOS checks; consult the desktop distribution guide and the actual workflow reports. Native MCP integration, server-hosted background Agent, automatic cross-device sync and real-time collaboration are not implemented capabilities. Treat current code, working UI and recorded verification as authoritative.
 
 ## Acknowledgments
 

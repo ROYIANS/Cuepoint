@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/verify-release-smoke-store.py", line 157, in <module>
+    main()
+  File "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/verify-release-smoke-store.py", line 153, in main
+    print(json.dumps(verify(args.workspace, json.loads(Path(args.expectation).read_text(encoding="utf-8"))), sort_keys=True))
+  File "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/verify-release-smoke-store.py", line 96, in verify
+    require(len(projects) == 1 and projects[0][0] == projects[0][1]["id"], "Expected one persisted UI project")
+  File "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/verify-release-smoke-store.py", line 19, in require
+    raise ValueError(message)
+ValueError: Expected one persisted UI project

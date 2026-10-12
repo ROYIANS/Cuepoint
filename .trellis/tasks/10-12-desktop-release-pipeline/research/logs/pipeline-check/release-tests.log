@@ -1,0 +1,58 @@
+
+> cuepoint-tauri-prototype@0.1.0 test:release /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node --test scripts/*.test.mjs ../../scripts/release-smoke-support.test.mjs
+
+✔ driver source proof rejects missing, modified and linked consumed Cargo archives (10.969792ms)
+✔ driver compatibility uses the observed WebView2 first three version parts (1.117958ms)
+✔ actual PE/ELF architecture headers reject wrong target and malformed offsets (0.18875ms)
+✔ PE icon verification inspects installed resources and rejects replaced bytes/bad offsets (0.531667ms)
+✔ closed CLI rejects missing, duplicate and arbitrary options before operations (0.220375ms)
+✔ fixture is deterministic, multi-chunk and has a marker inside the real preview window (1.575084ms)
+✔ native read-only observation rejects wrong owner, mutable profile and startup error (0.148792ms)
+✔ installer and installed binary guards detect real bytes, receipt ambiguity and links (4.207583ms)
+✔ finite poll does not turn timeout or thrown assertion into success (7.257416ms)
+✔ WebDriver keeps last-window close separate from session disposal and preserves assertion failures (28.212791ms)
+✔ WebDriver disposal fails on native errors other than an already deleted session (0.124667ms)
+✔ closed event policy makes bootstrap and manual runs build-only (0.98625ms)
+✔ portable tools retain local lane and reject Windows shell shims (0.152667ms)
+✔ release commands preserve Mac app receipts and disable per-format executable rewriting (0.535125ms)
+✔ collector accepts four targets across explicit attempts of one run and emits five installers (49.759542ms)
+✔ release revalidation rejects changed artifact provenance and divergent source inputs (155.892792ms)
+✔ collector rejects wrong source (7.976083ms)
+✔ collector rejects wrong run (4.269584ms)
+✔ collector rejects future attempt (5.70025ms)
+✔ collector rejects wrong owner (7.590708ms)
+✔ collector rejects test hooks (7.070125ms)
+✔ collector rejects wrong architecture (5.638709ms)
+✔ collector rejects failed check (7.129084ms)
+✔ collector rejects missing check (9.749166ms)
+✔ collector rejects unknown check (7.78675ms)
+✔ collector rejects changed input (6.381542ms)
+✔ collector rejects unsafe filename (6.669375ms)
+✔ collector rejects extra field (6.862125ms)
+✔ collector rejects wrong tool (8.276667ms)
+✔ collector hashes actual installer and evidence bytes, not claimed strings (10.159625ms)
+✔ collector refuses links and unknown package closure files (9.338125ms)
+✔ collector refuses duplicate target or artifact identity and omitted targets (14.177959ms)
+✔ receipt sealing verifies exact runtime evidence and fails incomplete reports (11.101209ms)
+✔ publisher leaves an incomplete owned draft on interruption and exact retry skips original bytes (59.654416ms)
+✔ collector-only retry reconstructs identical metadata and resumes original draft payload (53.33325ms)
+✔ publisher refuses {"published":true} (29.961083ms)
+✔ publisher refuses {"wrongTag":true} (17.957333ms)
+✔ publisher rejects published/unowned/duplicate drafts and unknown/mutated asset bytes (93.386625ms)
+✔ manual context cannot publish a draft even with a tag-like ref (12.209042ms)
+✔ publisher rejects a manifest from a future attempt before GitHub requests (15.477458ms)
+✔ publisher reconciles an upload that completed before its reply was lost (13.395375ms)
+✔ publisher uses authenticated pagination to discover a page-two draft (14.005375ms)
+✔ starter placeholders cause a visible incomplete failure and are never deleted (12.411292ms)
+✔ asset hashes are downloaded and independently computed when API digest is absent (19.744791ms)
+✔ artifact selection uses exact source/run attempts and rejects ambiguous/expired payloads (0.292833ms)
+✔ workflow gates publisher to desktop tags and pins all external actions (0.676458ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 46
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 732.801708
