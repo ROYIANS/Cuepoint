@@ -6,11 +6,12 @@ import {createWriteStream} from 'node:fs';
 import {dirname,join,relative,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createServer} from 'vite';
+import {nativeProbePath} from '../desktop/tauri/scripts/tool-resolver.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const node=process.execPath;
 const vitest=join(root,'node_modules/vitest/vitest.mjs');
-const probe=join(root,'desktop/tauri/.tools/target/debug/product_store_probe');
+const probe=nativeProbePath();
 const manifestPath=join(root,'tests/fixtures/shared-storage/nativeAcceptanceSuites.json');
 const hash=value=>createHash('sha256').update(value).digest('hex');
 
@@ -91,6 +92,7 @@ const report={schemaVersion:1,startedAt:new Date().toISOString(),suite,tests,reg
 const environment={...process.env,CARGO_INCREMENTAL:'0',CUEPOINT_STORAGE_TEST_OWNER:'sqlite',CUEPOINT_NATIVE_STORAGE_ACCEPTANCE:'1',CUEPOINT_NATIVE_STORE_PROBE:probe,CUEPOINT_TOOL_COVERAGE_DIR:join(evidenceDir,'coverage')};
 await mkdir(environment.CUEPOINT_TOOL_COVERAGE_DIR);
 const buildArgs=[join(root,'desktop/tauri/scripts/tools.mjs'),'cargo','build','--manifest-path','src-tauri/Cargo.toml','--locked','--features','test-hooks','--bin','product_store_probe'];
+if(process.env.CUEPOINT_RUST_TARGET) buildArgs.push('--target',process.env.CUEPOINT_RUST_TARGET);
 report.commands.push({command:node,args:buildArgs,log:'probe-build.log'});
 console.log('Building the current locked Rust probe with the pinned toolchain.');
 report.buildExitCode=await run(node,buildArgs,join(evidenceDir,'probe-build.log'),environment);

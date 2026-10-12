@@ -25,6 +25,8 @@
     "test:native-locks": "node scripts/native-locks-regression.mjs",
     "test:native-tavily": "node scripts/native-tavily-regression.mjs",
     "measure": "node scripts/measure.mjs",
-    "fixtures:generate": "node scripts/generate-fixtures.mjs"
+    "fixtures:generate": "node scripts/generate-fixtures.mjs",
+    "build:release": "node scripts/build-release.mjs",
+    "test:release": "node --test scripts/*.test.mjs ../../scripts/release-smoke-support.test.mjs"
   }
 }

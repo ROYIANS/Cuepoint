@@ -6,7 +6,7 @@ import sonar from 'eslint-plugin-sonarjs';
 
 export default [
     {files: ['scripts/**/*.mjs'], rules: js.configs.recommended.rules,
-        languageOptions: {globals: {process:'readonly',console:'readonly',URL:'readonly',Buffer:'readonly',setTimeout:'readonly',clearTimeout:'readonly'}}},
+        languageOptions: {globals: {process:'readonly',console:'readonly',URL:'readonly',Buffer:'readonly',setTimeout:'readonly',clearTimeout:'readonly',fetch:'readonly',AbortController:'readonly',AbortSignal:'readonly'}}},
     {files: ['scripts/**/*.ts', 'ui/**/*.{ts,tsx}'],
         languageOptions: {parser: tseslint.parser, parserOptions: {
             project: ['./tsconfig.json'], tsconfigRootDir: fileURLToPath(new URL('.', import.meta.url)),

@@ -1,0 +1,11 @@
+import {readFile,readdir} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {collectArtifacts} from './release-artifacts.mjs';
+import {parseOptions,runContext} from './release-policy.mjs';
+import {sourceVersion} from './build-release.mjs';
+const options=parseOptions(process.argv.slice(2),['--input','--selection','--output']);
+if (Object.keys(options).length !== 3) throw new Error('Require --input, --selection and --output');
+const input=resolve(options['--input']),selection=JSON.parse(await readFile(resolve(options['--selection']),'utf8'));
+const entries=await readdir(input,{withFileTypes:true});
+if (entries.some(entry=>!entry.isDirectory() || entry.isSymbolicLink()) || JSON.stringify(entries.map(entry=>entry.name).sort()) !== JSON.stringify(selection.map(item=>item.name).sort())) throw new Error('Downloaded artifact directories differ from exact selection');
+await collectArtifacts(selection.map(item=>resolve(input,item.name)),resolve(options['--output']),{...runContext(),version:await sourceVersion()},selection);

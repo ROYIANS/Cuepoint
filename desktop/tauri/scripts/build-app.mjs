@@ -3,6 +3,7 @@ import {mkdir,writeFile,cp,open,readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
+import {nativeTargetDirectory} from './tool-resolver.mjs';
 
 const base=fileURLToPath(new URL('../',import.meta.url));
 const acceptance=process.argv.includes('--acceptance');
@@ -13,7 +14,9 @@ if(acceptance && isolated)throw new Error('Fixture and normal-product isolation 
 const identifier=isolated ? process.env.CUEPOINT_PRODUCT_IDENTIFIER : acceptance?'dev.cuepoint.prototype.acceptance':'dev.cuepoint.prototype.offline';
 if(!identifier || !/^dev\.cuepoint\.review\.[a-z0-9][a-z0-9.-]{0,100}$/.test(identifier) && isolated)throw new Error('Isolated product requires a dedicated dev.cuepoint.review.* identifier');
 const profile=acceptance?'acceptance':isolated?(productSqlite?'isolated-sqlite-product':'isolated-product'):'normal';
-const appName=acceptance?'Cuepoint Acceptance':isolated?'Cuepoint Product Review':'Cuepoint Prototype';
+const normalConfig=JSON.parse(await readFile(resolve(base,'src-tauri/tauri.conf.json'),'utf8'));
+const appName=acceptance?'Cuepoint Acceptance':isolated?'Cuepoint Product Review':normalConfig.productName;
+if(process.platform !== 'darwin') throw new Error('build:app retains Mac review receipts; use build:release for portable installers');
 const evidence=resolve(base,'.acceptance/builds',`${Date.now()}-${profile}`);
 await mkdir(evidence,{recursive:true});
 async function run(name,args) {
@@ -42,7 +45,7 @@ if(isolated) {
     const path=resolve(evidence,'isolated-product-config.json');await writeFile(path,JSON.stringify(config));args.push('--config',path);
 }
 await run('native-bundle',args);
-const app=resolve(base,'.tools/target/release/bundle/macos',`${appName}.app`);
+const app=resolve(nativeTargetDirectory({profile:'release'}),'bundle/macos',`${appName}.app`);
 const archived=resolve(evidence,`${appName}.app`);
 await cp(app,archived,{recursive:true,errorOnExist:true,force:false});
 const storage=acceptance || productSqlite?'sqlite':'indexeddb';

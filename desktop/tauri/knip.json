@@ -1,5 +1,28 @@
 {
-  "entry": ["scripts/contract-oracle.ts", "scripts/fixture-audio.ts", "ui/main.tsx", "ui/tavilyProbeMain.tsx"],
-  "project": ["scripts/**/*.{ts,mjs}", "ui/**/*.{ts,tsx}"],
-  "include": ["files", "exports", "types", "duplicates", "enumMembers"]
+  "entry": [
+    "scripts/contract-oracle.ts",
+    "scripts/fixture-audio.ts",
+    "ui/main.tsx",
+    "ui/tavilyProbeMain.tsx",
+    "scripts/prepare-release.mjs",
+    "scripts/configure-hosted-tools.mjs",
+    "scripts/finalize-release.mjs",
+    "scripts/collect-release.mjs",
+    "scripts/select-release-artifacts.mjs",
+    "scripts/publish-draft.mjs",
+    "scripts/release-native-checks.mjs",
+    "scripts/run-release-smokes.mjs",
+    "scripts/*.test.mjs"
+  ],
+  "project": [
+    "scripts/**/*.{ts,mjs}",
+    "ui/**/*.{ts,tsx}"
+  ],
+  "include": [
+    "files",
+    "exports",
+    "types",
+    "duplicates",
+    "enumMembers"
+  ]
 }
