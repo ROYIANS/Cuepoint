@@ -210,6 +210,55 @@ assume a downstream platform build prepares a quality job. Correct: establish
 the actual shared prerequisite in each job, preserve the tests, bind the exact
 probe path and distinguish local verification from the next hosted run.
 
+## Desktop Knip cross-package callers
+
+### 1. Scope / Trigger
+
+Apply when desktop scripts export helpers used by root CLI commands. Root formal
+quality and desktop Knip are separate gates; neither implies the other passed.
+
+### 2. Signatures / Owners
+
+Run the unchanged desktop `quality` package command from `desktop/tauri`.
+`desktop/tauri/knip.json` declares `.` for the original desktop entry/project
+lists and `../..` for real root CLI ownership. The preparation CLI is an explicit
+entry; `test:storage:native` in the root package supplies its actual CLI entry.
+
+### 3. Contracts
+
+Keep original desktop discovery and issue categories. The new parent workspace
+has an empty project list and disables Node, TypeScript, Tailwind, TanStack
+Router, Tauri, Vite, Vitest, ESLint and GitHub Actions auto-discovery. Do not make
+the shared resolver itself an entry, ignore exports or add dummy consumers.
+External path globs without a workspace owner do not establish caller usage.
+
+### 4. Validation / Error Matrix
+
+| Condition | Required outcome |
+| --- | --- |
+| Real root CLI imports a shared desktop helper | Resolve and analyze that actual caller |
+| A genuinely unused resolver export is added | Desktop Knip fails with that export |
+| Root caller ownership is removed | The missing-use findings return |
+| Parent discovery expands unrelated root UI/archive/dependency tests | Reject that configuration even if Knip exits zero |
+
+### 5. Good / Base / Bad Cases
+
+Good: precise owned workspaces plus actual CLI import closure. Base: desktop-only
+scope when all consumers live there. Bad: broader entry discovery makes unused
+source appear reachable or root quality is reported as desktop quality proof.
+
+### 6. Tests Required
+
+Run both actual quality commands. Inspect final caller traces and workspace
+plugins. In a disposable source copy, add an unused resolver export and remove
+the parent caller workspace; both must fail. Keep original source untouched.
+
+### 7. Wrong vs Correct
+
+Wrong: add `../../scripts/...` globs alone or suppress the two export names.
+Correct: establish their real workspace owners, preserve the original desktop
+scope and verify a newly unused export is still rejected.
+
 ## Optional analytics deployment
 
 `VITE_UMAMI_SCRIPT_URL` and `VITE_UMAMI_WEBSITE_ID` are public build-time settings supplied by GitHub Actions repository variables. Keep the workflow's Vite build environment and Docker build arguments aligned. The Docker arguments belong only to the build stage; Compose and the Nginx runtime need no analytics environment variables. Local `.env` files are excluded from Git and Docker contexts, with `.env.example` as the documented template.

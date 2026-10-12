@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "baseRevision": "db52aedb382f83bb49f24908131eeebf1eb3401d",
+  "reviewedAt": "2026-10-12T03:41:43.134909+00:00",
+  "authoredScope": [
+    {
+      "path": "desktop/tauri/knip.json",
+      "status": "reviewed",
+      "sha256": "8a230e61dd2d05dfb7ca07427b493bd7cc46b9b8c88519dd3046620429558554",
+      "note": "Original desktop scope preserved, actual root caller workspace established, parent plugin discovery bounded."
+    }
+  ],
+  "dependencyHashes": {
+    "desktop/tauri/knip.json": "8a230e61dd2d05dfb7ca07427b493bd7cc46b9b8c88519dd3046620429558554",
+    "desktop/tauri/scripts/tool-resolver.mjs": "bb12e79ec489ffc6e87f025b79d2fbd7e6102aed0afcec51fe4f43f56939ec11",
+    "scripts/prepare-native-test-probe.mjs": "d75cc9e8963c30a67c5ea4d4b9073533e20942da8120c134ba78452243b91144",
+    "scripts/native-storage-regression.mjs": "a91aa5fb510ab02435e1a9cc9c42cfc6acee415dafa4ca387eb482b92a0fb090",
+    "desktop/tauri/package.json": "0f7bf199025f647a35ae06b6ba80d38a4c5477ff0fff2c5b49e0644c3f0b2ac1"
+  },
+  "checks": {
+    "originalDesktopEntriesPreserved": true,
+    "originalDesktopProjectPreserved": true,
+    "originalIssueCategoriesPreserved": true,
+    "noNewDesktopSuppressions": true,
+    "parentProjectEmpty": true,
+    "parentEntryExact": true,
+    "negativeConfigHashCurrent": true,
+    "workerHashesCurrent": true,
+    "independentGatesAllZero": true,
+    "independentGateInputsUnchanged": true,
+    "unusedNegativeRetained": true,
+    "callerRemovalNegativeRetained": true
+  },
+  "sourceChangesByReviewer": [],
+  "limits": "Knip-only current frozen config acceptance, separate native oversized-query correction not included."
+}

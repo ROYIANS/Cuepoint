@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "node": "v24.11.0",
+  "checks": [
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "args": [
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/knip/bin/knip.js",
+        "--config",
+        "knip.json",
+        "--no-progress"
+      ],
+      "cwd": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-desktop-knip-KMPp5q/desktop/tauri",
+      "exitCode": 0,
+      "log": "negative-copy-clean.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "args": [
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/knip/bin/knip.js",
+        "--config",
+        "knip.json",
+        "--no-progress"
+      ],
+      "cwd": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-desktop-knip-KMPp5q/desktop/tauri",
+      "exitCode": 1,
+      "log": "negative-unused-export.log"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "args": [
+        "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/knip/bin/knip.js",
+        "--config",
+        "knip.json",
+        "--no-progress"
+      ],
+      "cwd": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-desktop-knip-KMPp5q/desktop/tauri",
+      "exitCode": 1,
+      "log": "negative-remove-caller-workspace.log"
+    }
+  ],
+  "temporary": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint-desktop-knip-KMPp5q",
+  "configSha256": "502551f1101837116d26db1690d5ad6cc0c3eeecf3e5dd21f614853ac6f10280",
+  "status": "passed",
+  "temporaryRemoved": true
+}

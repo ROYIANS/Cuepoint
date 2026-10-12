@@ -1,0 +1,531 @@
+[*] Unresolved configuration
+{
+  cacheLocation: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/node_modules/.cache/knip',
+  catalog: {
+    filePath: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/package.json',
+    catalog: {},
+    catalogs: {},
+    overrides: undefined
+  },
+  config: 'knip.json',
+  configFilePath: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/knip.json',
+  cwd: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri',
+  cycles: false,
+  dependencies: false,
+  exports: false,
+  files: false,
+  fixTypes: [],
+  gitignore: true,
+  includedIssueTypes: {
+    files: true,
+    dependencies: false,
+    devDependencies: false,
+    optionalPeerDependencies: false,
+    unlisted: false,
+    binaries: false,
+    unresolved: false,
+    exports: true,
+    nsExports: false,
+    types: true,
+    nsTypes: false,
+    enumMembers: true,
+    namespaceMembers: false,
+    duplicates: true,
+    catalog: false,
+    catalogReferences: false,
+    cycles: false
+  },
+  isCache: false,
+  isDebug: true,
+  isDisableConfigHints: false,
+  isDisableTagHints: false,
+  isFix: false,
+  isFixCatalog: true,
+  isFixDependencies: true,
+  isFixFiles: undefined,
+  isFixUnusedExports: true,
+  isFixUnusedTypes: true,
+  isFormat: false,
+  isIncludeEntryExports: false,
+  isProduction: false,
+  isReportDependencies: false,
+  isReportExports: true,
+  isReportCycles: false,
+  isReportFiles: true,
+  isReportTypes: true,
+  isReportValues: true,
+  isSession: false,
+  isShowProgress: false,
+  isStrict: false,
+  isTrace: false,
+  isTreatConfigHintsAsErrors: false,
+  isTreatTagHintsAsErrors: false,
+  isUseTscFiles: undefined,
+  isWatch: false,
+  maxIssues: 0,
+  maxShowIssues: undefined,
+  parsedConfig: {
+    include: [ 'files', 'exports', 'types', 'duplicates', 'enumMembers' ],
+    workspaces: {
+      '../..': {
+        entry: [ 'scripts/prepare-native-test-probe.mjs' ],
+        project: [],
+        eslint: false,
+        'github-actions': false,
+        node: false,
+        tailwind: false,
+        'tanstack-router': false,
+        tauri: false,
+        typescript: false,
+        vite: false,
+        vitest: false
+      },
+      '.': {
+        entry: [
+          'scripts/contract-oracle.ts',
+          'scripts/fixture-audio.ts',
+          'ui/main.tsx',
+          'ui/tavilyProbeMain.tsx',
+          'scripts/prepare-release.mjs',
+          'scripts/configure-hosted-tools.mjs',
+          'scripts/finalize-release.mjs',
+          'scripts/collect-release.mjs',
+          'scripts/select-release-artifacts.mjs',
+          'scripts/publish-draft.mjs',
+          'scripts/release-native-checks.mjs',
+          'scripts/run-release-smokes.mjs',
+          'scripts/*.test.mjs'
+        ],
+        project: [ 'scripts/**/*.{ts,mjs}', 'ui/**/*.{ts,tsx}' ]
+      }
+    }
+  },
+  preprocessor: [],
+  preprocessorInputs: [],
+  preprocessorOptions: '',
+  rules: {
+    files: 'error',
+    dependencies: 'off',
+    devDependencies: 'off',
+    optionalPeerDependencies: 'off',
+    unlisted: 'off',
+    binaries: 'off',
+    unresolved: 'off',
+    exports: 'error',
+    nsExports: 'off',
+    types: 'error',
+    nsTypes: 'off',
+    enumMembers: 'error',
+    namespaceMembers: 'off',
+    duplicates: 'error',
+    catalog: 'off',
+    catalogReferences: 'off',
+    cycles: 'off'
+  },
+  tags: [ [], [] ],
+  traceDependency: undefined,
+  traceExport: undefined,
+  traceFile: undefined,
+  tsConfigFile: undefined,
+  workspace: undefined,
+  workspaces: []
+}
+[*] Included issue types
+{
+  files: true,
+  dependencies: false,
+  devDependencies: false,
+  optionalPeerDependencies: false,
+  unlisted: false,
+  binaries: false,
+  unresolved: false,
+  exports: true,
+  nsExports: false,
+  types: true,
+  nsTypes: false,
+  enumMembers: true,
+  namespaceMembers: false,
+  duplicates: true,
+  catalog: false,
+  catalogReferences: false,
+  cycles: false
+}
+[*] Parsed gitignore files
+{
+  gitignoreFiles: [
+    '../../.gitignore',
+    '.gitignore',
+    'src-tauri/vendor/tauri-plugin-http/.gitignore'
+  ]
+}
+[*] Included workspaces
+[ 'cuepoint-tauri-prototype', 'cuepoint' ]
+[*] Included workspace configs
+[
+  {
+    pkgName: 'cuepoint-tauri-prototype',
+    name: '.',
+    config: {
+      entry: [
+        'scripts/contract-oracle.ts',
+        'scripts/fixture-audio.ts',
+        'ui/main.tsx',
+        'ui/tavilyProbeMain.tsx',
+        'scripts/prepare-release.mjs',
+        'scripts/configure-hosted-tools.mjs',
+        'scripts/finalize-release.mjs',
+        'scripts/collect-release.mjs',
+        'scripts/select-release-artifacts.mjs',
+        'scripts/publish-draft.mjs',
+        'scripts/release-native-checks.mjs',
+        'scripts/run-release-smokes.mjs',
+        'scripts/*.test.mjs'
+      ],
+      project: [ 'scripts/**/*.{ts,mjs}', 'ui/**/*.{ts,tsx}' ],
+      paths: {},
+      ignore: [],
+      ignoreFiles: [],
+      ignoreGlobalBinaries: true,
+      ignoreExportsUsedInFile: false,
+      isIncludeEntryExports: false
+    },
+    ancestors: []
+  },
+  {
+    pkgName: 'cuepoint',
+    name: '../..',
+    config: {
+      entry: [ 'scripts/prepare-native-test-probe.mjs' ],
+      project: [],
+      paths: {},
+      ignore: [],
+      ignoreFiles: [],
+      ignoreGlobalBinaries: true,
+      ignoreExportsUsedInFile: false,
+      isIncludeEntryExports: false,
+      eslint: false,
+      'github-actions': false,
+      node: false,
+      tailwind: false,
+      'tanstack-router': false,
+      tauri: false,
+      typescript: false,
+      vite: false,
+      vitest: false
+    },
+    ancestors: [ '.' ]
+  }
+]
+[.] Finding paths
+{
+  patterns: [ '.travis.yml' ],
+  cwd: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri',
+  gitignore: true,
+  absolute: true,
+  dot: true,
+  fs: undefined,
+  ignore: [ '**/node_modules', '.git/!(hooks)' ],
+  expandDirectories: false,
+  followSymbolicLinks: false,
+  paths: []
+}
+[.] Definition paths (2)
+[
+  '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/env.d.ts',
+  '/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/references/mammoth.d.ts'
+]
+[.] Source mapping (package.json) (0)
+[]
+[.] Enabled plugins
+[ 'Node.js', 'pnpm', 'Tauri' ]
+[.] Finding config file
+{
+  patterns: [ 'pnpm-workspace.yaml', 'package.json' ],
+  cwd: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri',
+  gitignore: false,
+  absolute: true,
+  dot: true,
+  fs: undefined,
+  ignore: [ '**/node_modules', '.git/!(hooks)' ],
+  expandDirectories: false,
+  followSymbolicLinks: false,
+  paths: [
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/package.json'
+  ]
+}
+[.] Finding config file
+{
+  patterns: [
+    'tauri.conf.{json,json5}',
+    'src-tauri/Tauri.{macos,linux,windows,android,ios}.toml',
+    'src-tauri/Tauri.toml',
+    'src-tauri/tauri.{macos,linux,windows,android,ios}.conf.{json,json5}',
+    'src-tauri/tauri.conf.{json,json5}'
+  ],
+  cwd: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri',
+  gitignore: false,
+  absolute: true,
+  dot: true,
+  fs: undefined,
+  ignore: [ '**/node_modules', '.git/!(hooks)' ],
+  expandDirectories: false,
+  followSymbolicLinks: false,
+  paths: [
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri/tauri.conf.json'
+  ]
+}
+[.] Plugin dependencies (24)
+[
+  'binary:node (package.json)',
+  'deferResolveEntry:../../node_modules/eslint/bin/eslint.js (package.json)',
+  'deferResolveEntry:../../node_modules/knip/bin/knip.js (package.json)',
+  'deferResolveEntry:../../node_modules/typescript/bin/tsc (package.json)',
+  'deferResolveEntry:scripts/build-app.mjs (package.json)',
+  'deferResolveEntry:scripts/build-frontend.mjs (package.json)',
+  'deferResolveEntry:scripts/build-release.mjs (package.json)',
+  'deferResolveEntry:scripts/generate-contract-fixture.mjs (package.json)',
+  'deferResolveEntry:scripts/generate-fixtures.mjs (package.json)',
+  'deferResolveEntry:scripts/measure.mjs (package.json)',
+  'deferResolveEntry:scripts/native-locks-regression.mjs (package.json)',
+  'deferResolveEntry:scripts/native-regression.mjs (package.json)',
+  'deferResolveEntry:scripts/native-tavily-regression.mjs (package.json)',
+  'deferResolveEntry:scripts/packaged-regression.mjs (package.json)',
+  'deferResolveEntry:scripts/tools.mjs (package.json)',
+  'entry:**/*{.,-,_}test.{cjs,mjs,js,cts,mts,ts} (package.json)',
+  'entry:**/test-*.{cjs,mjs,js,cts,mts,ts} (package.json)',
+  'entry:**/test.{cjs,mjs,js,cts,mts,ts} (package.json)',
+  'entry:**/test/**/*.{cjs,mjs,js,cts,mts,ts} (package.json)',
+  'entry:.pnpmfile.{cjs,mjs}',
+  'entry:scripts/*.test.mjs (package.json)',
+  'entry:server.js',
+  'entry:server.js (package.json)',
+  'entry:src-tauri/tauri.conf.json'
+]
+[.] Finding entry paths
+{
+  patterns: [
+    'scripts/*.test.mjs',
+    'scripts/run-release-smokes.mjs',
+    'scripts/release-native-checks.mjs',
+    'scripts/publish-draft.mjs',
+    'scripts/select-release-artifacts.mjs',
+    'scripts/collect-release.mjs',
+    'scripts/finalize-release.mjs',
+    'scripts/configure-hosted-tools.mjs',
+    'scripts/prepare-release.mjs',
+    'ui/tavilyProbeMain.tsx',
+    'ui/main.tsx',
+    'scripts/fixture-audio.ts',
+    'scripts/contract-oracle.ts'
+  ],
+  cwd: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri',
+  gitignore: false,
+  absolute: true,
+  dot: true,
+  fs: undefined,
+  ignore: [ '**/node_modules', '.git/!(hooks)', '../../**' ],
+  expandDirectories: false,
+  followSymbolicLinks: false,
+  paths: [
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/main.tsx',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/tavilyProbeMain.tsx',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/collect-release.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/configure-hosted-tools.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/contract-oracle.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/finalize-release.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/fixture-audio.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/prepare-release.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/publish-draft.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/release-native-checks.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/release-pipeline.test.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/run-release-smokes.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/select-release-artifacts.mjs'
+  ]
+}
+[.] Finding entry paths from plugins
+{
+  patterns: [
+    '../../src/lib/references/mammoth.d.ts',
+    'ui/env.d.ts',
+    'tauri.conf.{json,json5}',
+    'src-tauri/Tauri.{macos,linux,windows,android,ios}.toml',
+    'src-tauri/Tauri.toml',
+    'src-tauri/tauri.{macos,linux,windows,android,ios}.conf.{json,json5}',
+    'src-tauri/tauri.conf.{json,json5}',
+    'pnpm-workspace.yaml',
+    'package.json'
+  ],
+  cwd: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri',
+  gitignore: true,
+  absolute: true,
+  dot: true,
+  fs: undefined,
+  ignore: [
+    '**/node_modules',
+    '.git/!(hooks)',
+    '**/node_modules',
+    '**/dist',
+    '**/.DS_Store',
+    '**/*.local',
+    '**/.env',
+    '**/.vite',
+    '**/.tanstack',
+    '**/.tools',
+    '**/src-tauri/target',
+    '**/src-tauri/gen',
+    '**/.acceptance',
+    '**/.release',
+    '**/src-tauri/permissions/autogenerated'
+  ],
+  expandDirectories: false,
+  followSymbolicLinks: false,
+  paths: [
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/package.json',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri/tauri.conf.json',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/env.d.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/references/mammoth.d.ts'
+  ]
+}
+[.] Finding entry paths from plugins (ignore exports)
+{
+  patterns: [
+    'src-tauri/tauri.conf.json',
+    '.pnpmfile.{cjs,mjs}',
+    '**/test/**/*.{cjs,mjs,js,cts,mts,ts}',
+    '**/test.{cjs,mjs,js,cts,mts,ts}',
+    '**/test-*.{cjs,mjs,js,cts,mts,ts}',
+    '**/*{.,-,_}test.{cjs,mjs,js,cts,mts,ts}',
+    'server.js',
+    'scripts/*.test.mjs'
+  ],
+  cwd: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri',
+  gitignore: true,
+  absolute: true,
+  dot: true,
+  fs: undefined,
+  ignore: [
+    '**/node_modules',
+    '.git/!(hooks)',
+    '**/dist',
+    '**/.DS_Store',
+    '**/*.local',
+    '**/.env',
+    '**/.vite',
+    '**/.tanstack',
+    '**/.tools',
+    '**/src-tauri/target',
+    '**/src-tauri/gen',
+    '**/.acceptance',
+    '**/.release',
+    '**/src-tauri/permissions/autogenerated',
+    '../../**'
+  ],
+  expandDirectories: false,
+  followSymbolicLinks: false,
+  paths: [
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/release-pipeline.test.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri/tauri.conf.json'
+  ]
+}
+[.] Finding project paths
+{
+  patterns: [ 'server.js', 'ui/**/*.{ts,tsx}', 'scripts/**/*.{ts,mjs}' ],
+  cwd: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri',
+  gitignore: true,
+  absolute: true,
+  dot: true,
+  fs: undefined,
+  ignore: [
+    '**/node_modules',
+    '.git/!(hooks)',
+    '**/dist',
+    '**/.DS_Store',
+    '**/*.local',
+    '**/.env',
+    '**/.vite',
+    '**/.tanstack',
+    '**/.tools',
+    '**/src-tauri/target',
+    '**/src-tauri/gen',
+    '**/.acceptance',
+    '**/.release',
+    '**/src-tauri/permissions/autogenerated',
+    '../../**'
+  ],
+  expandDirectories: false,
+  followSymbolicLinks: false,
+  paths: [
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/build-app.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/build-frontend.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/build-release.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/collect-release.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/configure-hosted-tools.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/contract-oracle.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/finalize-release.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/fixture-audio.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/generate-contract-fixture.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/generate-fixtures.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/measure.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/native-locks-regression.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/native-regression.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/native-tavily-regression.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/packaged-regression.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/prepare-release.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/publish-draft.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/release-artifacts.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/release-native-checks.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/release-pipeline.test.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/release-policy.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/run-release-smokes.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/select-release-artifacts.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/sse-server.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/tool-resolver.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/tools.mjs',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/acceptance.tsx',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/acceptanceAudio.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/acceptanceEvidence.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/acceptanceLocks.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/acceptanceMedia.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/acceptancePrint.tsx',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/acceptanceRecorder.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/acceptanceStream.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/bridge.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/env.d.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/main.tsx',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/tavilyProbe.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/tavilyProbeFetch.ts',
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/tavilyProbeMain.tsx'
+  ]
+}
+[../..] Source mapping (package.json) (0)
+[]
+[../..] Enabled plugins
+[]
+[../..] Plugin dependencies (8)
+[
+  'binary:node (../../package.json)',
+  'binary:tsc (../../package.json)',
+  'binary:vite (../../package.json)',
+  'binary:vitest (../../package.json)',
+  'deferResolveEntry:scripts/model-bank-snapshot.mjs (../../package.json)',
+  'deferResolveEntry:scripts/native-storage-regression.mjs (../../package.json)',
+  'deferResolveEntry:scripts/quality-check.mjs (../../package.json)',
+  'deferResolveEntry:scripts/quality/self-test.mjs (../../package.json)'
+]
+[../..] Finding entry paths
+{
+  patterns: [ '../../scripts/prepare-native-test-probe.mjs' ],
+  cwd: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri',
+  gitignore: false,
+  absolute: true,
+  dot: true,
+  fs: undefined,
+  ignore: [ '**/node_modules', '.git/!(hooks)' ],
+  expandDirectories: false,
+  followSymbolicLinks: false,
+  paths: [
+    '/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/prepare-native-test-probe.mjs'
+  ]
+}
+[*] Created 1 principal for 2 workspaces
+[*] Unable to read /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/

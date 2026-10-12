@@ -1,0 +1,41 @@
+
+> cuepoint-tauri-prototype@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node ../../node_modules/knip/bin/knip.js --config knip.json --no-progress
+
+Unused files (19)
+eslint.config.mjs                             
+scripts/collect-release.mjs                   
+scripts/configure-hosted-tools.mjs            
+scripts/contract-oracle.ts                    
+scripts/finalize-release.mjs                  
+scripts/fixture-audio.ts                      
+scripts/prepare-release.mjs                   
+scripts/release-native-checks.mjs             
+scripts/run-release-smokes.mjs                
+src-tauri/vendor/tauri-plugin-http/api-iife.js
+ui/acceptance.tsx                             
+ui/acceptanceAudio.ts                         
+ui/acceptanceLocks.ts                         
+ui/acceptanceMedia.ts                         
+ui/acceptancePrint.tsx                        
+ui/acceptanceRecorder.ts                      
+ui/acceptanceStream.ts                        
+ui/main.tsx                                   
+ui/tavilyProbeMain.tsx                        
+Unused exports (6)
+eventIsSkipped  function  ui/acceptanceEvidence.ts:5:17 
+message         function  ui/acceptanceEvidence.ts:12:17
+delay                     ui/acceptanceEvidence.ts:16:14
+rejects         function  ui/acceptanceEvidence.ts:17:23
+environment     function  ui/acceptanceEvidence.ts:42:17
+sha256          function  ui/bridge.ts:261:23           
+Unused exported types (1)
+NativeState  type  ui/bridge.ts:135:13
+Configuration hints (6)
+[scripts/contract-oracle.ts, …]               knip.json  Remove, or move unused top-level entry to one of "workspaces"  
+[scripts/**/*.{ts,mjs}, …]                    knip.json  Remove, or move unused top-level project to one of "workspaces"
+scripts/native-storage-regression.mjs  ../..  knip.json  Remove redundant entry pattern                                 
+scripts/prepare-native-test-probe.mjs  ../..  knip.json  Remove redundant project pattern                               
+scripts/native-storage-regression.mjs  ../..  knip.json  Remove redundant project pattern                               
+.css                                   ../..  knip.json  Compiled extension excluded by project (imports not followed)  
+ ELIFECYCLE  Command failed with exit code 1.

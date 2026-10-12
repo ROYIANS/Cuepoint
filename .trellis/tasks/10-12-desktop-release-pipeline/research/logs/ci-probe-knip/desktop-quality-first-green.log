@@ -1,0 +1,11 @@
+
+> cuepoint-tauri-prototype@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node ../../node_modules/knip/bin/knip.js --config knip.json --no-progress
+
+Unused exports (2)
+nativeProbeOutputPath      function  scripts/tool-resolver.mjs:63:17
+nativeProbeBuildArguments  function  scripts/tool-resolver.mjs:67:17
+Configuration hints (2)
+../../scripts/prepare-native-test-probe.mjs    knip.json  Remove redundant project pattern
+../../scripts/native-storage-regression.mjs    knip.json  Remove redundant project pattern
+ ELIFECYCLE  Command failed with exit code 1.
