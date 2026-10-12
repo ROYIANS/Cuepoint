@@ -7,8 +7,8 @@ import {fileURLToPath} from 'node:url';
 import {runTool} from '../desktop/tauri/scripts/tool-resolver.mjs';
 import {contained,sha256} from './release-smoke-support.mjs';
 
-export const TAURI_DRIVER_VERSION='2.1.0';
-export const TAURI_DRIVER_CRATE_SHA256='2f2e29bd6900fb718dfdc06f2e7a371d6087c085daaf83709847ef3e6b0c1953';
+const TAURI_DRIVER_VERSION='2.1.0';
+const TAURI_DRIVER_CRATE_SHA256='2f2e29bd6900fb718dfdc06f2e7a371d6087c085daaf83709847ef3e6b0c1953';
 
 export async function verifyConsumedCrate(cargoHome) {
     const root=join(cargoHome,'registry','cache');
@@ -64,7 +64,7 @@ async function download(url,path) {
     return {url,bytes:bytes.length,sha256:sha256(bytes)};
 }
 
-export async function main() {
+async function main() {
     if (process.env.GITHUB_ACTIONS !== 'true' || process.env.CUEPOINT_TOOL_MODE !== 'hosted' || !process.env.RUNNER_TEMP || !process.env.GITHUB_ENV) throw new Error('Driver setup requires the explicit hosted runner lane');
     if (!['linux','win32'].includes(process.platform)) throw new Error('External native driver is only supported on Windows/Linux');
     const directory=resolve(process.env.RUNNER_TEMP,'cuepoint-release-driver');

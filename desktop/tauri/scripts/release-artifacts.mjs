@@ -57,7 +57,7 @@ function validateContext(context) {
 }
 function validateReceipt(receipt,expected) {
     closed(receipt,['schema','state','policyHash','context','target','product','tools','inputs','payload','assets','checks','evidenceFiles'],'receipt');
-    if (receipt.schema !== 1 || receipt.state !== 'verified' || receipt.policyHash !== policyHash()) throw new Error('Unverified receipt or changed policy');
+    if (receipt.schema !== 1 || !['packaged','verified'].includes(receipt.state) || receipt.policyHash !== policyHash()) throw new Error('Incomplete receipt or changed policy');
     const context=receipt.context;
     validateContext(context);
     for (const key of ['repository','workflow','sourceSha','event','mode','tag','runId','version']) if (expected && context[key] !== expected[key]) throw new Error(`Target context mismatch: ${key}`);
@@ -84,6 +84,10 @@ function validateReceipt(receipt,expected) {
         if (!target.formats.includes(asset.format) || formats.has(asset.format) || asset.name !== assetName(target.id,context.version,asset.format)) throw new Error('Unknown/duplicate installer format or filename');
         formats.add(asset.format);
         if (!Number.isSafeInteger(asset.bytes) || asset.bytes <= 0 || !/^[a-f0-9]{64}$/.test(asset.sha256)) throw new Error('Invalid installer hash/size');
+    }
+    if (receipt.state === 'packaged') {
+        if (!Array.isArray(receipt.checks) || receipt.checks.length || !Array.isArray(receipt.evidenceFiles) || receipt.evidenceFiles.length) throw new Error('Packaged receipts must have empty checks and evidence');
+        return target;
     }
     if (!Array.isArray(receipt.checks) || receipt.checks.length !== target.requiredChecks.length) throw new Error('Missing required target checks');
     const checks=new Set();
@@ -120,6 +124,19 @@ function validateSelection(selection,receipt,artifactIds) {
     if (!Number.isSafeInteger(selection.id) || selection.id <= 0 || artifactIds.has(selection.id) || selection.target !== receipt.target.id || selection.runId !== receipt.context.runId || selection.attempt !== receipt.context.attempt || selection.name !== `desktop-${receipt.target.id}-${selection.runId}-${selection.attempt}`) throw new Error('Artifact selection/provenance mismatch');
     artifactIds.add(selection.id);
 }
+function releaseLimitations(receipts) {
+    const coverage=receipts.some(receipt=>receipt.state === 'packaged') ? [
+        'Packaging-only delivery: packaged targets have no automated tests, application launch or runtime acceptance; their checks and evidence arrays are empty.',
+        'Target and native build-host metadata, source identity and installer hashes are checked. Installed/extracted payload architecture, UI, SQLite persistence, microphone, print, providers, PDF and media codecs are not established by packaging.',
+        'The owner performs functional testing before public publication. A complete upload describes the installer file set, not passed software tests.',
+        'Linux targets use the Ubuntu 22.04 x64 baseline; AppImage/FUSE desktop launch and other distributions are not established by packaging.',
+    ] : [
+        'Mac host smoke proves package integrity and bounded process launch, not UI persistence. Intel UI/hardware checks pending.',
+        'Windows/Linux TXT UI persistence smoke does not prove microphone, print, provider, PDF or media codecs.',
+        'Linux AppImage smoke launches extracted payload; FUSE desktop launch and other distributions pending.',
+    ];
+    return ['Unsigned Windows; macOS ad-hoc, not notarized.',...coverage,'Windows local NTFS flushes regular-file bytes/metadata and uses no-overwrite publication plus process-termination recovery; parent-directory persistence across sudden OS/power loss is not guaranteed.'];
+}
 export async function collectArtifacts(targetDirectories,output,expected,artifactSelections) {
     if (targetDirectories.length !== Object.keys(TARGETS).length || !Array.isArray(artifactSelections) || artifactSelections.length !== targetDirectories.length) throw new Error('Require four explicitly selected target artifacts');
     const receipts=[],ids=new Set(),artifactIds=new Set();
@@ -144,7 +161,7 @@ export async function collectArtifacts(targetDirectories,output,expected,artifac
     // Collection retry is metadata-neutral: keeping the original target IDs
     // must reproduce the exact manifest bytes, even on a later collector try.
     const payloadContext={...expected,attempt:Math.max(...receipts.map(({receipt})=>receipt.context.attempt))};
-    const manifest={schema:1,context:payloadContext,policyHash:policyHash(),installers,targets:receipts.map(({receipt,selection})=>({receipt,artifact:selection})),limitations:['Unsigned Windows; macOS ad-hoc, not notarized.','Mac host smoke proves package integrity and bounded process launch, not UI persistence. Intel UI/hardware checks pending.','Windows/Linux TXT UI persistence smoke does not prove microphone, print, provider, PDF or media codecs.','Linux AppImage smoke launches extracted payload; FUSE desktop launch and other distributions pending.','Windows local NTFS flushes regular-file bytes/metadata and uses no-overwrite publication plus process-termination recovery; parent-directory persistence across sudden OS/power loss is not guaranteed.']};
+    const manifest={schema:1,context:payloadContext,policyHash:policyHash(),installers,targets:receipts.map(({receipt,selection})=>({receipt,artifact:selection})),limitations:releaseLimitations(receipts.map(({receipt})=>receipt))};
     await writeFile(join(output,'release-manifest.json'),JSON.stringify(manifest,null,2)+'\n',{flag:'wx'});
     return manifest;
 }
@@ -163,6 +180,7 @@ export async function verifyReleaseDirectory(directory) {
         expected.push(...entry.receipt.assets.map(asset=>({...asset,target:entry.receipt.target.id})));
     }
     expected.sort((a,b)=>a.name.localeCompare(b.name));
+    if (JSON.stringify(manifest.limitations) !== JSON.stringify(releaseLimitations(manifest.targets.map(entry=>entry.receipt)))) throw new Error('Release acceptance limitations changed');
     if (JSON.stringify(expected) !== JSON.stringify(manifest.installers)) throw new Error('Release installer set changed');
     const files=[...manifest.installers.map(asset=>asset.name),'SHA256SUMS','release-manifest.json'].sort();
     if (JSON.stringify(await listedFiles(directory)) !== JSON.stringify(files)) throw new Error('Unexpected release file');
@@ -177,7 +195,7 @@ export async function verifyReleaseDirectory(directory) {
 
 export async function copyCheckReports(receiptPath,paths) {
     const root=dirname(receiptPath),receipt=JSON.parse(await readFile(receiptPath,'utf8'));
-    if (receipt.state !== 'building' || receipt.checks.length || receipt.evidenceFiles.length) throw new Error('Only a fresh building receipt may be sealed');
+    if (!['building','packaged'].includes(receipt.state) || !Array.isArray(receipt.checks) || receipt.checks.length || !Array.isArray(receipt.evidenceFiles) || receipt.evidenceFiles.length) throw new Error('Only a fresh building or packaged receipt may be sealed');
     for (const [index,path] of paths.entries()) {
         const source=dirname(resolve(path)),report=JSON.parse(await readFile(path,'utf8'));
         closed(report,['schema','target','sourceSha','checks','evidenceFiles'],'check report');

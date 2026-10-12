@@ -138,5 +138,5 @@ test('release cancellation retains the finite diagnostics without relaxing publi
     assert.match(workflow,/- name: Preserve finite failure diagnostics\n\s+if: failure\(\) \|\| cancelled\(\)\n\s+uses: actions\/upload-artifact@[a-f0-9]{40}/);
     assert.equal([...workflow.matchAll(/contents: write/g)].length,1);
     assert.match(workflow,/if: github.event_name == 'push' && startsWith\(github.ref, 'refs\/tags\/desktop-v'\)/);
-    assert.match(workflow,/needs: \[quality, build\]/);
+    assert.match(workflow,/collect:\n\s+needs: build/);
 });

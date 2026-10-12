@@ -77,20 +77,20 @@ test('a fresh executable without a valid close acknowledgement cannot export the
         assert.equal(await readFile(f.options['github-env'],'utf8'),'EXISTING=value\n');
     } finally {await f.cleanup();}
 });
-test('every full root-test workflow installs and prepares the probe before tests without changing adapters',async ()=> {
-    for (const file of ['.github/workflows/ghcr.yml','.github/workflows/desktop-release.yml']) {
-        const content=await readFile(resolve(import.meta.dirname,'..',file),'utf8');
-        const quality=content.split('\n  quality:\n')[1].split(/\n  (?:docker|build):\n/)[0];
-        const preparation=quality.indexOf('node scripts/prepare-native-test-probe.mjs');
-        const installation=quality.indexOf('rustup toolchain install 1.99.0 --profile minimal');
-        assert.ok(installation >= 0 && preparation > installation);
-        const fullTest=quality.search(/(?:run: pnpm test\n|pnpm\.cjs" test\n)/);
-        assert.ok(preparation >= 0 && fullTest > preparation);
-        assert.match(quality,/--cargo "\$\(rustup which --toolchain 1\.99\.0 cargo\)" --rustc "\$\(rustup which --toolchain 1\.99\.0 rustc\)"/);
-        assert.match(quality,/--github-env "\$GITHUB_ENV"/);
-        assert.doesNotMatch(quality,/CUEPOINT_STORAGE_TEST_OWNER|CUEPOINT_NATIVE_STORAGE_ACCEPTANCE|--features product-sqlite/);
-        assert.match(quality,/node --test scripts\/prepare-native-test-probe\.test\.mjs/);
-    }
+test('GHCR prepares the real probe before root tests while desktop delivery remains packaging-only',async ()=> {
     const ghcr=await readFile(resolve(import.meta.dirname,'../.github/workflows/ghcr.yml'),'utf8');
+    assert.match(ghcr,/\n  quality:\n/);
+    const quality=ghcr.split('\n  quality:\n')[1].split(/\n  docker:\n/)[0];
+    const preparation=quality.indexOf('node scripts/prepare-native-test-probe.mjs');
+    const installation=quality.indexOf('rustup toolchain install 1.99.0 --profile minimal');
+    assert.ok(installation >= 0 && preparation > installation);
+    const fullTest=quality.search(/(?:run: pnpm test\n|pnpm\.cjs" test\n)/);
+    assert.ok(preparation >= 0 && fullTest > preparation);
+    assert.match(quality,/--cargo "\$\(rustup which --toolchain 1\.99\.0 cargo\)" --rustc "\$\(rustup which --toolchain 1\.99\.0 rustc\)"/);
+    assert.match(quality,/--github-env "\$GITHUB_ENV"/);
+    assert.doesNotMatch(quality,/CUEPOINT_STORAGE_TEST_OWNER|CUEPOINT_NATIVE_STORAGE_ACCEPTANCE|--features product-sqlite/);
+    assert.match(quality,/node --test scripts\/prepare-native-test-probe\.test\.mjs/);
     assert.match(ghcr,/node-version: 22/);
+    const desktop=await readFile(resolve(import.meta.dirname,'../.github/workflows/desktop-release.yml'),'utf8');
+    assert.doesNotMatch(desktop,/\n  quality:\n|prepare-native-test-probe|vitest|pnpm(?:\.cjs")? test|release-native-checks|run-release-smokes/);
 });

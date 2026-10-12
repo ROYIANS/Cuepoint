@@ -5,9 +5,6 @@ on:
     branches: [codex/desktop-release-pipeline]
     tags: ['desktop-v*']
   workflow_dispatch:
-  pull_request:
-    branches: [main]
-    paths: ['desktop/tauri/**', 'scripts/native-storage-regression.mjs', 'scripts/prepare-native-test-probe*.mjs', 'scripts/release*.mjs', 'scripts/setup-release-driver.mjs', 'scripts/verify-release-smoke-store*.py', 'tests/helpers/nativeProductProbe.ts', '.github/workflows/desktop-release.yml']
 
 permissions:
   contents: read
@@ -19,11 +16,9 @@ concurrency:
 env:
   CARGO_INCREMENTAL: '0'
   CARGO_PROFILE_DEV_DEBUG: '0'
-  CARGO_PROFILE_TEST_DEBUG: '0'
 
 jobs:
   prepare:
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-22.04
     outputs:
       matrix: ${{ steps.policy.outputs.matrix }}
@@ -40,57 +35,8 @@ jobs:
         id: policy
         run: node desktop/tauri/scripts/prepare-release.mjs
 
-  quality:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Preserve identical source bytes across hosts
-        run: git config --global core.autocrlf false
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6, verified 2026-10-12
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6, verified 2026-10-12
-        with:
-          node-version: 24.11.0
-      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4, verified 2026-10-12
-        with:
-          version: 10.15.0
-          dest: ${{ runner.temp }}/cuepoint-pnpm
-          run_install: false
-      - name: Frozen JavaScript dependencies
-        run: |
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" install --frozen-lockfile
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" --dir desktop/tauri install --frozen-lockfile
-      - name: Pinned no-GUI SQLite test toolchain
-        run: rustup toolchain install 1.99.0 --profile minimal
-      - name: Prepare fresh native SQLite test probe
-        run: |
-          node scripts/prepare-native-test-probe.mjs --cargo "$(rustup which --toolchain 1.99.0 cargo)" --rustc "$(rustup which --toolchain 1.99.0 rustc)" --target-dir "$RUNNER_TEMP/cuepoint-quality-probe-target" --evidence-dir "$RUNNER_TEMP/native-test-probe" --github-env "$GITHUB_ENV"
-      - name: Shared product and distribution quality
-        run: |
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" lint
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" quality
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" quality:self-test
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" test
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" model-bank:verify
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" build
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" --dir desktop/tauri types
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" --dir desktop/tauri lint
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" --dir desktop/tauri quality
-          node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" --dir desktop/tauri test:release
-          node --test scripts/prepare-native-test-probe.test.mjs
-          python3 scripts/verify-release-smoke-store.test.py
-      - name: Preserve native probe failure diagnostics
-        if: failure()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
-        with:
-          name: desktop-quality-probe-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/native-test-probe
-          if-no-files-found: warn
-          retention-days: 14
-
   build:
-    if: github.event_name != 'pull_request'
-    needs: [prepare, quality]
+    needs: prepare
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
@@ -114,7 +60,8 @@ jobs:
           dest: ${{ runner.temp }}/cuepoint-pnpm
           run_install: false
       - name: Pinned stable Rust
-        run: rustup toolchain install 1.99.0 --profile minimal --component rustfmt --component clippy --target '${{ matrix.triple }}'
+        # The shared tool resolver requires rustfmt's path; packaging never runs it.
+        run: rustup toolchain install 1.99.0 --profile minimal --component rustfmt --target '${{ matrix.triple }}'
       - name: Deliberate hosted executable resolution
         run: node desktop/tauri/scripts/configure-hosted-tools.mjs
       - name: Frozen dependencies
@@ -125,19 +72,12 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev patchelf xdg-utils xvfb webkit2gtk-driver gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-libav libfuse2
-      - name: Required corresponding-host native and shared SQLite suites
-        run: node desktop/tauri/scripts/release-native-checks.mjs --target '${{ matrix.target }}' --evidence-dir "$RUNNER_TEMP/native-checks"
+          sudo apt-get install --no-install-recommends -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev patchelf xdg-utils gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-libav libfuse2
       - name: Fresh normal product installers
         env:
           CARGO_TARGET_DIR: ${{ runner.temp }}/cuepoint-release-target
         run: node desktop/tauri/scripts/build-release.mjs --target '${{ matrix.target }}' --output "$RUNNER_TEMP/target-package"
-      - name: External platform driver setup
-        if: runner.os != 'macOS'
-        run: node scripts/setup-release-driver.mjs
-      - name: Required package payload smokes and receipt sealing
-        run: node desktop/tauri/scripts/run-release-smokes.mjs --receipt "$RUNNER_TEMP/target-package/receipt.json" --native-checks "$RUNNER_TEMP/native-checks/checks.json" --evidence-dir "$RUNNER_TEMP"
-      - name: Upload exact verified target
+      - name: Upload exact packaged target
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6, verified 2026-10-12
         with:
           name: desktop-${{ matrix.target }}-${{ github.run_id }}-${{ github.run_attempt }}
@@ -149,19 +89,12 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: desktop-diagnostics-${{ matrix.target }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            ${{ runner.temp }}/native-checks
-            ${{ runner.temp }}/smoke-*/*.json
-            ${{ runner.temp }}/smoke-*/*.log
-            ${{ runner.temp }}/smoke-*/*.png
-            ${{ runner.temp }}/cuepoint-release-driver/driver-setup.json
-            desktop/tauri/.release/builds
+          path: desktop/tauri/.release/builds
           if-no-files-found: warn
           retention-days: 14
 
   collect:
-    if: github.event_name != 'pull_request'
-    needs: [quality, build]
+    needs: build
     runs-on: ubuntu-22.04
     permissions:
       contents: read

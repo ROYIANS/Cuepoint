@@ -12,18 +12,19 @@ import {releaseBuildArguments} from './build-release.mjs';
 
 const context={repository:'ROYIANS/Cuepoint',workflow:WORKFLOW,sourceSha:'a'.repeat(40),event:'push',mode:'draft',tag:'desktop-v0.1.0',runId:'42',attempt:2,version:'0.1.0'};
 const clone=value=>JSON.parse(JSON.stringify(value));
-async function fixture() {
+async function fixture({state='packaged'}={}) {
     const root=await mkdtemp(join(tmpdir(),'cuepoint-release-tests-')),directories=[],selections=[];
     for (const [index,target] of Object.values(TARGETS).entries()) {
-        const path=join(root,target.id);await mkdir(path);await mkdir(join(path,'assets'));await mkdir(join(path,'evidence'));
+        const path=join(root,target.id);await mkdir(path);await mkdir(join(path,'assets'));
         const assets=[];
         for (const format of target.formats) {
             const name=assetName(target.id,context.version,format),bytes=Buffer.from(`real-fixture-${target.id}-${format}`);
             await writeFile(join(path,'assets',name),bytes);assets.push({name,format,bytes:bytes.length,sha256:sha256(bytes)});
         }
-        const evidence=Buffer.from(JSON.stringify({fixture:true,target:target.id}));await writeFile(join(path,'evidence/report.json'),evidence);
+        const evidence=Buffer.from(JSON.stringify({fixture:true,target:target.id}));
+        if (state === 'verified') {await mkdir(join(path,'evidence'));await writeFile(join(path,'evidence/report.json'),evidence);}
         const frontendFiles={'index.html':sha256('normal-root-frontend')};
-        const receipt={schema:1,state:'verified',policyHash:policyHash(),context:{...context,attempt:index % 2+1},target:Object.fromEntries(['id','platform','arch','runner','triple'].map(key=>[key,target[key]])),product:{...PRODUCT,signing:target.signing},tools:{versions:TOOL_VERSIONS,executables:{cargo:'/fake/cargo'},host:{platform:target.platform,arch:target.arch}},inputs:{sourceBefore:{'package.json':sha256('source')},sourceAfter:{'package.json':sha256('source')}},payload:{executableSha256:sha256('executable'),frontendFiles,frontendSha256:sha256(JSON.stringify(frontendFiles))},assets,checks:target.requiredChecks.map(name=>({name,status:'passed',evidence:'evidence/report.json'})),evidenceFiles:[{path:'evidence/report.json',bytes:evidence.length,sha256:sha256(evidence)}]};
+        const receipt={schema:1,state,policyHash:policyHash(),context:{...context,attempt:index % 2+1},target:Object.fromEntries(['id','platform','arch','runner','triple'].map(key=>[key,target[key]])),product:{...PRODUCT,signing:target.signing},tools:{versions:TOOL_VERSIONS,executables:{cargo:'/fake/cargo'},host:{platform:target.platform,arch:target.arch}},inputs:{sourceBefore:{'package.json':sha256('source')},sourceAfter:{'package.json':sha256('source')}},payload:{executableSha256:sha256('executable'),frontendFiles,frontendSha256:sha256(JSON.stringify(frontendFiles))},assets,checks:state === 'verified' ? target.requiredChecks.map(name=>({name,status:'passed',evidence:'evidence/report.json'})) : [],evidenceFiles:state === 'verified' ? [{path:'evidence/report.json',bytes:evidence.length,sha256:sha256(evidence)}] : []};
         await writeFile(join(path,'receipt.json'),JSON.stringify(receipt));directories.push(path);
         selections.push({id:index+1,name:`desktop-${target.id}-${context.runId}-${receipt.context.attempt}`,target:target.id,attempt:receipt.context.attempt,runId:context.runId});
     }
@@ -60,12 +61,27 @@ test('release commands preserve Mac app receipts and disable per-format executab
     }
     assert.throws(()=>releaseBuildArguments('unsupported'));
 });
-test('collector accepts four targets across explicit attempts of one run and emits five installers',async ()=> {
+test('collector accepts four packaged targets across explicit attempts and emits five installers without test claims',async ()=> {
     const f=await fixture();try {
         const manifest=await collectArtifacts(f.directories,f.output,context,f.selections);
         assert.equal(manifest.installers.length,5);assert.equal(manifest.targets.length,4);
+        for (const {receipt} of manifest.targets) {assert.equal(receipt.state,'packaged');assert.deepEqual(receipt.checks,[]);assert.deepEqual(receipt.evidenceFiles,[]);}
+        assert.match(manifest.limitations.join('\n'),/Packaging-only delivery/);
+        assert.match(manifest.limitations.join('\n'),/no automated tests, application launch or runtime acceptance/);
+        assert.match(manifest.limitations.join('\n'),/owner performs functional testing before public publication/);
+        assert.doesNotMatch(manifest.limitations.join('\n'),/smoke proves|smoke launches/);
         assert.deepEqual(await verifyReleaseDirectory(f.output),manifest);
         assert.equal((await readFile(join(f.output,'SHA256SUMS'),'utf8')).split('\n').filter(Boolean).length,5);
+    } finally {await f.cleanup();}
+});
+test('explicit verified artifacts still require and retain their hashed check evidence',async ()=> {
+    const f=await fixture({state:'verified'});try {
+        const manifest=await collectArtifacts(f.directories,f.output,context,f.selections);
+        assert.deepEqual(await verifyReleaseDirectory(f.output),manifest);
+        for (const {receipt} of manifest.targets) assert.equal(receipt.checks.length,TARGETS[receipt.target.id].requiredChecks.length);
+        assert.doesNotMatch(manifest.limitations.join('\n'),/Packaging-only delivery/);
+        await writeFile(join(f.directories[0],'evidence/report.json'),'changed evidence');
+        await assert.rejects(verifyTargetDirectory(f.directories[0],context),/checksum/);
     } finally {await f.cleanup();}
 });
 test('release revalidation rejects changed artifact provenance and divergent source inputs',async ()=> {
@@ -78,6 +94,8 @@ test('release revalidation rejects changed artifact provenance and divergent sou
         manifest=>manifest.targets[0].artifact.extra=true,
         manifest=>manifest.context.extra=true,
         manifest=>manifest.context.event='workflow_dispatch',
+        manifest=>manifest.limitations=['All software tests passed'],
+        manifest=>manifest.targets[0].receipt.state='verified',
         manifest=>{manifest.targets[1].receipt.inputs.sourceBefore['package.json']=sha256('different source');manifest.targets[1].receipt.inputs.sourceAfter['package.json']=sha256('different source');},
     ]) {
         const f=await fixture();try {
@@ -93,13 +111,23 @@ test('release revalidation rejects changed artifact provenance and divergent sou
 for (const [name,mutate] of [
     ['wrong source',r=>r.context.sourceSha='b'.repeat(40)],['wrong run',r=>r.context.runId='43'],['future attempt',r=>r.context.attempt=3],
     ['wrong owner',r=>r.product.storage='indexeddb'],['test hooks',r=>r.product.features.push('test-hooks')],['wrong architecture',r=>r.target.arch='arm'],
-    ['failed check',r=>r.checks[0].status='failed'],['missing check',r=>r.checks.pop()],['unknown check',r=>r.checks[0].name='invented'],
     ['changed input',r=>r.inputs.sourceAfter['package.json']='b'.repeat(64)],['unsafe filename',r=>r.assets[0].name='../escape'],
     ['extra field',r=>r.hidden=true],['wrong tool',r=>r.tools.versions={...r.tools.versions,pnpm:'11.0.0'}],
+    ['wrong build host',r=>r.tools.host.arch='arm'],['missing installer',r=>r.assets.pop()],['wrong signing',r=>r.product.signing='signed'],
+    ['building state',r=>r.state='building'],['invented state',r=>r.state='passed'],
+    ['fabricated passed check',r=>r.checks.push({name:'native-tests',status:'passed',evidence:'evidence/fake.json'})],
+    ['packaged evidence',r=>r.evidenceFiles.push({path:'evidence/fake.json',bytes:1,sha256:sha256('x')})],
+    ['malformed checks',r=>r.checks={}],['malformed evidence',r=>r.evidenceFiles=null],
 ]) test(`collector rejects ${name}`,async ()=> {
     const f=await fixture();try {await altered(f,0,mutate);await assert.rejects(collectArtifacts(f.directories,f.output,context,f.selections));} finally {await f.cleanup();}
 });
-test('collector hashes actual installer and evidence bytes, not claimed strings',async ()=> {
+for (const [name,mutate] of [
+    ['failed check',r=>r.checks[0].status='failed'],['missing check',r=>r.checks.pop()],['unknown check',r=>r.checks[0].name='invented'],
+    ['duplicate check',r=>r.checks[1]={...r.checks[0]}],['missing evidence',r=>r.evidenceFiles=[]],['missing check evidence',r=>r.checks[0].evidence='evidence/absent.json'],
+]) test(`explicit verified collector rejects ${name}`,async ()=> {
+    const f=await fixture({state:'verified'});try {await altered(f,0,mutate);await assert.rejects(collectArtifacts(f.directories,f.output,context,f.selections));} finally {await f.cleanup();}
+});
+test('collector hashes actual packaged installer bytes, not claimed strings',async ()=> {
     const f=await fixture();try {
         const receipt=JSON.parse(await readFile(join(f.directories[0],'receipt.json'),'utf8'));
         await writeFile(join(f.directories[0],'assets',receipt.assets[0].name),'mutated bytes');
@@ -122,15 +150,25 @@ test('collector refuses duplicate target or artifact identity and omitted target
         await assert.rejects(collectArtifacts([f.directories[0],f.directories[0],...f.directories.slice(2)],f.output,context,[f.selections[0],f.selections[0],...f.selections.slice(2)]));
     } finally {await f.cleanup();}
 });
-test('receipt sealing verifies exact runtime evidence and fails incomplete reports',async ()=> {
+for (const initialState of ['building','packaged']) test(`explicit receipt sealing from ${initialState} requires hashed check reports`,async ()=> {
     const f=await fixture();try {
         const root=f.directories[0],receiptPath=join(root,'receipt.json'),receipt=JSON.parse(await readFile(receiptPath,'utf8'));
-        receipt.state='building';receipt.checks=[];receipt.evidenceFiles=[];await rm(join(root,'evidence'),{recursive:true});await writeFile(receiptPath,JSON.stringify(receipt));
+        receipt.state=initialState;await writeFile(receiptPath,JSON.stringify(receipt));
         const reportDir=join(f.root,'checks');await mkdir(reportDir);await writeFile(join(reportDir,'report.json'),'actual check');
         const file={path:'report.json',bytes:12,sha256:sha256('actual check')};
         await writeFile(join(reportDir,'checks.json'),JSON.stringify({schema:1,target:receipt.target.id,sourceSha:context.sourceSha,checks:TARGETS[receipt.target.id].requiredChecks.map(name=>({name,status:'passed',evidence:file.path})),evidenceFiles:[file]}));
-        assert.equal((await copyCheckReports(receiptPath,[join(reportDir,'checks.json')])).state,'verified');
+        const sealed=await copyCheckReports(receiptPath,[join(reportDir,'checks.json')]);
+        assert.equal(sealed.state,'verified');assert.equal(sealed.checks.length,TARGETS[receipt.target.id].requiredChecks.length);
+        assert.deepEqual(await verifyTargetDirectory(root,context),sealed);
         await assert.rejects(copyCheckReports(receiptPath,[join(reportDir,'checks.json')]),/fresh/);
+    } finally {await f.cleanup();}
+});
+test('empty reports cannot turn a packaged receipt into a verified acceptance claim',async ()=> {
+    const f=await fixture();try {
+        const path=join(f.directories[0],'receipt.json');
+        await assert.rejects(copyCheckReports(path,[]),/Missing required/);
+        assert.equal(JSON.parse(await readFile(path,'utf8')).state,'packaged');
+        await verifyTargetDirectory(f.directories[0],context);
     } finally {await f.cleanup();}
 });
 
@@ -163,6 +201,8 @@ test('publisher leaves an incomplete owned draft on interruption and exact retry
         await assert.rejects(publishDraft(f.output,{api,context}),/interruption/);
         assert.match(state.releases[0].body,/"status":"incomplete"/);assert.equal(state.patches.length,0);assert.equal(state.assets.length,2);
         const result=await publishDraft(f.output,{api,context});assert.equal(result.assets.length,7);assert.equal(state.assets.length,7);assert.match(state.releases[0].body,/"status":"complete"/);
+        assert.match(state.releases[0].body,/Packaging-only delivery/);assert.match(state.releases[0].body,/owner performs functional testing before public publication/);
+        assert.doesNotMatch(state.releases[0].body,/smoke proves|smoke launches|All software tests passed/);
         const count=state.uploads;await publishDraft(f.output,{api,context});assert.equal(state.uploads,count);
         assert.ok(state.patches.every(patch=>patch.draft === true && patch.prerelease === true));
     } finally {await f.cleanup();}
@@ -250,5 +290,7 @@ test('workflow gates publisher to desktop tags and pins all external actions',as
     assert.equal([...workflow.matchAll(/contents: write/g)].length,1);
     for (const match of workflow.matchAll(/uses: ([^\s]+)/g)) assert.match(match[1],/^[\w-]+\/[\w-]+@[a-f0-9]{40}$/);
     assert.match(workflow,/matrix: \$\{\{ fromJSON\(needs.prepare.outputs.matrix\) \}\}/);
+    assert.match(workflow,/build:\n\s+needs: prepare/);assert.match(workflow,/collect:\n\s+needs: build/);
+    assert.doesNotMatch(workflow,/pull_request:|quality:\n|release-native-checks|release-product-smoke|finalize-release|prepare-native-test-probe|pnpm (?:test|lint|quality)|cargo (?:test|clippy|fmt)|tauri-driver|webkit2gtk-driver|xvfb/);
     assert.doesNotMatch(workflow,/pull_request_target|--clobber|draft: false|releaseDraft: false/);
 });

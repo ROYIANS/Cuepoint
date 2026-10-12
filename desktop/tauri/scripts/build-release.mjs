@@ -42,7 +42,8 @@ export function releaseBuildArguments(targetId) {
     const target=getTarget(targetId);
     // Preserve the intermediate signed Mac .app for the payload receipt while
     // delivering only DMG. Disable installer-type binary rewriting: this lane
-    // has no updater and verifies the same executable bytes in every format.
+    // has no updater and records the built executable hash without claiming
+    // installed/extracted payload parity or launching the application.
     return ['exec','tauri','build','--target',target.triple,'--bundles',target.bundles.join(','),'--features','product-sqlite','--no-binary-patching','--','--locked'];
 }
 export async function buildRelease(argv=process.argv.slice(2)) {
@@ -84,9 +85,9 @@ export async function buildRelease(argv=process.argv.slice(2)) {
     }
     const after=await sourceHashes();
     if (JSON.stringify(before) !== JSON.stringify(after) || git(['rev-parse','HEAD']) !== context.sourceSha || git(['status','--porcelain','--untracked-files=all'])) throw new Error('Source changed during packaging');
-    const receipt={schema:1,state:'building',policyHash:policyHash(),context,target:Object.fromEntries(['id','platform','arch','runner','triple'].map(key=>[key,target[key]])),product:{...PRODUCT,signing:target.signing},tools:{versions:TOOL_VERSIONS,executables:tools.tools,host:{platform:process.platform,arch:process.arch,osRelease:release(),hostname:hostname(),runnerImage:process.env.ImageVersion ?? null}},inputs:{sourceBefore:before,sourceAfter:after},payload:{executableSha256:payload.sha256,frontendFiles,frontendSha256:sha256(JSON.stringify(frontendFiles))},assets,checks:[],evidenceFiles:[]};
+    const receipt={schema:1,state:'packaged',policyHash:policyHash(),context,target:Object.fromEntries(['id','platform','arch','runner','triple'].map(key=>[key,target[key]])),product:{...PRODUCT,signing:target.signing},tools:{versions:TOOL_VERSIONS,executables:tools.tools,host:{platform:process.platform,arch:process.arch,osRelease:release(),hostname:hostname(),runnerImage:process.env.ImageVersion ?? null}},inputs:{sourceBefore:before,sourceAfter:after},payload:{executableSha256:payload.sha256,frontendFiles,frontendSha256:sha256(JSON.stringify(frontendFiles))},assets,checks:[],evidenceFiles:[]};
     await writeFile(resolve(output,'receipt.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});
-    console.log(`Built ${target.id}; unverified until native and payload checks seal ${relative(root,output)}`);
+    console.log(`Packaged ${target.id} at ${relative(root,output)}; no automated tests or runtime acceptance executed`);
     return receipt;
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await buildRelease();
