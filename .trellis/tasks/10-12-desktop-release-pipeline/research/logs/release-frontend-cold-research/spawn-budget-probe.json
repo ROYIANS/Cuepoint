@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "date": "2026-10-12",
+  "purpose": "Tiny actual spawned Node24 heap/argument handling; no frontend build",
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "--max-old-space-size=3072",
+    "-e",
+    "const {spawnSync}=require('node:child_process'); const {getHeapStatistics}=require('node:v8'); const code=\"console.log(JSON.stringify({execArgv:process.execArgv.slice(0,-2),heapSizeLimit:require('node:v8').getHeapStatistics().heap_size_limit}))\"; const run=args=>{const child=spawnSync(process.execPath,[...args,'-e',code],{encoding:'utf8',shell:false});return {status:child.status,signal:child.signal,result:JSON.parse(child.stdout)}}; console.log(JSON.stringify({node:process.version,platform:process.platform,arch:process.arch,parentHeapLimit:getHeapStatistics().heap_size_limit,hasNodeOptions:Boolean(process.env.NODE_OPTIONS),unforwarded:run([]),explicitFrontendBudget:run(['--max-old-space-size=4096'])}));"
+  ],
+  "exitCode": 0
+}

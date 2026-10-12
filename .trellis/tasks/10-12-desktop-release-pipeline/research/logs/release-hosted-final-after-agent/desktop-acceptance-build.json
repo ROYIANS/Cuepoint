@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/usr/bin/time",
+    "-l",
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "desktop/tauri/scripts/build-frontend.mjs",
+    "--acceptance"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 2.931570041,
+  "changedInputs": [],
+  "inputCount": 1016,
+  "compileOnlySyntheticEnvironment": {
+    "CUEPOINT_STREAM_ENDPOINT": "http://127.0.0.1:12345/v1",
+    "CUEPOINT_STREAM_TOKEN": "fixture-only-not-a-real-secret"
+  },
+  "reason": "Agent product input changed after prior acceptance checkpoint; final candidate compilation only, no app/media/provider run."
+}

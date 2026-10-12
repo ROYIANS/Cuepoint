@@ -1,0 +1,706 @@
+[36mvite v7.3.6 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 13195 modules transformed.
+rendering chunks...
+[33m[plugin vite:reporter] 
+(!) D:/a/Cuepoint/Cuepoint/node_modules/.pnpm/@tauri-apps+api@2.12.2/node_modules/@tauri-apps/api/core.js is dynamically imported by D:/a/Cuepoint/Cuepoint/src/lib/runtimePrint.ts but also statically imported by D:/a/Cuepoint/Cuepoint/node_modules/.pnpm/@tauri-apps+plugin-http@2.8.2/node_modules/@tauri-apps/plugin-http/dist-js/index.js, D:/a/Cuepoint/Cuepoint/src/db/database.ts, D:/a/Cuepoint/Cuepoint/src/lib/nativeSystemServices.ts, D:/a/Cuepoint/Cuepoint/src/lib/storage/nativeBinary.ts, dynamic import will not move module into another chunk.
+[39m
+[33m[plugin vite:reporter] 
+(!) D:/a/Cuepoint/Cuepoint/src/db/database.ts is dynamically imported by D:/a/Cuepoint/Cuepoint/src/lib/runtimeHttpPolicy.ts but also statically imported by D:/a/Cuepoint/Cuepoint/src/components/agent/CreatedEntityLinks.tsx, D:/a/Cuepoint/Cuepoint/src/components/agent/chatExecutionFlows.ts, D:/a/Cuepoint/Cuepoint/src/components/audio/AudioExports.tsx, D:/a/Cuepoint/Cuepoint/src/components/audio/AudioInspector.tsx, D:/a/Cuepoint/Cuepoint/src/components/audio/AudioSources.tsx, D:/a/Cuepoint/Cuepoint/src/components/audio/AudioWorkspacePage.tsx, D:/a/Cuepoint/Cuepoint/src/components/audio/ScriptDocument.tsx, D:/a/Cuepoint/Cuepoint/src/components/audio/SpeechControls.tsx, D:/a/Cuepoint/Cuepoint/src/components/audio/VoiceReferencePicker.tsx, D:/a/Cuepoint/Cuepoint/src/components/audioMusic/shared.tsx, D:/a/Cuepoint/Cuepoint/src/components/music/MusicCreation.tsx, D:/a/Cuepoint/Cuepoint/src/components/music/MusicWorkspacePage.tsx, D:/a/Cuepoint/Cuepoint/src/components/music/switchMusicVariant.ts, D:/a/Cuepoint/Cuepoint/src/db/agentContextPreview.ts, D:/a/Cuepoint/Cuepoint/src/db/agentFinalReview.ts, D:/a/Cuepoint/Cuepoint/src/db/agentFinishingCheck.ts, D:/a/Cuepoint/Cuepoint/src/db/agentGeneration.ts, D:/a/Cuepoint/Cuepoint/src/db/agentGenerationBatches.ts, D:/a/Cuepoint/Cuepoint/src/db/agentGenerationTarget.ts, D:/a/Cuepoint/Cuepoint/src/db/agentProjectCreation.ts, D:/a/Cuepoint/Cuepoint/src/db/agentRuns.ts, D:/a/Cuepoint/Cuepoint/src/db/agentSettings.ts, D:/a/Cuepoint/Cuepoint/src/db/agentTaskGuards.ts, D:/a/Cuepoint/Cuepoint/src/db/agentTaskRecords.ts, D:/a/Cuepoint/Cuepoint/src/db/agentTaskWrapups.ts, D:/a/Cuepoint/Cuepoint/src/db/agentTasks.ts, D:/a/Cuepoint/Cuepoint/src/db/agentToolRecovery.ts, D:/a/Cuepoint/Cuepoint/src/db/agentTools.ts, D:/a/Cuepoint/Cuepoint/src/db/assetReuse.ts, D:/a/Cuepoint/Cuepoint/src/db/assets.ts, D:/a/Cuepoint/Cuepoint/src/db/audio.ts, D:/a/Cuepoint/Cuepoint/src/db/audioArrangement.ts, D:/a/Cuepoint/Cuepoint/src/db/audioGeneration.ts, D:/a/Cuepoint/Cuepoint/src/db/audioGenerationBatches.ts, D:/a/Cuepoint/Cuepoint/src/db/audioShared.ts, D:/a/Cuepoint/Cuepoint/src/db/cascadeCommands.ts, D:/a/Cuepoint/Cuepoint/src/db/chat.ts, D:/a/Cuepoint/Cuepoint/src/db/connectors.ts, D:/a/Cuepoint/Cuepoint/src/db/contextSettings.ts, D:/a/Cuepoint/Cuepoint/src/db/episodes.ts, D:/a/Cuepoint/Cuepoint/src/db/generationPreferences.ts, D:/a/Cuepoint/Cuepoint/src/db/ipProfiles.ts, D:/a/Cuepoint/Cuepoint/src/db/materials.ts, D:/a/Cuepoint/Cuepoint/src/db/media.ts, D:/a/Cuepoint/Cuepoint/src/db/memoryRetrieval.ts, D:/a/Cuepoint/Cuepoint/src/db/music.ts, D:/a/Cuepoint/Cuepoint/src/db/productionProposals.ts, D:/a/Cuepoint/Cuepoint/src/db/productionShared.ts, D:/a/Cuepoint/Cuepoint/src/db/projectMemories.ts, D:/a/Cuepoint/Cuepoint/src/db/projects.ts, D:/a/Cuepoint/Cuepoint/src/db/references.ts, D:/a/Cuepoint/Cuepoint/src/db/searchConnections.ts, D:/a/Cuepoint/Cuepoint/src/db/shots.ts, D:/a/Cuepoint/Cuepoint/src/db/taskAudioGenerationEvidence.ts, D:/a/Cuepoint/Cuepoint/src/db/taskGenerationEvidence.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/audioArrangementTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/audioBatchTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/audioGenerationTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/audioProjectContext.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/audioTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/businessStore.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/businessTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/businessWriteReceipt.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/contextCompaction.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/finalReviewEvidence.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/generationBatchRuntime.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/generationPreparation.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/generationReview.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/generationRuntime.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/generationTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/imageDiscovery.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/imageQueue.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/ipTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/libraryToolHelpers.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/materialContent.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/materialImageInput.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/materialTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/memoryContext.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/memoryTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/musicGenerationReview.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/musicTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/projectContext.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/projectScope.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/referenceContext.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/referenceEvidence.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/referenceTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/runChat.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/runFinalReview.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/runOwnership.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/taskContext.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/taskTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/taskWrapup.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/toolLoading.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/tools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/webTools.ts, D:/a/Cuepoint/Cuepoint/src/lib/agent/wrapupEvidence.ts, D:/a/Cuepoint/Cuepoint/src/lib/ai/referenceWire.ts, D:/a/Cuepoint/Cuepoint/src/lib/ai/tavily.ts, D:/a/Cuepoint/Cuepoint/src/lib/audio/buffers.ts, D:/a/Cuepoint/Cuepoint/src/lib/audio/scriptImport.ts, D:/a/Cuepoint/Cuepoint/src/lib/audioGeneration/batchEvidence.ts, D:/a/Cuepoint/Cuepoint/src/lib/audioGeneration/batchPreparation.ts, D:/a/Cuepoint/Cuepoint/src/lib/audioGeneration/batchRuntime.ts, D:/a/Cuepoint/Cuepoint/src/lib/audioGeneration/outputEvidence.ts, D:/a/Cuepoint/Cuepoint/src/lib/audioGeneration/reference.ts, D:/a/Cuepoint/Cuepoint/src/lib/audioGeneration/runtime.ts, D:/a/Cuepoint/Cuepoint/src/lib/audioProjectPackage.ts, D:/a/Cuepoint/Cuepoint/src/lib/productionHandoff.ts, D:/a/Cuepoint/Cuepoint/src/lib/projectPackage.ts, D:/a/Cuepoint/Cuepoint/src/lib/references/import.ts, D:/a/Cuepoint/Cuepoint/src/lib/storage/hooks.ts, D:/a/Cuepoint/Cuepoint/src/lib/studioLibraryQueries.ts, D:/a/Cuepoint/Cuepoint/src/lib/videoWorkspaceRepository.tsx, D:/a/Cuepoint/Cuepoint/src/main.tsx, dynamic import will not move module into another chunk.
+[39m
+computing gzip size...
+[2mdesktop/tauri/dist/normal/[22m[32massets/CNS2-V-DgHqi_gL.bcmap                   [39m[1m[2m    0.09 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Roman-CGyUGrKi.bcmap                    [39m[1m[2m    0.10 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Katakana-DueN_6wN.bcmap                 [39m[1m[2m    0.10 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/ETenms-B5-H-DbS1LlRr.bcmap              [39m[1m[2m    0.10 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS-UCS2-HW-H-BfJ3t__Z.bcmap         [39m[1m[2m    0.12 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Hiragana-Dy6yEHKG.bcmap                 [39m[1m[2m    0.12 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Hankaku-SMDjWZXJ.bcmap                  [39m[1m[2m    0.13 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/B5-V-3ShXAXP7.bcmap                     [39m[1m[2m    0.14 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/CNS1-V-BUvSsmpl.bcmap                   [39m[1m[2m    0.14 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/B5pc-V-1X0fY8mT.bcmap                   [39m[1m[2m    0.14 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKdla-B5-V-CHovDFKh.bcmap               [39m[1m[2m    0.15 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKdlb-B5-V-CDfiFKye.bcmap               [39m[1m[2m    0.15 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKgccs-B5-V-Bb0FD7uo.bcmap              [39m[1m[2m    0.15 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKm314-B5-V-BrK5Z_J-.bcmap              [39m[1m[2m    0.15 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKm471-B5-V-B7Ks-vkf.bcmap              [39m[1m[2m    0.15 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniCNS-UCS2-V-CbsnO1ia.bcmap            [39m[1m[2m    0.16 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniCNS-UTF16-V-DoPO_42D.bcmap           [39m[1m[2m    0.16 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniCNS-UTF8-V-BD4cmnNX.bcmap            [39m[1m[2m    0.16 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/ETHK-B5-V-DmzBBgI2.bcmap                [39m[1m[2m    0.16 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/ETen-B5-V-CyIout1L.bcmap                [39m[1m[2m    0.16 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKscs-B5-V-CrljkNDo.bcmap               [39m[1m[2m    0.16 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSC-V-CDXb0xyy.bcmap                    [39m[1m[2m    0.16 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniCNS-UTF32-V-DpuHKqNE.bcmap           [39m[1m[2m    0.16 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSC-EUC-V-C8-Y2jkl.bcmap                [39m[1m[2m    0.16 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniKS-UTF16-V-EgvK-6IG.bcmap            [39m[1m[2m    0.16 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSC-Johab-V-CWzqnmVV.bcmap              [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSCms-UHC-V-DaEePsjg.bcmap              [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSCpc-EUC-V-Bd6pD5ID.bcmap              [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/V-BJkwLeFB.bcmap                        [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniKS-UTF32-V-CnOTbPsn.bcmap            [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/78-V-CJGcNX1t.bcmap                     [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSCms-UHC-HW-V-DKemUgQi.bcmap           [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniKS-UTF8-V-BIFFPWWm.bcmap             [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/EUC-V-BQ9CW2K_.bcmap                    [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/RKSJ-V-CVQ5ujKs.bcmap                   [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/ETenms-B5-V-DsL3AkeM.bcmap              [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/78-EUC-V-ChJxef36.bcmap                 [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/78-RKSJ-V-CyaguwXf.bcmap                [39m[1m[2m    0.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GB-V-DQcXdwec.bcmap                     [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBT-V-DVsZ47Yj.bcmap                    [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniGB-UTF16-V-E1RoE6KW.bcmap            [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniKS-UCS2-V-ahlksFWQ.bcmap             [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GB-EUC-V-DUJE8ZfE.bcmap                 [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/WP-Symbol-C3zzKJnO.bcmap                [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBK-EUC-V-bmo5E_xa.bcmap                [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBT-EUC-V-CCaONgYB.bcmap                [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBKp-EUC-V-FKuJrjD8.bcmap               [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBpc-EUC-V-BNBtOgzw.bcmap               [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniGB-UTF8-V-C8SGUjFI.bcmap             [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBTpc-EUC-V-D_dpKF5g.bcmap              [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniGB-UTF32-V-BFm4myiz.bcmap            [39m[1m[2m    0.18 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniGB-UCS2-V-COOBrDBb.bcmap             [39m[1m[2m    0.19 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Ext-V-ByyLJMVu.bcmap                    [39m[1m[2m    0.22 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-GB1-0-DCLN2jmY.bcmap              [39m[1m[2m    0.22 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Ext-RKSJ-V-gySMsgy2.bcmap               [39m[1m[2m    0.22 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBK2K-V-VEqjiYVJ.bcmap                  [39m[1m[2m    0.22 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Japan1-0-7ueYY-cc.bcmap           [39m[1m[2m    0.23 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Japan1-1-DymoVrld.bcmap           [39m[1m[2m    0.23 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Japan1-2-WYxwCoVU.bcmap           [39m[1m[2m    0.23 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Korea1-0-A0Ew6GJu.bcmap           [39m[1m[2m    0.24 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Japan1-3-DU7EG9_k.bcmap           [39m[1m[2m    0.24 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-GB1-1-C_oGAEc2.bcmap              [39m[1m[2m    0.25 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/NWP-V-DvbaGBQ0.bcmap                    [39m[1m[2m    0.25 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/90pv-RKSJ-V-BuoQaCHG.bcmap              [39m[1m[2m    0.26 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Add-V-CzFvKnCs.bcmap                    [39m[1m[2m    0.28 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Add-RKSJ-V-C7YDsPzV.bcmap               [39m[1m[2m    0.29 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/78ms-RKSJ-V-4hl06FMz.bcmap              [39m[1m[2m    0.29 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/90ms-RKSJ-V-BbstlayK.bcmap              [39m[1m[2m    0.29 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/90msp-RKSJ-V-BWep_0YK.bcmap             [39m[1m[2m    0.29 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-CNS1-0-CfVBOElR.bcmap             [39m[1m[2m    0.32 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Japan1-4-CPqEnWe7.bcmap           [39m[1m[2m    0.34 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-CNS1-1-Cs9TI-Yv.bcmap             [39m[1m[2m    0.37 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-CNS1-2-D3SWzMKj.bcmap             [39m[1m[2m    0.38 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Korea1-1-DFSgDZ4w.bcmap           [39m[1m[2m    0.39 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Korea1-2-LZ89XEQ6.bcmap           [39m[1m[2m    0.39 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-CNS1-3-BNxX-hNa.bcmap             [39m[1m[2m    0.40 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-CNS1-4-uApBOf1n.bcmap             [39m[1m[2m    0.41 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-CNS1-5-BWUfkzOP.bcmap             [39m[1m[2m    0.41 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-CNS1-6-DfjBny4_.bcmap             [39m[1m[2m    0.41 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Japan1-5-CyFviWdc.bcmap           [39m[1m[2m    0.43 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-GB1-2-BT5g0uLo.bcmap              [39m[1m[2m    0.47 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-GB1-3-BWe_tZZF.bcmap              [39m[1m[2m    0.47 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Japan1-6-8p9YIft8.bcmap           [39m[1m[2m    0.49 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/CNS2-H-COHfjmw4.bcmap                   [39m[1m[2m    0.50 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GB-H-CjAQlF1j.bcmap                     [39m[1m[2m    0.53 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/RKSJ-H-CotmKIAY.bcmap                   [39m[1m[2m    0.53 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GB-EUC-H-OgfW-rVY.bcmap                 [39m[1m[2m    0.55 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/H-BJYV6_el.bcmap                        [39m[1m[2m    0.55 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBpc-EUC-H-4mXfmDQd.bcmap               [39m[1m[2m    0.56 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/EUC-H-D0J4HUB1.bcmap                    [39m[1m[2m    0.58 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-GB1-4-CYF1KDey.bcmap              [39m[1m[2m    0.60 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-GB1-5-B89PBerI.bcmap              [39m[1m[2m    0.63 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS-UTF16-V-DfK_Aqy1.bcmap           [39m[1m[2m    0.64 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS2004-UTF16-V-BSHgoaRy.bcmap       [39m[1m[2m    0.65 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS-UCS2-V-Cr3xs5m4.bcmap            [39m[1m[2m    0.66 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS-UTF32-V-0rh54ED3.bcmap           [39m[1m[2m    0.68 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS-UTF8-V-BGWFHinB.bcmap            [39m[1m[2m    0.68 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS-UCS2-HW-V-BZyQaeYZ.bcmap         [39m[1m[2m    0.68 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS2004-UTF32-V-CH3k_ouF.bcmap       [39m[1m[2m    0.68 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS2004-UTF8-V-D8AJhywu.bcmap        [39m[1m[2m    0.68 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJISX0213-UTF32-V-Cz7JBDr9.bcmap      [39m[1m[2m    0.68 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJISX02132004-UTF32-V-BqqDIAe5.bcmap  [39m[1m[2m    0.69 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJISPro-UCS2-V-BpvX7JBA.bcmap         [39m[1m[2m    0.69 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJISPro-UCS2-HW-V-DLNkNO1x.bcmap      [39m[1m[2m    0.71 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/CNS1-H-DAbVz1sI.bcmap                   [39m[1m[2m    0.71 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/90msp-RKSJ-H-GTsoumJQ.bcmap             [39m[1m[2m    0.72 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/90ms-RKSJ-H-Bhsfh4Ys.bcmap              [39m[1m[2m    0.72 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJISPro-UTF8-V-Db5K6XXE.bcmap         [39m[1m[2m    0.73 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/83pv-RKSJ-H-DNQtuaxs.bcmap              [39m[1m[2m    0.91 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32mindex.html                                     [39m[1m[2m    0.96 kB[22m[1m[22m[2m │ gzip:     0.47 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/90pv-RKSJ-H-DOcWKG7K.bcmap              [39m[1m[2m    0.98 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/B5-H-Cw4_8on0.bcmap                     [39m[1m[2m    1.09 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/B5pc-H-BLVOWhvh.bcmap                   [39m[1m[2m    1.10 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/ETen-B5-H-BUa4x82H.bcmap                [39m[1m[2m    1.13 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKm314-B5-H-CUeI2x46.bcmap              [39m[1m[2m    1.77 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/CNS-EUC-H-C1HifF4e.bcmap                [39m[1m[2m    1.78 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSC-H-CUtFgdXl.bcmap                    [39m[1m[2m    1.83 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSC-EUC-H-CYoqfsaA.bcmap                [39m[1m[2m    1.85 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/CNS-EUC-V-DYWNmJNX.bcmap                [39m[1m[2m    1.92 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSCpc-EUC-H-BxNLD7US.bcmap              [39m[1m[2m    2.02 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKm471-B5-H-B_3IWC_G.bcmap              [39m[1m[2m    2.17 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKgccs-B5-H-BSg_4Hb2.bcmap              [39m[1m[2m    2.29 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/78-H-CSvm1opZ.bcmap                     [39m[1m[2m    2.38 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/78-RKSJ-H-34XPL1-s.bcmap                [39m[1m[2m    2.40 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/78-EUC-H-Uf9aYsyl.bcmap                 [39m[1m[2m    2.40 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Add-RKSJ-H-BpPRzomz.bcmap               [39m[1m[2m    2.41 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKdlb-B5-H-Bf7o2mkD.bcmap               [39m[1m[2m    2.41 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Add-H-1H-FQZVX.bcmap                    [39m[1m[2m    2.42 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Ext-H-BSOXjlXj.bcmap                    [39m[1m[2m    2.54 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Ext-RKSJ-H-DGTwwnmY.bcmap               [39m[1m[2m    2.54 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/78ms-RKSJ-H-BuwLY695.bcmap              [39m[1m[2m    2.65 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKdla-B5-H-Bg4tZIUs.bcmap               [39m[1m[2m    2.65 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/NWP-H-BSh0nlh5.bcmap                    [39m[1m[2m    2.77 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSCms-UHC-H-i6eA63f9.bcmap              [39m[1m[2m    2.79 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSCms-UHC-HW-H-lQjjyo98.bcmap           [39m[1m[2m    2.79 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/ETHK-B5-H-1MLb5v9x.bcmap                [39m[1m[2m    4.43 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/HKscs-B5-H-CXbBbq6g.bcmap               [39m[1m[2m    4.44 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBT-H-DL9h-WkS.bcmap                    [39m[1m[2m    7.27 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBT-EUC-H-BTsQIL1M.bcmap                [39m[1m[2m    7.29 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBTpc-EUC-H-DnIh5WJ3.bcmap              [39m[1m[2m    7.30 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBKp-EUC-H-CElrnV5g.bcmap               [39m[1m[2m   14.69 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBK-EUC-H-CAORqCkf.bcmap                [39m[1m[2m   14.69 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/FoxitSymbol-BVtbc20u.pfb                [39m[1m[2m   16.73 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/KSC-Johab-H-CGtV3MPT.bcmap              [39m[1m[2m   16.79 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/FoxitFixed-Dyd5Nipw.pfb                 [39m[1m[2m   17.60 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/FoxitFixedBold-D5TuYRwj.pfb             [39m[1m[2m   18.06 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/FoxitFixedItalic-DqjQkmbS.pfb           [39m[1m[2m   18.75 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/FoxitFixedBoldItalic-BqlXQ_Yv.pfb       [39m[1m[2m   19.15 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/FoxitSerifBold-DZZ4CclT.pfb             [39m[1m[2m   19.40 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/FoxitSerif-qbgiDIe-.pfb                 [39m[1m[2m   19.47 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/GBK2K-H-Cv55KPk8.bcmap                  [39m[1m[2m   19.66 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/FoxitSerifBoldItalic-DSQtwd_X.pfb       [39m[1m[2m   20.73 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/FoxitSerifItalic-CQs5lx9Y.pfb           [39m[1m[2m   21.23 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Korea1-UCS2-BEQZuOdo.bcmap        [39m[1m[2m   23.29 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS-UCS2-H-2DbZ0MaQ.bcmap            [39m[1m[2m   25.44 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniKS-UCS2-H-YeUc7k1L.bcmap             [39m[1m[2m   25.78 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniKS-UTF16-H-B0dvB-Td.bcmap            [39m[1m[2m   26.33 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniKS-UTF32-H-olR_LtmR.bcmap            [39m[1m[2m   26.45 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniKS-UTF8-H-CbpebD-y.bcmap             [39m[1m[2m   27.79 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/FoxitDingbats-BaQLufoW.pfb              [39m[1m[2m   29.51 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-GB1-UCS2-BA083yIo.bcmap           [39m[1m[2m   33.97 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS-UTF16-H-BlDDPdCK.bcmap           [39m[1m[2m   39.44 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS2004-UTF16-H-KXixH-HI.bcmap       [39m[1m[2m   39.53 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJISX0213-UTF32-H-BavAhZjb.bcmap      [39m[1m[2m   40.52 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS-UTF32-H-BIQPWkjv.bcmap           [39m[1m[2m   40.54 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJISX02132004-UTF32-H-DAH-AgUq.bcmap  [39m[1m[2m   40.61 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS2004-UTF32-H-CXrD-9YE.bcmap       [39m[1m[2m   40.63 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-Japan1-UCS2-BL-4M2vS.bcmap        [39m[1m[2m   40.95 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/Adobe-CNS1-UCS2-fO900upv.bcmap          [39m[1m[2m   41.19 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS-UTF8-H-CGusholx.bcmap            [39m[1m[2m   41.70 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniJIS2004-UTF8-H-BkOctZjn.bcmap        [39m[1m[2m   41.78 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniGB-UCS2-H-D7xzRvZN.bcmap             [39m[1m[2m   43.37 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniGB-UTF16-H-DKjbEwc0.bcmap            [39m[1m[2m   44.09 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniGB-UTF32-H-Behfouj5.bcmap            [39m[1m[2m   45.74 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniGB-UTF8-H-EROft1ro.bcmap             [39m[1m[2m   46.84 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniCNS-UCS2-H-DWzv8UhH.bcmap            [39m[1m[2m   48.28 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniCNS-UTF16-H-Bw0JKgCq.bcmap           [39m[1m[2m   50.42 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniCNS-UTF32-H-IE_GrH2i.bcmap           [39m[1m[2m   52.68 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/UniCNS-UTF8-H-BbLcFh6Q.bcmap            [39m[1m[2m   53.63 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/LiberationSans-BoldItalic-Bj53-jFw.ttf  [39m[1m[2m  135.12 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/LiberationSans-Bold-BPt4bU5Z.ttf        [39m[1m[2m  137.05 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/LiberationSans-Regular-cbskN6YR.ttf     [39m[1m[2m  139.51 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/LiberationSans-Italic-5QhGB3P9.ttf      [39m[1m[2m  162.04 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/docx.worker-D6l3sNo2.js                 [39m[1m[2m  600.15 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[32massets/pdf.worker.min-LyOxJPrg.mjs             [39m[1m[2m1,072.84 kB[22m[1m[22m
+[2mdesktop/tauri/dist/normal/[22m[35massets/MessageList-SMBnSpKm.css                [39m[1m[2m   17.15 kB[22m[1m[22m[2m │ gzip:     3.42 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[35massets/index-0i3mOYi-.css                      [39m[1m[2m  211.49 kB[22m[1m[22m[2m │ gzip:    34.54 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/codeowners-Bp6g37R7.js                  [39m[1m[2m    0.55 kB[22m[1m[22m[2m │ gzip:     0.32 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/useFillId-DdzehsRJ.js                   [39m[1m[2m    0.67 kB[22m[1m[22m[2m │ gzip:     0.38 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/shellsession-BADoaaVG.js                [39m[1m[2m    0.71 kB[22m[1m[22m[2m │ gzip:     0.43 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/tsv-B_m7g4N7.js                         [39m[1m[2m    0.74 kB[22m[1m[22m[2m │ gzip:     0.34 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/html-derivative-DlHx6ybY.js             [39m[1m[2m    0.90 kB[22m[1m[22m[2m │ gzip:     0.50 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/git-rebase-r7XF79zn.js                  [39m[1m[2m    0.98 kB[22m[1m[22m[2m │ gzip:     0.44 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/qmldir-C8lEn-DE.js                      [39m[1m[2m    1.00 kB[22m[1m[22m[2m │ gzip:     0.45 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/csv-fuZLfV_i.js                         [39m[1m[2m    1.14 kB[22m[1m[22m[2m │ gzip:     0.37 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/git-commit-F4YmCXRG.js                  [39m[1m[2m    1.23 kB[22m[1m[22m[2m │ gzip:     0.53 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/xsl-CtQFsRM5.js                         [39m[1m[2m    1.39 kB[22m[1m[22m[2m │ gzip:     0.52 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/dotenv-Da5cRb03.js                      [39m[1m[2m    1.42 kB[22m[1m[22m[2m │ gzip:     0.53 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/sparql-rVzFXLq3.js                      [39m[1m[2m    1.48 kB[22m[1m[22m[2m │ gzip:     0.82 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ini-BEwlwnbL.js                         [39m[1m[2m    1.53 kB[22m[1m[22m[2m │ gzip:     0.50 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/fortran-fixed-form-CkoXwp7k.js          [39m[1m[2m    1.67 kB[22m[1m[22m[2m │ gzip:     0.69 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/docker-BcOcwvcX.js                      [39m[1m[2m    1.74 kB[22m[1m[22m[2m │ gzip:     0.60 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/desktop-BmXAJ9_W.js                     [39m[1m[2m    1.83 kB[22m[1m[22m[2m │ gzip:     0.76 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/hxml-2-FPmUDs.js                        [39m[1m[2m    1.89 kB[22m[1m[22m[2m │ gzip:     0.90 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DJh7_GSf.js                       [39m[1m[2m    1.97 kB[22m[1m[22m[2m │ gzip:     0.90 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/wenyan-BV7otONQ.js                      [39m[1m[2m    2.16 kB[22m[1m[22m[2m │ gzip:     1.09 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/jssm-C2t-YnRu.js                        [39m[1m[2m    2.24 kB[22m[1m[22m[2m │ gzip:     0.62 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/reg-C-SQnVFl.js                         [39m[1m[2m    2.35 kB[22m[1m[22m[2m │ gzip:     0.70 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/edge-FbVlp4U3.js                        [39m[1m[2m    2.36 kB[22m[1m[22m[2m │ gzip:     0.70 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Buzeel3J.js                       [39m[1m[2m    2.49 kB[22m[1m[22m[2m │ gzip:     1.17 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/diff-D97Zzqfu.js                        [39m[1m[2m    2.57 kB[22m[1m[22m[2m │ gzip:     0.70 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gleam-BspZqrRM.js                       [39m[1m[2m    2.58 kB[22m[1m[22m[2m │ gzip:     0.82 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CRvXLAHf.js                       [39m[1m[2m    2.58 kB[22m[1m[22m[2m │ gzip:     1.19 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/erb-DXfck5VN.js                         [39m[1m[2m    2.61 kB[22m[1m[22m[2m │ gzip:     0.84 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/hy-DFXneXwc.js                          [39m[1m[2m    2.65 kB[22m[1m[22m[2m │ gzip:     1.18 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/json-Cp-IABpG.js                        [39m[1m[2m    2.82 kB[22m[1m[22m[2m │ gzip:     0.78 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/openscad-C4EeE6gA.js                    [39m[1m[2m    2.82 kB[22m[1m[22m[2m │ gzip:     1.01 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/log-2UxHyX5q.js                         [39m[1m[2m    2.85 kB[22m[1m[22m[2m │ gzip:     0.90 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/nativeSystemServices-gs38iOLv.js        [39m[1m[2m    2.86 kB[22m[1m[22m[2m │ gzip:     1.37 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/cairo-KRGpt6FW.js                       [39m[1m[2m    2.94 kB[22m[1m[22m[2m │ gzip:     0.81 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/berry-uYugtg8r.js                       [39m[1m[2m    3.01 kB[22m[1m[22m[2m │ gzip:     0.81 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/jsonl-DcaNXYhu.js                       [39m[1m[2m    3.01 kB[22m[1m[22m[2m │ gzip:     0.79 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/jsonc-Des-eS-w.js                       [39m[1m[2m    3.11 kB[22m[1m[22m[2m │ gzip:     0.80 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/logo-BtOb2qkB.js                        [39m[1m[2m    3.13 kB[22m[1m[22m[2m │ gzip:     1.47 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/po-BTJTHyun.js                          [39m[1m[2m    3.24 kB[22m[1m[22m[2m │ gzip:     0.91 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/json5-C9tS-k6U.js                       [39m[1m[2m    3.25 kB[22m[1m[22m[2m │ gzip:     0.83 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/mipsasm-CKIfxQSi.js                     [39m[1m[2m    3.26 kB[22m[1m[22m[2m │ gzip:     1.18 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/tasl-QIJgUcNo.js                        [39m[1m[2m    3.29 kB[22m[1m[22m[2m │ gzip:     0.85 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/rbs-CpoqiR4B.js                         [39m[1m[2m    3.31 kB[22m[1m[22m[2m │ gzip:     0.73 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/genie-D0YGMca9.js                       [39m[1m[2m    3.36 kB[22m[1m[22m[2m │ gzip:     1.21 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/rel-C3B-1QV4.js                         [39m[1m[2m    3.37 kB[22m[1m[22m[2m │ gzip:     1.11 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vala-CsfeWuGM.js                        [39m[1m[2m    3.37 kB[22m[1m[22m[2m │ gzip:     1.19 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/splunk-BtCnVYZw.js                      [39m[1m[2m    3.44 kB[22m[1m[22m[2m │ gzip:     1.52 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/fluent-C4IJs8-o.js                      [39m[1m[2m    3.61 kB[22m[1m[22m[2m │ gzip:     0.90 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ssh-config-_ykCGR6B.js                  [39m[1m[2m    3.62 kB[22m[1m[22m[2m │ gzip:     1.60 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/jsonnet-DFQXde-d.js                     [39m[1m[2m    3.62 kB[22m[1m[22m[2m │ gzip:     1.05 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/kdl-DV7GczEv.js                         [39m[1m[2m    3.63 kB[22m[1m[22m[2m │ gzip:     1.04 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/glsl-DplSGwfg.js                        [39m[1m[2m    3.63 kB[22m[1m[22m[2m │ gzip:     1.41 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/hurl-irOxFIW8.js                        [39m[1m[2m    3.65 kB[22m[1m[22m[2m │ gzip:     1.16 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/narrat-DRg8JJMk.js                      [39m[1m[2m    3.67 kB[22m[1m[22m[2m │ gzip:     1.11 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/turtle-BsS91CYL.js                      [39m[1m[2m    3.70 kB[22m[1m[22m[2m │ gzip:     0.98 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/Mono-BK2jiFvR.js                        [39m[1m[2m    3.76 kB[22m[1m[22m[2m │ gzip:     1.91 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/zenscript-DVFEvuxE.js                   [39m[1m[2m    3.91 kB[22m[1m[22m[2m │ gzip:     1.28 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ron-D8l8udqQ.js                         [39m[1m[2m    3.91 kB[22m[1m[22m[2m │ gzip:     0.98 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gn-n2N0HUVH.js                          [39m[1m[2m    4.00 kB[22m[1m[22m[2m │ gzip:     1.49 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DGl6H7g1.js                       [39m[1m[2m    4.01 kB[22m[1m[22m[2m │ gzip:     1.43 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/pascal-D93ZcfNL.js                      [39m[1m[2m    4.15 kB[22m[1m[22m[2m │ gzip:     1.67 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/Text-BOsLzquz.js                        [39m[1m[2m    4.36 kB[22m[1m[22m[2m │ gzip:     2.28 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/tcl-dwOrl1Do.js                         [39m[1m[2m    4.43 kB[22m[1m[22m[2m │ gzip:     1.52 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/nextflow-C-mBbutL.js                    [39m[1m[2m    4.51 kB[22m[1m[22m[2m │ gzip:     1.17 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/rosmsg-BJDFO7_C.js                      [39m[1m[2m    4.52 kB[22m[1m[22m[2m │ gzip:     1.06 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/http-jrhK8wxY.js                        [39m[1m[2m    4.55 kB[22m[1m[22m[2m │ gzip:     1.12 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/polar-C0HS_06l.js                       [39m[1m[2m    4.67 kB[22m[1m[22m[2m │ gzip:     1.12 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/sdbl-DVxCFoDh.js                        [39m[1m[2m    4.70 kB[22m[1m[22m[2m │ gzip:     2.01 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/fennel-BYunw83y.js                      [39m[1m[2m    4.77 kB[22m[1m[22m[2m │ gzip:     1.53 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/bibtex-CHM0blh-.js                      [39m[1m[2m    4.80 kB[22m[1m[22m[2m │ gzip:     0.83 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/llvm-BZoOZj88.js                        [39m[1m[2m    5.04 kB[22m[1m[22m[2m │ gzip:     2.01 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/wgsl-Dx-B1_4e.js                        [39m[1m[2m    5.14 kB[22m[1m[22m[2m │ gzip:     1.39 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gdresource-TyuKm33G.js                  [39m[1m[2m    5.29 kB[22m[1m[22m[2m │ gzip:     1.34 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/qml-3beO22l8.js                         [39m[1m[2m    5.34 kB[22m[1m[22m[2m │ gzip:     1.38 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/zig-VOosw3JB.js                         [39m[1m[2m    5.34 kB[22m[1m[22m[2m │ gzip:     1.55 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/dax-CEL-wOlO.js                         [39m[1m[2m    5.37 kB[22m[1m[22m[2m │ gzip:     2.23 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/bicep-Bmn6On1c.js                       [39m[1m[2m    5.38 kB[22m[1m[22m[2m │ gzip:     1.15 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/xml-sdJ4AIDG.js                         [39m[1m[2m    5.38 kB[22m[1m[22m[2m │ gzip:     1.21 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/awk-DMzUqQB5.js                         [39m[1m[2m    5.46 kB[22m[1m[22m[2m │ gzip:     1.38 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/jinja-f2NsQr07.js                       [39m[1m[2m    5.69 kB[22m[1m[22m[2m │ gzip:     1.40 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/lean-BZvkOJ9d.js                        [39m[1m[2m    5.78 kB[22m[1m[22m[2m │ gzip:     1.92 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/powerquery-CEu0bR-o.js                  [39m[1m[2m    5.90 kB[22m[1m[22m[2m │ gzip:     1.52 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/shaderlab-Dg9Lc6iA.js                   [39m[1m[2m    5.92 kB[22m[1m[22m[2m │ gzip:     2.08 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/cypher-COkxafJQ.js                      [39m[1m[2m    5.96 kB[22m[1m[22m[2m │ gzip:     1.73 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/coq-C7JzOVbR.js                         [39m[1m[2m    6.01 kB[22m[1m[22m[2m │ gzip:     1.95 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vb-Cu-pLBUe.js                          [39m[1m[2m    6.08 kB[22m[1m[22m[2m │ gzip:     2.33 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/min-dark-CafNBF8u.js                    [39m[1m[2m    6.29 kB[22m[1m[22m[2m │ gzip:     1.71 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gdshader-DkwncUOv.js                    [39m[1m[2m    6.33 kB[22m[1m[22m[2m │ gzip:     1.73 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ara-BRHolxvo.js                         [39m[1m[2m    6.36 kB[22m[1m[22m[2m │ gzip:     1.81 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/verilog-nZwndyjY.js                     [39m[1m[2m    6.41 kB[22m[1m[22m[2m │ gzip:     1.92 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/clojure-P80f7IUj.js                     [39m[1m[2m    6.41 kB[22m[1m[22m[2m │ gzip:     1.42 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/postcss-CXtECtnM.js                     [39m[1m[2m    6.42 kB[22m[1m[22m[2m │ gzip:     1.91 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/red-hvxz__6c.js                         [39m[1m[2m    6.42 kB[22m[1m[22m[2m │ gzip:     1.63 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/toml-vGWfd6FD.js                        [39m[1m[2m    6.43 kB[22m[1m[22m[2m │ gzip:     1.28 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/proto-C7zT0LnQ.js                       [39m[1m[2m    6.55 kB[22m[1m[22m[2m │ gzip:     1.42 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/chapel-DTp_pixX.js                      [39m[1m[2m    6.62 kB[22m[1m[22m[2m │ gzip:     1.85 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/solarized-light-Dlz6yCKv.js             [39m[1m[2m    6.63 kB[22m[1m[22m[2m │ gzip:     1.76 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/r-Cf5RLm7j.js                           [39m[1m[2m    6.74 kB[22m[1m[22m[2m │ gzip:     1.84 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/talonscript-CkByrt1z.js                 [39m[1m[2m    6.76 kB[22m[1m[22m[2m │ gzip:     1.49 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/riscv-BM1_JUlF.js                       [39m[1m[2m    6.91 kB[22m[1m[22m[2m │ gzip:     1.98 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/min-light-CTRr51gU.js                   [39m[1m[2m    6.97 kB[22m[1m[22m[2m │ gzip:     1.89 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/soy-8wufbnw4.js                         [39m[1m[2m    6.98 kB[22m[1m[22m[2m │ gzip:     1.66 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/solarized-dark-CpvCGNkr.js              [39m[1m[2m    7.00 kB[22m[1m[22m[2m │ gzip:     1.83 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/scheme-C98Dy4si.js                      [39m[1m[2m    7.17 kB[22m[1m[22m[2m │ gzip:     2.05 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-hCrqgAOV.js                       [39m[1m[2m    7.20 kB[22m[1m[22m[2m │ gzip:     2.07 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BePXWj-g.js                       [39m[1m[2m    7.21 kB[22m[1m[22m[2m │ gzip:     2.19 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/hlsl-D3lLCCz7.js                        [39m[1m[2m    7.26 kB[22m[1m[22m[2m │ gzip:     2.19 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DJ7gCtZA.js                       [39m[1m[2m    7.27 kB[22m[1m[22m[2m │ gzip:     2.31 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BPXT1Tb1.js                       [39m[1m[2m    7.45 kB[22m[1m[22m[2m │ gzip:     2.21 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/qss-IeuSbFQv.js                         [39m[1m[2m    7.47 kB[22m[1m[22m[2m │ gzip:     2.58 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CZU_oDHv.js                       [39m[1m[2m    7.66 kB[22m[1m[22m[2m │ gzip:     1.83 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/prisma-Vru482bI.js                      [39m[1m[2m    7.74 kB[22m[1m[22m[2m │ gzip:     1.48 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BPQRUEb5.js                       [39m[1m[2m    7.80 kB[22m[1m[22m[2m │ gzip:     2.36 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/systemd-4A_iFExJ.js                     [39m[1m[2m    7.87 kB[22m[1m[22m[2m │ gzip:     2.55 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-xLSsjhIQ.js                       [39m[1m[2m    7.89 kB[22m[1m[22m[2m │ gzip:     2.57 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/regexp-CDVJQ6XC.js                      [39m[1m[2m    7.99 kB[22m[1m[22m[2m │ gzip:     1.42 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/monokai-BRVnQi9A.js                     [39m[1m[2m    8.03 kB[22m[1m[22m[2m │ gzip:     1.94 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BH0F5EOn.js                       [39m[1m[2m    8.07 kB[22m[1m[22m[2m │ gzip:     2.04 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/haml-D5jkg6IW.js                        [39m[1m[2m    8.26 kB[22m[1m[22m[2m │ gzip:     1.81 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-2CUrsxAP.js                       [39m[1m[2m    8.46 kB[22m[1m[22m[2m │ gzip:     2.13 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vue-html-AaS7Mt5G.js                    [39m[1m[2m    8.47 kB[22m[1m[22m[2m │ gzip:     1.68 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BFlSH7_d.js                       [39m[1m[2m    8.47 kB[22m[1m[22m[2m │ gzip:     2.13 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DqLS9lLC.js                       [39m[1m[2m    8.49 kB[22m[1m[22m[2m │ gzip:     2.28 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/plsql-ChMvpjG-.js                       [39m[1m[2m    8.51 kB[22m[1m[22m[2m │ gzip:     3.00 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/dart-bE4Kk8sk.js                        [39m[1m[2m    8.62 kB[22m[1m[22m[2m │ gzip:     2.00 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-aUqCpn69.js                       [39m[1m[2m    8.76 kB[22m[1m[22m[2m │ gzip:     1.88 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-D3K7ljS1.js                       [39m[1m[2m    8.77 kB[22m[1m[22m[2m │ gzip:     1.91 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/horizon-BUw7H-hv.js                     [39m[1m[2m    8.78 kB[22m[1m[22m[2m │ gzip:     1.96 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/kotlin-BdnUsdx6.js                      [39m[1m[2m    8.79 kB[22m[1m[22m[2m │ gzip:     2.13 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/horizon-bright-CUuTKBJd.js              [39m[1m[2m    8.79 kB[22m[1m[22m[2m │ gzip:     1.97 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Cl0gHJqy.js                       [39m[1m[2m    8.85 kB[22m[1m[22m[2m │ gzip:     1.99 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Dlkg072T.js                       [39m[1m[2m    8.90 kB[22m[1m[22m[2m │ gzip:     2.44 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DYgYqq5t.js                       [39m[1m[2m    8.95 kB[22m[1m[22m[2m │ gzip:     2.51 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/make-CHLpvVh8.js                        [39m[1m[2m    8.96 kB[22m[1m[22m[2m │ gzip:     1.77 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/andromeeda-C4gqWexZ.js                  [39m[1m[2m    9.02 kB[22m[1m[22m[2m │ gzip:     2.36 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/sas-DEy46yEz.js                         [39m[1m[2m    9.06 kB[22m[1m[22m[2m │ gzip:     3.81 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/dark-plus-C3mMm8J8.js                   [39m[1m[2m    9.10 kB[22m[1m[22m[2m │ gzip:     2.10 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/slack-dark-BthQWCQV.js                  [39m[1m[2m    9.12 kB[22m[1m[22m[2m │ gzip:     1.97 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/smithy-cds9vsN8.js                      [39m[1m[2m    9.13 kB[22m[1m[22m[2m │ gzip:     1.53 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BTDLAJf0.js                       [39m[1m[2m    9.25 kB[22m[1m[22m[2m │ gzip:     2.53 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/sass-Cj5Yp3dK.js                        [39m[1m[2m    9.29 kB[22m[1m[22m[2m │ gzip:     2.49 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CKhNMYp3.js                       [39m[1m[2m    9.29 kB[22m[1m[22m[2m │ gzip:     2.43 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/plastic-3e1v2bzS.js                     [39m[1m[2m    9.30 kB[22m[1m[22m[2m │ gzip:     1.98 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DT6drTvx.js                       [39m[1m[2m    9.38 kB[22m[1m[22m[2m │ gzip:     2.53 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Cw9254lE.js                       [39m[1m[2m    9.38 kB[22m[1m[22m[2m │ gzip:     2.66 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/slack-ochin-DqwNpetd.js                 [39m[1m[2m    9.43 kB[22m[1m[22m[2m │ gzip:     2.10 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CR0ksVUi.js                       [39m[1m[2m    9.45 kB[22m[1m[22m[2m │ gzip:     2.60 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CyYC7MEO.js                       [39m[1m[2m    9.54 kB[22m[1m[22m[2m │ gzip:     2.74 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DNqa0pIk.js                       [39m[1m[2m    9.64 kB[22m[1m[22m[2m │ gzip:     2.78 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/tex-D96PA37w.js                         [39m[1m[2m    9.67 kB[22m[1m[22m[2m │ gzip:     3.06 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/jison-wvAkD_A8.js                       [39m[1m[2m    9.69 kB[22m[1m[22m[2m │ gzip:     1.85 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Dow9QUKh.js                       [39m[1m[2m    9.73 kB[22m[1m[22m[2m │ gzip:     2.78 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DylTp6K5.js                       [39m[1m[2m    9.85 kB[22m[1m[22m[2m │ gzip:     2.85 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/cmake-D1j8_8rp.js                       [39m[1m[2m    9.86 kB[22m[1m[22m[2m │ gzip:     3.37 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CDf44vHb.js                       [39m[1m[2m    9.89 kB[22m[1m[22m[2m │ gzip:     1.82 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/light-plus-B7mTdjB0.js                  [39m[1m[2m    9.94 kB[22m[1m[22m[2m │ gzip:     2.27 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BsiGmf1r.js                       [39m[1m[2m    9.98 kB[22m[1m[22m[2m │ gzip:     2.88 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/hcl-BWvSN4gD.js                         [39m[1m[2m   10.05 kB[22m[1m[22m[2m │ gzip:     1.93 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Dz035x-i.js                       [39m[1m[2m   10.16 kB[22m[1m[22m[2m │ gzip:     2.83 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-fRYCq05p.js                       [39m[1m[2m   10.20 kB[22m[1m[22m[2m │ gzip:     2.89 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/pkl-u5AG7uiY.js                         [39m[1m[2m   10.37 kB[22m[1m[22m[2m │ gzip:     1.38 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/beancount-k_qm7-4y.js                   [39m[1m[2m   10.37 kB[22m[1m[22m[2m │ gzip:     1.44 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/nextflow-groovy-vE_lwT2v.js             [39m[1m[2m   10.44 kB[22m[1m[22m[2m │ gzip:     2.14 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/dream-maker-BtqSS_iP.js                 [39m[1m[2m   10.47 kB[22m[1m[22m[2m │ gzip:     2.25 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/raku-DXvB9xmW.js                        [39m[1m[2m   10.47 kB[22m[1m[22m[2m │ gzip:     2.94 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/yaml-Buea-lGh.js                        [39m[1m[2m   10.51 kB[22m[1m[22m[2m │ gzip:     2.27 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-B0B_BaHi.js                       [39m[1m[2m   10.59 kB[22m[1m[22m[2m │ gzip:     2.19 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/rst-bs7f0vWN.js                         [39m[1m[2m   10.67 kB[22m[1m[22m[2m │ gzip:     2.42 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Cve50zM7.js                       [39m[1m[2m   10.70 kB[22m[1m[22m[2m │ gzip:     3.36 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Bh9ty1Qm.js                       [39m[1m[2m   10.73 kB[22m[1m[22m[2m │ gzip:     2.28 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DPePa4aT.js                       [39m[1m[2m   10.84 kB[22m[1m[22m[2m │ gzip:     2.60 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-B3SY5_Xl.js                       [39m[1m[2m   10.84 kB[22m[1m[22m[2m │ gzip:     2.34 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-JH4gZTLj.js                       [39m[1m[2m   10.88 kB[22m[1m[22m[2m │ gzip:     2.21 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-C0iX9sI8.js                       [39m[1m[2m   10.94 kB[22m[1m[22m[2m │ gzip:     2.32 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/elm-DbKCFpqz.js                         [39m[1m[2m   10.97 kB[22m[1m[22m[2m │ gzip:     2.12 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Dr2qtEWR.js                       [39m[1m[2m   11.08 kB[22m[1m[22m[2m │ gzip:     2.31 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/github-light-DAi9KRSo.js                [39m[1m[2m   11.18 kB[22m[1m[22m[2m │ gzip:     2.51 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/just-Cwhn7H3k.js                        [39m[1m[2m   11.23 kB[22m[1m[22m[2m │ gzip:     2.80 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-lO4sLBKk.js                       [39m[1m[2m   11.31 kB[22m[1m[22m[2m │ gzip:     3.88 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DIFX8Dj-.js                       [39m[1m[2m   11.35 kB[22m[1m[22m[2m │ gzip:     2.34 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/prolog-CbFg5uaA.js                      [39m[1m[2m   11.36 kB[22m[1m[22m[2m │ gzip:     3.83 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/terraform-BETggiCN.js                   [39m[1m[2m   11.39 kB[22m[1m[22m[2m │ gzip:     2.51 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/github-dark-DHJKELXO.js                 [39m[1m[2m   11.41 kB[22m[1m[22m[2m │ gzip:     2.55 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/puppet-BMWR74SV.js                      [39m[1m[2m   11.44 kB[22m[1m[22m[2m │ gzip:     2.11 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/laserwave-DUszq2jm.js                   [39m[1m[2m   11.50 kB[22m[1m[22m[2m │ gzip:     2.58 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-WFgDymVT.js                       [39m[1m[2m   11.52 kB[22m[1m[22m[2m │ gzip:     2.64 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-COaNbmqK.js                       [39m[1m[2m   11.53 kB[22m[1m[22m[2m │ gzip:     3.66 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BGtvvvvC.js                       [39m[1m[2m   11.57 kB[22m[1m[22m[2m │ gzip:     2.72 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-PW89VYLj.js                       [39m[1m[2m   11.57 kB[22m[1m[22m[2m │ gzip:     3.55 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CJmyFAO4.js                       [39m[1m[2m   11.62 kB[22m[1m[22m[2m │ gzip:     2.60 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-smxYn7Mo.js                       [39m[1m[2m   11.73 kB[22m[1m[22m[2m │ gzip:     2.73 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CoyI3fDK.js                       [39m[1m[2m   11.84 kB[22m[1m[22m[2m │ gzip:     3.69 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Ce-HG76J.js                       [39m[1m[2m   11.89 kB[22m[1m[22m[2m │ gzip:     3.71 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Ck47VXrf.js                       [39m[1m[2m   11.92 kB[22m[1m[22m[2m │ gzip:     2.57 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gherkin-DyxjwDmM.js                     [39m[1m[2m   11.95 kB[22m[1m[22m[2m │ gzip:     5.05 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-SEtpCgea.js                       [39m[1m[2m   11.98 kB[22m[1m[22m[2m │ gzip:     2.90 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/wasm-MzD3tlZU.js                        [39m[1m[2m   12.01 kB[22m[1m[22m[2m │ gzip:     2.19 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-C72ooX1V.js                       [39m[1m[2m   12.04 kB[22m[1m[22m[2m │ gzip:     2.79 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/hjson-D5-asLiD.js                       [39m[1m[2m   12.05 kB[22m[1m[22m[2m │ gzip:     1.64 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/surrealql-Cjom0U5J.js                   [39m[1m[2m   12.06 kB[22m[1m[22m[2m │ gzip:     3.30 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BEOEMTmR.js                       [39m[1m[2m   12.15 kB[22m[1m[22m[2m │ gzip:     3.00 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/handlebars-BpdQsYii.js                  [39m[1m[2m   12.15 kB[22m[1m[22m[2m │ gzip:     2.38 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Za-Gxpfj.js                       [39m[1m[2m   12.26 kB[22m[1m[22m[2m │ gzip:     2.99 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-ZV7BhQQ1.js                       [39m[1m[2m   12.27 kB[22m[1m[22m[2m │ gzip:     2.69 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DG-W13Wp.js                       [39m[1m[2m   12.30 kB[22m[1m[22m[2m │ gzip:     2.78 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CyxZoRN9.js                       [39m[1m[2m   12.35 kB[22m[1m[22m[2m │ gzip:     2.41 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BSv1JdfE.js                       [39m[1m[2m   12.35 kB[22m[1m[22m[2m │ gzip:     4.01 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DNEgb6Yf.js                       [39m[1m[2m   12.40 kB[22m[1m[22m[2m │ gzip:     2.93 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BWJmL-5n.js                       [39m[1m[2m   12.44 kB[22m[1m[22m[2m │ gzip:     2.91 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/apache-Pmp26Uib.js                      [39m[1m[2m   12.46 kB[22m[1m[22m[2m │ gzip:     3.72 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-5x_fOqWN.js                       [39m[1m[2m   12.47 kB[22m[1m[22m[2m │ gzip:     2.98 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BL986HC4.js                       [39m[1m[2m   12.53 kB[22m[1m[22m[2m │ gzip:     3.75 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Bv4TJ1Pf.js                       [39m[1m[2m   12.54 kB[22m[1m[22m[2m │ gzip:     2.74 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DCm8BmH4.js                       [39m[1m[2m   12.55 kB[22m[1m[22m[2m │ gzip:     3.99 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BcX1M10U.js                       [39m[1m[2m   12.61 kB[22m[1m[22m[2m │ gzip:     2.93 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CVEQ19vO.js                       [39m[1m[2m   12.62 kB[22m[1m[22m[2m │ gzip:     3.08 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DGhBn4UW.js                       [39m[1m[2m   12.70 kB[22m[1m[22m[2m │ gzip:     4.05 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vesper-DRje8inN.js                      [39m[1m[2m   12.73 kB[22m[1m[22m[2m │ gzip:     1.98 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BclPnOK5.js                       [39m[1m[2m   12.75 kB[22m[1m[22m[2m │ gzip:     2.89 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BJpcF0p4.js                       [39m[1m[2m   12.84 kB[22m[1m[22m[2m │ gzip:     2.69 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-C6fs4gve.js                       [39m[1m[2m   12.88 kB[22m[1m[22m[2m │ gzip:     2.96 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/bat-CickPsom.js                         [39m[1m[2m   12.89 kB[22m[1m[22m[2m │ gzip:     3.23 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Dtn1-6pk.js                       [39m[1m[2m   12.90 kB[22m[1m[22m[2m │ gzip:     3.04 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-D-Ro7eaJ.js                       [39m[1m[2m   12.92 kB[22m[1m[22m[2m │ gzip:     2.91 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DqUu_coK.js                       [39m[1m[2m   12.93 kB[22m[1m[22m[2m │ gzip:     3.93 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/fish-BvzEVeQv.js                        [39m[1m[2m   13.04 kB[22m[1m[22m[2m │ gzip:     1.74 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-WvoR3m_m.js                       [39m[1m[2m   13.09 kB[22m[1m[22m[2m │ gzip:     3.09 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/nsis-BlV79W_Q.js                        [39m[1m[2m   13.13 kB[22m[1m[22m[2m │ gzip:     4.07 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Bu2yKXkd.js                       [39m[1m[2m   13.21 kB[22m[1m[22m[2m │ gzip:     3.66 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Bs9e_t98.js                       [39m[1m[2m   13.21 kB[22m[1m[22m[2m │ gzip:     3.08 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/v-BGw2Nkan.js                           [39m[1m[2m   13.33 kB[22m[1m[22m[2m │ gzip:     2.77 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BY-TVgpY.js                       [39m[1m[2m   13.45 kB[22m[1m[22m[2m │ gzip:     3.51 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-D3cGXnBB.js                       [39m[1m[2m   13.54 kB[22m[1m[22m[2m │ gzip:     3.07 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vitesse-light-CVO1_9PV.js               [39m[1m[2m   13.62 kB[22m[1m[22m[2m │ gzip:     3.04 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-3OeRYLf4.js                       [39m[1m[2m   13.62 kB[22m[1m[22m[2m │ gzip:     2.50 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-D9oqkDxM.js                       [39m[1m[2m   13.65 kB[22m[1m[22m[2m │ gzip:     4.31 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/aurora-x-D-2ljcwZ.js                    [39m[1m[2m   13.66 kB[22m[1m[22m[2m │ gzip:     2.28 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CQm-9oWS.js                       [39m[1m[2m   13.67 kB[22m[1m[22m[2m │ gzip:     3.25 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vitesse-black-Bkuqu6BP.js               [39m[1m[2m   13.68 kB[22m[1m[22m[2m │ gzip:     3.06 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CkzBdmUa.js                       [39m[1m[2m   13.70 kB[22m[1m[22m[2m │ gzip:     3.55 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CMI13_9W.js                       [39m[1m[2m   13.75 kB[22m[1m[22m[2m │ gzip:     3.19 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vitesse-dark-D0r3Knsf.js                [39m[1m[2m   13.76 kB[22m[1m[22m[2m │ gzip:     3.06 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DrgJ7Ti1.js                       [39m[1m[2m   13.84 kB[22m[1m[22m[2m │ gzip:     3.82 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/pug-DKIMFp6K.js                         [39m[1m[2m   13.84 kB[22m[1m[22m[2m │ gzip:     2.58 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/synthwave-84-CbfX1IO0.js                [39m[1m[2m   14.04 kB[22m[1m[22m[2m │ gzip:     2.87 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BZyRE2e0.js                       [39m[1m[2m   14.05 kB[22m[1m[22m[2m │ gzip:     3.62 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DVbhi3w-.js                       [39m[1m[2m   14.11 kB[22m[1m[22m[2m │ gzip:     3.75 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CEU7scce.js                       [39m[1m[2m   14.12 kB[22m[1m[22m[2m │ gzip:     4.46 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/smalltalk-BOQMe2GC.js                   [39m[1m[2m   14.13 kB[22m[1m[22m[2m │ gzip:     2.16 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DtM2WXdz.js                       [39m[1m[2m   14.15 kB[22m[1m[22m[2m │ gzip:     3.56 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/github-light-default-D7oLnXFd.js        [39m[1m[2m   14.16 kB[22m[1m[22m[2m │ gzip:     3.04 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-C08MY5oN.js                       [39m[1m[2m   14.21 kB[22m[1m[22m[2m │ gzip:     3.80 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-FUDXvrIC.js                       [39m[1m[2m   14.25 kB[22m[1m[22m[2m │ gzip:     4.17 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/github-light-high-contrast-BfjtVDDH.js  [39m[1m[2m   14.28 kB[22m[1m[22m[2m │ gzip:     3.02 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/clarity-Dn5IMItf.js                     [39m[1m[2m   14.36 kB[22m[1m[22m[2m │ gzip:     2.51 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DgEbFDIh.js                       [39m[1m[2m   14.39 kB[22m[1m[22m[2m │ gzip:     4.16 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CmMiDX-S.js                       [39m[1m[2m   14.43 kB[22m[1m[22m[2m │ gzip:     3.70 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/github-dark-dimmed-DH5Ifo-i.js          [39m[1m[2m   14.43 kB[22m[1m[22m[2m │ gzip:     3.13 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/github-dark-default-Cuk6v7N8.js         [39m[1m[2m   14.44 kB[22m[1m[22m[2m │ gzip:     3.13 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DguEKQWK.js                       [39m[1m[2m   14.53 kB[22m[1m[22m[2m │ gzip:     3.69 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CA-Xp-Se.js                       [39m[1m[2m   14.56 kB[22m[1m[22m[2m │ gzip:     4.60 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/github-dark-high-contrast-E3gJ1_iC.js   [39m[1m[2m   14.60 kB[22m[1m[22m[2m │ gzip:     3.09 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CECY1XKx.js                       [39m[1m[2m   14.60 kB[22m[1m[22m[2m │ gzip:     3.04 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Bdfx-KCt.js                       [39m[1m[2m   14.62 kB[22m[1m[22m[2m │ gzip:     3.29 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-D4fEblSY.js                       [39m[1m[2m   14.68 kB[22m[1m[22m[2m │ gzip:     2.94 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gnuplot-DdkO51Og.js                     [39m[1m[2m   14.78 kB[22m[1m[22m[2m │ gzip:     3.27 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CwzFwtkP.js                       [39m[1m[2m   14.86 kB[22m[1m[22m[2m │ gzip:     3.70 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BKFBFKts.js                       [39m[1m[2m   14.88 kB[22m[1m[22m[2m │ gzip:     4.64 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DM1U5MZ5.js                       [39m[1m[2m   14.89 kB[22m[1m[22m[2m │ gzip:     3.40 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BwVtzPa_.js                       [39m[1m[2m   14.92 kB[22m[1m[22m[2m │ gzip:     3.44 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-D_vF-MxI.js                       [39m[1m[2m   14.96 kB[22m[1m[22m[2m │ gzip:     3.21 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-eCaggWwc.js                       [39m[1m[2m   14.96 kB[22m[1m[22m[2m │ gzip:     3.97 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DI9wT5-k.js                       [39m[1m[2m   15.01 kB[22m[1m[22m[2m │ gzip:     4.03 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/rust-B1yitclQ.js                        [39m[1m[2m   15.07 kB[22m[1m[22m[2m │ gzip:     2.72 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CeN4uNGP.js                       [39m[1m[2m   15.17 kB[22m[1m[22m[2m │ gzip:     4.22 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/kusto-wEQ09or8.js                       [39m[1m[2m   15.17 kB[22m[1m[22m[2m │ gzip:     3.92 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CZAdXu2X.js                       [39m[1m[2m   15.23 kB[22m[1m[22m[2m │ gzip:     3.97 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BYzlJjrU.js                       [39m[1m[2m   15.34 kB[22m[1m[22m[2m │ gzip:     4.35 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-C_wJM3wF.js                       [39m[1m[2m   15.37 kB[22m[1m[22m[2m │ gzip:     3.96 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-nj4tAqfN.js                       [39m[1m[2m   15.44 kB[22m[1m[22m[2m │ gzip:     4.97 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Oz5NFY0A.js                       [39m[1m[2m   15.45 kB[22m[1m[22m[2m │ gzip:     4.23 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Cdg-eh1x.js                       [39m[1m[2m   15.47 kB[22m[1m[22m[2m │ gzip:     3.05 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-nZ6VT5Zu.js                       [39m[1m[2m   15.47 kB[22m[1m[22m[2m │ gzip:     3.82 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/nix-CwoSXNpI.js                         [39m[1m[2m   15.51 kB[22m[1m[22m[2m │ gzip:     2.48 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/lua-BaeVxFsk.js                         [39m[1m[2m   15.54 kB[22m[1m[22m[2m │ gzip:     3.16 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/actionscript-3-B3316cI-.js              [39m[1m[2m   15.54 kB[22m[1m[22m[2m │ gzip:     2.71 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CxiNVTiD.js                       [39m[1m[2m   15.57 kB[22m[1m[22m[2m │ gzip:     4.00 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-C-fBDs61.js                       [39m[1m[2m   15.60 kB[22m[1m[22m[2m │ gzip:     4.29 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/abap-BdImnpbu.js                        [39m[1m[2m   15.85 kB[22m[1m[22m[2m │ gzip:     5.91 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BLycOv8f.js                       [39m[1m[2m   15.88 kB[22m[1m[22m[2m │ gzip:     4.08 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-TqsgRnMI.js                       [39m[1m[2m   15.91 kB[22m[1m[22m[2m │ gzip:     3.78 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Cjj_gJSQ.js                       [39m[1m[2m   15.95 kB[22m[1m[22m[2m │ gzip:     4.48 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Dc_V80Cl.js                       [39m[1m[2m   15.96 kB[22m[1m[22m[2m │ gzip:     4.39 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BNI-NhX_.js                       [39m[1m[2m   16.05 kB[22m[1m[22m[2m │ gzip:     3.71 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/matlab-D7o27uSR.js                      [39m[1m[2m   16.09 kB[22m[1m[22m[2m │ gzip:     3.06 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/luau-BnpPk5vE.js                        [39m[1m[2m   16.14 kB[22m[1m[22m[2m │ gzip:     3.55 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DBbWxEmY.js                       [39m[1m[2m   16.15 kB[22m[1m[22m[2m │ gzip:     4.46 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DSV6dVNr.js                       [39m[1m[2m   16.15 kB[22m[1m[22m[2m │ gzip:     3.64 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/cue-D82EKSYY.js                         [39m[1m[2m   16.20 kB[22m[1m[22m[2m │ gzip:     2.06 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BFvmHTnF.js                       [39m[1m[2m   16.28 kB[22m[1m[22m[2m │ gzip:     3.72 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-TfmoR65u.js                       [39m[1m[2m   16.31 kB[22m[1m[22m[2m │ gzip:     4.22 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-B8p3yUEd.js                       [39m[1m[2m   16.31 kB[22m[1m[22m[2m │ gzip:     3.80 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/elixir-CkH2-t6x.js                      [39m[1m[2m   16.32 kB[22m[1m[22m[2m │ gzip:     2.80 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/solidity-DijEV5ha.js                    [39m[1m[2m   16.41 kB[22m[1m[22m[2m │ gzip:     3.16 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-ByIPKATk.js                       [39m[1m[2m   16.49 kB[22m[1m[22m[2m │ gzip:     3.93 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DnqlO7ot.js                       [39m[1m[2m   16.49 kB[22m[1m[22m[2m │ gzip:     3.78 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/odin-BBf5iR-q.js                        [39m[1m[2m   16.51 kB[22m[1m[22m[2m │ gzip:     2.94 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BwmHUVjA.js                       [39m[1m[2m   16.52 kB[22m[1m[22m[2m │ gzip:     4.30 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ts-tags-D351s5mN.js                     [39m[1m[2m   16.57 kB[22m[1m[22m[2m │ gzip:     2.07 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-R2-5rlur.js                       [39m[1m[2m   16.71 kB[22m[1m[22m[2m │ gzip:     5.79 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CtD0DG-O.js                       [39m[1m[2m   16.71 kB[22m[1m[22m[2m │ gzip:     3.82 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DDz4iUPL.js                       [39m[1m[2m   16.86 kB[22m[1m[22m[2m │ gzip:     4.19 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CEvuKOeS.js                       [39m[1m[2m   16.86 kB[22m[1m[22m[2m │ gzip:     5.02 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-HlamIX_U.js                       [39m[1m[2m   16.90 kB[22m[1m[22m[2m │ gzip:     4.63 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BJCsnVuL.js                       [39m[1m[2m   17.09 kB[22m[1m[22m[2m │ gzip:     5.78 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/kanagawa-wave-DFGoQZhC.js               [39m[1m[2m   17.12 kB[22m[1m[22m[2m │ gzip:     2.93 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/kanagawa-lotus-C3DzagqV.js              [39m[1m[2m   17.12 kB[22m[1m[22m[2m │ gzip:     2.93 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/kanagawa-dragon-BuwD2xS4.js             [39m[1m[2m   17.12 kB[22m[1m[22m[2m │ gzip:     2.95 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DFgdWRRr.js                       [39m[1m[2m   17.26 kB[22m[1m[22m[2m │ gzip:     4.29 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BQbWpi7S.js                       [39m[1m[2m   17.29 kB[22m[1m[22m[2m │ gzip:     5.13 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BvQtUvQi.js                       [39m[1m[2m   17.32 kB[22m[1m[22m[2m │ gzip:     4.28 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DdJJNQGq.js                       [39m[1m[2m   17.51 kB[22m[1m[22m[2m │ gzip:     4.85 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/move-el3G9tDJ.js                        [39m[1m[2m   17.66 kB[22m[1m[22m[2m │ gzip:     3.06 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DvkJUjKh.js                       [39m[1m[2m   17.74 kB[22m[1m[22m[2m │ gzip:     4.62 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/graphql-ChdNCCLP.js                     [39m[1m[2m   18.00 kB[22m[1m[22m[2m │ gzip:     2.52 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DeRzKfF8.js                       [39m[1m[2m   18.00 kB[22m[1m[22m[2m │ gzip:     4.11 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Cr_-2pHw.js                       [39m[1m[2m   18.07 kB[22m[1m[22m[2m │ gzip:     4.65 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/liquid-C0sCDyMI.js                      [39m[1m[2m   18.09 kB[22m[1m[22m[2m │ gzip:     3.16 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CwWaD_B0.js                       [39m[1m[2m   18.21 kB[22m[1m[22m[2m │ gzip:     3.34 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/svelte-Cy7k_4gC.js                      [39m[1m[2m   18.24 kB[22m[1m[22m[2m │ gzip:     3.14 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-e2syvUzN.js                       [39m[1m[2m   18.50 kB[22m[1m[22m[2m │ gzip:     5.62 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BFPbSnNC.js                       [39m[1m[2m   18.55 kB[22m[1m[22m[2m │ gzip:     4.44 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index--KAs4NHJ.js                       [39m[1m[2m   18.56 kB[22m[1m[22m[2m │ gzip:     4.26 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-RR4jatQc.js                       [39m[1m[2m   18.56 kB[22m[1m[22m[2m │ gzip:     5.07 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/material-theme-D5KoaKCx.js              [39m[1m[2m   18.62 kB[22m[1m[22m[2m │ gzip:     3.11 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DAEB1b0d.js                       [39m[1m[2m   18.62 kB[22m[1m[22m[2m │ gzip:     4.29 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/material-theme-darker-BfHTSMKl.js       [39m[1m[2m   18.63 kB[22m[1m[22m[2m │ gzip:     3.11 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/material-theme-ocean-CyktbL80.js        [39m[1m[2m   18.63 kB[22m[1m[22m[2m │ gzip:     3.14 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/material-theme-lighter-B0m2ddpp.js      [39m[1m[2m   18.63 kB[22m[1m[22m[2m │ gzip:     3.11 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/material-theme-palenight-Csfq5Kiy.js    [39m[1m[2m   18.64 kB[22m[1m[22m[2m │ gzip:     3.13 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DtRzJF8P.js                       [39m[1m[2m   18.74 kB[22m[1m[22m[2m │ gzip:     4.31 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BGoQr6xS.js                       [39m[1m[2m   18.86 kB[22m[1m[22m[2m │ gzip:     5.88 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-C_ZpgG_R.js                       [39m[1m[2m   18.90 kB[22m[1m[22m[2m │ gzip:     4.98 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gdscript-DqcFQ5yU.js                    [39m[1m[2m   19.09 kB[22m[1m[22m[2m │ gzip:     3.77 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-HJ110puT.js                       [39m[1m[2m   19.15 kB[22m[1m[22m[2m │ gzip:     4.18 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/groovy-gcz8RCvz.js                      [39m[1m[2m   19.18 kB[22m[1m[22m[2m │ gzip:     3.60 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CCOv88Z8.js                       [39m[1m[2m   19.53 kB[22m[1m[22m[2m │ gzip:     4.39 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BRu3Og4l.js                       [39m[1m[2m   19.54 kB[22m[1m[22m[2m │ gzip:     5.03 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Bg3taimB.js                       [39m[1m[2m   19.57 kB[22m[1m[22m[2m │ gzip:     5.41 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-i9T2G3QD.js                       [39m[1m[2m   19.87 kB[22m[1m[22m[2m │ gzip:     4.91 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/glimmer-js-ByusRIyA.js                  [39m[1m[2m   20.07 kB[22m[1m[22m[2m │ gzip:     2.95 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/glimmer-ts-BfAWNZQY.js                  [39m[1m[2m   20.07 kB[22m[1m[22m[2m │ gzip:     2.94 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ayu-dark-DYE7WIF3.js                    [39m[1m[2m   20.08 kB[22m[1m[22m[2m │ gzip:     3.94 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ayu-mirage-32ctXXKs.js                  [39m[1m[2m   20.09 kB[22m[1m[22m[2m │ gzip:     3.94 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ayu-light-BA47KaF1.js                   [39m[1m[2m   20.15 kB[22m[1m[22m[2m │ gzip:     3.93 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/powershell-BmBUJMz7.js                  [39m[1m[2m   20.16 kB[22m[1m[22m[2m │ gzip:     4.07 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/mdc-D1_yUvq7.js                         [39m[1m[2m   20.18 kB[22m[1m[22m[2m │ gzip:     6.81 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/viml-CJc9bBzg.js                        [39m[1m[2m   20.37 kB[22m[1m[22m[2m │ gzip:     6.73 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-kY4OnSeP.js                       [39m[1m[2m   20.46 kB[22m[1m[22m[2m │ gzip:     5.42 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/snazzy-light-Bw305WKR.js                [39m[1m[2m   20.77 kB[22m[1m[22m[2m │ gzip:     3.83 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/pdf-D3pq-zHM.js                         [39m[1m[2m   20.80 kB[22m[1m[22m[2m │ gzip:     5.00 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/nushell-D3jzshHO.js                     [39m[1m[2m   20.88 kB[22m[1m[22m[2m │ gzip:     5.36 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-t3oOjP2B.js                       [39m[1m[2m   20.93 kB[22m[1m[22m[2m │ gzip:     5.54 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/dracula-BzJJZx-M.js                     [39m[1m[2m   21.07 kB[22m[1m[22m[2m │ gzip:     4.00 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/dracula-soft-BXkSAIEj.js                [39m[1m[2m   21.08 kB[22m[1m[22m[2m │ gzip:     4.04 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Dr33UYIB.js                       [39m[1m[2m   21.10 kB[22m[1m[22m[2m │ gzip:     5.98 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/wit-5i3qLPDT.js                         [39m[1m[2m   21.47 kB[22m[1m[22m[2m │ gzip:     2.89 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CRmk6ia5.js                       [39m[1m[2m   21.54 kB[22m[1m[22m[2m │ gzip:     5.82 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CS1x8WXy.js                       [39m[1m[2m   21.73 kB[22m[1m[22m[2m │ gzip:     5.09 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/rose-pine-5qJOZa0Y.js                   [39m[1m[2m   21.74 kB[22m[1m[22m[2m │ gzip:     3.88 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/rose-pine-moon-C9pEdX9L.js              [39m[1m[2m   21.75 kB[22m[1m[22m[2m │ gzip:     3.90 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/rose-pine-dawn-zx0QlTCp.js              [39m[1m[2m   21.75 kB[22m[1m[22m[2m │ gzip:     3.90 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/twig-27uCiNez.js                        [39m[1m[2m   21.98 kB[22m[1m[22m[2m │ gzip:     3.98 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/nim-BIad80T-.js                         [39m[1m[2m   22.46 kB[22m[1m[22m[2m │ gzip:     3.16 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Bzq4cVkz.js                       [39m[1m[2m   22.53 kB[22m[1m[22m[2m │ gzip:     4.37 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/common-lisp-Cg-RD9OK.js                 [39m[1m[2m   22.58 kB[22m[1m[22m[2m │ gzip:     6.06 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gruvbox-dark-hard-CFHQjOhq.js           [39m[1m[2m   22.63 kB[22m[1m[22m[2m │ gzip:     4.18 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gruvbox-dark-soft-CVdnzihN.js           [39m[1m[2m   22.63 kB[22m[1m[22m[2m │ gzip:     4.17 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gruvbox-light-hard-CH1njM8p.js          [39m[1m[2m   22.64 kB[22m[1m[22m[2m │ gzip:     4.18 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gruvbox-light-soft-hJgmCMqR.js          [39m[1m[2m   22.64 kB[22m[1m[22m[2m │ gzip:     4.18 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gruvbox-dark-medium-GsRaNv29.js         [39m[1m[2m   22.64 kB[22m[1m[22m[2m │ gzip:     4.18 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/gruvbox-light-medium-DRw_LuNl.js        [39m[1m[2m   22.64 kB[22m[1m[22m[2m │ gzip:     4.18 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BH1eNakV.js                       [39m[1m[2m   23.04 kB[22m[1m[22m[2m │ gzip:     4.44 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-BjRN1pDR.js                       [39m[1m[2m   23.32 kB[22m[1m[22m[2m │ gzip:     4.78 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/sql-CRqJ_cUM.js                         [39m[1m[2m   23.43 kB[22m[1m[22m[2m │ gzip:     7.42 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/cadence-Bv_4Rxtq.js                     [39m[1m[2m   23.67 kB[22m[1m[22m[2m │ gzip:     3.67 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/astro-HNnZUWAn.js                       [39m[1m[2m   24.01 kB[22m[1m[22m[2m │ gzip:     7.55 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/apl-CORt7UWP.js                         [39m[1m[2m   24.04 kB[22m[1m[22m[2m │ gzip:     4.20 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/templ-DhtptRzy.js                       [39m[1m[2m   24.06 kB[22m[1m[22m[2m │ gzip:     5.40 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-rpjLB_xr.js                       [39m[1m[2m   24.11 kB[22m[1m[22m[2m │ gzip:     4.86 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vhdl-CeAyd5Ju.js                        [39m[1m[2m   24.26 kB[22m[1m[22m[2m │ gzip:     3.87 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/angular-html-DA-rfuFy.js                [39m[1m[2m   24.29 kB[22m[1m[22m[2m │ gzip:     4.01 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-C6Ir4xBH.js                       [39m[1m[2m   24.58 kB[22m[1m[22m[2m │ gzip:     5.31 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/purescript-CklMAg4u.js                  [39m[1m[2m   24.69 kB[22m[1m[22m[2m │ gzip:     3.25 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/moonbit-CHtswR0a.js                     [39m[1m[2m   24.94 kB[22m[1m[22m[2m │ gzip:     3.79 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vue-BqiEGhQt.js                         [39m[1m[2m   24.96 kB[22m[1m[22m[2m │ gzip:     3.04 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/typespec-CAFt9gP4.js                    [39m[1m[2m   25.05 kB[22m[1m[22m[2m │ gzip:     2.63 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-h0IXXYxg.js                       [39m[1m[2m   25.11 kB[22m[1m[22m[2m │ gzip:     7.66 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/one-light-C3Wv6jpd.js                   [39m[1m[2m   25.30 kB[22m[1m[22m[2m │ gzip:     3.67 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/fsharp-CXgrBDvD.js                      [39m[1m[2m   25.31 kB[22m[1m[22m[2m │ gzip:     4.13 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/marko-DjSrsDqO.js                       [39m[1m[2m   25.48 kB[22m[1m[22m[2m │ gzip:     3.59 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/night-owl-light-CMTm3GFP.js             [39m[1m[2m   25.90 kB[22m[1m[22m[2m │ gzip:     4.26 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/c3-Dp5svz6Z.js                          [39m[1m[2m   26.39 kB[22m[1m[22m[2m │ gzip:     3.99 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/system-verilog-0hqHdDBg.js              [39m[1m[2m   26.56 kB[22m[1m[22m[2m │ gzip:     4.88 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-jIfOC0fG.js                       [39m[1m[2m   26.64 kB[22m[1m[22m[2m │ gzip:     8.60 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DCuisuws.js                       [39m[1m[2m   26.67 kB[22m[1m[22m[2m │ gzip:     7.57 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/nord-Ddv68eIx.js                        [39m[1m[2m   26.72 kB[22m[1m[22m[2m │ gzip:     4.40 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/codeql-DsOJ9woJ.js                      [39m[1m[2m   26.88 kB[22m[1m[22m[2m │ gzip:     3.79 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DeTuIViN.js                       [39m[1m[2m   27.05 kB[22m[1m[22m[2m │ gzip:     6.46 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/scss-D5BDwBP9.js                        [39m[1m[2m   27.20 kB[22m[1m[22m[2m │ gzip:     4.20 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/java-CylS5w8V.js                        [39m[1m[2m   27.22 kB[22m[1m[22m[2m │ gzip:     4.26 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/coffee-Ch7k5sss.js                      [39m[1m[2m   27.42 kB[22m[1m[22m[2m │ gzip:     6.35 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/razor-BjBPvh-w.js                       [39m[1m[2m   27.51 kB[22m[1m[22m[2m │ gzip:     3.57 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-ufMYj_hX.js                       [39m[1m[2m   27.63 kB[22m[1m[22m[2m │ gzip:     6.76 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-GxLhQOGm.js                       [39m[1m[2m   27.93 kB[22m[1m[22m[2m │ gzip:     6.65 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DYmKDIVx.js                       [39m[1m[2m   28.27 kB[22m[1m[22m[2m │ gzip:     7.13 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DcQWrnY1.js                       [39m[1m[2m   28.80 kB[22m[1m[22m[2m │ gzip:    11.23 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/scala-CqE71os6.js                       [39m[1m[2m   28.89 kB[22m[1m[22m[2m │ gzip:     3.94 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/night-owl-C39BiMTA.js                   [39m[1m[2m   28.91 kB[22m[1m[22m[2m │ gzip:     5.16 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/crystal-DGywbUpC.js                     [39m[1m[2m   29.39 kB[22m[1m[22m[2m │ gzip:     4.45 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/applescript-Co6uUVPk.js                 [39m[1m[2m   29.57 kB[22m[1m[22m[2m │ gzip:     5.93 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/stylus-BEDo0Tqx.js                      [39m[1m[2m   31.07 kB[22m[1m[22m[2m │ gzip:     7.99 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/julia-5Bft2YPA.js                       [39m[1m[2m   31.08 kB[22m[1m[22m[2m │ gzip:     4.34 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DOQB2VU2.js                       [39m[1m[2m   31.32 kB[22m[1m[22m[2m │ gzip:     6.96 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ahk-CsyLZFj1.js                         [39m[1m[2m   31.44 kB[22m[1m[22m[2m │ gzip:     7.81 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-D4J2jFf_.js                       [39m[1m[2m   31.98 kB[22m[1m[22m[2m │ gzip:     6.70 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-pKIjtwKp.js                       [39m[1m[2m   32.06 kB[22m[1m[22m[2m │ gzip:     5.80 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/poimandres-CS3Unz2-.js                  [39m[1m[2m   33.49 kB[22m[1m[22m[2m │ gzip:     5.50 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/one-dark-pro-DVMEJ2y_.js                [39m[1m[2m   33.79 kB[22m[1m[22m[2m │ gzip:     5.52 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/bsl-DlhNcFeZ.js                         [39m[1m[2m   33.95 kB[22m[1m[22m[2m │ gzip:     8.36 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/nginx-BpAMiNFr.js                       [39m[1m[2m   35.37 kB[22m[1m[22m[2m │ gzip:     4.43 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DXTzKzyB.js                       [39m[1m[2m   35.40 kB[22m[1m[22m[2m │ gzip:     9.11 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/houston-DnULxvSX.js                     [39m[1m[2m   35.42 kB[22m[1m[22m[2m │ gzip:     5.78 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DTPQMdUC.js                       [39m[1m[2m   35.53 kB[22m[1m[22m[2m │ gzip:     9.02 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/tokyo-night-hegEt444.js                 [39m[1m[2m   35.67 kB[22m[1m[22m[2m │ gzip:     6.24 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/haxe-CfZj7gIn.js                        [39m[1m[2m   35.95 kB[22m[1m[22m[2m │ gzip:     6.01 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/org-DM6o9KBp.js                         [39m[1m[2m   36.32 kB[22m[1m[22m[2m │ gzip:     3.70 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/erlang-DsQrWhSR.js                      [39m[1m[2m   37.48 kB[22m[1m[22m[2m │ gzip:     4.40 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CdVo3bUv.js                       [39m[1m[2m   38.62 kB[22m[1m[22m[2m │ gzip:     9.65 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/bird2-Bx8U0n9b.js                       [39m[1m[2m   38.68 kB[22m[1m[22m[2m │ gzip:     8.50 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/cobol-nBiQ_Alo.js                       [39m[1m[2m   39.13 kB[22m[1m[22m[2m │ gzip:    10.86 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/asm-D_Q5rh1f.js                         [39m[1m[2m   40.72 kB[22m[1m[22m[2m │ gzip:     8.21 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/shellscript-Yzrsuije.js                 [39m[1m[2m   41.48 kB[22m[1m[22m[2m │ gzip:     6.09 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/haskell-Df6bDoY_.js                     [39m[1m[2m   41.49 kB[22m[1m[22m[2m │ gzip:     6.44 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ModelIconCatalog-BYXMRN_4.js            [39m[1m[2m   42.46 kB[22m[1m[22m[2m │ gzip:    11.01 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/perl-B9cMNwum.js                        [39m[1m[2m   43.16 kB[22m[1m[22m[2m │ gzip:     4.67 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-_PbipTf_.js                       [39m[1m[2m   43.49 kB[22m[1m[22m[2m │ gzip:     9.85 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/d-85-TOEBH.js                           [39m[1m[2m   43.80 kB[22m[1m[22m[2m │ gzip:     8.47 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ahk2-8Zs4aa1G.js                        [39m[1m[2m   45.07 kB[22m[1m[22m[2m │ gzip:     9.88 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ruby-C0TQ7zu5.js                        [39m[1m[2m   46.72 kB[22m[1m[22m[2m │ gzip:     5.83 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/go-C27-OAKa.js                          [39m[1m[2m   46.82 kB[22m[1m[22m[2m │ gzip:     5.18 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/apex-DhZFqWV2.js                        [39m[1m[2m   47.89 kB[22m[1m[22m[2m │ gzip:     6.90 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ada-bCR0ucgS.js                         [39m[1m[2m   48.08 kB[22m[1m[22m[2m │ gzip:     6.03 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/css-CLj8gQPS.js                         [39m[1m[2m   49.04 kB[22m[1m[22m[2m │ gzip:    11.86 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/imba-DGztddWO.js                        [39m[1m[2m   49.93 kB[22m[1m[22m[2m │ gzip:     9.46 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/catppuccin-mocha-Ct7hS0mc.js            [39m[1m[2m   50.85 kB[22m[1m[22m[2m │ gzip:     8.49 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/catppuccin-latte-DH-8KZSZ.js            [39m[1m[2m   50.85 kB[22m[1m[22m[2m │ gzip:     8.49 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/catppuccin-frappe-CZL1YF0i.js           [39m[1m[2m   50.85 kB[22m[1m[22m[2m │ gzip:     8.51 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/catppuccin-macchiato-B7yYVSCf.js        [39m[1m[2m   50.86 kB[22m[1m[22m[2m │ gzip:     8.50 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/everforest-dark-BgDCqdQA.js             [39m[1m[2m   53.75 kB[22m[1m[22m[2m │ gzip:     8.42 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/everforest-light-C8M2exoo.js            [39m[1m[2m   53.75 kB[22m[1m[22m[2m │ gzip:     8.42 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/mermaid-CQcHuHx7.js                     [39m[1m[2m   54.81 kB[22m[1m[22m[2m │ gzip:     4.81 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/wikitext-BhOHFoWU.js                    [39m[1m[2m   55.89 kB[22m[1m[22m[2m │ gzip:     4.76 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/stata-DI20mbqo.js                       [39m[1m[2m   56.99 kB[22m[1m[22m[2m │ gzip:    12.36 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/html-pp8916En.js                        [39m[1m[2m   57.25 kB[22m[1m[22m[2m │ gzip:    11.69 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ballerina-BFfxhgS-.js                   [39m[1m[2m   58.69 kB[22m[1m[22m[2m │ gzip:     8.15 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/markdown-Cvjx9yec.js                    [39m[1m[2m   59.34 kB[22m[1m[22m[2m │ gzip:     5.64 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/ocaml-C0hk2d4L.js                       [39m[1m[2m   62.45 kB[22m[1m[22m[2m │ gzip:     5.02 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-DwFuU6fb.js                       [39m[1m[2m   68.38 kB[22m[1m[22m[2m │ gzip:    24.25 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/mojo-DJz3ZmWd.js                        [39m[1m[2m   69.52 kB[22m[1m[22m[2m │ gzip:     9.27 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/python-B6aJPvgy.js                      [39m[1m[2m   69.95 kB[22m[1m[22m[2m │ gzip:     9.13 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/c-BIGW1oBm.js                           [39m[1m[2m   72.11 kB[22m[1m[22m[2m │ gzip:    10.51 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/latex-D5pSuvFb.js                       [39m[1m[2m   72.90 kB[22m[1m[22m[2m │ gzip:     6.78 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vyper-CDx5xZoG.js                       [39m[1m[2m   74.65 kB[22m[1m[22m[2m │ gzip:    10.74 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/hack-BWmVpMyf.js                        [39m[1m[2m   81.13 kB[22m[1m[22m[2m │ gzip:    26.38 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/swift-C2oV4EkX.js                       [39m[1m[2m   87.23 kB[22m[1m[22m[2m │ gzip:    14.84 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/fortran-free-form-BxgE0vQu.js           [39m[1m[2m   88.97 kB[22m[1m[22m[2m │ gzip:    11.27 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/csharp-DSvCPggb.js                      [39m[1m[2m   90.19 kB[22m[1m[22m[2m │ gzip:    10.75 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/racket-BqYA7rlc.js                      [39m[1m[2m   92.39 kB[22m[1m[22m[2m │ gzip:    15.02 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/less-B1dDrJ26.js                        [39m[1m[2m   97.63 kB[22m[1m[22m[2m │ gzip:    14.70 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-HQrBH7Iv.js                       [39m[1m[2m  103.21 kB[22m[1m[22m[2m │ gzip:    38.91 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/blade-2xfisSek.js                       [39m[1m[2m  104.98 kB[22m[1m[22m[2m │ gzip:    28.20 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/objective-c-DXmwc3jG.js                 [39m[1m[2m  105.41 kB[22m[1m[22m[2m │ gzip:    23.33 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-Clx7TrcZ.js                       [39m[1m[2m  110.25 kB[22m[1m[22m[2m │ gzip:    27.15 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/php-Csjmro_R.js                         [39m[1m[2m  113.09 kB[22m[1m[22m[2m │ gzip:    28.74 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/asciidoc-CSVQ5wI8.js                    [39m[1m[2m  136.05 kB[22m[1m[22m[2m │ gzip:     9.50 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/mdx-Cmh6b_Ma.js                         [39m[1m[2m  136.11 kB[22m[1m[22m[2m │ gzip:    23.35 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/typst-BUadGCkm.js                       [39m[1m[2m  163.55 kB[22m[1m[22m[2m │ gzip:    10.98 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/objective-cpp-CLxacb5B.js               [39m[1m[2m  171.97 kB[22m[1m[22m[2m │ gzip:    30.62 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/javascript-wDzz0qaB.js                  [39m[1m[2m  174.83 kB[22m[1m[22m[2m │ gzip:    16.51 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/tsx-COt5Ahok.js                         [39m[1m[2m  175.54 kB[22m[1m[22m[2m │ gzip:    16.51 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/jsx-g9-lgVsj.js                         [39m[1m[2m  177.79 kB[22m[1m[22m[2m │ gzip:    16.61 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/typescript-BPQ3VLAy.js                  [39m[1m[2m  181.08 kB[22m[1m[22m[2m │ gzip:    16.04 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/angular-ts-BrjP3tb8.js                  [39m[1m[2m  183.82 kB[22m[1m[22m[2m │ gzip:    16.63 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/vue-vine-BoDAl6tE.js                    [39m[1m[2m  190.05 kB[22m[1m[22m[2m │ gzip:    17.99 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/wolfram-lXgVvXCa.js                     [39m[1m[2m  262.39 kB[22m[1m[22m[2m │ gzip:    77.14 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/pdf-CdE6nnZT.js                         [39m[1m[2m  407.56 kB[22m[1m[22m[2m │ gzip:   119.31 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/wasm-CG6Dc4jp.js                        [39m[1m[33m  622.34 kB[39m[22m[2m │ gzip:   230.29 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/cpp-BMRokrvK.js                         [39m[1m[33m  785.49 kB[39m[22m[2m │ gzip:    53.20 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/emacs-lisp-C_m_b--Z.js                  [39m[1m[33m  790.01 kB[39m[22m[2m │ gzip:   198.83 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/models.generated-B68mm077.js            [39m[1m[33m1,125.54 kB[39m[22m[2m │ gzip:   153.60 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/index-CLkFX2t3.js                       [39m[1m[33m3,565.24 kB[39m[22m[2m │ gzip: 1,099.56 kB[22m
+[2mdesktop/tauri/dist/normal/[22m[36massets/MessageList-BZbHXlbK.js                 [39m[1m[33m3,678.61 kB[39m[22m[2m │ gzip:   958.75 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 50.20s[39m

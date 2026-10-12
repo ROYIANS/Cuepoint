@@ -1,0 +1,11 @@
+
+> cuepoint-tauri-prototype@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
+> node ../../node_modules/eslint/bin/eslint.js --config eslint.config.mjs scripts ui --max-warnings 0
+
+
+/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/build-frontend.test.mjs
+  117:100  error  Unsafe usage of ThrowStatement  no-unsafe-finally
+
+✖ 1 problem (1 error, 0 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.

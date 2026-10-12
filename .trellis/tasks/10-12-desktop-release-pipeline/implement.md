@@ -4,6 +4,30 @@ Status: in progress. The user approved the final reviewed implementation plan on
 
 ## Current gate status
 
+Actual owner-activated run 38208372156, attempt 1, at 946664ab passed desktop
+quality (3,960 tests); the separate same-source GHCR run 38207181705 also passed.
+The native matrix reached new failures: both macOS normal frontend builds
+exhausted the approximately 2 GiB V8 heap while rendering; Windows directory,
+binary and media tests failed before an abnormal test-process exit. Linux was
+owner-cancelled after reporting one failed SQLite test, with no preserved nested
+stderr artifact. See `research/release-hosted-native-followup.md` and the original
+digest-checked evidence. The current correction branch is
+`codex/release-hosted-native-failures`. Bounded frontend build resources, verified
+Windows directory authority/fixture teardown and nested diagnostic visibility
+are the completed local correction units. Final verification of 1,016 frozen
+inputs passes: Node24 ordinary suite 228 files/3,965 tests (existing seven skips),
+real SQLite all 108 files/1,910 tests plus six native/five browser checks, all 95
+registered tools and 49 native business tables/assertion anchors; types, root and
+desktop quality, 64 release contracts and both product/frontend builds pass.
+Unchanged Rust source retains both passing feature suites/Clippy/fmt/portable
+evidence. The reached Agent continuation gate correction skips only already
+terminal snapshot history; five fresh-authority/Stop regressions and an old-loop
+negative control preserve the original 64-turn fixture and deadlines. See
+`research/release-hosted-final-validation.md` and the independent check. The
+Linux cause remains unknown; source fixes and local gates cannot close H1a/H1b
+or certify corresponding-host installers. A concrete grouped local commit plan
+still requires review; no remote mutation or archival is included.
+
 The next owner-supplied root CI log reached a new timeout in the exact 32 MiB
 MiMo speech envelope acceptance test at the unchanged default 5-second deadline.
 The minimal decoder copy correction is locally validated: both complete

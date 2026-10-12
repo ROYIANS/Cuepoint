@@ -1,0 +1,40 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/agentTools.test.ts (27 tests | 1 failed | 26 skipped) 103ms
+   ❯ durable bounded tool loop (25)
+     × reads each new execution candidate once without point-reading settled history 102ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/agentTools.test.ts > durable bounded tool loop > reads each new execution candidate once without point-reading settled history
+AssertionError: expected [ …(6) ] to deeply equal [ …(3) ]
+
+- Expected
++ Received
+
+  [
+    "tool_07efe5ef-f0c6-4e18-8af7-3e1e257abf4f",
+    "tool_245509ac-8ef7-4159-abc5-8d081a816d39",
++   "tool_245509ac-8ef7-4159-abc5-8d081a816d39",
++   "tool_77771466-b469-4beb-a9ba-5b3280265eb5",
++   "tool_77771466-b469-4beb-a9ba-5b3280265eb5",
+    "tool_77771466-b469-4beb-a9ba-5b3280265eb5",
+  ]
+
+ ❯ tests/agentTools.test.ts:120:56
+    118|       expect(calls).toHaveLength(3);
+    119|       expect(calls.every(call => call.status === "completed" && call.r…
+    120|       expect(read.mock.calls.map(([id]) => id).sort()).toEqual(calls.m…
+       |                                                        ^
+    121|       expect(tool.execute).toHaveBeenCalledTimes(3);
+    122|       expect(fetcher).toHaveBeenCalledTimes(5);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 26 skipped (27)
+   Start at  14:47:30
+   Duration  895ms (transform 71%, tests 12%, import 11%, setup 6%)
+

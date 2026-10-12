@@ -1,0 +1,227 @@
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 2162 modules transformed.
+rendering chunks...
+[plugin vite:reporter] 
+(!) /Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/@tauri-apps+api@2.12.2/node_modules/@tauri-apps/api/core.js is dynamically imported by /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/runtimePrint.ts but also statically imported by /Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/@tauri-apps+plugin-http@2.8.2/node_modules/@tauri-apps/plugin-http/dist-js/index.js, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/database.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/nativeSystemServices.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/storage/nativeBinary.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/database.ts is dynamically imported by /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/runtimeHttpPolicy.ts but also statically imported by /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/ui/acceptancePrint.tsx, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGenerationBatches.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentGenerationTarget.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentRuns.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentSettings.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskGuards.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskRecords.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTaskWrapups.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTasks.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentToolRecovery.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/agentTools.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/assets.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audio.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioGeneration.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioGenerationBatches.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/audioShared.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/connectors.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/media.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/memoryRetrieval.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/music.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/productionShared.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/references.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/shots.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/taskAudioGenerationEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/db/taskGenerationEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/audioProjectContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/businessStore.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/generationPreparation.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/imageDiscovery.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/imageQueue.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/materialContent.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/materialImageInput.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/projectContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/projectScope.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/referenceContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/referenceEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/runOwnership.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/taskContext.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/toolLoading.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/agent/wrapupEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/ai/referenceWire.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/batchEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/batchPreparation.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/outputEvidence.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioGeneration/reference.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/audioProjectPackage.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/projectPackage.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/references/import.ts, /Users/xiaomengdao/WebstormProjects/aifenjing/src/lib/storage/hooks.ts, dynamic import will not move module into another chunk.
+
+computing gzip size...
+../dist/acceptance/assets/CNS2-V-DgHqi_gL.bcmap                       0.09 kB
+../dist/acceptance/assets/Roman-CGyUGrKi.bcmap                        0.10 kB
+../dist/acceptance/assets/Katakana-DueN_6wN.bcmap                     0.10 kB
+../dist/acceptance/assets/ETenms-B5-H-DbS1LlRr.bcmap                  0.10 kB
+../dist/acceptance/assets/UniJIS-UCS2-HW-H-BfJ3t__Z.bcmap             0.12 kB
+../dist/acceptance/assets/Hiragana-Dy6yEHKG.bcmap                     0.12 kB
+../dist/acceptance/assets/Hankaku-SMDjWZXJ.bcmap                      0.13 kB
+../dist/acceptance/assets/B5-V-3ShXAXP7.bcmap                         0.14 kB
+../dist/acceptance/assets/CNS1-V-BUvSsmpl.bcmap                       0.14 kB
+../dist/acceptance/assets/B5pc-V-1X0fY8mT.bcmap                       0.14 kB
+../dist/acceptance/assets/HKdla-B5-V-CHovDFKh.bcmap                   0.15 kB
+../dist/acceptance/assets/HKdlb-B5-V-CDfiFKye.bcmap                   0.15 kB
+../dist/acceptance/assets/HKgccs-B5-V-Bb0FD7uo.bcmap                  0.15 kB
+../dist/acceptance/assets/HKm314-B5-V-BrK5Z_J-.bcmap                  0.15 kB
+../dist/acceptance/assets/HKm471-B5-V-B7Ks-vkf.bcmap                  0.15 kB
+../dist/acceptance/assets/UniCNS-UCS2-V-CbsnO1ia.bcmap                0.16 kB
+../dist/acceptance/assets/UniCNS-UTF16-V-DoPO_42D.bcmap               0.16 kB
+../dist/acceptance/assets/UniCNS-UTF8-V-BD4cmnNX.bcmap                0.16 kB
+../dist/acceptance/assets/ETHK-B5-V-DmzBBgI2.bcmap                    0.16 kB
+../dist/acceptance/assets/ETen-B5-V-CyIout1L.bcmap                    0.16 kB
+../dist/acceptance/assets/HKscs-B5-V-CrljkNDo.bcmap                   0.16 kB
+../dist/acceptance/assets/KSC-V-CDXb0xyy.bcmap                        0.16 kB
+../dist/acceptance/assets/UniCNS-UTF32-V-DpuHKqNE.bcmap               0.16 kB
+../dist/acceptance/assets/KSC-EUC-V-C8-Y2jkl.bcmap                    0.16 kB
+../dist/acceptance/assets/UniKS-UTF16-V-EgvK-6IG.bcmap                0.16 kB
+../dist/acceptance/assets/KSC-Johab-V-CWzqnmVV.bcmap                  0.17 kB
+../dist/acceptance/assets/KSCpc-EUC-V-Bd6pD5ID.bcmap                  0.17 kB
+../dist/acceptance/assets/KSCms-UHC-V-DaEePsjg.bcmap                  0.17 kB
+../dist/acceptance/assets/V-BJkwLeFB.bcmap                            0.17 kB
+../dist/acceptance/assets/UniKS-UTF32-V-CnOTbPsn.bcmap                0.17 kB
+../dist/acceptance/assets/78-V-CJGcNX1t.bcmap                         0.17 kB
+../dist/acceptance/assets/KSCms-UHC-HW-V-DKemUgQi.bcmap               0.17 kB
+../dist/acceptance/assets/UniKS-UTF8-V-BIFFPWWm.bcmap                 0.17 kB
+../dist/acceptance/assets/EUC-V-BQ9CW2K_.bcmap                        0.17 kB
+../dist/acceptance/assets/RKSJ-V-CVQ5ujKs.bcmap                       0.17 kB
+../dist/acceptance/assets/ETenms-B5-V-DsL3AkeM.bcmap                  0.17 kB
+../dist/acceptance/assets/78-EUC-V-ChJxef36.bcmap                     0.17 kB
+../dist/acceptance/assets/78-RKSJ-V-CyaguwXf.bcmap                    0.17 kB
+../dist/acceptance/assets/GB-V-DQcXdwec.bcmap                         0.18 kB
+../dist/acceptance/assets/GBT-V-DVsZ47Yj.bcmap                        0.18 kB
+../dist/acceptance/assets/UniGB-UTF16-V-E1RoE6KW.bcmap                0.18 kB
+../dist/acceptance/assets/UniKS-UCS2-V-ahlksFWQ.bcmap                 0.18 kB
+../dist/acceptance/assets/GB-EUC-V-DUJE8ZfE.bcmap                     0.18 kB
+../dist/acceptance/assets/WP-Symbol-C3zzKJnO.bcmap                    0.18 kB
+../dist/acceptance/assets/GBK-EUC-V-bmo5E_xa.bcmap                    0.18 kB
+../dist/acceptance/assets/GBT-EUC-V-CCaONgYB.bcmap                    0.18 kB
+../dist/acceptance/assets/GBpc-EUC-V-BNBtOgzw.bcmap                   0.18 kB
+../dist/acceptance/assets/GBKp-EUC-V-FKuJrjD8.bcmap                   0.18 kB
+../dist/acceptance/assets/UniGB-UTF8-V-C8SGUjFI.bcmap                 0.18 kB
+../dist/acceptance/assets/GBTpc-EUC-V-D_dpKF5g.bcmap                  0.18 kB
+../dist/acceptance/assets/UniGB-UTF32-V-BFm4myiz.bcmap                0.18 kB
+../dist/acceptance/assets/UniGB-UCS2-V-COOBrDBb.bcmap                 0.19 kB
+../dist/acceptance/assets/Ext-V-ByyLJMVu.bcmap                        0.22 kB
+../dist/acceptance/assets/Adobe-GB1-0-DCLN2jmY.bcmap                  0.22 kB
+../dist/acceptance/assets/Ext-RKSJ-V-gySMsgy2.bcmap                   0.22 kB
+../dist/acceptance/assets/GBK2K-V-VEqjiYVJ.bcmap                      0.22 kB
+../dist/acceptance/assets/Adobe-Japan1-0-7ueYY-cc.bcmap               0.23 kB
+../dist/acceptance/assets/Adobe-Japan1-1-DymoVrld.bcmap               0.23 kB
+../dist/acceptance/assets/Adobe-Japan1-2-WYxwCoVU.bcmap               0.23 kB
+../dist/acceptance/assets/Adobe-Korea1-0-A0Ew6GJu.bcmap               0.24 kB
+../dist/acceptance/assets/Adobe-Japan1-3-DU7EG9_k.bcmap               0.24 kB
+../dist/acceptance/assets/Adobe-GB1-1-C_oGAEc2.bcmap                  0.25 kB
+../dist/acceptance/assets/NWP-V-DvbaGBQ0.bcmap                        0.25 kB
+../dist/acceptance/assets/90pv-RKSJ-V-BuoQaCHG.bcmap                  0.26 kB
+../dist/acceptance/assets/Add-V-CzFvKnCs.bcmap                        0.28 kB
+../dist/acceptance/assets/Add-RKSJ-V-C7YDsPzV.bcmap                   0.29 kB
+../dist/acceptance/assets/78ms-RKSJ-V-4hl06FMz.bcmap                  0.29 kB
+../dist/acceptance/assets/90ms-RKSJ-V-BbstlayK.bcmap                  0.29 kB
+../dist/acceptance/assets/90msp-RKSJ-V-BWep_0YK.bcmap                 0.29 kB
+../dist/acceptance/assets/Adobe-CNS1-0-CfVBOElR.bcmap                 0.32 kB
+../dist/acceptance/assets/Adobe-Japan1-4-CPqEnWe7.bcmap               0.34 kB
+../dist/acceptance/assets/Adobe-CNS1-1-Cs9TI-Yv.bcmap                 0.37 kB
+../dist/acceptance/assets/Adobe-CNS1-2-D3SWzMKj.bcmap                 0.38 kB
+../dist/acceptance/index.html                                         0.38 kB │ gzip:   0.31 kB
+../dist/acceptance/assets/Adobe-Korea1-1-DFSgDZ4w.bcmap               0.39 kB
+../dist/acceptance/assets/Adobe-Korea1-2-LZ89XEQ6.bcmap               0.39 kB
+../dist/acceptance/assets/Adobe-CNS1-3-BNxX-hNa.bcmap                 0.40 kB
+../dist/acceptance/assets/Adobe-CNS1-4-uApBOf1n.bcmap                 0.41 kB
+../dist/acceptance/assets/Adobe-CNS1-6-DfjBny4_.bcmap                 0.41 kB
+../dist/acceptance/assets/Adobe-CNS1-5-BWUfkzOP.bcmap                 0.41 kB
+../dist/acceptance/assets/Adobe-Japan1-5-CyFviWdc.bcmap               0.43 kB
+../dist/acceptance/assets/Adobe-GB1-2-BT5g0uLo.bcmap                  0.47 kB
+../dist/acceptance/assets/Adobe-GB1-3-BWe_tZZF.bcmap                  0.47 kB
+../dist/acceptance/assets/Adobe-Japan1-6-8p9YIft8.bcmap               0.49 kB
+../dist/acceptance/assets/CNS2-H-COHfjmw4.bcmap                       0.50 kB
+../dist/acceptance/assets/GB-H-CjAQlF1j.bcmap                         0.53 kB
+../dist/acceptance/assets/RKSJ-H-CotmKIAY.bcmap                       0.53 kB
+../dist/acceptance/assets/GB-EUC-H-OgfW-rVY.bcmap                     0.55 kB
+../dist/acceptance/assets/H-BJYV6_el.bcmap                            0.55 kB
+../dist/acceptance/assets/GBpc-EUC-H-4mXfmDQd.bcmap                   0.56 kB
+../dist/acceptance/assets/EUC-H-D0J4HUB1.bcmap                        0.58 kB
+../dist/acceptance/assets/Adobe-GB1-4-CYF1KDey.bcmap                  0.60 kB
+../dist/acceptance/assets/Adobe-GB1-5-B89PBerI.bcmap                  0.63 kB
+../dist/acceptance/assets/UniJIS-UTF16-V-DfK_Aqy1.bcmap               0.64 kB
+../dist/acceptance/assets/UniJIS2004-UTF16-V-BSHgoaRy.bcmap           0.65 kB
+../dist/acceptance/assets/UniJIS-UCS2-V-Cr3xs5m4.bcmap                0.66 kB
+../dist/acceptance/assets/UniJIS-UTF32-V-0rh54ED3.bcmap               0.68 kB
+../dist/acceptance/assets/UniJIS-UTF8-V-BGWFHinB.bcmap                0.68 kB
+../dist/acceptance/assets/UniJIS-UCS2-HW-V-BZyQaeYZ.bcmap             0.68 kB
+../dist/acceptance/assets/UniJIS2004-UTF32-V-CH3k_ouF.bcmap           0.68 kB
+../dist/acceptance/assets/UniJIS2004-UTF8-V-D8AJhywu.bcmap            0.68 kB
+../dist/acceptance/assets/UniJISX0213-UTF32-V-Cz7JBDr9.bcmap          0.68 kB
+../dist/acceptance/assets/UniJISX02132004-UTF32-V-BqqDIAe5.bcmap      0.69 kB
+../dist/acceptance/assets/UniJISPro-UCS2-V-BpvX7JBA.bcmap             0.69 kB
+../dist/acceptance/assets/UniJISPro-UCS2-HW-V-DLNkNO1x.bcmap          0.71 kB
+../dist/acceptance/assets/CNS1-H-DAbVz1sI.bcmap                       0.71 kB
+../dist/acceptance/assets/90msp-RKSJ-H-GTsoumJQ.bcmap                 0.72 kB
+../dist/acceptance/assets/90ms-RKSJ-H-Bhsfh4Ys.bcmap                  0.72 kB
+../dist/acceptance/assets/UniJISPro-UTF8-V-Db5K6XXE.bcmap             0.73 kB
+../dist/acceptance/assets/83pv-RKSJ-H-DNQtuaxs.bcmap                  0.91 kB
+../dist/acceptance/assets/90pv-RKSJ-H-DOcWKG7K.bcmap                  0.98 kB
+../dist/acceptance/assets/B5-H-Cw4_8on0.bcmap                         1.09 kB
+../dist/acceptance/assets/B5pc-H-BLVOWhvh.bcmap                       1.10 kB
+../dist/acceptance/assets/ETen-B5-H-BUa4x82H.bcmap                    1.13 kB
+../dist/acceptance/assets/HKm314-B5-H-CUeI2x46.bcmap                  1.77 kB
+../dist/acceptance/assets/CNS-EUC-H-C1HifF4e.bcmap                    1.78 kB
+../dist/acceptance/assets/KSC-H-CUtFgdXl.bcmap                        1.83 kB
+../dist/acceptance/assets/KSC-EUC-H-CYoqfsaA.bcmap                    1.85 kB
+../dist/acceptance/assets/CNS-EUC-V-DYWNmJNX.bcmap                    1.92 kB
+../dist/acceptance/assets/KSCpc-EUC-H-BxNLD7US.bcmap                  2.02 kB
+../dist/acceptance/assets/HKm471-B5-H-B_3IWC_G.bcmap                  2.17 kB
+../dist/acceptance/assets/HKgccs-B5-H-BSg_4Hb2.bcmap                  2.29 kB
+../dist/acceptance/assets/78-H-CSvm1opZ.bcmap                         2.38 kB
+../dist/acceptance/assets/78-RKSJ-H-34XPL1-s.bcmap                    2.40 kB
+../dist/acceptance/assets/78-EUC-H-Uf9aYsyl.bcmap                     2.40 kB
+../dist/acceptance/assets/Add-RKSJ-H-BpPRzomz.bcmap                   2.41 kB
+../dist/acceptance/assets/HKdlb-B5-H-Bf7o2mkD.bcmap                   2.41 kB
+../dist/acceptance/assets/Add-H-1H-FQZVX.bcmap                        2.42 kB
+../dist/acceptance/assets/Ext-H-BSOXjlXj.bcmap                        2.54 kB
+../dist/acceptance/assets/Ext-RKSJ-H-DGTwwnmY.bcmap                   2.54 kB
+../dist/acceptance/assets/78ms-RKSJ-H-BuwLY695.bcmap                  2.65 kB
+../dist/acceptance/assets/HKdla-B5-H-Bg4tZIUs.bcmap                   2.65 kB
+../dist/acceptance/assets/NWP-H-BSh0nlh5.bcmap                        2.77 kB
+../dist/acceptance/assets/KSCms-UHC-H-i6eA63f9.bcmap                  2.79 kB
+../dist/acceptance/assets/KSCms-UHC-HW-H-lQjjyo98.bcmap               2.79 kB
+../dist/acceptance/assets/ETHK-B5-H-1MLb5v9x.bcmap                    4.43 kB
+../dist/acceptance/assets/HKscs-B5-H-CXbBbq6g.bcmap                   4.44 kB
+../dist/acceptance/assets/GBT-H-DL9h-WkS.bcmap                        7.27 kB
+../dist/acceptance/assets/GBT-EUC-H-BTsQIL1M.bcmap                    7.29 kB
+../dist/acceptance/assets/GBTpc-EUC-H-DnIh5WJ3.bcmap                  7.30 kB
+../dist/acceptance/assets/GBKp-EUC-H-CElrnV5g.bcmap                  14.69 kB
+../dist/acceptance/assets/GBK-EUC-H-CAORqCkf.bcmap                   14.69 kB
+../dist/acceptance/assets/FoxitSymbol-BVtbc20u.pfb                   16.73 kB
+../dist/acceptance/assets/KSC-Johab-H-CGtV3MPT.bcmap                 16.79 kB
+../dist/acceptance/assets/FoxitFixed-Dyd5Nipw.pfb                    17.60 kB
+../dist/acceptance/assets/FoxitFixedBold-D5TuYRwj.pfb                18.06 kB
+../dist/acceptance/assets/FoxitFixedItalic-DqjQkmbS.pfb              18.75 kB
+../dist/acceptance/assets/FoxitFixedBoldItalic-BqlXQ_Yv.pfb          19.15 kB
+../dist/acceptance/assets/FoxitSerifBold-DZZ4CclT.pfb                19.40 kB
+../dist/acceptance/assets/FoxitSerif-qbgiDIe-.pfb                    19.47 kB
+../dist/acceptance/assets/GBK2K-H-Cv55KPk8.bcmap                     19.66 kB
+../dist/acceptance/assets/FoxitSerifBoldItalic-DSQtwd_X.pfb          20.73 kB
+../dist/acceptance/assets/FoxitSerifItalic-CQs5lx9Y.pfb              21.23 kB
+../dist/acceptance/assets/Adobe-Korea1-UCS2-BEQZuOdo.bcmap           23.29 kB
+../dist/acceptance/assets/UniJIS-UCS2-H-2DbZ0MaQ.bcmap               25.44 kB
+../dist/acceptance/assets/UniKS-UCS2-H-YeUc7k1L.bcmap                25.78 kB
+../dist/acceptance/assets/UniKS-UTF16-H-B0dvB-Td.bcmap               26.33 kB
+../dist/acceptance/assets/UniKS-UTF32-H-olR_LtmR.bcmap               26.45 kB
+../dist/acceptance/assets/UniKS-UTF8-H-CbpebD-y.bcmap                27.79 kB
+../dist/acceptance/assets/FoxitDingbats-BaQLufoW.pfb                 29.51 kB
+../dist/acceptance/assets/Adobe-GB1-UCS2-BA083yIo.bcmap              33.97 kB
+../dist/acceptance/assets/UniJIS-UTF16-H-BlDDPdCK.bcmap              39.44 kB
+../dist/acceptance/assets/UniJIS2004-UTF16-H-KXixH-HI.bcmap          39.53 kB
+../dist/acceptance/assets/UniJISX0213-UTF32-H-BavAhZjb.bcmap         40.52 kB
+../dist/acceptance/assets/UniJIS-UTF32-H-BIQPWkjv.bcmap              40.54 kB
+../dist/acceptance/assets/UniJISX02132004-UTF32-H-DAH-AgUq.bcmap     40.61 kB
+../dist/acceptance/assets/UniJIS2004-UTF32-H-CXrD-9YE.bcmap          40.63 kB
+../dist/acceptance/assets/Adobe-Japan1-UCS2-BL-4M2vS.bcmap           40.95 kB
+../dist/acceptance/assets/Adobe-CNS1-UCS2-fO900upv.bcmap             41.19 kB
+../dist/acceptance/assets/UniJIS-UTF8-H-CGusholx.bcmap               41.70 kB
+../dist/acceptance/assets/UniJIS2004-UTF8-H-BkOctZjn.bcmap           41.78 kB
+../dist/acceptance/assets/UniGB-UCS2-H-D7xzRvZN.bcmap                43.37 kB
+../dist/acceptance/assets/UniGB-UTF16-H-DKjbEwc0.bcmap               44.09 kB
+../dist/acceptance/assets/UniGB-UTF32-H-Behfouj5.bcmap               45.74 kB
+../dist/acceptance/assets/UniGB-UTF8-H-EROft1ro.bcmap                46.84 kB
+../dist/acceptance/assets/UniCNS-UCS2-H-DWzv8UhH.bcmap               48.28 kB
+../dist/acceptance/assets/UniCNS-UTF16-H-Bw0JKgCq.bcmap              50.42 kB
+../dist/acceptance/assets/UniCNS-UTF32-H-IE_GrH2i.bcmap              52.68 kB
+../dist/acceptance/assets/UniCNS-UTF8-H-BbLcFh6Q.bcmap               53.63 kB
+../dist/acceptance/assets/LiberationSans-BoldItalic-Bj53-jFw.ttf    135.12 kB
+../dist/acceptance/assets/LiberationSans-Bold-BPt4bU5Z.ttf          137.05 kB
+../dist/acceptance/assets/LiberationSans-Regular-cbskN6YR.ttf       139.51 kB
+../dist/acceptance/assets/LiberationSans-Italic-5QhGB3P9.ttf        162.04 kB
+../dist/acceptance/assets/docx.worker-D6l3sNo2.js                   600.15 kB
+../dist/acceptance/assets/pdf.worker.min-LyOxJPrg.mjs             1,072.84 kB
+../dist/acceptance/assets/index-Bq9Rlw3D.css                         16.29 kB │ gzip:   4.40 kB
+../dist/acceptance/assets/index-DGMW539f.js                           2.01 kB │ gzip:   0.92 kB
+../dist/acceptance/assets/pdf-s5CdVP7J.js                            20.84 kB │ gzip:   5.02 kB
+../dist/acceptance/assets/index-D0jLr-v5.js                         352.60 kB │ gzip: 104.24 kB
+../dist/acceptance/assets/pdf-CdE6nnZT.js                           407.56 kB │ gzip: 119.31 kB
+../dist/acceptance/assets/acceptance-CpUVZtiZ.js                    655.96 kB │ gzip: 192.44 kB
+../dist/acceptance/assets/models.generated-B68mm077.js            1,125.54 kB │ gzip: 153.60 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.68s
+        2.90 real         4.89 user         0.58 sys
+          1156087808  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               84211  page reclaims
+                 241  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                 485  messages sent
+                 519  messages received
+                2053  signals received
+                3194  voluntary context switches
+               31215  involuntary context switches
+           289797922  instructions retired
+            90792164  cycles elapsed
+            12912320  peak memory footprint

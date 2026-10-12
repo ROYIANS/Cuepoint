@@ -1,0 +1,10 @@
+   Compiling cuepoint-prototype v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.18s
+     Running tests/portable_contract.rs (.tools/target/debug/deps/portable_contract-a5a68838d1c5b516)
+
+running 2 tests
+test malformed_wire_extra_fields_and_native_lengths_reject ... ok
+test actual_typescript_oracle_is_exact_in_rust ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

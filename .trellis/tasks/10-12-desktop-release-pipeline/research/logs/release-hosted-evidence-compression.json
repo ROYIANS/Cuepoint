@@ -1,0 +1,42 @@
+{
+  "format": "gzip; mtime=0; byte-for-byte restore verified",
+  "reason": "Package four generated oversized evidence JSON files without dropping any source identity, outcome, failure, coverage event or assertion anchor. This is storage compression only, not a new test result.",
+  "files": [
+    {
+      "originalPath": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/release-hosted-final/sqlite-all/acceptance.json",
+      "compressedPath": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/release-hosted-final/sqlite-all/acceptance.json.gz",
+      "originalBytes": 18941385,
+      "compressedBytes": 771856,
+      "originalSha256": "a285ca6f33aa280a9123293e05fab2e72028a44e4870d11261ff50aa614d4570",
+      "compressedSha256": "fa93cd44eebafccc397504e5a59b18cfc35b0463cf73b666f5953233255919e8",
+      "restoredByteExact": true
+    },
+    {
+      "originalPath": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/release-hosted-final/sqlite-all/tool-and-table-coverage.json",
+      "compressedPath": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/release-hosted-final/sqlite-all/tool-and-table-coverage.json.gz",
+      "originalBytes": 18063357,
+      "compressedBytes": 660611,
+      "originalSha256": "b9c077683051d16d107e41547f60e929afefa6f4bcfde9e0348eb5c78a643078",
+      "compressedSha256": "5e532f4ef31a6266d4bc1e223ea1d873e76c6f80d2a54e64a3cca638b2656646",
+      "restoredByteExact": true
+    },
+    {
+      "originalPath": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/release-hosted-final-after-agent/sqlite-all/acceptance.json",
+      "compressedPath": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/release-hosted-final-after-agent/sqlite-all/acceptance.json.gz",
+      "originalBytes": 19071585,
+      "compressedBytes": 774580,
+      "originalSha256": "cb7c005418cf41d2244e3fd482d546c3ffeb0dcaa077238de52639659d59aaf3",
+      "compressedSha256": "418069bd8a28c358241b829336c5645ea27445a4b8cbb1fd08b2beeff647845a",
+      "restoredByteExact": true
+    },
+    {
+      "originalPath": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/release-hosted-final-after-agent/sqlite-all/tool-and-table-coverage.json",
+      "compressedPath": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/release-hosted-final-after-agent/sqlite-all/tool-and-table-coverage.json.gz",
+      "originalBytes": 18188987,
+      "compressedBytes": 663255,
+      "originalSha256": "796deb8a17de8e586bc999bc8cf2d6187d0d661f9a51fa680ce7b1e7173fca56",
+      "compressedSha256": "84e4fa7f153374583a8cf5bcca33cdf4aee5361f59e60eaf62208fe46bec5d09",
+      "restoredByteExact": true
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ❯ tests/agentTools.test.ts (26 tests | 1 failed) 1842ms
+   ❯ durable bounded tool loop (24)
+     × rechecks an earlier pending candidate changed to unknown during later preparation 77ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/agentTools.test.ts > durable bounded tool loop > rechecks an earlier pending candidate changed to unknown during later preparation
+AssertionError: expected { …(17) } to match object { status: 'unknown', …(2) }
+(14 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "arguments": "{}",
+    "providerCallId": "call-0",
+-   "status": "unknown",
++   "status": "completed",
+  }
+
+ ❯ tests/agentTools.test.ts:154:21
+    152|     const earlier = calls.find(call => call.name === first.name)!;
+    153|     expect(calls).toHaveLength(2);
+    154|     expect(earlier).toMatchObject({status, arguments: "{}", providerCa…
+       |                     ^
+    155|     expect(later.prepare).toHaveBeenCalledTimes(1);
+    156|     if (status === "unknown") {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 42 passed (43)
+   Start at  14:44:57
+   Duration  3.24s (tests 67%, transform 22%, import 6%, setup 4%)
+

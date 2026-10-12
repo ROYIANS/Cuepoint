@@ -1,0 +1,16 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.11s
+     Running unittests src/lib.rs (.tools/target/debug/deps/cuepoint_native_storage-9db440b810d0598f)
+
+running 9 tests
+test paths::tests::namespace_checkpoint_reports_its_actual_platform_strength ... ok
+test paths::tests::native_snapshot_distinguishes_same_size_and_mtime_and_preserves_open_identity ... ok
+test paths::tests::native_link_snapshot_distinguishes_two_owned_names_from_ready_single_name ... ok
+test paths::tests::wrong_or_replaced_published_identity_cannot_be_reported_flushed ... ok
+test paths::tests::directory_checkpoint_allows_child_creation_but_rejects_object_replacement ... ok
+test paths::tests::published_regular_file_flush_uses_real_bound_file_and_preserves_failure_names ... ok
+test paths::tests::same_identity_and_size_mutation_during_flush_is_rejected ... ok
+test paths::tests::manifest_cleanup_preserves_changed_stage_after_real_namespace_checkpoint ... ok
+test paths::tests::completion_publication_cannot_exceed_its_reader_boundary ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 62 filtered out; finished in 1.19s
+

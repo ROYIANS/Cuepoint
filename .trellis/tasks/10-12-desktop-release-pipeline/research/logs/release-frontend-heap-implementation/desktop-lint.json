@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "--dir",
+    "desktop/tauri",
+    "lint"
+  ],
+  "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+  "exitCode": 1,
+  "elapsedSeconds": 8.140723583
+}

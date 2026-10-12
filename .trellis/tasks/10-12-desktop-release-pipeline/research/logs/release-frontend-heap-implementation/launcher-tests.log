@@ -1,0 +1,37 @@
+✖ normal and acceptance builds inherit args, cwd and environment with one fixed worker budget (74.688833ms)
+✔ frontend child failure retains its exact nonzero exit code and diagnostics (56.617458ms)
+✔ an actual worker spawn error fails the launcher (28.942ms)
+✔ percentage heap options fail before worker execution instead of overriding the fixed budget (95.620167ms)
+✔ worker SIGINT remains a signaled build failure (52.081167ms)
+✔ launcher SIGINT stops its worker before exiting (57.403833ms)
+✔ worker SIGTERM remains a signaled build failure (51.544917ms)
+✔ launcher SIGTERM stops its worker before exiting (57.359875ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 517.4665
+
+✖ failing tests:
+
+test at desktop/tauri/scripts/build-frontend.test.mjs:38:1
+✖ normal and acceptance builds inherit args, cwd and environment with one fixed worker budget (74.688833ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '/private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint frontend launcher S9aUNC'
+  - '/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint frontend launcher S9aUNC'
+  
+      at TestContext.<anonymous> (file:///Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/build-frontend.test.mjs:48:20)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint frontend launcher S9aUNC',
+    expected: '/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint frontend launcher S9aUNC',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

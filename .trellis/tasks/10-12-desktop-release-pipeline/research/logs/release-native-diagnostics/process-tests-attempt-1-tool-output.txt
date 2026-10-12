@@ -1,0 +1,71 @@
+Command: /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node --test desktop/tauri/scripts/logged-process.test.mjs
+Exit code: 1
+Tool-reported output retained from the first run, before correcting the fixtures:
+
+✔ forwards both live streams and retains all multi-MiB bytes through EOF (123.17275ms)
+✖ preserves cwd, environment and literal argument boundaries without a shell (55.997708ms)
+✔ retains a nonzero exit and panic text in both live output and evidence (55.37625ms)
+✔ spawn failure rejects after child close and leaves a closed evidence log (31.440458ms)
+✔ signal termination remains a failed check with retained prior output (53.398458ms)
+✔ an existing log fails before spawning and cannot be overwritten (28.620291ms)
+✔ a missing log directory fails before spawning (30.086625ms)
+✖ a broken live stdout fails rather than claiming successful capture (60.160584ms)
+✔ release cancellation retains the finite diagnostics without relaxing publication gates (4.586584ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 7
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 481.905875
+
+✖ failing tests:
+
+test at desktop/tauri/scripts/logged-process.test.mjs:63:1
+✖ preserves cwd, environment and literal argument boundaries without a shell (55.997708ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    {
+      args: [
+        'with spaces',
+        '中文',
+        '$(false)',
+  ...
+      ],
+  +   cwd: '/private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint logged process 测试 xd5rEc',
+  -   cwd: '/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint logged process 测试 xd5rEc',
+      value: 'exact fixture value'
+    }
+
+      at TestContext.<anonymous> (file:///Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/logged-process.test.mjs:70:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { cwd: '/private/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint logged process 测试 xd5rEc', value: 'exact fixture value', args: [ 'with spaces', '中文', '$(false)', '; exit 0', 'literal `code`' ] },
+    expected: { cwd: '/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/cuepoint logged process 测试 xd5rEc', value: 'exact fixture value', args: [ 'with spaces', '中文', '$(false)', '; exit 0', 'literal `code`' ] },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop/tauri/scripts/logged-process.test.mjs:115:1
+✖ a broken live stdout fails rather than claiming successful capture (60.160584ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 1
+
+      at TestContext.<anonymous> (file:///Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/scripts/logged-process.test.mjs:118:43)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

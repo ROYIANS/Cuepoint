@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "sourceFrozen": {
+    "src/lib/agent/runChat.ts": "411125aa09c01887cf8d9af9b543205c5155fd3394e4933fcd57287c7336f218",
+    "tests/agentTools.test.ts": "586a130abf60c46ec4728ef89a81e98bc18016c1b34cc15e0460b1b520ed39e1"
+  },
+  "original64TurnPermanentCase": {
+    "headBytesEqualCurrent": true,
+    "bodySha256": "d4a82eca5af5113b4fbc2b2435512beb4534257afba81623125683b353406608"
+  },
+  "ipcCounts": {
+    "open": {
+      "before": 2,
+      "after": 2
+    },
+    "begin": {
+      "before": 3475,
+      "after": 1363
+    },
+    "get": {
+      "before": 5426,
+      "after": 3314
+    },
+    "prepare": {
+      "before": 613,
+      "after": 613
+    },
+    "seal": {
+      "before": 803,
+      "after": 803
+    },
+    "commit": {
+      "before": 803,
+      "after": 803
+    },
+    "changes": {
+      "before": 803,
+      "after": 803
+    },
+    "query": {
+      "before": 553,
+      "after": 553
+    },
+    "validate": {
+      "before": 2672,
+      "after": 560
+    },
+    "abort": {
+      "before": 2672,
+      "after": 560
+    }
+  },
+  "originalRunChatSha256": "cfb3161e7eee2e2edcbb8f69bf2796e60e6e62a782e3e9c83ba025147bed595b",
+  "browserFinal": {
+    "command": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/agentTools.test.ts",
+      "tests/d05ToolMetadata.test.ts",
+      "--maxWorkers",
+      "1"
+    ],
+    "log": "browser-agent-final.log",
+    "exitCode": 0,
+    "filesPassed": 2,
+    "testsPassed": 44
+  },
+  "originalReadAmplificationNegativeControl": {
+    "config": "original-loop.config.ts",
+    "originalLoopHashMatchesBaseline": true,
+    "log": "original-loop-regression-red.log",
+    "exitCode": 1,
+    "expectedRootReads": 3,
+    "actualRootReads": 6
+  },
+  "scope": "Local actual SQLite focused tool loop / browser fixtures, no hosted installer or provider claim",
+  "sqliteFinal": {
+    "lane": "actual SQLite Agent and metadata permanent tests",
+    "owner": "sqlite",
+    "coverageEnabled": true,
+    "maxWorkers": 1,
+    "testTimeout": 20000,
+    "hookTimeout": 20000,
+    "args": [
+      "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+      "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/agentTools.test.ts",
+      "tests/d05ToolMetadata.test.ts",
+      "--maxWorkers",
+      "1"
+    ],
+    "elapsedSeconds": 23.663058757781982,
+    "exitCode": 0,
+    "changedInputs": [],
+    "filesPassed": 2,
+    "testsPassed": 44,
+    "log": "sqlite-agent-final.log"
+  }
+}

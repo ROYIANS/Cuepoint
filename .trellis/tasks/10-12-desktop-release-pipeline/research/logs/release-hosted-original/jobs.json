@@ -1,0 +1,1011 @@
+{
+  "total_count": 8,
+  "jobs": [
+    {
+      "id": 114676809685,
+      "run_id": 38208372156,
+      "workflow_name": "Desktop test packages",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/runs/38208372156",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUfjfl88AAAAas0U_1Q",
+      "head_sha": "946664ab235e0996da138796bd7d364381dab6ab",
+      "url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/jobs/114676809685",
+      "html_url": "https://github.com/ROYIANS/Cuepoint/actions/runs/38208372156/job/114676809685",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-12T05:32:24Z",
+      "started_at": "2026-10-12T05:32:26Z",
+      "completed_at": "2026-10-12T05:32:40Z",
+      "name": "prepare",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T05:32:26Z",
+          "completed_at": "2026-10-12T05:32:27Z"
+        },
+        {
+          "name": "Preserve identical source bytes across hosts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T05:32:27Z",
+          "completed_at": "2026-10-12T05:32:27Z"
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T05:32:27Z",
+          "completed_at": "2026-10-12T05:32:34Z"
+        },
+        {
+          "name": "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T05:32:34Z",
+          "completed_at": "2026-10-12T05:32:38Z"
+        },
+        {
+          "name": "Closed target and source-version policy",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T05:32:38Z",
+          "completed_at": "2026-10-12T05:32:38Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-12T05:32:38Z",
+          "completed_at": "2026-10-12T05:32:38Z"
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-12T05:32:38Z",
+          "completed_at": "2026-10-12T05:32:39Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-12T05:32:39Z",
+          "completed_at": "2026-10-12T05:32:39Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/check-runs/114676809685",
+      "labels": [
+        "ubuntu-22.04"
+      ],
+      "runner_id": 1000001389,
+      "runner_name": "GitHub Actions 1000001389",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114676809919,
+      "run_id": 38208372156,
+      "workflow_name": "Desktop test packages",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/runs/38208372156",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUfjfl88AAAAas0VAvw",
+      "head_sha": "946664ab235e0996da138796bd7d364381dab6ab",
+      "url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/jobs/114676809919",
+      "html_url": "https://github.com/ROYIANS/Cuepoint/actions/runs/38208372156/job/114676809919",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-12T05:32:24Z",
+      "started_at": "2026-10-12T05:32:26Z",
+      "completed_at": "2026-10-12T05:38:04Z",
+      "name": "quality",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T05:32:26Z",
+          "completed_at": "2026-10-12T05:32:28Z"
+        },
+        {
+          "name": "Preserve identical source bytes across hosts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T05:32:28Z",
+          "completed_at": "2026-10-12T05:32:28Z"
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T05:32:28Z",
+          "completed_at": "2026-10-12T05:32:37Z"
+        },
+        {
+          "name": "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T05:32:37Z",
+          "completed_at": "2026-10-12T05:32:41Z"
+        },
+        {
+          "name": "Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T05:32:41Z",
+          "completed_at": "2026-10-12T05:32:42Z"
+        },
+        {
+          "name": "Frozen JavaScript dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T05:32:42Z",
+          "completed_at": "2026-10-12T05:32:51Z"
+        },
+        {
+          "name": "Pinned no-GUI SQLite test toolchain",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-12T05:32:51Z",
+          "completed_at": "2026-10-12T05:32:58Z"
+        },
+        {
+          "name": "Prepare fresh native SQLite test probe",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-12T05:32:58Z",
+          "completed_at": "2026-10-12T05:33:19Z"
+        },
+        {
+          "name": "Shared product and distribution quality",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-12T05:33:19Z",
+          "completed_at": "2026-10-12T05:38:00Z"
+        },
+        {
+          "name": "Preserve native probe failure diagnostics",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-10-12T05:38:00Z",
+          "completed_at": "2026-10-12T05:38:00Z"
+        },
+        {
+          "name": "Post Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-10-12T05:38:00Z",
+          "completed_at": "2026-10-12T05:38:00Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-12T05:38:00Z",
+          "completed_at": "2026-10-12T05:38:00Z"
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-10-12T05:38:00Z",
+          "completed_at": "2026-10-12T05:38:01Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-10-12T05:38:01Z",
+          "completed_at": "2026-10-12T05:38:01Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/check-runs/114676809919",
+      "labels": [
+        "ubuntu-22.04"
+      ],
+      "runner_id": 1000001390,
+      "runner_name": "GitHub Actions 1000001390",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114678095365,
+      "run_id": 38208372156,
+      "workflow_name": "Desktop test packages",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/runs/38208372156",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUfjfl88AAAAas1jeBQ",
+      "head_sha": "946664ab235e0996da138796bd7d364381dab6ab",
+      "url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/jobs/114678095365",
+      "html_url": "https://github.com/ROYIANS/Cuepoint/actions/runs/38208372156/job/114678095365",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-12T05:38:05Z",
+      "started_at": "2026-10-12T05:38:06Z",
+      "completed_at": "2026-10-12T05:43:25Z",
+      "name": "build (windows-x64, windows-2022, x86_64-pc-windows-msvc)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T05:38:07Z",
+          "completed_at": "2026-10-12T05:38:08Z"
+        },
+        {
+          "name": "Preserve identical source bytes across hosts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T05:38:08Z",
+          "completed_at": "2026-10-12T05:38:10Z"
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T05:38:10Z",
+          "completed_at": "2026-10-12T05:38:27Z"
+        },
+        {
+          "name": "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T05:38:27Z",
+          "completed_at": "2026-10-12T05:38:37Z"
+        },
+        {
+          "name": "Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T05:38:37Z",
+          "completed_at": "2026-10-12T05:38:39Z"
+        },
+        {
+          "name": "Pinned stable Rust",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T05:38:39Z",
+          "completed_at": "2026-10-12T05:38:55Z"
+        },
+        {
+          "name": "Deliberate hosted executable resolution",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-12T05:38:55Z",
+          "completed_at": "2026-10-12T05:38:55Z"
+        },
+        {
+          "name": "Frozen dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-12T05:38:55Z",
+          "completed_at": "2026-10-12T05:39:21Z"
+        },
+        {
+          "name": "Linux native and media dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-10-12T05:39:21Z",
+          "completed_at": "2026-10-12T05:39:21Z"
+        },
+        {
+          "name": "Required corresponding-host native and shared SQLite suites",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 10,
+          "started_at": "2026-10-12T05:39:21Z",
+          "completed_at": "2026-10-12T05:43:17Z"
+        },
+        {
+          "name": "Fresh normal product installers",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-10-12T05:43:17Z",
+          "completed_at": "2026-10-12T05:43:17Z"
+        },
+        {
+          "name": "External platform driver setup",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-10-12T05:43:17Z",
+          "completed_at": "2026-10-12T05:43:17Z"
+        },
+        {
+          "name": "Required package payload smokes and receipt sealing",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-12T05:43:17Z",
+          "completed_at": "2026-10-12T05:43:17Z"
+        },
+        {
+          "name": "Upload exact verified target",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-10-12T05:43:17Z",
+          "completed_at": "2026-10-12T05:43:17Z"
+        },
+        {
+          "name": "Preserve finite failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-12T05:43:17Z",
+          "completed_at": "2026-10-12T05:43:18Z"
+        },
+        {
+          "name": "Post Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28,
+          "started_at": "2026-10-12T05:43:18Z",
+          "completed_at": "2026-10-12T05:43:18Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 29,
+          "started_at": "2026-10-12T05:43:18Z",
+          "completed_at": "2026-10-12T05:43:18Z"
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-10-12T05:43:18Z",
+          "completed_at": "2026-10-12T05:43:20Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-10-12T05:43:20Z",
+          "completed_at": "2026-10-12T05:43:20Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/check-runs/114678095365",
+      "labels": [
+        "windows-2022"
+      ],
+      "runner_id": 1000001391,
+      "runner_name": "GitHub Actions 1000001391",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114678095426,
+      "run_id": 38208372156,
+      "workflow_name": "Desktop test packages",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/runs/38208372156",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUfjfl88AAAAas1jeQg",
+      "head_sha": "946664ab235e0996da138796bd7d364381dab6ab",
+      "url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/jobs/114678095426",
+      "html_url": "https://github.com/ROYIANS/Cuepoint/actions/runs/38208372156/job/114678095426",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-12T05:38:05Z",
+      "started_at": "2026-10-12T05:38:07Z",
+      "completed_at": "2026-10-12T05:42:29Z",
+      "name": "build (macos-x64, macos-15-intel, x86_64-apple-darwin)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T05:38:08Z",
+          "completed_at": "2026-10-12T05:38:11Z"
+        },
+        {
+          "name": "Preserve identical source bytes across hosts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T05:38:11Z",
+          "completed_at": "2026-10-12T05:38:11Z"
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T05:38:11Z",
+          "completed_at": "2026-10-12T05:38:41Z"
+        },
+        {
+          "name": "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T05:38:41Z",
+          "completed_at": "2026-10-12T05:38:58Z"
+        },
+        {
+          "name": "Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T05:38:58Z",
+          "completed_at": "2026-10-12T05:39:02Z"
+        },
+        {
+          "name": "Pinned stable Rust",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T05:39:02Z",
+          "completed_at": "2026-10-12T05:39:17Z"
+        },
+        {
+          "name": "Deliberate hosted executable resolution",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-12T05:39:17Z",
+          "completed_at": "2026-10-12T05:39:17Z"
+        },
+        {
+          "name": "Frozen dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-12T05:39:17Z",
+          "completed_at": "2026-10-12T05:40:30Z"
+        },
+        {
+          "name": "Linux native and media dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-10-12T05:40:30Z",
+          "completed_at": "2026-10-12T05:40:30Z"
+        },
+        {
+          "name": "Required corresponding-host native and shared SQLite suites",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 10,
+          "started_at": "2026-10-12T05:40:30Z",
+          "completed_at": "2026-10-12T05:42:09Z"
+        },
+        {
+          "name": "Fresh normal product installers",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-10-12T05:42:09Z",
+          "completed_at": "2026-10-12T05:42:09Z"
+        },
+        {
+          "name": "External platform driver setup",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-10-12T05:42:09Z",
+          "completed_at": "2026-10-12T05:42:09Z"
+        },
+        {
+          "name": "Required package payload smokes and receipt sealing",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-12T05:42:09Z",
+          "completed_at": "2026-10-12T05:42:09Z"
+        },
+        {
+          "name": "Upload exact verified target",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-10-12T05:42:09Z",
+          "completed_at": "2026-10-12T05:42:09Z"
+        },
+        {
+          "name": "Preserve finite failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-12T05:42:09Z",
+          "completed_at": "2026-10-12T05:42:11Z"
+        },
+        {
+          "name": "Post Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28,
+          "started_at": "2026-10-12T05:42:11Z",
+          "completed_at": "2026-10-12T05:42:11Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 29,
+          "started_at": "2026-10-12T05:42:11Z",
+          "completed_at": "2026-10-12T05:42:11Z"
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-10-12T05:42:11Z",
+          "completed_at": "2026-10-12T05:42:12Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-10-12T05:42:12Z",
+          "completed_at": "2026-10-12T05:42:14Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/check-runs/114678095426",
+      "labels": [
+        "macos-15-intel"
+      ],
+      "runner_id": 1000001392,
+      "runner_name": "GitHub Actions 1000001392",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114678095468,
+      "run_id": 38208372156,
+      "workflow_name": "Desktop test packages",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/runs/38208372156",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUfjfl88AAAAas1jebA",
+      "head_sha": "946664ab235e0996da138796bd7d364381dab6ab",
+      "url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/jobs/114678095468",
+      "html_url": "https://github.com/ROYIANS/Cuepoint/actions/runs/38208372156/job/114678095468",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-12T05:38:05Z",
+      "started_at": "2026-10-12T05:38:12Z",
+      "completed_at": "2026-10-12T05:40:10Z",
+      "name": "build (macos-arm64, macos-14, aarch64-apple-darwin)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T05:38:12Z",
+          "completed_at": "2026-10-12T05:38:14Z"
+        },
+        {
+          "name": "Preserve identical source bytes across hosts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T05:38:14Z",
+          "completed_at": "2026-10-12T05:38:14Z"
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T05:38:14Z",
+          "completed_at": "2026-10-12T05:38:33Z"
+        },
+        {
+          "name": "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T05:38:33Z",
+          "completed_at": "2026-10-12T05:38:38Z"
+        },
+        {
+          "name": "Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T05:38:38Z",
+          "completed_at": "2026-10-12T05:38:40Z"
+        },
+        {
+          "name": "Pinned stable Rust",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T05:38:40Z",
+          "completed_at": "2026-10-12T05:38:46Z"
+        },
+        {
+          "name": "Deliberate hosted executable resolution",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-12T05:38:46Z",
+          "completed_at": "2026-10-12T05:38:46Z"
+        },
+        {
+          "name": "Frozen dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-12T05:38:46Z",
+          "completed_at": "2026-10-12T05:39:10Z"
+        },
+        {
+          "name": "Linux native and media dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-10-12T05:39:10Z",
+          "completed_at": "2026-10-12T05:39:10Z"
+        },
+        {
+          "name": "Required corresponding-host native and shared SQLite suites",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 10,
+          "started_at": "2026-10-12T05:39:10Z",
+          "completed_at": "2026-10-12T05:39:59Z"
+        },
+        {
+          "name": "Fresh normal product installers",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-10-12T05:39:59Z",
+          "completed_at": "2026-10-12T05:39:59Z"
+        },
+        {
+          "name": "External platform driver setup",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-10-12T05:39:59Z",
+          "completed_at": "2026-10-12T05:39:59Z"
+        },
+        {
+          "name": "Required package payload smokes and receipt sealing",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-12T05:39:59Z",
+          "completed_at": "2026-10-12T05:39:59Z"
+        },
+        {
+          "name": "Upload exact verified target",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-10-12T05:39:59Z",
+          "completed_at": "2026-10-12T05:39:59Z"
+        },
+        {
+          "name": "Preserve finite failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-12T05:39:59Z",
+          "completed_at": "2026-10-12T05:40:00Z"
+        },
+        {
+          "name": "Post Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28,
+          "started_at": "2026-10-12T05:40:00Z",
+          "completed_at": "2026-10-12T05:40:01Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 29,
+          "started_at": "2026-10-12T05:40:01Z",
+          "completed_at": "2026-10-12T05:40:01Z"
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-10-12T05:40:01Z",
+          "completed_at": "2026-10-12T05:40:01Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-10-12T05:40:01Z",
+          "completed_at": "2026-10-12T05:40:02Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/check-runs/114678095468",
+      "labels": [
+        "macos-14"
+      ],
+      "runner_id": 1000001393,
+      "runner_name": "GitHub Actions 1000001393",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114678095471,
+      "run_id": 38208372156,
+      "workflow_name": "Desktop test packages",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/runs/38208372156",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUfjfl88AAAAas1jebw",
+      "head_sha": "946664ab235e0996da138796bd7d364381dab6ab",
+      "url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/jobs/114678095471",
+      "html_url": "https://github.com/ROYIANS/Cuepoint/actions/runs/38208372156/job/114678095471",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "created_at": "2026-10-12T05:38:05Z",
+      "started_at": "2026-10-12T05:38:07Z",
+      "completed_at": "2026-10-12T05:52:39Z",
+      "name": "build (linux-x64, ubuntu-22.04, x86_64-unknown-linux-gnu)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T05:38:08Z",
+          "completed_at": "2026-10-12T05:38:10Z"
+        },
+        {
+          "name": "Preserve identical source bytes across hosts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T05:38:10Z",
+          "completed_at": "2026-10-12T05:38:10Z"
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T05:38:10Z",
+          "completed_at": "2026-10-12T05:38:20Z"
+        },
+        {
+          "name": "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T05:38:20Z",
+          "completed_at": "2026-10-12T05:38:26Z"
+        },
+        {
+          "name": "Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T05:38:26Z",
+          "completed_at": "2026-10-12T05:38:27Z"
+        },
+        {
+          "name": "Pinned stable Rust",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T05:38:27Z",
+          "completed_at": "2026-10-12T05:38:36Z"
+        },
+        {
+          "name": "Deliberate hosted executable resolution",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-12T05:38:36Z",
+          "completed_at": "2026-10-12T05:38:36Z"
+        },
+        {
+          "name": "Frozen dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-12T05:38:36Z",
+          "completed_at": "2026-10-12T05:38:45Z"
+        },
+        {
+          "name": "Linux native and media dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-12T05:38:45Z",
+          "completed_at": "2026-10-12T05:39:41Z"
+        },
+        {
+          "name": "Required corresponding-host native and shared SQLite suites",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "number": 10,
+          "started_at": "2026-10-12T05:39:41Z",
+          "completed_at": "2026-10-12T05:52:34Z"
+        },
+        {
+          "name": "Fresh normal product installers",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-10-12T05:52:34Z",
+          "completed_at": "2026-10-12T05:52:34Z"
+        },
+        {
+          "name": "External platform driver setup",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-10-12T05:52:34Z",
+          "completed_at": "2026-10-12T05:52:34Z"
+        },
+        {
+          "name": "Required package payload smokes and receipt sealing",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-12T05:52:34Z",
+          "completed_at": "2026-10-12T05:52:34Z"
+        },
+        {
+          "name": "Upload exact verified target",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-10-12T05:52:34Z",
+          "completed_at": "2026-10-12T05:52:34Z"
+        },
+        {
+          "name": "Preserve finite failure diagnostics",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-12T05:52:34Z",
+          "completed_at": "2026-10-12T05:52:34Z"
+        },
+        {
+          "name": "Post Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28,
+          "started_at": "2026-10-12T05:52:34Z",
+          "completed_at": "2026-10-12T05:52:34Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 29,
+          "started_at": "2026-10-12T05:52:34Z",
+          "completed_at": "2026-10-12T05:52:34Z"
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-10-12T05:52:34Z",
+          "completed_at": "2026-10-12T05:52:34Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-10-12T05:52:34Z",
+          "completed_at": "2026-10-12T05:52:34Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/check-runs/114678095471",
+      "labels": [
+        "ubuntu-22.04"
+      ],
+      "runner_id": 1000001394,
+      "runner_name": "GitHub Actions 1000001394",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114681442722,
+      "run_id": 38208372156,
+      "workflow_name": "Desktop test packages",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/runs/38208372156",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUfjfl88AAAAas4vxog",
+      "head_sha": "946664ab235e0996da138796bd7d364381dab6ab",
+      "url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/jobs/114681442722",
+      "html_url": "https://github.com/ROYIANS/Cuepoint/actions/runs/38208372156/job/114681442722",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "created_at": "2026-10-12T05:52:40Z",
+      "started_at": "2026-10-12T05:52:40Z",
+      "completed_at": "2026-10-12T05:52:39Z",
+      "name": "collect",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/check-runs/114681442722",
+      "labels": [
+        "ubuntu-22.04"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 114681442889,
+      "run_id": 38208372156,
+      "workflow_name": "Desktop test packages",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/runs/38208372156",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUfjfl88AAAAas4vySQ",
+      "head_sha": "946664ab235e0996da138796bd7d364381dab6ab",
+      "url": "https://api.github.com/repos/ROYIANS/Cuepoint/actions/jobs/114681442889",
+      "html_url": "https://github.com/ROYIANS/Cuepoint/actions/runs/38208372156/job/114681442889",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "created_at": "2026-10-12T05:52:40Z",
+      "started_at": "2026-10-12T05:52:40Z",
+      "completed_at": "2026-10-12T05:52:39Z",
+      "name": "draft",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/ROYIANS/Cuepoint/check-runs/114681442889",
+      "labels": [
+        "ubuntu-22.04"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    }
+  ]
+}

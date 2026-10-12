@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "lane": "actual SQLite Agent and metadata permanent tests",
+  "owner": "sqlite",
+  "coverageEnabled": true,
+  "maxWorkers": 1,
+  "testTimeout": 20000,
+  "hookTimeout": 20000,
+  "args": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/vitest/vitest.mjs",
+    "run",
+    "tests/agentTools.test.ts",
+    "tests/d05ToolMetadata.test.ts",
+    "--maxWorkers",
+    "1"
+  ],
+  "elapsedSeconds": 23.663058757781982,
+  "exitCode": 0,
+  "before": {
+    "src/lib/agent/runChat.ts": "411125aa09c01887cf8d9af9b543205c5155fd3394e4933fcd57287c7336f218",
+    "tests/agentTools.test.ts": "586a130abf60c46ec4728ef89a81e98bc18016c1b34cc15e0460b1b520ed39e1",
+    "tests/d05ToolMetadata.test.ts": "9eaa92b597459ef4f2fc023ba72e1d6d23b45e52cfbec9ff1aea48745b6f5da2",
+    "src/db/agentTools.ts": "dde83b3abd72f12b82e258bd404dd07d4469df99b0a17f55bd6c3368591c69ca",
+    "src/lib/storage/native.ts": "4532d47791ac0ad389a73ede820bb5c1cf38f695878fd308ac3ab232eb5948a6",
+    "src/lib/storage/store.ts": "232506e5d08845bc3ed329a8b7c47ca446e19c1de73fbdaf100192328ec27e96",
+    "tests/fixtures/shared-storage/nativeDatabase.ts": "c76ac28ee143d3a3a68bb31fc6af0957da88781b0290bc27c92e384f57037f98",
+    "tests/fixtures/shared-storage/storeFactory.ts": "33f336f99521b1d19080d6027ead24562b0b87af705662552ac72c8e0f8aef84",
+    "tests/fixtures/shared-storage/toolDefinitionCoverage.ts": "0c89e22386947f53bafd6fdde68076fefce4edc7ac38031ee788c21696843f56",
+    "tests/helpers/nativeProductProbe.ts": "0ec75888b76665aa652cb1a7ebe839a75c4f72a160c2d1edfb01ba301a8d4ad1",
+    "vitest.config.ts": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a",
+    "desktop/tauri/.tools/target/debug/product_store_probe": "4d81003f3fc5835a9112a47864467b33a99cd6d39e748aeb68804358dde6da40"
+  },
+  "after": {
+    "src/lib/agent/runChat.ts": "411125aa09c01887cf8d9af9b543205c5155fd3394e4933fcd57287c7336f218",
+    "tests/agentTools.test.ts": "586a130abf60c46ec4728ef89a81e98bc18016c1b34cc15e0460b1b520ed39e1",
+    "tests/d05ToolMetadata.test.ts": "9eaa92b597459ef4f2fc023ba72e1d6d23b45e52cfbec9ff1aea48745b6f5da2",
+    "src/db/agentTools.ts": "dde83b3abd72f12b82e258bd404dd07d4469df99b0a17f55bd6c3368591c69ca",
+    "src/lib/storage/native.ts": "4532d47791ac0ad389a73ede820bb5c1cf38f695878fd308ac3ab232eb5948a6",
+    "src/lib/storage/store.ts": "232506e5d08845bc3ed329a8b7c47ca446e19c1de73fbdaf100192328ec27e96",
+    "tests/fixtures/shared-storage/nativeDatabase.ts": "c76ac28ee143d3a3a68bb31fc6af0957da88781b0290bc27c92e384f57037f98",
+    "tests/fixtures/shared-storage/storeFactory.ts": "33f336f99521b1d19080d6027ead24562b0b87af705662552ac72c8e0f8aef84",
+    "tests/fixtures/shared-storage/toolDefinitionCoverage.ts": "0c89e22386947f53bafd6fdde68076fefce4edc7ac38031ee788c21696843f56",
+    "tests/helpers/nativeProductProbe.ts": "0ec75888b76665aa652cb1a7ebe839a75c4f72a160c2d1edfb01ba301a8d4ad1",
+    "vitest.config.ts": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a",
+    "desktop/tauri/.tools/target/debug/product_store_probe": "4d81003f3fc5835a9112a47864467b33a99cd6d39e748aeb68804358dde6da40"
+  },
+  "changedInputs": []
+}

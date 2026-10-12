@@ -1,0 +1,16 @@
+✔ normal and acceptance builds inherit args, cwd and environment with one fixed worker budget (158.11425ms)
+✔ frontend child failure retains its exact nonzero exit code and diagnostics (74.433042ms)
+✔ an actual worker spawn error fails the launcher (35.963667ms)
+✔ percentage heap options fail before worker execution instead of overriding the fixed budget (112.655792ms)
+✔ worker SIGINT remains a signaled build failure (69.749916ms)
+✔ launcher SIGINT stops its worker before exiting (60.287667ms)
+✔ worker SIGTERM remains a signaled build failure (54.695167ms)
+✔ launcher SIGTERM stops its worker before exiting (61.361458ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 669.445875

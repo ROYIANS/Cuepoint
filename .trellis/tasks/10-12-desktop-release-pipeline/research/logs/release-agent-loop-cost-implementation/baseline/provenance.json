@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "lane": "actual SQLite focused unchanged 64-tool continuation profile",
+  "args": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/vitest/vitest.mjs",
+    "run",
+    "--config",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/release-agent-loop-cost-implementation/baseline/instrumented.config.ts",
+    "--testNamePattern",
+    "pauses each 32-request segment"
+  ],
+  "owner": "sqlite",
+  "coverageEnabled": true,
+  "elapsedSeconds": 15.80647087097168,
+  "exitCode": 0,
+  "before": {
+    "src/lib/agent/runChat.ts": "cfb3161e7eee2e2edcbb8f69bf2796e60e6e62a782e3e9c83ba025147bed595b",
+    "tests/agentTools.test.ts": "3869e345a1d656ce0ebcc0bb8fcd732740d19bb85ca96f76f7348dd024945071",
+    "src/db/agentTools.ts": "dde83b3abd72f12b82e258bd404dd07d4469df99b0a17f55bd6c3368591c69ca",
+    "src/db/agentRuns.ts": "18e684d601758767a6f3c4f74da726ff193a8ead85dbedd7c6e2abc4c3f0f1f1",
+    "src/lib/storage/native.ts": "4532d47791ac0ad389a73ede820bb5c1cf38f695878fd308ac3ab232eb5948a6",
+    "src/lib/storage/store.ts": "232506e5d08845bc3ed329a8b7c47ca446e19c1de73fbdaf100192328ec27e96",
+    "tests/helpers/nativeProductProbe.ts": "0ec75888b76665aa652cb1a7ebe839a75c4f72a160c2d1edfb01ba301a8d4ad1",
+    "tests/helpers/finalReviewFixture.ts": "c8d47da98df3c4b3cc52b6b7ae58565f94cf3a9505c946d14798769e082bcdcb",
+    "tests/fixtures/shared-storage/storeFactory.ts": "33f336f99521b1d19080d6027ead24562b0b87af705662552ac72c8e0f8aef84",
+    "tests/fixtures/shared-storage/toolDefinitionCoverage.ts": "0c89e22386947f53bafd6fdde68076fefce4edc7ac38031ee788c21696843f56",
+    "tests/setup.ts": "1dfa6241d5bd0f2d3c9f2653dc83bb764849f5e36afe00804f32e4a74897cfbc",
+    "vitest.config.ts": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a",
+    "desktop/tauri/.tools/target/debug/product_store_probe": "4d81003f3fc5835a9112a47864467b33a99cd6d39e748aeb68804358dde6da40"
+  },
+  "after": {
+    "src/lib/agent/runChat.ts": "cfb3161e7eee2e2edcbb8f69bf2796e60e6e62a782e3e9c83ba025147bed595b",
+    "tests/agentTools.test.ts": "3869e345a1d656ce0ebcc0bb8fcd732740d19bb85ca96f76f7348dd024945071",
+    "src/db/agentTools.ts": "dde83b3abd72f12b82e258bd404dd07d4469df99b0a17f55bd6c3368591c69ca",
+    "src/db/agentRuns.ts": "18e684d601758767a6f3c4f74da726ff193a8ead85dbedd7c6e2abc4c3f0f1f1",
+    "src/lib/storage/native.ts": "4532d47791ac0ad389a73ede820bb5c1cf38f695878fd308ac3ab232eb5948a6",
+    "src/lib/storage/store.ts": "232506e5d08845bc3ed329a8b7c47ca446e19c1de73fbdaf100192328ec27e96",
+    "tests/helpers/nativeProductProbe.ts": "0ec75888b76665aa652cb1a7ebe839a75c4f72a160c2d1edfb01ba301a8d4ad1",
+    "tests/helpers/finalReviewFixture.ts": "c8d47da98df3c4b3cc52b6b7ae58565f94cf3a9505c946d14798769e082bcdcb",
+    "tests/fixtures/shared-storage/storeFactory.ts": "33f336f99521b1d19080d6027ead24562b0b87af705662552ac72c8e0f8aef84",
+    "tests/fixtures/shared-storage/toolDefinitionCoverage.ts": "0c89e22386947f53bafd6fdde68076fefce4edc7ac38031ee788c21696843f56",
+    "tests/setup.ts": "1dfa6241d5bd0f2d3c9f2653dc83bb764849f5e36afe00804f32e4a74897cfbc",
+    "vitest.config.ts": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a",
+    "desktop/tauri/.tools/target/debug/product_store_probe": "4d81003f3fc5835a9112a47864467b33a99cd6d39e748aeb68804358dde6da40"
+  },
+  "changedInputs": [],
+  "executedTestFixture": {
+    "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-native-loop-timeout/agentToolsProfile.test.ts",
+    "sha256": "6f2c040ec10a7bca5e75c4949bd950070edf0b22465678126aad15bafd5cb552"
+  },
+  "copiedTestFixture": {
+    "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/release-agent-loop-cost-implementation/baseline/agentToolsProfile.test.ts",
+    "sha256": "6f2c040ec10a7bca5e75c4949bd950070edf0b22465678126aad15bafd5cb552",
+    "executed": false
+  },
+  "instrumentationLimit": "Actual fixture imports the historical metrics module while actual database intercept imports each lane-specific metrics module. IPC counts include the full real fixture lifecycle; phases/modelRequests in lane results are empty and cannot establish phase timings."
+}

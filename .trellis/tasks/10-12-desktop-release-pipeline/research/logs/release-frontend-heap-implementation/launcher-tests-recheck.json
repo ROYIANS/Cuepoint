@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+    "--test",
+    "desktop/tauri/scripts/build-frontend.test.mjs"
+  ],
+  "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+  "exitCode": 0,
+  "elapsedSeconds": 0.6242835,
+  "nodeVersion": "v24.11.0",
+  "inputs": {
+    "desktop/tauri/scripts/build-frontend.mjs": "db417e2ab13b6c9c8c90cce60386acf5669b36ae82499cf77ef1e8d17ea6261e",
+    "desktop/tauri/scripts/build-frontend-worker.mjs": "2c7c31fc20f3ea4ae4e9ffe547409073ceb9cfad80287492211e9026e5cf496a",
+    "desktop/tauri/scripts/build-frontend.test.mjs": "f6c4b7792a17eab53fae3277b1be342326b4450b3ba4755cbd7fca75ab6a8894"
+  }
+}

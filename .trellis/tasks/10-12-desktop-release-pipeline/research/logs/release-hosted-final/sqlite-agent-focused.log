@@ -1,0 +1,31 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ↓ tests/agentTools.test.ts > tool permissions and skill snapshots > uses the accepted permission matrix without model-supplied flags
+ ↓ tests/agentTools.test.ts > tool permissions and skill snapshots > defaults to ask, validates settings, and freezes skills for each run
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > passes complete assistant/tool chains, saves plan atomically, and finishes
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > persists approval, binds one immutable call and rejects double decisions
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > resumes rejection as an explicit tool result without dispatch
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > never replays completed calls after a failed next model request
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > blocks ambiguous effects and allows explicit cancel without replay
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > recovers executing tools to unknown but leaves pending approvals intact
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > rejects argument errors before tool execution and lets model correct them
+ ✓ tests/agentTools.test.ts > durable bounded tool loop > pauses each 32-request segment and resumes without replay or resetting cumulative steps 16529ms
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > does not replenish the segment on approval or ordinary interruption
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > preserves final-step text when pausing and permits ending without any replay
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > allows a final answer on the last model request instead of unnecessarily pausing
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > lets a legacy eight-step failure continue using the larger first segment
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > will not pause or replenish around unresolved side effects
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > blocks reuse of provider call IDs and preserves the first result
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > does not apply an old approval after a tool effect definition changes
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > thread deletion cascades pending ledger without resurrection
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > Stop after a settled tool keeps its result and can continue without replay
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > preserves the saved reply when a resumed pending step fails before the next request
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > does not dispatch a second tool after Stop during the first tool
+ ↓ tests/agentTools.test.ts > durable bounded tool loop > reports checkpoint persistence failure distinctly from user Stop
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 21 skipped (22)
+   Start at  14:32:11
+   Duration  17.32s (tests 96%, transform 3%, import 1%)
+

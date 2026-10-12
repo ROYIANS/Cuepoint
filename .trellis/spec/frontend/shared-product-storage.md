@@ -260,6 +260,19 @@ during execution and checks the actual registered tool outcomes. Confirmed
 table/test mappings contain no record values or original tool arguments. A
 partial `--suite core` run does not establish complete business coverage.
 
+Native disk fixtures must close every actual owner before removing their private
+root. Binary fixtures close stages/read leases while SQLite is usable, take and
+close the disk Connection, then delete the directory. Media fixtures stop the
+server, wait for active readers to drain, clear preview PlaybackAuthorities,
+require exclusive disk ownership, close the binary store and SQLite, then delete.
+`MediaServer::stop` alone leaves retained preview guards alive. Windows SQLite
+opens omit delete sharing, so deleting the directory before automatic field Drop
+is not portable. Normal cleanup failures fail the test; cleanup during an
+existing panic reports its error without a second panic hiding the original
+assertion. Lifecycle regressions require the database/managed files to be live
+before Drop and the private root absent afterward. No deleted-file sharing,
+silently ignored cleanup error or removed body assertion substitutes for release.
+
 ## 7. Wrong vs Correct
 
 ```ts

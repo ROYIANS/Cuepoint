@@ -1,0 +1,17 @@
+﻿2026-10-12T05:39:41.5104713Z ##[group]Run node desktop/tauri/scripts/release-native-checks.mjs --target 'linux-x64' --evidence-dir "$RUNNER_TEMP/native-checks"
+2026-10-12T05:39:41.5105460Z [36;1mnode desktop/tauri/scripts/release-native-checks.mjs --target 'linux-x64' --evidence-dir "$RUNNER_TEMP/native-checks"[0m
+2026-10-12T05:39:41.5167499Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-12T05:39:41.5167774Z env:
+2026-10-12T05:39:41.5167933Z   CARGO_INCREMENTAL: 0
+2026-10-12T05:39:41.5168115Z   CARGO_PROFILE_DEV_DEBUG: 0
+2026-10-12T05:39:41.5168305Z   CARGO_PROFILE_TEST_DEBUG: 0
+2026-10-12T05:39:41.5168567Z   PNPM_HOME: /home/runner/work/_temp/cuepoint-pnpm/node_modules/.bin
+2026-10-12T05:39:41.5168867Z   CUEPOINT_TOOL_MODE: hosted
+2026-10-12T05:39:41.5169123Z   CARGO_TARGET_DIR: /home/runner/work/_temp/cuepoint-cargo-target
+2026-10-12T05:39:41.5169419Z   CUEPOINT_CARGO_PATH: /home/runner/.cargo/bin/cargo
+2026-10-12T05:39:41.5169696Z   CUEPOINT_RUSTC_PATH: /home/runner/.cargo/bin/rustc
+2026-10-12T05:39:41.5169955Z   CUEPOINT_RUSTUP_PATH: /home/runner/.cargo/bin/rustup
+2026-10-12T05:39:41.5170267Z   CUEPOINT_RUSTFMT_PATH: /home/runner/.cargo/bin/rustfmt
+2026-10-12T05:39:41.5170718Z   CUEPOINT_PNPM_PATH: /home/runner/work/_temp/cuepoint-pnpm/node_modules/.pnpm/pnpm@10.15.0/node_modules/pnpm/bin/pnpm.cjs
+2026-10-12T05:39:41.5171123Z ##[endgroup]
+2026-10-12T05:52:34.1643505Z ##[error]The operation was canceled.

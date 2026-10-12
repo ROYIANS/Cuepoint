@@ -1,0 +1,87 @@
+   Compiling typenum v1.20.1
+   Compiling serde_core v1.0.229
+   Compiling const-oid v0.10.2
+   Compiling libsqlite3-sys v0.38.2
+   Compiling fallible-iterator v0.3.0
+   Compiling smallvec v1.16.3
+   Compiling cuepoint-prototype v0.1.0 (D:\a\Cuepoint\Cuepoint\desktop\tauri\src-tauri)
+   Compiling cpufeatures v0.3.1
+   Compiling fallible-streaming-iterator v0.1.9
+   Compiling memchr v2.8.3
+   Compiling rusqlite v0.40.2
+   Compiling hybrid-array v0.4.15
+   Compiling windows-sys v0.61.2
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling uuid v1.28.0
+   Compiling serde v1.0.229
+   Compiling digest v0.11.3
+   Compiling serde_json v1.0.151
+   Compiling sha2 v0.11.0
+    Finished `test` profile [unoptimized] target(s) in 14.27s
+     Running unittests src\lib.rs (D:\a\_temp\cuepoint-cargo-target\debug\deps\cuepoint_native_storage-108b92dcaefda0c7.exe)
+
+running 64 tests
+test file_transfer::tests::active_export_directory_cannot_move_until_transfer_is_closed ... ok
+test file_transfer::tests::dialogs_are_bounded_and_do_not_idle_expire ... ok
+test file_transfer::tests::cancel_bounds_order_and_failed_hash_never_publish ... ok
+test file_transfer::tests::existing_or_raced_destinations_are_preserved ... ok
+test file_transfer::tests::changed_stage_after_publication_is_preserved_as_a_saved_file_warning ... ok
+test backup::tests::closed_snapshot_database_flush_preserves_bytes_identity_and_single_name ... ok
+test file_transfer::tests::final_file_flush_failure_is_reached_after_publication_and_never_retried ... ok
+test file_transfer::tests::published_failure_is_truthful_and_abandonment_cleans_stages ... ok
+test file_transfer::tests::replaced_or_aliased_stage_is_never_written_published_or_unlinked ... ok
+test full_product_store::tests::closed_dtos_readonly_scope_unknown_indexes_and_binary_bags_reject ... ok
+test full_product_store::tests::chunked_large_row_and_paged_epoch_no_whole_database_preload ... ok
+test full_product_store::tests::durable_operation_identity_never_replays_a_known_or_pending_result ... ok
+test full_product_store::tests::committed_changes_contain_indexes_only_and_indexed_table_epoch_is_monotonic ... ok
+test file_transfer::tests::zero_and_large_exports_keep_byte_identity_without_sqlite ... ok
+test full_product_store::tests::encoded_metadata_envelopes_are_bounded_even_for_control_heavy_chunks ... ok
+test full_product_store::tests::failed_final_ledger_rolls_back_all_business_rows_and_receipt ... ok
+test full_product_store::tests::lost_commit_reply_durable_lookup_reopen_and_changed_payload_id_reject ... ok
+test full_product_store::tests::optional_compound_unique_constraints_and_index_tie_order_are_real_sqlite ... ok
+test full_product_store::tests::indexed_limit_and_aggregate_count_preserve_total_order_bytes_and_phantom_guard ... ok
+test full_product_store::tests::oversized_read_request_is_closed_bound_consumed_and_lossless ... ok
+test native_print::tests::a4_dimensions_and_ten_mm_margin_use_points_not_pixels ... ok
+test native_print::tests::landscape_has_a_positive_content_area_after_both_margins ... ok
+test paths::tests::active_directory_guard_blocks_ancestor_replacement_until_released ... FAILED
+test full_product_store::tests::all_current_tables_keys_and_own_undefined_reopen_losslessly ... ok
+test paths::tests::manifest_cleanup_preserves_changed_stage_after_real_namespace_checkpoint ... ok
+test paths::tests::namespace_checkpoint_reports_its_actual_platform_strength ... ok
+test paths::tests::native_link_snapshot_distinguishes_two_owned_names_from_ready_single_name ... ok
+test paths::tests::native_snapshot_distinguishes_same_size_and_mtime_and_preserves_open_identity ... ok
+test paths::tests::ntfs_junction_root_and_ancestor_are_rejected_without_foreign_access ... ok
+test paths::tests::published_regular_file_flush_uses_real_bound_file_and_preserves_failure_names ... ok
+test paths::tests::same_identity_and_size_mutation_during_flush_is_rejected ... ok
+test paths::tests::windows_directory_flush_spike_records_real_access_and_result_without_claiming_a_barrier ... ok
+test paths::tests::wrong_or_replaced_published_identity_cannot_be_reported_flushed ... ok
+test paths::tests::completion_publication_cannot_exceed_its_reader_boundary ... ok
+test full_product_store::tests::point_absence_phantom_and_delete_recreate_aba_all_conflict ... ok
+test full_product_store::tests::utf16_primary_identity_and_indexes_have_no_new_user_cap ... ok
+test product_binary::tests::changed_stage_after_final_flush_is_not_unlinked_or_claimed ... FAILED
+test product_binary::tests::changed_between_hash_and_sql_commit_rejects_all_claims ... FAILED
+test product_binary::tests::duplicate_forged_and_foreign_claims_reject_before_commit ... FAILED
+test product_binary::tests::final_file_flush_failure_retains_intent_and_recovery_never_invents_a_claim ... FAILED
+test product_binary::tests::idle_or_canceled_stages_have_no_claimed_rows ... FAILED
+test product_binary::tests::ordered_chunks_checksum_and_no_ready_partial_data ... FAILED
+test product_binary::tests::missing_and_corrupt_material_preserve_catalog_and_reject_stale_read_lease ... FAILED
+test product_binary::tests::managed_claim_and_domain_result_share_actual_sqlite_rollback ... FAILED
+test product_binary::tests::playback_is_verified_bounded_and_revoked_by_missing_or_changed_bytes ... FAILED
+test product_binary::tests::private_playback_authority_opens_lazily_without_hashing_and_rejects_rewritten_identity ... FAILED
+test product_binary::tests::publication_never_overwrites_even_empty_destination ... FAILED
+test product_binary::tests::recovery_flush_cannot_authorize_deleting_a_changed_stage ... FAILED
+test product_binary::tests::recovery_partial_known_stages_is_idempotent_and_retains_unknown_files ... FAILED
+test product_binary::tests::request_shapes_are_closed_and_ranges_are_bounded ... FAILED
+test product_binary::tests::recovery_handles_death_between_publication_link_and_unlink ... FAILED
+test product_binary::tests::zero_byte_carrier_is_lossless_and_storage_does_not_invent_domain_limits ... FAILED
+test product_binary::tests::actual_large_file_streams_past_fixture_cap_and_reopens_without_full_file_cache ... FAILED
+test product_media::tests::actual_http_rejects_foreign_host_origin_paths_body_and_methods ... FAILED
+test product_media::tests::conditional_range_and_unknown_units_keep_rfc_complete_responses ... FAILED
+test product_media::tests::exact_ranges_keep_full_selected_response_not_a_transport_chunk ... ok
+test product_media::tests::current_session_revocation_missing_and_symlink_containment_fail_closed ... FAILED
+test product_media::tests::warm_capability_rewrite_replacement_and_restoration_never_reauthorize_or_rescan ... FAILED
+error: test failed, to rerun pass `--lib`
+
+Caused by:
+  process didn't exit successfully: `D:\a\_temp\cuepoint-cargo-target\debug\deps\cuepoint_native_storage-108b92dcaefda0c7.exe` (exit code: 0xc0000409, STATUS_STACK_BUFFER_OVERRUN)
+note: test exited abnormally; to see the full output pass --no-capture to the harness.

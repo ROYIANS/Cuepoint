@@ -1,0 +1,97 @@
+{
+  "node": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "pnpm": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+  "results": [
+    {
+      "name": "root-types",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 10.518338583
+    },
+    {
+      "name": "root-quality",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "quality"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 23.176867416
+    },
+    {
+      "name": "quality-selftest",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "quality:self-test"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 93.664933666
+    },
+    {
+      "name": "model-verify",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "model-bank:verify"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.8856295829999823
+    },
+    {
+      "name": "desktop-types",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "types"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 4.1157216670000025
+    },
+    {
+      "name": "desktop-lint",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "lint"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 3.280148582999999
+    },
+    {
+      "name": "desktop-quality",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "quality"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.6366835839999965
+    },
+    {
+      "name": "desktop-release-tests",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "test:release"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.9992547919999879
+    },
+    {
+      "name": "root-tests",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "test"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 41.55161750000002
+    }
+  ],
+  "inputCount": 1016,
+  "changedInputs": []
+}

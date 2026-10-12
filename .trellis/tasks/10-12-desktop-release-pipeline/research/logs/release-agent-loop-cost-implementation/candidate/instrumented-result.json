@@ -1,0 +1,3940 @@
+{
+  "schema": 1,
+  "node": "v24.11.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "startedAt": "2026-10-12T06:41:49.340Z",
+  "phase": "fixture",
+  "firstModelAt": 0,
+  "modelRequests": [],
+  "queries": [
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentTaskWrapups",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentRuns",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "chatMessages",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentTasks",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentTasks",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "contextCompactions",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 132,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentRuns",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentRuns",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "chatMessages",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 133,
+      "table": "agentToolCalls",
+      "index": "[runId+providerCallId]"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentRuns",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "chatMessages",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentRuns",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "chatMessages",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentGenerationJobs",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentRuns",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "chatMessages",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentRuns",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "chatMessages",
+      "index": "threadId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentToolCalls",
+      "index": "runId"
+    },
+    {
+      "kind": "equals",
+      "keys": 1,
+      "keyBytes": 70,
+      "table": "agentGenerationJobs",
+      "index": "runId"
+    }
+  ],
+  "commands": {
+    "open": {
+      "calls": 2,
+      "bytes": 80,
+      "nextMilliseconds": 1.0639159999999492
+    },
+    "begin": {
+      "calls": 1363,
+      "bytes": 561036,
+      "nextMilliseconds": 387.1314339999576
+    },
+    "get": {
+      "calls": 3314,
+      "bytes": 1133004,
+      "nextMilliseconds": 7013.69170500001
+    },
+    "prepare": {
+      "calls": 613,
+      "bytes": 10475793,
+      "nextMilliseconds": 1222.4092339999893
+    },
+    "seal": {
+      "calls": 803,
+      "bytes": 293095,
+      "nextMilliseconds": 307.2753119999894
+    },
+    "commit": {
+      "calls": 803,
+      "bytes": 324412,
+      "nextMilliseconds": 2574.8594280000016
+    },
+    "changes": {
+      "calls": 803,
+      "bytes": 177355,
+      "nextMilliseconds": 137.01783499999488
+    },
+    "query": {
+      "calls": 553,
+      "bytes": 276914,
+      "nextMilliseconds": 1151.1939649999983
+    },
+    "validate": {
+      "calls": 560,
+      "bytes": 152880,
+      "nextMilliseconds": 63.57509499999708
+    },
+    "abort": {
+      "calls": 560,
+      "bytes": 151200,
+      "nextMilliseconds": 39.012999000000036
+    }
+  },
+  "phases": [],
+  "coverageEnabled": true,
+  "elapsedMilliseconds": 14863.584041,
+  "finishedAt": "2026-10-12T06:42:04.204Z",
+  "limitations": "Research-only current real SQLite fixture; permanent20s deadline andoriginal64turn/fullassertions retained; no hosted/prod mutation or measured priorcounterfactual."
+}

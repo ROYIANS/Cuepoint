@@ -42,6 +42,17 @@ entry through Node, retaining argument boundaries; do not enable a shell or
 interpolate paths into command strings. Native probe resolution honors the
 explicit target directory/triple and `.exe` suffix.
 
+`build-frontend.mjs` owns the frontend-only Node old-space budget: it spawns the
+same Node executable with `--max-old-space-size=4096` and the unchanged Vite
+configuration in `build-frontend-worker.mjs`. All package/app/release/native-check
+callers enter this launcher. Passing a heap flag only to a parent Node process
+does not configure a separately spawned Node child. Preserve argv, cwd,
+environment, inherited output and nonzero/signal failure; no shell or global
+Vitest/Rust budget. Node24 percentage heap options override a numeric budget, so
+a conflicting `NODE_OPTIONS` percentage option fails explicitly. A measured local
+build is evidence for its host only; retain peak memory/duration and validate
+against corresponding runner resources before claiming hosted success.
+
 Root quality runs real Rust SQLite bridge tests before the platform matrix.
 Its own job must install pinned Rust and call the shared
 `scripts/prepare-native-test-probe.mjs` with actual Cargo/rustc paths, a fresh
@@ -62,6 +73,15 @@ No updater, signing credential or old-data importer belongs in this lane. Window
 uses the explicitly owner-approved regular-file flush / NTFS no-overwrite /
 process-recovery contract; new namespace survival after sudden OS crash or power
 loss is unpromised. Actual corresponding-host checks remain required.
+
+Windows `pin_directory` opens an ordinary local NTFS directory with
+`FILE_LIST_DIRECTORY | FILE_READ_ATTRIBUTES`, read/write sharing and no delete
+sharing, retaining no-follow/backup flags and real handle identity checks.
+Metadata-only `FILE_READ_ATTRIBUTES` opens do not participate in the required
+sharing conflict and therefore cannot enforce a rename/delete guard. Keep
+ordinary stat inspection metadata-only with delete sharing. Require real
+DELETE-access/rename rejection while pinned and success after release on Windows;
+cross-compilation or Unix tests do not prove these Win32 semantics.
 
 Eligible release builds require a clean exact checked source commit, native
 host/architecture, verified tool versions, a fresh output and fresh bundle
@@ -94,6 +114,15 @@ mock bridge, embedded WebDriver plugin or acceptance IPC is permitted. Mac
 package/signature/bounded-launch checks do not claim UI/store persistence.
 Hardware, system dialogs, providers, FUSE launch and other distributions remain
 explicit residual limits where unexercised.
+
+Native checks and their nested storage runner retain original per-command logs
+and forward actual stdout/stderr to the workflow. Await child close and writable
+log completion before reporting a result; a spawn, signal, stream or log failure
+cannot become success. Rust test output is uncaptured so an abnormal executable
+exit does not erase earlier panic diagnostics. Upload existing finite build
+diagnostics on failure or cancellation, keeping installer upload/collection
+success gates unchanged. Cancellation with an absent nested error is an unknown
+cause, not proof of a specific storage bug.
 
 `product_records.row_key` is canonical WireText storage text: lowercase four-hex
 UTF-16 code units, not a plaintext payload ID. External verifiers must decode
@@ -141,6 +170,9 @@ checks do not prevent concurrent external publication.
 | Upload interrupted / identical original retry | Incomplete owned draft / exact conservative resume |
 | Changed payload or unknown remote asset | Stop; owner recovery/new version needed |
 | Local tests only / unavailable host | Record finite local proof and pending actual gate |
+| Frontend default heap OOM / percentage option conflict | Dedicated bounded child budget / explicit conflict error; no global CI relaxation |
+| Windows metadata-only directory guard | Insufficient rename authority; retain actual list-access guard and release checks |
+| Nested process failure or cancellation | Keep failure/cancel status, exact logs and useful live diagnostics |
 
 ## 5. Good / Base / Bad Cases
 
@@ -166,6 +198,13 @@ shared native storage `--suite all`; retained assertions cannot be weakened for
 portability. Run corresponding-host filesystem/origin/profile tests and real
 installer smoke. Actual tag/draft upload evidence closes the hosted delivery
 gate; archive only after all required criteria have actual outcomes.
+
+Launcher regressions must run the actual launcher with a tiny fixture worker:
+argument/environment/cwd identity, explicit heap precedence, output, nonzero,
+spawn failure and supported-host signals. Logged-process regressions require
+real children producing both streams past a pipe buffer, full EOF/log parity and
+nonzero/spawn/signal/log failure behavior. Retain the full unchanged native suite
+and actual frontend build; fixtures do not establish renderer or installer proof.
 
 ## 7. Wrong vs Correct
 

@@ -1,0 +1,108 @@
+{
+  "head": "946664ab235e0996da138796bd7d364381dab6ab",
+  "scope": "Readonly current-source and existing actual-run evidence, no new test executions",
+  "inputs": [
+    {
+      "path": "tests/agentTools.test.ts",
+      "sha256": "3869e345a1d656ce0ebcc0bb8fcd732740d19bb85ca96f76f7348dd024945071",
+      "headSha256": "3869e345a1d656ce0ebcc0bb8fcd732740d19bb85ca96f76f7348dd024945071",
+      "equalsHead": true
+    },
+    {
+      "path": "src/lib/agent/runChat.ts",
+      "sha256": "cfb3161e7eee2e2edcbb8f69bf2796e60e6e62a782e3e9c83ba025147bed595b",
+      "headSha256": "cfb3161e7eee2e2edcbb8f69bf2796e60e6e62a782e3e9c83ba025147bed595b",
+      "equalsHead": true
+    },
+    {
+      "path": "src/db/agentTools.ts",
+      "sha256": "dde83b3abd72f12b82e258bd404dd07d4469df99b0a17f55bd6c3368591c69ca",
+      "headSha256": "dde83b3abd72f12b82e258bd404dd07d4469df99b0a17f55bd6c3368591c69ca",
+      "equalsHead": true
+    },
+    {
+      "path": "src/db/agentToolRecovery.ts",
+      "sha256": "f85f1c1bce7c4864b63e13d94c457e58e576d4fc3bd296ae0c7af0e09f851be9",
+      "headSha256": "f85f1c1bce7c4864b63e13d94c457e58e576d4fc3bd296ae0c7af0e09f851be9",
+      "equalsHead": true
+    },
+    {
+      "path": "src/db/agentRuns.ts",
+      "sha256": "18e684d601758767a6f3c4f74da726ff193a8ead85dbedd7c6e2abc4c3f0f1f1",
+      "headSha256": "18e684d601758767a6f3c4f74da726ff193a8ead85dbedd7c6e2abc4c3f0f1f1",
+      "equalsHead": true
+    },
+    {
+      "path": "src/lib/storage/store.ts",
+      "sha256": "232506e5d08845bc3ed329a8b7c47ca446e19c1de73fbdaf100192328ec27e96",
+      "headSha256": "232506e5d08845bc3ed329a8b7c47ca446e19c1de73fbdaf100192328ec27e96",
+      "equalsHead": true
+    },
+    {
+      "path": "src/lib/storage/native.ts",
+      "sha256": "4532d47791ac0ad389a73ede820bb5c1cf38f695878fd308ac3ab232eb5948a6",
+      "headSha256": "4532d47791ac0ad389a73ede820bb5c1cf38f695878fd308ac3ab232eb5948a6",
+      "equalsHead": true
+    },
+    {
+      "path": "src/lib/storage/browser.ts",
+      "sha256": "63c3b473d16dd4f7ce7d3c6daff5157769b36171954c8181688e8aeb36f69130",
+      "headSha256": "63c3b473d16dd4f7ce7d3c6daff5157769b36171954c8181688e8aeb36f69130",
+      "equalsHead": true
+    },
+    {
+      "path": "src/lib/storage/codec.ts",
+      "sha256": "b83d2c174efeb605ddd7e672e84655df5d7480bb9e42d64b2c3a51b2a88e9d2e",
+      "headSha256": "b83d2c174efeb605ddd7e672e84655df5d7480bb9e42d64b2c3a51b2a88e9d2e",
+      "equalsHead": true
+    },
+    {
+      "path": "src/lib/agent/toolLoading.ts",
+      "sha256": "4dc6777b9fc3c43788c1d782295a29bdd2a39df88c773d1b6a047a92c89b345e",
+      "headSha256": "4dc6777b9fc3c43788c1d782295a29bdd2a39df88c773d1b6a047a92c89b345e",
+      "equalsHead": true
+    },
+    {
+      "path": "src/lib/agent/projectContext.ts",
+      "sha256": "ad4033519124137bb9524af1f074969d1fd30eedd12b74267f7cb04efd71a6ab",
+      "headSha256": "ad4033519124137bb9524af1f074969d1fd30eedd12b74267f7cb04efd71a6ab",
+      "equalsHead": true
+    },
+    {
+      "path": "src/lib/agent/memoryContext.ts",
+      "sha256": "1487ee6ac02a93b82350b462b373d2e73751132499a1c595da25988c8bfe79b8",
+      "headSha256": "1487ee6ac02a93b82350b462b373d2e73751132499a1c595da25988c8bfe79b8",
+      "equalsHead": true
+    },
+    {
+      "path": "src/lib/agent/contextCompaction.ts",
+      "sha256": "9a5efe21dd24bcfa8981c266d4e93bd987cc63325397faa3782c975fb9e21f21",
+      "headSha256": "9a5efe21dd24bcfa8981c266d4e93bd987cc63325397faa3782c975fb9e21f21",
+      "equalsHead": true
+    },
+    {
+      "path": "tests/fixtures/shared-storage/nativeDatabase.ts",
+      "sha256": "c76ac28ee143d3a3a68bb31fc6af0957da88781b0290bc27c92e384f57037f98",
+      "headSha256": "c76ac28ee143d3a3a68bb31fc6af0957da88781b0290bc27c92e384f57037f98",
+      "equalsHead": true
+    },
+    {
+      "path": "tests/fixtures/shared-storage/storeFactory.ts",
+      "sha256": "33f336f99521b1d19080d6027ead24562b0b87af705662552ac72c8e0f8aef84",
+      "headSha256": "33f336f99521b1d19080d6027ead24562b0b87af705662552ac72c8e0f8aef84",
+      "equalsHead": true
+    },
+    {
+      "path": "tests/helpers/nativeProductProbe.ts",
+      "sha256": "0ec75888b76665aa652cb1a7ebe839a75c4f72a160c2d1edfb01ba301a8d4ad1",
+      "headSha256": "0ec75888b76665aa652cb1a7ebe839a75c4f72a160c2d1edfb01ba301a8d4ad1",
+      "equalsHead": true
+    },
+    {
+      "path": "vitest.config.ts",
+      "sha256": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a",
+      "headSha256": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a",
+      "equalsHead": true
+    }
+  ]
+}

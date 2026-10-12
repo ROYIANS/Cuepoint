@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "baseline": "946664ab235e0996da138796bd7d364381dab6ab",
+  "host": "local macOS arm64",
+  "node": "v24.11.0",
+  "ownedInputs": {
+    "desktop/tauri/scripts/logged-process.mjs": "5d95c4df0eb11b9f3672caeca5f09bfe6dd66301ba86ee87de6ee4acf314944a",
+    "desktop/tauri/scripts/logged-process.test.mjs": "fd77ecfd22dca7c17238682d395f3fe94903de90db1630393f5b298006fb81e9",
+    "desktop/tauri/scripts/release-native-checks.mjs": "1573ee097b9baa160ca359ceae9063eabd820d56d8e06f1bcb769fd6505f43bd",
+    "scripts/native-storage-regression.mjs": "12a11ff233cfec47a80278c731a489c0e8e646129a7becfe6dad5cc7ae40fe52",
+    ".github/workflows/desktop-release.yml": "d34d3a7e56685c0e4712079c016ed50b62f5f67d1984ddd694e0edc6a6556e2d"
+  },
+  "checks": [
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node --test desktop/tauri/scripts/logged-process.test.mjs",
+      "exitCode": 0,
+      "log": "process-tests-attempt-3.log",
+      "passed": 10,
+      "logSha256": "4c428b83828ffa900318e67acc8ae293fadcdb3a505ffa5f443fcb139d922aca"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri lint",
+      "exitCode": 0,
+      "log": "desktop-lint-final.log",
+      "logSha256": "032c836532bb5b8949c83c124a9353d0b6727efc6efc50358eef31d43c218b6a"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri quality",
+      "exitCode": 0,
+      "log": "desktop-quality-final.log",
+      "logSha256": "fdd444fe6e9a40f8a8f6d372ab8a72163b5ccb7c8745e443c2137dbbb788dab8"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri types",
+      "exitCode": 0,
+      "log": "desktop-types.log",
+      "logSha256": "6f46de1c6f4487e33d41a122d74a08f3c92a6a67ff880a9a5293b0c6ab8af60d"
+    },
+    {
+      "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node --test desktop/tauri/scripts/release-pipeline.test.mjs scripts/prepare-native-test-probe.test.mjs",
+      "exitCode": 0,
+      "log": "release-probe-contracts.log",
+      "passed": 43,
+      "logSha256": "b3e4ce2a55a86f36b7a54d8401707b1bcdc0a00cbf9a17396ccd18a2494d7f3e"
+    }
+  ],
+  "failedAttemptRetained": "process-tests-attempt-1-tool-output.txt",
+  "limits": [
+    "Tests/lint/type/quality preceded the final single fixed-list input-hash addition, which changes no execution; root final full/native gates follow.",
+    "POSIX RLIMIT_FSIZE fault contract skips Windows explicitly.",
+    "Hosted platform acceptance and upload after cancellation not performed.",
+    "Original Linux assertion root cause remains unknown."
+  ],
+  "status": "focused-local-checks-passed"
+}

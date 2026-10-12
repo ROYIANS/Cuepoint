@@ -1,0 +1,52 @@
+{
+  "differenceFromPreAgentGate": [
+    "src/lib/agent/runChat.ts",
+    "tests/agentTools.test.ts"
+  ],
+  "rustSourceCurrent": {
+    "desktop/tauri/src-tauri/src/backup.rs": "52b79c819cc6b62b933dc331782bf073240c5552dedb7dd51e3ad9f8e6e838f0",
+    "desktop/tauri/src-tauri/src/bin/product_store_probe.rs": "c182b09cf8e25a08e089cd9937dd83f32d51aa4088690f7bc26d97558654e529",
+    "desktop/tauri/src-tauri/src/bin/workspace_probe.rs": "87d2307291e407b1ee8bb4410474bb47c220e6703e305884c5cf736c24decc4c",
+    "desktop/tauri/src-tauri/src/bundled_origin.rs": "e07ddc062a810f367ec9d13160e65248f7d8dd7d12767dc7db5ad119168061b7",
+    "desktop/tauri/src-tauri/src/contracts.rs": "e56125a7270e044b419dab180388872fca00c89c99270a0f04fb7b2aa591bd20",
+    "desktop/tauri/src-tauri/src/database.rs": "aa144934f5ca836122bba20055c9efe8b752133b3b8d2abc20d54b7df6dc238d",
+    "desktop/tauri/src-tauri/src/desktop/acceptance.rs": "0d8f46534030493c2f7d78c6dd5c9d22f17994125ab3fba37a596d7f76c2f003",
+    "desktop/tauri/src-tauri/src/desktop.rs": "648c16c82473dd0ad0834f18ef2b5c5370ef52f1472491ae6163b48702526cd1",
+    "desktop/tauri/src-tauri/src/error.rs": "34ed94b0be0f2d38936c04ddf7730c6a90a52ff6b64018aa2a97149e3a40c604",
+    "desktop/tauri/src-tauri/src/file_transfer.rs": "3081e05342ab2b93fce5bf519a446b9cd8f1e241c523f94f6c546f8341860624",
+    "desktop/tauri/src-tauri/src/full_product_store/mod.rs": "74a7ed4ef3ca596791b73ff65a065c7c70ec71f367f221c0a8bb08db00860fb0",
+    "desktop/tauri/src-tauri/src/full_product_store/protocol.rs": "45c39f3739d49fb1f540dd8c3fc8220a7068538a57b3c05f5a3fc754bc11f4e7",
+    "desktop/tauri/src-tauri/src/full_product_store/query.rs": "03820365d6b94b19c7b010cef0913f3905948a445e0ce53689cd71186f1515c7",
+    "desktop/tauri/src-tauri/src/full_product_store/registry.rs": "deb2f48c4fb6e296e30d99801f19e39ccd50f1eeec0a060fc449c8f9ee50a71f",
+    "desktop/tauri/src-tauri/src/full_product_store/tests.rs": "efefe1f46b6a34c50b944ca8ebd606c3371e908e1f7bbb06ce033011dfc4ef13",
+    "desktop/tauri/src-tauri/src/hooks.rs": "2f963855ae3d5bd1eab16199a372d924ee97053b029c94c6f2e9c8183dab9c61",
+    "desktop/tauri/src-tauri/src/import.rs": "bfa76c4d02ace7e3fd4890907209b9a8e9d67646a8344e735ba47a4f69ebdaa4",
+    "desktop/tauri/src-tauri/src/lib.rs": "79101ad25ea78fe960388c9aa7de022125bb290356efc3aa6ce29196a783641e",
+    "desktop/tauri/src-tauri/src/main.rs": "2fb2d2312dbbe54796494b9135813f34ea8eecc8aa7a94e15dcd7aef7c9f9490",
+    "desktop/tauri/src-tauri/src/native_print.rs": "3025d9e90b113937263b84dcaf36232bcfc4881370a922e4072139a5ab14622e",
+    "desktop/tauri/src-tauri/src/paths/windows.rs": "f2af2dcdc841215f02b85300d6b33f15765e9b3e7e0ca9fe1f5fa4ea03004bcc",
+    "desktop/tauri/src-tauri/src/paths.rs": "12405b839ca5f6948b2780163581b8dbd04f31f1c4bf245dc40d99a23d25d2d0",
+    "desktop/tauri/src-tauri/src/product_binary/tests.rs": "348d4f29af9516db7c711a9ad4af448d57cb7b60683414d222b724048646ee88",
+    "desktop/tauri/src-tauri/src/product_binary.rs": "4cd2f7bd21430022d1bf2f0bbf22bc79a3deec7f2a730f6b3c99d69dbdc2a266",
+    "desktop/tauri/src-tauri/src/product_media/server.rs": "62bafcee0e2fb14422f3b4fa13f4cb87418e164822f62114abe0bb008f916f25",
+    "desktop/tauri/src-tauri/src/product_media/tests.rs": "168b6f4db84762e7c590f6f45e07a208c037220985210da17cf47985f66d0c4b",
+    "desktop/tauri/src-tauri/src/product_media.rs": "98fa0e0005f6091c44e209f89465077d5f10f43407b9d482ac903105de2c988e",
+    "desktop/tauri/src-tauri/src/runtime_services.rs": "2d40088d66b6bdd9a06ca93b8b6f407ead77bd2f2597e9b49a97f9e71708e2b5",
+    "desktop/tauri/src-tauri/src/worker.rs": "ee022926dcb83d68986a6f4772c925cc7a14349d688d43d7acafe2ff1934f183",
+    "desktop/tauri/src-tauri/src/workspace.rs": "9048efc9517d749bc19b0b84b00087431e926ab1a58f3205bb03408002d6b622"
+  },
+  "rustSourceChangedSincePassedGate": [],
+  "retainedChecks": [
+    {
+      "name": "quality-selftest",
+      "exitCode": 0,
+      "elapsedSeconds": 93.664933666
+    },
+    {
+      "name": "model-verify",
+      "exitCode": 0,
+      "elapsedSeconds": 0.8856295829999823
+    }
+  ],
+  "limitations": "Current-source comparisons preserve accepted unchanged Rust and quality-helper evidence; neither establishes corresponding-host Windows/Intel/Linux behavior."
+}

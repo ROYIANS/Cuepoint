@@ -1,0 +1,17 @@
+✔ forwards both live streams and retains all multi-MiB bytes through EOF (124.006042ms)
+✔ preserves cwd, environment and literal argument boundaries without a shell (60.605542ms)
+✔ retains a nonzero exit and panic text in both live output and evidence (56.38025ms)
+✔ spawn failure rejects after child close and leaves a closed evidence log (33.942334ms)
+✔ signal termination remains a failed check with retained prior output (56.182458ms)
+✔ an existing log fails before spawning and cannot be overwritten (30.002042ms)
+✔ a missing log directory fails before spawning (29.526ms)
+✔ a broken live stdout fails rather than claiming successful capture (59.161541ms)
+✔ release cancellation retains the finite diagnostics without relaxing publication gates (0.718125ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 487.788333

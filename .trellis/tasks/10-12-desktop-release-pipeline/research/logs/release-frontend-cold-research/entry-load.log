@@ -1,0 +1,1 @@
+{"node":"v24.11.0","platform":"darwin","arch":"arm64","build":"function","react":"function","tailwind":"function","reactPlugins":["vite:react-babel","vite:react-refresh","vite:react-virtual-preamble"],"tailwindPlugins":["@tailwindcss/vite:scan","@tailwindcss/vite:generate:serve","@tailwindcss/vite:generate:build"]}

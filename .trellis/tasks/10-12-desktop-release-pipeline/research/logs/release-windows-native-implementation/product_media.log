@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running unittests src/lib.rs (.tools/target/debug/deps/cuepoint_native_storage-9db440b810d0598f)
+
+running 11 tests
+test product_media::tests::exact_ranges_keep_full_selected_response_not_a_transport_chunk ... ok
+test product_media::tests::fixture_drop_revokes_idle_preview_authority_and_closes_disk_before_removing_root ... ok
+test product_media::tests::fixture_shared_disk_is_a_cleanup_failure_without_masking_an_existing_body_panic ... ok
+test product_media::tests::conditional_range_and_unknown_units_keep_rfc_complete_responses ... ok
+test product_media::tests::warm_http_capabilities_retire_on_parent_or_root_replacement_without_touching_outside ... ok
+test product_media::tests::current_session_revocation_missing_and_symlink_containment_fail_closed ... ok
+test product_media::tests::warm_capability_rewrite_replacement_and_restoration_never_reauthorize_or_rescan ... ok
+test product_media::tests::actual_http_rejects_foreign_host_origin_paths_body_and_methods ... ok
+test product_media::tests::sixty_five_idle_capabilities_hold_no_file_descriptor_or_reader_slot ... ok
+test product_media::tests::active_stream_revoke_disconnect_and_admission_release_real_readers ... ok
+test product_media::tests::actual_http_streams_complete_ninety_mib_and_exact_seek_ranges ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 60 filtered out; finished in 5.00s
+

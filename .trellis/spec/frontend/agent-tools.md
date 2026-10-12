@@ -49,6 +49,25 @@ Base: no tool response, ordinary text completes through the same runtime.
 Bad: silently change ask to full for a pending call, retry completed paid work, or append duplicate tool results into history.
 
 ## 6. Tests Required
+
+`executePendingTools` loads the current complete ledger snapshot and retains a
+per-item Abort check in both passes. Current legal commands never reverse
+completed/failed/rejected calls; the execution pass can skip those snapshot
+terminal entries without another historical point read. Every snapshot that was
+nonterminal still requires a fresh call read, fresh current run, metadata and
+permission validation, and atomic pending/approved claim immediately before
+execution. Never use a stale snapshot to dispatch or skip unknown-result checks.
+The generic transition helper is not a universal immutable state graph; this
+contract describes legitimate product commands under the thread lock.
+
+Keep the original 64-tool/32-request continuation fixture, exact immutable call
+and final-message assertions, and browser5s/native20s deadlines. Matched actual
+SQLite profiling must demonstrate reduced historical point reads rather than
+merely increasing a timeout. Preflight race regressions must settle or invalidate
+a previously nonterminal candidate and assert no replay, retained result and
+fresh current-run/claim behavior. Preserve Stop, metadata drift, approval and
+uncertain-effect tests on both owners.
+
 `agentTools.test.ts`: all permission branches with controlled definitions, immutable decision ownership, invalid arguments, original settings snapshot, 32-request segments across reload, repeated continuation without replay, approval/Stop without budget reset, old eight-step failures, final-step completion, duplicate call IDs, approve/reject continuation, uncertain effects, deletion, Stop and save failure, atomic plan result.
 `agentToolsReview.test.ts`: approval-before-park crash, multi-approval ordering, live-tab ownership, late deletion result, unknown-effect precedence.
 `chatStream.test.ts`: tool JSON/SSE assembly, disabled/invalid/truncated calls, finish reason, call limit, no fallback POST.
