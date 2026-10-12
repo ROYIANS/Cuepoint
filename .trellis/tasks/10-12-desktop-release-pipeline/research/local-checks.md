@@ -7,6 +7,29 @@ confirmed the exact grouped local commit plan with “行”; work-commit checkp
 are recorded in task.json. No push, tag, dispatch, Release mutation or public
 publication occurred.
 
+## Subsequent hosted cold-probe correction
+
+After C0 was merged into local main, the owner supplied an actual hosted root
+test failure: six native test files/92 cases failed with ENOENT for the absent
+`product_store_probe`. The former local checks remain historical proof of their
+recorded inputs; warm generated native output did not establish a fresh quality
+job's prerequisite. Both GHCR and desktop quality workflows now prepare a fresh
+pinned no-GUI probe before the full root suite. No native assertions, default
+database owner or opt-in skip boundaries were removed or changed.
+
+The new correction reproduces the same six-file/92-case missing-path failure,
+then builds and checks the actual probe in a fresh target. The unchanged complete
+root suite passes under Node22.21.1: 228 files/3,955 cases passed, with the same
+one file/seven cases explicitly skipped. The 1,021 runtime/test/script/config
+input hashes match before/after that full run. New preparation contracts pass
+on Node22 and Node24; exact final receipts and independent review are recorded
+in ci-probe-readiness.md, ci-probe-check.md and their logs. The former C0 source
+receipts are not relabeled as matching the now-changed workflow/build helpers.
+
+This is local cold preparation/test proof. The next actual GitHub quality run
+and H1a four-host installer outcomes remain pending. No remote action or new
+version tag has been performed by this correction.
+
 ## Checks executed
 
 | Current check | Outcome | Evidence |

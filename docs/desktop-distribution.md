@@ -69,9 +69,19 @@ modes are intentionally distinct:
    Quality, every target build and its required payload checks must all pass.
    Only the final publisher receives release-write permission; collection is read-only.
 
+Both the desktop and GHCR quality jobs prepare the real no-GUI SQLite test
+probe before the complete root suite. They install pinned Rust1.99.0, build
+with locked dependencies into a fresh runner target, check its ready/close
+protocol and export the exact executable path. Root tests retain their existing
+browser/native coverage and opt-in acceptance boundary. Preparing Rust only in
+a later matrix job cannot satisfy the earlier quality job. A preparation failure
+stops testing and preserves its build/readiness diagnostics for 14 days. GHCR
+keeps its Node22 setup; the desktop tool lane remains Node24.11.0.
+
 Implementation approval does not authorize a Git push, tag creation, workflow
 dispatch or GitHub Release mutation. First review the concrete local work-commit
-plan; then the repository owner pushes the bootstrap branch. Resolve actual
+plan; then the repository owner pushes the bootstrap branch, or pushes the
+reviewed main and manually runs this workflow on main. Resolve actual
 host failures before creating a version tag. Source fixes require a new verified
 source and, after a tagged attempt, a new version/tag; do not move tags to replace
 failed payloads.

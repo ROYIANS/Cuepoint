@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   pull_request:
     branches: [main]
-    paths: ['desktop/tauri/**', 'scripts/native-storage-regression.mjs', 'scripts/release*.mjs', 'scripts/setup-release-driver.mjs', 'scripts/verify-release-smoke-store*.py', 'tests/helpers/nativeProductProbe.ts', '.github/workflows/desktop-release.yml']
+    paths: ['desktop/tauri/**', 'scripts/native-storage-regression.mjs', 'scripts/prepare-native-test-probe*.mjs', 'scripts/release*.mjs', 'scripts/setup-release-driver.mjs', 'scripts/verify-release-smoke-store*.py', 'tests/helpers/nativeProductProbe.ts', '.github/workflows/desktop-release.yml']
 
 permissions:
   contents: read
@@ -60,6 +60,11 @@ jobs:
         run: |
           node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" install --frozen-lockfile
           node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" --dir desktop/tauri install --frozen-lockfile
+      - name: Pinned no-GUI SQLite test toolchain
+        run: rustup toolchain install 1.99.0 --profile minimal
+      - name: Prepare fresh native SQLite test probe
+        run: |
+          node scripts/prepare-native-test-probe.mjs --cargo "$(rustup which --toolchain 1.99.0 cargo)" --rustc "$(rustup which --toolchain 1.99.0 rustc)" --target-dir "$RUNNER_TEMP/cuepoint-quality-probe-target" --evidence-dir "$RUNNER_TEMP/native-test-probe" --github-env "$GITHUB_ENV"
       - name: Shared product and distribution quality
         run: |
           node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" lint
@@ -72,7 +77,16 @@ jobs:
           node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" --dir desktop/tauri lint
           node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" --dir desktop/tauri quality
           node "$RUNNER_TEMP/cuepoint-pnpm/node_modules/pnpm/bin/pnpm.cjs" --dir desktop/tauri test:release
+          node --test scripts/prepare-native-test-probe.test.mjs
           python3 scripts/verify-release-smoke-store.test.py
+      - name: Preserve native probe failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: desktop-quality-probe-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/native-test-probe
+          if-no-files-found: warn
+          retention-days: 14
 
   build:
     if: github.event_name != 'pull_request'

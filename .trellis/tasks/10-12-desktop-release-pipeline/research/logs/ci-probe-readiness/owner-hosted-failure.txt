@@ -1,0 +1,109 @@
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 92 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sharedNativeAdmission.test.ts > native root operation admission > bounds repeated grids of seventy simultaneous material-version snapshots below the native context ceiling
+ FAIL  tests/sharedNativeAdmission.test.ts > native root operation admission > retires disposed queued grid observations without beginning native contexts or invoking their callbacks
+ FAIL  tests/sharedNativeAdmission.test.ts > native root operation admission > finishes an over-capacity reader batch before its writer and releases a failed snapshot without callback replay
+ FAIL  tests/sharedNativeAdmission.test.ts > native root operation admission > advances the FIFO after cancellation and failure without replaying a callback
+ FAIL  tests/sharedNativeAdmission.test.ts > native root operation admission > admits concurrent readers, waits for their snapshots, and keeps later readers behind a queued writer
+ FAIL  tests/sharedNativeOutcome.test.ts > real native commit certainty through the business atomic boundary > reconciles a malformed acknowledgement without replaying the callback
+ FAIL  tests/sharedNativeOutcome.test.ts > real native commit certainty through the business atomic boundary > reconciles a rejected acknowledgement without replaying the callback
+ FAIL  tests/sharedNativeOutcome.test.ts > real native commit certainty through the business atomic boundary > preserves unknown certainty when durable status cannot be reached after COMMIT
+ FAIL  tests/sharedNativeOutcome.test.ts > actual native observation races and precise selectors > retries a conflicted initial readonly snapshot and delivers only its coherent result
+ FAIL  tests/sharedNativeOutcome.test.ts > actual native observation races and precise selectors > tracks point and fixed-kind selectors and stops delivering after disposal
+ FAIL  tests/sharedNativePreparationOutcome.test.ts > actual native local preparation certainty > retains batch COMMIT uncertainty and never begins a paid POST
+ FAIL  tests/sharedNativePreparationOutcome.test.ts > actual native local preparation certainty > retains claim COMMIT uncertainty and never begins a paid POST
+ FAIL  tests/sharedNativeRunChatOutcome.test.ts > real native commit uncertainty through executeChatRun > uses the persisted completed ledger after a lost COMMIT reply and unreachable status
+ FAIL  tests/sharedNativeRunChatOutcome.test.ts > real native commit uncertainty through executeChatRun > uses the persisted completed ledger after a lost COMMIT reply and pending status
+ FAIL  tests/sharedNativeRunChatOutcome.test.ts > real native commit uncertainty through executeChatRun > uses the persisted completed ledger after a lost COMMIT reply and notFound status
+ FAIL  tests/sharedNativeRunChatOutcome.test.ts > real native commit uncertainty through executeChatRun > keeps a committed operation immutable when the completion read also fails, then resumes from its reopened ledger
+ FAIL  tests/sharedNativeRunChatOutcome.test.ts > real native commit uncertainty through executeChatRun > keeps actual update_run_plan committed after reply/status loss, completion read failure=false
+ FAIL  tests/sharedNativeRunChatOutcome.test.ts > real native commit uncertainty through executeChatRun > keeps actual update_run_plan committed after reply/status loss, completion read failure=true
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > covers every current table with exact native registry parity
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips projects under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips characters under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips scenes under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips shots under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips media under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips props under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips styles under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips episodes under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips connectors under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips chatThreads under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips chatMessages under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips productionProposals under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agents under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentRuns under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentToolCalls under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentTasks under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips contextCompactions under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentGenerationJobs under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentTaskRecords under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentTaskRecordVersions under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentTaskWrapups under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentTaskWrapupVersions under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips projectMemories under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips projectMemoryVersions under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips searchConnections under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentGenerationBatches under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips agentGenerationBatchItems under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips projectReferences under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips referenceChunks under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips connectorAliases under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips ipProfiles under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips projectIpLinks under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips libraryMaterials under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips materialVersions under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips materialUses under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips materialEvents under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioChapters under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioSpeakers under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioSegments under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioTakes under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioTracks under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioClips under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioExports under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips musicDrafts under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips musicWorks under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioGenerationJobs under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioGenerationBatches under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioGenerationBatchItems under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > roundtrips audioArrangementProposals under its actual primary key
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > preserves compound optional unique indexes and rejects collisions atomically
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > joins nested explicit scopes, queries staged rows, and rolls back late failure
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > rejects widening, readonly writes and escaped closed handles
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > returns clones and applies supplied patch keys including explicit undefined
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > orders indexed ties by primary key and preserves reverse sort direction
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > does not issue commit notification after failed writes
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > queries every registered index with the same equality, anyOf and ordering rules
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > retains empty, NUL, long and lone UTF16 identities and indexed values
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > keeps bulk writes atomic and exposes callback changes, deletes and empty selections
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > preserves a long UTF16 object key through the actual row adapter
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > isolates postcommit subscribers for put, transactions and atomic tool ledgers
+ FAIL  tests/sharedNativeStorageContract.test.ts > shared storage conformance/sqlite > keeps limit-before-sortBy and aggregate count semantics with duplicate selectors
+ FAIL  tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > transfers arbitrary oversized read identities within the IPC envelope budget
+ FAIL  tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > returns bounded history pages and counts without hydrating original tool bodies
+ FAIL  tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > reopens a row with a 180001-unit UTF16 object key losslessly
+ FAIL  tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > roundtrips all49primary-key families, ownundefined and complete original strings across reopen
+ FAIL  tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > joins nested commands, sees uncommitted indexed rows and rolls back late ledgers
+ FAIL  tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > pages large metadata rows and anyOf lists without a user-visible row/key cap
+ FAIL  tests/sharedNativeStorageContract.test.ts > actual shared TypeScript/Rust SQLite adapter > rejects an empty-scan phantom without replaying a mutation callback
+ FAIL  tests/sharedNativeUiCommands.test.ts > sqlite shared UI command durability > persists all variant links with drafts, reuses their IDs after reopening and preserves independent text
+ FAIL  tests/sharedNativeUiCommands.test.ts > sqlite shared UI command durability > rolls back a created draft when its final variant association fails
+ FAIL  tests/sharedNativeUiCommands.test.ts > sqlite shared UI command durability > restores slot and binary metadata after a later real cleanup deletion fails
+ FAIL  tests/sharedNativeUiCommands.test.ts > sqlite shared UI command durability > restores shot and proposal when the final applied proposal persistence fails
+ FAIL  tests/sharedNativeUiCommands.test.ts > sqlite shared UI command durability > restores a complete project after its final deletion fails
+Error: spawn /home/runner/work/Cuepoint/Cuepoint/desktop/tauri/.tools/target/debug/product_store_probe ENOENT
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/92]⎯
+
+
+ Test Files  6 failed | 222 passed | 1 skipped (229)
+      Tests  92 failed | 3863 passed | 7 skipped (3962)
+   Start at  02:59:00
+   Duration  71.30s (tests 60%, setup 19%, import 13%, transform 8%, worker 1%)
+
+    Isolate  229 workers spawned · ~120ms startup each (spawn + environment, per file)
+             at least ~9.05s faster with isolate: false — reuses workers across files instead of one per file
+
+ ELIFECYCLE  Test failed. See above for more details.
+Error: Process completed with exit code 1.

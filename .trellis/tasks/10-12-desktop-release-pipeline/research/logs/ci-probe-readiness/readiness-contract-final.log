@@ -1,0 +1,16 @@
+✔ shared probe build selects only locked no-GUI test hooks and platform-correct output (0.601417ms)
+✔ fresh build and actual readiness exit precede explicit environment export (462.800917ms)
+✔ failed build cannot export a stale or absent executable (232.79575ms)
+✔ an existing target directory fails closed and preserves its bytes (214.880875ms)
+✔ wrong rustc and compiler wrappers reject before build or environment export (204.898375ms)
+✔ missing, failed and premature probe processes cannot manufacture readiness (435.4715ms)
+✔ a fresh executable without a valid close acknowledgement cannot export the path (365.840709ms)
+✔ every full root-test workflow installs and prepares the probe before tests without changing adapters (0.670583ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1970.204834

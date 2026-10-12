@@ -1,0 +1,27 @@
+{
+  "node": "v22.21.1",
+  "commands": [
+    {
+      "name": "node22-readiness-contract",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+        "--test",
+        "scripts/prepare-native-test-probe.test.mjs"
+      ],
+      "exitCode": 0,
+      "log": "node22-readiness-contract.log"
+    },
+    {
+      "name": "node22-real-probe-readiness",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+        "--input-type=module",
+        "-e",
+        "import {readFile} from 'node:fs/promises';import {verifyNativeProbeReady} from './scripts/prepare-native-test-probe.mjs';const receipt=JSON.parse(await readFile('.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-probe-readiness/cold-build/probe-ready.json','utf8'));console.log(JSON.stringify(await verifyNativeProbeReady(receipt.probe.path))); "
+      ],
+      "exitCode": 0,
+      "log": "node22-real-probe-readiness.log"
+    }
+  ],
+  "scope": "Existing installed Node22 actual process contracts and the freshly built real SQLite probe, no installer/hosted claims"
+}

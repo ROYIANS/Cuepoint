@@ -4,6 +4,13 @@ Status: in progress. The user approved the final reviewed implementation plan on
 
 ## Current gate status
 
+After C0/main integration, the owner supplied a reached hosted quality failure
+from the absent no-GUI `product_store_probe`. The correction is scoped to shared
+probe preparation and both full-root-test quality jobs, with all native tests
+preserved. Local red/green evidence and independent review are tracked in
+research/ci-probe-readiness.md and research/ci-probe-check.md; subsequent hosted
+execution is still pending. The C0 status below describes the earlier checkpoint.
+
 Local source implementation and independent pipeline/native review are complete.
 Root/desktop quality, release failure contracts, both frozen Rust feature lanes
 and the frozen full shared SQLite business/Agent suite pass. The current local

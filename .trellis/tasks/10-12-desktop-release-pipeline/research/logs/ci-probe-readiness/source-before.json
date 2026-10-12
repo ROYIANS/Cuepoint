@@ -1,0 +1,10 @@
+{
+  "revision": "f4d02530744e2c74db6769a67baba08b9a32d318",
+  "hashes": {
+    ".github/workflows/ghcr.yml": "a429ab4d2879c6dcbdf297f58aa653e0219678c6579083057e51294081d5f2a7",
+    ".github/workflows/desktop-release.yml": "071dfad9d15386d242bc535c24f8bc13646cf252e5afdb19f1fbff0236a8c4e7",
+    "desktop/tauri/scripts/tool-resolver.mjs": "7c6a64c2958c568e9ede638e52a24ee97f09482fd9e8211ed3ea78ff427f98cd",
+    "scripts/native-storage-regression.mjs": "a2e6503c892a6547160f5b306626318fbc700184ec9f4b1f80728204a934bf82",
+    "knip.json": "adae4bf80530d10ad4d6a0177d9cf872fdfeea2ec01abd7a8a6ea16e14b064ed"
+  }
+}

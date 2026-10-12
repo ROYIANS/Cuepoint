@@ -136,6 +136,80 @@ Local preliminary work commits retain an active task until actual four-host and
 tag/draft gates pass. Bootstrap/manual builds cannot mutate Releases; the final
 tag-only owned draft publisher receives the only contents-write permission.
 
+## Cold root-test native probe prerequisite
+
+### 1. Scope / Trigger
+
+Apply to every fresh CI job that runs the complete root Vitest suite, including
+GHCR quality and desktop-release quality. Six ordinary root suites execute the
+real Rust SQLite bridge even while the default database owner is browser. A
+later matrix job or a developer's ignored `.tools` output cannot satisfy this
+job's prerequisite.
+
+### 2. Signatures / Owners
+
+The shared preparation entry is `scripts/prepare-native-test-probe.mjs`:
+
+```text
+node scripts/prepare-native-test-probe.mjs --cargo ABSOLUTE_CARGO --rustc ABSOLUTE_RUSTC --target-dir FRESH_ABSOLUTE_TARGET --evidence-dir FRESH_ABSOLUTE_EVIDENCE --github-env EXISTING_REGULAR_ENV_FILE
+```
+
+`nativeProbeBuildArguments` and `nativeProbeOutputPath` in the existing desktop
+tool resolver own the locked no-GUI build arguments and debug executable path.
+The native acceptance runner shares those arguments while retaining its own
+full storage/Agent evidence and explicit target triple.
+
+### 3. Contracts
+
+Install fixed Rust1.99.0 and pass actual Cargo and rustc executable paths. Verify
+both versions, bind `RUSTC` explicitly and reject compiler wrappers. Build in a
+fresh target directory with `--locked --no-default-features --features test-hooks
+--bin product_store_probe`. This needs no desktop/product-sqlite feature,
+frontend or GTK. Before appending `CUEPOINT_NATIVE_STORE_PROBE` to `GITHUB_ENV`,
+the produced binary must acknowledge ready and close in a disposable workspace
+and exit successfully. Keep finite build/readiness evidence. Tests receive the
+exact just-built path; a stale local default cannot count as proof.
+
+GHCR retains its Node22 contract; desktop retains its pinned Node24.11.0 lane.
+Do not loosen the release hosted-tool validation to prepare the GHCR probe.
+Do not set `CUEPOINT_STORAGE_TEST_OWNER=sqlite` or
+`CUEPOINT_NATIVE_STORAGE_ACCEPTANCE=1` for ordinary root tests. Existing opt-in
+binary acceptance and its skip behavior remain separate.
+
+### 4. Validation / Error Matrix
+
+| Input or outcome | Required behavior |
+| --- | --- |
+| Missing probe before preparation | Reached ENOENT; never silently skip native tests |
+| Wrong compiler version, wrapper, stale target or invalid output | Fail preparation; do not export the probe path |
+| Cargo failure, malformed readiness or unsuccessful exit | Stop before root tests |
+| Fresh no-GUI probe ready and cleanly closed | Export exact path, then run unchanged full root suite |
+| Build setup only in another job | Insufficient; each root-test job prepares its own probe |
+
+### 5. Good / Base / Bad Cases
+
+Good: a fresh quality job compiles and checks the actual probe before all root
+workers start. Base: local existing probe allows development tests, with no
+cold-CI success implied. Bad: passing only warm-cache tests, preparing after
+Vitest, enabling a different database owner, or replacing native tests with
+mocks/skips to resolve an ENOENT.
+
+### 6. Tests Required
+
+Reproduce missing-path failure, build into a genuinely fresh target and run the
+affected native cases through that exact binary. Run the complete root suite
+with unchanged owner/acceptance flags. Exercise preparation failure, stale
+output, wrong tools and readiness rejection. Verify preparation precedes root
+tests in both workflows. Local macOS cold proof does not replace hosted Linux
+execution or cross-platform installer acceptance.
+
+### 7. Wrong vs Correct
+
+Wrong: treat the 92 missing-executable failures as 92 separate storage bugs or
+assume a downstream platform build prepares a quality job. Correct: establish
+the actual shared prerequisite in each job, preserve the tests, bind the exact
+probe path and distinguish local verification from the next hosted run.
+
 ## Optional analytics deployment
 
 `VITE_UMAMI_SCRIPT_URL` and `VITE_UMAMI_WEBSITE_ID` are public build-time settings supplied by GitHub Actions repository variables. Keep the workflow's Vite build environment and Docker build arguments aligned. The Docker arguments belong only to the build stage; Compose and the Nginx runtime need no analytics environment variables. Local `.env` files are excluded from Git and Docker contexts, with `.env.example` as the documented template.

@@ -32,6 +32,13 @@ jobs:
         run: pnpm quality
       - name: Verify quality gate failure contracts
         run: pnpm quality:self-test
+      - name: Pinned no-GUI SQLite test toolchain
+        run: rustup toolchain install 1.99.0 --profile minimal
+      - name: Prepare fresh native SQLite test probe
+        run: |
+          node scripts/prepare-native-test-probe.mjs --cargo "$(rustup which --toolchain 1.99.0 cargo)" --rustc "$(rustup which --toolchain 1.99.0 rustc)" --target-dir "$RUNNER_TEMP/cuepoint-quality-probe-target" --evidence-dir "$RUNNER_TEMP/native-test-probe" --github-env "$GITHUB_ENV"
+      - name: Verify native probe failure contracts
+        run: node --test scripts/prepare-native-test-probe.test.mjs
       - name: Test
         run: pnpm test
       - name: Verify model snapshot
@@ -41,6 +48,14 @@ jobs:
         env:
           VITE_UMAMI_SCRIPT_URL: ${{ vars.VITE_UMAMI_SCRIPT_URL }}
           VITE_UMAMI_WEBSITE_ID: ${{ vars.VITE_UMAMI_WEBSITE_ID }}
+      - name: Preserve native probe failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: ghcr-quality-probe-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/native-test-probe
+          if-no-files-found: warn
+          retention-days: 14
 
   docker:
     needs: quality

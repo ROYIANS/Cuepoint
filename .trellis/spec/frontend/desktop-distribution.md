@@ -42,6 +42,16 @@ entry through Node, retaining argument boundaries; do not enable a shell or
 interpolate paths into command strings. Native probe resolution honors the
 explicit target directory/triple and `.exe` suffix.
 
+Root quality runs real Rust SQLite bridge tests before the platform matrix.
+Its own job must install pinned Rust and call the shared
+`scripts/prepare-native-test-probe.mjs` with actual Cargo/rustc paths, a fresh
+target/evidence directory and `GITHUB_ENV` before the full root suite. The probe
+must build locked with no default features/test-hooks, acknowledge ready/close
+and exit before its exact path is exported. GHCR's full root suite has the same
+prerequisite while retaining Node22. Follow the executable cold-test contract
+in [Quality Guidelines](./quality-guidelines.md); downstream native matrix
+setup, warm ignored output and skipped native assertions are insufficient.
+
 Normal product identity is Cuepoint / `dev.cuepoint.prototype.offline` /
 `cuepoint-prototype`, profile normal, storage sqlite, features product-sqlite.
 Visible branding retains the dark PNG/ICO/ICNS assets. Versions in root package,

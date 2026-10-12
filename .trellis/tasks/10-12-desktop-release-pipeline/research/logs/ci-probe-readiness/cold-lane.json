@@ -1,0 +1,52 @@
+{
+  "parentAbsentBefore": true,
+  "targetAbsentBefore": true,
+  "dependenciesFresh": true,
+  "crateDownloadCacheReused": true,
+  "githubEnv": "CUEPOINT_NATIVE_STORE_PROBE=/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/ci-probe-readiness-20261012/target/debug/product_store_probe\n",
+  "schema": 1,
+  "startedAt": "2026-10-12T03:12:14.088Z",
+  "status": "passed",
+  "targetDirectory": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/ci-probe-readiness-20261012/target",
+  "coldTargetRequired": true,
+  "versions": {
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)"
+  },
+  "executables": {
+    "cargo": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup/toolchains/1.99.0-aarch64-apple-darwin/bin/cargo",
+    "rustc": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup/toolchains/1.99.0-aarch64-apple-darwin/bin/rustc"
+  },
+  "commands": [
+    {
+      "command": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup/toolchains/1.99.0-aarch64-apple-darwin/bin/cargo",
+      "args": [
+        "build",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "test-hooks",
+        "--bin",
+        "product_store_probe"
+      ],
+      "log": "probe-build.log"
+    }
+  ],
+  "limitations": "No-GUI SQLite test probe readiness only; not packaged-product or corresponding-platform acceptance.",
+  "targetAbsentBeforeBuild": true,
+  "buildExitCode": 0,
+  "probe": {
+    "path": "/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/ci-probe-readiness-20261012/target/debug/product_store_probe",
+    "size": 12261656,
+    "sha256": "5b4f8694f3c42f471cb418f5de81be7a4a8e24a1153995dfab926fcb9254c8a5"
+  },
+  "readiness": {
+    "ready": true,
+    "closed": true,
+    "processExited": true,
+    "exitCode": 0
+  },
+  "finishedAt": "2026-10-12T03:12:23.309Z"
+}

@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "source": {
+    ".github/workflows/desktop-release.yml": "fef06a00bd4c651cd303ce6e55b9258829c6989d3c405243254925866de259c9",
+    ".github/workflows/ghcr.yml": "68a135604a1e794a04f54f847c1e99eb37cd87be9ab1def36910d2bd1e60f26c",
+    "desktop/tauri/scripts/tool-resolver.mjs": "bb12e79ec489ffc6e87f025b79d2fbd7e6102aed0afcec51fe4f43f56939ec11",
+    "scripts/native-storage-regression.mjs": "a91aa5fb510ab02435e1a9cc9c42cfc6acee415dafa4ca387eb482b92a0fb090",
+    "scripts/prepare-native-test-probe.mjs": "d75cc9e8963c30a67c5ea4d4b9073533e20942da8120c134ba78452243b91144",
+    "scripts/prepare-native-test-probe.test.mjs": "3ae60d2ca0af98e821375cf6099013d81391d69f7e9050c474e1bf1c42ec6d86",
+    "knip.json": "83664e3125ad445dde6347e8ec15a3ff2dfb12c7a534e6b31d0d4b4762ec8f75"
+  },
+  "checks": [
+    {
+      "kind": "actual-missing-probe",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "log": "cold-missing-red.log",
+      "summary": "6 files failed; 92 failed and5passed; actualENOENT atnewtargetpath"
+    },
+    {
+      "kind": "actual-cold-build-and-readiness-node24",
+      "exitCode": 0,
+      "log": "cold-build-run.log",
+      "receipt": "cold-build/probe-ready.json"
+    },
+    {
+      "kind": "actual-cold-build-and-readiness-node22",
+      "exitCode": 0,
+      "log": "cold-build-node22.log",
+      "receipt": "cold-build-node22/probe-ready.json"
+    },
+    {
+      "kind": "readiness-contract-node24",
+      "exitCode": 0,
+      "log": "readiness-contract-final.log",
+      "tests": 8
+    },
+    {
+      "kind": "readiness-contract-node22",
+      "exitCode": 0,
+      "log": "readiness-contract-node22.log",
+      "tests": 8
+    },
+    {
+      "kind": "full-root-node22",
+      "exitCode": 0,
+      "log": "full-root-green-node22.log",
+      "tests": 3955,
+      "files": 228,
+      "skippedTests": 7,
+      "skippedFiles": 1,
+      "sourceReceipt": "frozen-full-test.json"
+    },
+    {
+      "kind": "root-types",
+      "exitCode": 0,
+      "log": "root-lint.log"
+    },
+    {
+      "kind": "formal-quality",
+      "exitCode": 0,
+      "log": "root-quality.log",
+      "reviewedAllowances": 12,
+      "reviewWarnings": 584,
+      "failures": 0
+    },
+    {
+      "kind": "release-protocol",
+      "exitCode": 0,
+      "log": "release-protocol.log",
+      "tests": 35
+    },
+    {
+      "kind": "diff-whitespace",
+      "exitCode": 0
+    }
+  ],
+  "node22": "22.21.1",
+  "node24": "24.11.0",
+  "pnpm": "10.15.0",
+  "rust": "1.99.0",
+  "sourceChangedDuringFullRun": [],
+  "limits": "Local macOS ARM64 cold target compilation and actualSQLite tests. Crate download cache reused; binary and dependencies built from fresh target. Not actual UbuntuGitHub reexecution or installer/runtime/draft proof. No commits, pushes, remote jobs, GUI, providers, userdata, shared-target deletion."
+}

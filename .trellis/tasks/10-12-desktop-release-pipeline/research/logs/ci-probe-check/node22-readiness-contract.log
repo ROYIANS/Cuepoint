@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: shared probe build selects only locked no-GUI test hooks and platform-correct output
+ok 1 - shared probe build selects only locked no-GUI test hooks and platform-correct output
+  ---
+  duration_ms: 0.56875
+  type: 'test'
+  ...
+# Subtest: fresh build and actual readiness exit precede explicit environment export
+ok 2 - fresh build and actual readiness exit precede explicit environment export
+  ---
+  duration_ms: 1044.028333
+  type: 'test'
+  ...
+# Subtest: failed build cannot export a stale or absent executable
+ok 3 - failed build cannot export a stale or absent executable
+  ---
+  duration_ms: 295.155583
+  type: 'test'
+  ...
+# Subtest: an existing target directory fails closed and preserves its bytes
+ok 4 - an existing target directory fails closed and preserves its bytes
+  ---
+  duration_ms: 217.721167
+  type: 'test'
+  ...
+# Subtest: wrong rustc and compiler wrappers reject before build or environment export
+ok 5 - wrong rustc and compiler wrappers reject before build or environment export
+  ---
+  duration_ms: 474.974291
+  type: 'test'
+  ...
+# Subtest: missing, failed and premature probe processes cannot manufacture readiness
+ok 6 - missing, failed and premature probe processes cannot manufacture readiness
+  ---
+  duration_ms: 482.596333
+  type: 'test'
+  ...
+# Subtest: a fresh executable without a valid close acknowledgement cannot export the path
+ok 7 - a fresh executable without a valid close acknowledgement cannot export the path
+  ---
+  duration_ms: 416.59225
+  type: 'test'
+  ...
+# Subtest: every full root-test workflow installs and prepares the probe before tests without changing adapters
+ok 8 - every full root-test workflow installs and prepares the probe before tests without changing adapters
+  ---
+  duration_ms: 0.919584
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2967.39925

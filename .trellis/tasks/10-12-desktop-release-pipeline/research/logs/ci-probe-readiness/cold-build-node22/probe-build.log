@@ -1,0 +1,52 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling libc v0.2.190
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling shlex v2.0.1
+   Compiling find-msvc-tools v0.1.14
+   Compiling typenum v1.20.1
+   Compiling vcpkg v0.2.15
+   Compiling pkg-config v0.3.34
+   Compiling serde_core v1.0.229
+   Compiling cc v1.7.0
+   Compiling zmij v1.0.23
+   Compiling getrandom v0.4.3
+   Compiling cfg-if v1.0.5
+   Compiling serde_json v1.0.151
+   Compiling hybrid-array v0.4.15
+   Compiling const-oid v0.10.2
+   Compiling serde v1.0.229
+   Compiling smallvec v1.16.3
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling fallible-streaming-iterator v0.1.9
+   Compiling fallible-iterator v0.3.0
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling bitflags v2.13.2
+   Compiling cuepoint-prototype v0.1.0 (/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/src-tauri)
+warning: stripping debug info with `rust-objcopy` failed: signal: 6 (SIGABRT)
+  |
+  = note: dyld[23974]: Library not loaded: @rpath/libLLVM.dylib
+            Referenced from: <D6B3C499-A2AF-3E42-8F77-C42BD658AAB5> /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup/toolchains/1.99.0-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/bin/rust-objcopy
+            Reason: tried: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup/toolchains/1.99.0-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/bin/../lib/libLLVM.dylib' (no such file), '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup/toolchains/1.99.0-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/bin/../lib/libLLVM.dylib' (no such file), '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/ci-probe-readiness-node22-20261012/target/debug/deps/libLLVM.dylib' (no such file), '/Users/xiaomengdao/lib/libLLVM.dylib' (no such file), '/usr/local/lib/libLLVM.dylib' (no such file), '/usr/lib/libLLVM.dylib' (no such file, not in dyld cache)
+          
+
+warning: `cuepoint-prototype` (build script) generated 1 warning
+   Compiling libsqlite3-sys v0.38.2
+   Compiling syn v3.0.7
+   Compiling cpufeatures v0.3.1
+   Compiling uuid v1.28.0
+   Compiling digest v0.11.3
+   Compiling sha2 v0.11.0
+   Compiling serde_derive v1.0.229
+   Compiling rusqlite v0.40.2
+warning: stripping debug info with `rust-objcopy` failed: signal: 6 (SIGABRT)
+  |
+  = note: dyld[24069]: Library not loaded: @rpath/libLLVM.dylib
+            Referenced from: <D6B3C499-A2AF-3E42-8F77-C42BD658AAB5> /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup/toolchains/1.99.0-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/bin/rust-objcopy
+            Reason: tried: '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup/toolchains/1.99.0-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/bin/../lib/libLLVM.dylib' (no such file), '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.tools/rustup/toolchains/1.99.0-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/bin/../lib/libLLVM.dylib' (no such file), '/Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/ci-probe-readiness-node22-20261012/target/debug/deps/libLLVM.dylib' (no such file), '/Users/xiaomengdao/lib/libLLVM.dylib' (no such file), '/usr/local/lib/libLLVM.dylib' (no such file), '/usr/lib/libLLVM.dylib' (no such file, not in dyld cache)
+          
+
+warning: `cuepoint-prototype` (bin "product_store_probe") generated 1 warning
+    Finished `dev` profile [unoptimized] target(s) in 6.04s

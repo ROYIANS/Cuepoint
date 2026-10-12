@@ -1,0 +1,36 @@
+{
+  "commands": [
+    {
+      "name": "root-lint",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "exitCode": 0,
+      "log": "root-lint.log"
+    },
+    {
+      "name": "desktop-types",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "types"
+      ],
+      "exitCode": 0,
+      "log": "desktop-types.log"
+    },
+    {
+      "name": "desktop-lint",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "--dir",
+        "desktop/tauri",
+        "lint"
+      ],
+      "exitCode": 0,
+      "log": "desktop-lint.log"
+    }
+  ],
+  "finishedAt": "2026-10-12T03:16:08.043351+00:00"
+}

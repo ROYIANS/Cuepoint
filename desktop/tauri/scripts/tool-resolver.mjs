@@ -57,5 +57,15 @@ export function nativeTargetDirectory({env=process.env,target,profile='debug'}={
 
 export function nativeProbePath(env=process.env) {
     if (env.CUEPOINT_NATIVE_STORE_PROBE) return resolve(env.CUEPOINT_NATIVE_STORE_PROBE);
-    return resolve(nativeTargetDirectory({env,target:env.CUEPOINT_RUST_TARGET}),'product_store_probe'+(process.platform === 'win32' ? '.exe' : ''));
+    return nativeProbeOutputPath(resolveTools(env).env.CARGO_TARGET_DIR,env.CUEPOINT_RUST_TARGET);
+}
+
+export function nativeProbeOutputPath(targetDirectory,target,platform=process.platform) {
+    return resolve(targetDirectory,...(target ? [target] : []),'debug','product_store_probe'+(platform === 'win32' ? '.exe' : ''));
+}
+
+export function nativeProbeBuildArguments(target) {
+    const args=['build','--manifest-path','src-tauri/Cargo.toml','--locked','--no-default-features','--features','test-hooks','--bin','product_store_probe'];
+    if (target) args.push('--target',target);
+    return args;
 }

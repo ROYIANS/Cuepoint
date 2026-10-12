@@ -7,6 +7,8 @@
     "scripts/native-product-fixture-check.mjs",
     "scripts/release-product-smoke.mjs",
     "scripts/release-smoke-support.test.mjs",
+    "scripts/prepare-native-test-probe.mjs",
+    "scripts/prepare-native-test-probe.test.mjs",
     "scripts/*-browser-regression.mjs",
     "scripts/e06-*.mjs",
     "tests/**/*.test.{ts,tsx}",
