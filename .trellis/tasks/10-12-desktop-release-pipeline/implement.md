@@ -175,3 +175,11 @@ Actual release/smoke helper command names are finalized in B1/V1 and documented 
 - Failed target/package smoke: no complete draft; retain diagnostics and fix source. Record unsupported/pending device behavior separately.
 - Collector interrupted upload: keep incomplete owned draft and original immutable payload; exact resume or explicit new-version recovery, no clobber/tag rewrite.
 - External activation unavailable: local work is reviewable, hosted/draft gates remain pending and task is not falsely archived as fully verified.
+
+## Owner decision: packaging-only delivery (2026-10-12)
+
+The owner explicitly superseded the single-test exception proposal: “可以关掉软件包打包这个工作流里面全部test…我发布前肯定自己test过了…这里只需要打包就行”. This authorizes removing the desktop workflow's full quality/native/shared SQLite/test and installed-payload smoke gates for manual, bootstrap and desktop-tag builds. The separate GHCR/daily quality workflow is unchanged. The owner handles functional testing before publication; no automated testing success may be inferred from a packaging run.
+
+The desktop workflow now needs only source/version/matrix preparation, locked build prerequisites, four corresponding-host package builds, file/source/host/version/hash closure, collection of five installers and existing tag-only draft delivery. Remove external UI drivers and smoke-only Linux dependencies. Keep actual compilation and required bundle dependencies. Keep unsigned/ad-hoc identity, exact source, fresh outputs, immutable retry, conservative draft ownership and owner-controlled publication.
+
+Successful build receipts must explicitly say `state: packaged`, with empty test checks/evidence, rather than inventing passed test or launch/storage evidence. The collector accepts this package-only state only with all existing source/product/host/tool/asset/hash closure checks. Existing standalone test/smoke commands may remain available for explicit developer use; they are not run by desktop packaging. Generated limitations and user docs must say tests/runtime acceptance are the owner's responsibility, and the known64turn native performance issue remains unresolved. No product/Agent/database code changes, test workload/deadline edits, migration or new test-skip options are needed.

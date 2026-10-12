@@ -41,7 +41,7 @@
 | [Voice Batches / Arrangement](./audio-batch-arrangement.md) | v24 batches, exact confirmation, bounded retry, take selection and retained-clip placement | Filled |
 | [State Management](./state-management.md) | Fixed ProductStore owner, explicit transaction context, episodes and STUDIO_LIBRARY_ID | Filled |
 | [Managed Workspace](./workspace-storage.md) | Browser copy staging, cross-platform owned paths, incremental hashing and native boundaries | Filled |
-| [Desktop Distribution](./desktop-distribution.md) | Portable pinned tools, exact installer receipts, actual payload smoke and owned draft delivery | Filled |
+| [Desktop Distribution](./desktop-distribution.md) | Packaging-only delivery, pinned tools, exact installer receipts and owned drafts; optional standalone smoke | Filled |
 | [Native Product Runtime](./native-product-runtime.md) | Shared product, isolated-before-normal SQLite activation, official HTTP and native system services | Filled |
 | [Native Workspace / Packaged Acceptance](./native-workspace.md) | Tauri DTO/generation/navigation boundaries, SQLite prototype, WebKit limitations and truthful packaged evidence | Filled |
 | [Shared Video Workspace](./video-workspace.md) | One product page tree, runtime repositories, field baselines, atomic commands and committed inverse receipts | Filled |

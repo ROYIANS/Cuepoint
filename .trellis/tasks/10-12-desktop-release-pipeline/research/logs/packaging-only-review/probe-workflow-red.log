@@ -1,0 +1,18 @@
+✖ every full root-test workflow installs and prepares the probe before tests without changing adapters (1.994ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 37.994417
+
+✖ failing tests:
+
+test at scripts/prepare-native-test-probe.test.mjs:80:1
+✖ every full root-test workflow installs and prepares the probe before tests without changing adapters (1.994ms)
+  TypeError: Cannot read properties of undefined (reading 'split')
+      at TestContext.<anonymous> (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/prepare-native-test-probe.test.mjs:83:57)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)

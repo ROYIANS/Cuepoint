@@ -1,0 +1,16 @@
+✔ shared probe build selects only locked no-GUI test hooks and platform-correct output (0.612083ms)
+✔ fresh build and actual readiness exit precede explicit environment export (2160.247375ms)
+✔ failed build cannot export a stale or absent executable (593.341417ms)
+✔ an existing target directory fails closed and preserves its bytes (304.001375ms)
+✔ wrong rustc and compiler wrappers reject before build or environment export (519.1215ms)
+✔ missing, failed and premature probe processes cannot manufacture readiness (1671.349542ms)
+✔ a fresh executable without a valid close acknowledgement cannot export the path (879.433917ms)
+✔ GHCR prepares the real probe before root tests while desktop delivery remains packaging-only (0.996292ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6170.742625

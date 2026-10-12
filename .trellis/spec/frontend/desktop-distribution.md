@@ -9,7 +9,11 @@ Keep [Native Product Runtime](./native-product-runtime.md),
 [Shared Product Storage](./shared-product-storage.md) and filesystem certainty
 contracts authoritative. Reference IndexedDB and fixture acceptance are distinct
 lanes, never a normal-product fallback. These contracts describe source behavior;
-actual corresponding-host acceptance remains a separate recorded gate.
+actual corresponding-host acceptance remains separately recorded. The owner
+explicitly chose packaging-only delivery on 2026-10-12: this Actions workflow
+does not run tests, lint, quality checks or application-launch acceptance. The
+owner validates functionality before public release. Do not infer successful
+runtime validation from a successful package build.
 
 ## 2. Signatures / Owners
 
@@ -53,8 +57,15 @@ a conflicting `NODE_OPTIONS` percentage option fails explicitly. A measured loca
 build is evidence for its host only; retain peak memory/duration and validate
 against corresponding runner resources before claiming hosted success.
 
-Root quality runs real Rust SQLite bridge tests before the platform matrix.
-Its own job must install pinned Rust and call the shared
+The desktop delivery workflow contains only prepare, build, collect and
+tag-only draft publication. It has no quality job, native/storage test command,
+external driver or payload-smoke step. Build jobs depend on prepare; collection
+depends on the four build outcomes. Do not restore automated tests as a delivery
+prerequisite without an owner decision. Keep independent daily GHCR quality
+unchanged.
+
+Any independent root quality job runs real Rust SQLite bridge tests. Its own job
+must install pinned Rust and call the shared
 `scripts/prepare-native-test-probe.mjs` with actual Cargo/rustc paths, a fresh
 target/evidence directory and `GITHUB_ENV` before the full root suite. The probe
 must build locked with no default features/test-hooks, acknowledge ready/close
@@ -72,7 +83,8 @@ notarization; Windows is unsigned; Ubuntu22.04 is the Linux build baseline.
 No updater, signing credential or old-data importer belongs in this lane. Windows
 uses the explicitly owner-approved regular-file flush / NTFS no-overwrite /
 process-recovery contract; new namespace survival after sudden OS crash or power
-loss is unpromised. Actual corresponding-host checks remain required.
+loss is unpromised. Retain corresponding-host test commands for explicit local
+development; their execution is not required by the packaging workflow.
 
 Windows `pin_directory` opens an ordinary local NTFS directory with
 `FILE_LIST_DIRECTORY | FILE_READ_ATTRIBUTES`, read/write sharing and no delete
@@ -91,21 +103,27 @@ frontend. Local pre-commit candidate app checks stay separately labeled.
 
 The pinned Tauri CLI patches bundle-type markers into Windows/Linux executables
 and restores the unpatched build executable afterward. This release lane passes
-`--no-binary-patching`, keeping the recorded executable hash equal to each
-installed/extracted payload. The updater is outside this lane. On Mac request
+`--no-binary-patching`, preventing those bundle-type mutations. Packaging records
+the build executable hash; without extraction it does not prove installed
+payload parity. The updater is outside this lane. On Mac request
 `app,dmg` internally so Tauri retains the signed `.app` for hash verification;
 only the DMG is an eligible downloadable asset. Do not add `.app` as a sixth
 installer or substitute an unverified post-build executable hash.
 
-A receipt begins `state: building` and can become `verified` only with the exact
-required actual native/storage/payload checks. It records policy hash, immutable
+Successful packaging writes `state: packaged` with strictly empty `checks` and
+`evidenceFiles`. It records policy hash, immutable
 repository/workflow/source/run/attempt/version context, target, normal product,
 resolved tools/host, matching source hashes, exact executable/frontend identity,
-installer length/hash and named evidence files. Check names and evidence closure
-are closed; a passed check without its hashed evidence is insufficient.
+installer length/hash. Collection accepts this truthful package-only outcome;
+never synthesize passed test rows or evidence from a successful build. Resolved
+host and target metadata do not establish installed/extracted architecture or
+runtime behavior. If the retained standalone verification tools are explicitly
+run, a fresh packaged receipt can become `verified` only with the exact actual
+native/storage/payload checks and hashed closed evidence. These tools are not
+invoked by the delivery workflow.
 
-Windows/Linux smoke runs the normal installed/extracted executable, verifies
-payload architecture/hash and trusted origin/profile, creates/imports/previews
+The optional standalone Windows/Linux smoke runs the normal installed/extracted
+executable, verifies payload architecture/hash and trusted origin/profile, creates/imports/previews
 through existing UI, observes actual process exit, removes only its fixture
 source, and reopens. A read-only external SQLite verifier asserts project,
 material/version, committed binary reference and exact managed bytes. Each
@@ -115,8 +133,8 @@ package/signature/bounded-launch checks do not claim UI/store persistence.
 Hardware, system dialogs, providers, FUSE launch and other distributions remain
 explicit residual limits where unexercised.
 
-Native checks and their nested storage runner retain original per-command logs
-and forward actual stdout/stderr to the workflow. Await child close and writable
+Standalone native checks and their nested storage runner retain original
+per-command logs and forward actual stdout/stderr to the caller. Await child close and writable
 log completion before reporting a result; a spawn, signal, stream or log failure
 cannot become success. Rust test output is uncaptured so an abnormal executable
 exit does not erase earlier panic diagnostics. Upload existing finite build
@@ -133,7 +151,7 @@ inspection of both contracts; never rewrite SQLite rows to satisfy a test.
 
 The bootstrap exact branch push and manual dispatch are build-only. Manual
 availability requires the workflow on the default branch. Desktop tag mode can
-create/resume only a pipeline-owned draft prerelease after all targets pass;
+create/resume only a pipeline-owned draft prerelease after all targets package;
 only its final publisher receives `contents: write`. Existing GHCR triggers and
 permissions remain separate. Implementation approval does not authorize push,
 tag creation, remote dispatch or Release mutation.
@@ -141,8 +159,11 @@ tag creation, remote dispatch or Release mutation.
 Artifact selection is explicit and bound to this run, target and original
 attempt. Reject ambiguous candidates and future attempts. Do not flatten loose
 globs. Verify regular files, path containment, exact whitelist, sizes/hashes,
-source equality and all checks before producing canonical SHA256SUMS and
-release-manifest.json. Retain original immutable artifacts for draft retries.
+source equality and the declared receipt state before producing canonical
+SHA256SUMS and release-manifest.json. The manifest and draft notes must say that
+automated tests, launch and storage smokes were not performed and owner
+functional verification is pending; never claim the owner already tested the
+build. Retain original immutable artifacts for draft retries.
 
 Publisher uses authenticated paginated draft discovery and an ownership marker
 bound to workflow/repository/tag/source/payload. The tag must already exist and
@@ -160,27 +181,29 @@ checks do not prevent concurrent external publication.
 | Unknown target/format, mismatched version/tag/tools/host | Fail before producing eligible output |
 | Dirty source, source changes or existing bundle namespace | Reject receipt; retain finite diagnostics |
 | Acceptance frontend, test hooks or wrong product/profile | Reject normal package proof |
+| Packaged receipt with check rows or evidence | Reject; build output cannot claim test success |
 | Failed/missing/duplicate/unknown check or absent evidence | Cannot seal verified receipt |
 | Wrong executable, architecture or trusted startup profile | Fail actual payload smoke |
 | UI import/reopen lacks exact committed row/file bytes | Fail storage smoke; no SQL/mock repair |
-| One Linux format absent or only other format tested | Required target remains incomplete |
+| One Linux installer format absent | Required package set remains incomplete |
 | Link, path escape, stale/wrong-source/hash or extra file | Collector fails; no complete draft |
 | Manual/branch mode | Build-only; no tag/Release mutation |
 | Existing published/immutable/unowned/duplicate release | Reject without mutation |
 | Upload interrupted / identical original retry | Incomplete owned draft / exact conservative resume |
 | Changed payload or unknown remote asset | Stop; owner recovery/new version needed |
-| Local tests only / unavailable host | Record finite local proof and pending actual gate |
+| Successful package build | Record packaged-only state; owner runtime validation remains separate |
 | Frontend default heap OOM / percentage option conflict | Dedicated bounded child budget / explicit conflict error; no global CI relaxation |
 | Windows metadata-only directory guard | Insufficient rename authority; retain actual list-access guard and release checks |
 | Nested process failure or cancellation | Keep failure/cancel status, exact logs and useful live diagnostics |
 
 ## 5. Good / Base / Bad Cases
 
-Good: owner pushes the bootstrap branch, actual four hosts pass, and a later
-version tag collects five exact checked installers into one complete draft.
-Base: local source and fake-API failure tests pass while hosted gates remain
-pending; task stays active. Bad: describe Mac source tests as Windows acceptance,
-drop a failing target, reuse a stale installer, automatically publish the draft
+Good: owner initiates packaging, four native hosts build, and a later version
+tag collects five exact installers into one complete draft whose notes disclose
+the absence of automated runtime tests. The owner validates before publishing.
+Base: local source and fake-API failure tests pass while actual package/draft
+delivery remains pending; task stays active. Bad: describe packaging as runtime
+acceptance, drop a failing target, reuse a stale installer, automatically publish the draft
 or overwrite an unrelated Release.
 
 ## 6. Tests Required
@@ -193,23 +216,29 @@ GitHub delivery. Verify tool paths, Windows argument handling and exact policy.
 External SQLite verifier regressions must include production-encoded ASCII and
 Unicode row keys, malformed encodings, and valid encodings with mismatched IDs.
 
-Run existing root/desktop quality and native suites on frozen source, including
-shared native storage `--suite all`; retained assertions cannot be weakened for
-portability. Run corresponding-host filesystem/origin/profile tests and real
-installer smoke. Actual tag/draft upload evidence closes the hosted delivery
-gate; archive only after all required criteria have actual outcomes.
+For delivery-tool changes run relevant local desktop types, lint, quality and
+protocol regressions, including packaged receipt collection/publication and
+negative source/hash/path/state cases. This local development verification is
+separate from the packaging-only Actions workflow. Keep product/native suites
+and optional smoke tools intact for explicit use; do not weaken their assertions
+or deadlines to bypass delivery. Actual four-target package collection and
+tag/draft upload evidence close the hosted delivery gates; archive only after
+those required criteria have actual outcomes. Automated host-test/smoke gates
+from the earlier plan were waived by the owner's packaging-only decision.
 
 Launcher regressions must run the actual launcher with a tiny fixture worker:
 argument/environment/cwd identity, explicit heap precedence, output, nonzero,
 spawn failure and supported-host signals. Logged-process regressions require
 real children producing both streams past a pipe buffer, full EOF/log parity and
 nonzero/spawn/signal/log failure behavior. Retain the full unchanged native suite
-and actual frontend build; fixtures do not establish renderer or installer proof.
+when modifying those native/launcher contracts; fixtures do not establish
+renderer or installer proof.
 
 ## 7. Wrong vs Correct
 
 Wrong: ignore a collector hash mismatch because download-artifact only warned,
 mark all checks passed from a build exit code, or publish `draft: false` after a
-partial upload. Correct: verify the exact file/evidence closure, require named
-actual outcomes, keep an interrupted draft incomplete, and leave publication to
-the owner after remote verification.
+partial upload. Correct: verify the exact file closure, label package-only
+outcomes truthfully, require actual hashed outcomes only for an explicit
+standalone verified receipt, keep an interrupted draft incomplete, and leave
+publication to the owner after remote verification and functional validation.

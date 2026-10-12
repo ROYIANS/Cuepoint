@@ -1,0 +1,29 @@
+{
+  "sourceHashMismatches": [],
+  "contractFrozenEntries": 31,
+  "reviewFrozenEntries": 34,
+  "ghcrByteUnchanged": true,
+  "ghcrSha256": "68a135604a1e794a04f54f847c1e99eb37cd87be9ab1def36910d2bd1e60f26c",
+  "productNativeOrFixtureChanges": [],
+  "diffCheckExitCode": 0,
+  "trackedChangedPaths": [
+    ".github/workflows/desktop-release.yml",
+    ".trellis/spec/frontend/desktop-distribution.md",
+    ".trellis/spec/frontend/index.md",
+    ".trellis/spec/frontend/quality-guidelines.md",
+    ".trellis/tasks/10-12-desktop-release-pipeline/check.jsonl",
+    ".trellis/tasks/10-12-desktop-release-pipeline/design.md",
+    ".trellis/tasks/10-12-desktop-release-pipeline/implement.jsonl",
+    ".trellis/tasks/10-12-desktop-release-pipeline/implement.md",
+    ".trellis/tasks/10-12-desktop-release-pipeline/prd.md",
+    ".trellis/tasks/10-12-desktop-release-pipeline/task.json",
+    "desktop/tauri/README.md",
+    "desktop/tauri/scripts/build-release.mjs",
+    "desktop/tauri/scripts/logged-process.test.mjs",
+    "desktop/tauri/scripts/release-artifacts.mjs",
+    "desktop/tauri/scripts/release-pipeline.test.mjs",
+    "docs/desktop-distribution.md",
+    "scripts/prepare-native-test-probe.test.mjs",
+    "scripts/setup-release-driver.mjs"
+  ]
+}

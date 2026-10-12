@@ -122,26 +122,29 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 ## Desktop distribution gate
 
 `.github/workflows/desktop-release.yml` adds a separate four-host installer gate
-under [Desktop Distribution](./desktop-distribution.md). Root quality precedes
-native jobs. Hosted calls use explicit pinned pnpm/Rust paths; corresponding-host
-native tests include both no-GUI test-hooks and full product-sqlite/test-hooks
-runtime suites, followed by shared native storage `--suite all`. Normal shipping
-features remain product-sqlite only. Build/check receipt closure is mandatory;
-compiler exit alone never becomes a UI/storage or package-integrity pass.
+under [Desktop Distribution](./desktop-distribution.md). By explicit owner
+decision on 2026-10-12 it performs packaging only: no quality job, automated
+tests, lint or application-launch/storage smoke. Hosted builds still use pinned
+tools and locked dependencies; normal shipping features remain product-sqlite
+only. Source/version/host/target/file/hash receipt closure remains mandatory.
+Successful build output is `packaged` with no passed test rows or runtime
+evidence. Owner functional validation is required before public release and is
+not asserted by the workflow.
 
-Actual Windows/Linux installer UI/import/source-removal/reopen proof and separate
-Mac integrity/signature/launch reports must precede complete collection. Unit
-collector/fake-GitHub retry tests are local protocol proof, not hosted delivery.
-Local preliminary work commits retain an active task until actual four-host and
-tag/draft gates pass. Bootstrap/manual builds cannot mutate Releases; the final
-tag-only owned draft publisher receives the only contents-write permission.
+Keep independent GHCR quality and standalone native/storage/smoke commands
+intact. Local collector/fake-GitHub regression tests verify changes to delivery
+tools; they do not establish hosted delivery. Actual four-target package
+collection and tag/draft upload still need outcomes before task archival.
+Bootstrap/manual builds cannot mutate Releases; the final tag-only owned draft
+publisher receives the only contents-write permission.
 
 ## Cold root-test native probe prerequisite
 
 ### 1. Scope / Trigger
 
 Apply to every fresh CI job that runs the complete root Vitest suite, including
-GHCR quality and desktop-release quality. Six ordinary root suites execute the
+GHCR quality. Desktop package delivery is packaging-only by owner decision and
+has no quality job or root-test invocation. Six ordinary root suites execute the
 real Rust SQLite bridge even while the default database owner is browser. A
 later matrix job or a developer's ignored `.tools` output cannot satisfy this
 job's prerequisite.
@@ -170,7 +173,8 @@ the produced binary must acknowledge ready and close in a disposable workspace
 and exit successfully. Keep finite build/readiness evidence. Tests receive the
 exact just-built path; a stale local default cannot count as proof.
 
-GHCR retains its Node22 contract; desktop retains its pinned Node24.11.0 lane.
+GHCR retains its Node22 contract; explicit standalone desktop checks retain
+their pinned Node24.11.0 lane.
 Do not loosen the release hosted-tool validation to prepare the GHCR probe.
 Do not set `CUEPOINT_STORAGE_TEST_OWNER=sqlite` or
 `CUEPOINT_NATIVE_STORAGE_ACCEPTANCE=1` for ordinary root tests. Existing opt-in
@@ -200,8 +204,8 @@ Reproduce missing-path failure, build into a genuinely fresh target and run the
 affected native cases through that exact binary. Run the complete root suite
 with unchanged owner/acceptance flags. Exercise preparation failure, stale
 output, wrong tools and readiness rejection. Verify preparation precedes root
-tests in both workflows. Local macOS cold proof does not replace hosted Linux
-execution or cross-platform installer acceptance.
+tests in each workflow that actually runs them. Local macOS cold proof does not
+replace hosted Linux execution or cross-platform installer acceptance.
 
 ### 7. Wrong vs Correct
 
@@ -231,6 +235,13 @@ has an empty project list and disables Node, TypeScript, Tailwind, TanStack
 Router, Tauri, Vite, Vitest, ESLint and GitHub Actions auto-discovery. Do not make
 the shared resolver itself an entry, ignore exports or add dummy consumers.
 External path globs without a workspace owner do not establish caller usage.
+
+Removing a workflow caller can expose genuinely unused CLI exports in root
+quality even when the desktop graph passes. If a constant or `main` is used
+only inside its retained standalone CLI, remove the unnecessary export keyword
+and preserve its implementation. Do not add dummy entries or suppressions to
+keep the old workflow's apparent usage. When removing a job, update workflow
+shape regressions while retaining the assertions for independent active jobs.
 
 ### 4. Validation / Error Matrix
 

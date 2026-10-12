@@ -1,0 +1,46 @@
+{
+  "sourceBefore": {
+    "scripts/prepare-native-test-probe.test.mjs": "c54bddd1bd11ea3b7f7356287d7cd3084f37f753ac62f45721813f0ae9aacdd7",
+    ".github/workflows/desktop-release.yml": "61dda482a3a261b3a06e7b324a9d9ae34c5b9ae71002b912b496c523a1fb11ef",
+    ".github/workflows/ghcr.yml": "68a135604a1e794a04f54f847c1e99eb37cd87be9ab1def36910d2bd1e60f26c"
+  },
+  "commands": [
+    {
+      "name": "probe-contracts",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+        "--test",
+        "scripts/prepare-native-test-probe.test.mjs"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 6.2,
+      "log": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/packaging-only-review/probe-contracts.log"
+    },
+    {
+      "name": "root-types",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "lint"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 8.786,
+      "log": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/packaging-only-review/root-types.log"
+    },
+    {
+      "name": "root-quality",
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+        "quality"
+      ],
+      "exitCode": 1,
+      "durationSeconds": 19.818,
+      "log": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/packaging-only-review/root-quality.log"
+    }
+  ],
+  "sourceAfter": {
+    "scripts/prepare-native-test-probe.test.mjs": "c54bddd1bd11ea3b7f7356287d7cd3084f37f753ac62f45721813f0ae9aacdd7",
+    ".github/workflows/desktop-release.yml": "61dda482a3a261b3a06e7b324a9d9ae34c5b9ae71002b912b496c523a1fb11ef",
+    ".github/workflows/ghcr.yml": "68a135604a1e794a04f54f847c1e99eb37cd87be9ab1def36910d2bd1e60f26c"
+  },
+  "sourceUnchanged": true
+}

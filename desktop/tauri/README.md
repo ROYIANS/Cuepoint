@@ -18,7 +18,14 @@ Build the normal application with the local machine pnpm:
 ```
 
 See [desktop distribution](../../docs/desktop-distribution.md) for the supported
-installer matrix, verification gates and owner-controlled GitHub Release flow.
+installer matrix and owner-controlled GitHub Release flow. The desktop workflow
+only builds and packages: it does not run tests, quality checks or application
+launch/smoke checks. Successful receipts say `packaged` and contain no passed
+test claims. Source/version/host/tool/file/hash integrity remains checked; the
+owner handles functional testing before publication. Separate local commands
+below and GHCR quality remain available. The known native 64-turn Agent
+continuation test can exceed 20 seconds; package-only delivery does not resolve
+its performance.
 
 The `--isolated-product` lane without `--sqlite-product` is an explicitly
 separate IndexedDB reference. It is not the normal product storage owner.
@@ -35,6 +42,10 @@ work was gated on independent storage acceptance. These statements describe that
 storage test lane, not the current normal product or its all-table SQLite owner.
 
 ## Local tools and gates
+
+These are explicit developer checks, not steps in the desktop packaging
+workflow. Existing standalone release smoke and finalization tools likewise
+run only when a developer invokes them.
 
 The coordinator installs verified Rust **1.99.0** under `.tools/`. `scripts/tools.mjs` supplies process-local `RUSTUP_HOME`, `CARGO_HOME`, `CARGO_TARGET_DIR`, `RUSTUP_TOOLCHAIN` and PATH. It never edits shell profiles or global homes. Do not invoke global Cargo or replace root dependencies. The package uses the existing root frontend tools; it adds no dependency during A.
 
