@@ -174,7 +174,9 @@ export async function generateMimoSpeech(credentials: MimoCredentials, input: {
     if (encoded.endsWith("==")) padding = 2;
     if (encoded.length / 4 * 3 - padding > MAX_AUDIO_BYTES) return fail("protocol", "MiMo 配音超过本地 32 MiB 音频限制；不会自动重新生成");
     try {
-        const decoded = atob(encoded), bytes = Uint8Array.from(decoded, char => char.charCodeAt(0));
+        const decoded = atob(encoded), bytes = new Uint8Array(decoded.length);
+        // Copy binary code units directly without materializing an iterable of audio-sized characters.
+        for (let index = 0; index < decoded.length; index++) bytes[index] = decoded.charCodeAt(index);
         // Validate a WAV container; the runtime performs the complete audio decode after checkpointing.
         const blob = new Blob([bytes], {type: "audio/wav"});
         if (blob.size > MAX_AUDIO_BYTES) return fail("protocol", "MiMo 配音超过本地 32 MiB 音频限制；不会自动重新生成");

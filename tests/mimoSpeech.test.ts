@@ -36,6 +36,21 @@ describe("MiMo native speech", () => {
     expect(JSON.parse(String(fetchImpl.mock.calls[0][1]?.body))).toMatchObject({ messages: [{ role: "user", content: "成熟男声" }, { role: "assistant", content: "你好。" }], audio: { optimize_text_preview: false } });
   });
 
+  it.each([65535, 65536, 65537])("preserves every WAV byte across zero/one/two base64 padding cases, length=%s", async length => {
+    const bytes = new Uint8Array(length);
+    for (let index = 0; index < bytes.length; index++) bytes[index] = index % 256;
+    bytes.set(new TextEncoder().encode("RIFF")); bytes.set(new TextEncoder().encode("WAVE"), 8);
+    const encoded = Buffer.from(bytes).toString("base64");
+    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(Response.json({ choices: [{ finish_reason: "stop", message: { audio: { data: encoded } } }] }));
+    const result = await generateMimoSpeech(credentials, input({ mode: "preset", instruction: "" }), { fetchImpl });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.blob.type).toBe("audio/wav");
+      expect(new Uint8Array(await result.blob.arrayBuffer())).toEqual(bytes);
+    }
+    expect(fetchImpl).toHaveBeenCalledOnce();
+  });
+
   it.each([wav, new Blob(["ID3", new Uint8Array(60)], { type: "application/octet-stream" })])("serializes actual WAV/MP3 clone bytes only into transport", async referenceBlob => {
     const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(await response());
     const value = { ...input({ mode: "clone", instruction: "", referenceMediaId: "media-1" }), referenceBlob };

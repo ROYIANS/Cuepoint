@@ -176,6 +176,18 @@ Use the shared `redactCredentials` primitive before truncating provider diagnost
 
 Speech POST uses fixed /chat/completions, assistant content for spoken text, user content for instruction/design, `stream:false`, and WAV output. Clone serializes a WAV/MP3 sample as a data URI only inside transport, max 10 MiB encoded including prefix. Design omits voice; explicit optimize_text_preview enables altered/automatic text and requires returned final_text_preview. Require stop completion, base64 WAV signature, then runtime checkpoint/decode. Redact credentials before truncating errors and never auto retry.
 
+For returned speech, preserve strict base64 syntax and padding-aware decoded-size
+validation before `atob`. Copy its binary string into one preallocated
+`Uint8Array` by indexed `charCodeAt`; `Uint8Array.from(binaryString, callback)`
+materializes costly iterable intermediates at the 32 MiB boundary. Keep Blob
+size, WAV signature, preview validation and once-only request semantics. Shared
+browser/Tauri code must not depend on Node `Buffer` or a newer optional WebView
+decoder API for this copy. Retain the exact 32 MiB boundary test with its default
+5-second deadline and above-limit rejection-before-`atob` assertions. Byte parity
+tests cover NUL/high bytes and all three base64 padding residues. Profile actual
+production stages on the unchanged fixture before relaxing a large-body test;
+local timing/memory observations do not establish hosted success or OOM safety.
+
 Official sources: https://mimo.mi.com/docs/zh-CN/api/model/list-models and https://mimo.mi.com/docs/zh-CN/quick-start/usage-guide/audio/speech-synthesis-v2.5, checked 2026-09-22.
 
 
