@@ -6,7 +6,7 @@
 
 1. **Plan before code** — figure out what to do before you start
 2. **Specs injected, not remembered** — guidelines are injected via hook/skill, not recalled from memory
-3. **Persist everything** — research, decisions, and lessons all go to files; conversations get compacted, files don't
+3. **Persist decisions and conclusions** — keep compact research, decisions and lessons; discard raw output and copied workspaces according to [Task Artifact Retention](spec/guides/task-artifact-retention.md)
 4. **Incremental development** — one task at a time
 5. **Capture learnings** — after each task, review and write new knowledge back to spec
 

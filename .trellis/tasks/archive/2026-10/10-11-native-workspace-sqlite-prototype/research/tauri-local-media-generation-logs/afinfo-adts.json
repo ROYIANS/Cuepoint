@@ -1,9 +1,0 @@
-{
-  "command": [
-    "/usr/bin/afinfo",
-    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/tone.aac"
-  ],
-  "exitCode": 0,
-  "stdout": "File:           /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-11-native-workspace-sqlite-prototype/research/media-preflight-temp/tone.aac\nFile type ID:   adts\nNum Tracks:     1\n----\nData format:     1 ch,  48000 Hz, aac  (0x00000000) 0 bits/channel, 0 bytes/packet, 1024 frames/packet, 0 bytes/frame\nChannel layout: Mono\nestimated duration: 2.004625 sec\naudio bytes: 8900\naudio packets: 96\nbit rate: 34765 bits per second\npacket size upper bound: 768\nmaximum packet size: 155\naudio data file offset: 0\noptimized\nformat list:\n[ 0] format:\t  1 ch,  48000 Hz, aac  (0x00000000) 0 bits/channel, 0 bytes/packet, 1024 frames/packet, 0 bytes/frame\nChannel layout: Mono\n----\n",
-  "stderr": ""
-}

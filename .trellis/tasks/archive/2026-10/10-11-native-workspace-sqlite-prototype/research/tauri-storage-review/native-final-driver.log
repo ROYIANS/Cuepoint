@@ -1,7 +1,0 @@
-fmt: 0; log /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/native-gates/2026-10-10T17-31-42.304Z/1-fmt.log
-clippy: 0; log /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/native-gates/2026-10-10T17-31-42.304Z/2-clippy.log
-clippy: 0; log /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/native-gates/2026-10-10T17-31-42.304Z/3-clippy.log
-test: 0; log /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/native-gates/2026-10-10T17-31-42.304Z/4-test.log
-test: 0; log /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/native-gates/2026-10-10T17-31-42.304Z/5-test.log
-build: 0; log /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/native-gates/2026-10-10T17-31-42.304Z/6-build.log
-build: 0; log /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/native-gates/2026-10-10T17-31-42.304Z/7-build.log

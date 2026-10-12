@@ -1,6 +1,0 @@
-{"test":"dense-native-read-start","requested":12,"fulfilled":12,"rejections":[]}
-{"test":"native-post-commit-listener","committedRow":{"id":"review-notified-commit","name":"actually committed"}}
-{"test":"read-lease-parent-symlink-after-open","result":"rejected","error":{"code":"unavailable","certainty":"rollback","name":"StorageError"}}
-{"test":"cleanup","result":"disposable-workspace-removed"}
-{"test":"browser-post-commit-listener","committedRowId":"review-browser-notified"}
-{"test":"large-unpaired-object-key","result":"accepted","keys":1}

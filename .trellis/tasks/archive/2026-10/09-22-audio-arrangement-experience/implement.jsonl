@@ -6,4 +6,4 @@
 {"file": ".trellis/spec/frontend/agent-task-wrapup.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
 {"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Batch/arrangement ownership, data lifecycle, approval and validation contract"}
-{"file": ".trellis/tasks/09-22-audio-arrangement-experience/research/current-gap-and-design.md", "reason": "Source-backed reuse boundaries, queue/history/CAS and required acceptance"}
+{"file": ".trellis/tasks/archive/2026-10/09-22-audio-arrangement-experience/research/current-gap-and-design.md", "reason": "Source-backed reuse boundaries, queue/history/CAS and required acceptance"}

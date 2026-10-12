@@ -1,5 +1,0 @@
-{
-  "extends": "../../tsconfig.app.json",
-  "compilerOptions": {"tsBuildInfoFile": "../../node_modules/.tmp/tsconfig.checkpoint.tsbuildinfo", "types": ["node", "vitest/globals"]},
-  "include": ["../checkpointProtocol.test.ts", "../syncProvider.test.ts", "../helpers/checkpointProtocolFixture.ts"]
-}

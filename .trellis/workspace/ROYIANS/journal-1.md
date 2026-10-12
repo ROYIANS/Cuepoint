@@ -1570,3 +1570,41 @@ Implemented and independently accepted browser managed-copy and bounded partial 
 ### Next Steps
 
 - 父桌面端存储与同步任务继续：后续单用户多设备同步和可移植原始历史逐字段投影另行规划；Windows/Linux实际宿主验收单列。
+
+
+## Session 57: Trellis artifact cleanup and release source-list correction
+<!-- trellis-session: v=2 fp=749787dc6ba5a19a -->
+
+**Date**: 2026-10-12
+**Task**: Trellis artifact cleanup and release source-list correction
+**Branch**: `codex/release-source-list-buffer`
+
+### Summary
+
+Completed owner-authorized Trellis cleanup; retain task core and Markdown conclusions. The reached release ENOBUFS correction is locally reviewed; hosted packaging remains pending.
+
+### Main Changes
+
+- Removed about 5.37 GB of raw task output, copied sources/dependencies and caches; retained all 89 task identities and authored conclusions.
+- Repaired archive context references; added scoped ignore controls and compact task-artifact retention policy.
+- Release source hashes now stream NUL-framed Git output with unchanged eligible scope; no delivery workflow tests were added.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `a231dcf2e61ef3035466ef4c5ee0881b37654f7e` | fix(release): stream tracked source hashes without buffer limits |
+
+### Testing
+
+- [OK] 84/84 release regressions; desktop types, lint and Knip pass. Independent full-source hash parity and five real child-failure probes pass.
+- [OK] Cleanup checkpoint: 348 task-core and 100 runtime hashes match; 367 research Markdown files remain and no non-Markdown research files remain.
+- [OK] 17 ignore-rule positive/negative controls pass. Independent final cleanup review is recorded in the release source-list review conclusion.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Owner authorized local commits and fast-forward main integration. Owner can push main for actual GitHub package delivery; hosted packaging and the release task remain pending.

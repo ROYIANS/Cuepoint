@@ -1,1 +1,0 @@
-tests/aihubmixVisionMetadata.test.ts(15,7): error TS2741: Property 'protocol' is missing in type '{ id: string; definitionId: "aihubmix"; baseUrl: string; apiKey: string; updatedAt: string; }' but required in type 'ConnectorConfig'.

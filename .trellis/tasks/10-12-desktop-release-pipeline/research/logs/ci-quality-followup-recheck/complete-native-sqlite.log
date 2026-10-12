@@ -1,7 +1,0 @@
-
-> cuepoint@0.1.0 test:storage:native /Users/xiaomengdao/WebstormProjects/aifenjing
-> node scripts/native-storage-regression.mjs --evidence-dir /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-quality-followup-recheck/native-all --suite all
-
-Building the current locked Rust probe with the pinned toolchain.
-Running 108 permanent suites against real SQLite; missing native capabilities fail this lane.
-Native acceptance passed; evidence: /Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-quality-followup-recheck/native-all

@@ -1,7 +1,7 @@
-{"file":".trellis/tasks/10-10-desktop-storage-sync/prd.md","reason":"Verify every confirmed decision is reflected and no product implementation is implied"}
-{"file":".trellis/tasks/10-10-desktop-storage-sync/design.md","reason":"Verify authority, import, delivery, secret, conflict and restore contracts are internally consistent"}
-{"file":".trellis/tasks/10-10-desktop-storage-sync/implement.md","reason":"Verify phase dependencies, disposable validation evidence and deferred scope"}
-{"file":".trellis/tasks/10-10-desktop-storage-sync/research/data-inventory.md","reason":"Cross-check current code ownership against migration and transport coverage"}
-{"file":".trellis/tasks/10-10-desktop-storage-sync/research/file-authority-and-media-availability.md","reason":"Check managed-copy, missing-state and automatic-full-delivery acceptance cases"}
-{"file":".trellis/tasks/10-10-desktop-storage-sync/research/local-workspace-and-plugins.md","reason":"Check plugin, workspace and personal-handoff boundaries"}
-{"file":".trellis/tasks/10-10-desktop-storage-sync/research/provider-comparison.md","reason":"Check provider evidence, capability limits and managed-service/self-host distinction"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/prd.md", "reason": "Verify every confirmed decision is reflected and no product implementation is implied"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/design.md", "reason": "Verify authority, import, delivery, secret, conflict and restore contracts are internally consistent"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/implement.md", "reason": "Verify phase dependencies, disposable validation evidence and deferred scope"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/research/data-inventory.md", "reason": "Cross-check current code ownership against migration and transport coverage"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/research/file-authority-and-media-availability.md", "reason": "Check managed-copy, missing-state and automatic-full-delivery acceptance cases"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/research/local-workspace-and-plugins.md", "reason": "Check plugin, workspace and personal-handoff boundaries"}
+{"file": ".trellis/tasks/10-10-desktop-storage-sync/research/provider-comparison.md", "reason": "Check provider evidence, capability limits and managed-service/self-host distinction"}

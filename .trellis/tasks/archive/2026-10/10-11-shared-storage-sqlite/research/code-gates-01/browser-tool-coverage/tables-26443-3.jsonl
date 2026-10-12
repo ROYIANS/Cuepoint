@@ -1,1 +1,0 @@
-{"kind":"committedTables","owner":"indexeddb","tables":["searchConnections","agents"],"test":"D07 actual adapter status, reading, paid outcome and cancellation > redacts full configured credentials before native adapter truncation and Tavily encoded-key URL filtering","file":"/Users/xiaomengdao/WebstormProjects/aifenjing/tests/d07RequestBoundary.test.ts"}

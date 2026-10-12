@@ -3,4 +3,4 @@
 {"file": ".trellis/spec/frontend/state-management.md", "reason": "Dexie transactions and project package remapping"}
 {"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Shared primitives, flat UI and draft preservation"}
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Validation gates"}
-{"file": ".trellis/tasks/09-19-agent-memory-management/research/memory-foundation.md", "reason": "Actual source, package and UI integration evidence"}
+{"file": ".trellis/tasks/archive/2026-09/09-19-agent-memory-management/research/memory-foundation.md", "reason": "Actual source, package and UI integration evidence"}

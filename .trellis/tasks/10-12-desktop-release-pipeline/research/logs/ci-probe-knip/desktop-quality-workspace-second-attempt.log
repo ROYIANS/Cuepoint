@@ -1,9 +1,0 @@
-
-> cuepoint-tauri-prototype@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
-> node ../../node_modules/knip/bin/knip.js --config knip.json --no-progress
-
-Configuration hints (4)
-scripts/native-storage-regression.mjs  ../..  knip.json  Remove redundant entry pattern                               
-scripts/prepare-native-test-probe.mjs  ../..  knip.json  Remove redundant project pattern                             
-scripts/native-storage-regression.mjs  ../..  knip.json  Remove redundant project pattern                             
-.css                                   ../..  knip.json  Compiled extension excluded by project (imports not followed)

@@ -12,6 +12,6 @@
 {"file": ".trellis/spec/frontend/agent-references.md", "reason": "Reference parsing/media and actual image input"}
 {"file": ".trellis/spec/frontend/delivery-export.md", "reason": "Existing project delivery and print contracts"}
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Required quality checks and reviewed allowances"}
-{"file": ".trellis/tasks/10-11-native-world-shot-relations/research/runtime-gates-and-parity.md", "reason": "Complete runtime gates, source anchors and full feature/tool acceptance target"}
-{"file": ".trellis/tasks/10-11-native-world-shot-relations/research/native-runtime-services.md", "reason": "Pinned official HTTP2.8.2 service verification and file/lock limitations"}
-{"file": ".trellis/tasks/10-11-native-world-shot-relations/research/agent-reuse-audit.md", "reason": "Agent reuse direction and actual runtime blockers"}
+{"file": ".trellis/tasks/archive/2026-10/10-11-native-world-shot-relations/research/runtime-gates-and-parity.md", "reason": "Complete runtime gates, source anchors and full feature/tool acceptance target"}
+{"file": ".trellis/tasks/archive/2026-10/10-11-native-world-shot-relations/research/native-runtime-services.md", "reason": "Pinned official HTTP2.8.2 service verification and file/lock limitations"}
+{"file": ".trellis/tasks/archive/2026-10/10-11-native-world-shot-relations/research/agent-reuse-audit.md", "reason": "Agent reuse direction and actual runtime blockers"}

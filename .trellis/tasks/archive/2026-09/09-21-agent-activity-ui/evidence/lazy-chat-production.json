@@ -1,8 +1,0 @@
-{
-  "errors": [],
-  "checks": [
-    "empty home defers transcript and icons",
-    "nonempty thread loads rich markdown, icons and scrolls to bottom",
-    "reading old messages stays at user-selected scroll position"
-  ]
-}

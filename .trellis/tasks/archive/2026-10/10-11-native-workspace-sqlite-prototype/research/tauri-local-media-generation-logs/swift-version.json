@@ -1,9 +1,0 @@
-{
-  "command": [
-    "/Library/Developer/CommandLineTools/usr/bin/swiftc",
-    "--version"
-  ],
-  "exitCode": 0,
-  "stdout": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0\n",
-  "stderr": "swift-driver version: 1.168.6 "
-}

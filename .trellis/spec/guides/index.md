@@ -24,6 +24,7 @@ These guides help you **ask the right questions before coding**.
 | [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md) | Identify patterns and reduce duplication | When you notice repeated patterns |
 | [Cross-Layer Thinking Guide](./cross-layer-thinking-guide.md) | Think through data flow across layers | Features spanning multiple layers |
 | [Development Change Policy](./development-change-policy.md) | Decide when compatibility and migration work is required | Before changing storage, schemas or persisted formats |
+| [Task Artifact Retention](./task-artifact-retention.md) | Keep task conclusions and prevent raw artifact accumulation | When writing research, running checks or archiving tasks |
 
 ---
 

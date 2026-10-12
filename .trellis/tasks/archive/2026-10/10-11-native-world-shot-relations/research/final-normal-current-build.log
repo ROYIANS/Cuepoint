@@ -1,7 +1,0 @@
-
-> cuepoint-tauri-prototype@0.1.0 build:app /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
-> node scripts/build-app.mjs
-
-frontend: 0; logs /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791709548110-normal
-native-bundle: 0; logs /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791709548110-normal
-Actual normal app: /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri/.acceptance/builds/1791709548110-normal/Cuepoint Prototype.app

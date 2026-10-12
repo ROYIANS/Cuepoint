@@ -9,4 +9,4 @@
 {"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Flat Agent theme, shared forms, media inspection and keyboard interactions."}
 {"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Scoped live-query identity, loading/missing states and retained drafts."}
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Repo/lib tests, type checks and final verification."}
-{"file": ".trellis/tasks/09-19-agent-batch-generation/research/existing-generation.md", "reason": "Verified source constraints and identity/recovery/application design implications."}
+{"file": ".trellis/tasks/archive/2026-09/09-19-agent-batch-generation/research/existing-generation.md", "reason": "Verified source constraints and identity/recovery/application design implications."}

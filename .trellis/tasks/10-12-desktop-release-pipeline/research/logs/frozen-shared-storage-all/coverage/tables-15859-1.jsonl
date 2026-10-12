@@ -1,2 +1,0 @@
-{"kind":"committedTables","owner":"indexeddb","tables":["connectors","connectorAliases"],"test":"deduplicates legacy connections without changing historical IDs, and rotates/revokes every alias","file":"/Users/xiaomengdao/WebstormProjects/aifenjing/tests/connectorMigration.test.ts"}
-{"kind":"committedTables","owner":"indexeddb","tables":["connectors","connectorAliases"],"test":"deduplicates legacy connections without changing historical IDs, and rotates/revokes every alias","file":"/Users/xiaomengdao/WebstormProjects/aifenjing/tests/connectorMigration.test.ts"}

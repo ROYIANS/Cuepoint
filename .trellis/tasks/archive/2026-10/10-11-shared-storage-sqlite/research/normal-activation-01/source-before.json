@@ -1,7 +1,0 @@
-{
-  "recordedAt": "2026-10-11T23:31:44.312782+00:00",
-  "path": "desktop/tauri/scripts/build-app.mjs",
-  "sha256": "5ce4ca71f17633289f52097b140b9efc657245d85eb286830f189a4058031dd2",
-  "head": "2324f117171ea5af538ad807804e48d3bb4f5b78",
-  "scope": "Only build-app.mjs policy change. Other task source/evidence is owned by parent/parallel workers."
-}

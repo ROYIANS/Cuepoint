@@ -1,4 +1,0 @@
-CUEPOINT-NATIVE-FULL-20261011-Q7
-第一场：雨夜。角色林七举着红色雨伞，走进蓝色车站。
-第二场：清晨。道具是一封没有寄出的信；风格为暖色写实。
-Native project document parsing fixture. Imported bytes must remain internal.

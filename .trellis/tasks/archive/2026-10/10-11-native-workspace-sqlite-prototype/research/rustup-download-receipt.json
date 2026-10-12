@@ -1,9 +1,0 @@
-{
-  "downloadedAt": "2026-10-10T17:08:21.670038+00:00",
-  "url": "https://static.rust-lang.org/rustup/dist/aarch64-apple-darwin/rustup-init",
-  "sha256": "ec1b9233e7f72990ecd8e62063fa7f6c3dfc2bec8e97f88bff165f9100ac696a",
-  "bytes": 11319056,
-  "checksumMatchesOfficialSidecar": true,
-  "resumedAfter": "attempt1 exit28 retained separately",
-  "scope": "project-local; no shell/global Rust modification"
-}

@@ -1,1 +1,0 @@
-{"kind":"committedTables","owner":"indexeddb","tables":["media","projects"],"test":"shared byte hashing compatibility > imports media when WebCrypto is absent, as on ordinary HTTP deployments","file":"/Users/xiaomengdao/WebstormProjects/aifenjing/tests/workspaceHashCompatibility.test.ts"}

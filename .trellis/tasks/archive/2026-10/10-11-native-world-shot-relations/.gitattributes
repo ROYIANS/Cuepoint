@@ -1,2 +1,0 @@
-# Keep the actual export receipt byte-identical; do not normalize CRLF.
-research/packaged/67-native-shots.csv -text

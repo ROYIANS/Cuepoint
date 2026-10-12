@@ -1,7 +1,7 @@
-{"file":".trellis/spec/frontend/native-workspace.md","reason":"Closed native bridge, SQLite ownership, generation safety and packaged route boundary"}
-{"file":".trellis/spec/frontend/state-management.md","reason":"Episode, story beat, shot ownership, ordering, baseline and missing-reference contracts"}
-{"file":".trellis/spec/frontend/workspace-storage.md","reason":"Managed media ownership, relative references and missing-file behavior"}
-{"file":".trellis/spec/guides/development-change-policy.md","reason":"Fresh-development policy forbids unrequested migration and compatibility branches"}
-{"file":".trellis/tasks/10-11-desktop-product-domain-expansion/prd.md","reason":"Selected video production domain requirements and acceptance criteria"}
-{"file":".trellis/tasks/10-11-desktop-product-domain-expansion/design.md","reason":"Native schema, bridge, routes and checkpoint-ready boundary"}
-{"file":".trellis/tasks/10-11-desktop-product-domain-expansion/implement.md","reason":"Ordered implementation and validation gates"}
+{"file": ".trellis/spec/frontend/native-workspace.md", "reason": "Closed native bridge, SQLite ownership, generation safety and packaged route boundary"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Episode, story beat, shot ownership, ordering, baseline and missing-reference contracts"}
+{"file": ".trellis/spec/frontend/workspace-storage.md", "reason": "Managed media ownership, relative references and missing-file behavior"}
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Fresh-development policy forbids unrequested migration and compatibility branches"}
+{"file": ".trellis/tasks/archive/2026-10/10-11-desktop-product-domain-expansion/prd.md", "reason": "Selected video production domain requirements and acceptance criteria"}
+{"file": ".trellis/tasks/archive/2026-10/10-11-desktop-product-domain-expansion/design.md", "reason": "Native schema, bridge, routes and checkpoint-ready boundary"}
+{"file": ".trellis/tasks/archive/2026-10/10-11-desktop-product-domain-expansion/implement.md", "reason": "Ordered implementation and validation gates"}

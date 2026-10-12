@@ -1,9 +1,0 @@
-
-> cuepoint@0.1.0 quality /Users/xiaomengdao/WebstormProjects/aifenjing
-> node scripts/quality-check.mjs
-
-Error: unused contract: evidence changed .trellis/spec/frontend/audio-music.md
-    at checkUnused (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality/unused.mjs:77:85)
-    at async runQuality (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs:42:31)
-    at async main (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs:73:18)
- ELIFECYCLE  Command failed with exit code 2.

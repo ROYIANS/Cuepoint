@@ -11,7 +11,7 @@
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Required root/desktop quality gates, meaningful native evidence and release checks"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/windows-native-feasibility.md", "reason": "Stable Win32 handle identity/reparse/link protocol and mandatory durability host gate"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/planning-review.md", "reason": "Static review resolutions and bootstrap/host-proof/format evidence boundaries"}
-{"file": ".trellis/spec/frontend/desktop-distribution.md", "reason": "Executable installer/tool/receipt/smoke and draft-only delivery contracts"}
+{"file": ".trellis/spec/frontend/desktop-distribution.md", "reason": "Packaging-only receipt/build/collection/draft contract, independent quality unchanged and standalone verification optional"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/native-files-implementation.md", "reason": "Concrete owner-approved Windows process-recovery persistence guarantee and source evidence"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-quality-followup.md", "reason": "Owner supplied both reached hosted quality failures; preserve gate and scope boundaries"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-large-identity-timeout.md", "reason": "Actual unchanged workload profiling and query-only byte-group candidate with finite proof"}
@@ -27,7 +27,9 @@
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-agent-loop-cost-implementation.md", "reason": "Reached Agent terminal-history read reduction with real fresh-candidate race/Stop regressions, matched IPC counts and unchanged 64-turn workload/deadlines"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-hosted-final-validation.md", "reason": "Frozen final local gate outcomes, retained original failures and explicit corresponding-host/delivery acceptance limits"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/packaging-only-boundary.md", "reason": "Latest explicit owner decision: desktop delivery only builds packages; all prior mandatory automated delivery test/smoke gates superseded, no runtime success implied"}
-{"file": ".trellis/spec/frontend/desktop-distribution.md", "reason": "Packaging-only receipt/build/collection/draft contract, independent quality unchanged and standalone verification optional"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/packaging-only-workflow.md", "reason": "Actual YAML/source command trace: four package jobs, least permissions, unchanged independent GHCR, no implicit install test hooks"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/packaging-only-contract.md", "reason": "Packaged receipt and exact source/file closure implementation with frozen local desktop verification"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/packaging-only-review.md", "reason": "Independent combined final packaging-only review; source logs reconciled, owner runtime validation remains separate"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-source-list-buffer-boundary.md", "reason": "Owner-pasted initial source hash ENOBUFS; exact existing scope and stream/path parity with package-only workflow unchanged"}
+{"file": ".trellis/spec/guides/task-artifact-retention.md", "reason": "Owner-approved compact conclusions; exclude raw task evidence and copied workspaces"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/trellis-cleanup-conclusion.md", "reason": "Completed cleanup scope, retained task core and repaired archive context references"}

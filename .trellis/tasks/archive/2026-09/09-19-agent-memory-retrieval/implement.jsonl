@@ -6,4 +6,4 @@
 {"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Flat responsive UI, namespaces and primitives"}
 {"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Live query error/loading and owner identity"}
 {"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Trace storage through preview and actual protocol payload"}
-{"file": ".trellis/tasks/09-19-agent-memory-retrieval/research/retrieval-foundation.md", "reason": "Inspected integration boundaries and confirmed product intent"}
+{"file": ".trellis/tasks/archive/2026-09/09-19-agent-memory-retrieval/research/retrieval-foundation.md", "reason": "Inspected integration boundaries and confirmed product intent"}

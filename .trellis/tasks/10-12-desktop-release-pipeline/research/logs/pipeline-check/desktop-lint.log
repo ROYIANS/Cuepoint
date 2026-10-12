@@ -1,4 +1,0 @@
-
-> cuepoint-tauri-prototype@0.1.0 lint /Users/xiaomengdao/WebstormProjects/aifenjing/desktop/tauri
-> node ../../node_modules/eslint/bin/eslint.js --config eslint.config.mjs scripts ui --max-warnings 0
-

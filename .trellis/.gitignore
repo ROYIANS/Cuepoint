@@ -30,3 +30,44 @@
 # Python cache
 **/__pycache__/
 **/*.pyc
+
+# Task artifacts: retain authored Markdown conclusions, not raw research output.
+tasks/**/research/**/*
+!tasks/**/research/**/
+!tasks/**/research/**/*.md
+tasks/**/reviews/**/*
+!tasks/**/reviews/**/
+!tasks/**/reviews/**/*.md
+tasks/**/evidence/**/*
+!tasks/**/evidence/**/
+!tasks/**/evidence/**/*.md
+tasks/**/validation/**/*
+!tasks/**/validation/**/
+!tasks/**/validation/**/*.md
+tasks/**/acceptance/**/*
+!tasks/**/acceptance/**/
+!tasks/**/acceptance/**/*.md
+
+# Disposable task-local output and copied workspaces (including their Markdown).
+tasks/**/logs/
+tasks/**/tools/
+tasks/**/evidence-pack/
+tasks/**/node_modules/
+tasks/**/.pnpm/
+tasks/**/cache/
+tasks/**/.cache/
+tasks/**/.vite/
+tasks/**/dist/
+tasks/**/target/
+tasks/**/screenshots/
+tasks/**/preview/
+tasks/**/clean-project/
+tasks/**/*-before/
+tasks/**/context/
+tasks/**/*.log
+tasks/**/*.png
+tasks/**/*.jpg
+tasks/**/*.jpeg
+tasks/**/*.webp
+tasks/**/*.zip
+tasks/**/*.gz

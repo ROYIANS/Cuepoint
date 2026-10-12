@@ -1,5 +1,0 @@
-{"owner":"sqlite","name":"prepare_generation_batch","method":"parse","outcome":"fulfilled","test":"durable generation batch review > accepts 20 requests, rejects 21 or five for one slot, rejects foreign owner"}
-{"owner":"sqlite","name":"prepare_generation_batch","method":"parse","outcome":"rejected","test":"durable generation batch review > accepts 20 requests, rejects 21 or five for one slot, rejects foreign owner"}
-{"owner":"sqlite","name":"prepare_generation_batch","method":"parse","outcome":"rejected","test":"durable generation batch review > accepts 20 requests, rejects 21 or five for one slot, rejects foreign owner"}
-{"owner":"sqlite","name":"prepare_generation_batch","method":"parse","outcome":"rejected","test":"durable generation batch review > accepts 20 requests, rejects 21 or five for one slot, rejects foreign owner"}
-{"owner":"sqlite","name":"prepare_generation_batch","method":"parse","outcome":"rejected","test":"durable generation batch review > accepts 20 requests, rejects 21 or five for one slot, rejects foreign owner"}

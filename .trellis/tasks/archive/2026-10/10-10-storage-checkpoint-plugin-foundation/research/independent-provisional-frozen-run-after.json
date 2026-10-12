@@ -1,8 +1,0 @@
-{
-  ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/provisional-source/checkpoint.ts": "dc1f70c2e94b87c0e57587ca293f869c3101c03d3ba99aed5d42c3bf51ed9405",
-  ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/provisional-source/syncProvider.ts": "9bd4b3169b40c35ac56b704c2360810edcc1e912fe3a726e9b909bf0bfad78a6",
-  "src/lib/workspace.ts": "bef1650cee404e8cf50460edf3fd90315dbeb64ffb5125c0be621734d0f69df9",
-  "src/lib/sha256.ts": "639e86426c7ba06930e5820c9fa13fc1d565f15b16dde58783a011139f7b5dc4",
-  ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/independent-probes.test.ts": "09297013bbca4f116dca4e9e16b16e42a01aac2c6c36d52e489b840deb8863d1",
-  ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/independent-provisional-vitest.config.ts": "85574821cb84b764fe959bbed6a9d3135fa2c1dd97ff0a751d7d4f1c72437a80"
-}

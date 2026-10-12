@@ -3,7 +3,7 @@
 {"file": ".trellis/spec/frontend/checkpoint-protocol.md", "reason": "Current partial protocol contract, mutation isolation, canonical wire format and provider outcome boundaries"}
 {"file": ".trellis/spec/frontend/type-safety.md", "reason": "Strict boundary validation and type conventions"}
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Repository quality gates and regression checks"}
-{"file": ".trellis/tasks/10-10-storage-workspace-foundation/research/retained-owner-contracts.md", "reason": "Complete applicable owner and dormant execution contracts without large spec injection truncation"}
+{"file": ".trellis/tasks/archive/2026-10/10-10-storage-workspace-foundation/research/retained-owner-contracts.md", "reason": "Complete applicable owner and dormant execution contracts without large spec injection truncation"}
 {"file": ".trellis/tasks/10-10-desktop-storage-sync/design.md", "reason": "Approved product architecture, provider authority, credentials and checkpoint policies"}
 {"file": ".trellis/tasks/10-10-desktop-storage-sync/research/checkpoint-contract-research.md", "reason": "Verified identity-preserving owner and sanitization gaps; current child intentionally narrower than future production codec candidates"}
-{"file": ".trellis/tasks/10-10-storage-checkpoint-plugin-foundation/research/review-plan.md", "reason": "Adversarial protocol risks, actual-source provenance and honest partial/native limits"}
+{"file": ".trellis/tasks/archive/2026-10/10-10-storage-checkpoint-plugin-foundation/research/review-plan.md", "reason": "Adversarial protocol risks, actual-source provenance and honest partial/native limits"}

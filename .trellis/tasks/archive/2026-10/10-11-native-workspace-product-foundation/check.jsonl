@@ -3,6 +3,6 @@
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Run root and desktop quality gates"}
 {"file": ".trellis/spec/frontend/type-safety.md", "reason": "Review closed DTO and unknown-field handling"}
 {"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Ensure no unrequested compatibility or migration code is introduced"}
-{"file": ".trellis/tasks/10-11-native-workspace-product-foundation/prd.md", "reason": "Acceptance criteria for real product native workspace slice"}
-{"file": ".trellis/tasks/10-11-native-workspace-product-foundation/design.md", "reason": "Technical boundary and recovery contracts"}
-{"file": ".trellis/tasks/10-11-native-workspace-product-foundation/implement.md", "reason": "Execution and validation gates"}
+{"file": ".trellis/tasks/archive/2026-10/10-11-native-workspace-product-foundation/prd.md", "reason": "Acceptance criteria for real product native workspace slice"}
+{"file": ".trellis/tasks/archive/2026-10/10-11-native-workspace-product-foundation/design.md", "reason": "Technical boundary and recovery contracts"}
+{"file": ".trellis/tasks/archive/2026-10/10-11-native-workspace-product-foundation/implement.md", "reason": "Execution and validation gates"}

@@ -1,6 +1,0 @@
-Owner-provided hosted failure, received 2026-10-12; not reproduced locally:
-FAIL tests/boundedInput.test.ts:183 > actual provider inbound limits > accepts a legitimate MiMo envelope above 4 MiB and exactly the decoded audio boundary
-Error: Test timed out in 5000ms.
-Test Files 1 failed | 227 passed | 1 skipped (229)
-Tests 1 failed | 3956 passed | 7 skipped (3964)
-Start at 04:39:37; Duration112.64s.

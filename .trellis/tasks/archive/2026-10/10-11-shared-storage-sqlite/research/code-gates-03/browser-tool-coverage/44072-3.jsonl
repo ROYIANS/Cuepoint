@@ -1,3 +1,0 @@
-{"owner":"indexeddb","name":"slot_update","method":"parse","outcome":"fulfilled","test":"batch fault boundaries > rejects generic Agent slot writes of a batch candidate without changing the target"}
-{"owner":"indexeddb","name":"slot_update","method":"prepare","outcome":"fulfilled","test":"batch fault boundaries > rejects generic Agent slot writes of a batch candidate without changing the target"}
-{"owner":"indexeddb","name":"slot_update","method":"execute","outcome":"rejected","test":"batch fault boundaries > rejects generic Agent slot writes of a batch candidate without changing the target"}
