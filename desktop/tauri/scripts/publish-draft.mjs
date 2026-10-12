@@ -116,7 +116,7 @@ export async function publishDraft(directory,{api,context=runContext()}={}) {
     // risk; the owner must not publish concurrently with an active upload.
     await getOwned();
     const completeNotes=notes.replace('**UPLOAD INCOMPLETE. Do not publish until the workflow finishes and the ownership marker says complete.**','**UPLOAD COMPLETE. The owner may review and publish this test distribution.**');
-    release=await api.json('PATCH',`${repo}/releases/${release.id}`,{body:completeNotes+'\n'+marker(manifest,digest,'complete'),draft:true,prerelease:true,make_latest:'false'});
+    release=await api.json('PATCH',`${repo}/releases/${release.id}`,{tag_name:manifest.context.tag,target_commitish:manifest.context.sourceSha,body:completeNotes+'\n'+marker(manifest,digest,'complete'),draft:true,prerelease:true,make_latest:'false'});
     owned(release,manifest,digest);return {id:release.id,html_url:release.html_url,payloadDigest:digest,assets:files};
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

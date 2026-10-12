@@ -187,6 +187,20 @@ unknown extras or changed bytes stop. Reverify the full remote asset set before
 marking complete. Owner publication follows completion; REST read-before-write
 checks do not prevent concurrent external publication.
 
+The completion `PATCH /repos/{repository}/releases/{id}` must explicitly retain
+`tag_name: manifest.context.tag` and
+`target_commitish: manifest.context.sourceSha`, alongside the complete body,
+`draft: true`, `prerelease: true` and `make_latest: false`. A reached hosted draft
+kept its complete assets/body but returned a persisted `untagged-*` tag after
+the former completion request omitted tag/source. GitHub documents those fields
+as optional; this observation is not a universal omission-reset guarantee.
+Keep the strict post-PATCH ownership/mode/tag check. Never accept an unexpected
+tag, published state or immutable response merely because assets uploaded.
+Recovery of that particular complete draft is an owner-authorized tag association
+repair only after verifying its ID, original marker, exact seven asset hashes and
+current remote tag. Do not broaden discovery to arbitrary untagged drafts or
+delete/reupload existing complete assets.
+
 `githubApi(token, fetchImpl).upload(url, path)` streams raw installer bytes to
 the validated GitHub upload URL with `Content-Type: application/octet-stream`
 and an explicit decimal `Content-Length`. Open the file once, obtain its size
@@ -229,6 +243,7 @@ or remote mutation is implied by local implementation approval.
 | Upload interrupted / identical original retry | Incomplete owned draft / exact conservative resume |
 | File stream without explicit byte length | Invalid upload framing; send the opened file's exact Content-Length |
 | Upload HTTP/transport rejection | Propagate failure and close file resources; keep the draft incomplete |
+| Completion response loses tag or changes draft mode | Reject; retain assets and diagnose actual fields before owner-authorized recovery |
 | Changed payload or unknown remote asset | Stop; owner recovery/new version needed |
 | Successful package build | Record packaged-only state; owner runtime validation remains separate |
 | Frontend default heap OOM / percentage option conflict | Dedicated bounded child budget / explicit conflict error; no global CI relaxation |
@@ -258,6 +273,12 @@ length, no chunked framing and full multichunk binary parity. Cover encoded
 asset names, zero/missing files, early HTTP rejection, actual socket failure,
 closed file resources and unchanged JSON/download behavior. Do not substitute a
 high-level fake `upload` method for this wire boundary.
+Completion regressions exercise a draft API fixture that resets an omitted
+tag_name, then require explicit tag/source, unchanged draft/prerelease mode and
+seven exact assets. Even an explicit correct request must reject a wrong-tag,
+published, non-prerelease, immutable or ownership-conflicting final response.
+An Object.assign-only PATCH fake that retains every omitted field cannot expose
+the reached tag-retention defect.
 External SQLite verifier regressions must include production-encoded ASCII and
 Unicode row keys, malformed encodings, and valid encodings with mismatched IDs.
 

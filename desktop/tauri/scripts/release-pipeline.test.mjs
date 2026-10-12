@@ -172,7 +172,7 @@ test('empty reports cannot turn a packaged receipt into a verified acceptance cl
     } finally {await f.cleanup();}
 });
 
-function fakeApi({failUploadAt=0,published=false,wrongTag=false}={}) {
+function fakeApi({failUploadAt=0,published=false,wrongTag=false,resetMissingDraftTag=false}={}) {
     const state={releases:[],assets:[],uploads:0,patches:[],gets:[],failed:false};
     let next=1;
     const api={
@@ -183,7 +183,11 @@ function fakeApi({failUploadAt=0,published=false,wrongTag=false}={}) {
             if (method === 'POST' && path.endsWith('/releases')) {const release={...body,id:next++,draft:!published,upload_url:'https://uploads.github.com/repos/ROYIANS/Cuepoint/releases/1/assets{?name,label}',html_url:'https://github.com/ROYIANS/Cuepoint/releases/tag/desktop-v0.1.0'};state.releases.push(release);return clone(release);}
             if (method === 'GET' && path.includes('/assets?')) return state.assets.map(asset=>({...asset,url:`https://api.github.com/repos/ROYIANS/Cuepoint/releases/assets/${asset.id}`}));
             if (method === 'GET' && /\/releases\/\d+$/.test(path)) return clone(state.releases[0]);
-            if (method === 'PATCH') {state.patches.push(body);Object.assign(state.releases[0],body);return clone(state.releases[0]);}
+            if (method === 'PATCH') {
+                state.patches.push(body);Object.assign(state.releases[0],body);
+                if (resetMissingDraftTag && !Object.hasOwn(body,'tag_name')) state.releases[0].tag_name='untagged-observed-fixture';
+                return clone(state.releases[0]);
+            }
             throw new Error(`Unexpected fake API ${method} ${path}`);
         },
         async upload(url,path) {
@@ -195,6 +199,49 @@ function fakeApi({failUploadAt=0,published=false,wrongTag=false}={}) {
         async download() {throw new Error('Digest-present fake must not download');},
     };return {api,state};
 }
+test('completion explicitly retains tag and source when a draft PATCH would reset an omitted tag',async ()=> {
+    const f=await fixture();try {
+        await collectArtifacts(f.directories,f.output,context,f.selections);
+        const {api,state}=fakeApi({resetMissingDraftTag:true});
+        const result=await publishDraft(f.output,{api,context});
+        assert.equal(result.assets.length,7);assert.equal(state.assets.length,7);assert.equal(state.releases.length,1);
+        assert.equal(state.releases[0].tag_name,context.tag);assert.equal(state.releases[0].target_commitish,context.sourceSha);
+        assert.equal(state.patches.length,1);
+        const patch=state.patches[0];
+        assert.equal(patch.tag_name,context.tag);assert.equal(patch.target_commitish,context.sourceSha);
+        assert.equal(patch.draft,true);assert.equal(patch.prerelease,true);assert.equal(patch.make_latest,'false');
+        assert.match(patch.body,/UPLOAD COMPLETE/);assert.doesNotMatch(patch.body,/UPLOAD INCOMPLETE/);
+        const marker=JSON.parse(patch.body.match(/<!-- cuepoint-desktop-release:(.*?) -->/)[1]);
+        assert.equal(marker.tag,context.tag);assert.equal(marker.sourceSha,context.sourceSha);
+        assert.equal(marker.payloadDigest,result.payloadDigest);assert.equal(marker.status,'complete');
+        const assets=clone(state.assets),uploads=state.uploads;
+        const retry=await publishDraft(f.output,{api,context});
+        assert.equal(retry.id,result.id);assert.equal(retry.payloadDigest,result.payloadDigest);
+        assert.equal(state.uploads,uploads);assert.deepEqual(state.assets,assets);
+        assert.ok(state.gets.every(call=>call.method !== 'DELETE'));
+    } finally {await f.cleanup();}
+});
+for (const [name,mutate,message] of [
+    ['wrong tag',release=>release.tag_name='untagged-returned-fixture',/wrong mode/],
+    ['published mode',release=>release.draft=false,/wrong mode/],
+    ['non-prerelease mode',release=>release.prerelease=false,/wrong mode/],
+    ['immutable mode',release=>release.immutable=true,/immutable/],
+    ['missing ownership',release=>release.body='UPLOAD COMPLETE',/unowned/],
+    ['changed ownership source',release=>release.body=release.body.replaceAll(context.sourceSha,'b'.repeat(40)),/ownership\/source\/payload conflict/],
+]) test(`completion still rejects ${name} in the final PATCH response`,async ()=> {
+    const f=await fixture();try {
+        await collectArtifacts(f.directories,f.output,context,f.selections);
+        const {api,state}=fakeApi({resetMissingDraftTag:true}),original=api.json;
+        api.json=async (method,path,body)=> {
+            const response=await original(method,path,body);
+            if (method === 'PATCH') mutate(response);
+            return response;
+        };
+        await assert.rejects(publishDraft(f.output,{api,context}),message);
+        assert.equal(state.patches.length,1);assert.equal(state.uploads,7);assert.equal(state.assets.length,7);
+        assert.ok(state.gets.every(call=>call.method !== 'DELETE'));
+    } finally {await f.cleanup();}
+});
 test('publisher leaves an incomplete owned draft on interruption and exact retry skips original bytes',async ()=> {
     const f=await fixture();try {
         await collectArtifacts(f.directories,f.output,context,f.selections);const {api,state}=fakeApi({failUploadAt:3});
