@@ -1,0 +1,16 @@
+{
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "args": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs",
+    "--root",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-Fq2Ljk",
+    "--only",
+    "lint",
+    "--report",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/44-ambiguous-named-callback-unanchorable-fails/report.json"
+  ],
+  "exitCode": 1,
+  "signal": null,
+  "stdout": "lint: 1 errors, 0 review warnings, 0 reviewed allowances; 2 failures\nwarning rules: {}\nquality: FAIL (lint)\n",
+  "stderr": "{\"section\":\"lint\",\"kind\":\"unallowed\",\"key\":\"[\\\"@typescript-eslint/only-throw-error\\\",\\\"src/debt.ts\\\",null]\",\"count\":1}\n{\"section\":\"lint\",\"kind\":\"unanchorable-diagnostic\",\"file\":\"src/debt.ts\",\"rule\":\"@typescript-eslint/only-throw-error\",\"message\":\"Expected an error object to be thrown.\"}\n"
+}

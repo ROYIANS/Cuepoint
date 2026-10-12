@@ -1,0 +1,30 @@
+
+ RUN  v5.0.1 /Users/xiaomengdao/WebstormProjects/aifenjing
+
+ ↓ tests/boundedInput.test.ts > bounded transport bytes and cleanup > enforces actual bytes despite missing/false length {}
+ ↓ tests/boundedInput.test.ts > bounded transport bytes and cleanup > enforces actual bytes despite missing/false length {"content-length":"1"}
+ ↓ tests/boundedInput.test.ts > bounded transport bytes and cleanup > rejects large declared size before reading, even when cancellation throws
+ ↓ tests/boundedInput.test.ts > bounded transport bytes and cleanup > counts multibyte UTF-8 across chunks and rejects malformed UTF-8
+ ↓ tests/boundedInput.test.ts > bounded transport bytes and cleanup > preserves original reader AbortError without signal
+ ↓ tests/boundedInput.test.ts > bounded transport bytes and cleanup > preserves original reader AbortError without signal
+ ↓ tests/boundedInput.test.ts > bounded transport bytes and cleanup > cancels an in-flight blocked read on Stop, releases its lock and returns AbortError
+ ↓ tests/boundedInput.test.ts > bounded transport bytes and cleanup > creates no oversized Blob
+ ↓ tests/boundedInput.test.ts > physical SSE event budgets > counts both CRLF bytes before dispatch, split=false
+ ↓ tests/boundedInput.test.ts > physical SSE event budgets > counts both CRLF bytes before dispatch, split=true
+ ↓ tests/boundedInput.test.ts > physical SSE event budgets > bounds undelimited lines and multi-data-line events before dispatch
+ ↓ tests/boundedInput.test.ts > physical SSE event budgets > handles many complete small events in one large chunk with no lifetime budget
+ ↓ tests/boundedInput.test.ts > physical SSE event budgets > preserves fatal decoding and rejects trailing un-dispatched data
+ ↓ tests/boundedInput.test.ts > actual provider inbound limits > accepts exactly 32 MiB raw speech and CDN audio, rejects +1 without relying on headers
+ ↓ tests/boundedInput.test.ts > actual provider inbound limits > bounds APIMart music submit/detail and embedded speech JSON before parse
+ ↓ tests/boundedInput.test.ts > actual provider inbound limits > retains authoritative non-2xx HTTP status when APIMart/MiMo diagnostic bodies overflow
+ ↓ tests/boundedInput.test.ts > actual provider inbound limits > uses ordinary JSON limits for MiMo models, and protocol failure for oversized speech envelopes
+ ↓ tests/boundedInput.test.ts > actual provider inbound limits > checks exact decoded base64 padding (+1 bytes) before atob
+ ↓ tests/boundedInput.test.ts > actual provider inbound limits > checks exact decoded base64 padding (+2 bytes) before atob
+ ✓ tests/boundedInput.test.ts > actual provider inbound limits > accepts a legitimate MiMo envelope above 4 MiB and exactly the decoded audio boundary 1589ms
+ ↓ tests/boundedInput.test.ts > actual provider inbound limits > allows protected AIHubMix video above 32 MiB and cancels above the independent media limit
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 20 skipped (21)
+   Start at  12:44:52
+   Duration  1.91s (tests 86%, transform 10%, setup 4%, import 1%)
+

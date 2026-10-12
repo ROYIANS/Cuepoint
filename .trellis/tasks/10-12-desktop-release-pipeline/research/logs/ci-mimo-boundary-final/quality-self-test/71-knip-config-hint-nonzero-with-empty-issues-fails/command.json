@@ -1,0 +1,16 @@
+{
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "args": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs",
+    "--root",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-Fq2Ljk",
+    "--only",
+    "unused",
+    "--report",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/71-knip-config-hint-nonzero-with-empty-issues-fails/report.json"
+  ],
+  "exitCode": 2,
+  "signal": null,
+  "stdout": "",
+  "stderr": "Error: Knip execution failed: {\"command\":\"/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node\",\"args\":[\"/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/knip@6.40.0/node_modules/knip/bin/knip.js\",\"--config\",\"/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-Fq2Ljk/knip.json\",\"--reporter\",\"json\",\"--no-progress\",\"--max-issues\",\"9007199254740991\"],\"exitCode\":1,\"signal\":null,\"stdout\":\"{\\\"issues\\\":[]}\\n\",\"stderr\":\"\"}\n    at run (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality/unused.mjs:51:21)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async checkUnused (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality/unused.mjs:61:16)\n    at async runQuality (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs:42:31)\n    at async main (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs:73:18)\n"
+}

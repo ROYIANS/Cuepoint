@@ -1,0 +1,1894 @@
+{
+  "schema": 1,
+  "baseRevision": "d6a7fa68d3ee1e850b86f1cfebc84ba062022402",
+  "branch": "codex/ci-mimo-audio-boundary",
+  "actions": [
+    "2 local work commits",
+    "fast-forward local main"
+  ],
+  "pathCount": 311,
+  "groups": [
+    {
+      "order": 1,
+      "message": "fix(ai): avoid iterable allocation when decoding MiMo speech",
+      "files": [
+        {
+          "path": ".trellis/spec/frontend/ai-connectors.md",
+          "sha256": "c05f0b758198c057a99dad95514bbbec8ee8d9eaf407e71d3d729217548ec205",
+          "bytes": 33394,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": "src/lib/ai/mimoSpeech.ts",
+          "sha256": "d6cfdbb126e27590b9f421474edfea9e3e52e51ba201d992d12d4e2b4a30aced",
+          "bytes": 11472,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": "tests/mimoSpeech.test.ts",
+          "sha256": "b148681dc02d3974e98e8677d01b635554f1de5817c3f9c790147be4ec8984d3",
+          "bytes": 10887,
+          "owner": "root and assigned Trellis follow-up agents"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "message": "docs(release): record MiMo boundary CI validation",
+      "files": [
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/check.jsonl",
+          "sha256": "663b32d9301cc930e83371efb5db0ec5467d09c49749c103ba3e5472501ec75f",
+          "bytes": 3628,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/implement.jsonl",
+          "sha256": "9f73bd5badbf7314bd359afc5f5af18e7af9510e315d19e177f83f217d59e76a",
+          "bytes": 3224,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/implement.md",
+          "sha256": "dd9726243d109eb102eb3878ff5ff9a6bc592e557b13025fdecd0e499282ba7d",
+          "bytes": 17169,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-mimo-boundary-check.md",
+          "sha256": "d98f8285baeace09d8dc416a6d7700eca7c448ce94a0679d7b98b7f8667ad2ee",
+          "bytes": 6290,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-mimo-boundary-followup.md",
+          "sha256": "150216954993cf2b225e111eaa3c0cd2a5809367951bb07a931e5016395a6040",
+          "bytes": 5121,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-mimo-boundary-implementation.md",
+          "sha256": "02d94cec0374b5950140b281a1a25e070c178f22a8598d33507537bdaa5a04e6",
+          "bytes": 7469,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-mimo-boundary-profile.md",
+          "sha256": "b53f85656bdcee03220ddbe70963ab895c5c5d9af462f7efb197efd68af379bc",
+          "bytes": 11262,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/commit-manifest-ci-mimo-boundary.json",
+          "sha256": null,
+          "bytes": null,
+          "owner": "root; manifest self hash omitted"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/commit-plan-ci-mimo-boundary.md",
+          "sha256": "ab9e6a214326041df9abf960f07d651696865ba73e39280388017736d53805d6",
+          "bytes": 45550,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-check/final-gate-inspection.json",
+          "sha256": "1b7f2b2e2e383cc28f9b030fc3b70b7bb400a71a062fea1a36a737573ca22b96",
+          "bytes": 3861,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-check/static-review.json",
+          "sha256": "e06f08d7deab47abf5c5ac4c078879985372ca34ffb641629aae7b87a3a046ac",
+          "bytes": 4017,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/complete-native-sqlite.log",
+          "sha256": "4148db98bf80876b22a458d24c051e2ca2877cffe3f1b89f2b0fa68aad144d66",
+          "bytes": 575,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/desktop-lint.log",
+          "sha256": "032c836532bb5b8949c83c124a9353d0b6727efc6efc50358eef31d43c218b6a",
+          "bytes": 202,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/desktop-quality.log",
+          "sha256": "fdd444fe6e9a40f8a8f6d372ab8a72163b5ccb7c8745e443c2137dbbb788dab8",
+          "bytes": 179,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/desktop-types.log",
+          "sha256": "6f46de1c6f4487e33d41a122d74a08f3c92a6a67ff880a9a5293b0c6ab8af60d",
+          "bytes": 179,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/model-verify.log",
+          "sha256": "f58b777b746a7ebd4198b0b7f1a3fcd25d51250f9683c34e11da47c7468cd87d",
+          "bytes": 267,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/native-acceptance.json",
+          "sha256": "a4a95dacff06e3fc11cad10e30226f2138212d996a44667d6c6cc9db4b3b61fa",
+          "bytes": 19001057,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/ordinary-full-root-node22.log",
+          "sha256": "f1e0c7f3c9012b30677d3a176e43338576a0b7f49c3d64f36dd1848d9b608dbf",
+          "bytes": 521,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/ordinary-full-root-node24.log",
+          "sha256": "99fe973943038c43d7b16e34feb186e3d31dc80d22ec220783756889d6b00380",
+          "bytes": 521,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/production-build.log",
+          "sha256": "3b9b95079620bf6ae74f1ca144c730579f05a3441c82b50b8d48ed2376358edf",
+          "bytes": 69678,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test.log",
+          "sha256": "d4378fd321373280034202209b47e5a40a2ec6b45cd7b38746d6644cca8ffb8e",
+          "bytes": 5077,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/01-clean-lint/command.json",
+          "sha256": "4a8f029811edf0c522a0f2fb7ae858beb4ad7182ee746d9ef65f4dfcc0028545",
+          "bytes": 672,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/01-clean-lint/inputs.json",
+          "sha256": "5e8d3306a716de3c674b3da719d571177b17a9726a2f59befb4d8f21e38b8a4a",
+          "bytes": 80188,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/01-clean-lint/report.json",
+          "sha256": "ad3c24fbbc83c3414b3fbae727b02cf5d76e69743e38963e6236878335d855a6",
+          "bytes": 1572,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/02-review-warning-visible-nonblocking/command.json",
+          "sha256": "9f1d938bfc52b305d7036cee1f470396df30c892189325a0b51b42a9ea2925ae",
+          "bytes": 719,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/02-review-warning-visible-nonblocking/inputs.json",
+          "sha256": "a9069f63061285e81d5fbce368d65bef81aff1ee75141f0601cc3819058891ad",
+          "bytes": 80380,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/02-review-warning-visible-nonblocking/report.json",
+          "sha256": "cb02c7cd234766b0e7bd79608d406b28a7bdb98883de6cc48e03644752bfe5d9",
+          "bytes": 2002,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/03-warning-cannot-be-baselined/command.json",
+          "sha256": "956f63b496a22305bc0edee9081f212d891b7fd189433cb2effeba8790ef02c5",
+          "bytes": 928,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/03-warning-cannot-be-baselined/inputs.json",
+          "sha256": "f1f2c829941c2326b04c4f60a962187778483fb6a1b3887a8fd6edb1e8b45958",
+          "bytes": 81082,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/03-warning-cannot-be-baselined/report.json",
+          "sha256": "4fb5005a8bbfebe2ce4238ab4c8e3c849a3133f4a72871dff166d7584853726f",
+          "bytes": 2911,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/04-typed-unsafe-fails/command.json",
+          "sha256": "e1c04fbe6885a72b2001d79ea0bcb495e6de2e82f7b6099a53aa6621ccee7b4f",
+          "bytes": 1322,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/04-typed-unsafe-fails/inputs.json",
+          "sha256": "cec63985769ea8ceba30da6feb09f2011b31391e2da40020faccd70d37c71b35",
+          "bytes": 80363,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/04-typed-unsafe-fails/report.json",
+          "sha256": "a8569dcdea4a50708581e144bfef56eb09ea66d3da49566231b982c470e87181",
+          "bytes": 5517,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/05-typed-unsafe-repair/command.json",
+          "sha256": "826e436b79c16a0cb8e3b3d91746b47f778fd1a44c34cdd3df678ea3b5f15e77",
+          "bytes": 681,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/05-typed-unsafe-repair/inputs.json",
+          "sha256": "5e8d3306a716de3c674b3da719d571177b17a9726a2f59befb4d8f21e38b8a4a",
+          "bytes": 80188,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/05-typed-unsafe-repair/report.json",
+          "sha256": "28ce49dfe7f45ca6c44492f4a42b0689bab025f49451ad867592683d87ae03b8",
+          "bytes": 1572,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/06-sonar-branches-fails/command.json",
+          "sha256": "18e4f70c4624dd4b182e8be219ff089651ff9ebb4b2b118906ca4da925685ac0",
+          "bytes": 888,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/06-sonar-branches-fails/inputs.json",
+          "sha256": "337c66ece4b923423b53cd35f473079a1c5f934040d3c6b2db3c90e46e74ce8d",
+          "bytes": 80439,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/06-sonar-branches-fails/report.json",
+          "sha256": "df2e9b2f04f3bf7eb5fd73cc902c678b50c2f80e5735e575db1d07a076ef90dd",
+          "bytes": 3514,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/07-sonar-branches-repair/command.json",
+          "sha256": "8beb4c3fa2fd69a476d650382154351a30a273cb00235f2ce4c715016050ef47",
+          "bytes": 683,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/07-sonar-branches-repair/inputs.json",
+          "sha256": "d109e0dd93b56c4fce5c14b8fdd4de2e20f4eb6c2962f127e2740ca70bdd22a1",
+          "bytes": 80387,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/07-sonar-branches-repair/report.json",
+          "sha256": "5015eac183765c48b27fe7376abdb12c1f241250bd31f1f2125b4e2dc59a06f3",
+          "bytes": 1684,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/08-real-hooks-fails/command.json",
+          "sha256": "39661636d24ef52177b1374fc364685a05358c575a5a0afd5d803d122b760ae6",
+          "bytes": 881,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/08-real-hooks-fails/inputs.json",
+          "sha256": "30cb68f94461f4c7b781077fc1de44dfa099dca51f93e34bf324943d5837e3d6",
+          "bytes": 80439,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/08-real-hooks-fails/report.json",
+          "sha256": "d970d68aceb586d617dbce37c9439c9c4da24eb55f3dc92847f1013d5ff43af0",
+          "bytes": 3143,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/09-real-hooks-repair/command.json",
+          "sha256": "0990817836481e4fceadf3f3f3968634895e084337507518548be08f10d71e3d",
+          "bytes": 679,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/09-real-hooks-repair/inputs.json",
+          "sha256": "f319c54b17aab432f1ea3c20490056481e04d9828157f0348093053f994a97c4",
+          "bytes": 80396,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/09-real-hooks-repair/report.json",
+          "sha256": "b8dc88988c4d7336905012f0312cd748b31df9f0d52abfa66c49d781c9e96902",
+          "bytes": 1686,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/10-strict-raw-unknown-throw-fails/command.json",
+          "sha256": "8976a2788df4e19ec13fe30b9ce96d87426818557529b03488438fd9af0e9532",
+          "bytes": 903,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/10-strict-raw-unknown-throw-fails/inputs.json",
+          "sha256": "fcdcda87483309909d8dbef83fb81cfa7e1e81f1437bc2dc63804daf8cb07ad8",
+          "bytes": 80355,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/10-strict-raw-unknown-throw-fails/report.json",
+          "sha256": "7240641debd7e2c971c033404640b106f223a8042b7c4ba7b5f7bdcd09a6f2c8",
+          "bytes": 2788,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/11-strict-raw-any-throw-fails/command.json",
+          "sha256": "ba858de6fe5e6fa45bc17be178e02884a81a13a6edc1e5185ba779fdfd678c79",
+          "bytes": 1109,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/11-strict-raw-any-throw-fails/inputs.json",
+          "sha256": "0c5c812550f0ee0e09e3b6d4aef2bee46773e009e20f9d861fc5e31182686623",
+          "bytes": 80351,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/11-strict-raw-any-throw-fails/report.json",
+          "sha256": "05c3a67f27b5dfea4e598c4fcd1aac2c1dd533360b46ae9ba1d664c648643dc8",
+          "bytes": 3892,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/12-strict-new-any-throw-fails/command.json",
+          "sha256": "f03ac423ec34def2a2b6c4d6be9827bd5058fa51e4013e16a111e275c46e843b",
+          "bytes": 1114,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/12-strict-new-any-throw-fails/inputs.json",
+          "sha256": "aa58d0a608ea8077b1873b983b00d1a192b35346c1644e8ca7e9ab804436581b",
+          "bytes": 80377,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/12-strict-new-any-throw-fails/report.json",
+          "sha256": "8b10e6770a5403d4fab3e412aab5fd14f94ed3665c94ee6d8e4cd4564f709944",
+          "bytes": 4473,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/13-caught-rethrow-contract-pass/command.json",
+          "sha256": "ae986b8c250cb5b4ca61dcf8aefe95aab7c3fdd28dd7e933e017c109ecb53646",
+          "bytes": 690,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/13-caught-rethrow-contract-pass/inputs.json",
+          "sha256": "0328038640138d2451c367bffc196f99993115eb78c26fb2569b80f6a2b5846a",
+          "bytes": 80411,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/13-caught-rethrow-contract-pass/report.json",
+          "sha256": "aba4f097b315a3fbecfe5b7eecde44b369aae1207e322b6c8cb3e2e84557c297",
+          "bytes": 1684,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/14-unknown-throw-fails/command.json",
+          "sha256": "057bcc7970e49e7ea628f2423857112ba664b9fa7776c87ffd7a494faa4d91d5",
+          "bytes": 891,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/14-unknown-throw-fails/inputs.json",
+          "sha256": "f2cebb2b9b1cd91c4069c1c7be818ab27a1403895aafde42c861ca287616e331",
+          "bytes": 80358,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/14-unknown-throw-fails/report.json",
+          "sha256": "1ca72cb3688e1256d3e242aae58d266d034ffd390842b895152f5dc6874febaa",
+          "bytes": 2958,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/15-reviewed-identity-pass/command.json",
+          "sha256": "b8c9742b2f79441f8596ee232008efecc61003e97fc9bffe6ccaa7418d21a523",
+          "bytes": 684,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/15-reviewed-identity-pass/inputs.json",
+          "sha256": "222186591e9dff323df7cf7c5abfede2d59f09edb19313d06255975693dcbec9",
+          "bytes": 81067,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/15-reviewed-identity-pass/report.json",
+          "sha256": "7e1d377f545ba8a736a84e4efe5161966aea755300476736904a4ac7c9bdea89",
+          "bytes": 2940,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/16-format-and-line-relocation-pass/command.json",
+          "sha256": "1fcef39ef3455f00d263a8c5ead3796cf107db43d0761ab7878d5adf4f1e237d",
+          "bytes": 693,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/16-format-and-line-relocation-pass/inputs.json",
+          "sha256": "70e1ebda80239756399d8986a97ea89ea108b767ba1c81ad9ef2c4847bb9d3c4",
+          "bytes": 81093,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/16-format-and-line-relocation-pass/report.json",
+          "sha256": "90a9fdce6c7c8f14c650256baf0b016d56a3604ccf7afc04254773a61e669c51",
+          "bytes": 2939,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/17-same-message-different-owner-fails/command.json",
+          "sha256": "0b8b26bc4276522b8eb6856ae8eebd6a524a4419d5ec3a2350a7e6176898985a",
+          "bytes": 1138,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/17-same-message-different-owner-fails/inputs.json",
+          "sha256": "c00c1dc57509aa8a0e69aa8bd1ca0753fe864b78d16e7fffbb94b4c887532e09",
+          "bytes": 81068,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/17-same-message-different-owner-fails/report.json",
+          "sha256": "71364c94477519186e729bdb0310ccfefd2d146f4940f68bfc3d6f723552d846",
+          "bytes": 3899,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/18-identical-node-increase-fails/command.json",
+          "sha256": "8c5306a71a95b87c8ea3d8003cbaf264b6f64bedec513549d8ff5fcc5f0fd557",
+          "bytes": 932,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/18-identical-node-increase-fails/inputs.json",
+          "sha256": "f6f4e956a50c5a8c5e53fea9f2acdc1f08fa0f74e75698c85d4e89196eae64e1",
+          "bytes": 81084,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/18-identical-node-increase-fails/report.json",
+          "sha256": "55f73f418e12d6d2dbf5946748d3be177199350c1bdb58f3ea4a41210c560c75",
+          "bytes": 4288,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/19-semantic-operand-mutation-fails/command.json",
+          "sha256": "ae1fdadbb00a361d88913feeadb08976627d694e15c8b356858134e54009d4c4",
+          "bytes": 1135,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/19-semantic-operand-mutation-fails/inputs.json",
+          "sha256": "9ec103e109b61e9d8a4e9092b71295cda75960087a3af5583701a6626d9da6a6",
+          "bytes": 81110,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/19-semantic-operand-mutation-fails/report.json",
+          "sha256": "8eeab72eca88f67407eb6ccb38237b8a3c645dbbb90c229f9ae6f402aabdff67",
+          "bytes": 4052,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/20-duplicate-debt-key-fails/command.json",
+          "sha256": "bb430a5e39229d32ac985f743150d821efc4753ef1c5dcffb7ddc3f9f853a612",
+          "bytes": 1161,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/20-duplicate-debt-key-fails/inputs.json",
+          "sha256": "d7f9b5fb3769384c89beccc682a174e9599e397b69eb2a35d56e5dc84c6b196f",
+          "bytes": 81401,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/20-duplicate-debt-key-fails/report.json",
+          "sha256": "8958512bad4fadfa9e1bc8208a93e5733569affe4265594482807127ac1c111c",
+          "bytes": 2159,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/21-invalid-debt-reason-fails/command.json",
+          "sha256": "92827c75419d5ba1d870cad3f847da7ac3e38ea2b9bc6c0caf9b2eda96e080e5",
+          "bytes": 1057,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/21-invalid-debt-reason-fails/inputs.json",
+          "sha256": "e00069d81f1f68b0213dd2a0efc58bbcec4ee58dd8bd6e9524bfe59c6341070d",
+          "bytes": 81023,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/21-invalid-debt-reason-fails/report.json",
+          "sha256": "119674b66dae6a3e88d3dfa5af0ee15a1043155853d17428ac94a0b075cd231a",
+          "bytes": 1948,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/22-invalid-debt-owner-fails/command.json",
+          "sha256": "e7738abf114161cea9c46a1f6b678a85ac2d12bc86a0d03efd6c87932413679d",
+          "bytes": 1055,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/22-invalid-debt-owner-fails/inputs.json",
+          "sha256": "cc2bedd9f6772b9a74ee9d20ab5826a6e296efba457d93918066410406fa117a",
+          "bytes": 81045,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/22-invalid-debt-owner-fails/report.json",
+          "sha256": "54c92e9d0d88d3d6fb8f79f8e801634cd200818d04b2094db5ecfef41078f2f3",
+          "bytes": 1946,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/23-duplicate-json-property-fails/command.json",
+          "sha256": "9292a7d95c77cd219f509183faf40a981e733d6a4ef10d25dcf179cf9d784831",
+          "bytes": 2115,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/23-duplicate-json-property-fails/inputs.json",
+          "sha256": "e019a6a69cec4658a14f83e8d1edb1a1b63592d0713b1b3d4d0f8390b23bebb3",
+          "bytes": 80580,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/23-duplicate-json-property-fails/report.json",
+          "sha256": "aeb7422ef9dcf9f729c41707c2a3b60e571309f3cfc2311668489d565f12bf55",
+          "bytes": 3095,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/24-missing-debt-owner-fails/command.json",
+          "sha256": "f28117c7b129e2cb749ccd96a8305b04901c6ec5d3028491b7f451a55c396544",
+          "bytes": 1087,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/24-missing-debt-owner-fails/inputs.json",
+          "sha256": "dc133fd67ba4892f79630f8459e42beff5b48fc01633d76854bb39a1b31e5597",
+          "bytes": 81021,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/24-missing-debt-owner-fails/report.json",
+          "sha256": "649c7dbbf121944a88e87dd6caead85e7eca9fad95379fce2aedab6196b988dc",
+          "bytes": 2015,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/25-wrong-debt-file-fails/command.json",
+          "sha256": "70a587cc51d9764292982a9f135232f821323492f4907c6184077df5deec3bd5",
+          "bytes": 1126,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/25-wrong-debt-file-fails/inputs.json",
+          "sha256": "35f583ca099a0ea188f5414e344b5c9559f55344bceded4570c9c14f42f9f925",
+          "bytes": 81068,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/25-wrong-debt-file-fails/report.json",
+          "sha256": "2b20f9602ff3dd47119ed068d7e701f2ed952a48921771f973ed65ac39a9dfe4",
+          "bytes": 3901,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/26-wrong-debt-rule-fails/command.json",
+          "sha256": "b39167a23fcc3f56601a224e8c114536df28ec6a5f17e95871c8d12140250f3e",
+          "bytes": 1104,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/26-wrong-debt-rule-fails/inputs.json",
+          "sha256": "ec45628af97bd558c7ae466fa79cea22ae80bbad9a1e157902339ab315f066f0",
+          "bytes": 81046,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/26-wrong-debt-rule-fails/report.json",
+          "sha256": "f7519385e50e4d3289418eb356574b4c30036935f5483f7e8151b39ba73b5e16",
+          "bytes": 3835,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/27-changed-identity-producer-fails/command.json",
+          "sha256": "a46a114ea56e2db261fabc10d97784ce775f4e92eb398a83f6a9ac3a1541af60",
+          "bytes": 993,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/27-changed-identity-producer-fails/inputs.json",
+          "sha256": "f78423bdcd1c15d9dd2ce8c455753b5dd81934af5cde0e41d31e0977395c2432",
+          "bytes": 81067,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/27-changed-identity-producer-fails/report.json",
+          "sha256": "2d444f72ed24ced01d266c93ee623cddddbce220b674433b2f1a7d41bd1d8c5c",
+          "bytes": 1917,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/28-debt-count-decrease-fails/command.json",
+          "sha256": "d29d0448fd57e410a0583caf3f7a7058a2a12e7fc4932477baf909987b62ab9d",
+          "bytes": 928,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/28-debt-count-decrease-fails/inputs.json",
+          "sha256": "d717412e00d2cfd2eaba5a47e40cbaa8fc6575b314655b20833adb18919841d8",
+          "bytes": 81067,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/28-debt-count-decrease-fails/report.json",
+          "sha256": "0e9834c1714bb22e1266c2c918f02852ba1514b8694d9712ec0e58a8ff9660c1",
+          "bytes": 3471,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/29-repaired-debt-stale-fails/command.json",
+          "sha256": "7ee94389ffd0623ea8857f12cfe95405203477fc6ed37484d23e41611efe68d3",
+          "bytes": 919,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/29-repaired-debt-stale-fails/inputs.json",
+          "sha256": "7079c6209df8209d00b2ebe92401c87018f5cf20bfcdcc9230b0edb05525369b",
+          "bytes": 81082,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/29-repaired-debt-stale-fails/report.json",
+          "sha256": "25fadab493a51828169459d0bd7bd225884614f5ddd76a7620474362ccd1cb4a",
+          "bytes": 2630,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/30-repaired-debt-shrunk-pass/command.json",
+          "sha256": "96c7e62e567a10297b372786114bd2cdbe2b0429c0d272e72b947a9f99c2b1a7",
+          "bytes": 687,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/30-repaired-debt-shrunk-pass/inputs.json",
+          "sha256": "48d4e083a821c7cb2f6a9d5df35632e888808d5e402fed20627513eed018359b",
+          "bytes": 80745,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/30-repaired-debt-shrunk-pass/report.json",
+          "sha256": "cad45e8e8b2c369003647deaf3a4aef6464bf699fc02d96a5facdd9fb6e87933",
+          "bytes": 1775,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/31-anonymous-call-owner-unallowed-fails/command.json",
+          "sha256": "ce9d391907351fe6e60c08f6e4490e61b0e4d0846f529530f7932951d677a2c4",
+          "bytes": 908,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/31-anonymous-call-owner-unallowed-fails/inputs.json",
+          "sha256": "b0111889363d506d196da1f6a74594f23b33f32a181b2653d76fa5a97bd6cda5",
+          "bytes": 80527,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/31-anonymous-call-owner-unallowed-fails/report.json",
+          "sha256": "6e98781242af206baf890016b6d2156df3d719fdd74af30f1c8c527c11be86ac",
+          "bytes": 2945,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/32-anonymous-call-owner-reviewed-pass/command.json",
+          "sha256": "75ac7f118dceababcee2a69067046f240ecaaf2262fb63175cfdbb344a24258f",
+          "bytes": 696,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/32-anonymous-call-owner-reviewed-pass/inputs.json",
+          "sha256": "158eb13456e87e46cc85a46aeac0a135e5e915d7ec091b730a8036586d1ef02a",
+          "bytes": 81236,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/32-anonymous-call-owner-reviewed-pass/report.json",
+          "sha256": "695d331428aa088382ad0b8a70dfbe11a3a29ce7fbb8cd08e23d599c4d614086",
+          "bytes": 2927,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/33-anonymous-sibling-debt-transfer-fails/command.json",
+          "sha256": "a9123d133a0d7daa1db45be01206ca4995e5f8f3532602a2a9350f0d8c5ae3fb",
+          "bytes": 1141,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/33-anonymous-sibling-debt-transfer-fails/inputs.json",
+          "sha256": "58c8deb504e018cf71dd1f6798da66993d0a20495bebff70b61b558354a40d86",
+          "bytes": 81236,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/33-anonymous-sibling-debt-transfer-fails/report.json",
+          "sha256": "2fac405db2946b6af2e5be4a637b7913e49b1ed09f1f3a715d3c69e07e50e4ff",
+          "bytes": 3888,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/34-anonymous-call-owner-format-relocation-pass/command.json",
+          "sha256": "dad3539b22c1f29bc98fbc33a130fd8c2414c213118a76087ef2e1c2ae3a43bf",
+          "bytes": 705,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/34-anonymous-call-owner-format-relocation-pass/inputs.json",
+          "sha256": "b7a6562ed49330e6e9cba072901504cd4bf87c015f3bc5332da7cf16bdfb9406",
+          "bytes": 81278,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/34-anonymous-call-owner-format-relocation-pass/report.json",
+          "sha256": "6da73fdc6b0b52decce1ad270ca1caabdb47511aee17e54d49a322ab37790604",
+          "bytes": 2927,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/35-ambiguous-anonymous-owner-fails-unanchorable/command.json",
+          "sha256": "e76bb5a60fcc4c07b4c2d32d8f6b122b9f9e76c1645090fad7a71890274fa8e8",
+          "bytes": 1038,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/35-ambiguous-anonymous-owner-fails-unanchorable/inputs.json",
+          "sha256": "b42da26d8a7dbccb9d10bf22c8e30217759384179db5d68681deee27219adf0d",
+          "bytes": 80896,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/35-ambiguous-anonymous-owner-fails-unanchorable/report.json",
+          "sha256": "78ebc743ebf129adbb8c90ba74af51dd27b975db40b37c70d8ad8d24b7ec5800",
+          "bytes": 2996,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/36-parenthesized-callback-unallowed-fails/command.json",
+          "sha256": "807437449872eefd635859393cbaa7d48767610d85b1e0a425c3e81339ea1b8d",
+          "bytes": 910,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/36-parenthesized-callback-unallowed-fails/inputs.json",
+          "sha256": "cf6b24a1dab4626e2dd859ac5a1ee0b5fe3bbd9c7585824e010033ff8d0200f0",
+          "bytes": 80531,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/36-parenthesized-callback-unallowed-fails/report.json",
+          "sha256": "b5a8100650f3f3075bc87c6432b838acb9872ceb6346623716facbdc469d05e1",
+          "bytes": 2945,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/37-parenthesized-callback-reviewed-pass/command.json",
+          "sha256": "acf259693fbfeb6b56f53d4ed97e4af1c995ad49f21edcf4c437e648dfb9e189",
+          "bytes": 698,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/37-parenthesized-callback-reviewed-pass/inputs.json",
+          "sha256": "30537deb371fcb50404ff64501a291c9b5f3c2400a806b9e4c0ce2f9a66bd5c2",
+          "bytes": 81240,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/37-parenthesized-callback-reviewed-pass/report.json",
+          "sha256": "36ad1cd78aa9847b6b56ee4f3a7b4b0b9ad74cb834c019f44f8ea24e2bf48aca",
+          "bytes": 2927,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/38-parenthesized-callback-sibling-transfer-fails/command.json",
+          "sha256": "2a9ee39935e889de2ddf9c3836f421235e1d95dee7267f4f5b4bc84ba1c1dfda",
+          "bytes": 1149,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/38-parenthesized-callback-sibling-transfer-fails/inputs.json",
+          "sha256": "ef8a72f780e7bca5b91c509b07f9be98dc8e84a5e7214213d5439784370b95bc",
+          "bytes": 81240,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/38-parenthesized-callback-sibling-transfer-fails/report.json",
+          "sha256": "d566b9e10320f4f9fe695d03d60022e9bf20051db8d54396523b3be9565ef53f",
+          "bytes": 3888,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/39-callback-parentheses-relocation-pass/command.json",
+          "sha256": "4356883a4d0280f314435002ca8b8e602dbb942a240ef050cb5d63a85dc368ee",
+          "bytes": 698,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/39-callback-parentheses-relocation-pass/inputs.json",
+          "sha256": "158eb13456e87e46cc85a46aeac0a135e5e915d7ec091b730a8036586d1ef02a",
+          "bytes": 81236,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/39-callback-parentheses-relocation-pass/report.json",
+          "sha256": "b2bccf0719fa308447822f28a2cba6e2b8644712dcbcbb2a1e118383a6b61945",
+          "bytes": 2927,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/40-named-callback-unallowed-fails/command.json",
+          "sha256": "d93237e58d38f4b1464740c11be1e276451f4561dc20ba9b603fa1524fa7d94d",
+          "bytes": 902,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/40-named-callback-unallowed-fails/inputs.json",
+          "sha256": "74c032251ae53e338f4abdcc85719209115324876d8cf4e9fff24ae4093bbfd8",
+          "bytes": 80555,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/40-named-callback-unallowed-fails/report.json",
+          "sha256": "cbf930000b283d28598d7a8f8194bd52e55ce3953370dd9057fc6e5c8a69eb79",
+          "bytes": 2958,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/41-named-callback-reviewed-pass/command.json",
+          "sha256": "9a2f6129498e555d920e9830edd6e0850a7a70809b1be6f7413743d91daa6652",
+          "bytes": 690,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/41-named-callback-reviewed-pass/inputs.json",
+          "sha256": "41998322e70d9f69a9662e702e4630920c494339ed103cf5bdfc8d0bffffa697",
+          "bytes": 81264,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/41-named-callback-reviewed-pass/report.json",
+          "sha256": "e8cde1742e564921ac39403be1786f96ce218ba6f3eafe4c2743e8e642ec305a",
+          "bytes": 2940,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/42-named-callback-sibling-transfer-fails/command.json",
+          "sha256": "abd13e9c4d1aaf5a861444e940b0c93c9441a70db4b631f4784776467bbbba0e",
+          "bytes": 1141,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/42-named-callback-sibling-transfer-fails/inputs.json",
+          "sha256": "281e9c19a8db1fd4316bc73552f714a79895dd6beb38aca76cead061009336a4",
+          "bytes": 81264,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/42-named-callback-sibling-transfer-fails/report.json",
+          "sha256": "e13ed167814037c79f2fe5f3c54e3b5e1063c08a2a9e47c4e2a4a3694e6c0a93",
+          "bytes": 3901,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/43-named-callback-format-wrapper-relocation-pass/command.json",
+          "sha256": "903d7beaddefcdc89487ea74d43e32f6a01a6223a35d3f7bc95eb88d27120314",
+          "bytes": 707,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/43-named-callback-format-wrapper-relocation-pass/inputs.json",
+          "sha256": "5a0612fbcf05bd8a794dc2a000fdc26a4099bf46f1d1e298ed1ea2f0291be7d0",
+          "bytes": 81286,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/43-named-callback-format-wrapper-relocation-pass/report.json",
+          "sha256": "ccd7940d07c46a43aae6ca8348f07401eadf013e3429b123442bf17523b1ffc7",
+          "bytes": 2940,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/44-ambiguous-named-callback-unanchorable-fails/command.json",
+          "sha256": "6b4d18f796f4b3c68e6ef0c67010e2bf8da2e0b93783f097567fa5e02f83e1b7",
+          "bytes": 1037,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/44-ambiguous-named-callback-unanchorable-fails/inputs.json",
+          "sha256": "48c71108ec6a9f142a67aa3eafa62deda34515b428bbacf7d3b3497861309f68",
+          "bytes": 80924,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/44-ambiguous-named-callback-unanchorable-fails/report.json",
+          "sha256": "bfe153d7d5b49bcdcf359fbb25776cf0a067016971c744d867706a353e43dd81",
+          "bytes": 2996,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/45-named-recursive-callback-unallowed-fails/command.json",
+          "sha256": "86be016327f53c75bb49be83e98de9ce24f5bef0fdb878e3abf3e307ea9ad200",
+          "bytes": 912,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/45-named-recursive-callback-unallowed-fails/inputs.json",
+          "sha256": "ec9b8f7dd611f219025c3a08628a96b3f954815ec412622937090230df65103a",
+          "bytes": 80519,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/45-named-recursive-callback-unallowed-fails/report.json",
+          "sha256": "52b364d233222b50416328112c54c4dc658df1203167d0f22e413981ebb9d9b4",
+          "bytes": 2960,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/46-named-recursive-callback-reviewed-pass/command.json",
+          "sha256": "5216925515aa7f1cb527cfbea7ad74d25b0348d33c605055addd9ab3b7bda837",
+          "bytes": 700,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/46-named-recursive-callback-reviewed-pass/inputs.json",
+          "sha256": "819a6f9948a713d90f2c55baf8679b7f34efc9a9b53f4fecb3075a86f2ecfa1d",
+          "bytes": 81228,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/46-named-recursive-callback-reviewed-pass/report.json",
+          "sha256": "ed061850787de0ce78eba00ea9899e20b1e22124f3fab9581815bd5c957f2259",
+          "bytes": 2942,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/47-named-callback-self-binding-change-fails/command.json",
+          "sha256": "0255aadf5b8513a6a16c090ead02693d9446470f8df43e4305904f9e4f4b0ad5",
+          "bytes": 1144,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/47-named-callback-self-binding-change-fails/inputs.json",
+          "sha256": "8bb7536197a5dcf99baa643804fee3e688eda52d9dbb05e2df9a33ed99640e7d",
+          "bytes": 81226,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/47-named-callback-self-binding-change-fails/report.json",
+          "sha256": "6daf9b0903e1b83486428218772feed3c1a88cc6745840b93ae12bdda3f16276",
+          "bytes": 3899,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/48-dual-call-callback-unallowed-fails/command.json",
+          "sha256": "09d15d3cea0bfea8ac5cc835c26ee79dd78583b2708a3800de2809cb4086bb29",
+          "bytes": 906,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/48-dual-call-callback-unallowed-fails/inputs.json",
+          "sha256": "078716c7db762b4dc73e48654f8235ef83a861c572283b2da1e8baec20e3dcbd",
+          "bytes": 80506,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/48-dual-call-callback-unallowed-fails/report.json",
+          "sha256": "acd02d4edcfbb7b9fe39dff1db25cc1dea9900dbbe98ef0d4beff20e4f48b5df",
+          "bytes": 2945,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/49-dual-call-callback-reviewed-pass/command.json",
+          "sha256": "76c37cf8f0dd492e750a9df281d0fea23f6e8cc386ec4b932e65900cb9d4fa04",
+          "bytes": 694,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/49-dual-call-callback-reviewed-pass/inputs.json",
+          "sha256": "f2110c103b93b266098e4b85c02d0d5a91ee94ad828126386ebced8ef7958328",
+          "bytes": 81215,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/49-dual-call-callback-reviewed-pass/report.json",
+          "sha256": "9e86c8851e02e03f575a4a4a0c27d1c5a076008a96f3bfd338cb08c675efbcb8",
+          "bytes": 2927,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/50-call-to-constructor-debt-transfer-fails/command.json",
+          "sha256": "bbdc8e3428603f8edf8a3c10ca232166aa7860eacb96cbd66df86e4c48a228fd",
+          "bytes": 1143,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/50-call-to-constructor-debt-transfer-fails/inputs.json",
+          "sha256": "27b33d10c99adaf97dc5abcf2cb798195d8cdb5355597f70e764aac8784e3a45",
+          "bytes": 81219,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/50-call-to-constructor-debt-transfer-fails/report.json",
+          "sha256": "87734eecdfe96bf03369ed633655c58b69a73009d308a13c41ee63836037fce3",
+          "bytes": 3884,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/51-guarded-branch-unallowed-fails/command.json",
+          "sha256": "8c365fd9010afb7919b6880bfd8bcc7279b449b657a06487383743e70da63c4d",
+          "bytes": 902,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/51-guarded-branch-unallowed-fails/inputs.json",
+          "sha256": "ad1c3b3374b9c809ef1331487e7d14385d3b24b981cff2f70b94e9e0730942e1",
+          "bytes": 80440,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/51-guarded-branch-unallowed-fails/report.json",
+          "sha256": "98847aa16d1eb3e5078e6d1fc4d590aec701471e95ea30519adcc55d5b3fdaf7",
+          "bytes": 2820,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/52-guarded-branch-reviewed-pass/command.json",
+          "sha256": "e558ce7e4a555a6fd7bbdda78bb3c087c49dcb8553d4324570f98d3c3a7e0030",
+          "bytes": 690,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/52-guarded-branch-reviewed-pass/inputs.json",
+          "sha256": "6b2a4594c35fa5087b67a9320f66f5ba5f39acf9253f43525a2c5668967a02c5",
+          "bytes": 81149,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/52-guarded-branch-reviewed-pass/report.json",
+          "sha256": "aba0c7c4b98909dae342d448dfce95289e9ee3781f0b092a816fe24c46ec1ab3",
+          "bytes": 2802,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/53-conditional-guard-debt-transfer-fails/command.json",
+          "sha256": "2f210c07e2b1642f333a54a83e7576105b82fb7d46847a5633060bd035548721",
+          "bytes": 1141,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/53-conditional-guard-debt-transfer-fails/inputs.json",
+          "sha256": "6a5e78055d7a37bdc1ee7b73453c66d045d92843c9e663e648fcaa4c40dc45ca",
+          "bytes": 81149,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/53-conditional-guard-debt-transfer-fails/report.json",
+          "sha256": "56e7fc7e176c4c03d6e45bfe43952625972affcb48c3e3d666c7c51598a54a2b",
+          "bytes": 3763,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/54-ambiguous-repeated-guard-unanchorable-fails/command.json",
+          "sha256": "e1c63a9eecc36d746905b34aea33c5aafbd7cf21bfa3bc255bd3bda21a9b7605",
+          "bytes": 1037,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/54-ambiguous-repeated-guard-unanchorable-fails/inputs.json",
+          "sha256": "489671dc399ae70c8007bc6aa3309323977cc46b405deb2bbbe3f76729887081",
+          "bytes": 80794,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/54-ambiguous-repeated-guard-unanchorable-fails/report.json",
+          "sha256": "03b8b3f8cb8401a998cbd3fc45dd0ff1d4c98ba36a5a38f9a5b00f3bdd5fb880",
+          "bytes": 2992,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/55-contextual-tokens-unallowed-fails/command.json",
+          "sha256": "80c0939a1c0b6fe0e7adf13eec4a3d80775eaab3a33699f082a044e3fb4eb82f",
+          "bytes": 905,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/55-contextual-tokens-unallowed-fails/inputs.json",
+          "sha256": "c2786987e4d7d2eaa3acbe9aec4c966c949dfad835012a02eb8a67d8e6633a97",
+          "bytes": 80415,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/55-contextual-tokens-unallowed-fails/report.json",
+          "sha256": "500b9285df8c34884e3f9b8f8790a147aecb6a26e94710045a590c3bc2330c84",
+          "bytes": 4732,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/56-contextual-tokens-allowance-pass/command.json",
+          "sha256": "0d2582d4cb4d5bc8369bdeb6a6f3ea125bc013fd435fc58237c62e945c8d12f2",
+          "bytes": 694,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/56-contextual-tokens-allowance-pass/inputs.json",
+          "sha256": "892bec00ce0a57355b974342a7253c3222640993c04b63af861a83a9faca4c75",
+          "bytes": 81124,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/56-contextual-tokens-allowance-pass/report.json",
+          "sha256": "7328a88f2077782207e34926001da1661bd5627fd6ed306e47ace5bde79e3631",
+          "bytes": 4714,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/57-contextual-regex-mutation-fails/command.json",
+          "sha256": "7c5c79dee105ade2738242766bf2cde4607cd6449b60a1bc55a8e2f989592212",
+          "bytes": 1135,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/57-contextual-regex-mutation-fails/inputs.json",
+          "sha256": "3ff8d0797dbe7ac5c6b48b05d7bef08a2451c39bada0c75fa22b1bf8aab59831",
+          "bytes": 81125,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/57-contextual-regex-mutation-fails/report.json",
+          "sha256": "e4c08bfefd80c18f8548625bc86e9e8a092fb29a756c14c64bf0621de364c9f1",
+          "bytes": 5674,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/58-domain-db-value-boundary-fails/command.json",
+          "sha256": "2aced15c6de75aacfcede88e4ad199ebff6f5e7dcc0fe44cb39afbb87faa2eec",
+          "bytes": 999,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/58-domain-db-value-boundary-fails/inputs.json",
+          "sha256": "f7670e78c3f32b83113b03ad655e19607370f5e41e156f2e37e24d6e4447204d",
+          "bytes": 80545,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/58-domain-db-value-boundary-fails/report.json",
+          "sha256": "87c1b37a83b7b91473301e75d0197a1e3c83f669c54272c7c0d52caface5c10f",
+          "bytes": 29955,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/59-all-type-named-forms-pass/command.json",
+          "sha256": "e3cfccf64a0d1df2b53eb4629145915836561c592ccf8e4f001a5b90d8aa6892",
+          "bytes": 763,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/59-all-type-named-forms-pass/inputs.json",
+          "sha256": "a82752f474773298e9ca5da908e2a6490d36d8511b0b39de0fec686b93bec24d",
+          "bytes": 80611,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/59-all-type-named-forms-pass/report.json",
+          "sha256": "89c7a7a76df4a95311cd320c76721e738b11a38fd0396e80d8d4aa71e558e95d",
+          "bytes": 29368,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/60-mixed-type-value-boundary-fails/command.json",
+          "sha256": "0e151aa05d1fac0dfacee014122216af02a16c3e7672eb6971c390d2917cae06",
+          "bytes": 1000,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/60-mixed-type-value-boundary-fails/inputs.json",
+          "sha256": "2cd8d8bbe163b93fbaf8992cb603aa2af62a8482088de4b1fc6c6f4e652a37b9",
+          "bytes": 80582,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/60-mixed-type-value-boundary-fails/report.json",
+          "sha256": "07b11e1cf4a96c50a6e7097704798d77f15ecf357ce74ce9ba5ca34f89aa2758",
+          "bytes": 29955,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/61-mixed-reexport-value-boundary-fails/command.json",
+          "sha256": "f0afba662dcc962fc1d4a4b5974b90ba6bc008a005bb2a7f68ac1af80bd7d421",
+          "bytes": 1004,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/61-mixed-reexport-value-boundary-fails/inputs.json",
+          "sha256": "21f230a7bf439293eaad005647c9d0560803b40f9b630eaeb405c7b9c51b5343",
+          "bytes": 80533,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/61-mixed-reexport-value-boundary-fails/report.json",
+          "sha256": "f4a4de12ab254da2d4eb40d28c8f18a12754b0be6d3847fb471c30ca7f077935",
+          "bytes": 29955,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/62-type-star-boundary-repair/command.json",
+          "sha256": "02653590e018257bf459c1688ef423eee91b0210693f49dc02e35815e6ba14a7",
+          "bytes": 763,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/62-type-star-boundary-repair/inputs.json",
+          "sha256": "71085bd17590a96febea9c80606f188adf7f13a8658b62b3892fe71ed5782b50",
+          "bytes": 80520,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/62-type-star-boundary-repair/report.json",
+          "sha256": "263b217a4d57acbf8a8d90905687b1d0c56ab61cf283c259331dbace036f96b3",
+          "bytes": 29126,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/63-db-ui-value-boundary-fails/command.json",
+          "sha256": "7ed540a1f1b064ace8191a65d5bdde777fce424cddf55dc1c90e6b8625678b14",
+          "bytes": 1005,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/63-db-ui-value-boundary-fails/inputs.json",
+          "sha256": "7154fb42ae0e7ce6081d1377f3491221ab373a342400dd1a3897634f56ca271c",
+          "bytes": 80653,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/63-db-ui-value-boundary-fails/report.json",
+          "sha256": "3ddb158b2da3bfaa2c25a682de66e0b13987e9a9eea5ade6719cf1df387ff182",
+          "bytes": 30397,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/64-literal-dynamic-boundary-fails/command.json",
+          "sha256": "a8be581d34447cac8b16583cf348a76b804d944106c7704111df7d60ee62050a",
+          "bytes": 1000,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/64-literal-dynamic-boundary-fails/inputs.json",
+          "sha256": "002281fb485225083778f75d6483d5ccb508e6e6d626dfa67a8edbe03074757f",
+          "bytes": 80662,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/64-literal-dynamic-boundary-fails/report.json",
+          "sha256": "5bff700e23592f685855b431789439de1d56b052e180bd0b14eace7c5766ccf9",
+          "bytes": 30119,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/65-literal-require-boundary-fails/command.json",
+          "sha256": "b4441f114520a9024fef92d15cfa62cb6333d8ce7ff41abbe9d4e88e789108f0",
+          "bytes": 993,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/65-literal-require-boundary-fails/inputs.json",
+          "sha256": "d3703cd0e07d05304bf2077ae93cb14bf3818d967fe78107deadece0df0f9951",
+          "bytes": 80655,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/65-literal-require-boundary-fails/report.json",
+          "sha256": "c054fb8e2c7dce3e95e91a126f4bb8d1d26d250f9e604b4ee2a5135b52cd982d",
+          "bytes": 30091,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/66-static-value-cycle-fails/command.json",
+          "sha256": "b111967a1c7a2a6b35b2b90c00745d8938c8875d0cfcadae3386e0ce9fea3545",
+          "bytes": 866,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/66-static-value-cycle-fails/inputs.json",
+          "sha256": "3fd29b50cd084e5f4b6910bda61052ff8252c83174b063010e816e73222633db",
+          "bytes": 80492,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/66-static-value-cycle-fails/report.json",
+          "sha256": "dfa05469330cb3a4607afde0afbe07f355f82398dcde46a0241f896fb86bd3b9",
+          "bytes": 29653,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/67-static-cycle-repair/command.json",
+          "sha256": "588baa2e27fea270757e57ff4f40468038597448ee1f229270280dea1a0f2006",
+          "bytes": 757,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/67-static-cycle-repair/inputs.json",
+          "sha256": "a17ec29af9eaa89fab3408fa061f230822dfc38e91cd6f8048c2952c0427d41b",
+          "bytes": 80465,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/67-static-cycle-repair/report.json",
+          "sha256": "c41f70a74a59e7c19496bdb871b0ae839192d65ba63b7d53f6d882978da80ed0",
+          "bytes": 29063,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/68-type-only-cycle-allowed/command.json",
+          "sha256": "915c401bd2a0f5f12502d13aa6d0a2ff82cf45a48d2832e0039541f4e152f685",
+          "bytes": 761,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/68-type-only-cycle-allowed/inputs.json",
+          "sha256": "6f2b285087861e96bfa749b5a5d9c2767e30a356a9e1d12c5201fdeec4e064f2",
+          "bytes": 80520,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/68-type-only-cycle-allowed/report.json",
+          "sha256": "b9e18d80c183e1d55659842f6884f95eabeab9dc56d76c4851012dd4825e5dee",
+          "bytes": 29282,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/69-literal-dynamic-cycle-separated-pass/command.json",
+          "sha256": "9e241c9c441e8ca4d270b41c9f650ba5852e2eabe87c3fb1dfbdebc8f4eecf26",
+          "bytes": 774,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/69-literal-dynamic-cycle-separated-pass/inputs.json",
+          "sha256": "d82bd5d42c76eb8fed5b7055fb1dce863a629e7af533d10b3ab88794c9679449",
+          "bytes": 80499,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/69-literal-dynamic-cycle-separated-pass/report.json",
+          "sha256": "f6108dee11617f245cb24108133263182a458b7aa538d6e3d3ec1f4e1b151213",
+          "bytes": 29285,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/70-computed-import-limit-visible-pass/command.json",
+          "sha256": "c11acba5492ca9135a3cc3531e83282c8a9df870a6a4a4ebed824094cb8c8524",
+          "bytes": 772,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/70-computed-import-limit-visible-pass/inputs.json",
+          "sha256": "a083b4aae03101eb7ad86aa3670b5b22ba2da882e053ab74613847a535694d31",
+          "bytes": 80508,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/70-computed-import-limit-visible-pass/report.json",
+          "sha256": "979db35bd5bd69b79157bbb50e4fe264274154de9f0554be2115e525a1eb0ea6",
+          "bytes": 29217,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/71-knip-config-hint-nonzero-with-empty-issues-fails/command.json",
+          "sha256": "dc9c90017315295db23b6cd152eb21d35d0e45ad3d0eb7b5ea123f0c5e302292",
+          "bytes": 1618,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/71-knip-config-hint-nonzero-with-empty-issues-fails/inputs.json",
+          "sha256": "962fce4531b8d824172a494a80ec63db62a4e9bbfa9697c5f75aa0be3ce8803e",
+          "bytes": 80302,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/71-knip-config-hint-nonzero-with-empty-issues-fails/report.json",
+          "sha256": "e2ca62b0a4fad8e65e4209dc8f924bd1fdbb46084d9fc68ec43410d27a8db847",
+          "bytes": 3310,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/72-knip-config-hint-nonzero-with-real-issues-fails/command.json",
+          "sha256": "96f27b0071e44eb5af8361ac3f624d827941179daa99bca240db4c314e4d68bd",
+          "bytes": 2026,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/72-knip-config-hint-nonzero-with-real-issues-fails/inputs.json",
+          "sha256": "b21d200ae14c1bd1b7f02b7ef125845f1fc53133c4c6b1f32c6e7f95e673f1b9",
+          "bytes": 80456,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/72-knip-config-hint-nonzero-with-real-issues-fails/report.json",
+          "sha256": "0383c5beded455e4ac9284d16cd4055b4b8384c12171f927f73574ecc22fb4a5",
+          "bytes": 4561,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/73-clean-unused-pass/command.json",
+          "sha256": "589f0cb31a03469d0fdf68e1d165706730ed6c3677d797d511c57a695c63caea",
+          "bytes": 695,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/73-clean-unused-pass/inputs.json",
+          "sha256": "5e8d3306a716de3c674b3da719d571177b17a9726a2f59befb4d8f21e38b8a4a",
+          "bytes": 80188,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/73-clean-unused-pass/report.json",
+          "sha256": "8ca3f32bcfc19ee06e6f1d5e72699362c631731562ba33385b869e85559e66bb",
+          "bytes": 2820,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/74-genuinely-unused-file-fails/command.json",
+          "sha256": "f772779c6b2357b3e6fe8839c3e3ba908dfda9d9e7532609dd85b47783e596e8",
+          "bytes": 825,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/74-genuinely-unused-file-fails/inputs.json",
+          "sha256": "24a908e403bd8b255017013fb7e5e2901cfb9a2d788aa2cd1d71d85c2d507e59",
+          "bytes": 80328,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/74-genuinely-unused-file-fails/report.json",
+          "sha256": "4083f7093e4cc64b01234bb53eabfac9e22884950bd15c41a3cffdedd4b79624",
+          "bytes": 5512,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/75-unused-file-removal-repair/command.json",
+          "sha256": "b10cdf4667cc8a6f54edccd713d3314350ad2a2bbea199681f4c636d3d920437",
+          "bytes": 704,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/75-unused-file-removal-repair/inputs.json",
+          "sha256": "5e8d3306a716de3c674b3da719d571177b17a9726a2f59befb4d8f21e38b8a4a",
+          "bytes": 80188,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/75-unused-file-removal-repair/report.json",
+          "sha256": "6aaa8a4c1beaf9d5c2e4e1f42bf4c189aaa166f110a15581ae5834fd2207a5aa",
+          "bytes": 2820,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/76-genuinely-unused-export-fails/command.json",
+          "sha256": "50ec337f0db3cef7dc212e8ebc3c3b31c9419a329c171a5d3d50409834f1d3b2",
+          "bytes": 835,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/76-genuinely-unused-export-fails/inputs.json",
+          "sha256": "dd3e06444401f53e358d0dd944e8fd69e1b24e3f910fa2bbd4517797b76597bc",
+          "bytes": 80371,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/76-genuinely-unused-export-fails/report.json",
+          "sha256": "644047e81eec8e0ee356ccead7c8b0c2c186b6fa06a0434db79653eb042da2c6",
+          "bytes": 5962,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/77-reviewed-unused-contract-pass/command.json",
+          "sha256": "3798ca459c126c9123d66adf07c6c389f8ed7206075c5a726964fe865b437fbf",
+          "bytes": 707,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/77-reviewed-unused-contract-pass/inputs.json",
+          "sha256": "a3b98938fbaac1b55c6ff4754b44db9168c38636be6b722ec059cb93e4ceb095",
+          "bytes": 81027,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/77-reviewed-unused-contract-pass/report.json",
+          "sha256": "80038a6a0e44dbe667ee01963ba35f5c435f94f67fd57d7a9c64aaab6379d087",
+          "bytes": 6251,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/78-external-contract-evidence-in-inventory-pass/command.json",
+          "sha256": "103adcdbf121513a067616884a8754586ef0b947670a1c35d34d891a0bf6c884",
+          "bytes": 722,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/78-external-contract-evidence-in-inventory-pass/inputs.json",
+          "sha256": "43d93c7df68c2abea4ad85a57c6e03513ef2bd9f695f71c6b160bbbd2301aa6d",
+          "bytes": 81415,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/78-external-contract-evidence-in-inventory-pass/report.json",
+          "sha256": "923525df85b49a9e0db6fe975517e02ef3e01715f41dc83a2038109beb182453",
+          "bytes": 6533,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/79-external-contract-evidence-hash-change-fails/command.json",
+          "sha256": "5a2f22383e9f30ea6d3b84d9fad051d9926c8739f964be0116502ce772500238",
+          "bytes": 996,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/79-external-contract-evidence-hash-change-fails/inputs.json",
+          "sha256": "3f343313388a3d6ded2baa54ae75733e1d77b07df3e3ee685fafddcefaeb41ca",
+          "bytes": 81453,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/79-external-contract-evidence-hash-change-fails/report.json",
+          "sha256": "39d5054a4fe8b0e1962226fa092e963bfd57ee849b973e19233357f6aebe14b8",
+          "bytes": 2014,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/80-duplicate-unused-key-fails/command.json",
+          "sha256": "d5714432be64f5c5509578c1f94a6263f307d629775a619af2da443c3f2c6094",
+          "bytes": 1098,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/80-duplicate-unused-key-fails/inputs.json",
+          "sha256": "9005266d8ee2136024ebaf7add9579cdb4be3225d2e95f7d7eb848cb15bec81f",
+          "bytes": 81698,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/80-duplicate-unused-key-fails/report.json",
+          "sha256": "d5d9f8526d3a3849131c0065f55cbe91f0cea4f0bdd4531b82fe1100e5adbaf4",
+          "bytes": 2038,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/81-invalid-unused-owner-fails/command.json",
+          "sha256": "c3a2662e00b4aef5159abc0c1ee48e7303aa38732eee1ecb4110663d21648d2f",
+          "bytes": 1064,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/81-invalid-unused-owner-fails/inputs.json",
+          "sha256": "a240263783d88ccf677f26622ae41d1d78cab7bd567ad9e4ba0c8c8771f0a17d",
+          "bytes": 81221,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/81-invalid-unused-owner-fails/report.json",
+          "sha256": "825156f21d248a750331dc8fb28cdc31f3ad34b9facee838e948a40e717e0b9f",
+          "bytes": 1970,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/82-missing-unused-evidence-fails/command.json",
+          "sha256": "6c2e9b513ad295a444d08e39ca502dde726a48db38893049f6c3f69ac8a05f60",
+          "bytes": 970,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/82-missing-unused-evidence-fails/inputs.json",
+          "sha256": "e0d6b031cfebf6e47f22db142959aa3e3a092f4821e6f264369ab776cb4e7d39",
+          "bytes": 81081,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/82-missing-unused-evidence-fails/report.json",
+          "sha256": "b2087da4efdaab4fae144278256ae8d5e5dc9390faa65ca72e9e72a4fda65439",
+          "bytes": 1885,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/83-added-unused-with-reviewed-contract-fails/command.json",
+          "sha256": "f1b99eebe951fc2fe4f882391691d6b0016902400fc52733941fb2507ceeb5cc",
+          "bytes": 843,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/83-added-unused-with-reviewed-contract-fails/inputs.json",
+          "sha256": "cc4b216ed21bacfa91be0a36bd1079bb2d9b887983d9f7e27f893ae1df4b2ee2",
+          "bytes": 81391,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/83-added-unused-with-reviewed-contract-fails/report.json",
+          "sha256": "c9ac9430c31984fb520989d609c12a44af50020566827f621206bbdf2e5794d3",
+          "bytes": 8971,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/84-unused-evidence-change-fails/command.json",
+          "sha256": "1fdde671183a5a678fe35769c2a7392aadd5d08c3a7710d6191b3bb8b8e03657",
+          "bytes": 963,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/84-unused-evidence-change-fails/inputs.json",
+          "sha256": "49be80f55667e7f593801ea6fc12907ab2322055cb3dbe3771eeb2ff56ff50e0",
+          "bytes": 81243,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/84-unused-evidence-change-fails/report.json",
+          "sha256": "77bf072cc59b7c9de877abcdaf4d37be72cf9692e2a5f8d9d1cc8d31a619b1d2",
+          "bytes": 1874,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/85-fixed-unused-contract-stale-fails/command.json",
+          "sha256": "b867a9dc8b46aa30cbb7f4ffe92cbdcedf62eaae8e2bb18f9300b4c2dfad416a",
+          "bytes": 861,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/85-fixed-unused-contract-stale-fails/inputs.json",
+          "sha256": "556613f9a944f3c692d57d01f72e3d79be37435f9f877b20900fb1a49696e6b7",
+          "bytes": 81259,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/85-fixed-unused-contract-stale-fails/report.json",
+          "sha256": "0b111963502328ef585571c32adf06d3b42ea1be8b9e7d5069d597c373ca6346",
+          "bytes": 3832,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/86-unused-export-consumer-repair/command.json",
+          "sha256": "059439a3b4d09250cfcf28f08fc8581c1b1074e969254999620d1b1c1e36922f",
+          "bytes": 707,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/86-unused-export-consumer-repair/inputs.json",
+          "sha256": "538f9d51f084461c814bc4d36862477f4548bd262061b2c5a004c6745c5fa4e8",
+          "bytes": 80801,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/86-unused-export-consumer-repair/report.json",
+          "sha256": "e6326f7b898a68cb271ee201b1d6ce0943e1451e9fba49de28c4760b822132e3",
+          "bytes": 3014,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/87-full-test-consumer-retained-pass/command.json",
+          "sha256": "1ee56333248e07757d80828cb0aade17fb13754ac00a917721e788141e6d109d",
+          "bytes": 710,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/87-full-test-consumer-retained-pass/inputs.json",
+          "sha256": "cca4c9ba10fdcecdf09334bef8041f960b012e95265cea05357b9089f0e8c4f3",
+          "bytes": 81015,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/87-full-test-consumer-retained-pass/report.json",
+          "sha256": "585e1a6bba6b7105b8102e0498eff36f5c32ad510385551acafe549cb14b4ad7",
+          "bytes": 6236,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/88-complete-production-entry-pass/command.json",
+          "sha256": "e44fd094a44745682b6e14cfdc2ce694355552e41e1577b19197fa25af7bd1aa",
+          "bytes": 915,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/88-complete-production-entry-pass/inputs.json",
+          "sha256": "cca4c9ba10fdcecdf09334bef8041f960b012e95265cea05357b9089f0e8c4f3",
+          "bytes": 81015,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/88-complete-production-entry-pass/report.json",
+          "sha256": "5412e52ad27bd5adc6e2f7ffeaf5b853e2cb5677e40e98c895a3107630a99bf7",
+          "bytes": 34433,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/summary.json",
+          "sha256": "2b1d81902607e7e4789d7ae01ebf766b28e8a10127947816c9bf3e79db0e1b3f",
+          "bytes": 26303,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/root-quality.log",
+          "sha256": "22efc7c13775ed91f970457e55b239fa8805c3d2b425315179edf8e504df9974",
+          "bytes": 561,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/root-types.log",
+          "sha256": "456ef41909486f747d978e83eff3fb3817dc8138f02f4e380f8884ecddb011aa",
+          "bytes": 94,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/verification.json",
+          "sha256": "cf2003debe547135151a54a55ec04410ede0f5ab6c3d09ca3230d1c5d692cb93",
+          "bytes": 242644,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-implementation/focused.json",
+          "sha256": "91595ed8d3daba38d59be0515e0e3976c1e9bcebd6e033afc66357738ef738e7",
+          "bytes": 2327,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-implementation/focused.log",
+          "sha256": "234fbd6049a260beb5263c2ca214c5884ff4a7f62046ef993048fd4506f29c0b",
+          "bytes": 368,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/baseline-boundedInput.test.ts.txt",
+          "sha256": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761",
+          "bytes": 13958,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/baseline-exact-node22.json",
+          "sha256": "67374a34531ad4d872094b5dabe6cccd9c02e7180a5ce17c5108dfe32f26dc4a",
+          "bytes": 1882,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/baseline-exact-node22.log",
+          "sha256": "075a7d8f333004455d16cdc3a37690e63d5e6b8cd353c5b43a25dec72ecafeaa",
+          "bytes": 3084,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/baseline-mimoSpeech.ts.txt",
+          "sha256": "661610d0e4617531b9600a6ce4c3a9593cb9a296abe7abcc9df6a9218aac8b64",
+          "bytes": 11287,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/byte-copy-comparison-node22.json",
+          "sha256": "967f7f8c85afcfa89309bf675473f4403f9182c32327162904c3a84686ecf647",
+          "bytes": 2978,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/byte-copy-indexed-node22.log",
+          "sha256": "c642be679cdc7e662773defaee4b2e37779c51edcd20b19ce5e279b409e78169",
+          "bytes": 660,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/byte-copy-original-node22.log",
+          "sha256": "3daf75a307e4903deb7e41340871e555d7bc87d141e383c765ab5acede6a72e8",
+          "bytes": 665,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/byte-copy-primitive.mjs",
+          "sha256": "995ab13ca80686da2478e3423e6b028a3a1b65119f11c07a4afc181bd34ecab2",
+          "bytes": 1092,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/candidate-stage-profile-node22.json",
+          "sha256": "7a65fc9c2b3576fb759eabbf384c0d12692d36b46ea1d470b549aa0afdf6d145",
+          "bytes": 9080,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/candidate-stage-profile-node22.log",
+          "sha256": "f73f654165e00fed89c88b3745f01461cc55bccc55e847bc5597a2c204626a49",
+          "bytes": 7961,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/owner-hosted-failure.txt",
+          "sha256": "06fd14e18bd225744b500a90937a495f7f377d92707f10506fe10b57edb9ba6e",
+          "bytes": 401,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/production-stage-profile-node22.json",
+          "sha256": "4db727ee4f2dd748bde8a9e9f14db393ce726329300c0ca7b412de4971035e1f",
+          "bytes": 9087,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/production-stage-profile-node22.log",
+          "sha256": "d07394cb150c938140096f284bf1a8d4104e831e558bdc6d34cbd316eb2b7057",
+          "bytes": 7996,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/profile-candidate.config.mjs",
+          "sha256": "79a69ca34af0b8360025bd5360717f55d60613d1ccbde2c649b18de25011e4e8",
+          "bytes": 4660,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/profile.config.mjs",
+          "sha256": "03532cd550b1e5490e9fd5c570ca0481ef6524840bfd321581d3f1b8d8abb732",
+          "bytes": 4401,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/research/verify-ci-mimo-followup.py",
+          "sha256": "968a6324eba7fee893104859f64f53a9d8d0ab09f91c03cf0cd13b2f13638ec3",
+          "bytes": 3510,
+          "owner": "root and assigned Trellis follow-up agents"
+        },
+        {
+          "path": ".trellis/tasks/10-12-desktop-release-pipeline/task.json",
+          "sha256": "f82347ba636efebbcc5b6106b3a8dd26e1e00be3a62b06ae090a4e1763fcd193",
+          "bytes": 6741,
+          "owner": "root and assigned Trellis follow-up agents"
+        }
+      ]
+    }
+  ],
+  "unrecognized": [],
+  "selfHashOmitted": ".trellis/tasks/10-12-desktop-release-pipeline/research/commit-manifest-ci-mimo-boundary.json",
+  "remotePush": false,
+  "archive": false
+}

@@ -1,0 +1,362 @@
+{
+  "mode": "actual candidate production source with matching finite stage-marker Vite transforms; same original fixture/assertions/default 5-second deadline",
+  "filesBefore": {
+    "src/lib/ai/mimoSpeech.ts": "d6cfdbb126e27590b9f421474edfea9e3e52e51ba201d992d12d4e2b4a30aced",
+    "src/lib/ai/boundedResponse.ts": "d157ce6a0eab5dbfccf407db85082bc40ebf7660329f35fd8ff4e2dca7664fc8",
+    "tests/boundedInput.test.ts": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761",
+    "vitest.config.ts": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a"
+  },
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "tests/boundedInput.test.ts",
+    "-t",
+    "accepts a legitimate MiMo envelope above 4 MiB and exactly the decoded audio boundary",
+    "--config",
+    ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/profile-candidate.config.mjs",
+    "--reporter=verbose"
+  ],
+  "exitCode": 0,
+  "wallSeconds": 1.169905958,
+  "filesAfter": {
+    "src/lib/ai/mimoSpeech.ts": "d6cfdbb126e27590b9f421474edfea9e3e52e51ba201d992d12d4e2b4a30aced",
+    "src/lib/ai/boundedResponse.ts": "d157ce6a0eab5dbfccf407db85082bc40ebf7660329f35fd8ff4e2dca7664fc8",
+    "tests/boundedInput.test.ts": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761",
+    "vitest.config.ts": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a"
+  },
+  "sourceUnchanged": true,
+  "profile": [
+    {
+      "label": "fixture-32MiB-allocation-base64",
+      "ms": 13.78083399999997,
+      "cpuMicroseconds": {
+        "user": 13178,
+        "system": 8582
+      },
+      "memory": {
+        "rss": 205520896,
+        "heapTotal": 54493184,
+        "heapUsed": 19132560,
+        "external": 114107395,
+        "arrayBuffers": 67142734
+      },
+      "memoryDelta": {
+        "rss": 116031488,
+        "heapTotal": 19922944,
+        "heapUsed": -4515296,
+        "external": 111677772,
+        "arrayBuffers": 66956753
+      }
+    },
+    {
+      "label": "Response.json-stringify-encode",
+      "ms": 114.039583,
+      "cpuMicroseconds": {
+        "user": 110069,
+        "system": 15932
+      },
+      "memory": {
+        "rss": 375046144,
+        "heapTotal": 101072896,
+        "heapUsed": 65215304,
+        "external": 171444373,
+        "arrayBuffers": 123109654
+      },
+      "memoryDelta": {
+        "rss": 169525248,
+        "heapTotal": 46579712,
+        "heapUsed": 46082744,
+        "external": 57336978,
+        "arrayBuffers": 55966920
+      }
+    },
+    {
+      "label": "response-read-start",
+      "ms": 0.4394580000000019,
+      "cpuMicroseconds": {
+        "user": 1582,
+        "system": 109
+      },
+      "memory": {
+        "rss": 375078912,
+        "heapTotal": 101072896,
+        "heapUsed": 65225104,
+        "external": 171444373,
+        "arrayBuffers": 123109654
+      },
+      "memoryDelta": {
+        "rss": 32768,
+        "heapTotal": 0,
+        "heapUsed": 9800,
+        "external": 0,
+        "arrayBuffers": 0
+      }
+    },
+    {
+      "label": "response-stream-read",
+      "ms": 0.36991700000004357,
+      "cpuMicroseconds": {
+        "user": 364,
+        "system": 6
+      },
+      "memory": {
+        "rss": 375111680,
+        "heapTotal": 101072896,
+        "heapUsed": 65259296,
+        "external": 171444373,
+        "arrayBuffers": 123109654
+      },
+      "memoryDelta": {
+        "rss": 32768,
+        "heapTotal": 0,
+        "heapUsed": 34192,
+        "external": 0,
+        "arrayBuffers": 0
+      }
+    },
+    {
+      "label": "response-byte-assembly",
+      "ms": 8.175291999999956,
+      "cpuMicroseconds": {
+        "user": 10959,
+        "system": 5609
+      },
+      "memory": {
+        "rss": 419872768,
+        "heapTotal": 101072896,
+        "heapUsed": 65275096,
+        "external": 216183687,
+        "arrayBuffers": 167848968
+      },
+      "memoryDelta": {
+        "rss": 44761088,
+        "heapTotal": 0,
+        "heapUsed": 15800,
+        "external": 44739314,
+        "arrayBuffers": 44739314
+      }
+    },
+    {
+      "label": "TextDecoder",
+      "ms": 13.483083000000022,
+      "cpuMicroseconds": {
+        "user": 11300,
+        "system": 5031
+      },
+      "memory": {
+        "rss": 420495360,
+        "heapTotal": 101335040,
+        "heapUsed": 66018280,
+        "external": 216183687,
+        "arrayBuffers": 123109654
+      },
+      "memoryDelta": {
+        "rss": 622592,
+        "heapTotal": 262144,
+        "heapUsed": 743184,
+        "external": 0,
+        "arrayBuffers": -44739314
+      }
+    },
+    {
+      "label": "JSON.parse",
+      "ms": 18.640625,
+      "cpuMicroseconds": {
+        "user": 14310,
+        "system": 4277
+      },
+      "memory": {
+        "rss": 465240064,
+        "heapTotal": 146079744,
+        "heapUsed": 110613200,
+        "external": 171444373,
+        "arrayBuffers": 123109654
+      },
+      "memoryDelta": {
+        "rss": 44744704,
+        "heapTotal": 44744704,
+        "heapUsed": 44594920,
+        "external": -44739314,
+        "arrayBuffers": 0
+      }
+    },
+    {
+      "label": "base64-syntax-start",
+      "ms": 0.1472919999999931,
+      "cpuMicroseconds": {
+        "user": 111,
+        "system": 21
+      },
+      "memory": {
+        "rss": 465240064,
+        "heapTotal": 146079744,
+        "heapUsed": 110616008,
+        "external": 171444373,
+        "arrayBuffers": 123109654
+      },
+      "memoryDelta": {
+        "rss": 0,
+        "heapTotal": 0,
+        "heapUsed": 2808,
+        "external": 0,
+        "arrayBuffers": 0
+      }
+    },
+    {
+      "label": "base64-syntax-regex",
+      "ms": 36.49404099999998,
+      "cpuMicroseconds": {
+        "user": 34029,
+        "system": 2077
+      },
+      "memory": {
+        "rss": 465256448,
+        "heapTotal": 146079744,
+        "heapUsed": 110619720,
+        "external": 171444373,
+        "arrayBuffers": 123109654
+      },
+      "memoryDelta": {
+        "rss": 16384,
+        "heapTotal": 0,
+        "heapUsed": 3712,
+        "external": 0,
+        "arrayBuffers": 0
+      }
+    },
+    {
+      "label": "exact-size-check",
+      "ms": 0.11237500000004275,
+      "cpuMicroseconds": {
+        "user": 106,
+        "system": 4
+      },
+      "memory": {
+        "rss": 465256448,
+        "heapTotal": 146079744,
+        "heapUsed": 110627952,
+        "external": 171444373,
+        "arrayBuffers": 123109654
+      },
+      "memoryDelta": {
+        "rss": 0,
+        "heapTotal": 0,
+        "heapUsed": 8232,
+        "external": 0,
+        "arrayBuffers": 0
+      }
+    },
+    {
+      "label": "atob",
+      "ms": 8.007292000000007,
+      "cpuMicroseconds": {
+        "user": 14117,
+        "system": 2946
+      },
+      "memory": {
+        "rss": 499040256,
+        "heapTotal": 180174848,
+        "heapUsed": 144229344,
+        "external": 171444373,
+        "arrayBuffers": 123109654
+      },
+      "memoryDelta": {
+        "rss": 33783808,
+        "heapTotal": 34095104,
+        "heapUsed": 33601392,
+        "external": 0,
+        "arrayBuffers": 0
+      }
+    },
+    {
+      "label": "indexed-decoded-string-copy",
+      "ms": 37.09429199999994,
+      "cpuMicroseconds": {
+        "user": 36821,
+        "system": 1200
+      },
+      "memory": {
+        "rss": 499089408,
+        "heapTotal": 180436992,
+        "heapUsed": 144250464,
+        "external": 204998805,
+        "arrayBuffers": 156664086
+      },
+      "memoryDelta": {
+        "rss": 49152,
+        "heapTotal": 262144,
+        "heapUsed": 21120,
+        "external": 33554432,
+        "arrayBuffers": 33554432
+      }
+    },
+    {
+      "label": "Blob-copy",
+      "ms": 3.0567080000000715,
+      "cpuMicroseconds": {
+        "user": 1272,
+        "system": 1817
+      },
+      "memory": {
+        "rss": 499089408,
+        "heapTotal": 146866176,
+        "heapUsed": 110699040,
+        "external": 204998805,
+        "arrayBuffers": 190218518
+      },
+      "memoryDelta": {
+        "rss": 0,
+        "heapTotal": -33570816,
+        "heapUsed": -33551424,
+        "external": 0,
+        "arrayBuffers": 33554432
+      }
+    },
+    {
+      "label": "MIME-signature",
+      "ms": 0.4388329999999314,
+      "cpuMicroseconds": {
+        "user": 396,
+        "system": 64
+      },
+      "memory": {
+        "rss": 499089408,
+        "heapTotal": 146866176,
+        "heapUsed": 110741872,
+        "external": 204998933,
+        "arrayBuffers": 190218646
+      },
+      "memoryDelta": {
+        "rss": 0,
+        "heapTotal": 0,
+        "heapUsed": 42832,
+        "external": 128,
+        "arrayBuffers": 128
+      }
+    },
+    {
+      "label": "original-assertions",
+      "ms": 0.5516250000000582,
+      "cpuMicroseconds": {
+        "user": 537,
+        "system": 15
+      },
+      "memory": {
+        "rss": 499122176,
+        "heapTotal": 146866176,
+        "heapUsed": 110790136,
+        "external": 204998933,
+        "arrayBuffers": 190218646
+      },
+      "memoryDelta": {
+        "rss": 32768,
+        "heapTotal": 0,
+        "heapUsed": 48264,
+        "external": 0,
+        "arrayBuffers": 0
+      }
+    }
+  ]
+}

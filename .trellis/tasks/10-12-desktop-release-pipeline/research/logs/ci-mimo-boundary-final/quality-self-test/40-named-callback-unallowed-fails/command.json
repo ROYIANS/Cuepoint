@@ -1,0 +1,16 @@
+{
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "args": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs",
+    "--root",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-Fq2Ljk",
+    "--only",
+    "lint",
+    "--report",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/40-named-callback-unallowed-fails/report.json"
+  ],
+  "exitCode": 1,
+  "signal": null,
+  "stdout": "lint: 1 errors, 0 review warnings, 0 reviewed allowances; 1 failures\nwarning rules: {}\nquality: FAIL (lint)\n",
+  "stderr": "{\"section\":\"lint\",\"kind\":\"unallowed\",\"key\":\"[\\\"@typescript-eslint/only-throw-error\\\",\\\"src/debt.ts\\\",\\\"4db001b4c04bffdce7a4f06d9ee04ed60345ebac7d15dc4fd6c9f143ee3b96f7\\\"]\",\"count\":1}\n"
+}

@@ -1,0 +1,16 @@
+{
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "args": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs",
+    "--root",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-Fq2Ljk",
+    "--only",
+    "lint",
+    "--report",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/34-anonymous-call-owner-format-relocation-pass/report.json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "lint: 1 errors, 0 review warnings, 1 reviewed allowances; 0 failures\nwarning rules: {}\nquality: PASS (lint)\n",
+  "stderr": ""
+}

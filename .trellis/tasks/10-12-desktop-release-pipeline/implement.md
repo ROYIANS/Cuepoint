@@ -4,6 +4,14 @@ Status: in progress. The user approved the final reviewed implementation plan on
 
 ## Current gate status
 
+The next owner-supplied root CI log reached a new timeout in the exact 32 MiB
+MiMo speech envelope acceptance test at the unchanged default 5-second deadline.
+The minimal decoder copy correction is locally validated: both complete
+Node22/Node24 root suites, actual SQLite all, types/quality/self-test/model/build
+pass on 1,058 frozen inputs. The original boundary fixture/deadline is unchanged.
+See `research/ci-mimo-boundary-followup.md`; previous passes below describe their
+earlier checkpoints. Hosted success and H1a/H1b remain unverified.
+
 The owner then supplied two additional reached hosted quality failures: the
 desktop Knip graph misses real root-script export callers, and one unchanged
 oversized-identity SQLite regression exceeds its 30-second deadline. Both are

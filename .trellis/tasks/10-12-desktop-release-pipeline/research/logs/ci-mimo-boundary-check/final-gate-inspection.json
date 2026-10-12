@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "status": "PASS",
+  "checkedAtUnix": 1791781293.280054,
+  "reviewMode": "Independent static/source/receipt reconciliation; no additional heavy gate reruns",
+  "baseline": "d6a7fa68d3ee1e850b86f1cfebc84ba062022402",
+  "frozenInputs": 1058,
+  "nativeFrozenInputs": 999,
+  "allCurrentInputsMatch": true,
+  "commandResults": [
+    {
+      "label": "ordinary-full-root-node22",
+      "exitCode": 0,
+      "seconds": 30.484925985336304,
+      "log": "ordinary-full-root-node22.log"
+    },
+    {
+      "label": "ordinary-full-root-node24",
+      "exitCode": 0,
+      "seconds": 29.80397391319275,
+      "log": "ordinary-full-root-node24.log"
+    },
+    {
+      "label": "complete-native-sqlite",
+      "exitCode": 0,
+      "seconds": 348.94040870666504,
+      "log": "complete-native-sqlite.log"
+    },
+    {
+      "label": "root-types",
+      "exitCode": 0,
+      "seconds": 7.735253810882568,
+      "log": "root-types.log"
+    },
+    {
+      "label": "root-quality",
+      "exitCode": 0,
+      "seconds": 18.6816508769989,
+      "log": "root-quality.log"
+    },
+    {
+      "label": "desktop-types",
+      "exitCode": 0,
+      "seconds": 3.37921404838562,
+      "log": "desktop-types.log"
+    },
+    {
+      "label": "desktop-lint",
+      "exitCode": 0,
+      "seconds": 3.0162670612335205,
+      "log": "desktop-lint.log"
+    },
+    {
+      "label": "desktop-quality",
+      "exitCode": 0,
+      "seconds": 0.5412306785583496,
+      "log": "desktop-quality.log"
+    },
+    {
+      "label": "quality-self-test",
+      "exitCode": 0,
+      "seconds": 75.24417781829834,
+      "log": "quality-self-test.log"
+    },
+    {
+      "label": "model-verify",
+      "exitCode": 0,
+      "seconds": 0.7953400611877441,
+      "log": "model-verify.log"
+    },
+    {
+      "label": "production-build",
+      "exitCode": 0,
+      "seconds": 21.355931043624878,
+      "log": "production-build.log"
+    }
+  ],
+  "verificationReceiptSha256": "cf2003debe547135151a54a55ec04410ede0f5ab6c3d09ca3230d1c5d692cb93",
+  "nativeReceiptSha256": "a4a95dacff06e3fc11cad10e30226f2138212d996a44667d6c6cc9db4b3b61fa",
+  "nativeReceiptIntactCopy": true,
+  "nativeSuite": "all",
+  "nativeFiles": 108,
+  "nativeTests": 1905,
+  "nativeRegistryCount": 95,
+  "missingCoverage": {
+    "missingSuccessfulExecutions": [],
+    "missingValidArguments": [],
+    "missingInvalidArguments": [],
+    "missingNativeCommittedTables": [],
+    "missingNativeBusinessTables": [],
+    "missingNativeOwnerAssertions": []
+  },
+  "additionalCapabilityExits": [
+    {
+      "kind": "selfHostedNative",
+      "exitCode": 0
+    },
+    {
+      "kind": "browserOnly",
+      "exitCode": 0
+    }
+  ],
+  "qualityExistingAllowances": 12,
+  "qualityReviewWarningCount": 585,
+  "qualityPolicyFilesUnchanged": {
+    "quality/debt.json": "ed05e66f1089e1125dad5137a26082700970ae696ceda0adc1e6422fb186e799",
+    "quality/unused-contracts.json": "7b4a977f58b229ec2c9681d16751c3df3c4c8c2691f7ec2cdcaf87f423da1d14",
+    "eslint.config.mjs": "d2851b0e467e5aa8957e974d0c7d227575212fad12cca8fa51f111415363807d",
+    "knip.json": "83664e3125ad445dde6347e8ec15a3ff2dfb12c7a534e6b31d0d4b4762ec8f75",
+    "scripts/quality-check.mjs": "dfff1ce20c7b190d55e073e5eee2351a6a7319bb7835e2983b9f8bc0b5bbf296",
+    "desktop/tauri/eslint.config.mjs": "2b99cb273c917af0cd717fae8481ad7a02c823b1c6b8a446d2afd2e068e6a68d"
+  },
+  "originalBoundedInputSha256": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761",
+  "productSha256": "d6cfdbb126e27590b9f421474edfea9e3e52e51ba201d992d12d4e2b4a30aced",
+  "parityTestSha256": "b148681dc02d3974e98e8677d01b635554f1de5817c3f9c790147be4ec8984d3",
+  "findings": [],
+  "limitations": [
+    "local macOS ARM64 only",
+    "supplied hosted timeout not reproduced locally",
+    "no subsequent hosted Linux proof",
+    "H1a four-target installer and H1b actual tag/draft remain pending"
+  ]
+}

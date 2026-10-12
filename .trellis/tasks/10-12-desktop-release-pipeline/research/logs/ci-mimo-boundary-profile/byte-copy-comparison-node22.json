@@ -1,0 +1,101 @@
+{
+  "purpose": "finite isolated primitive comparison, not a production fix acceptance receipt",
+  "results": [
+    {
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+        ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/byte-copy-primitive.mjs",
+        "original"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 1.439281291,
+      "result": {
+        "mode": "original",
+        "node": "v22.21.1",
+        "platform": "darwin",
+        "arch": "arm64",
+        "decodedBytes": 33554432,
+        "conversionMs": 1331.045625,
+        "before": {
+          "memory": {
+            "rss": 226820096,
+            "heapTotal": 40534016,
+            "heapUsed": 37463952,
+            "external": 113577131,
+            "arrayBuffers": 67125483
+          },
+          "cpu": {
+            "user": 51203,
+            "system": 14949
+          },
+          "now": 52.643709
+        },
+        "after": {
+          "memory": {
+            "rss": 1224409088,
+            "heapTotal": 1125908480,
+            "heapUsed": 1094774960,
+            "external": 68898156,
+            "arrayBuffers": 67125499
+          },
+          "cpu": {
+            "user": 1198127,
+            "system": 162855
+          },
+          "now": 1383.689334
+        },
+        "inputSha256": "e09320c5b00b34bb704802136c599a95b3996332ba84d7c7f21112b6231b6bd0",
+        "outputSha256": "e09320c5b00b34bb704802136c599a95b3996332ba84d7c7f21112b6231b6bd0",
+        "exactBytes": true
+      }
+    },
+    {
+      "command": [
+        "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin/node",
+        ".trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-profile/byte-copy-primitive.mjs",
+        "indexed"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 0.11209716699999994,
+      "result": {
+        "mode": "indexed",
+        "node": "v22.21.1",
+        "platform": "darwin",
+        "arch": "arm64",
+        "decodedBytes": 33554432,
+        "conversionMs": 31.947708000000006,
+        "before": {
+          "memory": {
+            "rss": 226672640,
+            "heapTotal": 40534016,
+            "heapUsed": 37463448,
+            "external": 113577131,
+            "arrayBuffers": 67125483
+          },
+          "cpu": {
+            "user": 46592,
+            "system": 11012
+          },
+          "now": 45.601292
+        },
+        "after": {
+          "memory": {
+            "rss": 227377152,
+            "heapTotal": 40534016,
+            "heapUsed": 37628672,
+            "external": 147191832,
+            "arrayBuffers": 100679931
+          },
+          "cpu": {
+            "user": 79135,
+            "system": 11449
+          },
+          "now": 77.549
+        },
+        "inputSha256": "e09320c5b00b34bb704802136c599a95b3996332ba84d7c7f21112b6231b6bd0",
+        "outputSha256": "e09320c5b00b34bb704802136c599a95b3996332ba84d7c7f21112b6231b6bd0",
+        "exactBytes": true
+      }
+    }
+  ]
+}

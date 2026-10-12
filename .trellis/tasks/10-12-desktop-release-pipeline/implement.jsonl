@@ -15,3 +15,5 @@
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/native-files-implementation.md", "reason": "Concrete owner-approved Windows process-recovery persistence guarantee and source evidence"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-quality-followup.md", "reason": "Owner supplied both reached hosted quality failures; preserve gate and scope boundaries"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-large-identity-timeout.md", "reason": "Actual unchanged workload profiling and query-only byte-group candidate with finite proof"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "MiMo bounded envelope, exact decoded audio limits and once-only provider semantics"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-mimo-boundary-followup.md", "reason": "Owner-reported exact 32 MiB MiMo CI timeout; narrow source and frozen gate boundaries"}

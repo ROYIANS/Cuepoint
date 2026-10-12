@@ -1,0 +1,16 @@
+{
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "args": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs",
+    "--root",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-Fq2Ljk",
+    "--only",
+    "lint",
+    "--report",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-mimo-boundary-final/quality-self-test/22-invalid-debt-owner-fails/report.json"
+  ],
+  "exitCode": 2,
+  "signal": null,
+  "stdout": "",
+  "stderr": "Error: debt allowance: concrete owner required\n    at validateReview (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality/shared.mjs:54:13)\n    at checkLint (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality/lint.mjs:16:5)\n    at async runQuality (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs:42:31)\n    at async main (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs:73:18)\n"
+}

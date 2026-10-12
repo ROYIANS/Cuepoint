@@ -1,0 +1,41 @@
+{
+  "command": [
+    "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm",
+    "test",
+    "tests/boundedInput.test.ts",
+    "tests/mimoSpeech.test.ts",
+    "tests/mimoRuntime.test.ts"
+  ],
+  "cwd": "/Users/xiaomengdao/WebstormProjects/aifenjing",
+  "node": "v22.21.1",
+  "pnpm": "10.15.0",
+  "pathPrefix": "/Users/xiaomengdao/.nvm/versions/node/v22.21.1/bin",
+  "startedAt": "2026-10-12T04:49:27.532845+00:00",
+  "sourceBefore": {
+    "src/lib/ai/mimoSpeech.ts": "d6cfdbb126e27590b9f421474edfea9e3e52e51ba201d992d12d4e2b4a30aced",
+    "tests/boundedInput.test.ts": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761",
+    "tests/mimoSpeech.test.ts": "b148681dc02d3974e98e8677d01b635554f1de5817c3f9c790147be4ec8984d3",
+    "tests/mimoRuntime.test.ts": "d112321027d2f3afdd3bd808a1405916dedaad9dbc68fcfc99285fa98418a774",
+    "vitest.config.ts": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a",
+    "src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+    "package.json": "8be8827d2d3e0c32a42a6d2fcd68243e590bd6fc0d5369c3213c3ab73a7dc6ef",
+    "pnpm-lock.yaml": "1f9a38564ee01d35a32fc4fa15dc49ca816405c15a0a55e7d8376028408843f3"
+  },
+  "storageOwner": null,
+  "nativeStorageAcceptance": null,
+  "notes": "Original Vitest config/default deadline/worker settings; injected finite provider Responses, no actual suppliers.",
+  "exitCode": 0,
+  "elapsedSeconds": 1.743763958,
+  "finishedAt": "2026-10-12T04:49:29.278662+00:00",
+  "sourceAfter": {
+    "src/lib/ai/mimoSpeech.ts": "d6cfdbb126e27590b9f421474edfea9e3e52e51ba201d992d12d4e2b4a30aced",
+    "tests/boundedInput.test.ts": "e8b8b385012157a718eebb8a46a26048f93094c1003621dd15fb58f6a3a1b761",
+    "tests/mimoSpeech.test.ts": "b148681dc02d3974e98e8677d01b635554f1de5817c3f9c790147be4ec8984d3",
+    "tests/mimoRuntime.test.ts": "d112321027d2f3afdd3bd808a1405916dedaad9dbc68fcfc99285fa98418a774",
+    "vitest.config.ts": "fd23371767c94618cf6ee2de3a0511d7514525cd21d705c2ffe71d26831d192a",
+    "src/lib/resource/limits.ts": "aaed95b303a65539344a27c6fbee1670171248995a4e2da3fe4dc9cc4307bb17",
+    "package.json": "8be8827d2d3e0c32a42a6d2fcd68243e590bd6fc0d5369c3213c3ab73a7dc6ef",
+    "pnpm-lock.yaml": "1f9a38564ee01d35a32fc4fa15dc49ca816405c15a0a55e7d8376028408843f3"
+  },
+  "changedInputs": []
+}
