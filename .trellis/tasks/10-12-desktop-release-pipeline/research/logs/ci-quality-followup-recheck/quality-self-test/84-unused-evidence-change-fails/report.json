@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "identityVersion": "ts-ast-tokens-v1",
+  "root": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-vjWHqd",
+  "node": "v24.11.0",
+  "versions": {
+    "eslint": "10.12.0",
+    "@eslint/js": "10.0.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "4.2.2",
+    "knip": "6.40.0"
+  },
+  "mode": "unused",
+  "startedAt": "2026-10-12T04:10:16.357Z",
+  "inputs": {
+    "eslint.config.mjs": "d2851b0e467e5aa8957e974d0c7d227575212fad12cca8fa51f111415363807d",
+    "knip.json": "83664e3125ad445dde6347e8ec15a3ff2dfb12c7a534e6b31d0d4b4762ec8f75",
+    "package.json": "8282e8ec1140ea36eb6f5daa7caae0c40fc010b1fcc9c62dd5ed8bebeba29c35",
+    "quality/unused-contracts.json": "0cbfc71d388f943d00b8481fdbfd41f608bed46ae5b7a5904e7f9c230d6dcf62",
+    "src/helper.ts": "05801ab895624a5622c40f870c1fabea81080fe9838c59bb2c836ff834745045",
+    "src/main.tsx": "62129ec71d299eab002b2d78e6ba78e591a1e80dc789844af0642ee840c808b1",
+    "tsconfig.app.json": "c40f7db8652b3433532289c87edd6898d4de984614f8a99dcf7bfbd8856e3bb3",
+    "tsconfig.json": "caa3948c842ed71fccfa010f80efe52377611513528de1db25721c16515a11d6"
+  },
+  "sections": {},
+  "failures": [
+    {
+      "section": "unused",
+      "kind": "tool-or-config-error",
+      "message": "unused contract: evidence changed src/helper.ts"
+    }
+  ],
+  "toolError": "Error: unused contract: evidence changed src/helper.ts\n    at checkUnused (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality/unused.mjs:77:85)\n    at async runQuality (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs:42:31)\n    at async main (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs:73:18)",
+  "finishedAt": "2026-10-12T04:10:16.728Z",
+  "exitCode": 2
+}

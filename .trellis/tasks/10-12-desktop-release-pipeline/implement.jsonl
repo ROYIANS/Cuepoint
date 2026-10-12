@@ -13,3 +13,5 @@
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/planning-review.md", "reason": "Static review resolutions and bootstrap/host-proof/format evidence boundaries"}
 {"file": ".trellis/spec/frontend/desktop-distribution.md", "reason": "Executable installer/tool/receipt/smoke and draft-only delivery contracts"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/native-files-implementation.md", "reason": "Concrete owner-approved Windows process-recovery persistence guarantee and source evidence"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-quality-followup.md", "reason": "Owner supplied both reached hosted quality failures; preserve gate and scope boundaries"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/ci-large-identity-timeout.md", "reason": "Actual unchanged workload profiling and query-only byte-group candidate with finite proof"}

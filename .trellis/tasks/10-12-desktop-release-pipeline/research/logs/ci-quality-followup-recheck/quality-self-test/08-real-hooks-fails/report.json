@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "identityVersion": "ts-ast-tokens-v1",
+  "root": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-vjWHqd",
+  "node": "v24.11.0",
+  "versions": {
+    "eslint": "10.12.0",
+    "@eslint/js": "10.0.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "4.2.2",
+    "knip": "6.40.0"
+  },
+  "mode": "lint",
+  "startedAt": "2026-10-12T04:09:15.248Z",
+  "inputs": {
+    "eslint.config.mjs": "d2851b0e467e5aa8957e974d0c7d227575212fad12cca8fa51f111415363807d",
+    "knip.json": "83664e3125ad445dde6347e8ec15a3ff2dfb12c7a534e6b31d0d4b4762ec8f75",
+    "package.json": "8282e8ec1140ea36eb6f5daa7caae0c40fc010b1fcc9c62dd5ed8bebeba29c35",
+    "src/hooks.tsx": "f4e08027052ba7e2d485f1e10cf0b71166398b5c4d489ca2100a20ad822b891e",
+    "src/main.tsx": "2c7a23574ec075073b58424315703aabdad07fbe3f28e0ab6080754f15b42746",
+    "tsconfig.app.json": "c40f7db8652b3433532289c87edd6898d4de984614f8a99dcf7bfbd8856e3bb3",
+    "tsconfig.json": "caa3948c842ed71fccfa010f80efe52377611513528de1db25721c16515a11d6"
+  },
+  "sections": {
+    "lint": {
+      "checkedFiles": [
+        "src/hooks.tsx",
+        "src/main.tsx"
+      ],
+      "identityProducer": {
+        "sha256": "ceaa7384fb067afe08676efeb7d43341269faf91d47c09071fb2000ef09f58f1",
+        "typescript": "5.9.3"
+      },
+      "inlineConfig": "disabled: root configuration is authoritative",
+      "errors": 1,
+      "warnings": 0,
+      "warningCounts": {},
+      "allowances": [],
+      "diagnostics": [
+        {
+          "file": "src/hooks.tsx",
+          "rule": "react-hooks/rules-of-hooks",
+          "severity": 2,
+          "message": "React Hook \"useState\" is called conditionally. React Hooks must be called in the exact same order in every component render.",
+          "line": 2,
+          "column": 72,
+          "endLine": 2,
+          "endColumn": 80,
+          "identityVersion": "ts-ast-tokens-v1",
+          "semanticOwner": "FunctionDeclaration:Fixture/If:then:[[\"Identifier\",\"active\"]]",
+          "nodeKind": "CallExpression",
+          "nodeTokens": [
+            [
+              "Identifier",
+              "useState"
+            ],
+            [
+              "OpenParenToken",
+              "("
+            ],
+            [
+              "FirstLiteralToken",
+              "0"
+            ],
+            [
+              "CloseParenToken",
+              ")"
+            ]
+          ],
+          "signature": "2c615b4b61233cb37ad96268b03ff614353e67a91a0faaf0f1068854878b256d"
+        }
+      ],
+      "failures": [
+        {
+          "kind": "unallowed",
+          "key": "[\"react-hooks/rules-of-hooks\",\"src/hooks.tsx\",\"2c615b4b61233cb37ad96268b03ff614353e67a91a0faaf0f1068854878b256d\"]",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "failures": [
+    {
+      "section": "lint",
+      "kind": "unallowed",
+      "key": "[\"react-hooks/rules-of-hooks\",\"src/hooks.tsx\",\"2c615b4b61233cb37ad96268b03ff614353e67a91a0faaf0f1068854878b256d\"]",
+      "count": 1
+    }
+  ],
+  "finishedAt": "2026-10-12T04:09:15.995Z",
+  "exitCode": 1
+}

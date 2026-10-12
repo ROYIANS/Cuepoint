@@ -1,0 +1,16 @@
+{
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "args": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs",
+    "--root",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-vjWHqd",
+    "--only",
+    "unused",
+    "--report",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-quality-followup-recheck/quality-self-test/83-added-unused-with-reviewed-contract-fails/report.json"
+  ],
+  "exitCode": 1,
+  "signal": null,
+  "stdout": "unused: 2 full-scope candidates, 1 reviewed contracts, 0 production-only review signals; 1 failures\nquality: FAIL (unused)\n",
+  "stderr": "{\"section\":\"unused\",\"kind\":\"unallowed\",\"key\":\"[\\\"files\\\",\\\"src/new-orphan.ts\\\",\\\"\\\"]\",\"count\":1}\n"
+}

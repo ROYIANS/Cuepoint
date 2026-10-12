@@ -1,0 +1,14 @@
+{
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "args": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs",
+    "--root",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-vjWHqd",
+    "--report",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-quality-followup-recheck/quality-self-test/88-complete-production-entry-pass/report.json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "lint: 0 errors, 0 review warnings, 0 reviewed allowances; 0 failures\nwarning rules: {}\narchitecture: 2 files, 1 static value edges, 0 literal dynamic edges, 0 static cycles; 0 failures; 0 computed imports/requires outside static proof\nunused: 0 full-scope candidates, 0 reviewed contracts, 1 production-only review signals; 0 failures\nquality: PASS (all)\n",
+  "stderr": ""
+}

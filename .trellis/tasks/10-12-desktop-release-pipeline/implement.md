@@ -4,6 +4,15 @@ Status: in progress. The user approved the final reviewed implementation plan on
 
 ## Current gate status
 
+The owner then supplied two additional reached hosted quality failures: the
+desktop Knip graph misses real root-script export callers, and one unchanged
+oversized-identity SQLite regression exceeds its 30-second deadline. Both are
+locally corrected and verified under the existing task; see
+`research/ci-quality-followup.md`. Final full ordinary/native suites and required
+quality/type/model/build checks pass on frozen source. The initial unrelated
+local Agent timeout and justified unchanged complete recheck remain recorded.
+No hosted rerun or cross-platform outcome is implied by local correction.
+
 After C0/main integration, the owner supplied a reached hosted quality failure
 from the absent no-GUI `product_store_probe`. The correction is scoped to shared
 probe preparation and both full-root-test quality jobs, with all native tests

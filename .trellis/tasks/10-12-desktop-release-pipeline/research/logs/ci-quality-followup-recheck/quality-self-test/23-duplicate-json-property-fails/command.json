@@ -1,0 +1,16 @@
+{
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "args": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs",
+    "--root",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-vjWHqd",
+    "--only",
+    "lint",
+    "--report",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-quality-followup-recheck/quality-self-test/23-duplicate-json-property-fails/report.json"
+  ],
+  "exitCode": 2,
+  "signal": null,
+  "stdout": "",
+  "stderr": "Error: /var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-vjWHqd/quality/debt.json: duplicate JSON key schemaVersion\n    at visit (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality/shared.mjs:33:36)\n    at visitNode2 (/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/lib/typescript.js:32449:18)\n    at forEachChildInExpressionStatement (/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/lib/typescript.js:32679:12)\n    at Object.forEachChild (/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/lib/typescript.js:32970:35)\n    at visit (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality/shared.mjs:37:10)\n    at visitNodes (/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/lib/typescript.js:32457:22)\n    at forEachChildInSourceFile (/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/lib/typescript.js:32670:12)\n    at Object.forEachChild (/Users/xiaomengdao/WebstormProjects/aifenjing/node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/lib/typescript.js:32970:35)\n    at visit (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality/shared.mjs:37:10)\n    at readOptional (file:///Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality/shared.mjs:39:5)\n"
+}

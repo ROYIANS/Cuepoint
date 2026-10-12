@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "identityVersion": "ts-ast-tokens-v1",
+  "root": "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-vjWHqd",
+  "node": "v24.11.0",
+  "versions": {
+    "eslint": "10.12.0",
+    "@eslint/js": "10.0.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-sonarjs": "4.2.2",
+    "knip": "6.40.0"
+  },
+  "mode": "lint",
+  "startedAt": "2026-10-12T04:09:26.362Z",
+  "inputs": {
+    "eslint.config.mjs": "d2851b0e467e5aa8957e974d0c7d227575212fad12cca8fa51f111415363807d",
+    "knip.json": "83664e3125ad445dde6347e8ec15a3ff2dfb12c7a534e6b31d0d4b4762ec8f75",
+    "package.json": "8282e8ec1140ea36eb6f5daa7caae0c40fc010b1fcc9c62dd5ed8bebeba29c35",
+    "quality/debt.json": "a4052cc7e61fde8781eac0c6aba4ab30a3cf14aedd5497cd4362ab7cc73f1346",
+    "src/debt.ts": "0b7ba93428de19b1a5533a4398e079d5da6dc4b704b8c69996a3d3b101000c9c",
+    "src/main.tsx": "2c7a23574ec075073b58424315703aabdad07fbe3f28e0ab6080754f15b42746",
+    "tsconfig.app.json": "c40f7db8652b3433532289c87edd6898d4de984614f8a99dcf7bfbd8856e3bb3",
+    "tsconfig.json": "caa3948c842ed71fccfa010f80efe52377611513528de1db25721c16515a11d6"
+  },
+  "sections": {
+    "lint": {
+      "checkedFiles": [
+        "src/debt.ts",
+        "src/main.tsx"
+      ],
+      "identityProducer": {
+        "sha256": "ceaa7384fb067afe08676efeb7d43341269faf91d47c09071fb2000ef09f58f1",
+        "typescript": "5.9.3"
+      },
+      "inlineConfig": "disabled: root configuration is authoritative",
+      "errors": 1,
+      "warnings": 0,
+      "warningCounts": {},
+      "allowances": [
+        {
+          "rule": "@typescript-eslint/only-throw-error",
+          "file": "src/debt.ts",
+          "signature": "ef767695214a297674591b0f7eb06b4c726edbe2f7009c784a70aa44f944e451",
+          "count": 1,
+          "reason": "Synthetic reviewed object throw fixture only",
+          "owner": "Quality gate self-test"
+        }
+      ],
+      "diagnostics": [
+        {
+          "file": "src/debt.ts",
+          "rule": "@typescript-eslint/only-throw-error",
+          "severity": 2,
+          "message": "Expected an error object to be thrown.",
+          "line": 1,
+          "column": 83,
+          "endLine": 1,
+          "endColumn": 99,
+          "identityVersion": "ts-ast-tokens-v1",
+          "semanticOwner": "FunctionDeclaration:first",
+          "nodeKind": "ObjectLiteralExpression",
+          "nodeTokens": [
+            [
+              "FirstPunctuation",
+              "{"
+            ],
+            [
+              "Identifier",
+              "value"
+            ],
+            [
+              "ColonToken",
+              ":"
+            ],
+            [
+              "Identifier",
+              "other"
+            ],
+            [
+              "CloseBraceToken",
+              "}"
+            ]
+          ],
+          "signature": "aa6213e550bc7fa20f47528c62c83e203a7abfd4c6456756da06c6fdd6e4db7c"
+        }
+      ],
+      "failures": [
+        {
+          "kind": "stale-allowance",
+          "key": "[\"@typescript-eslint/only-throw-error\",\"src/debt.ts\",\"ef767695214a297674591b0f7eb06b4c726edbe2f7009c784a70aa44f944e451\"]",
+          "expected": 1,
+          "actual": 0
+        },
+        {
+          "kind": "unallowed",
+          "key": "[\"@typescript-eslint/only-throw-error\",\"src/debt.ts\",\"aa6213e550bc7fa20f47528c62c83e203a7abfd4c6456756da06c6fdd6e4db7c\"]",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "failures": [
+    {
+      "section": "lint",
+      "kind": "stale-allowance",
+      "key": "[\"@typescript-eslint/only-throw-error\",\"src/debt.ts\",\"ef767695214a297674591b0f7eb06b4c726edbe2f7009c784a70aa44f944e451\"]",
+      "expected": 1,
+      "actual": 0
+    },
+    {
+      "section": "lint",
+      "kind": "unallowed",
+      "key": "[\"@typescript-eslint/only-throw-error\",\"src/debt.ts\",\"aa6213e550bc7fa20f47528c62c83e203a7abfd4c6456756da06c6fdd6e4db7c\"]",
+      "count": 1
+    }
+  ],
+  "finishedAt": "2026-10-12T04:09:27.140Z",
+  "exitCode": 1
+}

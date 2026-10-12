@@ -1,0 +1,16 @@
+{
+  "command": "/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node",
+  "args": [
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/scripts/quality-check.mjs",
+    "--root",
+    "/var/folders/m6/x3vx_lld0kg8rcgth931pll40000gn/T/quality-self-test-project-vjWHqd",
+    "--only",
+    "lint",
+    "--report",
+    "/Users/xiaomengdao/WebstormProjects/aifenjing/.trellis/tasks/10-12-desktop-release-pipeline/research/logs/ci-quality-followup-recheck/quality-self-test/36-parenthesized-callback-unallowed-fails/report.json"
+  ],
+  "exitCode": 1,
+  "signal": null,
+  "stdout": "lint: 1 errors, 0 review warnings, 0 reviewed allowances; 1 failures\nwarning rules: {}\nquality: FAIL (lint)\n",
+  "stderr": "{\"section\":\"lint\",\"kind\":\"unallowed\",\"key\":\"[\\\"@typescript-eslint/only-throw-error\\\",\\\"src/debt.ts\\\",\\\"74b902752d14261414fdbb90c728037f8902138382c2f128bf4d5e3f56ca7686\\\"]\",\"count\":1}\n"
+}
