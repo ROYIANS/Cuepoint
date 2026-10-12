@@ -166,6 +166,8 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
     }
     for (const saved of calls) {
         controller.signal.throwIfAborted();
+        // Current tool commands preserve settled history; reread every possible execution candidate.
+        if (["completed", "failed", "rejected"].includes(saved.status)) continue;
         const call = await db.agentToolCalls.get(saved.id);
         if (!call || ["completed", "failed", "rejected"].includes(call.status)) continue;
         const currentRun = await db.agentRuns.get(run.id);
