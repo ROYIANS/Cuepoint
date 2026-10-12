@@ -187,3 +187,9 @@ Successful build receipts must explicitly say `state: packaged`, with empty test
 ## Packaging follow-up: tracked source enumeration (2026-10-12)
 
 The owner supplied a macOS ARM64 packaging failure at the initial Git tracked-file snapshot (`spawnSync git ENOBUFS`). Resolve the default synchronous output-buffer failure while preserving the exact existing hash scope and all package-only delivery decisions. See `research/release-source-list-buffer-boundary.md` for observed evidence, ownership, scope and focused local validation. No CI tests, product/data changes or remote actions are added.
+
+## Reached draft-upload follow-up — 2026-10-12
+
+The tag run completed all four package builds and collection, then failed at release asset upload with HTTP400. The smallest repair stays in the GitHub upload adapter: explicit byte length for the existing streamed file and deterministic handle cleanup, with an actual local HTTP regression. Preserve original artifact closure, draft ownership/tag/hash checks and package-only CI. See `research/release-upload-http-boundary.md`. Remote recovery and public publication require owner authorization; the old run's source does not change on rerun.
+
+Local final result: same-descriptor Content-Length repair and deterministic cleanup are reviewed; 8 actual HTTP regressions, all 92 release tests, desktop types/lint/Knip and diff-check passed. Hosted run 38230826261 has four successful builds and collect; original artifact desktop-set-38230826261-1 is available for exact recovery. The concrete original-context recovery commands are in the boundary conclusion. No actual recovery/publication is claimed; task remains in progress.

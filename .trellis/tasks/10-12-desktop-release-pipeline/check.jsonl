@@ -35,3 +35,6 @@
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-source-list-buffer-boundary.md", "reason": "Owner-pasted initial source hash ENOBUFS; exact existing scope and stream/path parity with package-only workflow unchanged"}
 {"file": ".trellis/spec/guides/task-artifact-retention.md", "reason": "Owner-approved compact conclusions; exclude raw task evidence and copied workspaces"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/trellis-cleanup-conclusion.md", "reason": "Completed cleanup scope, retained task core and repaired archive context references"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-upload-http-boundary.md", "reason": "Reached draft asset HTTP400; smallest upload adapter framing repair and owner-controlled original payload recovery"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-upload-http-implementation.md", "reason": "Frozen actual Node fetch boundary proof and complete local desktop release gates"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-upload-http-review.md", "reason": "Independent review: exact framing, resource cleanup, unchanged publisher protocol and packaging-only workflows"}
