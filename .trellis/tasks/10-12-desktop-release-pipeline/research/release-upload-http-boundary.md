@@ -42,6 +42,13 @@ The adapter now sizes and streams one opened FileHandle, supplies Content-Length
 
 ## Concrete original-set recovery
 
+Superseded checkpoint: on 2026-10-13 the owner had moved desktop-v0.1.0 to
+501143bd and created new run38271681646. The old65 commands below record the
+earlier recovery proposal and must not be executed against the changed tag.
+Current recovery is documented in [the completion-tag boundary](./release-draft-tag-boundary.md):
+retain the complete501 draft and its seven assets, then restore only its tag
+association after concrete owner authorization. Do not delete this current draft.
+
 Recovery uses the corrected local publisher and exact artifact from the original tag run. `verifyReleaseDirectory` does not compare the current Git HEAD; the release policy and artifact validator are unchanged by this repair. The original manifest/source/tag/payload remain authoritative. Actual installer bytes, the private draft and its ownership marker have not been inspected locally. The publisher will verify them and stop on changed or unknown assets; it will not delete or clobber them.
 
 The following commands are prepared for owner-controlled recovery, not executed. Run from this repository with the corrected publisher and an authenticated GitHub CLI account that has Release write access. Keep shell tracing disabled so `gh auth token` is passed only to the child environment.

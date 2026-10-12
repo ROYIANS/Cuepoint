@@ -36,3 +36,6 @@
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-upload-http-boundary.md", "reason": "Reached draft asset HTTP400; smallest upload adapter framing repair and owner-controlled original payload recovery"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-upload-http-implementation.md", "reason": "Frozen actual Node fetch boundary proof and complete local desktop release gates"}
 {"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-upload-http-review.md", "reason": "Independent review: exact framing, resource cleanup, unchanged publisher protocol and packaging-only workflows"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-draft-tag-boundary.md", "reason": "Reached final completion PATCH loses draft tag association; minimal explicit tag/source retention and exact existing-draft recovery"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-draft-tag-implementation.md", "reason": "Frozen one-payload-line repair; focused7/full99 release regressions and desktop quality gates pass"}
+{"file": ".trellis/tasks/10-12-desktop-release-pipeline/research/release-draft-tag-review.md", "reason": "Independent strict final-response/source/tag/asset review; no unresolved source findings"}
