@@ -7,13 +7,10 @@ import {relative,resolve} from 'node:path';
 import {PRODUCT,assetName,getTarget,parseOptions,policyHash,runContext,sha256} from './release-policy.mjs';
 import {desktopRoot,nativeTargetDirectory,resolveTools,toolInvocation,TOOL_VERSIONS} from './tool-resolver.mjs';
 import {fileDigest,listedFiles} from './release-artifacts.mjs';
+import {releaseSourceHashes} from './release-source-hashes.mjs';
 
 const root=resolve(desktopRoot,'../..');
 function git(args) {return execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();}
-async function sourceHashes() {
-    const files=execFileSync('git',['ls-files','-z'],{cwd:root,encoding:'utf8'}).split('\0').filter(path=>path && !path.startsWith('.trellis/') && !path.startsWith('.agents/') && !path.startsWith('.codex/')).sort();
-    return Object.fromEntries(await Promise.all(files.map(async path=>[path,(await fileDigest(resolve(root,path))).sha256])));
-}
 export async function sourceVersion() {
     const [pkg,desktop,config,cargo]=await Promise.all(['package.json','desktop/tauri/package.json','desktop/tauri/src-tauri/tauri.conf.json','desktop/tauri/src-tauri/Cargo.toml'].map(path=>readFile(resolve(root,path),'utf8')));
     const version=JSON.parse(pkg).version;
@@ -59,7 +56,7 @@ export async function buildRelease(argv=process.argv.slice(2)) {
     await mkdir(output,{recursive:false});await mkdir(resolve(output,'assets'));
     const evidence=resolve(desktopRoot,'.release/builds',`${context.runId}-${context.attempt}-${target.id}`);
     await mkdir(resolve(desktopRoot,'.release/builds'),{recursive:true});await mkdir(evidence,{recursive:false});
-    const before=await sourceHashes();
+    const before=await releaseSourceHashes(root);
     await run(process.execPath,[resolve(desktopRoot,'scripts/build-frontend.mjs')],resolve(evidence,'frontend.log'),tools.env);
     const frontend=resolve(desktopRoot,'dist/normal');
     const frontendFiles=Object.fromEntries(await Promise.all((await listedFiles(frontend)).map(async path=>[path,sha256(await readFile(resolve(frontend,path)))])));
@@ -83,7 +80,7 @@ export async function buildRelease(argv=process.argv.slice(2)) {
         const source=resolve(directory,matches[0].name),name=assetName(target.id,context.version,format),digest=await fileDigest(source);
         await cp(source,resolve(output,'assets',name),{errorOnExist:true,force:false});assets.push({name,format,...digest});
     }
-    const after=await sourceHashes();
+    const after=await releaseSourceHashes(root);
     if (JSON.stringify(before) !== JSON.stringify(after) || git(['rev-parse','HEAD']) !== context.sourceSha || git(['status','--porcelain','--untracked-files=all'])) throw new Error('Source changed during packaging');
     const receipt={schema:1,state:'packaged',policyHash:policyHash(),context,target:Object.fromEntries(['id','platform','arch','runner','triple'].map(key=>[key,target[key]])),product:{...PRODUCT,signing:target.signing},tools:{versions:TOOL_VERSIONS,executables:tools.tools,host:{platform:process.platform,arch:process.arch,osRelease:release(),hostname:hostname(),runnerImage:process.env.ImageVersion ?? null}},inputs:{sourceBefore:before,sourceAfter:after},payload:{executableSha256:payload.sha256,frontendFiles,frontendSha256:sha256(JSON.stringify(frontendFiles))},assets,checks:[],evidenceFiles:[]};
     await writeFile(resolve(output,'receipt.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});

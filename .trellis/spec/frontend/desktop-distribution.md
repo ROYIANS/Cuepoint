@@ -18,7 +18,7 @@ runtime validation from a successful package build.
 ## 2. Signatures / Owners
 
 Owners are `desktop/tauri/scripts/tool-resolver.mjs`, `release-policy.mjs`,
-`build-release.mjs`, `release-artifacts.mjs`, `finalize-release.mjs`,
+`build-release.mjs`, `release-source-hashes.mjs`, `release-artifacts.mjs`, `finalize-release.mjs`,
 `collect-release.mjs`, `publish-draft.mjs`, the dedicated workflow, and the external
 `scripts/release-product-smoke.mjs` / `verify-release-smoke-store.py` harness.
 
@@ -101,6 +101,19 @@ namespace. Snapshot tracked source hashes before/after packaging. Never seal an
 eligible receipt from a dirty candidate build, stale installer or fixture
 frontend. Local pre-commit candidate app checks stay separately labeled.
 
+`releaseSourceHashes(root)` owns the exact tracked-source snapshot. Enumerate
+through asynchronous Git `ls-files -z` with root-relative exclusions for the
+existing `.trellis/`, `.agents/` and `.codex/` descendants before stdout reaches
+Node. Task/evidence paths can exceed the synchronous default 1 MiB buffer even
+when eligible source paths are small. Retain all other tracked paths, UTF-8/NUL
+framing including spaces and embedded newlines, and JavaScript `.sort()` order
+before creating the map with the existing file digests. Drain stdout/stderr and
+await successful child close; spawn/stream/nonzero/signal or incomplete output
+must reject the snapshot rather than accept partial hashes. Do not fix list
+growth by enlarging an arbitrary buffer, removing history, excluding additional
+source or weakening source-before/source-after comparisons. Small HEAD/status
+Git calls remain separate from the streamed path list.
+
 The pinned Tauri CLI patches bundle-type markers into Windows/Linux executables
 and restores the unpatched build executable afterward. This release lane passes
 `--no-binary-patching`, preventing those bundle-type mutations. Packaging records
@@ -180,6 +193,8 @@ checks do not prevent concurrent external publication.
 | --- | --- |
 | Unknown target/format, mismatched version/tag/tools/host | Fail before producing eligible output |
 | Dirty source, source changes or existing bundle namespace | Reject receipt; retain finite diagnostics |
+| Tracked paths exceed 1 MiB / excluded metadata dominates | Stream the exact eligible scope; no truncated source snapshot |
+| Git enumeration fails or leaves incomplete NUL output | Reject source proof before any eligible receipt |
 | Acceptance frontend, test hooks or wrong product/profile | Reject normal package proof |
 | Packaged receipt with check rows or evidence | Reject; build output cannot claim test success |
 | Failed/missing/duplicate/unknown check or absent evidence | Cannot seal verified receipt |
@@ -215,6 +230,15 @@ identical resume and changed/unknown assets. These are protocol tests, not real
 GitHub delivery. Verify tool paths, Windows argument handling and exact policy.
 External SQLite verifier regressions must include production-encoded ASCII and
 Unicode row keys, malformed encodings, and valid encodings with mismatched IDs.
+
+Source enumeration regressions use actual temporary Git indexes with total and
+eligible path output exceeding 1 MiB. Compare the exact sorted set and resulting
+hash map with the original three-prefix filter, including Unicode, spaces and
+newlines. Hash real files, verify an eligible mutation changes the snapshot and
+an excluded file does not, and reject actual Git failures. Keep synthetic index
+fixtures temporary; do not commit large lists or rerun unrelated native/Agent
+suites for a precompile enumeration correction. A current-repository snapshot
+parity check is local proof, not a hosted installer build.
 
 For delivery-tool changes run relevant local desktop types, lint, quality and
 protocol regressions, including packaged receipt collection/publication and
