@@ -294,3 +294,11 @@ Good: one project, three topics, relative times right-aligned, "+" starts a boun
 
 ### 7. Wrong vs Correct
 Wrong: `onClick={onNewTopic}` on the plus (the event reaches `createTopic` as a project). Correct: `onClick={() => onNewTopicInProject(project.id)}` with the guarded creation path.
+
+## Error display (2026-10-14)
+
+- Crash and not-found pages are `ErrorFallback`/`NotFound` (`defaultErrorComponent`/`defaultNotFoundComponent` on the router). They render inside the workspace so the app frame and navigation stay usable; "重试" calls the router `reset()` (which remounts the same subtree and may fail again), "回到首页" navigates away. Under `/agent` the page states that saved run progress can be continued and unsent composer text may be lost.
+- `RootErrorBoundary`/`RootErrorFallback` are hand-written (no new dependency), use plain elements, and do not depend on the router, the database or `AppFrame`. The storage-failure page uses the same fallback with fixed copy.
+- Non-crash failures use `showError`, never a raw `toast.error(error.message)` for the listed sites. The details dialog is mounted as a sibling of `RootErrorBoundary` so it also opens when the root crashes; its action results are an inline `role="status"` line because the Toaster may not exist.
+- Prefer `role="alert"` markup and `Dialog`/`AlertDialog`; `window.alert/prompt/confirm` stay forbidden.
+

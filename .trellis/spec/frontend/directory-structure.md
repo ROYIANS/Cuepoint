@@ -34,6 +34,7 @@ src/
 │   ├── layout/                      # AppFrame, ModuleLayout, ContextPanelHost and PageLayout
 │   ├── agent/                       # /agent chat (LobeHub-inspired, chat-only @lobehub/ui)
 │   │                                #   topicGrouping.ts, useThreadDeparture.tsx, startPrompt.ts; db/agentRunTerminalState.ts owns settleRun
+│   ├── errors/                      # ErrorFallback, RootErrorFallback, ErrorDetailsDialog, showError (see quality-guidelines "Error diagnostics")
 │   ├── ui/sheet.tsx                 # shadcn Sheet (global mobile navigation)
 │   ├── assets/*DetailPage.tsx       # shared detail editors
 │   └── workspace/                   # in-project chrome
