@@ -8,6 +8,8 @@ import {deleteChatThread} from "@/db/cascadeCommands";
 import {pauseThreadGeneration} from "@/lib/agent/generationBatchRuntime";
 import {pauseAudioGenerationBatches} from "@/lib/audioGeneration/batchRuntime";
 import {useReferenceDraft} from "./useReferenceDraft";
+import {useThreadDeparture} from "./useThreadDeparture";
+import {runBlocksThread} from "@/domain/agentToolSelection";
 import {TaskBoard} from "./TaskBoard";
 import {TaskInspector} from "./TaskInspector";
 import type {ManualDraftDeparture} from "@/lib/useManualDraftGuard";
@@ -116,17 +118,6 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const threadList = useMemo(() => threads ?? [], [threads]);
     const connectorList = useMemo(() => connectors ?? [], [connectors]);
 
-    const openThread = useCallback(
-        (id: Id) => {
-            if (id === activeThreadId) return;
-            leaveTask(() => {
-                if (executionThreadRef.current !== id) abortRef.current?.abort();
-                void navigate({to: "/agent/$threadId", params: {threadId: id}});
-            });
-        },
-        [abortRef, executionThreadRef, navigate, leaveTask, activeThreadId],
-    );
-
     const routedThread = useProductQuery(
         async (db) => {
             if (!activeThreadId) {
@@ -175,6 +166,25 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         if (!activeThreadId) return [];
         return db.agentRuns.where("threadId").equals(activeThreadId).sortBy("createdAt");
     }, [activeThreadId]);
+
+    const {request: requestDeparture, confirmation: departureConfirmation, armOnce: armConfirmedDeparture} = useThreadDeparture(activeThreadId, runs);
+
+    const openThread = useCallback(
+        (id: Id) => {
+            if (id === activeThreadId) return;
+            // Topic confirmation first, then the task inspector's own draft guard: the
+            // run keeps its saved steps either way, and a declined guard must not
+            // silently consume the user's leave request.
+            requestDeparture(() => leaveTask(() => {
+                if (executionThreadRef.current !== id) abortRef.current?.abort();
+                // The decision was already confirmed; the route blocker must not ask again.
+                armConfirmedDeparture();
+                void navigate({to: "/agent/$threadId", params: {threadId: id}});
+            }));
+        },
+        [abortRef, executionThreadRef, navigate, leaveTask, activeThreadId, requestDeparture, armConfirmedDeparture],
+    );
+
 
     useEffect(() => {
         const recover = () => void recoverAbandonedRuns().catch((error: unknown) => {
@@ -248,6 +258,17 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     metadata: result.ok ? result.metadata : undefined,
                     incompatibleModels: result.ok ? result.incompatibleModels : previous?.incompatibleModels ?? [],
                 }));
+            })
+            .catch(() => {
+                // A rejecting transport is an ordinary discovery failure, not a permanent probe.
+                if (cancelled) return;
+                setModelCatalog((previous) => ({
+                    connector,
+                    status: "error",
+                    models: [],
+                    incompatibleModels: sameChatModelConnector(connector, previous?.connector)
+                        ? previous?.incompatibleModels ?? [] : [],
+                }));
             });
         return () => {
             cancelled = true;
@@ -257,30 +278,43 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
 
     const handleNewTopic = useCallback(() => leaveTask(() => {
         if (deleteLock.current) return;
-        abortRef.current?.abort();
-        void (async () => {
-            const thread = await createChatThread({
-                connectorId: selectedConnector?.id,
-                model: modelValue || undefined,
-                projectId,
-                taskMode,
-            });
-            openThread(thread.id);
-        })().catch((error: unknown) => toast.error(error instanceof Error ? error.message : "创建对话失败"));
-    }), [abortRef, openThread, selectedConnector?.id, modelValue, projectId, taskMode, leaveTask]);
+        // One confirmation covers the whole action, including the navigation it causes.
+        requestDeparture(() => {
+            abortRef.current?.abort();
+            void (async () => {
+                const thread = await createChatThread({
+                    connectorId: selectedConnector?.id,
+                    model: modelValue || undefined,
+                    projectId,
+                    taskMode,
+                });
+                armConfirmedDeparture();
+                void navigate({to: "/agent/$threadId", params: {threadId: thread.id}});
+            })().catch((error: unknown) => toast.error(error instanceof Error ? error.message : "创建对话失败"));
+        });
+    }), [abortRef, navigate, selectedConnector?.id, modelValue, projectId, taskMode, leaveTask, requestDeparture, armConfirmedDeparture]);
 
     const handleRenameThread = useCallback((thread: ChatThread) => {
         setRenameTarget(thread);
         setRenameValue(thread.title);
     }, []);
 
+    const [renaming, setRenaming] = useState(false);
     const commitRename = useCallback(async () => {
-        if (!renameTarget) return;
-        await updateChatThread(renameTarget.id, {
-            title: renameValue.trim() || renameTarget.title,
-        });
-        setRenameTarget(undefined);
-    }, [renameTarget, renameValue]);
+        if (!renameTarget || renaming) return;
+        setRenaming(true);
+        try {
+            await updateChatThread(renameTarget.id, {
+                title: renameValue.trim() || renameTarget.title,
+            });
+            setRenameTarget(undefined);
+        } catch (error) {
+            // Keep the dialog and its typed title so the retry costs no retyping.
+            toast.error(error instanceof Error ? error.message : "重命名失败，请重试");
+        } finally {
+            if (mounted.current) setRenaming(false);
+        }
+    }, [mounted, renameTarget, renameValue, renaming]);
 
     const handleDeleteThread = useCallback((thread: ChatThread) => {
         if (deleteLock.current) return;
@@ -293,7 +327,6 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         const remove = () => {
             if (deleteLock.current || !mounted.current) return;
             deleteLock.current = target.id;
-            setDeleteTarget(target);
             setTaskInspectorOpen(false);
             setDeleting(true);
             void (async () => {
@@ -301,7 +334,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     if (abortRef.current && executionThreadRef.current === target.id) abortRef.current.abort();
                     await deleteChatThread(target.id);
                     if (!mounted.current) return;
-                    if (currentThread.current === target.id) void navigate({to: "/agent", replace: true});
+                    if (currentThread.current === target.id) {
+                        armConfirmedDeparture();
+                        void navigate({to: "/agent", replace: true});
+                    }
                     setDeleteTarget(current => current?.id === target.id ? undefined : current);
                 } catch (error) {
                     if (mounted.current) toast.error(error instanceof Error ? error.message : "删除对话失败，请重试");
@@ -311,11 +347,11 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 }
             })();
         };
-        if (currentThread.current === target.id) {
-            setDeleteTarget(undefined);
-            leaveTask(remove);
-        } else remove();
-    }, [abortRef, deleteTarget, executionThreadRef, navigate, leaveTask]);
+        // A declined task-departure guard must not silently discard this confirmation:
+        // the dialog stays open until removal actually starts.
+        if (currentThread.current !== target.id) {remove(); return;}
+        leaveTask(() => requestDeparture(remove));
+    }, [abortRef, deleteTarget, executionThreadRef, navigate, leaveTask, requestDeparture, armConfirmedDeparture]);
 
     const handleStop = useCallback(() => {
         abortRef.current?.abort();
@@ -381,7 +417,11 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     }, [acquireExecution, releaseExecution, navigate, activeThread, activeThreadId, selectedConnector, modelValue, reasoningEffort, interactionMode, chatMode, projectId, projectRequired, projectUnavailable, references, catalogMatches, modelCatalog, executionThreadRef, selectionRef, selectionRevisionRef, sendLockRef]);
 
     const handleRetry = useCallback(async (runId: string) => {
-        if (sendLockRef.current) return;
+        // A click during an in-flight send must say why it cannot run yet.
+        if (sendLockRef.current) {
+            toast.info("当前执行尚未结束，请等待完成或先停止。");
+            return;
+        }
         const token = acquireExecution();
         if (!token) return;
         const {controller} = token;
@@ -399,7 +439,11 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     }, [acquireExecution, releaseExecution, activeThreadId, selectionRef, sendLockRef]);
 
     const handleRunAction = useCallback(async (runId: string, action: RunAction, callId?: string) => {
-        if (sendLockRef.current) return;
+        // Approval, rejection and cancel decisions are never silently dropped.
+        if (sendLockRef.current) {
+            toast.info("当前执行尚未结束，请等待完成后再处理这次操作。");
+            return;
+        }
         const token = acquireExecution();
         if (!token) return;
         const {controller} = token;
@@ -468,7 +512,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     }
 
     const currentRun = runs?.filter((r) => r.threadId === activeThreadId).at(-1);
-    const showRunStatus = currentRun && (currentRun.status === "running" || currentRun.status === "waiting_approval" || currentRun.status === "interrupted" || currentRun.status === "failed");
+    const showRunStatus = currentRun !== undefined && runBlocksThread(currentRun);
     const openTask = async () => {
         if (activeTask) {
             setTaskInspectorOpen(true);
@@ -693,6 +737,8 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            {departureConfirmation}
         </>
     );
 }

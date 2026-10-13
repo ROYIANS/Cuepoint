@@ -6,6 +6,7 @@ import type {ChatModelCatalog} from "@/lib/ai/chatModelPolicy";
 import type {RunAction} from "./AgentRunDetails";
 import type {useReferenceDraft} from "./useReferenceDraft";
 import {createChatThread, updateChatThread} from "@/db/chat";
+import {deleteChatThread} from "@/db/cascadeCommands";
 import {resolveConnector} from "@/db/connectors";
 import {db} from "@/db/database";
 import {assertRetryConnector, beginAgentRun} from "@/db/agentRuns";
@@ -16,6 +17,16 @@ import {runWithCompatibleChatModel} from "@/lib/ai/connectors";
 import {deriveChatTitle} from "@/lib/chatTitle";
 
 type ReferenceDraft = ReturnType<typeof useReferenceDraft>;
+
+/**
+ * A topic created for a send that never produced a run is an orphan: nothing links to
+ * it, no message exists, and leaving it behind would strand the user's draft in a
+ * topic they never opened. Only threads this call created may be removed this way.
+ */
+async function discardUnusedThread(threadId: string, created: boolean): Promise<void> {
+    if (!created) return;
+    await deleteChatThread(threadId);
+}
 
 interface NewMessageFlow {
     submitted: ReturnType<ReferenceDraft["capture"]>;
@@ -60,6 +71,7 @@ export async function executeNewChatMessage({
                                             }: NewMessageFlow) {
     return runWithCompatibleChatModel(connector, model, async () => {
         let thread = activeThread;
+        let created = false;
         if (!thread) {
             thread = await createChatThread({
                 connectorId: connector.id,
@@ -68,13 +80,20 @@ export async function executeNewChatMessage({
                 taskMode,
                 projectId
             });
-            if (controller.signal.aborted) return;
+            created = true;
+            if (controller.signal.aborted) {
+                await discardUnusedThread(thread.id, created);
+                return;
+            }
             bindThread(thread.id);
 
         }
         const targetThread = thread;
         await withThreadRunLock(targetThread.id, async () => {
-            if (controller.signal.aborted) return;
+            if (controller.signal.aborted) {
+                await discardUnusedThread(targetThread.id, created);
+                return;
+            }
             // Acquire execution ownership before mounting detail recovery effects.
             let owner = submitted;
             if (!activeThread) {
@@ -87,7 +106,10 @@ export async function executeNewChatMessage({
                     throw error;
                 }
             }
-            if (controller.signal.aborted) return;
+            if (controller.signal.aborted) {
+                await discardUnusedThread(targetThread.id, created);
+                return;
+            }
             await updateChatThread(targetThread.id, {
                 interactionMode: activeThreadId ? interactionMode : "smart",
                 reasoningSelection: {

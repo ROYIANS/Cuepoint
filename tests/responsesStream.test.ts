@@ -49,12 +49,15 @@ describe("Responses transport", () => {
     expect(summary.mock.calls.flat().join("")).toBe("先检查");
     expect(result.metrics?.firstTokenAt).toBeTypeOf("number");
   });
-  it("does not dispatch incomplete, invalid, foreign or duplicate tools", async () => {
-    for (const output of [[{ ...call, name: "delete_project" }], [call, { ...call, id: "fc-2" }], [{ ...call, arguments: "{" }], [{ ...call, arguments: "[]" }], [{ ...call, status: "in_progress" }], [{ type: "web_search_call", id: "web-1" }]]) {
+  it("does not dispatch incomplete, invalid or duplicate tools, but reports a never-offered name", async () => {
+    for (const output of [[call, { ...call, id: "fc-2" }], [{ ...call, arguments: "{" }], [{ ...call, arguments: "[]" }], [{ ...call, status: "in_progress" }], [{ type: "web_search_call", id: "web-1" }]]) {
       const result = await streamResponses(input, { fetchImpl: vi.fn(async () => Response.json(response(output))) });
       expect(result.ok).toBe(false);
       expect(result).not.toHaveProperty("toolCalls");
     }
+    // A name this request never offered is a recoverable call, not a transport failure.
+    const unoffered = await streamResponses(input, { fetchImpl: vi.fn(async () => Response.json(response([{ ...call, name: "delete_project" }]))) });
+    expect(unoffered).toMatchObject({ ok: true, toolCalls: [{ function: { name: "delete_project" } }], unofferedToolNames: ["delete_project"] });
     const truncated = await streamResponses(input, { fetchImpl: vi.fn(async () => new Response(sse([{ type: "response.function_call_arguments.delta", delta: "{}" }, { type: "response.output_item.done", item: call }]) + "data: [DONE]\n\n", { headers: { "Content-Type": "text/event-stream" } })) });
     expect(truncated.ok).toBe(false);
   });

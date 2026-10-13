@@ -303,7 +303,12 @@ export function FloatingComposer({
     };
 
     const trySend = () => {
-        if (canSend && !listening) onSend();
+        // Dictating holds the textarea read-only; silently ignoring the press looks broken.
+        if (listening) {
+            toast.info("正在语音输入，请先结束听写再发送。");
+            return;
+        }
+        if (canSend) onSend();
     };
 
     return (

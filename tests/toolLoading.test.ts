@@ -79,13 +79,16 @@ describe("progressive tool loading", () => {
     expect(saved.offeredTools?.map((step) => step.names)).toEqual(bodies.map(names));
     expect(saved.requestMessages[0].content).not.toContain("删除按用户明确目标执行");
   });
-  it("rejects same-step load plus never-offered call before executing either", async () => {
+  it("records a same-step load plus never-offered call as a failed call without executing either", async () => {
     const run = await begin();
-    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => reply(run.protocol, [load(["story-edit"]), call("project_create", {}, "sneak")])));
-    expect((await db.agentRuns.get(run.id))?.status).toBe("failed");
-    expect(await db.agentToolCalls.count()).toBe(0);
+    let round = 0;
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => ++round === 1 ? reply(run.protocol, [load(["story-edit"]), call("project_create", {}, "sneak")]) : reply(run.protocol)));
+    expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
+    const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
+    expect(calls.find((item) => item.name === "project_create")).toMatchObject({ status: "failed", effect: "read" });
     expect(await db.projects.count()).toBe(0);
-    expect((await db.agentRuns.get(run.id))?.toolLoading?.loadedGroupIds).toEqual([]);
+    // The never-offered call cannot authorize the group it would have needed.
+    expect((await db.agentRuns.get(run.id))?.toolLoading?.loadedGroupIds).toEqual(["story-edit"]);
   });
   it("rejects disabled groups atomically without broadening authority", async () => {
     const run = await begin();
@@ -93,6 +96,7 @@ describe("progressive tool loading", () => {
     await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => reply(run.protocol, ++round === 1 ? [load(["web-research"])] : [])));
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
     expect(calls[0]).toMatchObject({ status: "failed", error: expect.stringContaining("未启用") });
+    expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
     expect((await db.agentRuns.get(run.id))?.toolLoading?.loadedGroupIds).toEqual([]);
   });
   it("enforces per-step offers even if a ledger envelope bypasses the transport", async () => {

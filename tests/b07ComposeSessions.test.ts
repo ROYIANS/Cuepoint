@@ -53,7 +53,7 @@ vi.mock("@/lib/storage/hooks", () => {
 
 const io = vi.hoisted(() => ({navigate: vi.fn(), create: vi.fn(), begin: vi.fn(), execute: vi.fn(),
     update: vi.fn(), importFile: vi.fn(), retryImport: vi.fn(), compatible: vi.fn(), lock: vi.fn()}));
-vi.mock("@tanstack/react-router", () => ({useNavigate: () => io.navigate, Link: "a"}));
+vi.mock("@tanstack/react-router", () => ({useNavigate: () => io.navigate, Link: "a", useBlocker: () => ({status: "idle", proceed: vi.fn(), reset: vi.fn()})}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 vi.mock("@/db/chat", async original => ({...await original<typeof import("@/db/chat")>(),
     createChatThread: io.create, updateChatThread: io.update}));

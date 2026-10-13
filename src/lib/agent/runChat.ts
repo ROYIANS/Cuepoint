@@ -9,7 +9,8 @@ import {continuationExtraTokens, prepareRunContext} from "./contextCompaction";
 import {refreshRunMemoryContext} from "./memoryContext";
 import {refreshRunProjectContext} from "./projectContext";
 import {frozenProjectScope} from "./projectScope";
-import {ToolPendingError, toolFailureResult} from "./toolErrors";
+import {ToolPendingError, ToolUnavailableError, toolFailureResult} from "./toolErrors";
+import {redactCredentials} from "@/lib/ai/safeError";
 import {type ResponsesResult, streamResponses} from "@/lib/ai/responsesStream";
 import {db as productDb} from "@/db/database";
 import {
@@ -86,6 +87,11 @@ const MAX_MODEL_STEPS = MODEL_STEPS_PER_SEGMENT;
 
 /** A failed completion lookup cannot certify that an atomic operation rolled back. */
 class UnresolvedToolOutcomeError extends Error {}
+
+/** A name the registry does not own has no real title; keep the bounded display label neutral. */
+function unavailableToolTitle(name: string): string {
+    return `不可用的工具 ${name.slice(0, 60)}`;
+}
 
 /** Only user review may supply an execution override; wire arguments remain untouched. */
 function effectiveToolInput(call: AgentToolCall) {
@@ -318,9 +324,21 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
                 await finishAgentRun(run.id, "completed", output(), undefined, result.finishReason, db);
                 return;
             }
+            const offeredNames = getOfferedToolNames(run);
             const details = result.toolCalls.map((call) => {
                 const tool = registry.find((item) => item.name === call.function.name);
-                if (!tool) throw new Error("未知工具");
+                // A name this request never offered is stored as an already-failed call and
+                // fed back to the model, exactly like invalid arguments. It never executes,
+                // never carries a preview and never requests approval.
+                if (!tool || !offeredNames.includes(call.function.name)) {
+                    const failure = new ToolUnavailableError(call.function.name, offeredNames);
+                    return {
+                        title: unavailableToolTitle(call.function.name),
+                        effect: "read" as const,
+                        highRisk: false,
+                        failure: {error: failure.message, result: JSON.stringify(toolFailureResult(failure, "not_started"))}
+                    };
+                }
                 let highRisk = tool.effect !== "read";
                 try {
                     highRisk = tool.highRisk(tool.parseArguments(JSON.parse(call.function.arguments)));
@@ -343,9 +361,14 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
         controller.abort();
         // Close claimed calls conservatively on unexpected interruption. Completed calls remain immutable.
         await markRunningToolsUnknown(run.id, db,error instanceof UnresolvedToolOutcomeError || error instanceof StorageError && error.certainty === "unknown");
-        const message = error instanceof Error ? error.message.split(apiKey).join("[已隐藏]").slice(0, 300) : "执行或本地保存失败";
+        // Shared redaction: an empty key must not explode the message into characters.
+        const message = error instanceof Error ? redactCredentials(error.message, apiKey).slice(0, 300) : "执行或本地保存失败";
+        // One fresh read decides whether preserved work needs an explicit resume. The
+        // in-memory run may already be stale after saveToolRound refreshed durable state.
         const latest = await db.agentRuns.get(run.id);
-        await finishAgentRun(run.id, saveFailed ? "failed" : error instanceof ToolPendingError ? "interrupted" : aborted ? (latest?.hasToolCalls ? "interrupted" : "cancelled") : "failed", output(), saveFailed ? "执行或本地保存失败，最后一段内容可能尚未保存。" : aborted ? "已停止，已完成的步骤保留。" : message, undefined, db);
+        const interrupted = Boolean(latest?.hasToolCalls);
+        run = latest ?? run;
+        await finishAgentRun(run.id, saveFailed ? "failed" : error instanceof ToolPendingError || interrupted && aborted ? "interrupted" : aborted ? "cancelled" : "failed", output(), saveFailed ? "执行或本地保存失败，最后一段内容可能尚未保存。" : aborted ? "已停止，已完成的步骤保留。" : message, undefined, db);
         if (saveFailed) throw new Error("执行或本地保存失败，最后一段内容可能尚未保存");
     }
 }

@@ -24,7 +24,8 @@ Batch queue, selection and genuine generation-source evidence extend these contr
 - Route changes (including browser back/forward) abort the execution associated with the old thread. Bind newly created thread identity before navigation so the first send does not cancel itself; keep sending locked until final persistence settles.
 - The first new user message derives default thread titles in the begin transaction. Custom titles and retry titles remain unchanged.
 - Thread deletion cascades executions; late writes cannot resurrect records. Legacy v7 pending/streaming messages become interrupted, retain partial text, and instruct the user to resend (they lack a request snapshot).
-- Transport makes at most one POST. Original-response JSON is supported; invalid responses/HTTP rejection do not trigger an implicit non-stream request. SSE requires protocol completion and usable answer text; malformed/truncated output, unenabled tool calls and length/filter termination fail explicitly, retaining partial deltas.
+- Transport makes at most one POST. Original-response JSON is supported; invalid responses/HTTP rejection do not trigger an implicit non-stream request. SSE requires protocol completion and usable answer text; malformed/truncated output and length/filter termination fail explicitly, retaining partial deltas.
+- A model-named tool that this request never offered — unregistered, or inside the frozen ceiling but outside `toolNamesForCall(run, step)` — is not a transport failure. It is persisted as one already-failed call (`status: "failed"`, `effect: "read"`, no preview, no `requiresConfirmation`, no approval) whose bounded `TOOL_NOT_AVAILABLE` envelope lists the names actually offered, and the run continues so the model can self-correct. Both transports therefore return such a name in `toolCalls` plus `unofferedToolNames` instead of rejecting it; duplicate, missing and oversized call identifiers still reject. The ledger's own round check keeps refusing a hand-crafted never-offered envelope that carries no pre-supplied failure (`saveToolRound` ~L118).
 - Browser close can lose the last uncommitted tokens. Retry is a fresh model request, not exact restoration of an HTTP stream or hidden model state. Future remote jobs reconcile providerTaskId; never replay ambiguous paid submissions.
 
 ## 4. Validation & Error Matrix
@@ -39,14 +40,65 @@ Batch queue, selection and genuine generation-source evidence extend these contr
 | Changed provider/base URL or missing connector | Reject retry; invite a new message |
 | Provider error contains key | Redact before persisting/displaying |
 | Stream lacks completion | Failed with partial content retained |
+| Model names a tool this request never offered | One failed call recorded, failure fed back to the model, run continues; no approval, no execution |
+| Empty final attempt after a completed text step | Preserve the already-visible answer text instead of clearing it |
+| Leaving a topic with an active run | Confirm first; confirm stops it under the existing semantics and keeps saved steps resumable or endable |
 
 ## 5. Good / Base / Bad
 Good: reopen an abandoned reply, see preserved partial text and a separate interruption notice, explicitly regenerate once.
 Base: original response returns JSON; parse it without a second request.
 Bad: mark every running row interrupted on mount, including a live tab's run; resend paid jobs after lost responses.
 
+## One terminal writer `settleRun` (2026-10-13)
+
+### 1. Scope / Trigger
+Every path that ends an Agent execution: normal completion, model/transport failure, Stop, budget pause, explicit cancel and startup interruption. Read before adding a new terminal state or writing run/message status by hand.
+
+### 2. Signatures
+`settleRun(db: StoreTx, runId, status: Exclude<AgentRunStatus, "running" | "waiting_approval">, options): Promise<boolean>` in `db/agentRunTerminalState.ts`. `options` = `{output?, error?, finishReason?, pauseReason?, preserveOutput?, messageError?, allowedFrom?}`. `finishAgentRun` is the thin `agentRuns`/`chatMessages` wrapper over it.
+
+### 3. Contracts
+`settleRun` owns `status`, `error`, `finishReason`, `pauseReason`, `updatedAt`, `endedAt` and the assistant message's `content`/`reasoning`/`status`/`error`; it runs inside the caller's transaction so the ledger mutation, the run row and the message settle together. It is a no-op unless the current status is in `allowedFrom` (default `running`/`waiting_approval`), so a second settlement never rewrites an ended run. `preserveOutput` keeps the visible text (cancel, budget pause); a supplied empty final attempt must not clear text already displayed by an earlier step, and the `SETTLED_MESSAGE_STATUS` map is the only run→message status mapping. `messageError` addresses the reader without inventing a run-level `error`; `pauseReason` is cleared unless explicitly supplied. `cancelAgentRun` and `pauseAtModelStepLimit` route through it, and cancel accepts the resumable states so a user can end interrupted/failed work. `interrupted` vs `cancelled` is decided from one fresh `hasToolCalls` read.
+
+### 4. Validation & Error Matrix
+| Condition | Result |
+| --- | --- |
+| Already terminal run | No-op, no field rewritten |
+| Missing assistant message / foreign runId | Reject; no partial write |
+| Cancel of a running run | Reject and keep it running (Stop comes first) |
+| Empty final output after a visible step | Keep the earlier text; do not blank the message |
+| Budget pause | `pauseReason: "model_step_limit"` kept, run `error` unchanged, reader notice on the message |
+
+### 5. Good / Base / Bad
+Good: Stop, budget pause and explicit cancel all leave the same fields consistent and keep saved steps resumable. Base: a completed run ignores a later settle attempt. Bad: a second hand-written writer that sets run status without the message, or a new terminal path that forgets to clear `pauseReason`.
+
+## Leaving an active topic is confirmed (2026-10-13)
+
+### 1. Scope / Trigger
+Clicking another topic, creating a new one, deleting the current one, or browser Back while the current topic's execution is active.
+
+### 2. Signatures
+`useThreadDeparture(threadId, runs)` returns `{request(leave), confirmation, armOnce()}`; `runBlocksThread(run)` in `domain/agentToolSelection` is the shared predicate.
+
+### 3. Contracts
+Confirm before aborting: the dialog states that leaving stops the execution and that completed steps and received content are preserved. The same predicate `runBlocksThread` decides both the composer's status strip and `beginAgentRun`'s admission check, so the UI and the DB cannot disagree. A confirmed decision arms exactly one navigation so the route blocker does not ask a second time for the same choice; a declined ask leaves the run and the route untouched. A blocked topic does not permanently block sending: the composer keeps offering resume/end, and the earlier `已有执行` refusal only applies while the run actually holds the thread.
+
+### 4. Validation & Error Matrix
+| Condition | Result |
+| --- | --- |
+| No active run | Leave immediately, no dialog |
+| Active run, user cancels | Stay; run, route and draft unchanged |
+| Active run, user confirms | Abort once, navigate once, saved steps retained |
+| Route attempt during an already confirmed departure | Superseded by the confirmation; no second dialog |
+| Text-only finished reply | Not "active"; leaving is immediate |
+
+### 5. Good / Base / Bad
+Good: switching topics mid-answer asks once, and confirming preserves the partial answer for an explicit continue. Base: switching between idle topics never prompts. Bad: silently aborting the run on click, or arming the blocker so a later unrelated navigation skips its own confirmation.
+
 ## 6. Tests Required
 `agentRuns.test.ts`: atomic creation, no key snapshots, deterministic ordering, stale checkpoints, immutable retry context, incomplete history exclusion, deletion, exclusive ownership and abandoned recovery, v7 migration, write coalescing/failure and runtime terminal states.
+`agentRunDefects.test.ts`: `settleRun` field parity and second-settlement refusal, the shared `runBlocksThread` predicate on both sides, budget pause, one-source interrupted/cancelled, and the start-hint append.
+`agentUnavailableTool.test.ts`: an unregistered name and an offered-but-unloaded name each recorded as one failed call with the run continuing and the model receiving the bounded envelope.
 `chatStream.test.ts`: split UTF-8/CRLF/events, protocol errors/completion, abort reader cleanup, exact POST count and redaction.
 Existing connector/model-policy tests retain no-write-before-compatibility behavior. Browser smoke with a local fake provider must demonstrate interruption → explicit retry → reload with old and new answers preserved.
 

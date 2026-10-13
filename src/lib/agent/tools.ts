@@ -16,7 +16,7 @@ import {TASK_TOOLS} from "./taskTools";
 import {GENERATION_TOOLS} from "./generationTools";
 import {BUSINESS_TOOLS} from "./businessTools";
 import {z} from "zod";
-import {toolArgumentError, ToolValidationError} from "./toolErrors";
+import {toolArgumentError, ToolUnavailableError, ToolValidationError} from "./toolErrors";
 import {db as productDb} from "@/db/database";
 import {updateRunPlanAndComplete} from "@/db/agentTools";
 import type {AgentPermissionMode, AgentToolCall, AgentToolSchema} from "@/domain/agent";
@@ -149,7 +149,7 @@ export function toolSchemas(names: readonly string[], registry = BUILTIN_TOOLS):
 export function validateToolCall(name: string, raw: string, enabled: readonly string[], registry = BUILTIN_TOOLS) {
     assertUniqueToolNames(registry);
     const tool = registry.find((item) => item.name === name);
-    if (!enabled.includes(name) || !tool) throw new Error("模型请求了未启用或未知的工具");
+    if (!enabled.includes(name) || !tool) throw new ToolUnavailableError(name, enabled);
     if (raw.length > 32_768) throw new ToolValidationError(tool.title, name, [{
         path: "参数",
         constraint: "工具参数超过大小限制，最多 32768 个字符",

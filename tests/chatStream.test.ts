@@ -406,16 +406,22 @@ describe("bounded tool wire protocol", () => {
   });
   it.each([
     [{ index: 0, id: "a", function: { name: "lookup", arguments: "{" } }],
-    [{ index: 0, id: "a", function: { name: "unknown", arguments: "{}" } }],
     [{ index: 1, id: "a", function: { name: "lookup", arguments: "{}" } }],
     [{ index: 16, id: "a", function: { name: "lookup", arguments: "{}" } }],
     [{ index: 0, function: { name: "lookup", arguments: "{}" } }],
     [{ index: 0, id: "a", function: { name: "lookup", arguments: "[]" } }],
     [{ index: 0, id: "a", function: { name: "lookup", arguments: "{}" } }, { index: 1, id: "a", function: { name: "lookup", arguments: "{}" } }],
     [{ index: 0, id: "a", function: { name: "lookup", arguments: "x".repeat(32769) } }],
-  ])("rejects incomplete, unknown, duplicate and oversized tool frames %#", async (...calls) => {
+  ])("rejects incomplete, duplicate and oversized tool frames %#", async (...calls) => {
     const fetcher = vi.fn(async () => sse(frame(calls, "tool_calls") + "data: [DONE]\n\n"));
     expect(await streamChatCompletions(input, { fetchImpl: fetcher })).toMatchObject({ ok: false });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it("returns a never-offered name as a recoverable call instead of failing the stream", async () => {
+    const fetcher = vi.fn(async () => sse(frame([{ index: 0, id: "a", function: { name: "unknown", arguments: "{}" } }], "tool_calls") + "data: [DONE]\n\n"));
+    expect(await streamChatCompletions(input, { fetchImpl: fetcher })).toMatchObject({
+      ok: true, toolCalls: [{ id: "a", function: { name: "unknown" } }], unofferedToolNames: ["unknown"], finishReason: "tool_calls",
+    });
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
   it("requires tool_calls completion and rejects tools when disabled", async () => {

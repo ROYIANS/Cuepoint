@@ -4,6 +4,45 @@ import {z} from "zod";
 export class ToolPendingError extends Error {
 }
 
+const UNAVAILABLE_RECOVERY = "本次调用没有执行，也没有产生任何修改。请检查可用的工具名称，或先用 load_tool_groups 加载所需工具组，再用新的工具调用标识重新发起；不要把这次失败当作成功，也不要重复提交原调用。";
+
+/** The wire envelope returned to the model when it names a tool that this round cannot run. */
+export interface ToolUnavailableFailure {
+    code: "TOOL_NOT_AVAILABLE";
+    executed: false;
+    error: string;
+    availableTools: string[];
+    omittedAvailableToolCount: number;
+    recovery: string;
+}
+
+/** A model-named tool that is unregistered or was not offered in this round's request. */
+export class ToolUnavailableError extends Error {
+    readonly requestedName: string;
+    /** Every tool name the current request actually offered, in offer order. */
+    readonly availableTools: string[];
+
+    constructor(requestedName: string, availableTools: readonly string[]) {
+        super(`模型请求了未启用或未知的工具：${requestedName.slice(0, 80)}，未执行。`);
+        this.name = "ToolUnavailableError";
+        this.requestedName = requestedName.slice(0, 80);
+        this.availableTools = [...availableTools].slice(0, 200);
+    }
+
+    /** A bounded, model-facing envelope: available names only, never internal registry facts. */
+    failure(maxTools = 40): ToolUnavailableFailure {
+        const listed = this.availableTools.slice(0, maxTools);
+        return {
+            code: "TOOL_NOT_AVAILABLE",
+            executed: false,
+            error: this.message,
+            availableTools: listed,
+            omittedAvailableToolCount: this.availableTools.length - listed.length,
+            recovery: UNAVAILABLE_RECOVERY,
+        };
+    }
+}
+
 export interface ToolValidationIssue {
     path: string;
     constraint: string;
@@ -55,9 +94,11 @@ export class ToolRecoveryError extends Error {
 }
 
 /** The caller supplies effect certainty from its real transaction/execution boundary. */
-export function toolFailureResult(cause: unknown, effectCertainty: ToolEffectCertainty): ToolValidationFailure | ToolRecoveryFailure | undefined {
+export function toolFailureResult(cause: unknown, effectCertainty: ToolEffectCertainty): ToolValidationFailure | ToolRecoveryFailure | ToolUnavailableFailure | undefined {
     let current = cause;
     for (let depth = 0; depth < 6; depth++) {
+        // An unavailable name was never claimed or executed, regardless of caller certainty.
+        if (current instanceof ToolUnavailableError) return current.failure();
         if (current instanceof ToolValidationError) return effectCertainty === "unknown" ? undefined : {...current.failure, effectCertainty};
         if (current instanceof ToolRecoveryError) return {
             ...current.failure, effectCertainty, executed: effectCertainty === "unknown" ? "unknown" : false,
