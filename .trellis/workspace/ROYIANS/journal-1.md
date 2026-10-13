@@ -1608,3 +1608,42 @@ Completed owner-authorized Trellis cleanup; retain task core and Markdown conclu
 ### Next Steps
 
 - Owner authorized local commits and fast-forward main integration. Owner can push main for actual GitHub package delivery; hosted packaging and the release task remain pending.
+
+
+## Session 58: Desktop shell refinement and Remix icons
+<!-- trellis-session: v=2 fp=35ad47af5557fd4a -->
+
+**Date**: 2026-10-13
+**Task**: Desktop shell refinement and Remix icons
+**Branch**: `codex/desktop-shell-ui`
+
+### Summary
+
+Completed the approved desktop shell and Remix migration: aligned native macOS traffic lights with a 44px header, reduced the global rail to 56px with 16px glyphs, muted header shortcuts, retained one rounded working surface and real header ownership, and fixed expanded textarea height in actual WebKit. User confirmed the local work commit with ok. Archived only this UI task; existing storage-sync and release tasks retain their own remaining scope.
+
+### Main Changes
+
+- Delivered compact shared shell and actual Agent/workspace header portals without moving business, draft or runtime owners.
+- Unified application general icons on pinned Remix 4.9.0; matched Line/Fill navigation pairs and kept provider logos and immutable historical comparisons.
+- Committed 106 approved code/spec/test/dependency paths, then archived task artifacts. Archive auto-commit encountered the previously untracked source-path issue; completed the narrowly scoped archive bookkeeping commit manually.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `e36860a7` | feat(ui): refine desktop shell and unify Remix icons |
+
+### Testing
+
+- [OK] Independent full-scope gates passed: 3974 tests with 7 explicit skips, 88 quality self-tests, model bank verification, desktop types/lint/quality and 99 release-script tests.
+- [OK] Compact refinement: 54 affected tests passed; final textarea-only CSS fix passed formal quality, both actual macOS app builds and real 760x520 expanded/collapsed draft editing.
+- [OK] Native inspection records traffic-light alignment, smaller navigation, reachable header menus/settings, Sheet focus, native zoom/fullscreen and white landscape print preview.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Final fresh browser, Windows/Linux runtime, measured window drag position, long-turn jump interaction and long multi-page print observations remain explicit verification limits in the archived acceptance record.
+- No remote push or release publication was performed. Storage-sync and release tasks were not archived in this UI session.
