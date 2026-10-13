@@ -19,7 +19,7 @@ import {
     RotateCcw,
     Sparkles,
     X
-} from "lucide-react";
+} from "@/components/ui/remixIcons";
 import {type ComponentRef, useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
 import type {ChatSurfaceMode, ComposerProps} from "@/components/agent/composerTypes";

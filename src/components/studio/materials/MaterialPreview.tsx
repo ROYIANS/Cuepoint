@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from "react";
-import {FileText, Music2, PackageOpen} from "lucide-react";
+import {FileText, Music2, PackageOpen} from "@/components/ui/remixIcons";
 import {toast} from "sonner";
 import {binaryByteLength} from "@/domain/binary";
 import {binaryPreviewMessage, useBinaryPreview} from "@/lib/media";

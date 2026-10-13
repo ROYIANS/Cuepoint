@@ -1,4 +1,4 @@
-import {Clapperboard, Image, Mic2, Music2, PenLine} from "lucide-react";
+import {Clapperboard, Image, Mic2, Music2, PenLine} from "@/components/ui/remixIcons";
 
 /** Presentation catalog only. Unavailable kinds must never create video records. */
 export const PROJECT_KINDS = [
@@ -52,7 +52,7 @@ export function ProjectKindPlaceholder({kind}: { kind: ProjectKindOption }) {
     return (
         <div
             className="flex min-h-64 flex-col items-center justify-center rounded-2xl border border-dashed px-6 py-10 text-center">
-            <Icon className="text-muted-foreground mb-5 size-8" strokeWidth={1.25} aria-hidden/>
+            <Icon className="text-muted-foreground mb-5 size-8" aria-hidden/>
             <span className="text-muted-foreground mb-3 rounded-full border px-2.5 py-1 text-xs">即将推出</span>
             <h2 className="text-lg font-medium">{kind.label}创作</h2>
             <p className="text-muted-foreground mt-2 max-w-md text-sm leading-6">{kind.description}</p>

@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import {Link} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Archive, ArrowUpRight, History, Trash2, Upload, X} from "lucide-react";
+import {Archive, ArrowUpRight, History, Trash2, Upload, X} from "@/components/ui/remixIcons";
 import {releaseMaterialUse} from "@/db/assetReuse";
 import {
     addFileMaterialVersion,

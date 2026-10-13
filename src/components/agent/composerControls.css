@@ -241,8 +241,8 @@
 }
 
 .agent-chat-root .agent-composer-stack.is-expanded textarea.agent-composer-input {
-    flex: 1;
-    height: 0 !important;
+    flex: 1 1 auto;
+    height: 100% !important;
     min-height: 0 !important;
     max-height: none !important;
     overflow-y: auto !important;
@@ -393,11 +393,6 @@
 
 .agent-chat-root .agent-skill-search .ant-input-affix-wrapper {
     padding: 8px 4px !important;
-}
-
-/* The mobile shell menu overlays the normal chat header; hide it while editing. */
-.studio-floor:has(.agent-composer-dock.is-expanded) .studio-mobile-header {
-    visibility: hidden;
 }
 
 .agent-project-trigger {

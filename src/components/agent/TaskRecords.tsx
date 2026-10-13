@@ -9,7 +9,7 @@ import {toolReferenceAttachments} from "@/lib/agent/referenceEvidence";
 import {useEffect, useRef, useState} from "react";
 import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "@/lib/useManualDraftGuard";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {BookOpen, ChevronDown, History, Pencil, Plus, Search} from "lucide-react";
+import {BookOpen, ChevronDown, History, Pencil, Plus, Search} from "@/components/ui/remixIcons";
 import {toast} from "sonner";
 import type {AgentTask} from "@/domain/agent";
 import type {ChatMessage} from "@/domain/types";
@@ -193,7 +193,7 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
             {TASK_RECORD_KINDS.map((kind) => <button key={kind} type="button" aria-pressed={filter === kind}
                                                      onClick={() => setFilter(kind)}>{KINDS[kind]}</button>)}</div>
         {!records ? <p className="agent-task-muted" role="status">正在读取记录…</p> : !visible.length ?
-            <div className="agent-task-record-empty"><BookOpen size={28} strokeWidth={1.3}/>
+            <div className="agent-task-record-empty"><BookOpen size={28}/>
                 <h3>{records.length ? "没有匹配的记录" : "每一步，都有迹可循"}</h3>
                 <p>{records.length ? "试试其他关键词或分类。" : "助手会在推进任务时记录调研、方案和验证结果。你也可以补充重要信息。"}</p>
             </div> : visible.map((record) => <details className="agent-task-record" key={record.id}>

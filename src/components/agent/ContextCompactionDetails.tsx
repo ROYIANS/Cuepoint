@@ -1,4 +1,4 @@
-import {Check, ChevronDown, LoaderCircle, TriangleAlert} from "lucide-react";
+import {Check, ChevronDown, LoaderCircle, TriangleAlert} from "@/components/ui/remixIcons";
 import type {ContextCompaction} from "@/domain/context";
 import {formatTokenCount} from "@/lib/agent/contextUsage";
 

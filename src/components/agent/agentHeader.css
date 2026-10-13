@@ -1,0 +1,71 @@
+.agent-header-theme.agent-chat-header {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    align-items: center;
+    gap: 12px;
+    overflow: visible;
+    color: var(--foreground);
+}
+
+.agent-header-topics, .agent-header-actions {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 4px;
+}
+
+.agent-header-title-group {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    align-items: center;
+    gap: 4px;
+}
+
+.agent-header-theme .agent-conversation-title {
+    margin: 0;
+    min-width: 0;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Scope the native ActionIcon buttons; dropdown content and title retain their own colors. */
+.agent-header-theme.agent-chat-header :is(.agent-header-topics, .agent-header-actions, .agent-header-title-group) button {
+    min-width: 36px;
+    min-height: 36px;
+    color: var(--muted-foreground);
+}
+
+.agent-header-theme.agent-chat-header :is(.agent-header-topics, .agent-header-actions, .agent-header-title-group) button:not(:disabled, [aria-disabled=true]):is(:hover, :active) {
+    color: var(--foreground);
+}
+
+.agent-header-theme.agent-chat-header :is(.agent-header-topics, .agent-header-actions, .agent-header-title-group) button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.agent-header-theme button:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.agent-header-popup-host {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.agent-header-popup-host .ant-dropdown { pointer-events: auto; }
+
+@media (max-width: 767px) {
+    .agent-header-theme.agent-chat-header { gap: 4px; }
+}

@@ -59,6 +59,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.16
         version: 1.2.16(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@remixicon/react':
+        specifier: 4.9.0
+        version: 4.9.0(react@19.3.0)
       '@tanstack/react-router':
         specifier: ^1.131.50
         version: 1.170.38(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -89,9 +92,6 @@ importers:
       jszip:
         specifier: ^3.10.1
         version: 3.10.2
-      lucide-react:
-        specifier: ^0.544.0
-        version: 0.544.0(react@19.3.0)
       mammoth:
         specifier: 1.12.0
         version: 1.12.0
@@ -156,6 +156,9 @@ importers:
       knip:
         specifier: 6.40.0
         version: 6.40.0
+      lucide-react:
+        specifier: 0.544.0
+        version: 0.544.0(react@19.3.0)
       tailwindcss:
         specifier: ^4.1.13
         version: 4.3.3
@@ -1780,6 +1783,11 @@ packages:
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
+
+  '@remixicon/react@4.9.0':
+    resolution: {integrity: sha512-5/jLDD4DtKxH2B4QVXTobvV1C2uL8ab9D5yAYNtFt+w80O0Ys1xFOrspqROL3fjrZi+7ElFUWE37hBfaAl6U+Q==}
+    peerDependencies:
+      react: '>=18.2.0'
 
   '@rolldown/pluginutils@1.0.0-rc.3':
     resolution: {integrity: sha512-eybk3TjzzzV97Dlj5c+XrBFW57eTNhzod66y9HrBlzJ6NsCrWCp/2kaPS3K9wJmurBC0Tdw4yPjXKZqlznim3Q==}
@@ -6094,6 +6102,10 @@ snapshots:
       clsx: 2.1.1
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
+
+  '@remixicon/react@4.9.0(react@19.3.0)':
+    dependencies:
+      react: 19.3.0
 
   '@rolldown/pluginutils@1.0.0-rc.3': {}
 

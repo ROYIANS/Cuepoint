@@ -1,5 +1,5 @@
 import {Link, useRouterState} from "@tanstack/react-router";
-import {ArrowLeft} from "lucide-react";
+import {ArrowLeft} from "@/components/ui/remixIcons";
 import type {ReactNode} from "react";
 import {AppFrame} from "@/components/layout/AppFrame";
 

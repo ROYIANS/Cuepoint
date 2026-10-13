@@ -4,6 +4,7 @@ import {Toaster} from "sonner";
 import {db} from "@/db/database";
 import {AgentChatPage} from "@/components/agent/AgentChatPage";
 import {LobeChatTheme} from "@/components/agent/LobeChatTheme";
+import {AppFrame} from "@/components/layout/AppFrame";
 import type {ChatMessage, ChatThread} from "@/domain/types";
 import "@/styles.css";
 
@@ -25,7 +26,7 @@ await db.chatThreads.bulkPut(threads);
 await db.chatMessages.bulkPut(messages(3));
 const root = createRootRoute({component: () => <>
     <button id="keyboard-start" style={{position: "fixed", top: 0, left: 0, width: 1, height: 1, opacity: 0}} aria-label="Keyboard start"/>
-    <LobeChatTheme><Outlet/></LobeChatTheme><Toaster/>
+    <AppFrame contentScroll="hidden"><LobeChatTheme><Outlet/></LobeChatTheme></AppFrame><Toaster/>
 </>});
 const initial = createRoute({getParentRoute: () => root, path: "/tests/fixtures/e02/", component: () => <AgentChatPage threadId="e02-a"/>});
 const agent = createRoute({getParentRoute: () => root, path: "/agent/$threadId", component: () => <AgentChatPage threadId={agent.useParams().threadId}/>});
@@ -34,9 +35,9 @@ const control = {
     db, navigate: (to: string) => router.navigate({to}), location: () => router.history.location.pathname,
     reset: async () => {await db.chatThreads.bulkPut(threads); await router.navigate({to: "/agent/$threadId", params: {threadId: "e02-a"}});},
     turns: async (count: number) => {
-        await db.transaction("rw", db.chatMessages, async () => {
-            await db.chatMessages.where("threadId").equals("e02-a").delete();
-            await db.chatMessages.bulkPut(messages(count));
+        await db.transaction("rw", ["chatMessages"], async tx => {
+            await tx.chatMessages.where("threadId").equals("e02-a").delete();
+            await tx.chatMessages.bulkPut(messages(count));
         });
     },
 };

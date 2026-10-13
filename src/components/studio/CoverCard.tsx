@@ -1,4 +1,4 @@
-import {Ellipsis, Plus} from "lucide-react";
+import {Ellipsis, Plus} from "@/components/ui/remixIcons";
 import type {ReactNode} from "react";
 import {Still} from "@/components/studio/Still";
 import {Button} from "@/components/ui/button";

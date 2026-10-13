@@ -33,7 +33,7 @@
       "evidence": [
         {
           "file": "src/styles.css",
-          "sha256": "6d0efdf75e76bba7d7f7873329a50599b2f597ae3cd8546c84e28786b95f943c"
+          "sha256": "70976f4bcd3a67f7938fb982da52432ab62fba0a75642ebcdc7a4e894be3cf3b"
         },
         {
           "file": "vite.config.ts",
@@ -51,7 +51,7 @@
       "evidence": [
         {
           "file": "src/styles.css",
-          "sha256": "6d0efdf75e76bba7d7f7873329a50599b2f597ae3cd8546c84e28786b95f943c"
+          "sha256": "70976f4bcd3a67f7938fb982da52432ab62fba0a75642ebcdc7a4e894be3cf3b"
         },
         {
           "file": "vite.config.ts",
@@ -69,7 +69,7 @@
       "evidence": [
         {
           "file": "scripts/e02-browser-regression.mjs",
-          "sha256": "215aa6f27c5122322af029da3665ad958d8ff74b2629e37751604f9614b10260"
+          "sha256": "9569ddbf428a81c631d485d2d291da9f0a2efe5f7a728e6db179f072f4a82f14"
         }
       ]
     },
@@ -124,6 +124,36 @@
         {
           "file": ".trellis/spec/frontend/audio-music.md",
           "sha256": "a8c2f93345033db1988fa7969bf47615c4af501e76d027da102f59a13961406c"
+        }
+      ]
+    },
+    {
+      "issue": "devDependencies",
+      "file": "package.json",
+      "symbol": "lucide-react",
+      "count": 1,
+      "reason": "Immutable historical E02 topic and E04 library comparison sources import Lucide. The actual E02 baseline runner loads TopicSidebar through Vite transform, and the E04 harness imports the original gallery/project-kind closure. These runtime comparisons are outside the authored production graph; retain the pinned development dependency without changing snapshot bytes. Current application general UI imports Remix.",
+      "owner": "Immutable source comparisons",
+      "evidence": [
+        {
+          "file": "tests/fixtures/sourceSnapshots/e02/TopicSidebar.tsx",
+          "sha256": "03eb777c98984d75300c9dcfd1533739e3c7308d561d6d72a6bf20be55bc2dc9"
+        },
+        {
+          "file": "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage.tsx",
+          "sha256": "c23024ec2c6eabb2b0e85da04c3108015026eadf5b35ff0e988b8db1eb641a3b"
+        },
+        {
+          "file": "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/projectKinds.tsx",
+          "sha256": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db"
+        },
+        {
+          "file": "scripts/e02-browser-regression.mjs",
+          "sha256": "9569ddbf428a81c631d485d2d291da9f0a2efe5f7a728e6db179f072f4a82f14"
+        },
+        {
+          "file": "tests/fixtures/e04-library/harness.tsx",
+          "sha256": "a746f3758e71cc63cd5b32661a8212081ccbf0e5790b9f81afb15baa396e83e8"
         }
       ]
     }

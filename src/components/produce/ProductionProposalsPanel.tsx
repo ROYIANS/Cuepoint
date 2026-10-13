@@ -11,7 +11,7 @@ import {
 import {useId, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {toast} from "sonner";
-import {Plus, Undo2} from "lucide-react";
+import {Plus, Undo2} from "@/components/ui/remixIcons";
 import {
     applyProductionProposal,
     cancelProductionProposal,

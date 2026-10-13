@@ -3,7 +3,7 @@ import {useProductQuery} from "@/lib/storage/hooks";
 import {useEffect, useRef, useState} from "react";
 import type {ProductStore, StoreTable} from "@/lib/storage/types";
 import {toast} from "sonner";
-import {Plus} from "lucide-react";
+import {Plus} from "@/components/ui/remixIcons";
 import {CoverCard, LibraryGrid} from "@/components/studio/CoverCard";
 import {LibraryHeader} from "@/components/studio/LibraryHeader";
 import {PageContent, PageState} from "@/components/layout/PageLayout";

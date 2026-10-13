@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from "react";
-import {ArrowDown, ArrowUp, MoreHorizontal, Play, Plus, Trash2, Volume2} from "lucide-react";
+import {ArrowDown, ArrowUp, MoreHorizontal, Play, Plus, Trash2, Volume2} from "@/components/ui/remixIcons";
 import {db} from "@/db/database";
 import {addAudioSegment, deleteAudioSegment, patchAudioSegment} from "@/db/audio";
 import {appendAudioScript, editAudioScriptLines} from "@/lib/audio/scriptImport";

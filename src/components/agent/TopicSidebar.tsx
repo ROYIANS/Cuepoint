@@ -1,4 +1,4 @@
-import {Avatar, Flexbox, Text} from "@lobehub/ui";
+import {Flexbox, Text} from "@lobehub/ui";
 import {ActionIcon} from "@lobehub/ui/base-ui";
 import {useNavigate} from "@tanstack/react-router";
 import {
@@ -6,31 +6,26 @@ import {
     ListTodo,
     MessageSquare,
     MessageSquarePlus,
-    PanelLeft,
-    PanelLeftClose,
     Pencil,
     Search,
     Settings,
     Trash2,
     X,
-} from "lucide-react";
+} from "@/components/ui/remixIcons";
 import {type ComponentType, type ReactNode, useEffect, useMemo, useRef, useState,} from "react";
 import {filterThreadsByTitle} from "@/components/agent/filterThreadsByTitle";
 import {groupThreadsByTime} from "@/components/agent/timeGroups";
-import {SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH,} from "@/components/agent/agentTheme";
+import {SIDEBAR_WIDTH} from "@/components/agent/agentTheme";
 import type {ChatThread, Id} from "@/domain/types";
-import {LOGO_SRC, PRODUCT_NAME_ZH} from "@/lib/brand";
 
 /**
- * Topic sidebar — lobehub AgentSidebar: brand row + collapse, ghost nav
+ * Topic sidebar — ghost nav
  * (开启新话题 / 搜索 / 话题…), date-grouped topic list, settings footer.
  * Shared list body also powers the mobile topic Sheet.
  */
 export function TopicSidebar({
                                  threads,
                                  activeThreadId,
-                                 collapsed,
-                                 onToggleCollapsed,
                                  onSelect,
                                  onNewTopic,
                                  onOpenTasks,
@@ -39,8 +34,6 @@ export function TopicSidebar({
                              }: {
     threads: ChatThread[];
     activeThreadId?: Id;
-    collapsed: boolean;
-    onToggleCollapsed: () => void;
     onSelect: (id: Id) => void;
     onNewTopic: () => void;
     onOpenTasks: () => void;
@@ -49,50 +42,8 @@ export function TopicSidebar({
 }) {
     const navigate = useNavigate();
 
-    if (collapsed) {
-        return (
-            <Flexbox
-                width={SIDEBAR_COLLAPSED_WIDTH}
-                height="100%"
-                padding={8}
-                gap={8}
-                className="agent-topic-sidebar is-collapsed"
-            >
-                <ActionIcon icon={PanelLeft} title="展开侧栏" aria-label="展开话题侧栏"
-                            aria-expanded={false} onClick={onToggleCollapsed}/>
-                <ActionIcon icon={MessageSquarePlus} title="开启新话题" aria-label="开启新话题" onClick={onNewTopic}/>
-                <ActionIcon icon={ListTodo} title="任务看板" aria-label="任务看板" onClick={onOpenTasks}/>
-            </Flexbox>
-        );
-    }
-
     return (
         <Flexbox width={SIDEBAR_WIDTH} height="100%" className="agent-topic-sidebar">
-            <Flexbox
-                horizontal
-                align="center"
-                padding={12}
-                gap={8}
-                style={{flex: "none"}}
-            >
-                <Avatar avatar={LOGO_SRC} background="transparent" shape="square" size={28}/>
-                <Text
-                    style={{
-                        flex: 1,
-                        minWidth: 0,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        fontSize: 14,
-                        fontWeight: 600,
-                    }}
-                >
-                    {PRODUCT_NAME_ZH}
-                </Text>
-                <ActionIcon icon={PanelLeftClose} title="收起侧栏" aria-label="收起话题侧栏"
-                            aria-expanded onClick={onToggleCollapsed}/>
-            </Flexbox>
-
             <TopicListBody
                 threads={threads}
                 activeThreadId={activeThreadId}
@@ -278,7 +229,7 @@ function SidebarNavItem({
                             onClick,
                             active,
                         }: {
-    icon: ComponentType<{ size?: number; strokeWidth?: number }>;
+    icon: ComponentType<{ size?: number }>;
     label: string;
     onClick: () => void;
     active?: boolean;
@@ -289,7 +240,7 @@ function SidebarNavItem({
             className={active ? "agent-sidebar-nav is-active" : "agent-sidebar-nav"}
             onClick={onClick}
         >
-            <Icon size={16} strokeWidth={1.75}/>
+            <Icon size={16}/>
             <span>{label}</span>
         </button>
     );

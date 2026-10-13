@@ -1,7 +1,7 @@
 import {useShotMedia} from "@/lib/useShotMedia";
 import {Link} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {ArrowLeft, Printer} from "lucide-react";
+import {ArrowLeft, Printer} from "@/components/ui/remixIcons";
 import {toast} from "sonner";
 import {MediaPreview} from "@/components/media/MediaThumb";
 import {Button} from "@/components/ui/button";

@@ -14,7 +14,7 @@ import {
     RotateCcw,
     Sparkles,
     X
-} from "lucide-react";
+} from "@/components/ui/remixIcons";
 import {toast} from "sonner";
 import type {AgentPlanItem, AgentRun, AgentTask} from "@/domain/agent";
 import type {ChatMessage} from "@/domain/types";

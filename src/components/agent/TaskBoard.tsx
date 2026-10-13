@@ -1,5 +1,5 @@
 import {useMemo, useRef, useState} from "react";
-import {ArrowLeft, ArrowUpRight, Check, ListTodo, Plus, Search, Sparkles} from "lucide-react";
+import {ArrowLeft, ArrowUpRight, Check, ListTodo, Plus, Search, Sparkles} from "@/components/ui/remixIcons";
 import {toast} from "sonner";
 import type {AgentRun, AgentTask} from "@/domain/agent";
 import type {Id, Project} from "@/domain/types";
@@ -109,7 +109,7 @@ export function TaskBoard({tasks, runs, projects, onOpenTask, onBack}: {
         </PageToolbar>
         {!ready ?
             <PageState kind="loading" title="正在读取任务与执行进度…"/> : entries.length === 0 ?
-                <div className="agent-task-empty"><ListTodo size={32} strokeWidth={1.25} aria-hidden/>
+                <div className="agent-task-empty"><ListTodo size={32} aria-hidden/>
                     <h2>还没有任务</h2><p>写下项目目标与完成标准，再与助手一起推进。
                     </p><Button onClick={() => {
                         setProjectId(filterProjectId);

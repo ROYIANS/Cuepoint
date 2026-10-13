@@ -1,8 +1,10 @@
 import type {AgentTask} from "@/domain/agent";
-import {ArrowRight, ListTodo} from "lucide-react";
+import {ArrowRight, ListTodo} from "@/components/ui/remixIcons";
 import {Avatar, Text} from "@lobehub/ui";
 import type {ComposerProps} from "@/components/agent/composerTypes";
 import {FloatingComposer} from "@/components/agent/FloatingComposer";
+import {AgentHeader} from "@/components/agent/AgentHeader";
+import {useAgentTopicNavigation} from "@/components/agent/AgentTopicNavigation";
 import {formatRelative} from "@/components/agent/timeGroups";
 import type {ChatThread, Id} from "@/domain/types";
 import {LOGO_SRC} from "@/lib/brand";
@@ -16,18 +18,28 @@ export function HomeWelcome({
                                 tasks,
                                 onOpenTasks,
                                 onSelectThread,
+                                onNewTopic,
+                                onRenameThread,
+                                onDeleteThread,
                             }: {
     tasks: AgentTask[];
     onOpenTasks: () => void;
     threads: ChatThread[];
     composer: ComposerProps;
     onSelectThread: (id: Id) => void;
+    onNewTopic: () => void;
+    onRenameThread: (thread: ChatThread) => void;
+    onDeleteThread: (thread: ChatThread) => void;
 }) {
+    const topics = useAgentTopicNavigation({threads, onSelect: onSelectThread, onNewTopic,
+        onRename: onRenameThread, onDelete: onDeleteThread, onOpenTasks});
     const recent = threads.filter((thread) => !composer.projectId || thread.projectId === composer.projectId).slice(0, 8);
     const project = composer.projects.find((item) => item.id === composer.projectId);
     const projectTasks = tasks.filter((task) => (!composer.projectId || task.projectId === composer.projectId) && task.lifecycle !== "archived");
     return (
         <div className="agent-home-shell">
+            <AgentHeader title="创作助手" topicToggle={topics.toggle} onNewTopic={onNewTopic}/>
+            {topics.navigation}
             <div className="agent-home">
                 <div className="agent-home-inner">
                     <div className="agent-home-hero">

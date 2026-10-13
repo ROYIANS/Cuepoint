@@ -14,7 +14,7 @@ import {ProjectSettingsPanel} from "./ProjectSettingsPanel";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {Link, Navigate, Outlet, useNavigate, useRouterState} from "@tanstack/react-router";
 import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
-import {ChevronLeft, Download, Library, Settings2} from "lucide-react";
+import {ChevronLeft, Download, Library, Settings2} from "@/components/ui/remixIcons";
 import {useRef, useState} from "react";
 import {toast} from "sonner";
 import {Still} from "@/components/studio/Still";
@@ -27,6 +27,7 @@ import {isPublishedSaveError} from "@/lib/runtimeSave";
 import {cn} from "@/lib/utils";
 import {shouldRedirectAudioMusicChild} from "@/lib/audio/workspaceRoute";
 import {AppFrame} from "@/components/layout/AppFrame";
+import {AppHeaderPortal} from "@/components/layout/AppHeaderPortal";
 import {PageState} from "@/components/layout/PageLayout";
 import {importStudioProject} from "@/components/studio/importStudioProject";
 import {pickZipFile} from "@/lib/library";
@@ -181,9 +182,9 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                     <Button className="mt-3" variant="outline"
                             onClick={() => void navigate({to: "/projects"})}>返回工作室</Button>
                 </div>}
-                <header hidden={unavailable} style={unavailable ? {display: "none"} : undefined}
-                        className="workspace-header grid min-h-11 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-1 border-b px-3 py-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4">
-                    <div className="col-start-1 row-start-1 flex min-w-0 items-center gap-1">
+                <AppHeaderPortal><div hidden={unavailable} style={unavailable ? {display: "none"} : undefined}
+                        className="workspace-header">
+                    <div className="workspace-header-title flex min-w-0 items-center gap-1">
                         {backToStudio ? (
                             <Button variant="ghost" size="icon-sm" asChild>
                                 <Link to="/projects" aria-label="返回工作室">
@@ -201,7 +202,8 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                     </div>
                     <nav
                         aria-label="项目工作区"
-                        className="text-muted-foreground col-span-2 row-start-2 flex min-w-0 flex-wrap items-center justify-center gap-1 text-xs sm:col-span-1 sm:col-start-2 sm:row-start-1">
+                        data-tauri-drag-region="false"
+                        className="workspace-header-nav text-muted-foreground flex min-w-0 flex-wrap items-center justify-center gap-1 text-xs">
                         {kind !== "video" ? <Link to="/p/$projectId" params={{projectId}}
                                                   className={cn("hover:text-foreground", projectHome && "text-foreground font-medium")}>{kind === "audio" ? "音频制作" : "音乐创作"}</Link> : filmEpisode ? (
                             <>
@@ -302,7 +304,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                         <Link to="/p/$projectId/memory" params={{projectId}}
                               className={cn("hover:text-foreground", pathname === `/p/${projectId}/memory` && "text-foreground font-medium")}>记忆</Link>
                     </nav>
-                    <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:col-start-3">
+                    <div className="workspace-header-actions flex items-center justify-end gap-1" data-tauri-drag-region="false">
                         <Button variant="ghost" size="sm" className="px-2" asChild><Link to="/assets" search={{project: projectId}}
                                                                         aria-label="项目素材"><Library/><span
                             className="hidden sm:inline">素材</span></Link></Button>
@@ -336,7 +338,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                             <span className="hidden lg:inline">{backingUp ? "正在保存并备份…" : "备份项目"}</span>
                         </Button>
                     </div>
-                </header>
+                </div></AppHeaderPortal>
                 <div className={cn("app-scroll min-h-0 min-w-0 flex-1", kind === "video" ? "overflow-auto" : "overflow-hidden")} inert={unavailable}>
                     <Outlet/>
                 </div>

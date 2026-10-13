@@ -1,6 +1,6 @@
 import {useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Upload} from "lucide-react";
+import {Upload} from "@/components/ui/remixIcons";
 import {db} from "@/db/database";
 import type {AudioTake} from "@/domain/audio";
 import {validateMimoReferenceBlob} from "@/lib/audioGeneration/reference";

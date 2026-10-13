@@ -34,7 +34,7 @@ import {downloadBlob, exportProjectZip,} from "@/lib/projectPackage";
 import {isPublishedSaveError} from "@/lib/runtimeSave";
 import {ASPECT_PRESET_IDS, ASPECT_PRESETS, type AspectPresetId, type ProjectMode,} from "@/domain/types";
 import {ProjectIpPicker} from "./ProjectIpPicker";
-import {Plus} from "lucide-react";
+import {Plus} from "@/components/ui/remixIcons";
 import {PROJECT_KINDS, type ProjectKindId, ProjectKindPlaceholder} from "./projectKinds";
 import {cn} from "@/lib/utils";
 import {PageContent, PageState, PageToolbar} from "@/components/layout/PageLayout";

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Archive, ArrowUpRight, Image, Layers, Search, Upload} from "lucide-react";
+import {Archive, ArrowUpRight, Image, Layers, Search, Upload} from "@/components/ui/remixIcons";
 import type {LibraryMaterial} from "@/domain/materials";
 import {Button} from "@/components/ui/button";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";

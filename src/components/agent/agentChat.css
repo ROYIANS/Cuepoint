@@ -214,12 +214,15 @@
 }
 
 .agent-chat-root .agent-home-shell {
+    display: flex;
     height: 100%;
     min-height: 0;
 }
 
 .agent-chat-root .agent-home {
     display: flex;
+    flex: 1;
+    min-width: 0;
     align-items: center;
     justify-content: flex-start;
     min-height: 100%;
@@ -356,8 +359,7 @@
     color: var(--foreground);
 }
 
-/* Conversation detail — ChatHeader is position:absolute; height: 52px.
-   Messages and composer must reserve that header + bottom dock as safe area. */
+/* Conversation body lives entirely below the shared top bar. */
 
 .agent-chat-root .agent-conversation {
     height: 100%;
@@ -600,52 +602,16 @@
     background: transparent;
 }
 
-.agent-chat-root .agent-chat-header {
-    position: absolute !important;
-    top: 0;
-    z-index: 10;
-    isolation: isolate;
-    height: var(--agent-chat-header-height, 52px) !important;
-    overflow: visible;
-    border: 0 !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    backdrop-filter: none;
-}
-
-.agent-chat-root .agent-conversation-title {
-    margin: 0;
-    min-width: 0;
-    font-family: var(--font-sans);
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 28px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* Fade the background only: titles and actions stay crisp as messages scroll beneath. */
-.agent-chat-root .agent-chat-header::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inset: -100%;
-    pointer-events: none;
-    border: 0;
-    border-radius: 0;
-    outline: none;
-    transform: none;
-    background: var(--surface-app);
-    -webkit-mask: radial-gradient(farthest-side at top, #000 50%, #0000);
-    mask: radial-gradient(farthest-side at top, #000 50%, #0000);
-}
+.agent-chat-root .agent-topic-navigation { width: 260px; overflow: hidden; }
+.agent-chat-root .agent-topic-navigation.is-collapsed { width: 0; }
+.agent-chat-root .agent-topic-sidebar { padding-top: 12px; }
 
 .agent-chat-root .agent-message-list {
     flex: 1;
     min-height: 0;
-    padding: calc(var(--agent-chat-header-height, 52px) + var(--agent-chat-safe-x, 16px)) var(--agent-chat-safe-x, 16px) var(--agent-chat-composer-safe, 168px);
+    padding: var(--agent-chat-safe-x, 16px) var(--agent-chat-safe-x, 16px) var(--agent-chat-composer-safe, 168px);
     overflow-y: auto;
+    scroll-padding-top: 16px;
     overflow-anchor: none;
     background: transparent;
 }
@@ -676,8 +642,8 @@
 
 /*
  * Keep the bottom controls readable without exposing the last message behind
- * the footer. This follows the header's background-only mask, with a deeper
- * reach because the dock has two control rows below the composer card.
+ * the footer. The dock has a deeper fade
+ * because its two control rows sit below the composer card.
  */
 .agent-chat-root .agent-composer-dock::before {
     content: "";
@@ -706,11 +672,6 @@
 }
 
 @media (max-width: 767px) {
-    /* Room for StudioShell hamburger over ChatHeader. */
-    .agent-chat-root .agent-chat-header {
-        padding-inline-start: 44px !important;
-    }
-
     .agent-chat-root .agent-conversation {
         max-width: 100%;
         overflow-x: hidden;
@@ -1721,7 +1682,7 @@
 }
 
 .agent-chat-root .agent-message-list:has(.agent-generation-review) {
-    scroll-padding-top: calc(var(--agent-chat-header-height, 52px) + 16px);
+    scroll-padding-top: 16px;
     scroll-padding-bottom: var(--agent-chat-composer-safe, 168px);
 }
 

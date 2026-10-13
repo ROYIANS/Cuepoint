@@ -3,7 +3,7 @@ import {Disclosure, DisclosureTitle, SelectOption, WorkspaceSelect} from "@/comp
 import {useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Copy, Download, Heart, Library, Pause, Play, Plus, Search, X} from "lucide-react";
+import {Copy, Download, Heart, HeartFill, Library, Pause, Play, Plus, Search, X} from "@/components/ui/remixIcons";
 import {db} from "@/db/database";
 import {addMusicDraft, patchMusicWork} from "@/db/music";
 import {adoptMusicWorkAsAudioTake} from "@/db/audio";
@@ -157,8 +157,7 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                                                                          onChange={(e) => setQuery(e.target.value)}/>
                     </div>
                     <Button size="sm" variant={favorites ? "secondary" : "outline"} aria-pressed={favorites}
-                            onClick={() => setFavorites(!favorites)}><Heart size={14}
-                                                                            fill={favorites ? "currentColor" : "none"}/>收藏</Button><WorkspaceSelect
+                            onClick={() => setFavorites(!favorites)}>{favorites ? <HeartFill size={14}/> : <Heart size={14}/>}收藏</Button><WorkspaceSelect
                     aria-label="作品排序" value={sort} onValueChange={setSort}><SelectOption
                     value="newest">最新</SelectOption><SelectOption value="oldest">最早</SelectOption></WorkspaceSelect>
                 </PageToolbar>
@@ -183,8 +182,7 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                             <span className="aw-time aw-muted">{timeLabel(work.durationSec)}</span><Button
                             size="icon-sm" variant="ghost" aria-label={work.favorite ? "取消收藏" : "收藏作品"}
                             disabled={busy}
-                            onClick={() => void action(() => patchMusicWork(projectId, work.id, work.revision, {favorite: !work.favorite}))}><Heart
-                            size={15} fill={work.favorite ? "currentColor" : "none"}/></Button>
+                            onClick={() => void action(() => patchMusicWork(projectId, work.id, work.revision, {favorite: !work.favorite}))}>{work.favorite ? <HeartFill size={15}/> : <Heart size={15}/>}</Button>
                         </div>
                     </div>)}
             </main>

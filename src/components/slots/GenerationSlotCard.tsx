@@ -2,7 +2,7 @@ import {binaryByteLength} from "@/domain/binary";
 import {verifyBinaryAvailable} from "@/lib/storage/binary";
 import {useWorkspaceUnavailable} from "@/lib/workspaceAvailability";
 import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
-import {Library, Plus, Trash2, Type} from "lucide-react";
+import {Library, Plus, Trash2, Type} from "@/components/ui/remixIcons";
 import {useEffect, useId, useRef, useState} from "react";
 import {toast} from "sonner";
 import {deleteMediaIfOrphan} from "@/db/media";

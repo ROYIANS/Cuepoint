@@ -1692,9 +1692,15 @@ pub fn run() {
             });
             let builder =
                 tauri::WebviewWindowBuilder::from_config(app, &app.config().app.windows[0])?
-                    .initialization_script(script);
+                    .initialization_script(script)
+                    .initialization_script(window_chrome_script());
             #[cfg(target_os = "macos")]
-            let builder = builder.data_store_identifier(store);
+            let builder = builder
+                .data_store_identifier(store)
+                .decorations(true)
+                .title_bar_style(tauri::TitleBarStyle::Overlay)
+                .hidden_title(true)
+                .traffic_light_position(tauri::LogicalPosition::new(16.0, 24.0));
             #[cfg(not(target_os = "macos"))]
             let builder = builder.data_directory(webview_profile_directory(
                 &app.path()

@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {toast} from "sonner";
-import {Download, Play} from "lucide-react";
+import {Download, Play} from "@/components/ui/remixIcons";
 import {db} from "@/db/database";
 import type {AudioProjectSnapshot} from "@/domain/audio";
 import {getAudioExportFreshness} from "@/lib/audio/fingerprint";

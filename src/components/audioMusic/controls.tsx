@@ -9,7 +9,7 @@ import {
     useState
 } from "react";
 import {Slider} from "@/components/ui/slider";
-import {ChevronRight, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX} from "lucide-react";
+import {ChevronRight, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX} from "@/components/ui/remixIcons";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Button} from "@/components/ui/button";
 

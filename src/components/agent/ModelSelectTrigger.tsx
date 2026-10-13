@@ -6,7 +6,7 @@ import {formatTokenCount} from "@/lib/agent/contextUsage";
 import {ModelIcon, ProviderIcon} from "./ModelIcons";
 import {ActionIcon} from "@lobehub/ui/base-ui";
 import * as Popover from "@radix-ui/react-popover";
-import {ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench} from "lucide-react";
+import {ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench} from "@/components/ui/remixIcons";
 import {type ReactNode, useEffect, useMemo, useRef, useState} from "react";
 import {SURFACE_ELEVATED, TEXT, TEXT_TERTIARY} from "@/components/agent/agentTheme";
 import type {ConnectorConfig, Id} from "@/domain/types";

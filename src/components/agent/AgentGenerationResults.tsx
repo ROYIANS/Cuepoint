@@ -3,7 +3,7 @@ import {AgentGenerationBatches} from "./AgentGenerationBatches";
 import {AgentAudioBatches} from "@/components/audio/AudioGenerationBatches";
 import {Link} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Check, CircleAlert, Image, LoaderCircle, Video} from "lucide-react";
+import {Check, CircleAlert, Image, LoaderCircle, Video} from "@/components/ui/remixIcons";
 import type {AgentGenerationStatus} from "@/domain/agentGeneration";
 import {MediaPreview} from "@/components/media/MediaThumb";
 

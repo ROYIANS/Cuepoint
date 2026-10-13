@@ -593,6 +593,9 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     tasks={tasks ?? []}
                     onOpenTasks={openBoard}
                     onSelectThread={openThread}
+                    onNewTopic={handleNewTopic}
+                    onRenameThread={handleRenameThread}
+                    onDeleteThread={handleDeleteThread}
                 />
             ) : (
                 <ChatWorkspace

@@ -1,7 +1,7 @@
 import {useRef, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {ChevronLeft} from "lucide-react";
+import {ChevronLeft} from "@/components/ui/remixIcons";
 import {patchScene, setSceneSlot} from "@/db/assets";
 import {SCENE_SLOTS, STUDIO_LIBRARY_ID} from "@/domain/types";
 import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";

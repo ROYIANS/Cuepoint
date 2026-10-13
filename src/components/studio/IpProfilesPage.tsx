@@ -15,7 +15,7 @@ import {
     Shirt,
     Smile,
     Undo2
-} from "lucide-react";
+} from "@/components/ui/remixIcons";
 import {setIpArchived} from "@/db/ipProfiles";
 import type {IpProfile} from "@/domain/materials";
 import {Button} from "@/components/ui/button";
@@ -159,7 +159,7 @@ export function IpProfilePage({ipId}: { ipId: string }) {
             {projects?.length ?
                 <div className="ip-project-list">{projects.map(project => <Link key={project.id} to="/p/$projectId"
                                                                                 params={{projectId: project.id}}><FolderOpen
-                    size={20} strokeWidth={1.5} aria-hidden/>
+                    size={20} aria-hidden/>
                     <div>
                         <strong>{project.name}</strong><span>{project.archivedAt ? "已归档 · " : ""}{PROJECT_KINDS.find(kind => kind.id === (project.kind ?? "video"))?.label ?? "未知类型"} · 更新于 {dateLabel(project.updatedAt)}</span>
                     </div>
@@ -172,10 +172,10 @@ export function IpProfilePage({ipId}: { ipId: string }) {
                 <Button asChild variant="outline"><Link to="/assets" search={{ip: profile.id}}>打开素材库<ArrowUpRight
                     aria-hidden/></Link></Button></div>
             <div className="ip-material-entry-grid"><Link to="/assets" search={{ip: profile.id, view: "media"}}><Image
-                size={23} strokeWidth={1.5} aria-hidden/><h3>媒体与资料</h3><p>图片、视频、音频和文档</p>
+                size={23} aria-hidden/><h3>媒体与资料</h3><p>图片、视频、音频和文档</p>
                 <span>{materials?.filter(material => ["image", "video", "audio", "document"].includes(material.kind)).length ?? 0} 份素材<ArrowUpRight
                     size={14} aria-hidden/></span></Link><Link to="/assets" search={{ip: profile.id, view: "settings"}}><Layers3
-                size={23} strokeWidth={1.5} aria-hidden/><h3>创作设定</h3><p>角色、场景、道具与风格</p>
+                size={23} aria-hidden/><h3>创作设定</h3><p>角色、场景、道具与风格</p>
                 <span>{materials?.filter(material => ["character", "scene", "prop", "style"].includes(material.kind)).length ?? 0} 份设定<ArrowUpRight
                     size={14} aria-hidden/></span></Link></div>
         </section>}
@@ -194,7 +194,7 @@ function DerivativeEntries() {
             title: "表情包",
             text: "情绪、动作与日常表达"
         }, {icon: Shirt, title: "周边设计", text: "把创作带入生活"}].map(item => <article key={item.title}>
-            <item.icon size={20} strokeWidth={1.5} aria-hidden/>
+            <item.icon size={20} aria-hidden/>
             <h3>{item.title}</h3><p>{item.text}</p><span>即将推出</span></article>)}</div>
     </section>;
 }

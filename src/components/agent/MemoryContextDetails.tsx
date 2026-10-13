@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {Link} from "@tanstack/react-router";
-import {BookOpen, Check, Minus, RotateCcw} from "lucide-react";
+import {BookOpen, Check, Minus, Restore} from "@/components/ui/remixIcons";
 import type {AgentRun} from "@/domain/agent";
 import type {MemorySelection} from "@/domain/memoryRetrieval";
 import {getThreadMemoryExclusions, setThreadMemoryExcluded,} from "@/db/memoryRetrieval";
@@ -241,7 +241,7 @@ function MemoryContextContent({
                             })
                         ) : (
                             <div className="memory-context-empty">
-                                <BookOpen size={28} strokeWidth={1.2}/>
+                                <BookOpen size={28}/>
                                 <h3>本次没有带入记忆</h3>
                                 <p>
                                     没有匹配的已启用内容，或当前预算不足。项目通用规则同样受预算限制。
@@ -270,7 +270,7 @@ function MemoryContextContent({
                                         disabled={!!pending}
                                         onClick={() => void exclude(id, false)}
                                     >
-                                        <RotateCcw/>
+                                        <Restore/>
                                         恢复
                                     </Button>
                                 )}

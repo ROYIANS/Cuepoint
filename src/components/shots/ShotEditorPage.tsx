@@ -44,7 +44,7 @@ import {
     Trash2,
     Type,
     Users,
-} from "lucide-react";
+} from "@/components/ui/remixIcons";
 import {
     type CSSProperties,
     type Dispatch,

@@ -3,7 +3,7 @@ import {useNavigate} from "@tanstack/react-router";
 import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
 import {useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
-import {Plus} from "lucide-react";
+import {Plus} from "@/components/ui/remixIcons";
 import {CoverCard, LibraryGrid} from "@/components/studio/CoverCard";
 import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";
 import {Button} from "@/components/ui/button";

@@ -6,7 +6,7 @@ import {ProductionProposalsPanel} from "./ProductionProposalsPanel";
 import {useShotMedia} from "@/lib/useShotMedia";
 import {Link} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {AlertTriangle, CheckCircle2, Download, Printer} from "lucide-react";
+import {AlertTriangle, CheckCircle2, Download, Printer} from "@/components/ui/remixIcons";
 import {normalizeProjectMode} from "@/domain/types";
 import {Button} from "@/components/ui/button";
 import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";

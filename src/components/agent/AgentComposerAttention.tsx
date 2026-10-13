@@ -1,5 +1,5 @@
 import {useProductQuery} from "@/lib/storage/hooks";
-import {ArrowUpRight, CircleAlert} from "lucide-react";
+import {ArrowUpRight, CircleAlert} from "@/components/ui/remixIcons";
 import type {AgentRun, AgentTask} from "@/domain/agent";
 import type {ChatMessage} from "@/domain/types";
 import {selectActivityAttention} from "@/lib/agent/activityAttention";

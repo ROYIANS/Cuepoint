@@ -1,7 +1,7 @@
 import {useRef, useState} from "react";
 import {Link} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {ArrowLeft, ArrowUpRight, BookOpen, History, Pause, Pencil, Plus, Search, Trash2,} from "lucide-react";
+import {ArrowLeft, ArrowUpRight, BookOpen, History, Pause, Pencil, Plus, Search, Trash2,} from "@/components/ui/remixIcons";
 import {toast} from "sonner";
 import type {ProjectMemory} from "@/domain/projectMemory";
 import {
@@ -130,7 +130,7 @@ export function ProjectMemoryPage({
                             ))
                         ) : (
                             <div className="memory-empty">
-                                <BookOpen size={28} strokeWidth={1.3}/>
+                                <BookOpen size={28}/>
                                 <h2>
                                     {result.records.length ? "没有匹配的记忆" : "还没有项目记忆"}
                                 </h2>
@@ -158,7 +158,7 @@ export function ProjectMemoryPage({
                         />
                     ) : (
                         <div className="memory-detail-placeholder">
-                            <BookOpen size={36} strokeWidth={1}/>
+                            <BookOpen size={36}/>
                             <h2>{selectedId ? "这条记忆已被删除" : "选择一条项目记忆"}</h2>
                             <p>选择一条记忆，查看它的适用条件、原始依据与修订过程。</p>
                             <small>已启用的记忆会按当前需求引用；也可标记为项目通用。</small>

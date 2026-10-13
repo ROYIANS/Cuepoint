@@ -4,7 +4,7 @@ import {toast} from "sonner";
 import {type CSSProperties, useCallback} from "react";
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
-import {ArrowDown, ArrowUp, ChevronDown, CopyPlus, GripVertical, Plus} from "lucide-react";
+import {ArrowDown, ArrowUp, ChevronDown, CopyPlus, GripVertical, Plus} from "@/components/ui/remixIcons";
 import {useVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
 import {type ColumnDef, SHOT_COLUMNS} from "@/domain/columns";
 import {emptySlot} from "@/domain/slot";

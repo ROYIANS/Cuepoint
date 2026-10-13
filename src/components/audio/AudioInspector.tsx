@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Check, Library, Plus, Trash2, Volume2} from "lucide-react";
+import {Check, Library, Plus, Trash2, Volume2} from "@/components/ui/remixIcons";
 import {db} from "@/db/database";
 import {addAudioClip, deleteAudioTake, patchAudioSegment} from "@/db/audio";
 import {promoteLegacyMaterial} from "@/db/materials";

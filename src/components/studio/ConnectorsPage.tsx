@@ -1,6 +1,6 @@
 import {SearchConnection} from "./SearchConnection";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Check, Plug} from "lucide-react";
+import {Check, Plug} from "@/components/ui/remixIcons";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import {Badge} from "@/components/ui/badge";
@@ -259,7 +259,7 @@ export function ConnectorsPage() {
                                 <div className="flex shrink-0 flex-wrap items-center gap-3">
                                     {connected ? (
                                         <Badge variant="outline" className="gap-1">
-                                            <Check className="size-3" strokeWidth={2.5} aria-hidden/>
+                                            <Check className="size-3" aria-hidden/>
                                             已连接
                                         </Badge>
                                     ) : (

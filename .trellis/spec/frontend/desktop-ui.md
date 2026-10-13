@@ -2,7 +2,7 @@
 
 ## 1. Scope and trigger
 
-All Studio and project pages share window chrome, neutral surfaces, typography and overlay behavior. This contract was implemented on 2026-10-10 to prepare the existing application for desktop packaging. It governs presentation; feature owners retain queries, mutation commands, drafts, playback, runtime sessions and persistence barriers.
+All Studio and project pages share window chrome, neutral surfaces, typography and overlay behavior. The 2026-10-13 user-approved shell replaces the previous edge-to-edge/wide-navigation presentation with a fixed icon rail, separate top bar and one rounded working surface. It governs presentation; feature owners retain queries, mutation commands, drafts, playback, runtime sessions and persistence barriers.
 
 ## 2. Signatures and owners
 
@@ -17,6 +17,10 @@ AppFrame({children, onImport?, contentScroll = "auto"}: {
 ```
 
 `StudioShell` and `WorkspaceChrome` supply their existing import handlers and guarded content. `AppFrame` does not create a router, data provider, project owner or Agent runtime. Its `NAV` owns destination labels and active state; `/agent/tasks` must never activate the chat destination.
+
+`src/components/layout/AppHeaderPortal.tsx` exports `AppHeaderPortal({children}: {children: ReactNode})`. It portals actual feature-header presentation into AppFrame's stable DOM target while preserving the original React providers and callbacks. The target owns no business/query state; responsiveness changes CSS, not the target or feature owner tree. A custom header suppresses the fallback section label.
+
+`src/lib/windowChrome.ts` exports `getWindowChromeKind(): "macos-overlay" | "native" | "browser"`. Genuine runtime detection precedes the frozen Rust-injected `window.__CUEPOINT_WINDOW_CHROME__ = {version:1,kind}` presentation marker. Browser ignores incidental markers; unknown native chrome does not reserve macOS traffic-light space. It calls no IPC and is separate from storage-profile selection.
 
 `src/components/layout/PageLayout.tsx` exports:
 
@@ -34,8 +38,10 @@ Header slots accept ReactNode. `PageContent` renders a div and adds width/paddin
 
 ## 3. Presentation and lifecycle contracts
 
-- `src/styles.css` is the shared token owner: navigation `#0c0c0c`, application `#101010`, panel `#151515`, elevated `#202020`. Existing semantic foreground, border and focus tokens govern controls. Agent's LobeHub/antd adapter is scoped to `.agent-chat-root`; never import antd reset CSS globally.
-- The frame fills `100dvh`, with no outer inset, decorative click canvas or additional rounded content frame. Navigation is 176px at widths >=1200, 64px at 768–1199, and a left Sheet below 768. All modes expose the same destinations and active state.
+- `src/styles.css` is the shared token owner: shell chrome `#242424`, application `#101010`, panel `#151515`, elevated `#202020`; the navigation token `#0c0c0c` remains for the mobile Sheet. Shared shell geometry is inset 8px, radius 16px, top row 44px and rail width 56px; mobile uses 4px inset and 12px radius. Desktop navigation targets are 36px with 16px glyphs; mobile navigation rows retain 44px targets. Header shortcuts default to muted foreground and brighten on enabled hover/press, keeping title text primary. Existing semantic foreground, border and focus tokens govern controls. Agent's LobeHub/antd adapter is scoped to its body or header theme host; never import antd reset CSS globally.
+- The frame fills `100dvh`. AppFrame owns a separate top bar, a fixed approximately 56px desktop icon rail at all widths >=768, and one inset/rounded working surface. Below 768, application navigation opens in a left Sheet. Preserve route predicates, import callbacks, tooltips and accessible names. Global destinations use official matching @remixicon/react Line/Fill family components, with Fill only for the active destination. Do not add a second shell around the chat column or a workbench.
+- macOS Tauri retains real native traffic lights with decorated Overlay/hidden native title; the application top row reserves their space. Pure titlebar space drags/double-clicks through pinned Tauri drag-region support; interactive controls explicitly exclude dragging. Only allow-start-dragging and allow-internal-toggle-maximize window capabilities are required. Windows/Linux retain their native title bars in this contract; browser shows application chrome without fake traffic lights or native calls.
+- Agent and project header JSX appears in the external top bar through AppHeaderPortal. Agent's scoped header theme/popup host stays distinct from the body `.agent-chat-root` so menus keep theme and escape working-surface clipping without changing other Agent popup lookup. The Agent sidebar toggle controls topic navigation only. Project header actions/tabs can wrap into a second row; guards and callbacks remain with WorkspaceChrome. Collection/detail page headings retain their semantic content inside the surface.
 - Functional page h1 is sans 24px/600/32px; narrow (<768) and dense workbench h1 are 20px/600/28px. Body is 14px/22px, metadata 12px/18px. Use restrained neutral grouping; avoid decorative accent strips and nested cards. Keep shadcn control geometry and focus styling (normal 36px, compact 32px), rather than flattening every control with feature CSS.
 - Shared Radix Tabs use `src/components/ui/tabs.tsx`: 36px panel-colored track and 32px triggers, with elevated surface for the selected trigger. Selection adds no static border, ring or shadow; keyboard `focus-visible` retains the shared ring. Consumers may adjust wrapping, width and compact inline padding, but must not replace the selected surface, radius or focus treatment. Do not mix a feature-specific underline/transparent/rectangular skin with the shared selected state. Navigation links and independent filters retain their own semantics.
 - Collection content uses available width, detail content caps at 1040px, reading documents at 880px, workbenches use available width. Shared padding is 24px; workbenches 16px 20px; narrow pages 16px. Header actions and toolbars wrap without widening the window. Tables and timelines may scroll horizontally within their own containers.
@@ -43,8 +49,9 @@ Header slots accept ReactNode. `PageContent` renders a div and adds width/paddin
 - Controlled `Dialog`, `Sheet` and `AlertDialog` integrate `createOverlayFocusReturn()` from `src/lib/overlayFocusReturn.ts`. It captures the opening focus, delegates caller autofocus handlers and queues a fallback only if the closing focus is body/null. It respects `preventDefault`, connectedness, a newer opening generation, Radix Trigger restoration and valid custom focus. It must not prevent AlertDialog's default initial Cancel focus.
 - Every AlertDialog registers its safe cancellation control through `AlertDialogCancel`. Existing manual-close handlers may use `asChild` plus wrapper `onClick={event => event.preventDefault()}` so Slot runs the child owner once and suppresses duplicate primitive close behavior. Preserve disabled/pending/blocker behavior.
 - Short-window overlays use bounded height, a scrollable body and reachable header/footer. Pending and failed writes retain existing owner rules and drafts. Escape and close restore focus after the closing animation, without scrolling the underlying page.
+- Application-owned general UI icons use pinned `@remixicon/react` through the statically imported semantic mapping in `src/components/ui/remixIcons.tsx`. Both Remix Line and Fill variants use filled SVG paths; do not apply Lucide stroke-width/fill rules. The adapter removes LobeHub's transparent fill and stroke geometry while retaining color, size, class, aria and ref. Navigation directly uses matched official pairs. Model/provider brand marks and measurement SVG keep their distinct owners. Historical immutable comparisons retain Lucide as a development dependency; do not rewrite snapshot bytes or dependency-owned icon internals.
 - Agent icon buttons requiring native keyboard activation import `ActionIcon` from `@lobehub/ui/base-ui`. The installed deprecated root export renders a focusable div without Enter/Space activation. Keep accessible labels and existing props/handlers; do not nest buttons in links.
-- Print remains white A4 landscape with 10mm margins. `@media print` releases height/overflow of the frame, content surface and workspace ancestors, hides navigation/mobile header/workspace header/print toolbar/toasts, and keeps storyboard cards together where possible. Screen theme changes must not recolor printable output.
+- Print remains white A4 landscape with 10mm margins. `@media print` releases height/overflow of the frame/body/content surface/workspace ancestors, clears shell inset/border/radius, hides top bar/navigation/workspace header/print toolbar/toasts, and keeps storyboard cards together where possible. Screen theme changes must not recolor printable output.
 
 ## 4. Validation and error matrix
 
@@ -58,13 +65,15 @@ Header slots accept ReactNode. `PageContent` renders a div and adds width/paddin
 | Short window / long dialog | Body scrolls; close, cancel and commit remain reachable |
 | Overlay caller prevents autofocus | Helper respects caller; no forced focus return |
 | Opener removed or another element already focused | No fallback focus theft |
-| Window crosses 768 or 1200 | Navigation changes presentation; runtime, input and playback owners remain mounted |
+| Window crosses 768 or 1200 | Sheet/rail presentation changes only at 768; desktop rail never expands; runtime, input and playback owners remain mounted |
+| Native marker missing or unrelated | Browser ignores it; genuine native uses ordinary native presentation, never changes storage owner |
+| Titlebar control clicked | Original action executes; dragging/maximizing does not intercept controls or menus |
 
 ## 5. Good, base and bad cases
 
 - Good: `PageContent mode="detail" role="main"` combines shared width with a feature's ownership guards; `PageHeader actions={<Button .../>}` keeps its existing command callback.
 - Base: collection page uses `LibraryHeader`, `PageToolbar` and contextual `PageState`, preserving sort/search state and cards' keyboard menus.
-- Bad: a new page adds a 36px marketing headline, custom global surface colors, another outer frame, or a scroll wrapper around an existing workbench. A controlled confirmation without `AlertDialogCancel` leaves initial focus outside the modal.
+- Bad: a new page adds a 36px marketing headline, feature-specific shell colors, a second rounded frame, or a scroll wrapper around an existing workbench. A controlled confirmation without `AlertDialogCancel` leaves initial focus outside the modal.
 
 ## 6. Verification and assertion points
 
@@ -73,6 +82,7 @@ Header slots accept ReactNode. `PageContent` renders a div and adds width/paddin
 - Tabs: verify Material media/settings, World query-backed categories and Music creator/workspace modes. Mouse selection has no permanent outline; arrow keys move selection and expose keyboard focus; narrow wrapping must not widen the document. Check settled content after route/draft changes before recording the selected state.
 - Preserve meaningful business tests for asset ownership/drafts, shot filters/lazy rows/undo/episode delivery, audio arrangement and approvals, music variants/duration, memory CAS and Agent execution/context. Pure visual changes need native evidence, not implementation-mirroring snapshots.
 - Full frontend gate: typecheck (`pnpm lint`), tests, quality, quality self-test, model-bank verification and build. Use the explicit local pnpm path from AGENTS.md. Record actual failures and fixes before the passing run.
+- `tests/windowChrome.test.ts`: incidental browser markers, no window/IPC, storage-independent native presentation and unknown-marker handling. Real macOS inspection additionally verifies traffic-light alignment, drag/control exclusion, double-click/fullscreen and minimum 760x520 size; browser/build proof cannot replace it. Report Windows/Linux runtime evidence separately.
 
 ## 7. Wrong versus correct
 

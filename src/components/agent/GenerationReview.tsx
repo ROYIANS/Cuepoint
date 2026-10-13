@@ -2,7 +2,7 @@ import {useId, useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {Input, Select} from "antd";
 import {Link} from "@tanstack/react-router";
-import {ArrowUpRight, Image, LoaderCircle, RotateCcw, Video} from "lucide-react";
+import {ArrowUpRight, Image, LoaderCircle, Restore, Video} from "@/components/ui/remixIcons";
 import {toast} from "sonner";
 import {getGenerationPreferenceState, saveGenerationPreference} from "@/db/generationPreferences";
 import type {AgentToolCall} from "@/domain/agent";
@@ -179,7 +179,7 @@ function GenerationReviewForm({call, initial, busy, onAction}: {
                 setDraft(initial);
                 setError(undefined);
                 setNotice(undefined);
-            }}><RotateCcw size={13} aria-hidden/>恢复 AI 建议
+            }}><Restore size={13} aria-hidden/>恢复 AI 建议
             </button>
         </div>
         <p className="agent-generation-cost-note">确认后向所选供应商提交，可能产生费用。生成结果会先保存到本地。</p>

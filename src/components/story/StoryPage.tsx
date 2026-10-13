@@ -4,7 +4,7 @@ import {BeatTextField} from "./BeatTextField";
 import {type TextDraftStatusChange, useTextDraftRetention} from "@/lib/useTextDraftRetention";
 import {changedDraftFields} from "@/lib/draftConflict";
 import {useVideoWorkspaceQuery, useVideoWorkspaceReadStatus, useVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
-import {ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2} from "lucide-react";
+import {ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2} from "@/components/ui/remixIcons";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {type Episode, normalizeEpisodeStory, type StoryBeat} from "@/domain/types";
 import {Button} from "@/components/ui/button";

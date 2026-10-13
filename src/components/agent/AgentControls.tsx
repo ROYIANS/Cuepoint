@@ -18,7 +18,7 @@ import {
     ShieldCheck,
     SlidersHorizontal,
     Upload
-} from "lucide-react";
+} from "@/components/ui/remixIcons";
 import {toast} from "sonner";
 import {type AgentPermissionMode, GENERAL_AGENT_ID} from "@/domain/agent";
 import {getGeneralAgentConfig, updateGeneralAgentConfig} from "@/db/agentSettings";

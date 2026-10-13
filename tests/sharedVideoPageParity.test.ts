@@ -47,6 +47,7 @@ import {emptyEpisode, emptyProject, emptyShot} from "@/db/productionRecords";
 import {AppFrame} from "@/components/layout/AppFrame";
 import {PageHeader, PageState} from "@/components/layout/PageLayout";
 import {WorkspaceChrome} from "@/components/workspace/WorkspaceChrome";
+import {AppHeaderPortal} from "@/components/layout/AppHeaderPortal";
 import {ProjectHomePage} from "@/components/workspace/ProjectHomePage";
 import {WorkspaceCapabilityState} from "@/components/workspace/WorkspaceCapabilityState";
 import {StoryPage} from "@/components/story/StoryPage";
@@ -122,7 +123,8 @@ describe("shared video product page consumers", () => {
         const {project, episode} = fixture(storage); host.pathname = `/p/${project.id}/e/${episode.id}/shots`;
         const tree = render(() => WorkspaceChrome({projectId: project.id}), shellResults(project, episode));
         expect(tree.some(node => node.type === AppFrame)).toBe(true);
-        expect(tree.some(node => node.type === "header" && String(node.props.className).includes("workspace-header"))).toBe(true);
+        expect(tree.some(node => node.type === AppHeaderPortal)).toBe(true);
+        expect(tree.some(node => node.type === "div" && String(node.props.className).includes("workspace-header"))).toBe(true);
         expect(tree.some(node => node.type === Outlet)).toBe(true);
         expect(tree.some(node => node.type === WorkspaceCapabilityState)).toBe(false);
     });

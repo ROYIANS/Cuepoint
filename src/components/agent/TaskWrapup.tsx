@@ -18,7 +18,7 @@ import {
     RefreshCw,
     Sparkles,
     X
-} from "lucide-react";
+} from "@/components/ui/remixIcons";
 import {toast} from "sonner";
 import type {AgentReasoningEffort, AgentTask} from "@/domain/agent";
 import type {ConnectorConfig} from "@/domain/types";
@@ -385,7 +385,7 @@ export function TaskWrapup({
         <div className="task-review-heading">
             <div><span className="task-review-eyebrow">REVIEW & REFLECTION</span><h3>让这次工作，有一个清晰的收尾。</h3>
                 <p>检查交付，留下决策与经验，再确认完成。</p></div>
-            <ClipboardCheck size={24} strokeWidth={1.3} aria-hidden/></div>
+            <ClipboardCheck size={24} aria-hidden/></div>
         {readError && <div className="task-review-error" role="alert">
             <p>暂时无法读取验收总结。{draft ? "你的草稿仍保留，恢复读取后可继续保存。" : "任务和对话仍可查看。"}</p>
             <details>

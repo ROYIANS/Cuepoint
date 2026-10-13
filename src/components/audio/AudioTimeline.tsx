@@ -8,14 +8,14 @@ import {
     Copy,
     Download,
     Expand,
-    Magnet,
+    Snap,
     MoreHorizontal,
     Music2,
     Pause,
     Play,
     Plus,
-    RotateCcw,
-    RotateCw,
+    Undo2,
+    Redo2,
     Scissors,
     SkipBack,
     SlidersHorizontal,
@@ -24,7 +24,7 @@ import {
     X,
     ZoomIn,
     ZoomOut
-} from "lucide-react";
+} from "@/components/ui/remixIcons";
 import type {AudioClip, AudioExport, AudioProjectSnapshot, AudioTake, AudioTrack} from "@/domain/audio";
 import {addAudioTrack, patchAudioTrack} from "@/db/audio";
 import {AudioPreviewPlayer} from "@/lib/audio/engine";
@@ -420,10 +420,10 @@ export function AudioTimeline({
                                                                                    disabled={busy || !history.canUndo}
                                                                                    aria-label="撤销时间线编辑"
                                                                                    title="撤销 · ⌘/Ctrl Z"
-                                                                                   onClick={() => void action(() => history.undo())}><RotateCcw/></Button><Button
+                                                                                   onClick={() => void action(() => history.undo())}><Undo2/></Button><Button
                 size="icon-sm" variant="ghost" disabled={busy || !history.canRedo} aria-label="重做时间线编辑"
                 title="重做 · ⌘/Ctrl Shift Z"
-                onClick={() => void action(() => history.redo())}><RotateCw/></Button><Button size="icon-sm"
+                onClick={() => void action(() => history.redo())}><Redo2/></Button><Button size="icon-sm"
                                                                                               variant="ghost"
                                                                                               disabled={busy || !splitAvailable}
                                                                                               aria-label="在播放位置分割"
@@ -518,7 +518,7 @@ export function AudioTimeline({
                 <div className="at-toolbar-actions"><Button variant={snapping ? "secondary" : "ghost"} size="icon-sm"
                                                             aria-label="吸附片段边缘和播放头" aria-pressed={snapping}
                                                             title="吸附 · 拖动时按 Alt 暂停吸附"
-                                                            onClick={() => setSnapping(!snapping)}><Magnet
+                                                            onClick={() => setSnapping(!snapping)}><Snap
                     size={13}/></Button><Popover><PopoverTrigger asChild><Button variant="ghost" size="sm"><Plus
                     size={13}/>音轨</Button></PopoverTrigger><PopoverContent side="top" align="end"
                                                                              className="at-track-menu">{(["voice", "music", "effects"] as const).map((role) =>

@@ -47,6 +47,7 @@ const require = createRequire(import.meta.url);
 const playwrightEntry = process.env.E02_PLAYWRIGHT_PATH ?? import.meta.resolve("playwright");
 const playwrightPackage = fileURLToPath(new URL("./package.json", new URL(playwrightEntry, "file://")));
 const report = {mode, safeAreaEvidence: surrogate ? "CSS env-to-custom-property test surrogate; no OS/device emulation" : "Actual Chromium env bottom 0; no iOS/device claim",
+    comparisonScope: "Immutable E02 topic-row/body-CSS snapshot inside the current shared shell; the external header is current production code in every mode",
     versions: {node: process.version, vite: require("vite/package.json").version, playwright: require(playwrightPackage).version},
     cases: [], errors: [], documents: [], styles: [], expanded: [], scroll: [], focus: []};
 let browser, page, url;
@@ -171,7 +172,7 @@ try {
         });
         await test("actual header context menu routes rename/delete to selected A", async () => {
             await reset();
-            const more = page.locator(".agent-chat-header [role=button]").filter({has: page.locator("svg.lucide-ellipsis")});
+            const more = page.locator(".agent-chat-header").getByRole("button", {name: "话题更多操作", exact: true});
             await more.click(); await page.getByRole("menuitem", {name: "重命名", exact: true}).click();
             const rename = page.getByRole("dialog", {name: "重命名话题"}); await rename.waitFor();
             assert.equal(await rename.locator("input").inputValue(), "Selected topic A"); await page.keyboard.press("Escape"); await rename.waitFor({state: "hidden"});
@@ -209,7 +210,7 @@ try {
             const narrow = width < 768, mobileFixed = narrow && !baseline;
             const gutter = mobileFixed ? "8px" : "16px";
             assert.equal(measurement.list.paddingLeft, gutter); assert.equal(measurement.list.paddingRight, gutter);
-            assert.equal(measurement.list.paddingTop, "68px", "header clearance stays 52+16");
+            assert.equal(measurement.list.paddingTop, baseline ? "68px" : "16px", "transcript starts inside its surface below the external header");
             assert.equal(measurement.dock.paddingLeft, gutter); assert.equal(measurement.dock.paddingRight, gutter);
             let expectedBottom = "16px";
             if (mobileFixed) expectedBottom = surrogate ? "32px" : "12px";
@@ -221,7 +222,8 @@ try {
             assert.equal(measurement.overflow.document, false); assert.equal(measurement.overflow.list, "auto");
             assert.equal(measurement.dock.bottom, measurement.column.bottom);
             assert.equal(measurement.list.paddingBottom, measurement.composerSafe.trim());
-            assert.equal(measurement.header.paddingLeft, narrow ? "44px" : "16px");
+            assert.equal(measurement.header.paddingLeft, "0px", "the external header has no obsolete internal/mobile reservation");
+            assert.ok(measurement.header.bottom <= measurement.column.top, "shared header remains outside the conversation column");
             if (width === 1440) {assert.equal(measurement.content.width, 800); assert.ok(parseFloat(measurement.content.marginLeft) > 0);}
             // Real wheel scroll, then inspect the final production message above the dock.
             await page.locator(".agent-message-list").hover(); await page.mouse.wheel(0, 10000);

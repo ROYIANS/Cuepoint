@@ -1,4 +1,4 @@
-import {BookOpen} from "lucide-react";
+import {BookOpen} from "@/components/ui/remixIcons";
 import type {MemorySourceRef} from "@/domain/projectMemory";
 import {Button} from "@/components/ui/button";
 

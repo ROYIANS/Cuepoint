@@ -13,7 +13,7 @@ import {
     Plus,
     Sparkles,
     X
-} from "lucide-react";
+} from "@/components/ui/remixIcons";
 import {db} from "@/db/database";
 import {
     addAudioChapter,

@@ -294,6 +294,19 @@ pub(crate) fn product_open_external(window: WebviewWindow, url: String) -> Resul
         .map_err(|_| Error::new("external", "System browser could not open the link"))
 }
 
+/// Presentation-only startup state. Never combine chrome with persistence identity.
+pub(crate) fn window_chrome_script() -> String {
+    let kind = if cfg!(target_os = "macos") {
+        "macos-overlay"
+    } else {
+        "native"
+    };
+    let config = serde_json::json!({"version": 1, "kind": kind});
+    format!(
+        "Object.defineProperty(window,'__CUEPOINT_WINDOW_CHROME__',{{value:Object.freeze({config}),writable:false,configurable:false}});"
+    )
+}
+
 pub(crate) fn profile(identifier: &str, sqlite: bool) -> Result<(String, [u8; 16])> {
     if identifier.is_empty()
         || identifier.len() > 160

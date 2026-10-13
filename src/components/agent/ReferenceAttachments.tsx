@@ -2,7 +2,7 @@ import type {AgentRun} from "@/domain/agent";
 import type {AgentImageReference, AgentSelectedReferences} from "@/domain/referenceInput";
 import {useEffect, useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {FileText, ImageIcon, Paperclip, X} from "lucide-react";
+import {FileText, ImageIcon, Paperclip, X} from "@/components/ui/remixIcons";
 import {binaryPreviewMessage, useBinaryPreview} from "@/lib/media";
 import {getReferenceSource} from "@/db/references";
 import {type ProjectReference, type ReferenceAttachment, referenceLocatorLabel} from "@/domain/references";

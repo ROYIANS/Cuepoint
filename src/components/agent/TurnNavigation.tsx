@@ -35,8 +35,8 @@ export function TurnNavigation({messages, listRef, contentRef, onNavigate}: {
         if (!list || !content) return;
         let frame = 0;
         const updateActive = () => {
-            const header = parseFloat(getComputedStyle(list).getPropertyValue("--agent-chat-header-height")) || 52;
-            setActive(getActiveTurnIndex(offsets.current, list.scrollTop + header + 16));
+            const clearance = parseFloat(getComputedStyle(list).scrollPaddingTop) || 16;
+            setActive(getActiveTurnIndex(offsets.current, list.scrollTop + clearance));
         };
         const measure = () => {
             frame = 0;
@@ -131,8 +131,8 @@ export function TurnNavigation({messages, listRef, contentRef, onNavigate}: {
                                                     const anchor = anchors.current.find((element) => element.dataset.turnAnchor === turn.id);
                                                     if (!list || !anchor) return;
                                                     onNavigate();
-                                                    const header = parseFloat(getComputedStyle(list).getPropertyValue("--agent-chat-header-height")) || 52;
-                                                    list.scrollTop += anchor.getBoundingClientRect().top - list.getBoundingClientRect().top - header - 16;
+                                                    const clearance = parseFloat(getComputedStyle(list).scrollPaddingTop) || 16;
+                                                    list.scrollTop += anchor.getBoundingClientRect().top - list.getBoundingClientRect().top - clearance;
                                                     setActive(index);
                                                     // Touch receives the same preview as keyboard/hover; tapping outside dismisses it.
                                                     showPreview(index, event.currentTarget);

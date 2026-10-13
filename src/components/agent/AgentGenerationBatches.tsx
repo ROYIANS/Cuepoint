@@ -15,7 +15,7 @@ import {
     Play,
     Trash2,
     X
-} from "lucide-react";
+} from "@/components/ui/remixIcons";
 import {resolveConnector} from "@/db/connectors";
 import {
     applyBatchSelections,

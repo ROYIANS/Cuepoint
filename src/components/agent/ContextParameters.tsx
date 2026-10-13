@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import {InputNumber, Switch} from "antd";
-import {ArrowLeft, RotateCcw} from "lucide-react";
+import {ArrowLeft, Restore} from "@/components/ui/remixIcons";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {toast} from "sonner";
 import type {ProductStore} from "@/lib/storage/types";
@@ -99,7 +99,7 @@ export function ContextParameters({threadId, onBack}: { threadId?: string; onBac
         {threadId && <div className="agent-parameter-actions">
             <button type="button" disabled={disabled}
                     onClick={() => void save(() => resetThreadContextPolicy(threadId), "已恢复新对话默认参数")}>
-                <RotateCcw size={13}/>恢复默认
+                <Restore size={13}/>恢复默认
             </button>
             <button type="button" disabled={disabled}
                     onClick={() => void save(() => saveContextPolicyAsDefault(threadId), "已设为新对话默认参数")}>设为默认

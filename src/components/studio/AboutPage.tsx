@@ -1,4 +1,4 @@
-import {ExternalLink, Heart, QrCode} from "lucide-react";
+import {ExternalLink, Heart, QrCode} from "@/components/ui/remixIcons";
 import {useRef, useState} from "react";
 import {toast} from "sonner";
 import {Button} from "@/components/ui/button";

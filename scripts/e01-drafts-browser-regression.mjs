@@ -347,7 +347,7 @@ try {
         await navigate(`/agent/${ids.thread}`); await page.locator(".agent-task-summary-label").click();
         await page.getByRole("button", {name: "工作记录", exact: true}).click(); await page.getByRole("button", {name: "新记录"}).click(); await fillRecord();
         const requestDelete = async () => {
-            await page.locator(".agent-topic-row.is-active .agent-topic-row-actions [role=button]").filter({has: page.locator("svg.lucide-trash-2")}).evaluate(element => element.click());
+            await page.locator(".agent-topic-row.is-active .agent-topic-row-actions").getByRole("button", {name: "删除", exact: true}).evaluate(element => element.click());
             await page.getByRole("alertdialog", {name: "删除话题"}).getByRole("button", {name: "删除", exact: true}).click();
         };
         await requestDelete(); await continueEditing();

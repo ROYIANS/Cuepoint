@@ -1,5 +1,5 @@
 import {Dropdown} from "antd";
-import {Check, ChevronDown} from "lucide-react";
+import {Check, ChevronDown} from "@/components/ui/remixIcons";
 import {useState} from "react";
 import type {AgentReasoningEffort} from "@/domain/agent";
 import type {ConnectorConfig} from "@/domain/types";

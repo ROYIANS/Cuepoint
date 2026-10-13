@@ -14,7 +14,7 @@
     position: absolute;
     z-index: 4;
     left: 0;
-    top: calc(var(--agent-chat-header-height, 52px) + 24px);
+    top: 24px;
     bottom: calc(var(--agent-chat-composer-safe, 168px) + 12px);
     width: 28px;
     display: flex;
