@@ -21,7 +21,7 @@ import {db as productDb} from "@/db/database";
 import {updateRunPlanAndComplete} from "@/db/agentTools";
 import type {AgentPermissionMode, AgentToolCall, AgentToolSchema} from "@/domain/agent";
 
-export type {AgentToolContext, AgentToolDefinition, TypedToolDefinition} from './toolDefinition';
+export type {AgentToolContext, AgentToolDefinition} from './toolDefinition';
 
 export function requiresToolApproval(mode: AgentPermissionMode, tool: Pick<AgentToolDefinition, "effect" | "highRisk" | "requiresConfirmation">, args: unknown): boolean {
     if (!["ask", "assist", "full"].includes(mode)) throw new Error("未知授权模式");

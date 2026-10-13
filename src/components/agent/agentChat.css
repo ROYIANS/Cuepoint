@@ -719,15 +719,6 @@
     background: rgb(200 200 200 / 90%);
 }
 
-/*
- * ChatItem loading badge uses colorPrimary as a solid fill. Our primary is
- * near-white, so the disc reads filled — keep only the Loader2 ring.
- */
-.agent-chat-root [style*="--chat-item-avatar-size"] > *:last-child {
-    background: transparent !important;
-    color: rgb(238 238 238) !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
     .agent-chat-root .agent-thinking-matrix-dot {
         transition: none;
@@ -792,9 +783,27 @@
 }
 
 
-/* Keep response metadata on ChatItem's content axis and in normal flow. */
+/* Assistant text is drawn flat on the surface; users keep a right-aligned bubble. */
 .agent-chat-root .agent-transcript-item {
-    margin-block-end: 0 !important;
+    min-width: 0;
+}
+
+.agent-chat-root .agent-transcript-user {
+    display: flex;
+    justify-content: flex-end;
+    margin-block: 16px 8px;
+}
+
+.agent-chat-root .agent-user-bubble {
+    max-width: min(85%, 640px);
+    padding: 8px 14px;
+    border-radius: 16px;
+    background: var(--accent);
+    overflow-wrap: anywhere;
+}
+
+.agent-chat-root .agent-assistant-transcript {
+    margin-block: 8px 4px;
 }
 
 .agent-chat-root .agent-message-footer {
@@ -805,6 +814,37 @@
     margin-block: 8px 20px;
     color: var(--muted-foreground);
     font-size: 12px;
+}
+
+/* Time, model and usage stay out of sight until the reader points at the reply. */
+.agent-chat-root .agent-message-hover-info {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transition: opacity 120ms ease;
+}
+
+.agent-chat-root .agent-assistant-transcript:hover .agent-message-hover-info,
+.agent-chat-root .agent-assistant-transcript:focus-within .agent-message-hover-info {
+    opacity: 1;
+}
+
+.agent-chat-root .agent-message-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.agent-chat-root .agent-message-error {
+    color: var(--destructive);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .agent-chat-root .agent-message-hover-info {
+        transition: none;
+    }
 }
 
 .agent-chat-root .agent-message-meta {
@@ -831,7 +871,7 @@
     align-items: center;
     gap: 8px;
     color: var(--muted-foreground);
-    padding: 8px 0 !important;
+    padding: 8px 0;
     text-align: left;
     cursor: pointer;
 }

@@ -1,10 +1,4 @@
 /* Execution is a quiet, chronological transcript inside the existing chat surface. */
-/* ChatItem docs exposes avatar then content; only assistant content fills the column. */
-.agent-chat-root .agent-assistant-transcript > :last-child {
-    flex: 1;
-    min-width: 0;
-}
-
 .agent-chat-root .agent-execution-activity {
     margin-block: 4px 12px;
 }
@@ -12,7 +6,7 @@
 .agent-chat-root .agent-execution-summary {
     width: 100%;
     gap: 8px;
-    padding-block: 8px 12px !important;
+    padding-block: 8px 12px;
     border-bottom: 1px solid var(--border);
     font-size: 14px;
     font-variant-numeric: tabular-nums;
@@ -29,17 +23,7 @@
     min-width: 0;
 }
 
-.agent-chat-root .agent-execution-explanation {
-    margin-bottom: 12px;
-    color: var(--muted-foreground);
-    font-size: 12px;
-    line-height: 1.6;
-}
 
-.agent-chat-root .agent-execution-explanation p {
-    white-space: normal;
-    overflow-wrap: anywhere;
-}
 
 .agent-chat-root .agent-execution-summary {
     white-space: normal;
@@ -133,19 +117,7 @@
     border-radius: 4px;
 }
 
-.agent-chat-root .agent-activity-working {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 24px;
-    margin-block: 12px;
-    color: var(--muted-foreground);
-    font-size: 12px;
-}
 
-.agent-chat-root .agent-activity-working .agent-thinking-matrix {
-    padding: 0 !important;
-}
 
 .agent-chat-root .agent-activity-plan {
     margin-block: 8px;
@@ -185,51 +157,26 @@
     }
 }
 
-.agent-chat-root .agent-execution-failure-summary {
-    color: #f59e0b !important;
-}
-
-.agent-chat-root .agent-tool-validation-error {
+.agent-chat-root .agent-tool-failure {
     margin: 8px 0 12px;
-    padding: 10px 12px !important;
-    color: var(--foreground);
+    padding: 10px 12px;
     background: #f59e0b0d;
     font-size: 12px;
     line-height: 1.55;
 }
 
-.agent-chat-root .agent-tool-validation-error strong {
+.agent-chat-root .agent-tool-failure strong {
     display: block;
     margin-bottom: 4px;
     color: #fbbf24;
     font-weight: 600;
 }
 
-.agent-chat-root .agent-tool-validation-error p {
+.agent-chat-root .agent-tool-failure p {
     margin: 4px 0;
-    color: var(--foreground);
     overflow-wrap: anywhere;
 }
 
-.agent-chat-root .agent-tool-validation-error ul {
-    margin: 6px 0;
-    padding-left: 18px !important;
-}
-
-.agent-chat-root .agent-tool-validation-error code {
-    color: #f0c674;
-    font-size: 12px;
-}
-
-.agent-chat-root .agent-tool-validation-error span {
+.agent-chat-root .agent-tool-failure .agent-tool-failure-recovery {
     color: var(--muted-foreground);
-}
-
-.agent-chat-root .agent-tool-validation-error .agent-tool-validation-recovery {
-    color: var(--muted-foreground);
-}
-
-.agent-chat-root .agent-tool-validation-legacy {
-    color: var(--muted-foreground) !important;
-    font-size: 12px;
 }

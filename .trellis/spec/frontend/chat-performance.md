@@ -56,7 +56,7 @@ export function snapChatToBottom(el: { scrollHeight: number; scrollTop: number }
 - **Layout settle**: `ResizeObserver` on `.agent-content` re-snaps while pinned (markdown / images growing). One `requestAnimationFrame` snap on thread change covers the first paint.
 - **History isolation**: Shared `useProductQuery` can update the parent after a matching committed change. `AgentChatMessageItem` compares `id/content/status/role/createdAt/reasoning/reasoningDurationMs` so completed rows skip ChatItem + markdown. Hoist `markdownProps` and avatar meta; do not allocate them in the map.
 - **Empty streaming**: while `status === "streaming"` and both `content` and `reasoning` are empty, `renderMessage` swaps in `ThinkingMatrix` (3×3 square cells; per-column length-2 snakes in order 1→2→3, bounce at top, may exit bottom; ~220ms tick); pass `message=""` so EditableMessage does not coerce a React node. Avatar `loading` stays on until the first answer token — ChatItem’s corner badge must be a hollow ring (transparent fill), not a solid `colorPrimary` disc. For run-backed messages, the execution process owns the current public reasoning/content and working indicator; the standalone matrix/ThinkingPanel path remains for legacy messages without a run.
-- **Avatars**: user = `boring-avatars` default export, stable `name={PRODUCT_NAME_EN}`; assistant = `LOGO_SRC`. Memo the React node once per list.
+- **Avatars**: none. Assistant text is drawn flat; user messages keep a right bubble without an avatar (2026-10-13).
 
 ---
 

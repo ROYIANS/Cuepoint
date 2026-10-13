@@ -8,7 +8,6 @@ import { executeChatRun } from "@/lib/agent/runChat";
 import { getOfferedToolNames, MAX_LOADED_TOOLS } from "@/lib/agent/toolLoading";
 import { getTaskContext } from "@/lib/agent/taskContext";
 import { SMART_EXECUTION_INSTRUCTIONS } from "@/lib/agent/skills";
-import { describeRunExecution } from "@/lib/agent/executionSummary";
 import type { AgentRun, AgentWireToolCall } from "@/domain/agent";
 import type { ConnectorConfig } from "@/domain/types";
 
@@ -53,8 +52,8 @@ describe("bound sound project execution readiness", () => {
     await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
     const saved = (await db.agentRuns.get(run.id))!;
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
-    expect(describeRunExecution(saved, calls)).toMatchObject({ kind: "reply", label: "仅回复，未调用工具", modelSteps: 1, counts: { total: 0 } });
-    expect(describeRunExecution(saved, calls).offeredTools).toBe(saved.offeredTools![0].names.length);
+    expect(calls).toHaveLength(0);
+    expect(saved.modelStep).toBe(1);
     expect(saved.offeredTools?.[0].names.length).toBeGreaterThan(0);
     expect((await db.chatMessages.get(saved.assistantMessageId))?.content).toBe(text);
     expect(await db.audioSegments.where("projectId").equals(project.id).count()).toBe(0);
@@ -70,7 +69,8 @@ describe("bound sound project execution readiness", () => {
     await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
     const saved = (await db.agentRuns.get(run.id))!;
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
-    expect(describeRunExecution(saved, calls)).toMatchObject({ kind: "preparation", label: "仅准备，未执行业务", modelSteps: 3 });
+    expect(calls.every(item => item.name === "load_tool_groups")).toBe(true);
+    expect(saved.modelStep).toBe(3);
     expect(await db.audioSegments.where("projectId").equals(project.id).count()).toBe(0);
     expect(fetcher).toHaveBeenCalledTimes(3);
   });
@@ -85,8 +85,7 @@ describe("bound sound project execution readiness", () => {
     const saved = (await db.agentRuns.get(run.id))!;
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
     expect(saved.status).toBe("completed");
-    expect(describeRunExecution(saved, calls).counts).toMatchObject({ total: 1, failed: 1, completed: 0 });
-    expect(describeRunExecution(saved, calls).label).not.toBe("已完成");
+    expect(calls.map(item => item.status)).toEqual(["failed"]);
     expect(calls[0].status).toBe("failed");
   });
 
