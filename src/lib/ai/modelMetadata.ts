@@ -1,4 +1,5 @@
-import {getModelBankEntry, MODEL_BANK_COPIED_AT} from "./modelBank";
+import {lookupModelByDefinition} from "./modelCatalog/store";
+import {MODELS_DEV_URL} from "./modelCatalog/types";
 
 export interface ChatModelMetadata {
     vision?: boolean;
@@ -9,9 +10,8 @@ export interface ChatModelMetadata {
 
 export interface ModelLimit {
     tokens: number;
-    source: "provider" | "model-bank";
+    source: "provider" | "models-dev";
     sourceUrl?: string;
-    copiedAt?: string;
 }
 
 /** Resolve each field independently: a gateway may report only one limit. */
@@ -19,17 +19,13 @@ export function resolveModelMetadata(model: string, provider?: ChatModelMetadata
     contextWindow?: ModelLimit;
     maxOutputTokens?: ModelLimit;
 } {
-    const reference = getModelBankEntry(model, providerId);
+    // Synchronous, memory-only: safe inside a database transaction.
+    const reference = lookupModelByDefinition(providerId, model)?.entry;
     const resolve = (field: "contextWindow" | "maxOutputTokens"): ModelLimit | undefined => {
         const supplied = positiveInteger(provider?.[field]);
         if (supplied) return {tokens: supplied, source: "provider"};
-        const tokens = reference?.[field];
-        return tokens ? {
-            tokens,
-            source: "model-bank",
-            sourceUrl: reference.sourceUrl,
-            copiedAt: MODEL_BANK_COPIED_AT,
-        } : undefined;
+        const tokens = field === "contextWindow" ? reference?.context : reference?.output;
+        return tokens ? {tokens, source: "models-dev", sourceUrl: MODELS_DEV_URL} : undefined;
     };
     return {contextWindow: resolve("contextWindow"), maxOutputTokens: resolve("maxOutputTokens")};
 }

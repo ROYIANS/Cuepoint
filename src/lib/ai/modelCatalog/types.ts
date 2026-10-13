@@ -33,18 +33,5 @@ export interface CatalogSnapshot {
     entries: readonly CatalogEntry[];
 }
 
-/** Frozen price snapshot, shaped for a later `AgentRun.modelPricing`. */
-export interface ModelPricing {
-    source: "baseline" | "synced";
-    provider: string;
-    modelId: string;
-    /** True when the price comes from the model's original vendor, not the connector's own provider. */
-    reference: boolean;
-    currency: "USD";
-    unit: "per_million_tokens";
-    input?: number;
-    output?: number;
-    cacheRead?: number;
-    cacheWrite?: number;
-    capturedAt: string;
-}
+/** Public Models.dev site; it has no verified per-model page, so provenance links the catalog itself. */
+export const MODELS_DEV_URL = "https://models.dev";

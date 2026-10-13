@@ -1,8 +1,6 @@
 import lookup from "./lookup.generated.json";
 import manifest from "../../../../vendor/lobehub/manifest.json";
 
-export const MODEL_BANK_COPIED_AT = manifest.copiedAt;
-
 type LimitRecord = { id: string; contextWindowTokens?: number; maxOutput?: number };
 const providers: Readonly<Record<string, readonly LimitRecord[]>> = lookup.providers;
 const sources: Readonly<Record<string, string>> = lookup.sources;
@@ -55,28 +53,4 @@ export type ModelBankDataset = Record<string, ModelBankModel[]>;
 export async function loadModelBank(): Promise<ModelBankDataset> {
     const data = await import("./models.generated.json");
     return data.default;
-}
-
-/** Derive capabilities from the verified full snapshot, never from model name heuristics. */
-export async function getModelBankVision(model: string, providerId?: string) {
-    const data = await loadModelBank();
-    const direct = providerId ? data[providerId]?.find((row) => row.id === model.trim()) : undefined;
-    let candidates = direct && providerId ? [{
-        provider: providerId,
-        model: direct
-    }] : Object.entries(data).flatMap(([provider, rows]) => rows.filter((row) => row.id === model.trim()).map((model) => ({
-        provider,
-        model
-    })));
-    if (!direct && candidates.some(({provider}) => originalVendors.has(provider))) candidates = candidates.filter(({provider}) => originalVendors.has(provider));
-    const values = candidates.map(({model}) => {
-        const abilities = model.abilities;
-        return abilities && typeof abilities === "object" && !Array.isArray(abilities) ? abilities.vision === true : undefined;
-    });
-    if (!values.length || values.some((value) => value === undefined || value !== values[0])) return undefined;
-    return {
-        supported: values[0] === true,
-        source: "model-bank" as const,
-        sourceUrl: `${manifest.repository}/blob/${manifest.revision}/${sources[candidates[0].provider]}`
-    };
 }

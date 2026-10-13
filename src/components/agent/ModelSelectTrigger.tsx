@@ -6,7 +6,8 @@ import {ModelIcon, ProviderIcon} from "./ModelIcons";
 import {ActionIcon} from "@lobehub/ui/base-ui";
 import * as Popover from "@radix-ui/react-popover";
 import {ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench} from "@/components/ui/icons";
-import {type ReactNode, useEffect, useMemo, useRef, useState} from "react";
+import {type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore} from "react";
+import {getModelCatalog, subscribeModelCatalog} from "@/lib/ai/modelCatalog/store";
 import {SURFACE_ELEVATED, TEXT, TEXT_TERTIARY} from "@/components/agent/agentTheme";
 import type {ConnectorConfig, Id} from "@/domain/types";
 import {buildChatModelOptions, type ChatModelPolicy} from "@/lib/ai/chatModelPolicy";
@@ -22,6 +23,8 @@ function ModelDetail({modelId, metadata, providerId}: {
     metadata?: ChatModelMetadata;
     providerId?: string
 }) {
+    // Re-render when the catalog finishes loading (or is replaced), since lookups read memory.
+    const catalog = useSyncExternalStore(subscribeModelCatalog, getModelCatalog);
     const resolved = resolveModelMetadata(modelId, metadata, providerId);
     const contextWindow = resolved.contextWindow?.tokens;
     const vendor = lookupVendor(modelId);
@@ -41,7 +44,7 @@ function ModelDetail({modelId, metadata, providerId}: {
             () => { /* An unreadable catalog leaves the capability unknown. */ },
         );
         return () => { current = false; };
-    }, [modelId, providerId, providedVision, visionKey]);
+    }, [modelId, providerId, providedVision, visionKey, catalog]);
     const vision = visionResult?.key === visionKey ? visionResult.capability : undefined;
     const abilities = [
         vision?.supported ? "视觉识别" : null,
@@ -62,11 +65,11 @@ function ModelDetail({modelId, metadata, providerId}: {
             </div>
             <dl style={{margin: 0, display: "grid", gap: 12}}>
                 <div>
-                    <dt>上下文上限{contextWindow ? resolved.contextWindow?.source === "provider" ? " · 供应商" : " · Model Bank" : ""}</dt>
+                    <dt>上下文上限{contextWindow ? resolved.contextWindow?.source === "provider" ? " · 供应商" : " · 模型目录" : ""}</dt>
                     <dd title={resolved.contextWindow?.sourceUrl}>{contextWindow ? `${formatTokenCount(contextWindow)} tokens` : "供应商未提供"}</dd>
                 </div>
                 {resolved.maxOutputTokens && <div>
-                    <dt>最大输出 · {resolved.maxOutputTokens.source === "provider" ? "供应商" : "Model Bank"}</dt>
+                    <dt>最大输出 · {resolved.maxOutputTokens.source === "provider" ? "供应商" : "模型目录"}</dt>
                     <dd title={resolved.maxOutputTokens.sourceUrl}>{formatTokenCount(resolved.maxOutputTokens.tokens)} tokens</dd>
                 </div>}
                 <div>
@@ -81,7 +84,7 @@ function ModelDetail({modelId, metadata, providerId}: {
                     </dd>
                 </div>
                 <div>
-                    <dt>图片输入{vision && vision.source !== "unknown" ? ` · ${vision.source === "provider" ? "供应商" : "Model Bank"}` : ""}</dt>
+                    <dt>图片输入{vision && vision.source !== "unknown" ? ` · ${vision.source === "provider" ? "供应商" : "模型目录"}` : ""}</dt>
                     <dd title={vision?.sourceUrl}>{!vision ? "正在确认…" : vision.supported ? "支持 · 使用当前模型识图" : vision.source === "unknown" ? "能力未确认" : "不支持"}</dd>
                 </div>
 

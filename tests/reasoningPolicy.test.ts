@@ -1,5 +1,6 @@
 import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import { describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
+import { initModelCatalog } from "@/lib/ai/modelCatalog/store";
 import { db } from "@/db/database";
 import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
 import { resolveAgentToolApproval } from "@/db/agentTools";
@@ -15,6 +16,7 @@ const connector: ConnectorConfig = { id: "cx", name: "test", definitionId: "open
 const answer = () => Response.json({ choices: [{ message: { content: "完成" }, finish_reason: "stop" }] });
 
 describe("verified reasoning policy", () => {
+  beforeAll(() => initModelCatalog());
   it("uses exact model/connector capabilities and provider-specific allowed levels", () => {
     expect(getReasoningPolicy(connector, "gpt-5")?.levels).toEqual(["minimal", "low", "medium", "high"]);
     expect(getReasoningPolicy(connector, "gpt-5.1")?.levels).toEqual(["none", "low", "medium", "high"]);

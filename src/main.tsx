@@ -7,6 +7,7 @@ import {getHistoryNavigation} from "@/lib/historyNavigation";
 import {createProductRouterHistory} from "@/lib/productRouterHistory";
 import {installNativeExternalLinks} from "@/lib/runtimeExternalLinks";
 import {initializeProductStorage} from "@/db/database";
+import {initModelCatalog} from "@/lib/ai/modelCatalog/store";
 import {ErrorFallback, NotFound} from "@/components/errors/ErrorFallback";
 import {RootErrorBoundary, RootErrorFallback} from "@/components/errors/RootErrorFallback";
 import {ErrorDetailsDialog} from "@/components/errors/ErrorDetailsDialog";
@@ -46,6 +47,9 @@ const applicationRoot = createRoot(root, {
 async function startApplication():Promise<void> {
     try {
         await initializeProductStorage();
+        // Not awaited: the catalog is advisory and must not delay first paint. It never rejects, and
+        // beginAgentRun awaits the same memoized promise before creating a run.
+        void initModelCatalog();
         applicationRoot.render(
             <StrictMode>
                 <RootErrorBoundary>

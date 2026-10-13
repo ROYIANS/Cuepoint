@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
+import { initModelCatalog } from "@/lib/ai/modelCatalog/store";
 import { getModelBankEntry, loadModelBank } from "@/lib/ai/modelBank";
 import { resolveModelMetadata } from "@/lib/ai/modelMetadata";
 import { getReasoningPolicy } from "@/lib/ai/reasoningPolicy";
@@ -6,14 +7,14 @@ import { formatTokenCount } from "@/lib/agent/contextUsage";
 import { verifySnapshot, deriveDataset } from "../scripts/model-bank-snapshot.mjs";
 import { readFileSync } from "node:fs";
 
-describe("curated Model Bank", () => {
+describe("model catalog limits through resolveModelMetadata", () => {
+  beforeAll(() => initModelCatalog());
   it("resolves limits per field, preserving provider priority and provenance", () => {
     const result = resolveModelMetadata("gpt-5.6-luna", { source: "provider", contextWindow: 128000 });
     expect(result.contextWindow).toEqual({ tokens: 128000, source: "provider" });
-    expect(result.maxOutputTokens).toMatchObject({ tokens: 128000, source: "model-bank", copiedAt: "2026-09-19" });
-    expect(result.maxOutputTokens?.sourceUrl).toContain("ebe586289d55936b738e4dc822dbdd745196b4f3");
+    expect(result.maxOutputTokens).toEqual({ tokens: 128000, source: "models-dev", sourceUrl: "https://models.dev" });
     const outputOnly = resolveModelMetadata("gpt-5.6-luna", { source: "provider", maxOutputTokens: 4096 });
-    expect(outputOnly.contextWindow).toMatchObject({ tokens: 1050000, source: "model-bank" });
+    expect(outputOnly.contextWindow).toMatchObject({ tokens: 1050000, source: "models-dev" });
     expect(outputOnly.maxOutputTokens).toEqual({ tokens: 4096, source: "provider" });
   });
   it("does not infer aliases or expose prototype keys, but preserves unknown provider data", () => {
@@ -25,7 +26,7 @@ describe("curated Model Bank", () => {
     expect(resolveModelMetadata(" gpt-5 ").contextWindow?.tokens).toBe(400000);
   });
   it("rejects invalid supplied limits without confusing output and context", () => {
-    expect(resolveModelMetadata("gpt-5", { source: "provider", contextWindow: NaN }).contextWindow?.source).toBe("model-bank");
+    expect(resolveModelMetadata("gpt-5", { source: "provider", contextWindow: NaN }).contextWindow?.source).toBe("models-dev");
     expect(resolveModelMetadata("unknown", { source: "provider", maxOutputTokens: 1000 }).contextWindow).toBeUndefined();
   });
   it("keeps model references independent of provider wire permissions", () => {

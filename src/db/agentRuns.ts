@@ -4,6 +4,7 @@ import {settleRun} from "./agentRunTerminalState";
 import {runBlocksThread} from "@/domain/agentToolSelection";
 import type {ReferenceAttachment} from "@/domain/references";
 import {referenceSelectionCharacterBudget, selectReferenceContext} from "@/lib/agent/referenceContext";
+import {initModelCatalog, snapshotModelPricing} from "@/lib/ai/modelCatalog/store";
 import {requireVision, resolveVisionCapability} from "@/lib/ai/visionCapability";
 import {getMemorySelection} from "./memoryRetrieval";
 import {filterProjectMemoryTools} from "@/lib/agent/memoryToolNames";
@@ -68,7 +69,11 @@ export async function beginAgentRun(input: {
     const db = store ?? productDb;
     const identity = connectorRunIdentity(input.connector);
     if (!input.model.trim() || !input.connector.apiKey.trim()) throw new Error("请选择模型并配置 API Key");
+    // Both catalog reads happen before the transaction: loading may import the baseline chunk,
+    // while the lookups inside the transaction below only read memory.
+    await initModelCatalog();
     const visionCapability = await resolveVisionCapability(input.model, identity.definitionId, input.modelMetadata);
+    const modelPricing = snapshotModelPricing(identity, input.model.trim(), nowIso());
     return db.transaction("rw", db.tables, async (db) => {
         const thread = await db.chatThreads.get(input.threadId);
         if (!thread) throw new Error("对话不存在");
@@ -142,12 +147,14 @@ export async function beginAgentRun(input: {
             summaryId: summary?.id,
             memoryEnvelope: memorySelection?.envelope, ...capacity
         };
+        const frozenPricing = previous?.modelPricing ?? modelPricing;
         const run: AgentRun = {
             context,
             memorySelection,
             memoryAudit: [],
             referenceAudit: [],
             visionCapability: previous?.visionCapability ?? visionCapability,
+            ...(frozenPricing ? {modelPricing: frozenPricing} : {}),
             projectId: thread.projectId,
             projectContext: previous?.projectContext ?? taskContext.projectContext,
             id: runId,

@@ -3,6 +3,7 @@ import {matchModel, type ModelMatch} from "./match";
 import type {CatalogSnapshot} from "./types";
 import {parseBaselineSnapshot, parseSyncedSnapshot} from "./validate";
 import type {ConnectorConfig} from "@/domain/types";
+import type {ModelPricing} from "@/domain/agent";
 
 export const MODEL_CATALOG_KEY = "modelCatalog";
 
@@ -33,10 +34,14 @@ async function loadBaseline(): Promise<CatalogSnapshot | undefined> {
  */
 export function initModelCatalog(): Promise<void> {
     initializing ??= (async () => {
-        const started = generation;
-        const synced = await getDeviceSetting(MODEL_CATALOG_KEY, parseSyncedSnapshot);
-        const snapshot = synced ?? await loadBaseline();
-        if (snapshot && generation === started) publish(snapshot);
+        try {
+            const started = generation;
+            const synced = await getDeviceSetting(MODEL_CATALOG_KEY, parseSyncedSnapshot);
+            const snapshot = synced ?? await loadBaseline();
+            if (snapshot && generation === started) publish(snapshot);
+        } catch {
+            // The catalog is advisory: a failed load leaves every lookup "unknown".
+        }
     })();
     return initializing;
 }
@@ -57,6 +62,34 @@ export function subscribeModelCatalog(listener: () => void): () => void {
  */
 export function lookupModel(connector: Pick<ConnectorConfig, "definitionId" | "baseUrl">, modelId: string): ModelMatch | undefined {
     return current ? matchModel(current, connector, modelId) : undefined;
+}
+
+/**
+ * Lookup for callers that only know the connector definition id (the limit/vision consumers
+ * receive no base URL). An `openai-compatible` connector then has no provider of its own and
+ * resolves through the original-vendor tier, as the previous catalog did.
+ */
+export function lookupModelByDefinition(definitionId: string | undefined, modelId: string): ModelMatch | undefined {
+    return lookupModel({definitionId: (definitionId ?? "") as ConnectorConfig["definitionId"], baseUrl: ""}, modelId);
+}
+
+/** Frozen USD price for a new run, or undefined when no price is known. Reads memory only. */
+export function snapshotModelPricing(
+    connector: Pick<ConnectorConfig, "definitionId" | "baseUrl">, modelId: string, capturedAt: string,
+): ModelPricing | undefined {
+    const price = lookupModel(connector, modelId)?.price;
+    if (!current || !price) return undefined;
+    const rates = {
+        ...(price.input !== undefined ? {input: price.input} : {}),
+        ...(price.output !== undefined ? {output: price.output} : {}),
+        ...(price.cacheRead !== undefined ? {cacheRead: price.cacheRead} : {}),
+        ...(price.cacheWrite !== undefined ? {cacheWrite: price.cacheWrite} : {}),
+    };
+    if (!Object.keys(rates).length) return undefined;
+    return {
+        source: current.source, provider: price.provider, modelId: price.modelId, reference: price.reference,
+        currency: "USD", unit: "per_million_tokens", ...rates, capturedAt,
+    };
 }
 
 export function resetModelCatalogForTests(): void {

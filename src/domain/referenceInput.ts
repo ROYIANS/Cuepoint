@@ -43,7 +43,7 @@ export interface AgentSelectedReferences extends AgentReferenceInput {
 
 export interface AgentVisionCapability {
     supported: boolean;
-    source: "provider" | "model-bank" | "unknown";
+    source: "provider" | "models-dev" | "model-bank" | "unknown";
     sourceUrl?: string;
 }
 
