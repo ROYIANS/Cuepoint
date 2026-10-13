@@ -2,7 +2,7 @@ import {binaryPreviewMessage, useBinaryPreview} from "@/lib/media";
 import type {MediaRecord} from "@/domain/types";
 import {useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Check, Plus, RotateCcw, Search, Trash2, Upload} from "@/components/ui/remixIcons";
+import {Check, Plus, RotateCcw, Search, Trash2, Upload} from "@/components/ui/icons";
 import {toast} from "sonner";
 import {listProjectReferences, removeProjectReference} from "@/db/references";
 import {registerProjectImage, retryReferenceImport} from "@/lib/references/import";

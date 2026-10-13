@@ -1,9 +1,9 @@
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 import {useMemo, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {
     Archive,
-    ArrowLeft,
     ArrowUpRight,
     FolderOpen,
     Image,
@@ -15,7 +15,7 @@ import {
     Shirt,
     Smile,
     Undo2
-} from "@/components/ui/remixIcons";
+} from "@/components/ui/icons";
 import {setIpArchived} from "@/db/ipProfiles";
 import type {IpProfile} from "@/domain/materials";
 import {Button} from "@/components/ui/button";
@@ -62,16 +62,15 @@ export function IpProfilesPage() {
     const profiles = view?.profiles ?? [];
     const filtered = profiles.filter(profile => profile.archived === archived && `${profile.name} ${profile.positioning} ${profile.topics}`.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
     const projectIds = useMemo(() => new Set(view?.projects?.map(project => project.id) ?? []), [view?.projects]);
-    return <PageContent role="main" mode="collection" className="ip-page">
+    return <ModuleLayout navigationLabel="IP 导航" navigation={<>
+        <h2 className="module-nav-heading">IP</h2><div className="module-nav-group" role="group" aria-label="IP 状态">
+            <button type="button" className="module-nav-item" aria-pressed={!archived} onClick={() => setArchived(false)}>使用中 <span>{profiles.filter(profile => !profile.archived).length}</span></button>
+            <button type="button" className="module-nav-item" aria-pressed={archived} onClick={() => setArchived(true)}>已归档 <span>{profiles.filter(profile => profile.archived).length}</span></button>
+        </div><div className="module-nav-group">{filtered.map(profile => <Link key={profile.id} to="/ips/$ipId" params={{ipId: profile.id}} className="module-nav-item">{profile.name}</Link>)}</div>
+    </>}><PageContent role="main" mode="collection" className="ip-page">
         <PageHeader title="IP" description="管理创作定位、表达偏好与关联项目。"
                     actions={<Button onClick={() => setCreateOpen(true)}><Plus aria-hidden/>新建 IP</Button>}/>
         <PageToolbar className="ip-library-toolbar">
-            <div className="ip-filter-tabs" role="group" aria-label="IP 状态"><Button variant="ghost" type="button"
-                                                                                      aria-pressed={!archived}
-                                                                                      onClick={() => setArchived(false)}>使用中 <span>{profiles.filter(profile => !profile.archived).length}</span></Button><Button
-                variant="ghost" type="button" aria-pressed={archived}
-                onClick={() => setArchived(true)}>已归档 <span>{profiles.filter(profile => profile.archived).length}</span></Button>
-            </div>
             <div className="ip-search"><Search size={15} aria-hidden/><Input aria-label="搜索 IP"
                                                                              placeholder="搜索名称、定位或主题"
                                                                              value={search}
@@ -105,45 +104,43 @@ export function IpProfilesPage() {
             setCreateOpen(false);
             void navigate({to: "/ips/$ipId", params: {ipId: id}});
         }}/>}
-    </PageContent>;
+    </PageContent></ModuleLayout>;
 }
 
 export function IpProfilePage({ipId}: { ipId: string }) {
     const [editing, setEditing] = useState<IpProfile | null>(null);
     const [tab, setTab] = useState<"profile" | "projects" | "materials">("profile");
+    const [profileFilter, setProfileFilter] = useState<"all" | "active" | "archived">("all");
     const view = useProductQuery(async (db) => {
         try {
             const profile = await db.ipProfiles.get(ipId) ?? null;
             const links = await db.projectIpLinks.where("ipId").equals(ipId).toArray();
             const projects = (await db.projects.bulkGet(links.map(link => link.projectId))).filter(project => project !== undefined);
             const materials = await db.libraryMaterials.filter(material => material.scope.kind === "ip" && material.scope.id === ipId && !material.archived).toArray();
-            return {ipId, profile, projects, materials};
+            return {ipId, profile, projects, materials, profiles: await db.ipProfiles.orderBy("updatedAt").reverse().toArray()};
         } catch (cause) {
             return {ipId, error: errorMessage(cause)};
         }
     }, [ipId]);
-    if (!view || view.ipId !== ipId) return <PageContent role="main" mode="detail" className="ip-page"><PageState kind="loading" title="正在读取 IP 档案…"/></PageContent>;
-    if (view.error || !view.profile) return <PageContent role="main" mode="detail" className="ip-page">
-        <PageHeader title="IP 档案" back={<Link to="/ips" className="ip-back"><ArrowLeft size={16} aria-hidden/>全部 IP</Link>}/>
-        <PageState kind={view.error ? "error" : "missing"} title={view.error ? "暂时无法读取档案" : "找不到这个 IP"}
-                   description={view.error ?? "这个档案可能已不可用，请返回列表查看。"}/>
-    </PageContent>;
+    const navigation = <>
+        <h2 className="module-nav-heading">IP</h2><div className="module-nav-group"><Link to="/ips" className="module-nav-item">全部 IP</Link></div>
+        {view?.ipId === ipId && view.profile && <div className="module-nav-group" role="group" aria-label="IP 内容"><h3 className="module-nav-heading text-xs">{view.profile.name}</h3>{([{id: "profile", label: "档案"}, {id: "projects", label: "关联项目"}, {id: "materials", label: "专属素材"}] as const).map(item => <button key={item.id} type="button" className="module-nav-item" aria-pressed={tab === item.id} onClick={() => setTab(item.id)}>{item.label}</button>)}</div>}
+        <div className="module-nav-group" role="group" aria-label="IP 状态">{([{id: "all", label: "全部"}, {id: "active", label: "使用中"}, {id: "archived", label: "已归档"}] as const).map(item => <button key={item.id} type="button" className="module-nav-item" aria-pressed={profileFilter === item.id} onClick={() => setProfileFilter(item.id)}>{item.label}</button>)}</div>
+        <div className="module-nav-group">{view?.ipId === ipId && view.profiles?.filter(profile => profile.id === ipId || profileFilter === "all" || profile.archived === (profileFilter === "archived")).map(profile => <Link key={profile.id} to="/ips/$ipId" params={{ipId: profile.id}} className="module-nav-item" aria-current={profile.id === ipId ? "page" : undefined}>{profile.name}{profile.archived && <span className="ml-auto text-xs">已归档</span>}</Link>)}</div>
+    </>;
+    if (!view || view.ipId !== ipId) return <ModuleLayout navigation={navigation} navigationLabel="IP 导航"><PageContent role="main" mode="detail" className="ip-page"><PageState kind="loading" title="正在读取 IP 档案…"/></PageContent></ModuleLayout>;
+    if (view.error || !view.profile) return <ModuleLayout navigation={navigation} navigationLabel="IP 导航"><PageContent role="main" mode="detail" className="ip-page">
+        <PageHeader title="IP 档案"/>
+        <PageState kind={view.error ? "error" : "missing"} title={view.error ? "暂时无法读取档案" : "找不到这个 IP"} description={view.error ?? "这个档案可能已不可用，请返回列表查看。"}/>
+    </PageContent></ModuleLayout>;
     const {profile, projects, materials} = view;
-    return <PageContent role="main" mode="detail" className="ip-page ip-detail-page">
+    return <ModuleLayout navigation={navigation} navigationLabel="IP 导航"><PageContent role="main" mode="detail" className="ip-page ip-detail-page">
         <PageHeader title={profile.name} description={<span className="whitespace-pre-wrap">{profile.positioning || "还没有填写定位，可在档案中补充。"}</span>}
-                    back={<Link to="/ips" className="ip-back"><ArrowLeft size={16} aria-hidden/>全部 IP</Link>}
                     actions={<div className="ip-detail-actions">{!profile.archived &&
                 <Button variant="outline" onClick={() => setEditing(profile)}><Pencil
                     aria-hidden/>编辑档案</Button>}<IpArchiveAction profile={profile}/></div>}/>
         {profile.archived && <p className="ip-archive-note"><Archive size={15} aria-hidden/>档案已归档，原有项目和素材仍保留。恢复后可继续编辑和关联新项目。
         </p>}
-        <PageToolbar className="ip-detail-tabs" role="group" aria-label="IP 内容">{([{id: "profile", label: "档案"}, {
-            id: "projects",
-            label: "关联项目",
-            count: projects?.length ?? 0
-        }, {id: "materials", label: "专属素材", count: materials?.length ?? 0}] as const).map(item => <Button
-            variant="ghost" key={item.id} type="button" aria-pressed={tab === item.id}
-            onClick={() => setTab(item.id)}>{item.label}{"count" in item && <span>{item.count}</span>}</Button>)}</PageToolbar>
         {tab === "profile" && <>
             <div className="ip-detail-fields">{IP_TEXT_FIELDS.map(field => <section key={field.key}>
                 <h2>{field.label}</h2><p
@@ -181,7 +178,7 @@ export function IpProfilePage({ipId}: { ipId: string }) {
         </section>}
         {editing && <IpProfileEditor key={editing.id} profile={editing} onClose={() => setEditing(null)}
                                      onSaved={() => setEditing(null)}/>}
-    </PageContent>;
+    </PageContent></ModuleLayout>;
 }
 
 function DerivativeEntries() {

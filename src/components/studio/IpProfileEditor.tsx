@@ -1,6 +1,6 @@
 import {useId, useRef, useState} from "react";
 import {useBlocker} from "@tanstack/react-router";
-import {LoaderCircle} from "@/components/ui/remixIcons";
+import {LoaderCircle} from "@/components/ui/icons";
 import type {IpProfile, IpProfileInput} from "@/domain/materials";
 import {createIpProfile, updateIpProfile} from "@/db/ipProfiles";
 import {Button} from "@/components/ui/button";

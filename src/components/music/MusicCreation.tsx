@@ -1,5 +1,5 @@
 import {useRef, useState} from "react";
-import {Sparkles} from "@/components/ui/remixIcons";
+import {Sparkles} from "@/components/ui/icons";
 import {db} from "@/db/database";
 import {patchMusicDraft} from "@/db/music";
 import type {MusicDraft, MusicSettings} from "@/domain/music";

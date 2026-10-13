@@ -1,5 +1,5 @@
 import {Dropdown} from "antd";
-import {Check, ChevronDown} from "@/components/ui/remixIcons";
+import {Check, ChevronDown} from "@/components/ui/icons";
 import {useState} from "react";
 import type {AgentReasoningEffort} from "@/domain/agent";
 import type {ConnectorConfig} from "@/domain/types";
@@ -13,7 +13,7 @@ export function ModelSettingsMenu({connector, model, effort, onChange, onChooseM
     const [open, setOpen] = useState(false);
     const policy = connector ? getReasoningPolicy(connector, model) : undefined;
     return <Dropdown open={open} onOpenChange={setOpen} trigger={["click"]} placement="topRight" autoFocus
-                     getPopupContainer={() => document.querySelector<HTMLElement>(".agent-chat-root") ?? document.body}
+                     getPopupContainer={trigger => trigger.closest<HTMLElement>('[data-slot="context-panel-content"]') ?? trigger.closest<HTMLElement>(".agent-chat-root") ?? document.body}
                      menu={{
                          className: "agent-composer-menu",
                          items: [

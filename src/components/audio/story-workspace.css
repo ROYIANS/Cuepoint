@@ -405,6 +405,15 @@
     overflow: visible;
 }
 
+.as-context-panel {
+    gap: 0;
+}
+
+.as-chapter-navigation {
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
 .as-error {
     display: flex;
     align-items: center;

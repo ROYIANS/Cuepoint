@@ -1,6 +1,6 @@
 import {ActionIcon} from "@lobehub/ui/base-ui";
 import {Dropdown} from "antd";
-import {ListTodo, MessageSquarePlus, MoreHorizontal, Pencil, Trash2} from "@/components/ui/remixIcons";
+import {ListTodo, MessageSquarePlus, MoreHorizontal, Pencil, Trash2} from "@/components/ui/icons";
 import type {ReactNode} from "react";
 import {AppHeaderPortal} from "@/components/layout/AppHeaderPortal";
 import type {ChatThread} from "@/domain/types";
@@ -11,7 +11,7 @@ function headerPopupRoot(trigger: HTMLElement): HTMLElement {
 }
 
 /** The portal keeps Agent providers; its explicit popup host stays outside surface clipping. */
-export function AgentHeader({title, thread, topicToggle, onRename, onDelete, onOpenTask, taskTitle, onNewTopic}: {
+export function AgentHeader({title, thread, topicToggle: _topicToggle, onRename, onDelete, onOpenTask, taskTitle, onNewTopic}: {
     title: string;
     thread?: ChatThread;
     topicToggle: ReactNode;
@@ -23,7 +23,6 @@ export function AgentHeader({title, thread, topicToggle, onRename, onDelete, onO
 }) {
     return <AppHeaderPortal>
         <div className="agent-header-theme css-var-agent-chat agent-chat-header" data-agent-header="">
-            <div className="agent-header-topics" data-tauri-drag-region="false">{topicToggle}</div>
             <div className="agent-header-title-group">
                 <h1 className="agent-conversation-title" title={title}>{title}</h1>
                 {thread && onRename && onDelete && <Dropdown trigger={["click"]} getPopupContainer={headerPopupRoot}

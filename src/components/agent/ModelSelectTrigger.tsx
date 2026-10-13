@@ -6,7 +6,7 @@ import {formatTokenCount} from "@/lib/agent/contextUsage";
 import {ModelIcon, ProviderIcon} from "./ModelIcons";
 import {ActionIcon} from "@lobehub/ui/base-ui";
 import * as Popover from "@radix-ui/react-popover";
-import {ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench} from "@/components/ui/remixIcons";
+import {ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench} from "@/components/ui/icons";
 import {type ReactNode, useEffect, useMemo, useRef, useState} from "react";
 import {SURFACE_ELEVATED, TEXT, TEXT_TERTIARY} from "@/components/agent/agentTheme";
 import type {ConnectorConfig, Id} from "@/domain/types";
@@ -14,8 +14,8 @@ import {buildChatModelOptions, type ChatModelPolicy} from "@/lib/ai/chatModelPol
 import {connectorDisplayName, connectorProviderKey,} from "@/lib/ai/catalog";
 import {groupModelsByVendor, inferModelHints, lookupVendor, modelDisplayName,} from "@/lib/ai/modelVendors";
 
-function popupRoot(): HTMLElement {
-    return document.querySelector<HTMLElement>(".agent-chat-root") ?? document.body;
+function popupRoot(anchor: HTMLElement | null): HTMLElement {
+    return anchor?.closest<HTMLElement>('[data-slot="context-panel-content"]') ?? anchor?.closest<HTMLElement>(".agent-chat-root") ?? document.body;
 }
 
 function ModelDetail({modelId, metadata, providerId}: {
@@ -117,6 +117,7 @@ export function ModelSelectTrigger({
         setLocalOpen(next);
         onOpenChange?.(next);
     };
+    const anchorRef = useRef<HTMLElement>(null);
     const searchRef = useRef<HTMLInputElement>(null);
     const [search, setSearch] = useState("");
     const [preview, setPreview] = useState(model);
@@ -236,9 +237,9 @@ export function ModelSelectTrigger({
 
     return (
         <Popover.Root open={open} onOpenChange={setOpen}>
-            {trigger ? <Popover.Anchor asChild><span
+            {trigger ? <Popover.Anchor asChild><span ref={anchorRef}
                 className="agent-model-settings-anchor">{trigger}</span></Popover.Anchor> : <Popover.Trigger asChild>
-                <button type="button" className="agent-chip" aria-label={model || "选择模型"} aria-haspopup="dialog"
+                <button ref={node => {anchorRef.current = node;}} type="button" className="agent-chip" aria-label={model || "选择模型"} aria-haspopup="dialog"
                         aria-expanded={open}>
                     {model ? <ModelIcon model={model} size={16} type="color"/> : null}
                     <span
@@ -253,7 +254,7 @@ export function ModelSelectTrigger({
                     <ChevronDown size={12} style={{flexShrink: 0, opacity: 0.7}}/>
                 </button>
             </Popover.Trigger>}
-            <Popover.Portal container={popupRoot()}>
+            <Popover.Portal container={popupRoot(anchorRef.current)}>
                 <Popover.Content side="top" align="end" sideOffset={10} collisionPadding={16}
                                  className="agent-model-popover" onOpenAutoFocus={(event) => {
                     event.preventDefault();
@@ -261,7 +262,7 @@ export function ModelSelectTrigger({
                 }} onCloseAutoFocus={(event) => {
                     if (trigger) {
                         event.preventDefault();
-                        document.querySelector<HTMLButtonElement>(".agent-model-settings-anchor button")?.focus({preventScroll: true});
+                        anchorRef.current?.querySelector<HTMLButtonElement>("button")?.focus({preventScroll: true});
                     }
                 }}>
                     {panel}

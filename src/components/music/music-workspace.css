@@ -27,8 +27,26 @@
     flex-direction: column;
     min-height: 0;
     min-width: 0;
-    border-right: 1px solid var(--border);
+    height: 100%;
     background: var(--surface-panel, var(--card));
+}
+
+.mw-module-layout > .module-navigation {
+    padding: 0;
+    overflow: hidden;
+}
+
+.mw-module-layout .mw-library {
+    flex: 1;
+}
+
+.mw-detail-panel {
+    --aw-line: var(--border);
+    --aw-muted: var(--muted-foreground);
+}
+
+.mw-detail-panel .aw-select {
+    width: 100%;
 }
 
 .mw-draft-bar {

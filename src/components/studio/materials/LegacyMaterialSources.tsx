@@ -1,7 +1,7 @@
 import {useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {Link} from "@tanstack/react-router";
-import {ArrowUpRight, Layers} from "@/components/ui/remixIcons";
+import {ArrowUpRight, Layers} from "@/components/ui/icons";
 import {promoteLegacyMaterial} from "@/db/materials";
 import {type MediaRecord, STUDIO_LIBRARY_ID} from "@/domain/types";
 import {slotMediaIds} from "@/domain/slot";

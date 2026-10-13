@@ -3,6 +3,7 @@ import {createRoot} from "react-dom/client";
 import {createRouter, RouterProvider} from "@tanstack/react-router";
 import {routeTree} from "./routeTree.gen";
 import {initUmami} from "@/lib/umami";
+import {getHistoryNavigation} from "@/lib/historyNavigation";
 import {createProductRouterHistory} from "@/lib/productRouterHistory";
 import {installNativeExternalLinks} from "@/lib/runtimeExternalLinks";
 import {initializeProductStorage} from "@/db/database";
@@ -11,6 +12,7 @@ initUmami();
 installNativeExternalLinks();
 
 const router = createRouter({routeTree, history: createProductRouterHistory()});
+getHistoryNavigation(router.history);
 
 declare module "@tanstack/react-router" {
     interface Register {

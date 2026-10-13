@@ -2,7 +2,7 @@ import {SelectOption, SourcePlayer, WorkspaceSelect} from "@/components/audioMus
 import {useEffect, useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {withBinaryReadLease} from "@/lib/storage/binary";
-import {Check, ChevronDown, Library, Mic, Plus, Square, Upload, X} from "@/components/ui/remixIcons";
+import {Check, ChevronDown, Library, Mic, Plus, Square, Upload, X} from "@/components/ui/icons";
 import {db} from "@/db/database";
 import {addAudioTake} from "@/db/audio";
 import {adoptMaterialInProject} from "@/db/materials";

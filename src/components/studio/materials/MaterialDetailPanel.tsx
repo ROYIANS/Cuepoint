@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import {Link} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Archive, ArrowUpRight, History, Trash2, Upload, X} from "@/components/ui/remixIcons";
+import {Archive, ArrowUpRight, History, Trash2, Upload, X} from "@/components/ui/icons";
 import {releaseMaterialUse} from "@/db/assetReuse";
 import {
     addFileMaterialVersion,
@@ -17,7 +17,7 @@ import type {LibraryMaterial} from "@/domain/materials";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
-import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
+import {ContextPanel, ContextPanelContent, ContextPanelDescription, ContextPanelHeader, ContextPanelTitle} from "@/components/ui/context-panel";
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -67,10 +67,10 @@ export function MaterialDetailPanel({id, onClose, onSelect}: {
     return material ?
         <MaterialEditor key={material.id} material={material} requestedId={id} unavailable={!loadedMaterial}
                         onEditingChange={setEditing} onClose={onClose} onSelect={select}/> :
-        <Sheet open onOpenChange={(open) => {
+        <ContextPanel open onOpenChange={(open) => {
             if (!open) onClose();
-        }}><SheetContent
-            className="material-detail"><SheetHeader><SheetTitle>素材详情</SheetTitle><SheetDescription>{material === null ? "素材不存在或已删除" : "正在读取素材…"}</SheetDescription></SheetHeader></SheetContent></Sheet>;
+        }}><ContextPanelContent
+            className="material-detail"><ContextPanelHeader><ContextPanelTitle>素材详情</ContextPanelTitle><ContextPanelDescription>{material === null ? "素材不存在或已删除" : "正在读取素材…"}</ContextPanelDescription></ContextPanelHeader></ContextPanelContent></ContextPanel>;
 }
 
 function MaterialEditor({material, requestedId, unavailable, onEditingChange, onClose, onSelect}: {
@@ -157,16 +157,16 @@ function MaterialEditor({material, requestedId, unavailable, onEditingChange, on
     const operationsDisabled = unavailable || pending || Boolean(draft);
     const scopeLabel = materialScope.kind === "global" ? "全局素材" : materialScope.kind === "ip" ? `IP · ${data?.ips.find((ip) => ip.id === materialScope.id)?.name ?? "已不可用"}` : `项目 · ${data?.projects.find((project) => project.id === materialScope.id)?.name ?? "已删除"}`;
     const hasReferences = Boolean(data?.uses.length || data?.derived.length);
-    return <><Sheet open onOpenChange={(open) => {
-        if (!open) guard.requestClose(onClose);
-    }}><SheetContent className="material-detail" showCloseButton={false}>
+    return <><ContextPanel open onRequestDeparture={guard.requestClose} onOpenChange={(open) => {
+        if (!open) onClose();
+    }}><ContextPanelContent className="material-detail" showCloseButton={false}>
         {unavailable && <p role="alert">素材不存在或已删除，当前修改仍保留。请放弃修改或继续编辑。</p>}
-        <SheetHeader className="material-detail-heading">
+        <ContextPanelHeader className="material-detail-heading">
             <div><p className="material-eyebrow">{KIND_LABELS[material.kind]} · {scopeLabel}</p>
-                <SheetTitle>{material.name}</SheetTitle><SheetDescription>版本 {material.revision}{material.archived ? " · 已归档" : " · 可复用"}</SheetDescription>
+                <ContextPanelTitle>{material.name}</ContextPanelTitle><ContextPanelDescription>版本 {material.revision}{material.archived ? " · 已归档" : " · 可复用"}</ContextPanelDescription>
             </div>
             <Button size="icon" variant="ghost" aria-label="关闭素材详情" disabled={pending}
-                    onClick={() => guard.requestClose(onClose)}><X/></Button></SheetHeader>
+                    onClick={() => guard.requestClose(onClose)}><X/></Button></ContextPanelHeader>
         <div className="material-detail-body">
             <MaterialPreview payload={version?.payload} inspect/>
             {data && data.versions.length > 1 &&
@@ -297,7 +297,7 @@ function MaterialEditor({material, requestedId, unavailable, onEditingChange, on
             {hasReferences &&
                 <p className="material-muted">当前有 {data?.uses.length} 条项目引用、{data?.derived.length} 份衍生素材，不能永久删除；可归档。</p>}
         </div>
-    </SheetContent></Sheet>{guard.dialog}<AlertDialog open={deleting} onOpenChange={(open) => {
+    </ContextPanelContent></ContextPanel>{guard.dialog}<AlertDialog open={deleting} onOpenChange={(open) => {
         if (!pending) setDeleting(open);
     }}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>永久删除“{material.name}”？</AlertDialogTitle><AlertDialogDescription>删除所有版本和文件，操作不可撤销。保存前会再次检查引用。</AlertDialogDescription></AlertDialogHeader>{error &&
         <p role="alert" className="material-error">{error}</p>}<AlertDialogFooter><AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline"

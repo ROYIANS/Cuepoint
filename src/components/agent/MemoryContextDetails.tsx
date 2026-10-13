@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {Link} from "@tanstack/react-router";
-import {BookOpen, Check, Minus, Restore} from "@/components/ui/remixIcons";
+import {BookOpen, Check, Minus, Restore} from "@/components/ui/icons";
 import type {AgentRun} from "@/domain/agent";
 import type {MemorySelection} from "@/domain/memoryRetrieval";
 import {getThreadMemoryExclusions, setThreadMemoryExcluded,} from "@/db/memoryRetrieval";
@@ -9,7 +9,7 @@ import {listProjectMemories} from "@/db/projectMemories";
 import {readMemory} from "@/components/memory/readMemory";
 import {CATEGORY_LABELS, STATUS_LABELS,} from "@/components/memory/memoryLabels";
 import {Button} from "@/components/ui/button";
-import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle,} from "@/components/ui/sheet";
+import {ContextPanel, ContextPanelContent, ContextPanelDescription, ContextPanelHeader, ContextPanelTitle,} from "@/components/ui/context-panel";
 import {formatTokenCount} from "@/lib/agent/contextUsage";
 import "./memoryContext.css";
 
@@ -30,27 +30,18 @@ export function MemoryContextDetails({
                                          run,
                                          readOnly,
                                      }: Props) {
-    return (
-        <Sheet open={open} onOpenChange={onOpenChange}>
-            {open && (
-                <MemoryContextContent
-                    key={JSON.stringify([threadId, run?.id ?? "preview", selection?.projectId])}
-                    selection={selection}
-                    threadId={threadId}
-                    run={run}
-                    readOnly={readOnly}
-                />
-            )}
-        </Sheet>
-    );
+    return open ? <MemoryContextContent key={JSON.stringify([threadId, run?.id ?? "preview", selection?.projectId])}
+        open={open} onOpenChange={onOpenChange} selection={selection} threadId={threadId} run={run} readOnly={readOnly}/> : null;
 }
 
 function MemoryContextContent({
+                                  open,
+                                  onOpenChange,
                                   selection,
                                   threadId,
                                   run,
                                   readOnly,
-                              }: Omit<Props, "open" | "onOpenChange">) {
+                              }: Props) {
     const [step, setStep] = useState<number | "prepared">(
         run?.memoryAudit?.at(-1)?.step ?? "prepared",
     );
@@ -111,21 +102,22 @@ function MemoryContextContent({
     }
 
     return (
-        <SheetContent
+        <ContextPanel open={open} onOpenChange={onOpenChange} onRequestDeparture={(proceed, cancel) => {if (!session.locked) proceed(); else cancel?.();}}>
+        <ContextPanelContent
             className="memory-context-sheet"
             aria-label="项目记忆引用详情"
         >
-            <SheetHeader className="memory-context-heading">
+            <ContextPanelHeader className="memory-context-heading">
                 <span className="memory-context-eyebrow">项目上下文</span>
-                <SheetTitle>
+                <ContextPanelTitle>
                     {step === "prepared" ? "下次引用的记忆" : "这次带入的记忆"}
-                </SheetTitle>
-                <SheetDescription>
+                </ContextPanelTitle>
+                <ContextPanelDescription>
                     {run
                         ? "查看模型请求对应的记忆版本，历史记录不会随项目编辑而改写。"
                         : "根据当前草稿与任务选择，实际发送前会再次核对。"}
-                </SheetDescription>
-            </SheetHeader>
+                </ContextPanelDescription>
+            </ContextPanelHeader>
             <div className="memory-context-scroll">
                 {!state && <p role="status">正在读取记忆管理状态…</p>}
                 {state?.data && !state.data.available && <p role="alert">关联项目不可用；记忆快照仅供查看。</p>}
@@ -301,7 +293,7 @@ function MemoryContextContent({
                 </p>
                 <p>当前要求和最新项目事实优先于历史记忆。数值为文本估算。</p>
             </footer>
-        </SheetContent>
+        </ContextPanelContent></ContextPanel>
     );
 }
 

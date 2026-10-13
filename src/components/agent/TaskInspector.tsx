@@ -14,14 +14,14 @@ import {
     RotateCcw,
     Sparkles,
     X
-} from "@/components/ui/remixIcons";
+} from "@/components/ui/icons";
 import {toast} from "sonner";
 import type {AgentPlanItem, AgentRun, AgentTask} from "@/domain/agent";
 import type {ChatMessage} from "@/domain/types";
 import {pinAgentTaskResult, setAgentTaskLifecycle, unpinAgentTaskResult, updateAgentTask} from "@/db/agentTasks";
 import {getTaskDisplayState, isTaskBusy, TASK_STATE_LABELS} from "@/lib/agent/taskState";
 import {Button} from "@/components/ui/button";
-import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
+import {ContextPanel, ContextPanelContent, ContextPanelDescription, ContextPanelHeader, ContextPanelTitle} from "@/components/ui/context-panel";
 import {
     Dialog,
     DialogContent,
@@ -231,11 +231,10 @@ function TaskInspectorContent({
         void mutate(() => updateAgentTask(task.id, {plan}, editRevision), "执行清单已保存", () => setEditor(null));
     }
 
-    return <Sheet open={open} onOpenChange={(next) => {
-        if (!next) requestDeparture(() => onOpenChange(false));
-        else onOpenChange(true);
+    return <ContextPanel open={open} onRequestDeparture={(proceed, cancel) => requestDeparture(proceed, undefined, cancel)} onOpenChange={(next) => {
+        onOpenChange(next);
     }}>
-        <SheetContent className="agent-task-inspector" showCloseButton={false}>
+        <ContextPanelContent className="agent-chat-root css-var-agent-chat agent-task-inspector" showCloseButton={false}>
             <div className="agent-task-inspector-nav"><Button variant="ghost" size="sm"
                                                               disabled={pending || reviewPending}
                                                               onClick={() => requestDeparture(onOpenBoard)}><ArrowLeft/>任务工作台</Button><Button
@@ -246,10 +245,10 @@ function TaskInspectorContent({
                 onClick={() => requestDeparture(() => onOpenChange(false))}><X/></Button>
             </div>
             <div className="agent-task-inspector-scroll">
-                <SheetHeader className="agent-task-inspector-heading"><span
-                    className={`agent-task-status is-${state}`}>{TASK_STATE_LABELS[state]}</span><SheetTitle>{task.title}</SheetTitle><SheetDescription><Sparkles
+                <ContextPanelHeader className="agent-task-inspector-heading"><span
+                    className={`agent-task-status is-${state}`}>{TASK_STATE_LABELS[state]}</span><ContextPanelTitle>{task.title}</ContextPanelTitle><ContextPanelDescription><Sparkles
                     size={14} aria-hidden/>{projectName ?? "项目不可用"} ·
-                    小光点<span>更新于 {dateLabel(task.updatedAt)}</span></SheetDescription></SheetHeader>
+                    小光点<span>更新于 {dateLabel(task.updatedAt)}</span></ContextPanelDescription></ContextPanelHeader>
                 {projectUnavailable && <div className="agent-task-notice">所属项目已不可用，历史记录仍可查看。</div>}
                 {busy &&
                     <div className="agent-task-notice">执行尚未结束。请在对话中处理批准、停止或恢复操作，再编辑任务。</div>}
@@ -422,6 +421,6 @@ function TaskInspectorContent({
                                                                    disabled={!editable || (editor === "goal" && (!title.trim() || !goal.trim()))}>{pending ? "保存中…" : "保存"}</Button></DialogFooter>
                 </form>
             </DialogContent></Dialog>
-        </SheetContent>
-    </Sheet>;
+        </ContextPanelContent>
+    </ContextPanel>;
 }

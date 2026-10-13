@@ -9,7 +9,7 @@ import {AgentGenerationResults} from "./AgentGenerationResults";
 import {Link} from "@tanstack/react-router";
 import {useEffect, useId, useMemo, useRef, useState} from "react";
 import {Markdown} from "@lobehub/ui";
-import {Check, ChevronDown, Circle, CircleAlert, LoaderCircle, ShieldQuestion, Wrench} from "@/components/ui/remixIcons";
+import {Check, ChevronDown, Circle, CircleAlert, LoaderCircle, ShieldQuestion, Wrench} from "@/components/ui/icons";
 import {canResumeAgentRun} from "@/db/agentTools";
 import type {AgentRun, AgentToolCall} from "@/domain/agent";
 import {MODEL_STEPS_PER_SEGMENT} from "@/domain/agent";

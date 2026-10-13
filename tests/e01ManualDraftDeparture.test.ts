@@ -117,4 +117,27 @@ describe("E01 production departure callbacks", () => {
         await vi.waitFor(() => expect(leave).toHaveBeenCalledOnce());
         expect(discard).toHaveBeenCalledTimes(2);
     });
+    it("reports canceled panel replacement once and permits a later retry", () => {
+        const leave = vi.fn(), cancel = vi.fn();
+        const render = () => useManualDraftDeparture(true,false,vi.fn());
+        draw(render).requestDeparture(leave,undefined,cancel);
+        click(button(draw(render).confirmation,"继续编辑"));
+        expect(cancel).toHaveBeenCalledOnce(); expect(leave).not.toHaveBeenCalled();
+        draw(render).requestDeparture(leave,undefined,cancel);
+        expect((draw(render).confirmation as Node).props.open).toBe(true);
+        const modal = draw(render).confirmation as Node;
+        (modal.props.onOpenChange as (open: boolean) => void)(false);
+        expect(cancel).toHaveBeenCalledTimes(2); expect(leave).not.toHaveBeenCalled();
+    });
+    it("rejects a competing panel request without replacing the initiating departure", async () => {
+        const first = vi.fn(), second = vi.fn(), canceled = vi.fn();
+        const render = () => useManualDraftDeparture(true,false,vi.fn(async () => {}));
+        draw(render).requestDeparture(first);
+        draw(render).requestDeparture(second,undefined,canceled);
+        expect(canceled).toHaveBeenCalledOnce();
+        click(button(draw(render).confirmation,"放弃并离开"));
+        await vi.waitFor(() => expect(first).toHaveBeenCalledOnce());
+        expect(second).not.toHaveBeenCalled();
+    });
+
 });

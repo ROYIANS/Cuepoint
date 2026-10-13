@@ -3,7 +3,7 @@ import {Input} from "@/components/ui/input";
 import {copySelection} from "@/lib/copySelection";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Library, Plus, Trash2} from "@/components/ui/remixIcons";
+import {Library, Plus, Trash2} from "@/components/ui/icons";
 import {useState} from "react";
 import {toast} from "sonner";
 import {

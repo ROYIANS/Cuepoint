@@ -1,5 +1,5 @@
 import * as Popover from "@radix-ui/react-popover";
-import {ArrowLeft, Check, ChevronDown, Folder, Plus, Search, X} from "@/components/ui/remixIcons";
+import {ArrowLeft, Check, ChevronDown, Folder, Plus, Search, X} from "@/components/ui/icons";
 import {useId, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import type {Id, Project, ProjectKind} from "@/domain/types";

@@ -1,5 +1,6 @@
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 import type {AgentTask} from "@/domain/agent";
-import {ArrowRight, ListTodo} from "@/components/ui/remixIcons";
+import {ArrowRight, ListTodo} from "@/components/ui/icons";
 import {Avatar, Text} from "@lobehub/ui";
 import type {ComposerProps} from "@/components/agent/composerTypes";
 import {FloatingComposer} from "@/components/agent/FloatingComposer";
@@ -37,9 +38,8 @@ export function HomeWelcome({
     const project = composer.projects.find((item) => item.id === composer.projectId);
     const projectTasks = tasks.filter((task) => (!composer.projectId || task.projectId === composer.projectId) && task.lifecycle !== "archived");
     return (
-        <div className="agent-home-shell">
+        <ModuleLayout className="agent-home-shell" mainClassName="agent-module-main" navigationLabel="话题导航" navigation={topics.navigation}>
             <AgentHeader title="创作助手" topicToggle={topics.toggle} onNewTopic={onNewTopic}/>
-            {topics.navigation}
             <div className="agent-home">
                 <div className="agent-home-inner">
                     <div className="agent-home-hero">
@@ -111,6 +111,6 @@ export function HomeWelcome({
                     ) : null}
                 </div>
             </div>
-        </div>
+        </ModuleLayout>
     );
 }

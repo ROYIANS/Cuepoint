@@ -1,3 +1,5 @@
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
+import {TopicSidebar} from "@/components/agent/TopicSidebar";
 import {useChatSelection} from "./useChatSelection";
 import {useChatExecutionSession} from "./useChatExecutionSession";
 import {executeNewChatMessage, resolveChatRunAction, retryFrozenChatRun} from "./chatExecutionFlows";
@@ -435,17 +437,18 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             routedThread.forId !== activeThreadId ||
             (routedThread.forId === activeThreadId && routedThread.thread === null));
 
+    const unavailableNavigation = <TopicSidebar threads={threadList} activeThreadId={activeThreadId}
+        onSelect={openThread} onNewTopic={handleNewTopic} onOpenTasks={openBoard}
+        onRename={handleRenameThread} onDelete={handleDeleteThread}/>;
     if (!loaded || routedThreadPending) {
         return (
-            <Flexbox align="center" justify="center" height="100%" style={{minHeight: "100%"}}>
-                加载中…
-            </Flexbox>
+            <ModuleLayout navigation={unavailableNavigation} navigationLabel="话题导航"><Flexbox align="center" justify="center" height="100%" style={{minHeight: "100%"}}>加载中…</Flexbox></ModuleLayout>
         );
     }
 
     if (connectorList.length === 0 && showHome) {
         return (
-            <Flexbox
+            <ModuleLayout navigation={unavailableNavigation} navigationLabel="话题导航"><Flexbox
                 align="center"
                 justify="center"
                 height="100%"
@@ -460,7 +463,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     <Button type="primary">前往连接</Button>
                 </Link>
                 <Button onClick={openBoard}>先整理任务</Button>
-            </Flexbox>
+            </Flexbox></ModuleLayout>
         );
     }
 

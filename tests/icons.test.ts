@@ -4,9 +4,9 @@ import {ActionIcon} from "@lobehub/ui/base-ui";
 import {MotionProvider} from "@lobehub/ui/es/MotionProvider/index";
 import * as motion from "motion/react-m";
 import {describe, expect, it} from "vitest";
-import {Search} from "@/components/ui/remixIcons";
+import {Home, Search} from "@/components/ui/icons";
 
-describe("Remix icon rendering boundary", () => {
+describe("Phosphor icon rendering boundary", () => {
     it("stays visible through LobeUI's native ActionIcon and transparent fill default", () => {
         const html = renderToStaticMarkup(createElement(MotionProvider, {
             motion,
@@ -31,11 +31,21 @@ describe("Remix icon rendering boundary", () => {
         }));
         expect(html).toContain('fill="#abcdef"');
         expect(html).toContain('width="18" height="18"');
-        expect(html).toContain('viewBox="0 0 24 24"');
+        expect(html).toContain('viewBox="0 0 256 256"');
         expect(html).toContain("search-glyph");
         expect(html).toContain('role="img" aria-label="搜索" focusable="false"');
         expect(html).not.toContain("stroke=");
         expect(html).not.toContain("stroke-width=");
+    });
+
+    it("renders distinct regular and fill states from the same Home component", () => {
+        const ordinary = renderToStaticMarkup(createElement(Home, {weight: "regular", size: 16, "aria-hidden": true}));
+        const active = renderToStaticMarkup(createElement(Home, {weight: "fill", size: 16, "aria-hidden": true}));
+        expect(ordinary).toContain('viewBox="0 0 256 256"');
+        expect(active).toContain('viewBox="0 0 256 256"');
+        expect(ordinary).toContain('width="16" height="16"');
+        expect(active).toContain('width="16" height="16"');
+        expect(ordinary.match(/<path[^>]* d="([^"]+)"/)?.[1]).not.toEqual(active.match(/<path[^>]* d="([^"]+)"/)?.[1]);
     });
 
 });

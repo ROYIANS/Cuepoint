@@ -1,7 +1,7 @@
 import {useRef, useState} from "react";
 import {Link} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {ArrowLeft, ArrowUpRight, BookOpen, History, Pause, Pencil, Plus, Search, Trash2,} from "@/components/ui/remixIcons";
+import {ArrowLeft, ArrowUpRight, BookOpen, History, Pause, Pencil, Plus, Search, Trash2,} from "@/components/ui/icons";
 import {toast} from "sonner";
 import type {ProjectMemory} from "@/domain/projectMemory";
 import {

@@ -3,7 +3,7 @@ import {Disclosure, DisclosureTitle, SelectOption, WorkspaceSelect} from "@/comp
 import {useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Copy, Download, Heart, HeartFill, Library, Pause, Play, Plus, Search, X} from "@/components/ui/remixIcons";
+import {Copy, Download, Heart, HeartFill, Library, Pause, Play, Plus, Search} from "@/components/ui/icons";
 import {db} from "@/db/database";
 import {addMusicDraft, patchMusicWork} from "@/db/music";
 import {adoptMusicWorkAsAudioTake} from "@/db/audio";
@@ -18,7 +18,9 @@ import {Button} from "@/components/ui/button";
 import {PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import {Input} from "@/components/ui/input";
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
+import {ContextPanel, ContextPanelContent, ContextPanelDescription, ContextPanelHeader, ContextPanelTitle} from "@/components/ui/context-panel";
+import {ModuleLayout, useModuleNavigation} from "@/components/layout/ModuleLayout";
+import {ProjectWorkspaceNavigation} from "@/components/workspace/ProjectWorkspaceNavigation";
 import {
     AudioPlayer,
     Empty,
@@ -54,7 +56,6 @@ function MusicWorkspace({projectId}: { projectId: string }) {
     const [favorites, setFavorites] = useState(false);
     const [sort, setSort] = useState("newest");
     const [mobileMode, setMobileMode] = useState("create");
-    const [wide, setWide] = useState(() => window.matchMedia("(min-width: 1280px)").matches);
     const [connectorId, setConnectorId] = useState("");
     const [error, setError] = useState("");
     const [actionBusy, setBusy] = useState(false);
@@ -62,12 +63,6 @@ function MusicWorkspace({projectId}: { projectId: string }) {
     const submissionPending = useRef(false);
     const busy = actionBusy || submitting;
     const actionPending = useRef(false);
-    useEffect(() => {
-        const media = window.matchMedia("(min-width: 1280px)");
-        const update = () => setWide(media.matches);
-        media.addEventListener("change", update);
-        return () => media.removeEventListener("change", update);
-    }, []);
 
     async function action(fn: () => Promise<unknown>) {
         if (actionPending.current || submissionPending.current) return;
@@ -116,14 +111,10 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                                                   setMobileMode("create");
                                                   setSelectedId("");
                                               })}/>;
-    return <div className="aw-root mw-root">
-        <PageHeader dense title="音乐创作" className="mw-page-header"/>
-        <div className="mw-mobile-nav"><Tabs value={mobileMode} onValueChange={setMobileMode}><TabsList
-            aria-label="音乐工作台"><TabsTrigger value="create">创作</TabsTrigger><TabsTrigger
-            value="works">作品 {data.works.length || ""}</TabsTrigger></TabsList></Tabs></div>
-        {error && <div role="alert" className="aw-banner aw-error">{error}</div>}
-        <div className="mw-body" data-mode={mobileMode} data-details={Boolean(selected && wide)}>
-            <aside className="mw-composer" aria-label="音乐创作">
+    const composer = (
+            <div className="mw-composer" aria-label="音乐创作">
+                <ProjectWorkspaceNavigation projectId={projectId} projectName={data.project.name} kind="music"/>
+                <div className="mw-mobile-nav"><MusicModeSwitch value={mobileMode} onValueChange={setMobileMode}/></div>
                 <div className="mw-draft-bar"><WorkspaceSelect aria-label="创作草稿" disabled={busy}
                                                                value={draft?.id ?? ""}
                                                                onValueChange={(value) => void action(async () => {
@@ -148,7 +139,13 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                     const row = await addMusicDraft(projectId, {settings: defaultMusicSettings()});
                     setDraftId(row.id);
                 })}>开始创作</Button>}
-            </aside>
+            </div>
+    );
+    return <div className="aw-root mw-root">
+        <ModuleLayout navigation={composer} navigationWidth={340} navigationLabel="音乐创作" className="mw-module-layout" mainClassName="overflow-hidden">
+        <PageHeader dense title="音乐创作" className="mw-page-header"/>
+        <div className="mw-mobile-nav"><MusicModeSwitch value={mobileMode} onValueChange={setMobileMode}/></div>
+        {error && <div role="alert" className="aw-banner aw-error">{error}</div>}
             <main className="mw-library" aria-label="音乐作品库">
                 <div className="mw-library-heading"><h2>作品</h2><span>{data.works.length} 首</span></div>
                 <PageToolbar className="mw-library-tools">
@@ -186,24 +183,32 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                         </div>
                     </div>)}
             </main>
-            {wide && selected && <aside className="mw-details">
-                <div className="mw-details-heading"><span>作品详情</span><Button size="icon-sm" variant="ghost"
-                                                                                 aria-label="关闭作品详情"
-                                                                                 onClick={() => setSelectedId("")}><X/></Button>
-                </div>
-                {details}</aside>}
-        </div>
-        {!wide && <Sheet open={Boolean(selected)} onOpenChange={(open) => {
-            if (!open) setSelectedId("");
-        }}><SheetContent
-            className="mw-detail-sheet w-full sm:max-w-md"><SheetHeader><SheetTitle>作品详情</SheetTitle><SheetDescription>歌词、创作笔记与作品操作</SheetDescription></SheetHeader>
+        </ModuleLayout>
+        <ContextPanel open={Boolean(selected)} width={300} onOpenChange={(open) => {
+            if (!open && !actionPending.current && !submissionPending.current) setSelectedId("");
+        }} onRequestDeparture={(proceed, cancel) => {if (!actionPending.current && !submissionPending.current) proceed(); else cancel?.();}}><ContextPanelContent className="mw-detail-panel">
+            <ContextPanelHeader><ContextPanelTitle>作品详情</ContextPanelTitle><ContextPanelDescription>歌词、创作笔记与作品操作</ContextPanelDescription></ContextPanelHeader>
             <div className="mw-detail-sheet-body">{details}</div>
-        </SheetContent></Sheet>}
+        </ContextPanelContent></ContextPanel>
         <AudioPlayer key={playing?.id ?? "empty"} mediaId={playing?.mediaId} title={playing?.title ?? ""}
                      autoplay={Boolean(playing)} toggleRequest={toggleRequest} onPlayingChange={setIsPlaying}
                      onPrevious={previous ? () => play(previous) : undefined}
                      onNext={next ? () => play(next) : undefined} onEnded={next ? () => play(next) : undefined}/>
     </div>;
+}
+
+/** The form remains the same module-navigation child on desktop and narrow screens. */
+function MusicModeSwitch({value, onValueChange}: {value: string; onValueChange: (value: string) => void}) {
+    const {narrow, setOpen} = useModuleNavigation();
+    const previousMode = useRef(value);
+    useEffect(() => {
+        if (previousMode.current !== value && narrow) setOpen(value === "create");
+        previousMode.current = value;
+    }, [value, narrow, setOpen]);
+    return <Tabs value={value} onValueChange={(next) => {
+        onValueChange(next);
+        setOpen(next === "create");
+    }}><TabsList aria-label="音乐工作台"><TabsTrigger value="create">创作</TabsTrigger><TabsTrigger value="works">作品</TabsTrigger></TabsList></Tabs>;
 }
 
 function MusicDetails({work, busy, action, reuse}: {

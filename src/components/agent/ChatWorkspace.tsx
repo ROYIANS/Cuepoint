@@ -1,8 +1,9 @@
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 import type {RunAction} from "./AgentRunDetails";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import type {AgentRun} from "@/domain/agent";
 import {Flexbox} from "@lobehub/ui";
-import {ListTodo} from "@/components/ui/remixIcons";
+import {ListTodo} from "@/components/ui/icons";
 import {type CSSProperties, lazy, Suspense, useLayoutEffect, useRef, useState} from "react";
 import {AgentHeader} from "@/components/agent/AgentHeader";
 import {useAgentTopicNavigation} from "@/components/agent/AgentTopicNavigation";
@@ -21,7 +22,7 @@ const MessageList = lazy(() => import("./MessageList").then((module) => ({defaul
 /**
  * Chat workspace — lobehub Conversation layout:
  * collapsible TopicSidebar (md+) | message stream +
- * floating composer. Below md, topics open in a right Sheet.
+ * floating composer. Narrow topic navigation opens in the shared left overlay.
  */
 export function ChatWorkspace({
                                   threads,
@@ -101,7 +102,7 @@ export function ChatWorkspace({
                 topicToggle={topics.toggle} onRename={onRenameThread} onDelete={onDeleteThread}
                 taskTitle={taskTitle} onNewTopic={onNewTopic}
                 onOpenTask={taskTitle || (composer.projectId && !composer.blocked) ? onOpenTask : undefined}/>
-            {topics.navigation}
+            <ModuleLayout navigationLabel="话题导航" navigation={topics.navigation} mainClassName="agent-module-main">
             <Flexbox flex={1} height="100%" className="agent-chat-column min-w-0">
                 <div className="agent-transcript-container" inert={expanded}
                      style={expanded ? {visibility: "hidden"} : undefined}>
@@ -129,6 +130,7 @@ export function ChatWorkspace({
                     </div>
                 </div>
             </Flexbox>
+            </ModuleLayout>
         </Flexbox>
     );
 }

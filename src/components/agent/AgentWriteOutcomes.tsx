@@ -1,5 +1,5 @@
 import {useId, useMemo, useState} from "react";
-import {ChevronDown} from "@/components/ui/remixIcons";
+import {ChevronDown} from "@/components/ui/icons";
 import type {AgentRun, AgentToolCall} from "@/domain/agent";
 import {Button} from "@/components/ui/button";
 import {describeRunWrites, WRITE_KIND_LABELS, WRITE_OPERATION_LABELS} from "@/lib/agent/runWriteOutcomes";

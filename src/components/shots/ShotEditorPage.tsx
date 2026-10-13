@@ -44,7 +44,7 @@ import {
     Trash2,
     Type,
     Users,
-} from "@/components/ui/remixIcons";
+} from "@/components/ui/icons";
 import {
     type CSSProperties,
     type Dispatch,

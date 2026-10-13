@@ -1,6 +1,6 @@
 import {ReferenceMessageSources} from "./ReferenceAttachments";
 import {ModelIcon} from "./ModelIcons";
-import {Coins, Gauge} from "@/components/ui/remixIcons";
+import {Coins, Gauge} from "@/components/ui/icons";
 import {formatTokenCount} from "@/lib/agent/contextUsage";
 import {AgentRunDetails, type RunAction} from "./AgentRunDetails";
 import type {AgentRun, AgentToolCall} from "@/domain/agent";

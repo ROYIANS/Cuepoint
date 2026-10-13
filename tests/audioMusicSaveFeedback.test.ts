@@ -40,6 +40,7 @@ import {AudioExports} from "@/components/audio/AudioExports";
 import {AudioPlayer} from "@/components/audioMusic/shared";
 import {MusicWorkspacePage} from "@/components/music/MusicWorkspacePage";
 import {Button} from "@/components/ui/button";
+import {ContextPanel} from "@/components/ui/context-panel";
 import {db} from "@/db/database";
 import {addAudioClip, addAudioTake, getAudioProjectSnapshot} from "@/db/audio";
 import {createAudioMusicProject} from "@/db/projects";
@@ -185,4 +186,34 @@ describe.each(callerKinds)("%s saves distinguish publication from failure", kind
         expect(await db.media.get(view.mediaId)).toBeDefined();
         if (kind === "timeline") expect(view.render().find(node => node.props.role === "status" && text(node.props.children).includes("已取消另存文件"))).toBeDefined();
     });
+});
+
+
+it("music details reject a panel departure while the actual download action is pending", async () => {
+    let accept!: () => void;
+    const blocked = new Promise<void>(resolve => {accept = resolve;});
+    transport("canceled");
+    const originalTransport = host.invoke.getMockImplementation()!;
+    host.invoke.mockImplementation(async (...args: Parameters<typeof originalTransport>) => {
+        if (args[0] === "product_save_begin") await blocked;
+        return originalTransport(...args);
+    });
+    const view = await caller("music");
+    const panel = () => view.render().find(node => node.type === ContextPanel)!;
+    expect(panel().props.open).toBe(true);
+    view.click();
+    const proceed = vi.fn(), cancel = vi.fn();
+    (panel().props.onRequestDeparture as (proceed: () => void, cancel?: () => void) => void)(proceed, cancel);
+    (panel().props.onOpenChange as (open: boolean) => void)(false);
+    expect(proceed).not.toHaveBeenCalled();
+    expect(cancel).toHaveBeenCalledOnce();
+    expect(panel().props.open).toBe(true);
+    accept();
+    await vi.waitFor(() => expect(host.invoke.mock.calls.some(([command]) => command === "product_save_cancel")).toBe(true));
+    await vi.waitFor(() => {
+        (panel().props.onRequestDeparture as (proceed: () => void) => void)(proceed);
+        expect(proceed).toHaveBeenCalled();
+    });
+    (panel().props.onOpenChange as (open: boolean) => void)(false);
+    expect(panel().props.open).toBe(false);
 });

@@ -70,6 +70,7 @@ import {MaterialLibraryPage} from "@/components/studio/MaterialLibraryPage";
 
 // Execute the real page/row components with a deterministic hook host. Only the
 // storage boundary is substituted; native assertions execute captured queriers.
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(value: unknown): Node[] {
     if (Array.isArray(value)) return value.flatMap(nodes);
@@ -77,7 +78,7 @@ function nodes(value: unknown): Node[] {
     const node = value as Node;
     const children = node.type === PageHeader || node.type === PageState
         ? (node.type as (props: Record<string, unknown>) => unknown)(node.props) : node.props.children;
-    return [node, ...nodes(children)];
+    return [node, ...nodes(children), ...(node.type === ModuleLayout ? nodes(node.props.navigation) : [])];
 }
 function render(run: () => unknown, results: unknown[] = []) {host.cursor = 0; host.queryIndex = 0; host.queries = []; host.results = results; return nodes(run());}
 function scoped(node: unknown) {const element = node as Node; return (element.type as (props: unknown) => unknown)(element.props);}
@@ -161,7 +162,7 @@ describe("shared video product page consumers", () => {
         expect(actions.map(action => action.label)).toEqual(expect.arrayContaining(["所属 IP", "备份项目（zip）"]));
         expect(tree.some(node => node.type === ProjectIpPicker)).toBe(true);
         for (const label of ["音频", "音乐"]) {
-            const typeButton = tree.find(node => node.type === "button" && Array.isArray(node.props.children) && node.props.children.some(child => typeof child === "object" && child && "props" in child && child.props.children === label));
+            const typeButton = tree.find(node => node.type === "button" && Array.isArray(node.props.children) && node.props.children.some(child => child === label || typeof child === "object" && child && "props" in child && child.props.children === label));
             expect(typeButton).toBeDefined();
             (typeButton?.props.onClick as () => void)();
             tree = render(ProjectGalleryPage, galleryResults);

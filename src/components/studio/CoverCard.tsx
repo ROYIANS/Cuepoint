@@ -1,4 +1,4 @@
-import {Ellipsis, Plus} from "@/components/ui/remixIcons";
+import {Ellipsis, Plus} from "@/components/ui/icons";
 import type {ReactNode} from "react";
 import {Still} from "@/components/studio/Still";
 import {Button} from "@/components/ui/button";

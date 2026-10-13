@@ -31,9 +31,9 @@ src/
 ├── components/
 │   ├── studio/AssetLibraryPages.tsx # studio 角色/场景/道具/风格 grids
 │   ├── studio/StudioShell.tsx       # guarded Studio owner + shared AppFrame
-│   ├── layout/                      # AppFrame and presentation-only PageLayout
+│   ├── layout/                      # AppFrame, ModuleLayout, ContextPanelHost and PageLayout
 │   ├── agent/                       # /agent chat (LobeHub-inspired, chat-only @lobehub/ui)
-│   ├── ui/sheet.tsx                 # shadcn Sheet (studio + agent mobile drawers)
+│   ├── ui/sheet.tsx                 # shadcn Sheet (global mobile navigation)
 │   ├── assets/*DetailPage.tsx       # shared detail editors
 │   └── workspace/                   # in-project chrome
 ├── db/
@@ -71,7 +71,7 @@ Project world owns project-scoped character, scene, prop, and style detail route
 
 ## Studio navigation and project kinds (2026-10-10)
 
-- `/` redirects to `/agent`; `/settings` redirects to `/about`. Shared `layout/AppFrame.tsx` owns navigation for both Studio and project shells. Chat, IP, projects, materials and tasks remain separate destinations, with connectors and About below. `/agent/tasks` must not activate chat.
+- `/` redirects to `/agent`; `/settings` redirects to `/about`. Shared `layout/AppFrame.tsx` owns navigation for both Studio and project shells. Chat, IP, projects, materials and tasks remain separate destinations, with connectors and bottom Settings below (Settings currently redirects to About). `/agent/tasks` must not activate chat.
 - `/ips` and `/ips/$ipId` are implemented persisted profile surfaces. Membership/context rules belong to [IP / Material Library](./ip-material-library.md); IP is not a project kind.
 - `/assets` owns the materials hub while retaining legacy Studio character/scene/prop/style list/detail URLs. Shared editors keep `STUDIO_LIBRARY_ID` versus project ownership checks.
 - `projectKinds.tsx` is the presentation availability catalog. Film/series, audio and music dispatch through `ProjectHomePage`; unavailable options are blocked both in the UI and submit handler. Project kind migrations belong to their database contracts.
@@ -85,3 +85,7 @@ Project world owns project-scoped character, scene, prop, and style detail route
 ## Feature command, session and codec owners
 
 Shot pages consume named commands, a keyboard adapter, typed text-column mapping and separate row/relationship owners. Audio/music pages consume pure selection, shared buffer loading, export and variant commands. Chat uses separate execution-session, three named flow and selection owners; reference drafts remain separate. The project home route delegates to `components/workspace/ProjectHomePage.tsx`; shell/gallery share `components/studio/importStudioProject.ts`. Pure package parsing/remapping lives in `lib/packages/`; root package modules retain ZIP/media IO and one whole import transaction. See [the D03 contract](./component-guidelines.md#d03-feature-responsibility-contract-2026-10-08) for exact owners, signatures, lifecycle/error rules and migration limits.
+
+## Shared navigation presentation (2026-10-13)
+
+`layout/ModuleLayout.tsx` owns internal left navigation presentation; `layout/ContextPanelHost.tsx` coordinates feature-owned panels rendered by `ui/context-panel.tsx`. `ui/icons.tsx` adapts static Phosphor glyphs. `lib/historyNavigation.ts` tracks accepted app history capabilities beside product history; frame arrows never infer a parent route. These owners do not fetch or mutate business records.

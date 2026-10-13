@@ -2,7 +2,7 @@ import {useId, useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {Input, Select} from "antd";
 import {Link} from "@tanstack/react-router";
-import {ArrowUpRight, Image, LoaderCircle, Restore, Video} from "@/components/ui/remixIcons";
+import {ArrowUpRight, Image, LoaderCircle, Restore, Video} from "@/components/ui/icons";
 import {toast} from "sonner";
 import {getGenerationPreferenceState, saveGenerationPreference} from "@/db/generationPreferences";
 import type {AgentToolCall} from "@/domain/agent";
