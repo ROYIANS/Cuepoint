@@ -42,7 +42,7 @@ resolveProductStorage(native: boolean, profile: unknown): Readonly<{
 getProductStorage(): ReturnType<typeof resolveProductStorage>
 usesSqliteProductStorage(): boolean
 
-runtimeFetchFor(purpose?: "configured" | "result-download" | "search-probe"): typeof fetch
+runtimeFetchFor(purpose?: "configured" | "result-download" | "search-probe" | "model-catalog"): typeof fetch
 connectorProbeFetch(baseUrl: string, fetchImpl?: typeof fetch): typeof fetch
 authorizeRuntimeHttp(
   url: URL, method: string, headers: Headers,

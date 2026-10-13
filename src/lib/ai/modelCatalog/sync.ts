@@ -136,13 +136,16 @@ function sanitizeProviders(root: Record<string, unknown>, wanted: ReadonlySet<st
     const providers: Record<string, RawProvider> = {};
     const valid = new Set<string>();
     for (const [id, raw] of Object.entries(root)) {
-        if (!isRecord(raw) || !isRecord(raw.models)) continue;
+        // `providers[id] = ...` with id "__proto__" would replace the object's prototype instead of adding a
+        // key, so a hostile document could make absent providers appear to exist. Not covered by a test: the
+        // helper is private and the effect is invisible through Object.keys/entries (see the task notes).
+        if (id === "__proto__" || !isRecord(raw) || !isRecord(raw.models)) continue;
         valid.add(id);
         if (!wanted.has(id)) continue;
         const models: RawProvider["models"] = {};
         for (const model of Object.values(raw.models)) {
             const parsed = modelSchema.safeParse(model);
-            if (parsed.success) models[parsed.data.id] = parsed.data;
+            if (parsed.success && parsed.data.id !== "__proto__") models[parsed.data.id] = parsed.data;
         }
         providers[id] = {api: raw.api, models};
     }
