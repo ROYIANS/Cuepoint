@@ -1670,3 +1670,32 @@ Shipped split-pane module navigation, docked/overlay context panels, single-row 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 60: Agent 体验精简与稳定性：安静对话、工具时间线、项目分组侧栏
+<!-- trellis-session: v=2 fp=6e161d09a0a7ee4e -->
+
+**Date**: 2026-10-13
+**Task**: Agent 体验精简与稳定性：安静对话、工具时间线、项目分组侧栏
+**Branch**: `codex/agent-experience-overhaul`
+
+### Summary
+
+删除成果声明链并收窄结束前检查（普通回复从最多3次模型请求降为1次）；统一 settleRun 终态入口，修复 D1 未提供工具回给模型及 D2-D11；助手消息无气泡、成功时安静，工具调用改为缩进时间线与行内批准，实体链接折叠；话题侧栏参照 Cursor 按项目分组，可切换按时间，项目加号直接新建；同步规范并经独立检查。全量门禁通过；真实窗口由用户验证。未合并、未推送。遗留：armOnce 结构性风险、e01/e02 手动浏览器脚本待核对、S4/S6 未处理。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `3100d973` | refactor(agent): remove final-review claim check, narrow finishing check |
+| `9275bbee` | fix(agent): unify run settlement, fix topic departure and unavailable-tool failures |
+| `b7dac8c1` | feat(agent-ui): quiet message presentation without assistant bubbles |
+| `c2307309` | feat(agent-ui): compact tool timeline with inline approval |
+| `f67e1db7` | style(agent-ui): plain-text tool rows without underline or hover background |
+| `f09b7a41` | style(agent-ui): clear hierarchy in the process area and collapse entity links |
+| `377ffcdd` | feat(agent-ui): Cursor-style topic sidebar grouped by project |
+| `463716b8` | docs(agent): sync specs with the quiet transcript, and harden review findings |
+
+### Status
+
+[OK] **Completed**
