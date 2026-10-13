@@ -1,6 +1,5 @@
 import {CreatedEntityLinks} from "./CreatedEntityLinks";
 import {AgentWriteOutcomes} from "./AgentWriteOutcomes";
-import {AgentFinalReviewStatus} from "./AgentFinalReviewStatus";
 import {WebResearchSources} from "./WebResearchSources";
 import {ProjectImageSources} from "./ProjectImageSources";
 import {GenerationReview} from "./GenerationReview";
@@ -9,16 +8,14 @@ import {AgentGenerationResults} from "./AgentGenerationResults";
 import {Link} from "@tanstack/react-router";
 import {useEffect, useId, useMemo, useRef, useState} from "react";
 import {Markdown} from "@lobehub/ui";
-import {Check, ChevronDown, Circle, CircleAlert, LoaderCircle, ShieldQuestion, Wrench} from "@/components/ui/icons";
+import {Check, ChevronDown, Circle, CircleAlert, LoaderCircle, ShieldQuestion} from "@/components/ui/icons";
 import {canResumeAgentRun} from "@/db/agentTools";
 import type {AgentRun, AgentToolCall} from "@/domain/agent";
 import {MODEL_STEPS_PER_SEGMENT} from "@/domain/agent";
 import {Button} from "@/components/ui/button";
 import type {ChatMessage} from "@/domain/types";
-import {buildRunActivity, formatRunElapsed, getRunElapsedMs, isPersistedToolRound} from "@/lib/agent/runPresentation";
-import {readToolRecoveryFailure, readToolValidationFailure, type ToolRecoveryFailure, type ToolValidationFailure} from "@/lib/agent/toolErrors";
-import {describeRunExecution} from "@/lib/agent/executionSummary";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {buildRunActivity, isPersistedToolRound} from "@/lib/agent/runPresentation";
+import {readToolRecoveryFailure, readToolValidationFailure, type ToolRecoveryFailure} from "@/lib/agent/toolErrors";
 import {ThinkingPanel} from "./ThinkingPanel";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import "./executionActivity.css";
@@ -26,54 +23,72 @@ import "./executionActivity.css";
 const MARKDOWN_PROPS = {variant: "chat"} as const;
 
 export type RunAction = "resume" | "cancel" | "approve" | "reject";
-const STATUS: Record<AgentToolCall["status"], string> = {
+// Success is shown by its icon only; every other state gets a short word.
+const STATUS: Partial<Record<AgentToolCall["status"], string>> = {
     pending: "准备执行", awaiting_approval: "等待批准", approved: "已批准，等待执行",
-    running: "执行中", completed: "已完成", failed: "失败", rejected: "已拒绝", unknown: "结果待核实",
-};
-const EFFECT: Record<AgentToolCall["effect"], string> = {
-    read: "读取本地数据", write: "编辑数据", network: "使用互联网", bookkeeping: "维护任务与计划",
+    running: "执行中", rejected: "已拒绝", unknown: "结果待核实",
 };
 
-function StepIcon({status}: { status: AgentToolCall["status"] }) {
+function StepIcon({status, soft}: { status: AgentToolCall["status"]; soft?: boolean }) {
     if (status === "completed") return <Check size={15} className="text-green-500"/>;
     if (status === "running") return <LoaderCircle size={15} className="animate-spin motion-reduce:animate-none"/>;
     if (status === "awaiting_approval") return <ShieldQuestion size={15} className="text-amber-500"/>;
-    if (status === "failed" || status === "unknown") return <CircleAlert size={15} className="text-amber-500"/>;
+    if (status === "failed") return <CircleAlert size={15} className={soft ? "text-amber-500" : "text-destructive"}/>;
+    if (status === "unknown") return <CircleAlert size={15} className="text-amber-500"/>;
     return <Circle size={15}/>;
 }
 
-/** Only this tiny label ticks; historical markdown never rerenders for the clock. */
-function RunElapsed({run}: { run: AgentRun }) {
-    const [now, setNow] = useState(Date.now);
-    useEffect(() => {
-        if (run.status !== "running") return;
-        setNow(Date.now());
-        const timer = window.setInterval(() => setNow(Date.now()), 1000);
-        return () => window.clearInterval(timer);
-    }, [run.status]);
-    return <span title="本轮经过时间，包含等待确认的时间">用时 {formatRunElapsed(getRunElapsedMs(run, now))}</span>;
-}
-
-function ValidationFailureNotice({failure, legacy}: { failure: ToolValidationFailure; legacy?: boolean }) {
-    return <div className="agent-tool-validation-error" role="alert">
-        <strong>参数校验失败，操作未执行</strong>
-        {legacy &&
-            <p className="agent-tool-validation-legacy">历史记录补充：按当前工具规则复核，以下诊断不代表当时返回内容。</p>}
-        <ul>{failure.issues.map((issue, index) => <li key={`${issue.path}-${index}`}>
-            <code>{issue.path}</code>：{issue.constraint}{issue.received !== undefined &&
-            <span>（收到 {String(issue.received)}）</span>}</li>)}</ul>
-        <p className="agent-tool-validation-recovery">
-            此次操作未执行，也未产生结果。助手应修正上述参数后重新调用；若依据其他资料回答，需要说明缺失信息对结论的影响。
-            {failure.issues.some((issue) => /limit|offset/i.test(issue.path)) && " 如需读取较长内容，请按 nextOffset 分页读取，每次请求保持在单次上限内。"}
-        </p>
+/** Only an uncertain outcome keeps its own notice; certain failures fold into one error line. */
+function RecoveryFailureNotice({failure}: {failure: ToolRecoveryFailure}) {
+    return <div className="agent-tool-failure" role="alert">
+        <strong>操作结果待核实</strong>
+        <p>{failure.error}</p>
+        <p className="agent-tool-failure-recovery">{failure.recovery}</p>
     </div>;
 }
 
-function RecoveryFailureNotice({failure}: {failure: ToolRecoveryFailure}) {
-    return <div className="agent-tool-validation-error" role="alert">
-        <strong>{failure.effectCertainty === "rolled_back" ? "操作已回滚" : failure.effectCertainty === "not_started" ? "操作未开始" : "操作结果待核实"}</strong>
-        <p>{failure.error}</p>
-        <p className="agent-tool-validation-recovery">{failure.recovery}</p>
+function failureLine(call: AgentToolCall, recovery?: ToolRecoveryFailure, validationError?: string): string {
+    const prefix = recovery?.effectCertainty === "rolled_back" ? "已回滚：" : recovery?.effectCertainty === "not_started" || validationError ? "未执行：" : "";
+    return prefix + (recovery?.error ?? call.error ?? validationError ?? "调用失败");
+}
+
+const OBJECT_LIMIT = 40;
+
+/** Argument-validation failures are corrected by the model itself; they are not execution failures. */
+function isValidationFailure(call: AgentToolCall, validationError?: string): boolean {
+    return call.status === "failed" && (Boolean(validationError) || (call.error?.startsWith("工具") === true && call.error.includes("参数无效")));
+}
+
+/** Object of the call, read only from the validated preview: target label first, then a short summary. */
+function callObject(call: AgentToolCall): string | undefined {
+    const preview = call.generationOverride?.preview ?? call.preview;
+    const raw = (preview?.target?.label || preview?.summary || "").replace(/\s+/g, " ").trim();
+    if (!raw || call.title.includes(raw)) return undefined;
+    const chars = [...raw];
+    return chars.length > OBJECT_LIMIT ? `${chars.slice(0, OBJECT_LIMIT - 1).join("")}…` : raw;
+}
+
+/** Quiet fold for raw arguments and results; always the last item of an expanded call. */
+function TechnicalDetails({call}: { call: AgentToolCall }) {
+    const [open, setOpen] = useState(false);
+    const panelId = useId();
+    return <div className="agent-step-technical">
+        <button type="button" className="agent-quiet-toggle" aria-expanded={open} aria-controls={panelId}
+                onClick={() => setOpen((value) => !value)}>
+            <span>参数与返回结果</span><ChevronDown size={12} className={open ? "rotate-180" : ""} aria-hidden/>
+        </button>
+        <div id={panelId} className="agent-step-technical-body" hidden={!open}>
+            <div className="agent-step-payload-label">AI 原始参数</div>
+            <pre>{call.arguments}</pre>
+            {call.generationOverride && <>
+                <div className="agent-step-payload-label">用户确认的参数</div>
+                <pre>{call.generationOverride.arguments}</pre>
+            </>}
+            {call.result && <>
+                <div className="agent-step-payload-label">返回结果</div>
+                <pre>{call.result}</pre>
+            </>}
+        </div>
     </div>;
 }
 
@@ -83,43 +98,45 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
     onAction: (runId: string, action: RunAction, callId?: string) => void;
 }) {
     const {request} = useAgentActivityNavigation();
-    const [open, setOpen] = useState(call.status === "awaiting_approval" || call.status === "unknown");
+    const awaiting = call.status === "awaiting_approval";
+    const [open, setOpen] = useState(awaiting || call.status === "unknown");
     const panelId = useId();
     useEffect(() => {
         if (request?.runId === run.id && request.callId === call.id) setOpen(true);
     }, [request, run.id, call.id]);
-    const recoverable = canResumeAgentRun(run);
-    const reviewGeneration = !readOnly && call.name === "submit_generation" && call.status === "awaiting_approval" && recoverable && !unknown && !executing;
-    const musicReview = call.name === "music_generate";
-    const activeMusicReview = musicReview && !readOnly && call.status === "awaiting_approval" && recoverable && !unknown && !executing;
-    const preview = call.generationOverride?.preview ?? call.preview;
-    const [legacyValidation, setLegacyValidation] = useState<ToolValidationFailure | undefined>();
-    const structuredValidation = useMemo(() => call.status === "failed" ? readToolValidationFailure(call.result) : undefined, [call.status, call.result]);
-    const recovery = useMemo(() => call.status === "failed" ? readToolRecoveryFailure(call.result) : undefined, [call.status, call.result]);
     useEffect(() => {
-        let cancelled = false;
-        if (!structuredValidation && call.status === "failed" && call.error?.includes("参数无效")) {
-            void import("@/lib/agent/tools").then(({getLegacyToolValidationFailure}) => {
-                if (!cancelled) setLegacyValidation(getLegacyToolValidationFailure(call));
-            });
-        } else setLegacyValidation(undefined);
-        return () => {
-            cancelled = true;
-        };
-    }, [call, structuredValidation]);
-    const validation = structuredValidation ?? legacyValidation;
-    const isLegacyValidation = !structuredValidation && Boolean(legacyValidation);
+        if (awaiting) setOpen(true);
+    }, [awaiting]);
+    const recoverable = canResumeAgentRun(run);
+    const reviewGeneration = !readOnly && call.name === "submit_generation" && awaiting && recoverable && !unknown && !executing;
+    const musicReview = call.name === "music_generate";
+    const activeMusicReview = musicReview && !readOnly && awaiting && recoverable && !unknown && !executing;
+    const preview = call.generationOverride?.preview ?? call.preview;
+    const validationError = useMemo(() => call.status === "failed" ? readToolValidationFailure(call.result)?.error : undefined, [call.status, call.result]);
+    const recovery = useMemo(() => call.status === "failed" ? readToolRecoveryFailure(call.result) : undefined, [call.status, call.result]);
+    const decide = !readOnly && !reviewGeneration && !musicReview && awaiting && recoverable && !unknown && !executing;
+    const status = STATUS[call.status];
+    const object = callObject(call);
+    const soft = isValidationFailure(call, validationError);
     return <div className="agent-run-step" data-activity-call={call.id}>
         <button type="button" className="agent-tool-call-toggle" aria-expanded={open} aria-controls={panelId}
-                onClick={() => setOpen((value) => !value)}>
-            <StepIcon status={call.status}/><span>{call.title}</span><small>{STATUS[call.status]}</small><ChevronDown
+                data-status={call.status} data-soft={soft ? "true" : undefined} onClick={() => setOpen((value) => !value)}>
+            <StepIcon status={call.status} soft={soft}/><span className="agent-tool-verb">{call.title}{object &&
+                <span className="agent-tool-object"> · {object}</span>}</span>{status && <small>{status}</small>}<ChevronDown
             size={12} className={open ? "rotate-180" : ""} aria-hidden/>
         </button>
+        {call.status === "failed" && (recovery?.effectCertainty === "unknown"
+            ? <RecoveryFailureNotice failure={recovery}/>
+            : <p className={soft ? "agent-call-error agent-call-error-soft" : "agent-call-error text-destructive"}
+                 data-kind={soft ? "validation" : "failure"} role="alert">{failureLine(call, recovery, validationError)}</p>)}
+        {/* Approval is never folded away: what will happen is the preview, the decision sits beside it. */}
+        {decide && <div className="agent-step-actions">
+            <Button size="sm" disabled={busy} onClick={() => onAction(run.id, "approve", call.id)}>批准</Button>
+            <Button size="sm" variant="outline" disabled={busy} onClick={() => onAction(run.id, "reject", call.id)}>拒绝</Button>
+            {call.highRisk && <small className="agent-high-risk">高风险操作</small>}
+        </div>}
         <div id={panelId} hidden={!open}>
             <div className="agent-step-payload">
-                <p>{EFFECT[call.effect]}{recovery?.effectCertainty === "rolled_back" ? " · 已回滚" : validation || recovery?.effectCertainty === "not_started" ? " · 未执行" : call.highRisk ? " · 高风险操作" : ""}</p>
-                {validation && <ValidationFailureNotice failure={validation} legacy={isLegacyValidation}/>}
-                {recovery && <RecoveryFailureNotice failure={recovery}/>}
                 {musicReview ? <MusicGenerationReview key={call.id} call={call} busy={busy} active={activeMusicReview}
                                                       onAction={onAction}/> : reviewGeneration ?
                     <GenerationReview call={call} busy={busy} onAction={onAction}/> : preview &&
@@ -132,56 +149,28 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
                     </div>}
                 <WebResearchSources call={call}/>
                 <ProjectImageSources call={call}/>
-                <details className="agent-step-technical">
-                    <summary>参数与返回结果</summary>
-                    <div className="agent-step-payload-label">AI 原始参数</div>
-                    <pre>{call.arguments}</pre>
-                    {call.generationOverride && <>
-                        <div className="agent-step-payload-label">用户确认的参数</div>
-                        <pre>{call.generationOverride.arguments}</pre>
-                    </>}
-                    {call.result && <>
-                        <div className="agent-step-payload-label">返回结果</div>
-                        <pre>{call.result}</pre>
-                    </>}
-                </details>
-                {call.error && !validation && !recovery && <p className="text-destructive">{call.error}</p>}
             </div>
-            {call.name !== "project_create" && <CreatedEntityLinks call={call}/>}
-            {!readOnly && !reviewGeneration && !musicReview && call.status === "awaiting_approval" && recoverable && !unknown && !executing &&
-                <div className="agent-step-actions">
-                    <Button size="sm" disabled={busy}
-                            onClick={() => onAction(run.id, "approve", call.id)}>批准此次操作</Button>
-                    <Button size="sm" variant="outline" disabled={busy}
-                            onClick={() => onAction(run.id, "reject", call.id)}>拒绝</Button>
-                </div>}
+            {call.name !== "project_create" && <CreatedEntityLinks call={call} collapseDetails/>}
+            <TechnicalDetails call={call}/>
         </div>
         {call.name === "project_create" && <CreatedEntityLinks call={call} allowProjectConversation={!readOnly}/>}
     </div>;
 }
 
-function ToolGroup({calls, ...props}: Omit<Parameters<typeof ToolCallRow>[0], "call"> & { calls: AgentToolCall[] }) {
+type RowProps = Omit<Parameters<typeof ToolCallRow>[0], "call">;
+
+/** Consecutive successful calls of one kind collapse into one expandable line. */
+function MergedCalls({calls, ...props}: RowProps & { calls: AgentToolCall[] }) {
     const {request} = useAgentActivityNavigation();
     const [open, setOpen] = useState(false);
     const panelId = useId();
-    const handledRequest = useRef<number | undefined>(undefined);
     useEffect(() => {
-        if (request?.runId === props.run.id && request.callId && calls.some((call) => call.id === request.callId) && handledRequest.current !== request.key) {
-            handledRequest.current = request.key;
-            setOpen(true);
-        }
+        if (request?.runId === props.run.id && request.callId && calls.some((call) => call.id === request.callId)) setOpen(true);
     }, [request, props.run.id, calls]);
-    const running = calls.some((call) => call.status === "running");
-    const attention = calls.some((call) => call.status === "awaiting_approval" || call.status === "unknown");
-    const failed = calls.filter((call) => call.status === "failed").length;
-    const titles = [...new Set(calls.map((call) => call.title))];
-    const label = titles.slice(0, 2).join("、") + (titles.length > 2 ? "等" : "");
-    return <div className="agent-tool-group">
-        <button type="button" className="agent-tool-group-toggle" aria-expanded={open} aria-controls={panelId}
+    return <div className="agent-tool-merged">
+        <button type="button" className="agent-tool-call-toggle" aria-expanded={open} aria-controls={panelId}
                 onClick={() => setOpen((value) => !value)}>
-            {running ? <LoaderCircle size={14} className="animate-spin motion-reduce:animate-none" aria-hidden/> :
-                <Wrench size={14} aria-hidden/>}
-            <span>{label}</span><small>{calls.length} 项{attention ? " · 待处理" : failed ? ` · 含 ${failed} 项失败` : running ? " · 执行中" : ""}</small><ChevronDown
+            <Check size={15} className="text-green-500" aria-hidden/><span className="agent-tool-verb">{calls[0].title} · {calls.length} 项</span><ChevronDown
             size={12} className={open ? "rotate-180" : ""} aria-hidden/>
         </button>
         <div id={panelId} className="agent-tool-group-calls" hidden={!open}>
@@ -190,14 +179,34 @@ function ToolGroup({calls, ...props}: Omit<Parameters<typeof ToolCallRow>[0], "c
     </div>;
 }
 
+const mergeable = (call: AgentToolCall) => call.status === "completed" && call.name !== "project_create";
+
+function ToolGroup({calls, ...props}: RowProps & { calls: AgentToolCall[] }) {
+    const segments: AgentToolCall[][] = [];
+    for (const call of calls) {
+        const last = segments.at(-1);
+        const head = last?.[0];
+        if (last && head && mergeable(head) && mergeable(call) && (head.title === call.title || head.name === call.name)) last.push(call);
+        else segments.push([call]);
+    }
+    return <div className="agent-tool-group">
+        {segments.map((segment) => segment.length > 1
+            ? <MergedCalls key={segment[0].id} calls={segment} {...props}/>
+            : <ToolCallRow key={segment[0].id} {...props} call={segment[0]}/>)}
+    </div>;
+}
+
+// A run waiting for approval keeps its process open so the decision is never folded away.
+const opensProcess = (status: AgentRun["status"]) => status === "running" || status === "waiting_approval";
+
 export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}: {
     run: AgentRun; message: ChatMessage; calls: AgentToolCall[];
     busy: boolean; readOnly?: boolean;
     onAction: (runId: string, action: RunAction, callId?: string) => void;
 }) {
     const {request} = useAgentActivityNavigation();
-    const [expanded, setExpanded] = useState(run.status === "running");
-    const [hasExpanded, setHasExpanded] = useState(run.status === "running");
+    const [expanded, setExpanded] = useState(opensProcess(run.status));
+    const [hasExpanded, setHasExpanded] = useState(opensProcess(run.status));
     const previousStatus = useRef(run.status);
     const sectionRef = useRef<HTMLElement>(null);
     const positionedRequest = useRef<number | undefined>(undefined);
@@ -213,9 +222,10 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
     const currentContent = run.status === "running" && !persisted ? message.content : "";
     const reasoningActive = run.status === "running" && !!currentReasoning && !currentContent;
     const budgetPaused = run.status === "interrupted" && run.pauseReason === "model_step_limit";
-    const failedCount = ownedCalls.filter((call) => call.status === "failed").length;
-    const execution = useMemo(() => describeRunExecution(run, ownedCalls), [run, ownedCalls]);
-    const missingLedger = Boolean(run.hasToolCalls && !ownedCalls.length);
+    const toolCount = ownedCalls.filter((call) => call.effect !== "bookkeeping").length;
+    const running = run.status === "running";
+    // Plain replies without tools, reasoning or plan have no process to disclose.
+    const hasProcess = running || ownedCalls.length > 0 || activity.length > 0 || Boolean(currentReasoning) || Boolean(run.plan?.length);
 
     useEffect(() => {
         if (expanded) setHasExpanded(true);
@@ -224,7 +234,7 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
     useEffect(() => {
         if (previousStatus.current !== run.status) {
             // Transition only: database updates must never undo a manual toggle.
-            if (run.status === "running") setExpanded(true);
+            if (opensProcess(run.status)) setExpanded(true);
             else if (["completed", "cancelled", "failed", "interrupted"].includes(run.status)) setExpanded(false);
             previousStatus.current = run.status;
         }
@@ -251,41 +261,15 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
 
     return <section ref={sectionRef} className="agent-run-activity agent-execution-activity" aria-label="执行过程"
                     data-activity-run={run.id}>
-        <Button variant="ghost" className="agent-run-summary agent-execution-summary h-auto justify-start rounded-none"
+        {hasProcess && <button type="button" className="agent-run-summary agent-execution-summary"
                 aria-expanded={expanded} aria-controls={panelId} onClick={() => setExpanded((value) => !value)}>
-            <RunElapsed run={run}/><ChevronDown size={14} className={expanded ? "rotate-180" : ""} aria-hidden/>
-            <small>{execution.label}</small>
-            {failedCount > 0 && <small className="agent-execution-failure-summary">含 {failedCount} 项失败</small>}
-        </Button>
+            {running && <LoaderCircle size={12} className="animate-spin motion-reduce:animate-none" aria-hidden/>}
+            <span>{running ? (toolCount > 0 ? `进行中 · 已用 ${toolCount} 个工具` : "进行中") : toolCount > 0 ? `用了 ${toolCount} 个工具` : "过程记录"}</span>
+            <ChevronDown size={14} className={expanded ? "rotate-180" : ""} aria-hidden/>
+        </button>}
         <AgentWriteOutcomes run={run} calls={ownedCalls}/>
-        <AgentFinalReviewStatus run={run}/>
-        <div id={panelId} className="agent-execution-timeline" hidden={!expanded}>
+        <div id={panelId} className="agent-execution-timeline" hidden={hasProcess && !expanded}>
             {(expanded || hasExpanded) && <>
-                <div className="agent-execution-explanation">
-                    <p>{execution.detail}</p>
-                    <Popover><PopoverTrigger asChild><Button variant="ghost" size="sm"
-                                                             className="h-auto px-0 py-1 text-xs text-muted-foreground">执行记录</Button></PopoverTrigger>
-                        <PopoverContent align="start" className="w-72 text-xs">
-                            <p className="mb-3 text-muted-foreground">以下为本次执行记录，不代表作品已制作完成。</p>
-                            <dl className="grid grid-cols-2 gap-x-3 gap-y-2">
-                                <dt>模型请求</dt>
-                                <dd>{execution.modelSteps ?? "未记录"}</dd>
-                                <dt>工具调用</dt>
-                                <dd>{missingLedger ? "记录不完整" : `${execution.counts.total} 项`}</dd>
-                                <dt>调用已返回</dt>
-                                <dd>{missingLedger ? "未记录" : `${execution.counts.completed} 项`}</dd>
-                                <dt>失败 / 拒绝</dt>
-                                <dd>{missingLedger ? "未记录" : `${execution.counts.failed} / ${execution.counts.rejected}`}</dd>
-                                <dt>等待批准 / 待核实</dt>
-                                <dd>{missingLedger ? "未记录" : `${execution.counts.waiting} / ${execution.counts.unknown}`}</dd>
-                                <dt>最后请求提供的工具</dt>
-                                <dd>{execution.offeredTools ?? "未记录"}</dd>
-                                <dt>请求协议</dt>
-                                <dd>{execution.protocol ?? "未记录"}</dd>
-                            </dl>
-                        </PopoverContent>
-                    </Popover>
-                </div>
                 {activity.map((item) => item.kind === "text"
                     ? <Markdown key={item.id} {...MARKDOWN_PROPS}
                                 className="agent-activity-narrative">{item.content}</Markdown>
@@ -298,11 +282,6 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
                                                     durationMs={message.reasoningDurationMs}/>}
                 {currentContent &&
                     <Markdown {...MARKDOWN_PROPS} className="agent-activity-narrative">{currentContent}</Markdown>}
-                {run.status === "running" &&
-                    <div className="agent-activity-working" role="status"><LoaderCircle size={12}
-                                                                                        className="animate-spin motion-reduce:animate-none"
-                                                                                        aria-hidden/><span>{executing ? "正在执行工具" : currentContent ? "正在撰写" : "正在思考"}</span>
-                    </div>}
                 {run.plan && run.plan.length > 0 && <details className="agent-activity-plan">
                     <summary>执行计划
                         · {run.plan.filter((step) => step.status === "completed").length}/{run.plan.length}<ChevronDown
@@ -310,14 +289,13 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
                     <ol className="agent-run-plan" aria-label="本次执行计划">{run.plan.map((step) => <li key={step.id}>
                         <StepIcon
                             status={step.status === "completed" ? "completed" : step.status === "in_progress" ? "running" : "pending"}/>
-                        <span>{step.title}<small>{step.status === "completed" ? "已完成" : step.status === "in_progress" ? "进行中" : "待办"}</small></span>
+                        <span>{step.title}{step.status !== "completed" &&
+                            <small>{step.status === "in_progress" ? "进行中" : "待办"}</small>}</span>
                     </li>)}</ol>
                 </details>}
             </>}
             {/* Keep mounted: review dialogs own unsaved drafts and navigation guards. */}
             <AgentGenerationResults runId={run.id}/>
-            {unknown && <p role="status"
-                           className="text-xs text-amber-500">上次操作的结果尚未确认，为避免重复执行，已暂停自动接续。请先核实已有结果，再结束本次执行。</p>}
             {!readOnly && recoverable && <div className="agent-step-actions">
                 {!unknown && !pendingApproval && <Button size="sm" variant="outline" disabled={busy}
                                                          onClick={() => onAction(run.id, "resume")}>{budgetPaused ? `继续执行 · 最多 ${MODEL_STEPS_PER_SEGMENT} 轮` : "从已保存的步骤继续"}</Button>}

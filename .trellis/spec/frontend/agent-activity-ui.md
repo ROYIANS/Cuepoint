@@ -7,7 +7,7 @@ Read before editing execution chronology, thinking/tool disclosure, composer act
 - `AgentRun.activitySteps?: AgentActivityStep[]`, where a step contains `step`, `content`, optional public `reasoning` and `reasoningDurationMs`.
 - `saveToolRound(..., responseOutput?, publicOutput?)` stores the public snapshot in the same transaction as the tool ledger and continuation envelope.
 - `buildRunActivity(run, calls)` returns chronological text/reasoning/tool groups; `isPersistedToolRound` distinguishes a retained tool-round message from a new model answer.
-- `getRunElapsedMs(run, now?)` and `formatRunElapsed(ms)` implement natural elapsed time, including waits.
+- `getRunElapsedMs(run, now?)` and `formatRunElapsed(ms)` remain pure helpers in `runPresentation.ts`; the transcript no longer shows a ticking elapsed label (2026-10-13).
 - `useAgentActivityNavigation()` exposes `request` and `reveal({runId, callId?, batchId?})`. The provider scopes requests to the current thread without remounting the execution owner.
 - `selectActivityAttention(input)` derives owned required actions from current-thread runs, calls, batches, items, jobs, tasks and messages.
 - `buildChatTurns(messages)`, `turnExcerpt(text, limit?)`, `getActiveTurnIndex(offsets, readingPosition)` are pure helpers for the conversation rail.
@@ -15,7 +15,7 @@ Read before editing execution chronology, thinking/tool disclosure, composer act
 ## 3. Contracts
 Only public text belongs in the transcript. Never render encrypted Responses reasoning, raw request history or private provider envelopes as model thinking. Legacy rounds are recovered from the current continuation suffix and matched to the current run's tool identities. Missing historical reasoning cannot be reconstructed. A successful final answer stays visible even if it repeats a previous round's wording.
 
-During execution, narrative and subdued collapsible tool groups are chronological. Adjacent calls without intervening narrative/reasoning form one group. Only the small elapsed label ticks each second. Completion/stop/failure transitions close the outer process once; subsequent manual toggles survive live-query updates. Failure and pending approval must never disable folding. The original permission and recovery controls remain inside the process.
+During execution, narrative, reasoning and tool-call rows are chronological. Completion/stop/failure transitions close the outer process once; a run that is `running` or `waiting_approval` opens it, and subsequent manual toggles survive live-query updates. Failure and pending approval must never disable folding, but a pending approval's buttons sit outside its call's collapsible panel so folding the row cannot hide the decision. The original permission and recovery controls remain inside the process.
 
 Historical rich process content can defer mounting until first expansion. Batch results remain mounted under the hidden process so local edits and navigation blockers survive folding. A reveal opens the matching process/group/call or existing batch dialog; it never approves or sends a request. Expanded composer mode retains the status strip and exits when a process reveal arrives.
 
@@ -29,7 +29,7 @@ A user message anchors each navigation turn; later assistant attempts update tha
 | Failed/awaiting tool | Outer process, group and tool row remain manually collapsible |
 | Model completes with unconfirmed batch | Final answer visible, process collapsed, composer reminder persists |
 | New DB tick after manual expansion | Do not force open/closed again |
-| Running / terminal timer | Increment only while running; freeze at endedAt or updatedAt otherwise |
+| Running | Static "进行中" in the summary row; no per-second timer |
 | Legacy continuation contains previous turns | Exclude the base envelope and validate owned tool identity |
 | Batch has unsaved draft during fold | Keep component/state and leave protection mounted |
 | Composer expanded then reminder clicked | Retain reminder; expose target without hidden/inert focus |
@@ -59,7 +59,7 @@ Correct: change disclosure state on an execution transition or explicit reveal/u
 
 ## Tool validation diagnostics
 
-Schema rejection is a pre-execution failure, not a successful read and not ambiguous paid submission. Preserve structured bounded field errors in the tool result sent to the model. For `business_read_text`, one request reads at most 12000 characters and episode scripts use `story.script`; pagination follows `nextOffset`. Never silently clamp requested input or rewrite the immutable call. Explain whether correction/new invocation is needed and that a final answer must disclose relevant missing evidence. The UI must not infer semantic recovery merely because another call succeeded later; the completed process header retains a failure count.
+Schema rejection is a pre-execution failure, not a successful read and not ambiguous paid submission. Preserve structured bounded field errors in the tool result sent to the model. For `business_read_text`, one request reads at most 12000 characters and episode scripts use `story.script`; pagination follows `nextOffset`. Never silently clamp requested input or rewrite the immutable call. Explain whether correction/new invocation is needed and that a final answer must disclose relevant missing evidence. The UI must not infer semantic recovery merely because another call succeeded later; the failure stays on its own call row with its reason visible without expanding. Validation failures the model can self-correct render as a muted single line (`data-kind="validation"`), reserved red is for real execution failures.
 
 A failed parse must not label a local read as high-risk solely because argument parsing failed. Existing generic argument failures may display explicitly labelled diagnostics recomputed with current local schemas; do not rewrite historical records or fabricate what the old model received.
 
@@ -71,21 +71,44 @@ The bottom composer dock owns both the input card and its control footer. Its ba
 
 ## Execution ending is not business completion
 
-`describeRunExecution(run, calls)` derives presentation from owned durable rows (both
-runId and threadId). It distinguishes reply-only, bookkeeping-only, read-only, returned
-tool calls, failures/rejections, approvals, unknown outcomes, step-budget pause and
-stopped/failed execution. No prose or error-message keyword detection decides whether
-the requested job is complete. `completed` network calls may return pending or failed
-jobs, so the summary must not imply saved assets or acoustic acceptance.
+No run verdict, completion label or claim review is shown. `describeRunExecution`, its execution-record popover, the "含 N 项失败" count and the read-only final-reply claim check were removed (2026-10-13); the single closed-state affordance is the summary row "用了 N 个工具" (bookkeeping calls such as plan updates and tool loading do not count; "过程记录" when only reasoning/plan/narrative exist; hidden for a plain reply with no process). No prose or error-message keyword detection decides whether the requested job is complete. `completed` network calls may return pending or failed jobs, so the UI must never imply saved assets or acoustic acceptance beyond what a write receipt shows.
 
-Use the compact existing process heading and explanatory text inside its disclosure.
-The shadcn execution-record popover exposes bounded diagnostic counts and actual saved
-model-step/offer/protocol facts only. Absent legacy diagnostics remain unrecorded;
-hasToolCalls with no ledger is incomplete, not proof of zero calls. Never expose raw
-prompts, credentials, private reasoning or full tool payloads in this summary.
-Conversation mode retains a neutral reply-ended label. The summary does not authorize
-new work or offer generic automatic retry; existing approval/recovery controls remain.
+Tests: `audioAgentExecution.test.ts` exercises both protocols with promise-only replies, loader-only completion, failed reads and real progression, asserting ledger rows and `run.modelStep` directly.
 
-Tests: `agentExecutionSummary.test.ts` covers ownership and state precedence;
-`audioAgentExecution.test.ts` exercises both protocols with promise-only replies,
-loader-only completion, failed reads and actual read/write progression.
+## Quiet transcript (2026-10-13)
+
+### 1. Scope / Trigger
+Read before changing what a finished or running assistant turn shows, the tool-call timeline, approval placement or the composer attention card. Principle: success is quiet; only states that need the user speak; one event appears fully in one place.
+
+### 2. Signatures / Owners
+`MessageList.tsx` draws messages (`agent-user-bubble` for users; assistant text has no bubble/avatar/title/time) and exports `presentMessageStatus` for the single status line. `AgentRunDetails.tsx` owns the summary row, timeline, `callObject(call)` (object after the verb from `(generationOverride?.preview ?? preview).target?.label`, else `preview.summary`, truncated to 40 characters, omitted when it repeats or is contained in the title), `TechnicalDetails` (quiet collapsed "参数与返回结果") and `opensProcess(status)`. `AgentWriteOutcomes` keeps the "本次已保存" row. `CreatedEntityLinks` takes an optional `collapseDetails`.
+
+### 3. Contracts
+- Default finished turn: body, quiet actions (copy; regenerate when retryable), optional "本次已保存：…" row (only when at least one valid receipt exists, entries link to records), and one summary row. Model, speed, tokens and time are hover/focus-only.
+- Status line only for `error` (the error text, red), `aborted` ("已停止") and `interrupted` (notice, or "执行已暂停"/"生成中断"). No body placeholder "（已停止）".
+- Timeline: one row per call (icon + verb [+ muted object]); success shows an icon only; consecutive `completed` calls of the same tool merge into "title · N 项" (`project_create` never merges). A failed call shows its reason on the row. Detail lives in an indented panel with a left guide line; parameters/results are the last, collapsed row. No horizontal rule under the summary, no underline, no hover background; hover only darkens text and reveals chevrons (always visible on touch/reduced motion; focus ring kept).
+- Entity links: the preview target is the only default-visible link; other per-entity links collapse behind an "N 项明细" row when `collapseDetails` is set (task records keep the flat list).
+- Approval: a pending call stays expanded with 批准/拒绝 beside it, outside the collapsible panel. Generation and music review and batch dialogs keep their own confirmation and stay mounted. The composer attention card only points ("待批准 · 查看") and calls `reveal`; it never carries a second approve/reject pair. Other cards keep their actionable buttons.
+- The composer status strip shows only the running state (with 停止). Interrupted/failed/waiting-approval are carried by the card and the message status line.
+- Plan: one place, a collapsed "执行计划 · n/m"; state text only for in-progress and pending steps.
+
+### 4. Validation & Error Matrix
+| Situation | Required behavior |
+| --- | --- |
+| Plain reply, no tools/reasoning/plan | No summary row |
+| Only reasoning/plan/narrative | Summary row "过程记录" |
+| Write calls without receipts | No saved row, no disclaimer |
+| Failed call | Reason visible on the row, not in the header |
+| Validation failure | Muted single line, still visible |
+| Waiting approval | Process open; buttons visible when the row is folded |
+| Interrupted/failed run with tools | Card + status line carry resume/end; no strip text |
+| Several entities created | One preview link + collapsed "N 项明细" |
+
+### 5. Good / Base / Bad Cases
+Good: a successful write turn reads as body + "本次已保存：镜头 3 项" + "用了 2 个工具". Base: a plain chat reply is just text and actions. Bad: a header label such as "工具调用已结束", a disclaimer that the turn "does not prove completion", per-entity link walls, or a second approve button on the composer card.
+
+### 6. Tests Required
+`agentMessagePresentation.test.ts` (quiet defaults, absent removed copy, single error/stop line, hover-only metadata), `agentToolTimeline.test.ts` (one line per call, merging, failure reason, auto-open approval and `onAction`, card points without buttons, review components stay mounted, object dedupe/truncation, `aria-expanded`), `createdEntityLinksCollapse.test.ts` (collapse, single link, default flat behavior). Visuals (indent, guide line, hover, chevrons, 760px) need real-window acceptance.
+
+### 7. Wrong vs Correct
+Wrong: surface every state as text in the header, strip, card and footer; put approve buttons only inside a folded panel or twice. Correct: one full statement per event; approval beside its call; the card only reveals it.

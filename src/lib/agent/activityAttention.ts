@@ -91,16 +91,16 @@ export function selectActivityAttention(input: AttentionInput): ActivityAttentio
         for (const call of approvals) result.push({
             id: `call:${call.id}`,
             kind: "approval",
-            label: "待你批准操作",
+            label: "待批准",
             detail: call.title,
-            action: "查看并决定",
+            action: "查看",
             target: {runId: run.id, callId: call.id}
         });
         if (!approvals.length) result.push({
             id: `run:${run.id}`,
             kind: "resume",
             label: run.pauseReason === "model_step_limit" ? "阶段已暂停" : "执行已中断",
-            detail: "进度已保存，可检查后继续",
+            detail: "进度已保存",
             action: "查看执行",
             target: {runId: run.id}
         });

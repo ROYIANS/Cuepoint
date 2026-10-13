@@ -15,7 +15,6 @@ import {executeChatRun, resumeChatRun} from "@/lib/agent/runChat";
 import {BUILTIN_TOOLS, requiresToolApproval} from "@/lib/agent/tools";
 import {getProjectContext} from "@/lib/agent/projectContext";
 import {readWriteReceipt} from "@/lib/agent/writeReceipt";
-import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import type {AgentRun} from "@/domain/agent";
 import type {ConnectorConfig} from "@/domain/types";
 
@@ -61,7 +60,7 @@ async function paused(name: ToolName, projectId: string, args: unknown, protocol
 }
 
 async function settle(run: AgentRun) {
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(async () => reply(run.protocol)));
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), async () => reply(run.protocol));
 }
 
 const sorted = <T extends {id: string}>(rows: T[]) => rows.sort((a, b) => a.id.localeCompare(b.id));

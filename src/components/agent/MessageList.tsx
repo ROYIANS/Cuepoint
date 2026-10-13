@@ -8,34 +8,28 @@ import {useProductQuery} from "@/lib/storage/hooks";
 import {isPersistedToolRound} from "@/lib/agent/runPresentation";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import {Button} from "@/components/ui/button";
-import {CopyButton, Text} from "@lobehub/ui";
-import {ChatItem} from "@lobehub/ui/chat";
-import Avatar from "boring-avatars";
-import {memo, type ReactNode, useCallback, useLayoutEffect, useMemo, useRef} from "react";
+import {CopyButton, Markdown, Text} from "@lobehub/ui";
+import {memo, useCallback, useLayoutEffect, useRef} from "react";
 import type {ChatMessage} from "@/domain/types";
-import {LOGO_SRC, PRODUCT_NAME_EN, PRODUCT_NAME_ZH} from "@/lib/brand";
 import {isChatNearBottom, snapChatToBottom} from "@/lib/chatScroll";
 import {ThinkingMatrix} from "./ThinkingMatrix";
 import {ThinkingPanel} from "./ThinkingPanel";
 import {MemoryRunHistory} from "./MemoryContextDetails";
 import {TurnNavigation} from "./TurnNavigation";
 
+/** One quiet status line, only for outcomes the reader must notice. */
+export function presentMessageStatus(message: Pick<ChatMessage, "status" | "error">, run?: Pick<AgentRun, "pauseReason">): { text: string; tone: "error" | "muted" } | undefined {
+    if (message.status === "error") return {text: message.error || "生成失败", tone: "error"};
+    if (message.status === "aborted") return {text: "已停止", tone: "muted"};
+    if (message.status === "interrupted") return {text: message.error || (run?.pauseReason === "model_step_limit" ? "执行已暂停" : "生成中断"), tone: "muted"};
+    return undefined;
+}
+
 const EMPTY_CALLS: AgentToolCall[] = [];
 const MARKDOWN_PROPS = {variant: "chat"} as const;
 
-/** Stable callback so ChatItem does not String() a React node as `message`. */
-function renderThinkingMessage() {
-    return <ThinkingMatrix/>;
-}
-
-const ASSISTANT_AVATAR = {
-    avatar: LOGO_SRC,
-    backgroundColor: "transparent",
-    title: PRODUCT_NAME_ZH,
-};
-
 /**
- * Message list — ChatItem `message` must be a string.
+ * Message list — assistant text is drawn directly (no avatar/title/bubble); users keep a right bubble.
  * Stick with `scrollTop` on this element (not `scrollIntoView` smooth).
  * History rows are memoized so Dexie liveQuery ticks only paint the streaming item.
  */
@@ -61,16 +55,6 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
     const threadKey = list[0]?.threadId ?? "";
     const userMessages = list.filter((message) => message.role === "user");
     const lastUserId = userMessages.at(-1)?.id;
-    const userAvatar = useMemo(() => <Avatar name={PRODUCT_NAME_EN} size={40}/>, []);
-    const userMeta = useMemo(
-        () => ({
-            avatar: userAvatar,
-            backgroundColor: "transparent",
-            title: "我",
-        }),
-        [userAvatar],
-    );
-
     useLayoutEffect(() => {
         stickToBottom.current = true;
         manuallyNavigated.current = false;
@@ -134,7 +118,7 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
                         list.map((message) => {
                             if (message.role === "system") return null;
                             return (
-                                <AgentChatMessageItem key={message.id} message={message} userMeta={userMeta}
+                                <AgentChatMessageItem key={message.id} message={message}
                                                       run={runs?.find((run) => run.id === message.runId)} busy={busy}
                                                       readOnly={readOnly} onRunAction={onRunAction}
                                                       retryable={Boolean(message.runId && message.runId === retryableRunId)}
@@ -152,7 +136,6 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
 const AgentChatMessageItem = memo(
     function AgentChatMessageItem({
                                       message,
-                                      userMeta,
                                       run,
                                       busy,
                                       readOnly,
@@ -167,7 +150,6 @@ const AgentChatMessageItem = memo(
         onRunAction: (runId: string, action: RunAction, callId?: string) => void;
         retryable: boolean;
         onRetryRun: (id: string) => void;
-        userMeta: { avatar: ReactNode; backgroundColor: string; title: string };
     }) {
         const calls = useProductQuery((db) => run ? db.agentToolCalls.where("runId").equals(run.id).toArray() : Promise.resolve(EMPTY_CALLS), [run?.id]) ?? EMPTY_CALLS;
         const isUser = message.role === "user";
@@ -185,59 +167,56 @@ const AgentChatMessageItem = memo(
             !message.content &&
             !hasReasoning;
         const showCopy = !isUser && !processOwnsContent && Boolean(message.content) && message.status !== "streaming";
-        const text = showMatrix || processOwnsContent
-            ? ""
-            : message.content ||
-            (message.status === "aborted" ? "（已停止）" : "");
+        const text = showMatrix || processOwnsContent ? "" : message.content;
+        const statusLine = presentMessageStatus(message, run);
+        const time = new Date(message.createdAt);
+        const timeLabel = Number.isNaN(time.getTime()) ? undefined : time.toLocaleString();
 
-        const statusLabel = message.status === "error" ? "生成失败" : message.status === "interrupted" ? run?.pauseReason === "model_step_limit" ? "执行已暂停" : "生成中断" : message.status === "aborted" ? "已停止" : undefined;
+        if (isUser) {
+            return (
+                <div className="agent-transcript-item agent-transcript-user" data-turn-anchor={message.id} title={timeLabel}>
+                    <div className="agent-user-bubble">
+                        <ReferenceMessageSources context={message.referenceContext} content={message.content}/>
+                        <Markdown {...MARKDOWN_PROPS}>{message.content}</Markdown>
+                    </div>
+                </div>
+            );
+        }
         return (
-            <ChatItem
-                className={isUser ? "agent-transcript-item" : "agent-transcript-item agent-assistant-transcript"}
-                data-turn-anchor={isUser ? message.id : undefined}
-                placement={isUser ? "right" : "left"}
-                primary={isUser}
-                variant={isUser ? "bubble" : "docs"}
-                showTitle={!isUser}
-                loading={message.status === "streaming" && !message.content}
-                time={new Date(message.createdAt).getTime()}
-                avatar={isUser ? userMeta : ASSISTANT_AVATAR}
-                avatarProps={{shape: isUser ? "circle" : "square"}}
-                markdownProps={MARKDOWN_PROPS}
-                placeholderMessage=""
-                aboveMessage={!isUser ? <>
-                    {run && <AgentRunDetails run={run} message={message} calls={calls} busy={busy} readOnly={readOnly}
-                                             onAction={onRunAction}/>}
-                    {!run && hasReasoning && <ThinkingPanel reasoning={message.reasoning ?? ""} active={reasoningActive}
-                                                            durationMs={message.reasoningDurationMs}/>}
-                </> : <ReferenceMessageSources context={message.referenceContext} content={message.content}/>}
-                belowMessage={!isUser ? <div className="agent-message-footer">
+            <div className="agent-transcript-item agent-assistant-transcript">
+                {run && <AgentRunDetails run={run} message={message} calls={calls} busy={busy} readOnly={readOnly}
+                                         onAction={onRunAction}/>}
+                {!run && hasReasoning && <ThinkingPanel reasoning={message.reasoning ?? ""} active={reasoningActive}
+                                                        durationMs={message.reasoningDurationMs}/>}
+                {showMatrix && <ThinkingMatrix/>}
+                {text && <Markdown {...MARKDOWN_PROPS}>{text}</Markdown>}
+                <div className="agent-message-footer">
                     <ReferenceMessageSources run={run} content={processOwnsContent ? "" : message.content}/>
                     <div className="agent-message-meta">
-                        {run?.model &&
-                            <span className="agent-model-attribution" title={run.model}><ModelIcon model={run.model}
-                                                                                                   size={14}/>{run.model}</span>}
-                        {run?.outputTokensPerSecond !== undefined && <span className="agent-model-attribution"
-                                                                           title="生成速度：供应商返回的输出 token ÷ 流式生成耗时（不含工具和审批等待）"><Gauge
-                            size={12}/>{run.outputTokensPerSecond.toFixed(1)} tok/s</span>}
-                        {run?.usage?.totalTokens !== undefined && <span className="agent-model-attribution"
-                                                                        title={`本次执行累计 ${run.usage.totalTokens.toLocaleString()} tokens；输入 ${run.usage.inputTokens?.toLocaleString() ?? "未知"}，输出 ${run.usage.outputTokens?.toLocaleString() ?? "未知"}`}><Coins
-                            size={12}/>{formatTokenCount(run.usage.totalTokens)}</span>}
-                        {run && <MemoryRunHistory run={run} readOnly={readOnly}/>}
                         {showCopy && <CopyButton content={message.content} title="复制" size="small"/>}
+                        {run && <MemoryRunHistory run={run} readOnly={readOnly}/>}
+                        <span className="agent-message-hover-info">
+                            {timeLabel && <span>{timeLabel}</span>}
+                            {run?.model && <span className="agent-model-attribution" title={run.model}><ModelIcon
+                                model={run.model} size={14}/>{run.model}</span>}
+                            {run?.outputTokensPerSecond !== undefined && <span className="agent-model-attribution"
+                                                                               title="生成速度：供应商返回的输出 token ÷ 流式生成耗时（不含工具和审批等待）"><Gauge
+                                size={12}/>{run.outputTokensPerSecond.toFixed(1)} tok/s</span>}
+                            {run?.usage?.totalTokens !== undefined && <span className="agent-model-attribution"
+                                                                            title={`输入 ${run.usage.inputTokens?.toLocaleString() ?? "未知"}，输出 ${run.usage.outputTokens?.toLocaleString() ?? "未知"}`}><Coins
+                                size={12}/>{formatTokenCount(run.usage.totalTokens)}</span>}
+                        </span>
                     </div>
-                    {statusLabel && <div role="status">{statusLabel} · {message.error || "已保留收到的内容"}</div>}
-                    {retryable && message.runId && <Button size="sm" variant="outline"
-                                                           onClick={() => onRetryRun(message.runId!)}>重新生成</Button>}
-                </div> : undefined}
-                message={text}
-                renderMessage={showMatrix ? renderThinkingMessage : undefined}
-            />
-
+                    {(statusLine || (retryable && message.runId)) && <div className="agent-message-status">
+                        {statusLine && <span role="status" className={statusLine.tone === "error" ? "agent-message-error" : undefined}>{statusLine.text}</span>}
+                        {retryable && message.runId && <Button size="sm" variant="outline"
+                                                               onClick={() => onRetryRun(message.runId!)}>重新生成</Button>}
+                    </div>}
+                </div>
+            </div>
         );
     },
     (prev, next) =>
-        prev.userMeta === next.userMeta &&
         prev.run?.id === next.run?.id &&
         prev.run?.updatedAt === next.run?.updatedAt &&
         prev.run?.status === next.run?.status &&

@@ -20,7 +20,6 @@ import {ToolRecoveryError, toolFailureResult, readToolRecoveryFailure} from "@/l
 import {createId} from "@/lib/ids";
 import {registeredTools} from "./helpers/registeredTools";
 import {executeChatRun} from "@/lib/agent/runChat";
-import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 
 const tools = registeredTools([...BUSINESS_TOOLS, ...AUDIO_TOOLS, ...MUSIC_TOOLS, ...AUDIO_GENERATION_TOOLS]);
 afterEach(() => vi.unstubAllGlobals());
@@ -214,7 +213,7 @@ describe("actual runtime typed recovery serialization", () => {
         const fetcher = vi.fn<typeof fetch>(async () => ++rounds === 1
             ? Response.json({choices: [{message: {content: "", tool_calls: [{id: "owned-call", type: "function", function: {name, arguments: JSON.stringify(raw)}}]}, finish_reason: "tool_calls"}]})
             : Response.json({choices: [{message: {content: "已保留失败与恢复记录"}, finish_reason: "stop"}]}));
-        await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), tools.map(entry => entry.name === name ? {...entry, execute} : entry));
+        await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, tools.map(entry => entry.name === name ? {...entry, execute} : entry));
         const saved = (await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];
         expect(saved.arguments).toBe(JSON.stringify(raw));
         expect(await db.characters.count()).toBe(1);
@@ -222,14 +221,12 @@ describe("actual runtime typed recovery serialization", () => {
             expect(saved).toMatchObject({status: "unknown"});
             expect(saved.result).toBeUndefined();
             expect(fetcher).toHaveBeenCalledTimes(1);
-            expect((await db.agentRuns.get(run.id))?.finalReview).toBeUndefined();
         } else {
             const result = readToolRecoveryFailure(saved.result);
             expect(saved.status).toBe("failed");
             expect(result).toMatchObject({executed: false, effectCertainty: boundary === "atomic_rollback" ? "rolled_back" : "not_started",
                 code: boundary === "atomic_rollback" ? "STALE_TOOL_PREVIEW" : boundary === "read" ? "TARGET_NOT_FOUND" : "PROJECT_SCOPE_MISMATCH"});
             expect(fetcher).toHaveBeenCalledTimes(2);
-            expect((await db.agentRuns.get(run.id))?.finalReview?.status).toBe("checked");
         }
         expect(execute).toHaveBeenCalledTimes(boundary === "preparation" ? 0 : 1);
         expect((await db.characters.get(character.id))?.name).toBe(boundary === "atomic_rollback" ? "用户后续编辑" : character.name);

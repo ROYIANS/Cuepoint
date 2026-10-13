@@ -9,6 +9,7 @@ import {AgentHeader} from "@/components/agent/AgentHeader";
 import {useAgentTopicNavigation} from "@/components/agent/AgentTopicNavigation";
 import type {ComposerProps} from "@/components/agent/composerTypes";
 import {FloatingComposer} from "@/components/agent/FloatingComposer";
+import {appendStartPrompt} from "@/components/agent/startPrompt";
 import {
     CHAT_COMPOSER_SAFE,
     CHAT_CONTENT_MAX,
@@ -36,6 +37,7 @@ export function ChatWorkspace({
                                   composer,
                                   onSelectThread,
                                   onNewTopic,
+                                  onNewTopicInProject,
                                   onRenameThread,
                                   onDeleteThread,
                                   onOpenTasks,
@@ -58,6 +60,7 @@ export function ChatWorkspace({
     composer: ComposerProps;
     onSelectThread: (id: Id) => void;
     onNewTopic: () => void;
+    onNewTopicInProject?: (projectId: Id) => void;
     onRenameThread: (thread: ChatThread) => void;
     onDeleteThread: (thread: ChatThread) => void;
 }) {
@@ -78,7 +81,7 @@ export function ChatWorkspace({
         resize.observe(dock);
         return () => resize.disconnect();
     }, []);
-    const topics = useAgentTopicNavigation({threads, activeThreadId, onSelect: onSelectThread,
+    const topics = useAgentTopicNavigation({threads, activeThreadId, projects: composer.projects, onNewTopicInProject, onSelect: onSelectThread,
         onNewTopic, onRename: onRenameThread, onDelete: onDeleteThread, onOpenTasks});
 
     return (
@@ -112,7 +115,7 @@ export function ChatWorkspace({
                             <div>
                                 <button type="button" onClick={onOpenTask}>整理目标与清单</button>
                                 {!composer.blocked && <button type="button"
-                                                              onClick={() => composer.onChange("请根据当前任务目标和执行清单开始推进；如需补充关键信息，请先说明。")}>与助手一起开始</button>}
+                                                              onClick={() => composer.onChange(appendStartPrompt(composer.value))}>与助手一起开始</button>}
                             </div>
                             <small>也可以独立完成清单，随时回来确认成果。</small></div> : messages?.length ? <Suspense
                                 fallback={<div className="agent-message-list" role="status">

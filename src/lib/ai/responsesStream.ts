@@ -76,11 +76,13 @@ export function decodeResponseOutput(output: unknown, tools: StreamChatInput["to
     items: AgentResponseItem[];
     content: string;
     reasoning: string;
-    calls: AgentWireToolCall[]
+    calls: AgentWireToolCall[];
+    unofferedToolNames: string[]
 } {
     if (!Array.isArray(output) || output.length > 256 || JSON.stringify(output).length > MAX_ENVELOPE_SIZE) throw new Error("Responses 输出信封无效或超过限制");
     let content = "", reasoning = "";
     const calls: AgentWireToolCall[] = [];
+    const unofferedToolNames: string[] = [];
     const ids = new Set<string>();
     const items = output.map((item): AgentResponseItem => {
         if (!record(item)) throw new Error("Responses 输出项无效");
@@ -120,7 +122,9 @@ export function decodeResponseOutput(output: unknown, tools: StreamChatInput["to
         }
         if (item.type === "function_call") {
             const callId = id(item.call_id), name = text(item.name, 128), args = text(item.arguments, 32768);
-            if (calls.length >= 16 || calls.some((call) => call.id === callId) || !tools?.some((tool) => tool.function.name === name)) throw new Error("Responses 请求了重复、过多或未启用的工具");
+            // A name this request never offered is recorded as a failed call, not a
+            // whole-run wire failure; duplicate, missing and oversized ids still reject.
+            if (calls.length >= 16 || calls.some((call) => call.id === callId)) throw new Error("Responses 请求了重复或过多的工具");
             let parsed: unknown;
             try {
                 parsed = JSON.parse(args);
@@ -128,6 +132,7 @@ export function decodeResponseOutput(output: unknown, tools: StreamChatInput["to
                 throw new Error("工具调用参数不是完整 JSON");
             }
             if (!record(parsed)) throw new Error("工具参数必须是对象");
+            if (tools && !tools.some((tool) => tool.function.name === name)) unofferedToolNames.push(name);
             calls.push({id: callId, type: "function", function: {name, arguments: args}});
             return {
                 type: "function_call",
@@ -139,7 +144,7 @@ export function decodeResponseOutput(output: unknown, tools: StreamChatInput["to
         }
         throw new Error("Responses 返回了未启用的输出类型");
     });
-    return {items, content, reasoning, calls};
+    return {items, content, reasoning, calls, unofferedToolNames};
 }
 
 /** Stateless Responses adapter: one POST, local continuation, no automatic fallback. */
@@ -202,6 +207,7 @@ export async function streamResponses(input: StreamChatInput & {
             reasoning,
             via,
             finishReason: parsed.calls.length ? "tool_calls" : "stop", ...(parsed.calls.length ? {toolCalls: parsed.calls} : {}),
+            ...(parsed.unofferedToolNames.length ? {unofferedToolNames: parsed.unofferedToolNames} : {}),
             responseOutput: parsed.items
         });
     };

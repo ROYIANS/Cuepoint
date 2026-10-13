@@ -11,6 +11,7 @@ import {targetRevision} from "@/lib/productionRevision";
 import {interruptedToolState, recoverBatchPreparationCalls, upgradeLegacyPlanCalls} from "./agentToolRecovery";
 import {formatTaskPlan, validateTaskPlan} from "@/lib/agent/taskState";
 import {db as productDb} from "@/db/database";
+import {settleRun} from "./agentRunTerminalState";
 import type {
     AgentPlanItem,
     AgentResponseItem,
@@ -61,16 +62,9 @@ export async function pauseAtModelStepLimit(runId: string, store?: ProductStore)
         if ((run.modelStep ?? 0) - (run.modelStepSegmentStart ?? 0) < MODEL_STEPS_PER_SEGMENT) return false;
         const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
         if (calls.some((call) => !["completed", "failed", "rejected"].includes(call.status))) throw new Error("请先处理尚未完成的工具步骤");
-        const at = nowIso();
         const notice = `本段已达到 ${MODEL_STEPS_PER_SEGMENT} 轮模型请求，进度已保存。可继续执行下一段，或结束本次执行。`;
-        await db.agentRuns.update(runId, {
-            status: "interrupted",
-            pauseReason: "model_step_limit",
-            error: undefined,
-            endedAt: undefined,
-            updatedAt: at
-        });
-        await db.chatMessages.update(run.assistantMessageId, {status: "interrupted", error: notice});
+        // A budget pause is a terminal-but-resumable state; it uses the shared writer too.
+        await settleRun(db, runId, "interrupted", {messageError: notice, pauseReason: "model_step_limit", preserveOutput: true});
         return true;
     });
 }
@@ -110,12 +104,26 @@ export async function startModelStep(runId: string, limit: number, store?: Produ
     });
 }
 
-export async function saveToolRound(runId: string, content: string, wireCalls: AgentWireToolCall[], details: Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation">[], responseOutput?: AgentResponseItem[], publicOutput?: Pick<AgentRunOutput, "reasoning" | "reasoningDurationMs">, store?: ProductStore): Promise<void> {
+/** A round detail may carry its own already-failed outcome for a model-named unavailable tool. */
+export type AgentToolRoundDetail = Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation"> & {
+    failure?: { error: string; result: string }
+};
+
+export async function saveToolRound(runId: string, content: string, wireCalls: AgentWireToolCall[], details: AgentToolRoundDetail[], responseOutput?: AgentResponseItem[], publicOutput?: Pick<AgentRunOutput, "reasoning" | "reasoningDurationMs">, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
     await db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
         if (run.status !== "running") throw new Error("执行已停止");
-        if (run.toolLoading && wireCalls.some((call) => !toolNamesForCall(run, run.modelStep ?? 1).includes(call.function.name))) throw new Error("模型请求了本轮未提供的工具，已阻止执行");
+        // A name this request never offered cannot execute here. The only permitted
+        // exception is the code-owned unavailable-tool shape: an already-failed read-only
+        // call with no effect metadata, recorded so the model receives its tool result.
+        const offered = (name: string) => toolNamesForCall(run, run.modelStep ?? 1).includes(name);
+        const unavailable = (index: number) => {
+            const detail = details[index];
+            return Boolean(detail?.failure) && detail.effect === "read" && !detail.highRisk && !detail.atomic &&
+                !detail.recovery && !detail.requiresConfirmation;
+        };
+        if (run.toolLoading && wireCalls.some((call, index) => !offered(call.function.name) && !unavailable(index))) throw new Error("模型请求了本轮未提供的工具，已阻止执行");
         if (wireCalls.length === 0 || wireCalls.length !== details.length) throw new Error("工具轮次格式无效");
         if (run.protocol === "responses") {
             const functions = responseOutput?.filter((item) => item.type === "function_call");
@@ -124,19 +132,23 @@ export async function saveToolRound(runId: string, content: string, wireCalls: A
         const existing = await db.agentToolCalls.where("runId").equals(runId).toArray();
         if (wireCalls.some((call) => existing.some((row) => row.providerCallId === call.id)) || new Set(wireCalls.map((call) => call.id)).size !== wireCalls.length) throw new Error("模型重复使用工具调用标识，已阻止重复执行");
         const at = nowIso();
-        await db.agentToolCalls.bulkAdd(wireCalls.map((call, index): AgentToolCall => ({
-            id: createId("tool"),
-            runId,
-            threadId: run.threadId,
-            providerCallId: call.id,
-            step: run.modelStep ?? 1,
-            order: index,
-            name: call.function.name,
-            arguments: call.function.arguments, ...details[index],
-            status: "pending",
-            createdAt: at,
-            updatedAt: at,
-        })));
+        await db.agentToolCalls.bulkAdd(wireCalls.map((call, index): AgentToolCall => {
+            // `failure` is a caller-supplied, already-settled outcome; never a durable field.
+            const {failure, ...metadata} = details[index];
+            return {
+                id: createId("tool"),
+                runId,
+                threadId: run.threadId,
+                providerCallId: call.id,
+                step: run.modelStep ?? 1,
+                order: index,
+                name: call.function.name,
+                arguments: call.function.arguments, ...metadata,
+                ...(failure ? {status: "failed" as const, error: failure.error, result: failure.result} : {status: "pending" as const}),
+                createdAt: at,
+                updatedAt: at,
+            };
+        }));
         await db.agentRuns.update(runId, {
             activitySteps: [...(run.activitySteps ?? []), {
                 step: run.modelStep ?? 1,
@@ -313,16 +325,12 @@ export async function cancelAgentRun(runId: string, store?: ProductStore): Promi
             result: JSON.stringify({error: "本次执行已取消"}),
             updatedAt: at
         });
-        await db.agentRuns.update(runId, {
-            status: "cancelled",
-            pauseReason: undefined,
-            updatedAt: at,
-            endedAt: at,
-            error: "本次执行已结束，已完成的步骤保留。"
-        });
-        await db.chatMessages.update(run.assistantMessageId, {
-            status: "aborted",
-            error: "本次执行已结束，已完成的步骤保留。"
+        // One terminal writer: the same path that ends interrupted/failed/completed runs.
+        // A resumable run may also be ended explicitly, which clears its pause reason.
+        await settleRun(db, runId, "cancelled", {
+            error: "本次执行已结束，已完成的步骤保留。",
+            preserveOutput: true,
+            allowedFrom: ["running", "waiting_approval", "interrupted", "failed"],
         });
     });
 }

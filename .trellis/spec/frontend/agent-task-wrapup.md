@@ -212,7 +212,7 @@ used as proof of a currently usable song.
 selection/placement, deleted history, coverage and no extra network traffic.
 `audioTaskEvidence.test.ts` covers source ownership, per-result identity, paginated inventory,
 aggregate result rejection, 101st-output freshness, output provenance/metadata changes, stale
-summaries and completion. `audioBatchFinalReview.test.ts` covers confirmed batch provenance and retry chains. `audioGenerationAgent.test.ts` verifies actual
+summaries and completion. Batch provenance and retry-chain coverage lives with the audio generation batch tests. `audioGenerationAgent.test.ts` verifies actual
 ledger results include inspected output evidence. Preserve existing task/film batch tests.
 Native browser transactions and live provider/acoustic tests are separate acceptance.
 

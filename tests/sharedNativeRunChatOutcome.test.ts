@@ -9,7 +9,6 @@ import {executeChatRun,resumeChatRun} from "@/lib/agent/runChat";
 import type {AgentToolDefinition} from "@/lib/agent/tools";
 import {BUILTIN_TOOLS} from "@/lib/agent/tools";
 import type {ConnectorConfig} from "@/domain/types";
-import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {createNativeProbe} from "./helpers/nativeProductProbe";
 import type {ProductStore} from "@/lib/storage/types";
 
@@ -46,7 +45,7 @@ describe("real native commit uncertainty through executeChatRun",()=> {
             const tool:AgentToolDefinition={name,title:"创建一次",description:"actual local fixture",effect:"write",atomic:true,parameters:{type:"object",properties:{},additionalProperties:false},parseArguments:raw=>z.object({}).strict().parse(raw),highRisk:()=>false,
                 execute:async (_args,context)=> {armed=true;return executeAtomicTool(context,async tx=> {runs++;return {id:(await createProject("单次保存",undefined,undefined,undefined,tx)).id};});}};
             const provider=vi.fn(async ()=>Response.json({choices:[{message:{content:"工具已处理"},finish_reason:"stop"}]}));
-            await executeChatRun(run,connector.apiKey,new AbortController(),withFinalReviewFixture(provider),[tool],native.store);
+            await executeChatRun(run,connector.apiKey,new AbortController(),provider,[tool],native.store);
             expect(runs).toBe(1);expect(businessOperations.size).toBe(1);expect(provider).toHaveBeenCalled();
             expect(await native.store.projects.count()).toBe(1);
             expect((await native.store.agentToolCalls.where("runId").equals(run.id).first())?.status).toBe("completed");
@@ -73,12 +72,12 @@ describe("real native commit uncertainty through executeChatRun",()=> {
             const tool:AgentToolDefinition={name,title:"创建一次",description:"actual local fixture",effect:"write",atomic:true,parameters:{type:"object",properties:{},additionalProperties:false},parseArguments:raw=>z.object({}).strict().parse(raw),highRisk:()=>false,
                 execute:async (_args,context)=> {armed=true;return executeAtomicTool(context,async tx=> {runs++;return {id:(await createProject("读失败也保留",undefined,undefined,undefined,tx)).id};});}};
             const provider=vi.fn(async ()=>Response.json({choices:[{message:{content:"工具已处理"},finish_reason:"stop"}]}));
-            await executeChatRun(run,connector.apiKey,new AbortController(),withFinalReviewFixture(provider),[tool],native.store);
+            await executeChatRun(run,connector.apiKey,new AbortController(),provider,[tool],native.store);
             expect(failedRead).toBe(true);expect(provider).not.toHaveBeenCalled();expect(runs).toBe(1);expect(businessOperations.size).toBe(1);
             expect((await native.store.agentRuns.get(run.id))?.error).toContain("不能自动重跑");
             expect((await native.store.agentToolCalls.where("runId").equals(run.id).first())?.status).toBe("completed");
             lost=false;await native.reopen();
-            await resumeChatRun(run.id,connector.apiKey,new AbortController(),withFinalReviewFixture(provider),[tool],native.store);
+            await resumeChatRun(run.id,connector.apiKey,new AbortController(),provider,[tool],native.store);
             expect(runs).toBe(1);expect(businessOperations.size).toBe(1);expect(await native.store.projects.count()).toBe(1);
             expect((await native.store.agentRuns.get(run.id))?.status).toBe("completed");
             expect((await native.store.agentToolCalls.where("runId").equals(run.id).first())?.status).toBe("completed");
@@ -103,13 +102,13 @@ describe("real native commit uncertainty through executeChatRun",()=> {
             const original=BUILTIN_TOOLS.find(tool=>tool.name === "update_run_plan")!;
             const tool:AgentToolDefinition={...original,execute:async (args,context)=> {executions++;armed=true;return original.execute(args,context);}};
             const provider=vi.fn(async ()=>Response.json({choices:[{message:{content:"计划已保存"},finish_reason:"stop"}]}));
-            await executeChatRun(run,connector.apiKey,new AbortController(),withFinalReviewFixture(provider),[tool],native.store);
+            await executeChatRun(run,connector.apiKey,new AbortController(),provider,[tool],native.store);
             expect(executions).toBe(1);expect(operationIds.size).toBe(1);
             expect((await native.store.agentRuns.get(run.id))?.plan).toEqual(plan);
             expect((await native.store.agentToolCalls.where("runId").equals(run.id).first())?.status).toBe("completed");
             if (failRead) {expect(readFailed).toBe(true);expect(provider).not.toHaveBeenCalled();}
             lost=false;await native.reopen();
-            if (failRead) await resumeChatRun(run.id,connector.apiKey,new AbortController(),withFinalReviewFixture(provider),[tool],native.store);
+            if (failRead) await resumeChatRun(run.id,connector.apiKey,new AbortController(),provider,[tool],native.store);
             expect(executions).toBe(1);expect(operationIds.size).toBe(1);
             expect((await native.store.agentRuns.get(run.id))?.plan).toEqual(plan);
             expect((await native.store.agentToolCalls.where("runId").equals(run.id).first())?.status).toBe("completed");

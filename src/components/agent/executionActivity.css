@@ -1,10 +1,4 @@
 /* Execution is a quiet, chronological transcript inside the existing chat surface. */
-/* ChatItem docs exposes avatar then content; only assistant content fills the column. */
-.agent-chat-root .agent-assistant-transcript > :last-child {
-    flex: 1;
-    min-width: 0;
-}
-
 .agent-chat-root .agent-execution-activity {
     margin-block: 4px 12px;
 }
@@ -12,8 +6,7 @@
 .agent-chat-root .agent-execution-summary {
     width: 100%;
     gap: 8px;
-    padding-block: 8px 12px !important;
-    border-bottom: 1px solid var(--border);
+    padding-block: 8px;
     font-size: 14px;
     font-variant-numeric: tabular-nums;
 }
@@ -25,21 +18,12 @@
 }
 
 .agent-chat-root .agent-execution-timeline {
-    padding-top: 12px !important;
+    padding-top: 4px !important;
+    margin-left: 12px;
     min-width: 0;
 }
 
-.agent-chat-root .agent-execution-explanation {
-    margin-bottom: 12px;
-    color: var(--muted-foreground);
-    font-size: 12px;
-    line-height: 1.6;
-}
 
-.agent-chat-root .agent-execution-explanation p {
-    white-space: normal;
-    overflow-wrap: anywhere;
-}
 
 .agent-chat-root .agent-execution-summary {
     white-space: normal;
@@ -80,6 +64,25 @@
     color: var(--muted-foreground);
     cursor: pointer;
     font-size: 12px;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.agent-chat-root .agent-tool-verb {
+    color: var(--foreground);
+}
+
+.agent-chat-root .agent-tool-call-toggle[data-status="failed"]:not([data-soft]) .agent-tool-verb {
+    color: var(--destructive);
+}
+
+.agent-chat-root .agent-tool-object {
+    color: var(--muted-foreground);
+}
+
+.agent-chat-root .agent-tool-call-toggle:hover .agent-tool-object {
+    color: var(--foreground);
 }
 
 .agent-chat-root .agent-tool-group-toggle > span,
@@ -133,19 +136,7 @@
     border-radius: 4px;
 }
 
-.agent-chat-root .agent-activity-working {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 24px;
-    margin-block: 12px;
-    color: var(--muted-foreground);
-    font-size: 12px;
-}
 
-.agent-chat-root .agent-activity-working .agent-thinking-matrix {
-    padding: 0 !important;
-}
 
 .agent-chat-root .agent-activity-plan {
     margin-block: 8px;
@@ -166,8 +157,29 @@
     display: none;
 }
 
+.agent-chat-root .agent-activity-plan > summary:hover {
+    color: var(--foreground);
+}
+
+.agent-chat-root .agent-activity-plan > summary > svg {
+    opacity: 0;
+    transition: opacity 120ms ease;
+}
+
+.agent-chat-root .agent-activity-plan > summary:is(:hover, :focus-visible) > svg,
+.agent-chat-root .agent-activity-plan[open] > summary > svg {
+    opacity: 0.7;
+}
+
 .agent-chat-root .agent-activity-plan[open] > summary > svg {
     transform: rotate(180deg);
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+    .agent-chat-root .agent-activity-plan > summary > svg {
+        opacity: 0.7;
+        transition: none;
+    }
 }
 
 .agent-chat-root .agent-execution-activity .agent-thinking-header {
@@ -185,51 +197,141 @@
     }
 }
 
-.agent-chat-root .agent-execution-failure-summary {
-    color: #f59e0b !important;
-}
-
-.agent-chat-root .agent-tool-validation-error {
+.agent-chat-root .agent-tool-failure {
     margin: 8px 0 12px;
-    padding: 10px 12px !important;
-    color: var(--foreground);
+    padding: 10px 12px;
     background: #f59e0b0d;
     font-size: 12px;
     line-height: 1.55;
 }
 
-.agent-chat-root .agent-tool-validation-error strong {
+.agent-chat-root .agent-tool-failure strong {
     display: block;
     margin-bottom: 4px;
     color: #fbbf24;
     font-weight: 600;
 }
 
-.agent-chat-root .agent-tool-validation-error p {
+.agent-chat-root .agent-tool-failure p {
     margin: 4px 0;
-    color: var(--foreground);
     overflow-wrap: anywhere;
 }
 
-.agent-chat-root .agent-tool-validation-error ul {
-    margin: 6px 0;
-    padding-left: 18px !important;
-}
-
-.agent-chat-root .agent-tool-validation-error code {
-    color: #f0c674;
-    font-size: 12px;
-}
-
-.agent-chat-root .agent-tool-validation-error span {
+.agent-chat-root .agent-tool-failure .agent-tool-failure-recovery {
     color: var(--muted-foreground);
 }
 
-.agent-chat-root .agent-tool-validation-error .agent-tool-validation-recovery {
+.agent-chat-root .agent-tool-merged {
+    min-width: 0;
+}
+
+.agent-chat-root .agent-call-error {
+    margin: 0 0 4px 23px;
+    font-size: 12px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.agent-chat-root .agent-high-risk {
+    align-self: center;
+    font-size: 12px;
+    color: var(--destructive);
+}
+
+/* Everything an expanded call shows hangs under its own row: indented to the row text and tied by a thin line. */
+.agent-chat-root .agent-run-step > [id] {
+    margin-left: 7px;
+    padding-left: 16px;
+    border-left: 1px solid var(--border);
+    min-width: 0;
+}
+
+.agent-chat-root .agent-run-step > [id] .agent-step-payload {
+    margin-block: 0 4px;
+    padding-block: 0 4px !important;
+}
+
+.agent-chat-root .agent-run-step > [id] .agent-change-results {
+    margin: 4px 0;
+}
+
+.agent-chat-root .agent-call-error-soft {
     color: var(--muted-foreground);
 }
 
-.agent-chat-root .agent-tool-validation-legacy {
-    color: var(--muted-foreground) !important;
+.agent-chat-root .agent-quiet-toggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0 !important;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--muted-foreground);
     font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.agent-chat-root .agent-quiet-toggle:hover {
+    color: var(--foreground);
+}
+
+.agent-chat-root .agent-quiet-toggle > svg {
+    opacity: 0;
+    transition: opacity 120ms ease;
+}
+
+.agent-chat-root .agent-quiet-toggle:is(:hover, :focus-visible) > svg,
+.agent-chat-root .agent-quiet-toggle[aria-expanded="true"] > svg {
+    opacity: 0.7;
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+    .agent-chat-root .agent-quiet-toggle > svg {
+        opacity: 0.7;
+        transition: none;
+    }
+}
+
+.agent-chat-root .agent-execution-activity .agent-quiet-toggle:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.agent-chat-root .agent-step-technical-body[hidden],
+.agent-chat-root .agent-change-detail-list[hidden] {
+    display: none;
+}
+
+.agent-chat-root .agent-step-technical-body {
+    min-width: 0;
+    font-size: 12px;
+}
+
+.agent-chat-root .agent-step-technical-body pre {
+    max-height: 192px;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: var(--muted-foreground);
+}
+
+.agent-chat-root .agent-change-detail-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    font-size: 12px;
+}
+
+@media (max-width: 760px) {
+    .agent-chat-root .agent-execution-timeline {
+        margin-left: 4px;
+    }
+
+    .agent-chat-root .agent-run-step > [id] {
+        margin-left: 5px;
+        padding-left: 10px;
+    }
 }

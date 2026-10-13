@@ -11,7 +11,6 @@ import {executeChatRun,resumeChatRun} from "@/lib/agent/runChat";
 import {AUDIO_ARRANGEMENT_TOOLS} from "@/lib/agent/audioArrangementTools";
 import {BUILTIN_TOOLS,requiresToolApproval} from "@/lib/agent/tools";
 import {describeRunWrites} from "@/lib/agent/runWriteOutcomes";
-import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import type {AgentRun,AgentWireToolCall} from "@/domain/agent";
 import type {ConnectorConfig} from "@/domain/types";
 
@@ -45,7 +44,7 @@ describe("reviewed arrangement Agent adapters",()=>{
     it.each(["chat-completions","responses"] as const)("%s performs separately approved selection and arrangement with actual receipts",async protocol=>{
         const f=await fixture(protocol);let rounds=0;
         const fetcher=vi.fn<typeof fetch>(async()=>reply(protocol,++rounds === 1 ? [call("audio_select_takes",{chapterId:f.chapter.id,choices:f.choices},"select")] : rounds === 2 ? [call("audio_arrange_selected",{chapterId:f.chapter.id,segmentIds:f.choices.map(row=>row.segmentId),trackId:f.track.id,gapSec:.5},"arrange")] : []));
-        const transport=withFinalReviewFixture(fetcher);
+        const transport=fetcher;
         await executeChatRun(f.run,connector.apiKey,new AbortController(),transport);
         expect((await db.agentRuns.get(f.run.id))?.status).toBe("waiting_approval");expect(await db.audioClips.count()).toBe(0);
         expect((await db.audioSegments.toArray()).every(row=>!row.selectedTakeId)).toBe(true);
@@ -74,12 +73,12 @@ describe("reviewed arrangement Agent adapters",()=>{
     it("a later manual track edit invalidates a frozen placement approval atomically",async()=>{
         const f=await fixture();
         await db.audioSegments.bulkPut((await db.audioSegments.toArray()).map(row=>({...row,selectedTakeId:f.choices.find(choice=>choice.segmentId === row.id)!.takeId,revision:row.revision+1})));
-        const fetcher=withFinalReviewFixture(vi.fn<typeof fetch>(async()=>reply(f.run.protocol,[call("audio_arrange_selected",{chapterId:f.chapter.id,segmentIds:f.choices.map(row=>row.segmentId),trackId:f.track.id},"stale")] )));
+        const fetcher=vi.fn<typeof fetch>(async()=>reply(f.run.protocol,[call("audio_arrange_selected",{chapterId:f.chapter.id,segmentIds:f.choices.map(row=>row.segmentId),trackId:f.track.id},"stale")] ));
         await executeChatRun(f.run,connector.apiKey,new AbortController(),fetcher);const item=await pending(f.run);
         // Same owner, but changing a target track changes the concrete reviewed effect.
         await db.audioTracks.update(f.track.id,{gain:.25,revision:f.track.revision+1});
         await resolveAgentToolApproval(f.run.id,item.id,"approve");
-        const final=withFinalReviewFixture(async()=>reply(f.run.protocol));
+        const final=async()=>reply(f.run.protocol);
         await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),final);
         expect((await db.agentToolCalls.get(item.id))?.status).toBe("failed");expect(await db.audioClips.count()).toBe(0);expect(await db.audioArrangementProposals.count()).toBe(0);
     });
@@ -100,7 +99,7 @@ describe("reviewed arrangement Agent adapters",()=>{
             const patch=args[1];
             if(!failed && "status" in patch && patch.status === "completed") {failed=true;throw new Error("ledger unavailable");}
             return next(); });
-        try {await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),withFinalReviewFixture(async()=>reply(f.run.protocol)));} finally {fault.mockRestore();}
+        try {await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),async()=>reply(f.run.protocol));} finally {fault.mockRestore();}
         expect(failed).toBe(true);expect((await db.audioSegments.toArray()).every(row=>!row.selectedTakeId)).toBe(true);expect(await db.audioArrangementProposals.count()).toBe(0);expect((await db.agentToolCalls.get(item.id))?.status).toBe("failed");
     });
 });

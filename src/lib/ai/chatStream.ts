@@ -62,7 +62,9 @@ export type StreamChatResult = ({ metrics?: Omit<AgentModelMetrics, "step">; usa
     reasoning: string;
     via: "stream" | "json";
     finishReason?: string;
-    toolCalls?: AgentWireToolCall[]
+    toolCalls?: AgentWireToolCall[];
+    /** Names the model called that this request never offered, in call order. */
+    unofferedToolNames?: string[]
 }
     | { ok: false; message: string; aborted?: boolean; finishReason?: string });
 
@@ -244,6 +246,7 @@ function decodeCompletion(data: unknown, stream: boolean): {
 /** Assemble bounded provider fragments; execution still validates strict tool arguments. */
 function createToolAccumulator(tools?: AgentToolSchema[]) {
     const calls = new Map<number, { id: string; name: string; arguments: string }>();
+    const unofferedByIndex = new Map<number, string>();
     let retainedBytes = 0;
     const callBytes = (call: {
         id: string;
@@ -276,6 +279,9 @@ function createToolAccumulator(tools?: AgentToolSchema[]) {
                 if (call.arguments.length > 32768 || call.name.length > 128 || call.id.length > 256) throw new Error("工具调用超过大小限制");
                 retainedBytes += callBytes(call) - beforeBytes;
                 calls.set(index, call);
+                // A frame naming a tool this request never offered is not a wire
+                // violation: it is recorded as a failed call and fed back to the model.
+                if (call.name && call.id && tools && !tools.some((tool) => tool.function.name === call.name)) unofferedByIndex.set(index, call.name);
             }
         },
         retainedBytes(): number {
@@ -285,7 +291,7 @@ function createToolAccumulator(tools?: AgentToolSchema[]) {
             if (!calls.size) return undefined;
             const seen = new Set<string>();
             return [...calls.entries()].sort(([a], [b]) => a - b).map(([index, call], position) => {
-                if (index !== position || !call.id || seen.has(call.id) || !tools?.some((tool) => tool.function.name === call.name)) throw new Error("工具调用缺少标识、重复或请求了未启用的工具");
+                if (index !== position || !call.id || seen.has(call.id)) throw new Error("工具调用缺少标识或重复");
                 seen.add(call.id);
                 let args: unknown;
                 try {
@@ -297,6 +303,10 @@ function createToolAccumulator(tools?: AgentToolSchema[]) {
                 return {id: call.id, type: "function", function: {name: call.name, arguments: call.arguments}};
             });
         },
+        /** Names the model called that this request never offered, in call order. */
+        unofferedNames(): string[] {
+            return [...unofferedByIndex.entries()].sort(([a], [b]) => a - b).map(([, name]) => name);
+        },
     };
 }
 
@@ -306,11 +316,12 @@ function completionResult(
     via: "stream" | "json",
     finishReason?: string,
     toolCalls?: AgentWireToolCall[],
+    unofferedToolNames?: string[],
 ): StreamChatResult {
     const metadata = finishReason ? {finishReason} : {};
     if (toolCalls?.length) {
         if (finishReason !== "tool_calls") return {ok: false, message: "工具调用缺少完整结束状态", ...metadata};
-        return {ok: true, content, reasoning, via, toolCalls, ...metadata};
+        return {ok: true, content, reasoning, via, toolCalls, ...(unofferedToolNames?.length ? {unofferedToolNames} : {}), ...metadata};
     }
     if (finishReason && finishReason !== "stop") {
         const message = finishReason === "length" ? "回复达到模型长度上限，内容未完成"
@@ -404,7 +415,7 @@ export async function streamChatCompletions(
             assertResponseBytes(utf8Bytes(delta.content ?? "") + utf8Bytes(delta.reasoning ?? "") + calls.retainedBytes(), MAX_JSON_BYTES);
             applyDeltaHandlers(handlers, delta, acc);
             signal?.throwIfAborted();
-            return withMetrics(completionResult(acc.content, acc.reasoning, "json", finishReason ? redactError(finishReason, apiKey) : undefined, calls.finish()));
+            return withMetrics(completionResult(acc.content, acc.reasoning, "json", finishReason ? redactError(finishReason, apiKey) : undefined, calls.finish(), calls.unofferedNames()));
         }
         if (!res.body) throw new Error("模型返回了空的响应流");
 
@@ -445,7 +456,7 @@ export async function streamChatCompletions(
         }
         signal?.throwIfAborted();
         if (!completed && !finishReason) throw new Error("回复流意外中断，已保留收到的内容");
-        return withMetrics(completionResult(acc.content, acc.reasoning, "stream", finishReason, calls.finish()));
+        return withMetrics(completionResult(acc.content, acc.reasoning, "stream", finishReason, calls.finish(), calls.unofferedNames()));
     } catch (err) {
         if (isReadAbort(err, signal)) {
             return withMetrics({ok: false, message: "已停止", aborted: true});

@@ -1,6 +1,5 @@
 import {interceptStoreTable} from "./helpers/storeFaults";
 import {failStoreTableOnce} from "./helpers/storeFaults";
-import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {serializeMemoryEntries as originalSerializeMemoryEntries, planMemorySelection as originalPlanMemorySelection} from "./fixtures/sourceSnapshots/d05/src/lib/memory/retrieval";
 import { describe, it, expect, vi } from "vitest";
 import { db } from "@/db/database";
@@ -280,7 +279,7 @@ describe("thread policy and request layers", () => {
       body = String(init?.body);
       return json("完成");
     });
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
     expect(fetcher).toHaveBeenCalledTimes(1);
     expect(body).toContain(row.body);
     const saved = (await db.agentRuns.get(run.id))!;
@@ -294,7 +293,7 @@ describe("thread policy and request layers", () => {
       next,
       connector.apiKey,
       new AbortController(),
-      withFinalReviewFixture(blocked),
+      blocked,
     );
     spy.mockRestore();
     expect(blocked).not.toHaveBeenCalled();
@@ -353,10 +352,9 @@ describe("thread policy and request layers", () => {
       (await db.agentRuns.get(run.id))!,
       connector.apiKey,
       new AbortController(),
-      withFinalReviewFixture(fetcher),
+      fetcher,
     );
     expect(fetcher).toHaveBeenCalledTimes(3);
-    expect((await db.agentRuns.get(run.id))?.finalReview?.status).toBe("checked");
     expect(JSON.stringify(requests[0])).toContain("OLD_RAIN_RULE");
     const secondMessages = requests[1].messages as Array<{ content: string }>;
     const secondLayer = secondMessages.find((m) =>
@@ -385,7 +383,7 @@ describe("thread policy and request layers", () => {
     const spy = interceptStoreTable(db, "agentRuns", "put", async (_tx,args,next)=> { const [value]=args as Parameters<typeof db.agentRuns.put>;return value.modelStep === 1
           ? Promise.reject(new Error("audit storage failed"))
           : next(); });
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
     spy.mockRestore();
     expect(fetcher).not.toHaveBeenCalled();
     expect((await db.agentRuns.get(run.id))?.memoryAudit).toEqual([]);

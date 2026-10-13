@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "verify finishing-check narrowing and terminal-state contracts"}
+{"file": ".trellis/spec/frontend/agent-write-evidence.md", "reason": "verify write-outcome evidence still intact after UI trimming"}
+{"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "verify timeline/approval presentation contract"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "verify quality gates and no-regression expectations"}
+{"file": ".trellis/tasks/10-13-agent-experience-overhaul/research/code-defect-audit.md", "reason": "verify each D1-D5 defect is actually fixed"}
+{"file": ".trellis/tasks/10-13-agent-experience-overhaul/research/ui-redundancy-audit.md", "reason": "verify each deleted/merged element per inventory"}

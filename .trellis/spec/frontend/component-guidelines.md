@@ -252,7 +252,7 @@ Read before changing TopicSidebar row selection, rename/delete actions, focus vi
 `TopicRow` owns a noninteractive `.agent-topic-row` container and sibling native `button type="button"` controls: `.agent-topic-row-title` selects, `.agent-topic-row-action` renames/deletes. Existing TopicSidebar/AgentChatPage callbacks retain mutation/navigation/departure ownership.
 
 ### 3. Contracts
-Row actions must be in the Tab order even when the row is inactive and unhovered. CSS reveals them on hover, active or `:focus-within`; every keyboard-focused control has a visible ring. Child Enter/Space activates only that native button and intended thread; it must not invoke row selection. The selection button retains native Enter/Space and pointer behavior. Actions are siblings, never interactive descendants of a row button. Preserve accessible names and pointer/context-menu target semantics. Explicit role attributes may support existing DOM-based test targeting; they do not replace native semantics.
+Row actions must be in the Tab order even when the row is inactive and unhovered. CSS reveals them on hover, active or `:focus-within` (2026-10-13: the row's right-hand relative time is hidden at the same moment, and on `hover: none` the actions stay visible); every keyboard-focused control has a visible ring. Child Enter/Space activates only that native button and intended thread; it must not invoke row selection. The selection button retains native Enter/Space and pointer behavior. Actions are siblings, never interactive descendants of a row button. Preserve accessible names and pointer/context-menu target semantics. Explicit role attributes may support existing DOM-based test targeting; they do not replace native semantics.
 
 ### 4. Validation / Error Matrix
 Inactive + unhovered + Tab → title focus reveals actions; next Tab reaches rename/delete. Child Enter/Space → correct target dialog, current selected thread and route unchanged. Title Enter/Space/pointer → intended selected thread without action dialog. Hover/active/context menu → existing visibility and intended owner. Failed/pending mutation → existing E01 owner guards remain responsible.
@@ -265,3 +265,32 @@ Real browser Tab from an external anchor into an unhovered inactive row, both ac
 
 ### 7. Wrong vs Correct
 Wrong: put onSelect on a parent button-like row containing ActionIcon descendants and handle every bubbling key. Correct: make selection/actions independent native buttons and reveal actions from CSS focus ownership.
+
+## Topic sidebar: project grouping (2026-10-13)
+
+### 1. Scope / Trigger
+Read before changing `TopicSidebar`, the grouping preference or new-topic entry points.
+
+### 2. Signatures / Owners
+`topicGrouping.ts`: `groupThreadsByProject(threads, projects, now?)`, `readTopicGrouping(storage?)`, `writeTopicGrouping(value, storage?)`, `formatRelativeShort(iso, now?)`, `UNLINKED_PROJECT_KEY`. Preference key `cuepoint.agent.topicGrouping` ("project" | "time"; sibling of `cuepoint.agent.sendShortcut`). `TopicSidebar` props add `projects?` and `onNewTopicInProject?(projectId)`. `AgentChatPage.createTopic(projectOverride?)` is the one creation path; `handleNewTopic` takes no argument so a click event is never read as a project id. Time grouping still uses `groupThreadsByTime`.
+
+### 3. Contracts
+Structure: brand row, "开启新话题" (primary), "搜索", "任务", then the list; no settings entry and no "话题 N" heading. Default grouping is by project: one collapsible section per project that has topics (newest topic first), topics in a section newest first, a project icon (Folder/FolderOpen) on each project and a Tray icon on "未关联项目", which collects threads without `projectId`, with a deleted project, and is last. "按时间" merges topics into the existing today/yesterday/month groups. A funnel button opens a menu with the two radio options; invalid or unreadable storage falls back to "project" and write failures are ignored. A "+" on each project section (hover/focus, always on touch; not for the unlinked section or an archived project) creates a topic bound to that project through `createTopic`, keeping `leaveTask → requestDeparture → armConfirmedDeparture`. Search filters by title in the current grouping and renders matching collapsed sections open without rewriting the user's fold state. If `projects` is undefined, group by time instead of flashing everything into "未关联项目". No pin/archive: no data model supports them.
+
+### 4. Validation & Error Matrix
+| Condition | Result |
+| --- | --- |
+| Thread references a deleted project | Listed under "未关联项目" |
+| Project has no topics | Section not shown |
+| Storage throws or holds junk | Default "project", no error |
+| "+" clicked | Calls the callback with the project id; row selection not triggered |
+| Archived project | No "+" |
+
+### 5. Good / Base / Bad Cases
+Good: one project, three topics, relative times right-aligned, "+" starts a bound topic after the usual confirmation. Base: no projects load yet, time grouping. Bad: calling creation with a click event, or showing deleted-project topics as an available project.
+
+### 6. Tests Required
+`topicGrouping.test.ts` (ordering, unlinked/deleted/empty projects, preference fallbacks, relative-time bands), `topicSidebar.test.ts` (default project render, fold, switching and persistence, search expansion and restore, hover/focus replacement markup, "+" callback and no row selection, no settings entry or count heading). Visual layout, tooltips and the portal menu in the narrow overlay need real-window acceptance.
+
+### 7. Wrong vs Correct
+Wrong: `onClick={onNewTopic}` on the plus (the event reaches `createTopic` as a project). Correct: `onClick={() => onNewTopicInProject(project.id)}` with the guarded creation path.

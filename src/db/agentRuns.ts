@@ -1,5 +1,7 @@
 import type {ProductStore} from "@/lib/storage/types";
 import {createToolLoading, DISCOVERY_TOOL_NAME, toolLoadingInstructions} from "@/lib/agent/toolLoading";
+import {settleRun} from "./agentRunTerminalState";
+import {runBlocksThread} from "@/domain/agentToolSelection";
 import type {ReferenceAttachment} from "@/domain/references";
 import {referenceSelectionCharacterBudget, selectReferenceContext} from "@/lib/agent/referenceContext";
 import {requireVision, resolveVisionCapability} from "@/lib/ai/visionCapability";
@@ -74,7 +76,7 @@ export async function beginAgentRun(input: {
         if (thread.projectId && !await db.projects.get(thread.projectId)) throw new Error("关联项目已不存在，无法执行");
         if (await db.agentTaskWrapups.where("threadId").equals(thread.id).filter((record) => record.status === "preparing").count()) throw new Error("总结正在整理，请先等待或停止");
         const runs = await db.agentRuns.where("threadId").equals(thread.id).toArray();
-        if (runs.some((run) => run.status === "running" || run.status === "waiting_approval" || (run.hasToolCalls && (run.status === "interrupted" || run.status === "failed")))) throw new Error("此对话已有执行，请等待完成或恢复中断状态");
+        if (runs.some(runBlocksThread)) throw new Error("此对话已有执行，请等待完成或恢复中断状态");
         const history = await db.chatMessages.where("threadId").equals(thread.id).sortBy("createdAt");
         // Keep order deterministic even when several IndexedDB writes share a millisecond.
         const at = new Date(Math.max(Date.now(), ...history.map((m) => Date.parse(m.createdAt) + 1).filter(Number.isFinite))).toISOString();
@@ -160,7 +162,8 @@ export async function beginAgentRun(input: {
             model: input.model.trim(),
             connector: identity,
             requestMessages,
-            protocol: previous?.protocol ?? (previous?.hasToolCalls ? "chat-completions" : selectAgentProtocol(identity, input.model, reasoningEffort, enabledToolNames.length > 0)),
+            // A retry always reuses the frozen protocol; only a new send selects one.
+            protocol: previous?.protocol ?? selectAgentProtocol(identity, input.model, reasoningEffort, enabledToolNames.length > 0),
             ...(reasoningEffort !== undefined ? {reasoningEffort} : {}),
             permissionMode: previous ? previous.permissionMode ?? "ask" : agent.permissionMode ?? "ask",
             interactionMode,
@@ -219,23 +222,9 @@ export async function checkpointAgentRun(runId: string, sequence: number, output
 
 export async function finishAgentRun(runId: string, status: Exclude<AgentRunStatus, "running" | "waiting_approval">, output?: AgentRunOutput, error?: string, finishReason?: string, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
-    await db.transaction("rw", [db.agentRuns, db.chatMessages].flat(), async (db) => {
-        const run = await db.agentRuns.get(runId);
-        if (!run || (run.status !== "running" && run.status !== "waiting_approval")) return;
-        const message = await db.chatMessages.get(run.assistantMessageId);
-        if (!message || message.runId !== run.id) throw new Error("执行消息不存在");
-        const at = nowIso();
-        const messageStatus = {
-            completed: "complete",
-            failed: "error",
-            cancelled: "aborted",
-            interrupted: "interrupted"
-        } as const;
-        await db.chatMessages.update(message.id, {...output, status: messageStatus[status], error});
-        await db.agentRuns.update(run.id, {status, error, finishReason, updatedAt: at, endedAt: at,
-            ...(run.finalReview?.status === "pending" ? {finalReview: {...run.finalReview, status: "unverified" as const,
-                reason: status === "cancelled" ? "stopped" as const : "interrupted" as const, endedAt: at}} : {})});
-    });
+    // Thin wrapper: one terminal writer, always inside the run+message transaction.
+    await db.transaction("rw", [db.agentRuns, db.chatMessages].flat(), (tx) =>
+        settleRun(tx, runId, status, {output, error, finishReason}).then(() => undefined));
 }
 
 /** Caller must own the thread's Web Lock; elapsed wall time is not proof of abandonment. */
@@ -296,7 +285,9 @@ export async function recordAgentModelMetrics(runId: string, metrics: AgentModel
         await db.agentRuns.update(runId, {
             modelMetrics,
             usage: Object.keys(usage).length ? usage : undefined,
-            outputTokensPerSecond
+            outputTokensPerSecond,
+            // Usage-only changes still belong to this run's revision so live readers refresh.
+            updatedAt: nowIso()
         });
     });
 }

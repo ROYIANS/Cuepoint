@@ -34,7 +34,7 @@ function planFromEnvelope(raw: string, field: "plan" | "steps"): AgentPlanItem[]
     return parsePlan(envelope[field]);
 }
 
-/** Saves a single local finishing checkpoint at a successful no-tool boundary.
+/** Saves a single local finishing checkpoint at a successful no-tool boundary that follows tool calls or an unfinished plan.
  * Does not complete the run, force tools, change permissions or perform network work.
  */
 export async function saveAgentFinishingCheck(
@@ -74,6 +74,8 @@ export async function saveAgentFinishingCheck(
                 return false;
             }
         }
+        // 2026-10-13: a plain Q&A reply (no tool calls, no unfinished validated plan) is never rechecked.
+        if (!calls.length && !plan?.some(item => item.status !== "completed")) return false;
         if (typeof output.content !== "string" || output.content.length > 4_194_304 || typeof (output.reasoning ?? "") !== "string" || (output.reasoning?.length ?? 0) > 4_194_304 ||
             output.reasoningDurationMs !== undefined && (!Number.isFinite(output.reasoningDurationMs) || output.reasoningDurationMs < 0)) throw new Error("收尾回复内容无效或超出限制");
         let responseItems: AgentResponseItem[] | undefined;
