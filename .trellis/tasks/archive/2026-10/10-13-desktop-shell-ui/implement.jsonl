@@ -1,0 +1,4 @@
+{"file":".trellis/spec/frontend/desktop-ui.md","reason":"Existing shared frame, focus, lifecycle, scroll and print contracts; user request supersedes old shell geometry."}
+{"file":".trellis/spec/frontend/component-guidelines.md","reason":"Shared component layering and scoped Agent styling; reconcile old header/shell clauses."}
+{"file":".trellis/spec/frontend/native-product-runtime.md","reason":"Preserve actual native runtime detection, startup identity and shared product ownership."}
+{"file":".trellis/tasks/10-13-desktop-shell-ui/research/shell-and-native-findings.md","reason":"Verified header owners, portal/theme risks, selected icon boundary and macOS titlebar APIs."}

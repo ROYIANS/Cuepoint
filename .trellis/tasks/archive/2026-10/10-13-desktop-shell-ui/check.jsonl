@@ -1,0 +1,4 @@
+{"file":".trellis/spec/frontend/desktop-ui.md","reason":"Verify the revised shell contract while preserving focus, scroll, theme and print behavior."}
+{"file":".trellis/spec/frontend/component-guidelines.md","reason":"Verify presentation remains separate from business owners and Agent context stays scoped."}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Required checks and meaningful existing business/harness assertions."}
+{"file":".trellis/tasks/10-13-desktop-shell-ui/research/shell-and-native-findings.md","reason":"Native acceptance limits and concrete lifecycle/theme/offset risks to review."}
