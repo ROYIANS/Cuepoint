@@ -180,3 +180,20 @@
 .agent-chat-root .agent-tool-failure .agent-tool-failure-recovery {
     color: var(--muted-foreground);
 }
+
+.agent-chat-root .agent-tool-merged {
+    min-width: 0;
+}
+
+.agent-chat-root .agent-call-error {
+    margin: 0 0 4px 23px;
+    font-size: 12px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.agent-chat-root .agent-high-risk {
+    align-self: center;
+    font-size: 12px;
+    color: var(--destructive);
+}

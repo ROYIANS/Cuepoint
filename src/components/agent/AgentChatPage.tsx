@@ -580,11 +580,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 {!projectUnavailable && activeTask.lifecycle !== "open" && <button type="button"
                                                                                    onClick={() => void setAgentTaskLifecycle(activeTask.id, "open").catch((error: Error) => toast.error(error.message))}>重新打开</button>}
             </div>}
-            {showRunStatus ? (
+            {showRunStatus && currentRun.status === "running" ? (
                 <div className="agent-composer-run-status" role="status">
-                    <span><i/>{currentRun.status === "running" ? compactions?.at(-1)?.status === "running" ? "正在整理较早的对话…" : "正在执行" : currentRun.status === "waiting_approval" ? "等待你批准操作" : currentRun.status === "interrupted" ? currentRun.pauseReason === "model_step_limit" ? "执行已暂停，可继续下一段" : "执行已中断，进度已保存" : "执行未完成"}</span>
-                    {currentRun.status === "running" &&
-                        <button type="button" onClick={handleStop} disabled={!sending}>停止</button>}
+                    <span><i/>{compactions?.at(-1)?.status === "running" ? "正在整理较早的对话…" : "正在执行"}</span>
+                    <button type="button" onClick={handleStop} disabled={!sending}>停止</button>
                 </div>
             ) : null}</> : undefined,
         contextUsage: <ContextUsageTrigger attachments={references.attachments} projectId={projectId}
