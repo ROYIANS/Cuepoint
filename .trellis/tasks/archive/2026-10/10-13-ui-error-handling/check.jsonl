@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/desktop-ui.md", "reason": "verify error matrix and native action behaviour"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "verify quality gates"}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "verify run recovery semantics are unchanged by remounts"}
+{"file": ".trellis/tasks/10-13-ui-error-handling/research/error-handling-landscape.md", "reason": "verify each requirement against the landscape facts"}
