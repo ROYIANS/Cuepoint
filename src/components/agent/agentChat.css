@@ -743,6 +743,7 @@
     cursor: pointer;
     font: inherit;
     text-align: start;
+    box-shadow: none;
 }
 
 .agent-chat-root .agent-thinking-header:hover .agent-thinking-title {
@@ -757,8 +758,6 @@
 
 .agent-chat-root .agent-thinking-chevron {
     flex: none;
-    opacity: 0.7;
-    transition: transform 160ms ease;
 }
 
 .agent-chat-root .agent-thinking-chevron--open {
@@ -874,10 +873,36 @@
     padding: 8px 0;
     text-align: left;
     cursor: pointer;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    font: inherit;
 }
 
 .agent-chat-root .agent-run-summary:hover {
     color: var(--foreground);
+}
+
+.agent-chat-root .agent-run-summary > svg:last-child,
+.agent-chat-root .agent-tool-call-toggle > svg:last-child,
+.agent-chat-root .agent-thinking-chevron {
+    opacity: 0;
+    transition: opacity 120ms ease, transform 160ms ease;
+}
+
+.agent-chat-root .agent-run-summary:is(:hover, :focus-visible, [aria-expanded="true"]) > svg:last-child,
+.agent-chat-root .agent-tool-call-toggle:is(:hover, :focus-visible, [aria-expanded="true"]) > svg:last-child,
+.agent-chat-root .agent-thinking-header:is(:hover, :focus-visible, [aria-expanded="true"]) .agent-thinking-chevron {
+    opacity: 0.7;
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+    .agent-chat-root .agent-run-summary > svg:last-child,
+    .agent-chat-root .agent-tool-call-toggle > svg:last-child,
+    .agent-chat-root .agent-thinking-chevron {
+        opacity: 0.7;
+        transition: none;
+    }
 }
 
 .agent-chat-root .agent-run-summary:focus-visible {
@@ -1442,9 +1467,8 @@
 
 .agent-chat-root .agent-change-link {
     width: fit-content;
-    color: var(--foreground);
-    text-decoration: underline;
-    text-underline-offset: 4px;
+    color: var(--muted-foreground);
+    text-decoration: none;
 }
 
 .agent-chat-root .agent-change-link:hover {

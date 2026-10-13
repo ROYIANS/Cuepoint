@@ -72,6 +72,35 @@ describe("tool timeline", () => {
         for (const phrase of ["已完成", "读取本地数据", "编辑数据", "待处理", "项失败"]) expect(text()).not.toContain(phrase);
     });
 
+    it("shows the previewed object after the title, and only the title without one", async () => {
+        const preview = (target?: {label: string; href: string}, summary = "摘要") => ({summary, changes: [], target});
+        await renderDetails([
+            call("c1", {title: "编辑镜头", preview: preview({label: "镜头 3", href: "/p/a"})}),
+            call("c2", {title: "读取角色", name: "character_read"}),
+            call("c3", {title: "写入长文", name: "long_write", preview: preview({label: "很".repeat(60), href: "/p/a"})}),
+        ], {status: "running"});
+        const rows = [...container.querySelectorAll("[data-activity-call]")];
+        expect(rows[0].querySelector(".agent-tool-verb")?.textContent).toBe("编辑镜头 · 镜头 3");
+        expect(rows[1].querySelector(".agent-tool-verb")?.textContent).toBe("读取角色");
+        expect(rows[1].querySelector(".agent-tool-object")).toBeNull();
+        const long = rows[2].querySelector(".agent-tool-object")?.textContent ?? "";
+        expect([...long.replace(" · ", "")].length).toBe(40);
+        expect(long.endsWith("…")).toBe(true);
+    });
+
+    it("keeps aria-expanded in step with the disclosure so the hover-only chevron stays accessible", async () => {
+        await renderDetails([call("c1")], {status: "completed"});
+        const summary = container.querySelector<HTMLElement>(".agent-run-summary")!;
+        expect(summary.tagName).toBe("BUTTON");
+        expect(summary.getAttribute("aria-expanded")).toBe("false");
+        await act(async () => summary.click());
+        expect(summary.getAttribute("aria-expanded")).toBe("true");
+        const row = container.querySelector<HTMLElement>(".agent-tool-call-toggle")!;
+        expect(row.getAttribute("aria-expanded")).toBe("false");
+        await act(async () => row.click());
+        expect(row.getAttribute("aria-expanded")).toBe("true");
+    });
+
     it("merges consecutive successful calls of one kind and expands to the individual rows", async () => {
         await renderDetails([call("c1"), call("c2"), call("c3"), call("c4", {title: "读取角色", name: "character_read"})], {status: "running"});
         expect(buttons("读取镜头 · 3 项")).toHaveLength(1);

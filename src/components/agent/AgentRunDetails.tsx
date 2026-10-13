@@ -52,6 +52,17 @@ function failureLine(call: AgentToolCall, recovery?: ToolRecoveryFailure, valida
     return prefix + (recovery?.error ?? call.error ?? validationError ?? "调用失败");
 }
 
+const OBJECT_LIMIT = 40;
+
+/** Object of the call, read only from the validated preview: target label first, then a short summary. */
+function callObject(call: AgentToolCall): string | undefined {
+    const preview = call.generationOverride?.preview ?? call.preview;
+    const raw = (preview?.target?.label || preview?.summary || "").replace(/\s+/g, " ").trim();
+    if (!raw) return undefined;
+    const chars = [...raw];
+    return chars.length > OBJECT_LIMIT ? `${chars.slice(0, OBJECT_LIMIT - 1).join("")}…` : raw;
+}
+
 function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: {
     run: AgentRun; call: AgentToolCall; busy: boolean; readOnly?: boolean;
     unknown: boolean; executing: boolean;
@@ -76,10 +87,12 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
     const recovery = useMemo(() => call.status === "failed" ? readToolRecoveryFailure(call.result) : undefined, [call.status, call.result]);
     const decide = !readOnly && !reviewGeneration && !musicReview && awaiting && recoverable && !unknown && !executing;
     const status = STATUS[call.status];
+    const object = callObject(call);
     return <div className="agent-run-step" data-activity-call={call.id}>
         <button type="button" className="agent-tool-call-toggle" aria-expanded={open} aria-controls={panelId}
-                onClick={() => setOpen((value) => !value)}>
-            <StepIcon status={call.status}/><span>{call.title}</span>{status && <small>{status}</small>}<ChevronDown
+                data-status={call.status} onClick={() => setOpen((value) => !value)}>
+            <StepIcon status={call.status}/><span className="agent-tool-verb">{call.title}{object &&
+                <span className="agent-tool-object"> · {object}</span>}</span>{status && <small>{status}</small>}<ChevronDown
             size={12} className={open ? "rotate-180" : ""} aria-hidden/>
         </button>
         {call.status === "failed" && (recovery?.effectCertainty === "unknown"
@@ -138,7 +151,7 @@ function MergedCalls({calls, ...props}: RowProps & { calls: AgentToolCall[] }) {
     return <div className="agent-tool-merged">
         <button type="button" className="agent-tool-call-toggle" aria-expanded={open} aria-controls={panelId}
                 onClick={() => setOpen((value) => !value)}>
-            <Check size={15} className="text-green-500" aria-hidden/><span>{calls[0].title} · {calls.length} 项</span><ChevronDown
+            <Check size={15} className="text-green-500" aria-hidden/><span className="agent-tool-verb">{calls[0].title} · {calls.length} 项</span><ChevronDown
             size={12} className={open ? "rotate-180" : ""} aria-hidden/>
         </button>
         <div id={panelId} className="agent-tool-group-calls" hidden={!open}>
@@ -229,12 +242,12 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
 
     return <section ref={sectionRef} className="agent-run-activity agent-execution-activity" aria-label="执行过程"
                     data-activity-run={run.id}>
-        {hasProcess && <Button variant="ghost" className="agent-run-summary agent-execution-summary h-auto justify-start rounded-none"
+        {hasProcess && <button type="button" className="agent-run-summary agent-execution-summary"
                 aria-expanded={expanded} aria-controls={panelId} onClick={() => setExpanded((value) => !value)}>
             {running && <LoaderCircle size={12} className="animate-spin motion-reduce:animate-none" aria-hidden/>}
             <span>{running ? (toolCount > 0 ? `进行中 · 已用 ${toolCount} 个工具` : "进行中") : toolCount > 0 ? `用了 ${toolCount} 个工具` : "过程记录"}</span>
             <ChevronDown size={14} className={expanded ? "rotate-180" : ""} aria-hidden/>
-        </Button>}
+        </button>}
         <AgentWriteOutcomes run={run} calls={ownedCalls}/>
         <div id={panelId} className="agent-execution-timeline" hidden={hasProcess && !expanded}>
             {(expanded || hasExpanded) && <>
