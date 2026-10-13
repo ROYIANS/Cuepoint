@@ -75,6 +75,7 @@ vi.mock("@/components/agent/ContextUsagePanel", () => ({ContextUsageTrigger: "co
 vi.mock("@lobehub/ui", () => ({Button: "button", Empty: "empty", Flexbox: "div"}));
 
 import {toast} from "sonner";
+import {resetReportedErrorsForTests} from "@/lib/diagnostics/reportError";
 import {AgentChatPage} from "@/components/agent/AgentChatPage";
 import {useReferenceDraft} from "@/components/agent/useReferenceDraft";
 import type {ComposerProps} from "@/components/agent/composerTypes";
@@ -141,7 +142,7 @@ function reference(id: string, status: ProjectReference["status"] = "ready"): Pr
         warnings: [], createdAt: "2026-09-30", updatedAt: "2026-09-30"};
 }
 beforeEach(() => {
-    hosts.length = 0; vi.clearAllMocks(); Object.values(io).forEach(mock => mock.mockReset());
+    hosts.length = 0; vi.clearAllMocks(); resetReportedErrorsForTests(); Object.values(io).forEach(mock => mock.mockReset());
     vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn()});
     io.update.mockResolvedValue(undefined); io.execute.mockResolvedValue(undefined);
     io.begin.mockResolvedValue({id: "run"});
@@ -244,7 +245,7 @@ describe("B07 first send and ownership boundaries", () => {
         expect(ui.composer().attachments).toEqual([{referenceId: "submitted-ref", revision: 1}]);
         expect(ui.composer().sending).toBe(false); expect(io.navigate).not.toHaveBeenCalled();
         expect(io.begin).not.toHaveBeenCalled(); expect(io.execute).not.toHaveBeenCalled();
-        expect(toast.error).toHaveBeenCalledWith("thread already running");
+        expect(toast.error).toHaveBeenCalledWith("发送失败", expect.objectContaining({description: "thread already running"}));
     });
     it("failed navigation restores unchanged origin and no run begins", async () => {
         const {ui, created} = home(); io.create.mockResolvedValue(created); io.navigate.mockRejectedValue(new Error("navigation failed"));
@@ -257,7 +258,7 @@ describe("B07 first send and ownership boundaries", () => {
         const pending = ui.send(); await settle(); ui.type("new home");
         io.navigate.mockRejectedValue(new Error("navigation failed")); gate.resolve(created); await pending; await settle();
         expect(ui.composer().value).toBe("new home"); expect(io.begin).not.toHaveBeenCalled();
-        expect(toast.error).toHaveBeenCalledWith(expect.stringContaining(`「${created.title}」`));
+        expect(toast.error).toHaveBeenCalledWith("发送失败", expect.objectContaining({description: expect.stringContaining(`「${created.title}」`)}));
         ui.select(created.id); expect(ui.composer().value).toBe(" submitted "); expect(ui.composer().attachments).toHaveLength(1);
     });
     it("deferred failed navigation cannot roll back over post-transfer home edits", async () => {
@@ -275,7 +276,7 @@ describe("B07 first send and ownership boundaries", () => {
         nav.reject(new Error("navigation failed")); await pending; await settle();
         expect(ui.composer().value).toBe(" submitted ");
         expect(ui.composer().attachments).toEqual([{referenceId: "submitted-ref", revision: 1}]);
-        expect(toast.error).toHaveBeenCalledWith(expect.stringContaining(`「${created.title}」`));
+        expect(toast.error).toHaveBeenCalledWith("发送失败", expect.objectContaining({description: expect.stringContaining(`「${created.title}」`)}));
         expect(io.begin).not.toHaveBeenCalled(); expect(io.execute).not.toHaveBeenCalled();
         ui.select(); expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
     });
@@ -361,7 +362,7 @@ describe("B07 first send and ownership boundaries", () => {
         const pending = ui.send(); await settle(); expect(ui.composer().value).toBe(""); ui.type("next");
         gate.reject(new Error("execution failed")); await pending; await settle();
         expect(ui.composer().value).toBe("next"); expect(ui.composer().attachments).toEqual([]);
-        expect(toast.error).toHaveBeenCalledWith("execution failed"); expect(io.begin).toHaveBeenCalledTimes(1);
+        expect(toast.error).toHaveBeenCalledWith("发送失败", expect.objectContaining({description: "execution failed"})); expect(io.begin).toHaveBeenCalledTimes(1);
     });
     it("preserves composer loading gate when routed ownership is pending", () => {
         const ui = page(); ui.pendingOwnership();

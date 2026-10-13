@@ -9,6 +9,7 @@ import {installNativeExternalLinks} from "@/lib/runtimeExternalLinks";
 import {initializeProductStorage} from "@/db/database";
 import {ErrorFallback, NotFound} from "@/components/errors/ErrorFallback";
 import {RootErrorBoundary, RootErrorFallback} from "@/components/errors/RootErrorFallback";
+import {ErrorDetailsDialog} from "@/components/errors/ErrorDetailsDialog";
 import {installGlobalErrorHandlers} from "@/components/errors/showError";
 import {addBreadcrumb} from "@/lib/diagnostics/breadcrumbs";
 import {reportError} from "@/lib/diagnostics/reportError";
@@ -50,16 +51,20 @@ async function startApplication():Promise<void> {
                 <RootErrorBoundary>
                     <RouterProvider router={router}/>
                 </RootErrorBoundary>
+                <ErrorDetailsDialog/>
             </StrictMode>,
         );
     } catch (cause) {
         reportError(cause, {source: "boundary"});
         applicationRoot.render(
-            <RootErrorFallback
-                title="工作区无法打开"
-                description="本机存储初始化失败。请关闭应用后重新打开；现有文件会保留。"
-                error={cause}
-            />,
+            <>
+                <RootErrorFallback
+                    title="工作区无法打开"
+                    description="本机存储初始化失败。请关闭应用后重新打开；现有文件会保留。"
+                    error={cause}
+                />
+                <ErrorDetailsDialog/>
+            </>,
         );
     }
 }
