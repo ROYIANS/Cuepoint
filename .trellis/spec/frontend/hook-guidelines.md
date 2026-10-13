@@ -224,3 +224,31 @@ Actual ReactDOM/TextDraftField/Dexie primitive and memoized regression must repr
 ### 7. Wrong vs Correct
 
 Wrong: automatic Hook autofix or fake hook rendering as proof of all React scheduling. Correct: individual reviewed effect contract, one exact documented Hook allowance and current native source/body/DB proof. No StrictMode/concurrent or OS behavior claim beyond executed cases.
+
+## useProductQuery callbacks must only await database work (2026-10-14)
+
+### 1. Scope / Trigger
+Read before writing or editing any `useProductQuery` / `useProductQueryState` callback. Found through the new error details dialog: opening a chat topic crashed with `PrematureCommitError` ("Transaction committed too early").
+
+### 2. Signatures
+`useProductQuery(query, deps)` runs `liveQuery(() => transaction("r", ALL_TABLES, query))` (`src/lib/storage/browser.ts`). The hook rethrows a query failure during rendering, so a failed query surfaces as a page crash.
+
+### 3. Contracts
+The callback runs inside one read transaction over every table. Await only Dexie operations (`db.*`, or helpers that take the `db`/`tx` you were given). Any other await (a dynamic `import()`, a timer, `fetch`, `crypto.subtle`, a lock request, a file or blob read) lets the transaction commit early and the query fails with `PrematureCommitError`. Work that needs such an await runs before the query (and its result is passed in or kept in component state), or the value is read with `useEffect` + `useState`, discarding a stale result on cleanup.
+
+### 4. Validation & Error Matrix
+| Callback awaits | Result |
+| --- | --- |
+| Only `db.*` or helpers given `db` | Works |
+| Dynamic `import()`, timer, network, crypto | `PrematureCommitError`, rethrown into rendering |
+| A query that never touches the database | Do not use `useProductQuery`; use state |
+
+### 5. Good / Base / Bad Cases
+Good: resolve the lazily imported catalog in an effect and keep the result in state. Base: a query that reads two tables with `db.x.get`. Bad: `useProductQuery(async () => ({capability: await resolveVisionCapability(...)}))`, which loads a 1.78 MB JSON by dynamic import inside the transaction (`ModelSelectTrigger`, fixed).
+
+### 6. Tests Required
+`tests/productQueryTransactionSafety.test.ts` pins both sides against the real store: a non-Dexie wait inside the query fails with `PrematureCommitError`; the same work done before the query succeeds.
+
+### 7. Wrong vs Correct
+Wrong: put any awaited non-database work inside the query callback. Correct: do it first, or move it out of the query. The same ordering already applies to `agentRuns.ts` (vision is resolved before the transaction), and any catalog lookup used in a transaction must be read from memory.
+

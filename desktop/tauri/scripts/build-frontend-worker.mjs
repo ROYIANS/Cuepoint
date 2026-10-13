@@ -3,6 +3,7 @@ import react from '../../../node_modules/@vitejs/plugin-react/dist/index.js';
 import tailwind from '../../../node_modules/@tailwindcss/vite/dist/index.mjs';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
+import {readFileSync} from 'node:fs';
 
 const base=fileURLToPath(new URL('../',import.meta.url));
 const projectRoot=resolve(base,'../..');
@@ -16,5 +17,5 @@ if(acceptance && (!endpoint || !/^http:\/\/127\.0\.0\.1:\d+\/v1$/.test(endpoint)
 const frontendRoot=acceptance ? resolve(base,'ui') : projectRoot;
 const frontendAlias=acceptance ? resolve(base,'../../src') : resolve(projectRoot,'src');
 await build({configFile:false,root:frontendRoot,plugins:[react(),tailwind()],resolve:{alias:{'@':frontendAlias}},
-    define:{__ACCEPTANCE__:JSON.stringify(acceptance),__STREAM_ENDPOINT__:JSON.stringify(endpoint),__STREAM_TOKEN__:JSON.stringify(token)},
+    define:{__APP_VERSION__:JSON.stringify(JSON.parse(readFileSync(resolve(projectRoot,'package.json'),'utf8')).version),__ACCEPTANCE__:JSON.stringify(acceptance),__STREAM_ENDPOINT__:JSON.stringify(endpoint),__STREAM_TOKEN__:JSON.stringify(token)},
     build:{outDir:resolve(base,'dist',acceptance?'acceptance':'normal'),emptyOutDir:true,assetsInlineLimit:0},worker:{format:'es'}});

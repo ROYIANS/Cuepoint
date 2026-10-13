@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 60
-- **Last Active**: 2026-10-13
+- **Total Sessions**: 61
+- **Last Active**: 2026-10-14
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1701 | Active |
+| `journal-1.md` | ~1727 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 61 | 2026-10-14 | UI 错误处理与诊断信息收集 | `9685e732`, `8f87e320`, `f125a616`, `70b2e237`, `361ae91e` | `codex/ui-error-handling` |
 | 60 | 2026-10-13 | Agent 体验精简与稳定性：安静对话、工具时间线、项目分组侧栏 | `3100d973`, `9275bbee`, `b7dac8c1`, `c2307309`, `f67e1db7`, `f09b7a41`, `377ffcdd`, `463716b8` | `codex/agent-experience-overhaul` |
 | 59 | 2026-10-13 | Page navigation layout: split panes, Phosphor icons, history controls | `fcded5cc`, `a4a211ef` | `main` |
 | 58 | 2026-10-13 | Desktop shell refinement and Remix icons | `e36860a7` | `codex/desktop-shell-ui` |

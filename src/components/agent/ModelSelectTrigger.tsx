@@ -1,7 +1,6 @@
 import type {ChatModelMetadata} from "@/lib/ai/modelMetadata";
 import {resolveModelMetadata} from "@/lib/ai/modelMetadata";
 import {resolveVisionCapability} from "@/lib/ai/visionCapability";
-import {useProductQuery} from "@/lib/storage/hooks";
 import {formatTokenCount} from "@/lib/agent/contextUsage";
 import {ModelIcon, ProviderIcon} from "./ModelIcons";
 import {ActionIcon} from "@lobehub/ui/base-ui";
@@ -28,10 +27,21 @@ function ModelDetail({modelId, metadata, providerId}: {
     const vendor = lookupVendor(modelId);
     const hints = inferModelHints(modelId);
     const visionKey = `${providerId ?? ""}:${modelId}:${metadata?.vision ?? "unknown"}`;
-    const visionResult = useProductQuery(async () => ({
-        key: visionKey,
-        capability: await resolveVisionCapability(modelId, providerId, metadata)
-    }), [visionKey]);
+    // Not a product query: this reads the lazily imported model catalog and never touches the
+    // database. Inside useProductQuery the dynamic import outlives the read transaction and
+    // fails with PrematureCommitError (see tests/productQueryTransactionSafety.test.ts).
+    // Only the primitive facts that decide the result are dependencies, so a fresh `metadata`
+    // object each render does not restart the lookup.
+    const providedVision = metadata?.vision;
+    const [visionResult, setVisionResult] = useState<{key: string; capability: Awaited<ReturnType<typeof resolveVisionCapability>>}>();
+    useEffect(() => {
+        let current = true;
+        void resolveVisionCapability(modelId, providerId, providedVision === undefined ? undefined : {source: "provider", vision: providedVision}).then(
+            capability => { if (current) setVisionResult({key: visionKey, capability}); },
+            () => { /* An unreadable catalog leaves the capability unknown. */ },
+        );
+        return () => { current = false; };
+    }, [modelId, providerId, providedVision, visionKey]);
     const vision = visionResult?.key === visionKey ? visionResult.capability : undefined;
     const abilities = [
         vision?.supported ? "视觉识别" : null,

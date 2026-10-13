@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "UI component and error-display conventions"}
+{"file": ".trellis/spec/frontend/desktop-ui.md", "reason": "desktop error matrix, no window.alert, native actions"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "quality gates and conventions"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "typed boundaries for the error info shape"}
+{"file": ".trellis/tasks/10-13-ui-error-handling/research/error-handling-landscape.md", "reason": "current error surface, framework capabilities, collection constraints"}

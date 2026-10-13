@@ -25,6 +25,7 @@ import {useProductQuery} from "@/lib/storage/hooks";
 import {Button, Empty, Flexbox} from "@lobehub/ui";
 import {useCallback, useEffect, useMemo, useRef, useState,} from "react";
 import {toast} from "sonner";
+import {showError} from "@/components/errors/showError";
 import {ChatWorkspace} from "@/components/agent/ChatWorkspace";
 import type {ComposerProps} from "@/components/agent/composerTypes";
 import {HomeWelcome} from "@/components/agent/HomeWelcome";
@@ -290,7 +291,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 });
                 armConfirmedDeparture();
                 void navigate({to: "/agent/$threadId", params: {threadId: thread.id}});
-            })().catch((error: unknown) => toast.error(error instanceof Error ? error.message : "创建对话失败"));
+            })().catch((error: unknown) => showError({title: "创建对话失败", cause: error, actionName: "create-thread"}));
         });
     }), [abortRef, navigate, selectedConnector?.id, modelValue, projectId, taskMode, leaveTask, requestDeparture, armConfirmedDeparture]);
     const handleNewTopic = useCallback(() => createTopic(), [createTopic]);
@@ -312,7 +313,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             setRenameTarget(undefined);
         } catch (error) {
             // Keep the dialog and its typed title so the retry costs no retyping.
-            toast.error(error instanceof Error ? error.message : "重命名失败，请重试");
+            showError({title: "重命名失败", cause: error, actionName: "rename-thread"});
         } finally {
             if (mounted.current) setRenaming(false);
         }
@@ -342,7 +343,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     }
                     setDeleteTarget(current => current?.id === target.id ? undefined : current);
                 } catch (error) {
-                    if (mounted.current) toast.error(error instanceof Error ? error.message : "删除对话失败，请重试");
+                    if (mounted.current) showError({title: "删除对话失败", cause: error, actionName: "delete-thread"});
                 } finally {
                     deleteLock.current = undefined;
                     if (mounted.current) setDeleting(false);
@@ -410,9 +411,9 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     sameChatModelConnector(selectionRef.current.connector, connector) &&
                     selectionRef.current.model === model && selectionRef.current.threadId === activeThreadId
             });
-            if (checked && !checked.ok && !checked.aborted) toast.error(checked.message);
+            if (checked && !checked.ok && !checked.aborted) showError({title: "发送失败", cause: new Error(checked.message), actionName: "send-message", detail: checked.message});
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : "发送失败，请重试");
+            showError({title: "发送失败", cause: error, actionName: "send-message", ...(error instanceof Error ? {detail: error.message} : {})});
         } finally {
             releaseExecution(token);
         }
@@ -432,9 +433,9 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 runId, activeThreadId, controller,
                 isThreadCurrent: id => selectionRef.current.threadId === id
             });
-            if (checked && !checked.ok && !checked.aborted) toast.error(checked.message);
+            if (checked && !checked.ok && !checked.aborted) showError({title: "重新生成失败", cause: new Error(checked.message), actionName: "retry-run", detail: checked.message});
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : "重新生成失败");
+            showError({title: "重新生成失败", cause: error, actionName: "retry-run", ...(error instanceof Error ? {detail: error.message} : {})});
         } finally {
             releaseExecution(token);
         }
@@ -454,9 +455,9 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 runId, action, callId, activeThreadId, controller,
                 isThreadCurrent: id => selectionRef.current.threadId === id
             });
-            if (checked && !checked.ok && !checked.aborted) toast.error(checked.message);
+            if (checked && !checked.ok && !checked.aborted) showError({title: "处理执行失败", cause: new Error(checked.message), actionName: "run-action", detail: checked.message});
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : "处理执行失败");
+            showError({title: "处理执行失败", cause: error, actionName: "run-action", ...(error instanceof Error ? {detail: error.message} : {})});
         } finally {
             releaseExecution(token);
         }
@@ -597,7 +598,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
 
         reasoningEffort,
         onReasoningEffortChange: value => {
-            void handleReasoningEffortChange(value).catch(() => toast.error("推理设置保存失败，当前页面仍保留所选值"));
+            void handleReasoningEffortChange(value).catch((error: unknown) => showError({title: "推理设置保存失败", cause: error, actionName: "save-reasoning-effort", detail: "当前页面仍保留所选值"}));
         },
         value: draft,
         sending,
@@ -619,14 +620,14 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         onSend: () => void handleSend(),
         onStop: handleStop,
         onConnectorChange: (id) => {
-            void handleConnectorChange(id).catch(error => toast.error(error instanceof Error ? error.message : "连接设置保存失败"));
+            void handleConnectorChange(id).catch((error: unknown) => showError({title: "连接设置保存失败", cause: error, actionName: "save-connector"}));
         },
         onModelChange: (model) => {
-            void handleModelChange(model).catch(error => toast.error(error instanceof Error ? error.message : "模型设置保存失败"));
+            void handleModelChange(model).catch((error: unknown) => showError({title: "模型设置保存失败", cause: error, actionName: "save-model"}));
         },
         onChatModeChange: handleChatModeChange,
         onInteractionModeChange: mode => {
-            void handleInteractionModeChange(mode).catch(() => toast.error("对话模式保存失败，请重试"));
+            void handleInteractionModeChange(mode).catch((error: unknown) => showError({title: "对话模式保存失败", cause: error, actionName: "save-interaction-mode", detail: "请重试"}));
         },
     };
 

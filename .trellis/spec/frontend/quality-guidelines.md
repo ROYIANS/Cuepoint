@@ -384,3 +384,40 @@ Actual production CLI must reject sibling callback and branch debt transfers, su
 ### 7. Wrong vs Correct / Attribution and Limits
 
 Wrong: zero warnings claim, counted unresolved historical metadata imports as repairs, normalized an unexplained tool exit into success, or treated source counts as user-visible performance. Correct: complete historical imported vendor/dependency closure, individual before/current rule interpretation, exact independent coverage, explicit generated-route token equivalence/restoration and real source hashes. Local macOS Node22 proof is not Linux GitHub execution; offline/generated-media native tests do not establish paid providers, mobile/device/OS scheduling, battery or latency behavior.
+
+## Error diagnostics and redaction (2026-10-14)
+
+### 1. Scope / Trigger
+Read before adding any UI error output, changing `src/lib/diagnostics/` or `src/components/errors/`, or putting new data into a diagnostic report. Diagnostics are user-initiated only: nothing is persisted or sent automatically.
+
+### 2. Signatures
+`sanitizeText(input, limit?)`, `sanitizePath(pathname)` (`sanitize.ts`); `addBreadcrumb(kind: "route" | "action", label)`, `getBreadcrumbs()` (ring of 30, memory only); `toErrorInfo(cause)`, `buildDiagnosticReport(info, context)`, `buildIssueUrl(info, context)` (`errorReport.ts`); `friendlyMessage(cause)`; `reportError(cause, {source: "boundary" | "global" | "action", actionName?})`, `getLatestError()`, `subscribeLatestError` (`reportError.ts`); `showError({title?, cause, actionName?, detail?})`, `installGlobalErrorHandlers()` (`showError.ts`); `openErrorDetails()` / `ErrorDetailsDialog`. Build-time `__APP_VERSION__` is defined in both `vite.config.ts` and `desktop/tauri/scripts/build-frontend-worker.mjs`; `appVersion()` falls back to `"dev"`.
+
+### 3. Contracts
+- One export point: every displayed, copied, saved or URL-embedded string goes through `sanitizeText`; a failure inside sanitizing returns the placeholder, never the raw text. Patterns cover URLs (userinfo and query removed), `sk-` keys, Bearer/Authorization/Cookie, generic `token|secret|password|api_key` pairs, JWTs, local paths (including user names with spaces), 32+ character random runs.
+- `toErrorInfo` reads only `name`, `message`, `stack` (20 lines), `certainty`/`code` and `failure.effectCertainty/code`. It never reads arbitrary own properties (`request`, `config`) and never walks `cause` for content.
+- Breadcrumb labels are route paths or fixed action names. Never pass user input, prompts or content.
+- `actionName` is a fixed literal at the call site. `detail` is actionable business text and is sanitized and truncated to 200 characters before display; it must never be raw provider output that echoes a prompt.
+- `AbortError` anywhere in a short `cause` chain is a normal cancellation and is never reported. Identical fingerprints within 1 second are reported once (covers StrictMode and the three boundary callbacks).
+- No automatic transmission: no `fetch`, `sendBeacon`, image beacon or analytics call may carry diagnostic data. The dialog states this and copy, save and GitHub open happen only on click. Clipboard failure falls back to selecting the textarea.
+- Only the listed chat and connector failure sites use `showError`; other `toast.error` calls stay as they are until migrated deliberately.
+
+### 4. Validation & Error Matrix
+| Condition | Result |
+| --- | --- |
+| `AbortError` (or abort in cause chain) | Ignored |
+| Same fingerprint within 1 s | Single report and toast |
+| Sanitizer throws | Placeholder, never raw text |
+| Clipboard missing or rejected | Select textarea, show manual-copy hint |
+| Storage failed to open | Fixed friendly page plus details; never `cause.message` |
+| Page render error | Only the workspace is replaced; nav and header stay |
+
+### 5. Good / Base / Bad Cases
+Good: a rejected send shows a friendly title with the sanitized original message and a "查看详情" action. Base: an unknown render error shows the generic page with retry, home and details. Bad: interpolating an error object or request config into a report, adding a prompt excerpt as a breadcrumb, or catching a cancellation as an error.
+
+### 6. Tests Required
+`diagnostics.test.ts` (each secret shape and its counter-example, ring size, dedupe window, wrapped abort, friendly classes, report has no content fields), `errorFallback.test.ts` (workspace-only replacement, root boundary, global handlers, AbortError not reported), `errorDetailsDialog.test.ts` (each action, clipboard fallback, redaction in text, saved Blob and issue URL, no `fetch`), `errorBoundaryChatUnmount.test.ts` (unmount cleanup, `recoverAbandonedRuns`). Real-window acceptance covers the crash page, 760px dialog layout and the packaged clipboard.
+
+### 7. Wrong vs Correct
+Wrong: `toast.error(String(error))` or putting `error.request` into a report. Correct: `showError({title, cause, actionName: "send-message", detail})` and let the report builder read the fixed fields.
+

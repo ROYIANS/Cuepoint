@@ -7,12 +7,26 @@ import {getHistoryNavigation} from "@/lib/historyNavigation";
 import {createProductRouterHistory} from "@/lib/productRouterHistory";
 import {installNativeExternalLinks} from "@/lib/runtimeExternalLinks";
 import {initializeProductStorage} from "@/db/database";
+import {ErrorFallback, NotFound} from "@/components/errors/ErrorFallback";
+import {RootErrorBoundary, RootErrorFallback} from "@/components/errors/RootErrorFallback";
+import {ErrorDetailsDialog} from "@/components/errors/ErrorDetailsDialog";
+import {installGlobalErrorHandlers} from "@/components/errors/showError";
+import {addBreadcrumb} from "@/lib/diagnostics/breadcrumbs";
+import {reportError} from "@/lib/diagnostics/reportError";
 
 initUmami();
 installNativeExternalLinks();
 
-const router = createRouter({routeTree, history: createProductRouterHistory()});
+const router = createRouter({
+    routeTree,
+    history: createProductRouterHistory(),
+    defaultErrorComponent: ErrorFallback,
+    defaultNotFoundComponent: NotFound,
+    defaultOnCatch: error => { reportError(error, {source: "boundary"}); },
+});
 getHistoryNavigation(router.history);
+router.subscribe("onResolved", event => addBreadcrumb("route", event.toLocation.pathname));
+installGlobalErrorHandlers();
 
 declare module "@tanstack/react-router" {
     interface Register {
@@ -23,26 +37,34 @@ declare module "@tanstack/react-router" {
 const root = document.getElementById("root");
 if (!root) throw new Error("root element missing");
 
-const applicationRoot = createRoot(root);
+const applicationRoot = createRoot(root, {
+    onCaughtError: error => { reportError(error, {source: "boundary"}); },
+    onUncaughtError: error => { reportError(error, {source: "global"}); },
+    onRecoverableError: error => { reportError(error, {source: "global"}); },
+});
 
 async function startApplication():Promise<void> {
     try {
         await initializeProductStorage();
         applicationRoot.render(
             <StrictMode>
-                <RouterProvider router={router}/>
+                <RootErrorBoundary>
+                    <RouterProvider router={router}/>
+                </RootErrorBoundary>
+                <ErrorDetailsDialog/>
             </StrictMode>,
         );
     } catch (cause) {
-        console.error("Product storage could not be opened", cause);
+        reportError(cause, {source: "boundary"});
         applicationRoot.render(
-            <main className="flex min-h-screen items-center justify-center bg-background p-8 text-foreground">
-                <div className="max-w-lg space-y-4">
-                    <h1 className="text-2xl font-semibold">工作区无法打开</h1>
-                    <p className="text-muted-foreground">本机存储初始化失败。请关闭应用后重新打开；现有文件会保留。</p>
-                    <p className="text-sm text-muted-foreground">{cause instanceof Error ? cause.message : "无法读取工作区"}</p>
-                </div>
-            </main>,
+            <>
+                <RootErrorFallback
+                    title="工作区无法打开"
+                    description="本机存储初始化失败。请关闭应用后重新打开；现有文件会保留。"
+                    error={cause}
+                />
+                <ErrorDetailsDialog/>
+            </>,
         );
     }
 }
