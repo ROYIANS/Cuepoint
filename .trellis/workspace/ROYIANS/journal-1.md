@@ -1699,3 +1699,29 @@ Shipped split-pane module navigation, docked/overlay context panels, single-row 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 61: UI 错误处理与诊断信息收集
+<!-- trellis-session: v=2 fp=96016c138066df3e -->
+
+**Date**: 2026-10-14
+**Task**: UI 错误处理与诊断信息收集
+**Branch**: `codex/ui-error-handling`
+
+### Summary
+
+新增三层错误兜底（路由级、根级、全局监听，排除 AbortError）、统一出口 showError、只在用户主动时导出的诊断详情面板（复制/保存/GitHub 反馈，不落盘不自动发送）与脱敏；独立检查补上 token/password/Cookie/JWT/带空格路径的脱敏漏洞；新错误面板抓到一个旧 bug：ModelSelectTrigger 在 useProductQuery 事务内动态导入模型库导致 PrematureCommitError，已修并加测试与规范。全量门禁通过。未验证：打包版剪贴板、760px 对话框布局、聊天页崩溃后重试的真实窗口行为（用户回复 ok，未逐项确认）。局限：消息里嵌入的用户内容无法按模式脱敏；详情总显示最近一次错误；同操作 1 秒内重复失败只提示一次。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `9685e732` | feat(errors): add diagnostics core and route/root error fallbacks |
+| `8f87e320` | feat(errors): add diagnostics details dialog and route key chat failures through it |
+| `f125a616` | fix(errors): close sanitizer gaps, honor wrapped aborts and wire model discovery |
+| `70b2e237` | docs(errors): document diagnostics redaction and error display contracts |
+| `361ae91e` | fix(agent): resolve model vision outside the product query transaction |
+
+### Status
+
+[OK] **Completed**
