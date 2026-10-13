@@ -1,0 +1,29 @@
+{
+  "recentMonths": 18,
+  "fullProviders": [
+    "deepseek",
+    "aihubmix",
+    "xiaomi",
+    "openai"
+  ],
+  "originProviders": [
+    "openai",
+    "deepseek",
+    "xiaomi",
+    "anthropic",
+    "google",
+    "xai",
+    "mistral",
+    "alibaba",
+    "zhipuai",
+    "moonshotai",
+    "minimax",
+    "meta",
+    "cohere",
+    "stepfun",
+    "perplexity",
+    "inception",
+    "upstage",
+    "ai21"
+  ]
+}
