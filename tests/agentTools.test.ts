@@ -1,4 +1,3 @@
-import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
@@ -59,18 +58,18 @@ describe("durable bounded tool loop", () => {
       if (bodies.length === 2) return toolResponse("update_run_plan", '{"steps":[{"id":"inspect","title":"检查工作区","status":"completed"}]}', "call-2");
       return answer();
     });
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
     expect(fetcher).toHaveBeenCalledTimes(4);
     expect(bodies[1].messages.slice(-2).map((m) => m.role)).toEqual(["assistant", "tool"]);
     expect(bodies[2].messages.filter((m) => m.role === "tool").map((m) => m.tool_call_id)).toEqual(["call-1", "call-2"]);
-    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 5, finalReview: {status: "checked"}, plan: [{ id: "inspect", title: "检查工作区", status: "completed" }] });
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 4, plan: [{ id: "inspect", title: "检查工作区", status: "completed" }] });
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
     expect(calls.every((call) => call.status === "completed" && !!call.result)).toBe(true);
     expect((await db.chatMessages.get(run.assistantMessageId))?.content).toBe("完成");
   });
   it("persists approval, binds one immutable call and rejects double decisions", async () => {
     const run = await begin(); const tool = controlled();
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).not.toHaveBeenCalled();
     expect((await db.agentRuns.get(run.id))?.status).toBe("waiting_approval");
     const call = (await db.agentToolCalls.toArray())[0];
@@ -81,29 +80,29 @@ describe("durable bounded tool loop", () => {
     await resolveAgentToolApproval(run.id, call.id, "approve");
     await expect(resolveAgentToolApproval(run.id, call.id, "approve")).rejects.toThrow("已处理");
     const fetcher = vi.fn(async () => answer());
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).toHaveBeenCalledTimes(1);
     expect(await db.agentToolCalls.get(call.id)).toMatchObject({ arguments: "{}", decision: "approve", status: "completed" });
-    await expect(resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool, BUILTIN_TOOLS[1]])).rejects.toThrow();
+    await expect(resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]])).rejects.toThrow();
     expect(tool.execute).toHaveBeenCalledTimes(1);
   });
   it("resumes rejection as an explicit tool result without dispatch", async () => {
     const run = await begin(); const tool = controlled("network");
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     const call = (await db.agentToolCalls.toArray())[0];
     await resolveAgentToolApproval(run.id, call.id, "reject");
     const fetcher = vi.fn(async (_url, init) => { expect(String(init?.body)).toContain("用户拒绝"); return answer(); });
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).not.toHaveBeenCalled();
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
   });
   it("never replays completed calls after a failed next model request", async () => {
     const run = await begin("full"); const tool = controlled(); let requests = 0;
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => ++requests === 1 ? toolResponse(tool.name) : new Response("down", { status: 500 }))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => ++requests === 1 ? toolResponse(tool.name) : new Response("down", { status: 500 })), [tool, BUILTIN_TOOLS[1]]);
     const saved = (await db.agentRuns.get(run.id))!;
     expect(saved.status).toBe("failed");
     expect(canRetryRun(saved, [saved], await db.chatMessages.toArray())).toBe(false);
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())), [tool, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).toHaveBeenCalledTimes(1);
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
   });
@@ -113,7 +112,7 @@ describe("durable bounded tool loop", () => {
     let requests = 0;
     const fetcher = vi.fn(async () => ++requests <= 3 ? toolResponse(tool.name, "{}", `call-${requests}`) : answer());
     try {
-      await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool, BUILTIN_TOOLS[1]]);
+      await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
       const calls = (await db.agentToolCalls.where("runId").equals(run.id).toArray()).sort((a, b) => a.step - b.step || a.order - b.order);
       expect(calls).toHaveLength(3);
       expect(calls.every(call => call.status === "completed" && call.result === JSON.stringify({changed: true}))).toBe(true);
@@ -121,7 +120,7 @@ describe("durable bounded tool loop", () => {
       expect(tool.execute).toHaveBeenCalledTimes(3);
       expect(fetcher).toHaveBeenCalledTimes(5);
       const saved = await db.agentRuns.get(run.id);
-      expect(saved).toMatchObject({status: "completed", finalReview: {status: "checked"}});
+      expect(saved).toMatchObject({status: "completed"});
       expect(saved?.continuationMessages?.filter(message => message.role === "tool").map(message => message.content)).toEqual(calls.map(call => call.result));
     } finally { read.mockRestore(); }
   });
@@ -147,7 +146,7 @@ describe("durable bounded tool loop", () => {
     });
     let requests = 0;
     const fetcher = vi.fn(async () => ++requests === 1 ? Response.json({choices: [{message: {content: "", tool_calls: [first, later].map((tool, index) => ({id: `call-${index}`, type: "function", function: {name: tool.name, arguments: "{}"}}))}, finish_reason: "tool_calls"}]}) : answer());
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [first, later]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, [first, later]);
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
     const earlier = calls.find(call => call.name === first.name)!;
     expect(calls).toHaveLength(2);
@@ -178,7 +177,7 @@ describe("durable bounded tool loop", () => {
     })};
     let requests = 0;
     const fetcher = vi.fn(async () => ++requests === 1 ? toolResponse(first.name, "{}", "history") : Response.json({choices: [{message: {content: "", tool_calls: [first, later].map((tool, index) => ({id: `pending-${index}`, type: "function", function: {name: tool.name, arguments: "{}"}}))}, finish_reason: "tool_calls"}]}));
-    await executeChatRun(run, connector.apiKey, controller, withFinalReviewFixture(fetcher), [first, later]);
+    await executeChatRun(run, connector.apiKey, controller, fetcher, [first, later]);
     expect(fetcher).toHaveBeenCalledTimes(2); expect(first.execute).toHaveBeenCalledTimes(1);
     expect(later.prepare).toHaveBeenCalledTimes(1); expect(later.execute).not.toHaveBeenCalled();
     const calls = await db.agentToolCalls.where("runId").equals(run.id).toArray();
@@ -190,7 +189,7 @@ describe("durable bounded tool loop", () => {
   });
   it("blocks ambiguous effects and allows explicit cancel without replay", async () => {
     const run = await begin("full"); const tool = controlled(); tool.execute = vi.fn(async () => { throw new Error("lost result"); });
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     expect((await db.agentToolCalls.toArray())[0].status).toBe("unknown");
     await expect(resumeAgentRun(run.id)).rejects.toThrow("不确定");
     await expect(beginAgentRun({ threadId: run.threadId, connector, model: "model", content: "next" })).rejects.toThrow("已有执行");
@@ -200,7 +199,7 @@ describe("durable bounded tool loop", () => {
   });
   it("recovers executing tools to unknown but leaves pending approvals intact", async () => {
     const run = await begin(); const tool = controlled();
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     await interruptThreadRuns(run.threadId);
     expect((await db.agentRuns.get(run.id))?.status).toBe("waiting_approval");
     const call = (await db.agentToolCalls.toArray())[0];
@@ -212,7 +211,7 @@ describe("durable bounded tool loop", () => {
   });
   it("rejects argument errors before tool execution and lets model correct them", async () => {
     const run = await begin("full"); const tool = controlled(); let requests = 0;
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => ++requests === 1 ? toolResponse(tool.name, '{"approve":true}') : answer())), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => ++requests === 1 ? toolResponse(tool.name, '{"approve":true}') : answer()), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).not.toHaveBeenCalled();
     expect((await db.agentToolCalls.toArray())[0].status).toBe("failed");
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
@@ -220,7 +219,7 @@ describe("durable bounded tool loop", () => {
   it("pauses each 32-request segment and resumes without replay or resetting cumulative steps", async () => {
     const run = await begin("full"); const tool = controlled(); let requests = 0;
     const fetcher = vi.fn(async () => toolResponse(tool.name, "{}", `call-${++requests}`));
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
     expect(fetcher).toHaveBeenCalledTimes(32);
     expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "interrupted", pauseReason: "model_step_limit", modelStep: 32 });
     expect((await db.agentRuns.get(run.id))?.error).toBeUndefined();
@@ -230,17 +229,17 @@ describe("durable bounded tool loop", () => {
     await interruptThreadRuns(run.threadId);
     expect((await db.agentRuns.get(run.id))?.pauseReason).toBe("model_step_limit");
     expect(fetcher).toHaveBeenCalledTimes(32);
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
     expect(fetcher).toHaveBeenCalledTimes(64);
     expect(tool.execute).toHaveBeenCalledTimes(64);
     expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "interrupted", pauseReason: "model_step_limit", modelStep: 64, modelStepSegmentStart: 32 });
     for (const call of firstCalls) expect(await db.agentToolCalls.get(call.id)).toEqual(call);
     const finalFetch = vi.fn(async () => answer());
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(finalFetch), [tool, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), finalFetch, [tool, BUILTIN_TOOLS[1]]);
     expect(finalFetch).toHaveBeenCalledTimes(2);
     expect(tool.execute).toHaveBeenCalledTimes(64);
     const complete = await db.agentRuns.get(run.id);
-    expect(complete).toMatchObject({ status: "completed", modelStep: 67, modelStepSegmentStart: 64, finalReview: {status: "checked"} });
+    expect(complete).toMatchObject({ status: "completed", modelStep: 66, modelStepSegmentStart: 64 });
     expect(complete?.pauseReason).toBeUndefined();
     expect(complete?.continuationMessages?.filter((m) => m.role === "tool")).toHaveLength(64);
   });
@@ -248,12 +247,12 @@ describe("durable bounded tool loop", () => {
     const run = await begin(); const tool = controlled();
     await db.agentRuns.update(run.id, { modelStep: MODEL_STEPS_PER_SEGMENT - 1 });
     const request = vi.fn(async () => toolResponse(tool.name));
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(request), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), request, [tool, BUILTIN_TOOLS[1]]);
     const call = (await db.agentToolCalls.toArray())[0];
     await interruptThreadRuns(run.threadId);
     await resolveAgentToolApproval(run.id, call.id, "approve");
     const nextRequest = vi.fn(async () => answer());
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(nextRequest), [tool, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), nextRequest, [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).toHaveBeenCalledTimes(1);
     expect(nextRequest).not.toHaveBeenCalled();
     expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "interrupted", pauseReason: "model_step_limit", modelStep: 32 });
@@ -269,7 +268,7 @@ describe("durable bounded tool loop", () => {
     const run = await begin("full"); const tool = controlled();
     await db.agentRuns.update(run.id, { modelStep: 31 });
     const fetcher = vi.fn(async () => Response.json({ choices: [{ message: { content: "角色已创建，下一步处理场景。", tool_calls: [{ id: "last-call", type: "function", function: { name: tool.name, arguments: "{}" } }] }, finish_reason: "tool_calls" }] }));
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);
     expect((await db.chatMessages.get(run.assistantMessageId))?.content).toBe("角色已创建，下一步处理场景。");
     await cancelAgentRun(run.id);
     expect((await db.agentRuns.get(run.id))?.pauseReason).toBeUndefined();
@@ -279,21 +278,21 @@ describe("durable bounded tool loop", () => {
   it("allows a final answer on the last model request instead of unnecessarily pausing", async () => {
     const run = await begin("full");
     await db.agentRuns.update(run.id, { modelStep: 31 });
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())));
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => answer()));
     expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 32 });
     expect((await db.agentRuns.get(run.id))?.pauseReason).toBeUndefined();
   });
   it("lets a legacy eight-step failure continue using the larger first segment", async () => {
     const run = await begin("full"); const tool = controlled();
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     await db.agentRuns.update(run.id, { status: "failed", modelStep: 8, error: "已达到本次执行的模型步骤上限，请结束本次执行后调整任务" });
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())), [tool, BUILTIN_TOOLS[1]]);
-    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 11, finalReview: {status: "checked"} });
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [tool, BUILTIN_TOOLS[1]]);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({ status: "completed", modelStep: 10 });
     expect(tool.execute).toHaveBeenCalledTimes(1);
   });
   it("will not pause or replenish around unresolved side effects", async () => {
     const run = await begin(); const tool = controlled();
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     const call = (await db.agentToolCalls.toArray())[0];
     await db.agentRuns.update(run.id, { status: "running", modelStep: 32 });
     await expect(pauseAtModelStepLimit(run.id)).rejects.toThrow("尚未完成");
@@ -305,23 +304,23 @@ describe("durable bounded tool loop", () => {
   });
   it("blocks reuse of provider call IDs and preserves the first result", async () => {
     const run = await begin("full"); const tool = controlled();
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).toHaveBeenCalledTimes(1);
     expect((await db.agentRuns.get(run.id))?.error).toContain("重复");
   });
   it("does not apply an old approval after a tool effect definition changes", async () => {
     const run = await begin(); const tool = controlled();
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     const call = (await db.agentToolCalls.toArray())[0];
     await resolveAgentToolApproval(run.id, call.id, "approve");
     const changed = { ...tool, effect: "network" as const };
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())), [changed, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [changed, BUILTIN_TOOLS[1]]);
     expect(tool.execute).not.toHaveBeenCalled();
     expect((await db.agentRuns.get(run.id))?.error).toContain("定义已变化");
   });
   it("thread deletion cascades pending ledger without resurrection", async () => {
     const run = await begin(); const tool = controlled();
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     const call = (await db.agentToolCalls.toArray())[0];
     await deleteChatThread(run.threadId);
     await expect(resolveAgentToolApproval(run.id, call.id, "approve")).rejects.toThrow("已删除");
@@ -330,27 +329,27 @@ describe("durable bounded tool loop", () => {
   it("Stop after a settled tool keeps its result and can continue without replay", async () => {
     const run = await begin("full"); const controller = new AbortController(); const tool = controlled();
     tool.execute = vi.fn(async () => { controller.abort(); return { changed: true }; });
-    await executeChatRun(run, connector.apiKey, controller, withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, controller, vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     expect((await db.agentRuns.get(run.id))?.status).toBe("interrupted");
     expect((await db.agentToolCalls.toArray())[0].status).toBe("completed");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())), [tool, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).toHaveBeenCalledTimes(1);
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
   });
   it("preserves the saved reply when a resumed pending step fails before the next request", async () => {
     const run = await begin(); const tool = controlled();
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => toolResponse(tool.name))), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     const call = (await db.agentToolCalls.toArray())[0];
     await db.chatMessages.update(run.assistantMessageId, { content: "已保存的解释", reasoning: "已保存思考" });
     await resolveAgentToolApproval(run.id, call.id, "approve");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())), [{ ...tool, effect: "network" }, BUILTIN_TOOLS[1]]);
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [{ ...tool, effect: "network" }, BUILTIN_TOOLS[1]]);
     expect(await db.chatMessages.get(run.assistantMessageId)).toMatchObject({ content: "已保存的解释", reasoning: "已保存思考" });
   });
   it("does not dispatch a second tool after Stop during the first tool", async () => {
     const run = await begin("full"); const controller = new AbortController(); const tool = controlled();
     tool.execute = vi.fn(async () => { controller.abort(); return { changed: true }; });
     const fetcher = vi.fn(async () => Response.json({ choices: [{ message: { content: "", tool_calls: ["first", "second"].map((id) => ({ id, type: "function", function: { name: tool.name, arguments: "{}" } })) }, finish_reason: "tool_calls" }] }));
-    await executeChatRun(run, connector.apiKey, controller, withFinalReviewFixture(fetcher), [tool, BUILTIN_TOOLS[1]]);
+    await executeChatRun(run, connector.apiKey, controller, fetcher, [tool, BUILTIN_TOOLS[1]]);
     expect(tool.execute).toHaveBeenCalledTimes(1);
     const calls = await db.agentToolCalls.toArray();
     expect(calls.filter((call) => call.status === "pending")).toHaveLength(1);
@@ -361,7 +360,7 @@ describe("durable bounded tool loop", () => {
     const run = await begin();
     const persist = failStoreTableOnce(db,"chatMessages","update",new Error("quota"));
     try {
-      await expect(executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(vi.fn(async () => answer())))).rejects.toThrow("本地保存失败");
+      await expect(executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => answer()))).rejects.toThrow("本地保存失败");
       expect((await db.agentRuns.get(run.id))?.status).toBe("failed");
       expect((await db.chatMessages.get(run.assistantMessageId))?.error).toContain("本地保存失败");
     } finally { persist.mockRestore(); }

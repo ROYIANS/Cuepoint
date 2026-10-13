@@ -63,14 +63,12 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
         if (protocol === "responses") expect(request).toContain("opaque-provider-reasoning");
         return reply(protocol, "现在创建", [wire("project_create", { name: "真实项目", continueInProject: false })]);
       }
-      if (count === 5) return reply(protocol, '{"claims":[]}');
       return reply(protocol, "项目已创建；其他计划事项尚未继续。");
     });
     await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
     const saved = (await db.agentRuns.get(run.id))!;
     expect(saved.status, saved.error).toBe("completed");
-    expect(fetchImpl).toHaveBeenCalledTimes(5);
-    expect(saved.finalReview?.status).toBe("checked");
+    expect(fetchImpl).toHaveBeenCalledTimes(4);
     expect(saved.finishingCheck).toMatchObject({ step: 2 });
     expect(saved.plan).toEqual(plan);
     expect(saved.requestMessages).toEqual(initial);
@@ -88,23 +86,51 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
   it.each(["chat-completions", "responses"] as const)("allows a second plain answer to finish an advice plan under %s", async protocol => {
     const run = await begin(protocol);
     let count = 0;
-    const fetchImpl = vi.fn<typeof fetch>(async () => ++count === 1 ? reply(protocol, "", [wire("update_run_plan", { steps: plan })]) : count === 4 ? reply(protocol, '{"claims":[]}') : reply(protocol, "用户只需要建议，不进行写入。"));
+    const fetchImpl = vi.fn<typeof fetch>(async () => ++count === 1 ? reply(protocol, "", [wire("update_run_plan", { steps: plan })]) : reply(protocol, "用户只需要建议，不进行写入。"));
     await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
-    expect(fetchImpl).toHaveBeenCalledTimes(4);
+    expect(fetchImpl).toHaveBeenCalledTimes(3);
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
     expect(await db.projects.count()).toBe(0);
     expect(await db.agentToolCalls.where("runId").equals(run.id).count()).toBe(1);
   });
 
-  it.each(["no plan", "inherited plan", "conversation", "empty tools"])("checks eligible smart %s text-only replies while keeping conversation/empty capability unverified", async kind => {
+  it.each(["no plan", "inherited plan", "conversation", "empty tools"])("checks only text-only replies with an unfinished plan for %s; plain Q&A, conversation and empty tools make exactly one request", async kind => {
     const run = await begin("chat-completions", { ...(kind === "inherited plan" ? { plan } : {}), ...(kind === "conversation" ? { interactionMode: "conversation", plan } : {}), ...(kind === "empty tools" ? { enabledToolNames: [], plan } : {}) });
     let count = 0;
-    const fetchImpl = vi.fn<typeof fetch>(async () => reply(run.protocol, ++count === 3 ? '{"claims":[]}' : "下一步将开始，先说明建议。"));
+    const fetchImpl = vi.fn<typeof fetch>(async () => reply(run.protocol, ++count && "下一步将开始，先说明建议。"));
     await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
-    const eligible = kind === "no plan" || kind === "inherited plan";
-    expect(fetchImpl).toHaveBeenCalledTimes(eligible ? 3 : 1);
+    const eligible = kind === "inherited plan";
+    expect(fetchImpl).toHaveBeenCalledTimes(eligible ? 2 : 1);
     expect(Boolean((await db.agentRuns.get(run.id))?.finishingCheck)).toBe(eligible);
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
+  });
+
+  it.each(["chat-completions", "responses"] as const)("plain Q&A makes one model request and its reply never enters the process record for %s", async protocol => {
+    const run = await begin(protocol);
+    const fetchImpl = vi.fn<typeof fetch>(async () => reply(protocol, "这是直接回答。"));
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+    const saved = (await db.agentRuns.get(run.id))!;
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect(saved.status).toBe("completed");
+    expect(saved.finishingCheck).toBeUndefined();
+    expect(saved.activitySteps ?? []).toHaveLength(0);
+    expect((await db.chatMessages.get(run.assistantMessageId))?.content).toBe("这是直接回答。");
+  });
+
+  it.each(["chat-completions", "responses"] as const)("still checks exactly once after a real tool call for %s", async protocol => {
+    const run = await begin(protocol);
+    let count = 0;
+    const fetchImpl = vi.fn<typeof fetch>(async () => {
+      count++;
+      if (count === 1) return reply(protocol, "", [wire("workspace_overview", {})]);
+      if (count === 2) return reply(protocol, "我会继续处理。");
+      return reply(protocol, "已完成读取。");
+    });
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
+    const saved = (await db.agentRuns.get(run.id))!;
+    expect(fetchImpl).toHaveBeenCalledTimes(3);
+    expect(saved.finishingCheck).toMatchObject({ step: 2, reason: "terminal_reply" });
+    expect(saved.status).toBe("completed");
   });
 
   it.each(["chat-completions", "responses"] as const)("never adds a finishing request at the last segment step for %s", async protocol => {
@@ -139,12 +165,11 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
     expect(fetchImpl).toHaveBeenCalledOnce();
     db.close(); await db.open();
     let resumedRequests = 0;
-    const resumeFetch = vi.fn<typeof fetch>(async () => reply(protocol, ++resumedRequests === 2 ? '{"claims":[]}' : "需要你补充具体内容。"));
+    const resumeFetch = vi.fn<typeof fetch>(async () => reply(protocol, ++resumedRequests && "需要你补充具体内容。"));
     await resumeChatRun(f.run.id, connector.apiKey, new AbortController(), resumeFetch);
     const saved = (await db.agentRuns.get(f.run.id))!;
     expect(saved.finishingCheck).toEqual(stopped.finishingCheck);
-    expect(saved.status).toBe("completed"); expect(resumeFetch).toHaveBeenCalledTimes(2);
-    expect(saved.finalReview?.status).toBe("checked");
+    expect(saved.status).toBe("completed"); expect(resumeFetch).toHaveBeenCalledTimes(1);
     expect(saved.activitySteps?.filter(step => step.step === 3)).toHaveLength(1);
   });
 

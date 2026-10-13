@@ -4,7 +4,6 @@ import type {ProjectContextSnapshot} from "./projectContext";
 import type {GenerationPreferences} from "./generationPreferences";
 import type {ContextPolicy, ContextSnapshot} from "./context";
 import type {ConnectorConfig, Id} from "@/domain/types";
-import type {AgentFinalReview} from "./agentFinalReview";
 
 export interface AgentConfig {
     generationPreferences?: GenerationPreferences;
@@ -138,7 +137,6 @@ export interface AgentTokenUsage {
 }
 
 export interface AgentModelMetrics {
-    purpose?: "final_review";
     step: number;
     startedAt: number;
     firstTokenAt?: number;
@@ -183,8 +181,6 @@ export interface AgentRun {
     createdProjectBinding?: { projectId: Id; callId: Id };
     /** One bounded finishing check per run, preserved across explicit resumes. */
     finishingCheck?: { step: number; createdAt: string; reason?: "unfinished_plan" | "terminal_reply" };
-    /** Separate read-only observations. Never replaces or certifies original prose. */
-    finalReview?: AgentFinalReview;
     /** Frozen task-intake eligibility; never inferred from model arguments. */
     taskMode?: boolean;
     context?: ContextSnapshot;

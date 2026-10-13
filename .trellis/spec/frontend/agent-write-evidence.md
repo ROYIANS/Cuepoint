@@ -67,34 +67,6 @@ Good: one of two valid excerpts becomes mismatched and the result reports exactl
 ### 7. Wrong vs Correct
 Wrong: infer all same-ID ranges survived because one sibling is still in an ID Set. Correct: compare each normalized association in its preserved order and disclose bounded historical IDs plus exact counts.
 
-## One read-only final reply review (2026-10-10)
+## Final reply review removed (2026-10-13)
 
-### 1. Scope / Trigger
-After the final candidate and at most one execution finishing check, eligible smart runs can use one additional model request to inspect completion claims. User approval covers this bounded extra cost. It is not a guaranteed semantic certification mechanism.
-
-### 2. Signatures
-`beginAgentFinalReview(runId, expectedStep, output, signal, responseOutput?)`, `reviewFinalReply(...)`, `finishAgentFinalReview(runId, candidateFingerprint, claims?, reason?)`; persisted `AgentRun.finalReview: AgentFinalReview` version 1.
-
-### 3. Contracts
-Atomically save candidate/snapshot fingerprints and a one-use pending marker while reserving one actual segment model step. Fresh review messages contain only fixed instructions, original final text and code-owned bounded evidence: at most 20 historical receipts and 40 current outputs from at most 20 jobs, plus exact coverage disclosures. No tools, memory, image inputs, raw results, credentials or original reasoning envelope are offered. Use the same frozen model/protocol/effort, normal transport metrics, a 30-second deadline, 24,000-character response cap and 4,096 output-token request. Original streamed prose/reasoning remains intact. Responses retains its final opaque envelope in the original run separately; review output never becomes public prose or future business continuation.
-
-Parse strict JSON with up to 20 claims, exact ordered nonoverlapping UTF-16 start/end/text and owned evidence refs. `assessment` is a model judgment; only typed `historical_write`, `output_available`, `output_selected`, `output_placed` predicates are code-compared. No refs forces unknown. A predicate match verifies that structural fact, never the entire sentence or acoustic quality. Pending review does not auto-replay on reload/resume. Owner/candidate/output/batch-item fingerprint changes make it unverified/stale. Image batch outputs currently remain outside this review coverage.
-
-### 4. Validation & Error Matrix
-| Condition | Result |
-| --- | --- |
-| Conversation/no tools/unresolved calls/stale ownership | Ineligible, no dispatch |
-| Final segment step, oversized text/context | Unverified budget/content/context; no invented pause |
-| Stop/timeout/transport/invalid JSON or refs/spans | Preserve original answer; explicit unverified reason |
-| Current evidence changed during review | Stale, discard claims |
-| Imported/forged output or preparation-only batch | No supported output proof |
-| Review already claimed or interrupted | No second review request |
-
-### 5. Good / Base / Bad Cases
-Good: final text's precise saved output claim references one currently available owned result. Base: no completion claims returns an empty list without certifying prose. Bad: label a whole answer truthful because a model says consistent, or infer no effects from missing evidence.
-
-### 6. Tests Required
-`agentFinalReview.test.ts`, `audioBatchFinalReview.test.ts`: exact spans/refs, zero-tool envelope in both protocols, opaque original Responses retention, model judgments versus structural predicates, permissions/Stop/timeout/budget, interrupted no-replay, all-source freshness and forged batch/retry origin rejection. Live model tool choices/stops and compact desktop/narrow observations remain separate evidence.
-
-### 7. Wrong vs Correct
-Wrong: rewrite an uncertain answer into “nothing happened” or inject the full original tools/context into a review. Correct: keep original content, send one bounded zero-tool snapshot, show structural findings and disclose unverified claims.
+The read-only final reply review (`reviewFinalReply`, `AgentRun.finalReview`, `final_review` model metrics, the claim-status UI and `finalReviewEvidence`) was removed by user decision to avoid an extra paid request per tool run. Historical records may retain the fields; nothing reads them. Direct-write receipts above are unaffected. See [agent-execution](./agent-execution.md#bounded-terminal-finishing-check-2026-10-10-narrowed-2026-10-13).

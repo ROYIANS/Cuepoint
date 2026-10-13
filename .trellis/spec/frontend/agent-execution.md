@@ -57,36 +57,37 @@ Correct: push snapshots into the serialized writer, await `flush()`, then atomic
 Wrong: `setTimeout` decides a background tab died and starts its request again.
 Correct: probe the thread's Web Lock; if unavailable leave it alone; if available mark unfinished local execution interrupted without network traffic.
 
-## Bounded terminal finishing check (2026-10-10)
+## Bounded terminal finishing check (2026-10-10, narrowed 2026-10-13)
 
 ### 1. Scope / Trigger
-A successful tool-free terminal answer from a smart run may receive one execution check, including when no plan was written. The user approved this extra request and the separate read-only claim review. Conversation, Stop, genuine input/approval boundaries and segment budgets remain authoritative.
+A successful tool-free terminal answer from a smart run may receive one execution check only when the run already made tool calls, or has a validated plan with unfinished items. A plain Q&A reply (no tool calls, no unfinished plan) makes exactly one model request and is never moved into the process record. 2026-10-13 user decision: the earlier no-plan/no-tool fallback and the read-only final-reply claim review (`reviewFinalReply`, `AgentRun.finalReview`, `final_review` metric) cost extra paid requests and latency for ordinary chat, so the review chain was removed and the check was narrowed. Conversation, Stop, genuine input/approval boundaries and segment budgets remain authoritative.
 
 ### 2. Signatures
-`saveAgentFinishingCheck(runId, expectedStep, output, responseOutput?, signal?): Promise<boolean>` persists `AgentRun.finishingCheck: {step, createdAt, reason: "unfinished_plan" | "terminal_reply"}`. `buildFinishingCheckPrompt(run, calls)` projects owned historical evidence. `reviewFinalReply` is a separate zero-tool request; see [write evidence](./agent-write-evidence.md).
+`saveAgentFinishingCheck(runId, expectedStep, output, responseOutput?, signal?): Promise<boolean>` persists `AgentRun.finishingCheck: {step, createdAt, reason: "unfinished_plan" | "terminal_reply"}`. `buildFinishingCheckPrompt(run, calls)` projects owned historical evidence. Historical records may still carry `finalReview` or `purpose: "final_review"` metrics; nothing reads or writes them.
 
 ### 3. Contracts
-Require running smart mode, enabled tools, exact current model step, remaining segment budget and unchanged durable thread/project/task ownership. Every existing call must be completed and belong to this thread. If an `update_run_plan` exists, validate its atomic bookkeeping call, offered tool, original arguments and saved result against the current plan; no-plan and all-complete-plan replies can still be checked. The marker is durable once per run, including explicit resume.
+Require running smart mode, enabled tools, exact current model step, remaining segment budget and unchanged durable thread/project/task ownership. Every existing call must be completed and belong to this thread. New trigger rule: `calls.length > 0` or a validated plan with at least one non-completed item; otherwise return `false` without dispatch. If an `update_run_plan` exists, validate its atomic bookkeeping call, offered tool, original arguments and saved result against the current plan. A completed plan after tool calls can still be checked. The marker is durable once per run, including explicit resume.
 
-Atomically preserve the original candidate as public activity plus assistant continuation and a fixed system check. Responses retains the exact validated envelope and opaque reasoning; public activity contains no encrypted content. Requests, permissions, Stop, metrics and normal tool loop remain intact. Project facts, direct receipts and plan steps are different evidence. Receipt projection caps at 20 entries and explicitly discloses omissions and uncovered calls. Advice/planning-only requests may finish without writes. This is bounded model self-checking, not guaranteed detection of every promise or false claim.
+Atomically preserve the original candidate as public activity plus assistant continuation and a fixed system check. Responses retains the exact validated envelope and opaque reasoning; public activity contains no encrypted content. Requests, permissions, Stop, metrics and normal tool loop remain intact. The prompt describes only the facts that tool calls happened or plan items remain unfinished; it adds no authorization, never reruns completed calls or resubmits generation. Project facts, direct receipts and plan steps are different evidence. Receipt projection caps at 20 entries and explicitly discloses omissions and uncovered calls. Advice/planning-only requests may finish without writes. This is bounded model self-checking, not guaranteed detection of every promise or false claim.
 
 ### 4. Validation & Error Matrix
 | Condition | Result |
 | --- | --- |
 | Conversation, no tools, terminal/foreign/stale run or task | No check dispatch |
+| No tool calls and no unfinished validated plan (plain Q&A) | No check dispatch; one request total |
 | Failed/rejected/unsettled call or malformed/inconsistent saved plan | No check dispatch |
 | Marker already exists or final segment step reached | No additional execution check |
-| No plan or completed plan, otherwise eligible | One normal-loop check allowed |
+| Tool calls exist (or unfinished plan), otherwise eligible | One normal-loop check allowed |
 | Stop, persistence failure or invalid Responses envelope | No dispatch or partial mutation |
 
 ### 5. Good / Base / Bad Cases
-Good: one user action request progresses from a premature candidate through an actual business tool. Base: advice-only prose finishes after explaining that no action was requested. Bad: ticking a plan counts as completion or bypasses generation approval.
+Good: one user action request progresses from a premature candidate through an actual business tool. Base: plain Q&A finishes after a single request; advice-only prose after a plan finishes after explaining that no action was requested. Bad: ticking a plan counts as completion or bypasses generation approval; checking a plain chat answer.
 
 ### 6. Tests Required
-`agentFinishingCheck.test.ts` and `agentFinishingCheckPrompt.test.ts`: both protocols, no-plan/completed-plan, advice, exact opaque envelope, once-only resumed runs, stale owner, final step and no replay. Runtime fixtures must accept the real extra request and assert actual paid counts, usage and receipts; never turn the feature off to preserve old counters.
+`agentFinishingCheck.test.ts` and `agentFinishingCheckPrompt.test.ts`: both protocols, plain Q&A one request with no activity step, check once after tool calls, unfinished plan, advice, exact opaque envelope, once-only resumed runs, stale owner, final step and no replay. Runtime fixtures must assert the actual paid request count, usage and receipts; never turn the feature off or loosen assertions merely to preserve old counters.
 
 ### 7. Wrong vs Correct
-Wrong: a no-call answer always requires another user “continue”, or a saved plan authorizes more writes. Correct: persist one bounded evidence-based check, retain the original candidate, and let the normal permission/input/budget rules decide the next action.
+Wrong: a no-call, no-plan answer always receives another request, or a saved plan authorizes more writes. Correct: persist one bounded evidence-based check only when tool calls or unfinished plan items exist, retain the original candidate, and let the normal permission/input/budget rules decide the next action.
 
 ## Contextual ownership and typed recovery (2026-10-10)
 

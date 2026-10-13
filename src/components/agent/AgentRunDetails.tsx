@@ -1,6 +1,5 @@
 import {CreatedEntityLinks} from "./CreatedEntityLinks";
 import {AgentWriteOutcomes} from "./AgentWriteOutcomes";
-import {AgentFinalReviewStatus} from "./AgentFinalReviewStatus";
 import {WebResearchSources} from "./WebResearchSources";
 import {ProjectImageSources} from "./ProjectImageSources";
 import {GenerationReview} from "./GenerationReview";
@@ -258,7 +257,6 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
             {failedCount > 0 && <small className="agent-execution-failure-summary">含 {failedCount} 项失败</small>}
         </Button>
         <AgentWriteOutcomes run={run} calls={ownedCalls}/>
-        <AgentFinalReviewStatus run={run}/>
         <div id={panelId} className="agent-execution-timeline" hidden={!expanded}>
             {(expanded || hasExpanded) && <>
                 <div className="agent-execution-explanation">

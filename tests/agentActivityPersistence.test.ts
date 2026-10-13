@@ -1,5 +1,4 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
-import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/db/database";
@@ -43,11 +42,10 @@ describe("public tool-round activity persistence", () => {
       ] });
       return Response.json({ choices: [{ message: { content, reasoning_content: reasoning, ...(isToolRound ? { tool_calls: [{ id: `call-${requestCount}`, type: "function", function: { name: "workspace_overview", arguments: "{}" } }] } : {}) }, finish_reason: isToolRound ? "tool_calls" : "stop" }] });
     };
-    await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetchImpl));
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
     const saved = (await db.agentRuns.get(run.id))!;
     expect(saved.status).toBe("completed");
-    expect(saved.modelStep).toBe(5);
-    expect(saved.finalReview?.status).toBe("checked");
+    expect(saved.modelStep).toBe(4);
     expect(saved.activitySteps).toMatchObject([
       { step: 1, content: "过程 1", reasoning: "公开思考 1" },
       { step: 2, content: "过程 2", reasoning: "公开思考 2" },

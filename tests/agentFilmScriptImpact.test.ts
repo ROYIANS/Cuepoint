@@ -15,7 +15,6 @@ import {executeChatRun} from "@/lib/agent/runChat";
 import type {AgentToolContext} from "@/lib/agent/tools";
 import {readWriteReceipt} from "@/lib/agent/writeReceipt";
 import {registeredTools} from "./helpers/registeredTools";
-import {withFinalReviewFixture} from "./helpers/finalReviewFixture";
 
 const connector: ConnectorConfig = {id: "film-impact-fixture", definitionId: "openai-compatible", baseUrl: "https://film-impact.invalid/v1", apiKey: "not-real", updatedAt: "2026-10-10"};
 const tool = registeredTools(BUSINESS_TOOLS).find(definition => definition.name === "episode_update")!;
@@ -232,7 +231,7 @@ describe("film impact actual protocol continuation", () => {
             expect(await shotSnapshot()).toEqual(shots);
             return reply(protocol);
         });
-        await executeChatRun(run, connector.apiKey, new AbortController(), withFinalReviewFixture(fetcher));
+        await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
         const saved = (await db.agentRuns.get(run.id))!;
         expect(saved.status).toBe("completed");
         expect(saved.requestMessages).toEqual(originalRequests);

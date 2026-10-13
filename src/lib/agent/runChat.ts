@@ -3,7 +3,6 @@ import {StorageError} from "@/lib/storage/errors";
 import {toolMetadataMatches} from './toolDefinition';
 import {getOfferedToolNames, refreshRunToolLoading, toolNamesForCall} from "./toolLoading";
 import {saveAgentFinishingCheck} from "@/db/agentFinishingCheck";
-import {reviewFinalReply} from "./runFinalReview";
 import {upgradeLegacyPlanCalls} from "@/db/agentToolRecovery";
 import {budgetContext} from "./contextPlanner";
 import {continuationExtraTokens, prepareRunContext} from "./contextCompaction";
@@ -315,7 +314,6 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
             }
             if (!result.toolCalls?.length) {
                 if (await saveAgentFinishingCheck(run.id, run.modelStep!, output(), result.responseOutput, controller.signal, db)) continue;
-                await reviewFinalReply(run.id, run.modelStep!, output(), apiKey, controller.signal, fetchImpl, result.responseOutput, db);
                 controller.signal.throwIfAborted();
                 await finishAgentRun(run.id, "completed", output(), undefined, result.finishReason, db);
                 return;
