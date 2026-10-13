@@ -33,6 +33,12 @@ export function useThreadDeparture(threadId: string | undefined, runs: readonly 
     useEffect(() => {
         leaving.current = false;
     }, [threadId]);
+    // A confirmation covers the run it stopped. If the user stays (a failed create/delete)
+    // and the thread starts executing again, that new execution gets its own confirmation.
+    const executing = (runs ?? []).some((run) => run.status === "running" || run.status === "waiting_approval");
+    useEffect(() => {
+        if (executing) leaving.current = false;
+    }, [executing]);
     const armOnce = useCallback(() => {
         armed.current = true;
     }, []);

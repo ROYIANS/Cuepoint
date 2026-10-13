@@ -33,6 +33,7 @@ src/
 │   ├── studio/StudioShell.tsx       # guarded Studio owner + shared AppFrame
 │   ├── layout/                      # AppFrame, ModuleLayout, ContextPanelHost and PageLayout
 │   ├── agent/                       # /agent chat (LobeHub-inspired, chat-only @lobehub/ui)
+│   │                                #   topicGrouping.ts, useThreadDeparture.tsx, startPrompt.ts; db/agentRunTerminalState.ts owns settleRun
 │   ├── ui/sheet.tsx                 # shadcn Sheet (global mobile navigation)
 │   ├── assets/*DetailPage.tsx       # shared detail editors
 │   └── workspace/                   # in-project chrome

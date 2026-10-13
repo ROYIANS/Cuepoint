@@ -191,4 +191,19 @@ describe("D6 an in-flight send does not silently swallow decisions", () => {
         await expect(saveToolRound(run.id, "", [{id: "forged", type: "function", function: {name: "business_search", arguments: "{}"}}], [{title: "search", effect: "read", highRisk: false}]))
             .rejects.toThrow("本轮未提供");
     });
+
+    it("does not let a caller-built failure detail launder a non-read, high-risk or confirmed call", async () => {
+        await updateGeneralAgentConfig({permissionMode: "full", enabledSkillIds: ["workspace", "planning", "business-read"]});
+        const run = await beginAgentRun({threadId: (await createChatThread()).id, connector, model: "model", content: "开始"});
+        await startModelStep(run.id, 32);
+        const wire = [{id: "forged-failure", type: "function" as const, function: {name: "business_search", arguments: "{}"}}];
+        const failure = {error: "x", result: "{}"};
+        for (const detail of [
+            {title: "t", effect: "write" as const, highRisk: false, failure},
+            {title: "t", effect: "read" as const, highRisk: true, failure},
+            {title: "t", effect: "read" as const, highRisk: false, atomic: true, failure},
+            {title: "t", effect: "read" as const, highRisk: false, requiresConfirmation: true, failure},
+        ]) await expect(saveToolRound(run.id, "", wire, [detail])).rejects.toThrow("本轮未提供");
+        expect(await db.agentToolCalls.where("runId").equals(run.id).count()).toBe(0);
+    });
 });

@@ -76,7 +76,7 @@
 - [ ] Delivery exports filter by both project and episode and wait for live queries to load
 - [ ] Shot `status` defaults to draft; filters live on `Episode.shotFilters` (empty arrays = all); fresh native startup performs no old-data migration
 - [ ] Browser and actual Rust SQLite core/business gates cover current tables, registered tools, binary carriers and uncertainty without callback/provider replay; isolated packaged acceptance precedes normal owner activation
-- [ ] Agent stream does not `scrollIntoView({ behavior: "smooth" })` on a sentinel; history ChatItems memo by content/status/reasoning/reasoningDurationMs
+- [ ] Agent stream does not `scrollIntoView({ behavior: "smooth" })` on a sentinel; history message items memo by content/status/reasoning/reasoningDurationMs
 
 ---
 

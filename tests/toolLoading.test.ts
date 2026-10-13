@@ -79,7 +79,7 @@ describe("progressive tool loading", () => {
     expect(saved.offeredTools?.map((step) => step.names)).toEqual(bodies.map(names));
     expect(saved.requestMessages[0].content).not.toContain("删除按用户明确目标执行");
   });
-  it("records a same-step load plus never-offered call as a failed call without executing either", async () => {
+  it("applies the same-step loader but records the never-offered call as a failed call without executing it", async () => {
     const run = await begin();
     let round = 0;
     await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => ++round === 1 ? reply(run.protocol, [load(["story-edit"]), call("project_create", {}, "sneak")]) : reply(run.protocol)));
