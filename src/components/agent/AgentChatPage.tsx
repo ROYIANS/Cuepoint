@@ -276,7 +276,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         };
     }, [discoveryId, discoveryDefinitionId, discoveryBaseUrl, discoveryApiKey]);
 
-    const handleNewTopic = useCallback(() => leaveTask(() => {
+    const createTopic = useCallback((projectOverride?: Id) => leaveTask(() => {
         if (deleteLock.current) return;
         // One confirmation covers the whole action, including the navigation it causes.
         requestDeparture(() => {
@@ -285,7 +285,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 const thread = await createChatThread({
                     connectorId: selectedConnector?.id,
                     model: modelValue || undefined,
-                    projectId,
+                    projectId: projectOverride ?? projectId,
                     taskMode,
                 });
                 armConfirmedDeparture();
@@ -293,6 +293,8 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             })().catch((error: unknown) => toast.error(error instanceof Error ? error.message : "创建对话失败"));
         });
     }), [abortRef, navigate, selectedConnector?.id, modelValue, projectId, taskMode, leaveTask, requestDeparture, armConfirmedDeparture]);
+    const handleNewTopic = useCallback(() => createTopic(), [createTopic]);
+    const handleNewTopicInProject = useCallback((id: Id) => createTopic(id), [createTopic]);
 
     const handleRenameThread = useCallback((thread: ChatThread) => {
         setRenameTarget(thread);
@@ -482,7 +484,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             (routedThread.forId === activeThreadId && routedThread.thread === null));
 
     const unavailableNavigation = <TopicSidebar threads={threadList} activeThreadId={activeThreadId}
-        onSelect={openThread} onNewTopic={handleNewTopic} onOpenTasks={openBoard}
+        onSelect={openThread} onNewTopic={handleNewTopic} onNewTopicInProject={handleNewTopicInProject} onOpenTasks={openBoard}
         onRename={handleRenameThread} onDelete={handleDeleteThread}/>;
     if (!loaded || routedThreadPending) {
         return (
@@ -640,6 +642,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     onOpenTasks={openBoard}
                     onSelectThread={openThread}
                     onNewTopic={handleNewTopic}
+                    onNewTopicInProject={handleNewTopicInProject}
                     onRenameThread={handleRenameThread}
                     onDeleteThread={handleDeleteThread}
                 />
@@ -661,6 +664,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     composer={composerProps}
                     onSelectThread={openThread}
                     onNewTopic={handleNewTopic}
+                    onNewTopicInProject={handleNewTopicInProject}
                     onRenameThread={handleRenameThread}
                     onDeleteThread={handleDeleteThread}
                 />

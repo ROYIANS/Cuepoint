@@ -20,6 +20,7 @@ export function HomeWelcome({
                                 onOpenTasks,
                                 onSelectThread,
                                 onNewTopic,
+                                onNewTopicInProject,
                                 onRenameThread,
                                 onDeleteThread,
                             }: {
@@ -29,10 +30,11 @@ export function HomeWelcome({
     composer: ComposerProps;
     onSelectThread: (id: Id) => void;
     onNewTopic: () => void;
+    onNewTopicInProject?: (projectId: Id) => void;
     onRenameThread: (thread: ChatThread) => void;
     onDeleteThread: (thread: ChatThread) => void;
 }) {
-    const topics = useAgentTopicNavigation({threads, onSelect: onSelectThread, onNewTopic,
+    const topics = useAgentTopicNavigation({threads, projects: composer.projects, onNewTopicInProject, onSelect: onSelectThread, onNewTopic,
         onRename: onRenameThread, onDelete: onDeleteThread, onOpenTasks});
     const recent = threads.filter((thread) => !composer.projectId || thread.projectId === composer.projectId).slice(0, 8);
     const project = composer.projects.find((item) => item.id === composer.projectId);

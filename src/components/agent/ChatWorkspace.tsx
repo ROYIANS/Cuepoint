@@ -37,6 +37,7 @@ export function ChatWorkspace({
                                   composer,
                                   onSelectThread,
                                   onNewTopic,
+                                  onNewTopicInProject,
                                   onRenameThread,
                                   onDeleteThread,
                                   onOpenTasks,
@@ -59,6 +60,7 @@ export function ChatWorkspace({
     composer: ComposerProps;
     onSelectThread: (id: Id) => void;
     onNewTopic: () => void;
+    onNewTopicInProject?: (projectId: Id) => void;
     onRenameThread: (thread: ChatThread) => void;
     onDeleteThread: (thread: ChatThread) => void;
 }) {
@@ -79,7 +81,7 @@ export function ChatWorkspace({
         resize.observe(dock);
         return () => resize.disconnect();
     }, []);
-    const topics = useAgentTopicNavigation({threads, activeThreadId, onSelect: onSelectThread,
+    const topics = useAgentTopicNavigation({threads, activeThreadId, projects: composer.projects, onNewTopicInProject, onSelect: onSelectThread,
         onNewTopic, onRename: onRenameThread, onDelete: onDeleteThread, onOpenTasks});
 
     return (

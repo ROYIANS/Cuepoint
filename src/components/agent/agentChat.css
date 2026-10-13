@@ -380,10 +380,10 @@
 
 .agent-chat-root .agent-sidebar-nav {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
     width: 100%;
-    height: 36px;
+    height: 32px;
     padding: 0 10px !important;
     border: none;
     border-radius: 8px;
@@ -395,50 +395,162 @@
     cursor: pointer;
 }
 
-.agent-chat-root .agent-sidebar-nav:hover,
-.agent-chat-root .agent-sidebar-nav.is-active {
-    background: rgba(255, 255, 255, 0.06);
+.agent-chat-root .agent-sidebar-nav:hover {
+    background: rgb(255 255 255 / 6%);
     color: var(--foreground);
 }
 
+.agent-chat-root .agent-sidebar-nav.is-primary {
+    background: rgb(255 255 255 / 8%);
+    color: var(--foreground);
+}
+
+.agent-chat-root .agent-sidebar-nav.is-primary:hover {
+    background: rgb(255 255 255 / 12%);
+}
+
 .agent-chat-root .agent-sidebar-nav:focus-visible,
-.agent-chat-root .agent-sidebar-section:focus-visible,
 .agent-chat-root .agent-sidebar-group:focus-visible,
+.agent-chat-root .agent-sidebar-list-toggle:focus-visible,
 .agent-chat-root .agent-topic-row-title:focus-visible,
 .agent-chat-root .agent-topic-row-action:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px rgb(255 255 255 / 55%);
 }
 
-.agent-chat-root .agent-sidebar-section,
-.agent-chat-root .agent-sidebar-group {
+.agent-chat-root .agent-sidebar-list-head {
     display: flex;
+    flex: none;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    padding: 8px 10px 4px !important;
-    border: none;
-    background: transparent;
+    padding: 12px 18px 2px 18px;
     color: var(--muted-foreground);
     font-size: 12px;
-    font-weight: 500;
+}
+
+.agent-chat-root .agent-sidebar-list-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--muted-foreground);
+    cursor: pointer;
+}
+
+.agent-chat-root .agent-sidebar-list-toggle:hover {
+    background: rgb(255 255 255 / 8%);
+    color: var(--foreground);
+}
+
+.agent-chat-root .agent-sidebar-list {
+    min-height: 0;
+    padding: 2px 8px 12px;
+    overflow-y: auto;
+}
+
+.agent-chat-root .agent-sidebar-group-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.agent-chat-root .agent-sidebar-group {
+    display: flex;
+    flex: 1;
+    gap: 8px;
+    align-items: center;
+    min-width: 0;
+    height: 28px;
+    padding: 0 10px !important;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: rgb(255 255 255 / 88%);
+    font-size: 13px;
+    font-weight: 400;
     text-align: start;
     cursor: pointer;
 }
 
-.agent-chat-root .agent-sidebar-group {
-    padding: 6px 10px 4px !important;
+.agent-chat-root .agent-sidebar-group-icon {
+    flex: none;
     color: var(--muted-foreground);
+}
+
+.agent-chat-root .agent-sidebar-group-label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.agent-chat-root .agent-sidebar-group-add {
+    position: absolute;
+    right: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--muted-foreground);
+    opacity: 0;
+    cursor: pointer;
+}
+
+.agent-chat-root .agent-sidebar-group-row:hover .agent-sidebar-group-add,
+.agent-chat-root .agent-sidebar-group-row:focus-within .agent-sidebar-group-add {
+    opacity: 1;
+}
+
+.agent-chat-root .agent-sidebar-group-add:hover {
+    background: rgb(255 255 255 / 8%);
+    color: var(--foreground);
+}
+
+.agent-chat-root .agent-sidebar-group-add:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(255 255 255 / 55%);
+}
+
+.agent-chat-root .agent-sidebar-section-body.is-project .agent-topic-row-title {
+    padding-left: 34px;
 }
 
 .agent-chat-root .agent-sidebar-chevron {
     flex: none;
     color: var(--muted-foreground);
-    transition: transform 0.15s ease;
+    opacity: 0;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.agent-chat-root .agent-sidebar-group:hover .agent-sidebar-chevron,
+.agent-chat-root .agent-sidebar-group:focus-visible .agent-sidebar-chevron,
+.agent-chat-root .agent-sidebar-chevron.is-closed {
+    opacity: 1;
 }
 
 .agent-chat-root .agent-sidebar-chevron.is-closed {
     transform: rotate(-90deg);
+}
+
+@media (hover: none) {
+    .agent-chat-root .agent-sidebar-chevron {
+        opacity: 1;
+    }
+
+    .agent-chat-root .agent-sidebar-group-add {
+        opacity: 1;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -451,13 +563,17 @@
     position: relative;
     display: flex;
     align-items: center;
-    height: 36px;
+    height: 32px;
     border-radius: 8px;
 }
 
 .agent-chat-root .agent-topic-row:hover,
+.agent-chat-root .agent-topic-row:focus-within {
+    background: rgb(255 255 255 / 5%);
+}
+
 .agent-chat-root .agent-topic-row.is-active {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgb(255 255 255 / 8%);
 }
 
 .agent-chat-root .agent-topic-row-title {
@@ -469,7 +585,7 @@
     border: none;
     border-radius: inherit;
     background: transparent;
-    color: rgb(255 255 255 / 78%);
+    color: rgb(255 255 255 / 72%);
     text-align: start;
     cursor: pointer;
     font-size: 14px;
@@ -481,39 +597,55 @@
 
 .agent-chat-root .agent-topic-row.is-active .agent-topic-row-title {
     color: var(--foreground);
-    font-weight: 600;
+}
+
+.agent-chat-root .agent-topic-row-time {
+    flex: none;
+    padding-right: 10px;
+    color: var(--muted-foreground);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
 .agent-chat-root .agent-topic-row-actions {
     position: absolute;
-    right: 10px;
+    right: 4px;
     display: inline-flex;
     align-items: center;
     opacity: 0;
     pointer-events: none;
 }
 
+/* Hover or keyboard focus swaps the age for the row actions. */
+.agent-chat-root .agent-topic-row:hover .agent-topic-row-time,
+.agent-chat-root .agent-topic-row:focus-within .agent-topic-row-time {
+    visibility: hidden;
+}
+
 .agent-chat-root .agent-topic-row:hover .agent-topic-row-actions,
-.agent-chat-root .agent-topic-row.is-active .agent-topic-row-actions,
 .agent-chat-root .agent-topic-row:focus-within .agent-topic-row-actions {
     opacity: 1;
     pointer-events: auto;
 }
 
 .agent-chat-root .agent-topic-row:hover .agent-topic-row-title,
-.agent-chat-root .agent-topic-row.is-active .agent-topic-row-title,
 .agent-chat-root .agent-topic-row:focus-within .agent-topic-row-title {
-    padding-right: 58px;
+    padding-right: 56px;
 }
 
 @media (hover: none) {
+    .agent-chat-root .agent-topic-row-time {
+        display: none;
+    }
+
     .agent-chat-root .agent-topic-row-actions {
         opacity: 1;
         pointer-events: auto;
     }
 
     .agent-chat-root .agent-topic-row-title {
-        padding-right: 58px;
+        padding-right: 56px;
     }
 }
 
@@ -524,29 +656,29 @@
     width: 24px;
     height: 24px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     background: transparent;
-    color: var(--ant-color-text-tertiary, #6f6f6f);
+    color: var(--muted-foreground);
     cursor: pointer;
 }
 
 .agent-chat-root .agent-topic-row-action:hover {
-    background: var(--ant-color-fill-tertiary, rgba(255, 255, 255, 0.06));
-    color: var(--ant-color-text-secondary, #aaa);
+    background: rgb(255 255 255 / 8%);
+    color: var(--foreground);
 }
 
 .agent-chat-root .agent-topic-row-action:active {
-    color: var(--ant-color-text, #fff);
+    color: var(--foreground);
 }
 
 .agent-chat-root .agent-topic-search {
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 36px;
+    height: 32px;
     padding: 0 10px;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgb(255 255 255 / 6%);
 }
 
 .agent-chat-root .agent-topic-search-icon {
@@ -604,7 +736,8 @@
 
 .agent-chat-root .agent-topic-navigation { width: 260px; overflow: hidden; }
 .agent-chat-root .agent-topic-navigation.is-collapsed { width: 0; }
-.agent-chat-root .agent-topic-sidebar { padding-top: 12px; }
+.agent-chat-root .agent-topic-sidebar { padding-top: 8px; }
+.agent-chat-root .agent-topic-brand { height: 32px; margin: 0 8px 4px; padding: 0 10px; }
 
 .agent-chat-root .agent-message-list {
     flex: 1;
