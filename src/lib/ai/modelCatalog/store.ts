@@ -92,6 +92,17 @@ export function snapshotModelPricing(
     };
 }
 
+/** Makes a freshly persisted sync result current and notifies subscribers. Memory only. */
+export function applySyncedSnapshot(snapshot: CatalogSnapshot): void {
+    publish(snapshot);
+}
+
+/** Falls back to the built-in baseline in memory (after the synced row was deleted). */
+export async function restoreBaselineSnapshot(): Promise<void> {
+    const baseline = await loadBaseline();
+    publish(baseline);
+}
+
 export function resetModelCatalogForTests(): void {
     current = undefined;
     generation += 1;

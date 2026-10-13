@@ -1,7 +1,7 @@
 import {DEVICE_SETTING_MAX_BYTES} from "@/db/deviceSettings";
 import type {CatalogCost, CatalogEntry, CatalogSnapshot} from "./types";
 
-const MAX_ENTRIES = 20000;
+export const MAX_CATALOG_ENTRIES = 20000;
 const COST_KEYS = ["input", "output", "cacheRead", "cacheWrite"] as const;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -42,7 +42,8 @@ function validFacts(value: Record<string, unknown>): boolean {
     return value.releaseDate === undefined || (typeof value.releaseDate === "string" && /^\d{4}-\d{2}(-\d{2})?$/.test(value.releaseDate));
 }
 
-function parseEntry(value: unknown): CatalogEntry | undefined {
+/** Validates one projected entry; the sync drops (rather than fails on) a single bad one. */
+export function parseCatalogEntry(value: unknown): CatalogEntry | undefined {
     if (!isRecord(value) || !validFacts(value)) return undefined;
     const cost = parseCost(value.cost);
     if (cost === null) return undefined;
@@ -58,11 +59,11 @@ function parseEntry(value: unknown): CatalogEntry | undefined {
 }
 
 function parseEntries(value: unknown): CatalogEntry[] | undefined {
-    if (!Array.isArray(value) || value.length > MAX_ENTRIES) return undefined;
+    if (!Array.isArray(value) || value.length > MAX_CATALOG_ENTRIES) return undefined;
     const entries: CatalogEntry[] = [];
     const seen = new Set<string>();
     for (const raw of value) {
-        const entry = parseEntry(raw);
+        const entry = parseCatalogEntry(raw);
         if (!entry) return undefined;
         const key = `${entry.provider}\u0000${entry.id}`;
         if (seen.has(key)) return undefined;

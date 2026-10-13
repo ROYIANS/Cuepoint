@@ -261,9 +261,11 @@ const services: RuntimeFetchServices = {
 const runtimeFetch = createRuntimeFetch(services);
 export const runtimeResultFetch = createRuntimeFetch(services, {purpose: "result-download"});
 const searchProbeFetch = createRuntimeFetch(services, {purpose: "search-probe"});
+const modelCatalogFetch = createRuntimeFetch(services, {purpose: "model-catalog"});
 
 export function runtimeFetchFor(purpose: RuntimeHttpPurpose = "configured"): typeof fetch {
     if (purpose === "result-download") return runtimeResultFetch;
+    if (purpose === "model-catalog") return modelCatalogFetch;
     return purpose === "search-probe" ? searchProbeFetch : runtimeFetch;
 }
 
