@@ -1647,3 +1647,26 @@ Completed the approved desktop shell and Remix migration: aligned native macOS t
 
 - Final fresh browser, Windows/Linux runtime, measured window drag position, long-turn jump interaction and long multi-page print observations remain explicit verification limits in the archived acceptance record.
 - No remote push or release publication was performed. Storage-sync and release tasks were not archived in this UI session.
+
+
+## Session 59: Page navigation layout: split panes, Phosphor icons, history controls
+<!-- trellis-session: v=2 fp=37478a9937492b61 -->
+
+**Date**: 2026-10-13
+**Task**: Page navigation layout: split panes, Phosphor icons, history controls
+**Branch**: `main`
+
+### Summary
+
+Shipped split-pane module navigation, docked/overlay context panels, single-row header with honest back/forward history, Remix->Phosphor icons. Follow-up: new-topic moved to header when topic sidebar collapsed, logo added to topic sidebar, settings button removed. Task archived and merged into local main (bae26318); not pushed. Native-window acceptance (A3/A6/A7/A8) left for manual check.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `fcded5cc` | feat(ui): split-pane module navigation, context panels and history controls |
+| `a4a211ef` | fix(agent): move new-topic to header when sidebar collapsed, brand topic sidebar |
+
+### Status
+
+[OK] **Completed**

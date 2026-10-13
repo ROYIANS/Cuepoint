@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 58
+- **Total Sessions**: 59
 - **Last Active**: 2026-10-13
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1649 | Active |
+| `journal-1.md` | ~1672 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 59 | 2026-10-13 | Page navigation layout: split panes, Phosphor icons, history controls | `fcded5cc`, `a4a211ef` | `main` |
 | 58 | 2026-10-13 | Desktop shell refinement and Remix icons | `e36860a7` | `codex/desktop-shell-ui` |
 | 57 | 2026-10-12 | Trellis artifact cleanup and release source-list correction | `a231dcf2e61ef3035466ef4c5ee0881b37654f7e` | `codex/release-source-list-buffer` |
 | 56 | 2026-10-12 | 共享存储 SQLite 完整桌面验收与归档 | `9383f3f52557ba785db0b6eb687b6bd3f9498fd8`, `8612d1fab586d2baceb04296907ef993eeb075ab`, `07646728dfd6ae6ab8580292694f7e0d628ccc3f` | `codex/shared-storage-sqlite` |
