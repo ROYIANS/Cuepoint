@@ -4,16 +4,14 @@ import {toast} from "sonner";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {
     Check,
-    ChevronDown,
     Headphones,
-    ListMusic,
     Mic,
     PanelRightClose,
     PanelRightOpen,
     Plus,
     Sparkles,
     X
-} from "@/components/ui/remixIcons";
+} from "@/components/ui/icons";
 import {db} from "@/db/database";
 import {
     addAudioChapter,
@@ -26,8 +24,9 @@ import {AUDIO_TRANSACTION_TABLES} from "@/db/audioShared";
 import type {AudioSegment, AudioTake} from "@/domain/audio";
 import {Button} from "@/components/ui/button";
 import {PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
+import {ProjectWorkspaceNavigation} from "@/components/workspace/ProjectWorkspaceNavigation";
+import {ContextPanel, ContextPanelContent, ContextPanelDescription, ContextPanelHeader, ContextPanelTitle} from "@/components/ui/context-panel";
 import {DraftConflictError} from "@/lib/draftConflict";
 import {errorText, SavedText, useProjectAudioJobs} from "@/components/audioMusic/shared";
 import {AudioSources} from "./AudioSources";
@@ -41,18 +40,6 @@ import {pauseAudioGenerationBatches} from "@/lib/audioGeneration/batchRuntime";
 import {AudioArrangementActions} from "./AudioArrangementActions";
 import {AudioClipHistory} from "@/lib/audio/commands";
 import "./story-workspace.css";
-
-function useInspectorSheet() {
-    const [sheet, setSheet] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 1099px)").matches);
-    useEffect(() => {
-        const query = window.matchMedia("(max-width: 1099px)");
-        const update = () => setSheet(query.matches);
-        query.addEventListener("change", update);
-        update();
-        return () => query.removeEventListener("change", update);
-    }, []);
-    return sheet;
-}
 
 export function AudioWorkspacePage({projectId}: { projectId: string }) {
     useProjectAudioJobs(projectId);
@@ -79,12 +66,10 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
     const [sourceRequest, setSourceRequest] = useState<{ id: string; segmentId?: string }>();
     const [voicesOpen, setVoicesOpen] = useState(false);
     const [voiceTarget, setVoiceTarget] = useState<AudioSegment>();
-    const [chapterOpen, setChapterOpen] = useState(false);
     const [seekRequest, setSeekRequest] = useState<{ id: string; position: number }>();
     const [error, setError] = useState("");
     const [busy, setBusy] = useState(false);
     const pending = useRef(false);
-    const sheet = useInspectorSheet();
     const [, updateHistory] = useState(0);
     const historyChapterId = data?.snapshot?.chapters.find(row => row.id === chapterId)?.id ?? data?.snapshot?.chapters[0]?.id;
     const clipHistory = useMemo(() => historyChapterId ? new AudioClipHistory(projectId, historyChapterId, () => updateHistory(value => value + 1)) : undefined, [projectId, historyChapterId]);
@@ -149,23 +134,17 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
     function openVoices(row?: AudioSegment) {
         if (row) selectSegment(row);
         setVoiceTarget(row ?? segment);
-        if (sheet) setInspectorOpen(false);
         setVoicesOpen(true);
     }
 
     const inspector = <AudioInspector projectId={projectId} chapterId={chapter.id} snapshot={snapshot} segment={segment}
                                       takeId={takeId} tab={inspectorTab} onTabChange={setInspectorTab}
                                       onTake={selectTake} onClip={selectClip} onAddSources={(target) => {
-        if (sheet) setInspectorOpen(false);
         setSourceRequest({id: String(Date.now()), segmentId: target});
     }} action={action} busy={busy} onVoices={openVoices}/>;
-    return <div className="as-workspace" data-mode={mode}>
-        <PageHeader dense title="音频制作" className="as-page-header"/>
-        <PageToolbar className="as-toolbar">
-            <div className="as-chapter-selector"><Popover open={chapterOpen}
-                                                          onOpenChange={setChapterOpen}><PopoverTrigger asChild><Button
-                variant="ghost" size="sm"><ListMusic size={15}/><span>{chapter.title}</span><ChevronDown
-                size={13}/></Button></PopoverTrigger><PopoverContent align="start" className="as-chapter-menu">
+    const navigation = <>
+        <ProjectWorkspaceNavigation projectId={projectId} projectName={project.name} kind="audio"/>
+        <div className="module-navigation-section as-chapter-navigation">
                 <div className="as-menu-heading">项目章节</div>
                 <div className="mb-3"><SavedText key={`${chapter.id}:title`} projectId={projectId} rowId={chapter.id}
                                                  field="title" value={chapter.title} label="当前章节名称"
@@ -181,7 +160,6 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
                     setSegmentId("");
                     setTakeId("");
                     setClipId("");
-                    setChapterOpen(false);
                 }}><span className="text-muted-foreground text-xs">{String(index + 1).padStart(2, "0")}</span><span
                     className="truncate">{row.title}</span>{chapter.id === row.id &&
                     <Check size={14} className="ml-auto"/>}</Button>)}<Button variant="ghost" size="sm"
@@ -208,10 +186,15 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
                                                                                   setSegmentId("");
                                                                                   setTakeId("");
                                                                                   setClipId("");
-                                                                                  setChapterOpen(false);
                                                                               })}><Plus
-                size={14}/>新增章节</Button></PopoverContent></Popover><span
-                className="as-project-name">{project.name}</span></div>
+                size={14}/>新增章节</Button>
+        </div>
+    </>;
+    return <ModuleLayout navigation={navigation} navigationLabel="音频章节" mainClassName="overflow-hidden">
+        <div className="as-workspace" data-mode={mode}>
+        <PageHeader dense title="音频制作" className="as-page-header"/>
+        <PageToolbar className="as-toolbar">
+            <div className="as-chapter-selector"><span className="truncate font-medium">{chapter.title}</span></div>
             <nav className="as-view-modes" aria-label="音频制作模式"><Button size="sm"
                                                                              variant={mode === "script" ? "secondary" : "ghost"}
                                                                              aria-pressed={mode === "script"}
@@ -228,7 +211,7 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
                 request={sourceRequest} compact projectId={projectId} segmentId={segment?.id} onSaved={saved}/><Button
                 variant="ghost" size="sm" aria-label={inspectorOpen ? "收起声音面板" : "打开声音面板"} onClick={() => {
                 if (!segment) setInspectorTab("sources");
-                setInspectorOpen(!inspectorOpen);
+                if (!pending.current) setInspectorOpen(!inspectorOpen);
             }}>{inspectorOpen ? <PanelRightClose size={16}/> : <PanelRightOpen size={16}/>}<span
                 className="as-panel-button-label">声音</span></Button></div>
         </PageToolbar>
@@ -243,13 +226,7 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
                                                                onInspect={(row) => inspect(row)} onVoices={openVoices}/>
                 <div className="px-4 pb-4"><AudioChapterBatches projectId={projectId} chapterId={chapter.id}/></div>
             </main>
-            {!sheet && inspectorOpen && <aside className="as-inspector">
-                <div className="as-inspector-top"><span><Headphones size={14}/>声音工作区</span><Button variant="ghost"
-                                                                                                        size="icon-sm"
-                                                                                                        aria-label="收起声音工作区"
-                                                                                                        onClick={() => setInspectorOpen(false)}><X
-                    size={14}/></Button></div>
-                {inspector}</aside>}</div>
+        </div>
         <VoiceLibrary key={projectId} projectId={projectId} open={voicesOpen} onOpenChange={setVoicesOpen}
                       speakers={snapshot.speakers} takes={snapshot.takes} selectedId={voiceTarget?.speakerId}
                       onChoose={voiceTarget ? async (id) => {
@@ -264,9 +241,14 @@ export function AudioWorkspacePage({projectId}: { projectId: string }) {
         <AudioTimeline projectId={projectId} projectName={project.name} chapterId={chapter.id} snapshot={snapshot} clipHistory={clipHistory}
                        selectedId={clipId} onSelect={selectClip} mobileMode={mode} seekRequest={seekRequest}
                        onOpenSources={() => inspect()}/>
-        {sheet && <Sheet open={inspectorOpen} onOpenChange={setInspectorOpen}><SheetContent
-            className="as-inspector-sheet"><SheetHeader><SheetTitle>声音与版本</SheetTitle><SheetDescription>{segment ? "当前段落的声音、生成版本和剪辑来源" : "管理项目声音与导出成品"}</SheetDescription></SheetHeader>
-            <div className="as-sheet-scroll">{inspector}</div>
-        </SheetContent></Sheet>}
-    </div>;
+        <ContextPanel open={inspectorOpen} onOpenChange={(open) => {if (!pending.current) setInspectorOpen(open);}} width={320}
+                      onRequestDeparture={(proceed, cancel) => {if (!pending.current) proceed(); else cancel?.();}}>
+            <ContextPanelContent className="as-context-panel">
+                <ContextPanelHeader><ContextPanelTitle><span className="flex items-center gap-2"><Headphones size={16}/>声音与版本</span></ContextPanelTitle>
+                    <ContextPanelDescription>{segment ? "当前段落的声音、生成版本和剪辑来源" : "管理项目声音与导出成品"}</ContextPanelDescription>
+                </ContextPanelHeader>
+                <div className="as-sheet-scroll">{inspector}</div>
+            </ContextPanelContent>
+        </ContextPanel>
+    </div></ModuleLayout>;
 }

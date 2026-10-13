@@ -68,6 +68,7 @@ import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import type {ConnectorConfig, Episode} from "@/domain/types";
 
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 type Node = ReactElement<Record<string, unknown>>;
 const hosts: Host[] = [];
 function mount(results: unknown[] = []) {
@@ -89,7 +90,7 @@ function nodes(tree: unknown): Node[] {
     const children = node.type === PageHeader
         ? PageHeader(node.props as Parameters<typeof PageHeader>[0])
         : node.props.children;
-    return [node, ...nodes(children)];
+    return [node, ...nodes(children), ...(node.type === ModuleLayout ? nodes(node.props.navigation) : [])];
 }
 function draw(host: Host, run: () => unknown) {
     runtime.active = host; host.cursor = 0; host.queryIndex = 0;

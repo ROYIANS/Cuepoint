@@ -11,7 +11,7 @@ import {
 import {useId, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {toast} from "sonner";
-import {Plus, Undo2} from "@/components/ui/remixIcons";
+import {Plus, Undo2} from "@/components/ui/icons";
 import {
     applyProductionProposal,
     cancelProductionProposal,

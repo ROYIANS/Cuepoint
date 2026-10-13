@@ -94,7 +94,7 @@ export function useMaterialDraftGuard(dirty: boolean, pending: boolean) {
         enableBeforeUnload: dirty || pending
     });
     const requestClose = (close: () => void, cancel?: () => void) => {
-        if (pending) return;
+        if (pending) {cancel?.(); return;}
         if (dirty) setRequested({close, cancel}); else close();
     };
     const dialog: ReactNode = <AlertDialog open={Boolean(requested) || blocker.status === "blocked"}

@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "@/lib/useManualDraftGuard";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {ArrowLeft, Check, Mic, Plus, Sparkles} from "@/components/ui/remixIcons";
+import {ArrowLeft, Check, Mic, Plus, Sparkles} from "@/components/ui/icons";
 import {addAudioSpeaker, patchAudioSpeaker} from "@/db/audio";
 import type {AudioSpeaker, AudioTake, MimoSpeechSettings} from "@/domain/audio";
 import {MIMO_VOICES} from "@/lib/ai/mimoSpeech";

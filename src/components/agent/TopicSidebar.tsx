@@ -1,6 +1,5 @@
 import {Flexbox, Text} from "@lobehub/ui";
-import {ActionIcon} from "@lobehub/ui/base-ui";
-import {useNavigate} from "@tanstack/react-router";
+import {LOGO_SRC, PRODUCT_NAME_ZH} from "@/lib/brand";
 import {
     ChevronDown,
     ListTodo,
@@ -8,19 +7,17 @@ import {
     MessageSquarePlus,
     Pencil,
     Search,
-    Settings,
     Trash2,
     X,
-} from "@/components/ui/remixIcons";
-import {type ComponentType, type ReactNode, useEffect, useMemo, useRef, useState,} from "react";
+} from "@/components/ui/icons";
+import {type ComponentType, useEffect, useMemo, useRef, useState,} from "react";
 import {filterThreadsByTitle} from "@/components/agent/filterThreadsByTitle";
 import {groupThreadsByTime} from "@/components/agent/timeGroups";
-import {SIDEBAR_WIDTH} from "@/components/agent/agentTheme";
 import type {ChatThread, Id} from "@/domain/types";
 
 /**
  * Topic sidebar — ghost nav
- * (开启新话题 / 搜索 / 话题…), date-grouped topic list, settings footer.
+ * (开启新话题 / 搜索 / 话题…), date-grouped topic list under the brand header.
  * Shared list body also powers the mobile topic Sheet.
  */
 export function TopicSidebar({
@@ -40,10 +37,8 @@ export function TopicSidebar({
     onRename: (thread: ChatThread) => void;
     onDelete: (thread: ChatThread) => void;
 }) {
-    const navigate = useNavigate();
-
     return (
-        <Flexbox width={SIDEBAR_WIDTH} height="100%" className="agent-topic-sidebar">
+        <Flexbox width="100%" height="100%" className="agent-topic-sidebar">
             <TopicListBody
                 threads={threads}
                 activeThreadId={activeThreadId}
@@ -52,23 +47,13 @@ export function TopicSidebar({
                 onOpenTasks={onOpenTasks}
                 onRename={onRename}
                 onDelete={onDelete}
-                footer={
-                    <Flexbox padding={8} style={{flex: "none"}}>
-                        <ActionIcon
-                            icon={Settings}
-                            title="连接"
-                            aria-label="连接"
-                            onClick={() => void navigate({to: "/connectors"})}
-                        />
-                    </Flexbox>
-                }
             />
         </Flexbox>
     );
 }
 
 /** Shared nav + searchable topic list for desktop sidebar and mobile drawer. */
-export function TopicListBody({
+function TopicListBody({
                                   threads,
                                   activeThreadId,
                                   onSelect,
@@ -76,7 +61,6 @@ export function TopicListBody({
                                   onOpenTasks,
                                   onRename,
                                   onDelete,
-                                  footer,
                               }: {
     threads: ChatThread[];
     activeThreadId?: Id;
@@ -85,7 +69,6 @@ export function TopicListBody({
     onOpenTasks: () => void;
     onRename: (thread: ChatThread) => void;
     onDelete: (thread: ChatThread) => void;
-    footer?: ReactNode;
 }) {
     const [topicsOpen, setTopicsOpen] = useState(true);
     const [folded, setFolded] = useState<Record<string, boolean>>({});
@@ -117,6 +100,10 @@ export function TopicListBody({
 
     return (
         <>
+            <Flexbox horizontal align="center" gap={8} paddingInline={16} paddingBlock={12} style={{flex: "none"}} className="agent-topic-brand">
+                <img src={LOGO_SRC} alt="" width={24} height={24} style={{objectFit: "contain"}}/>
+                <Text strong>{PRODUCT_NAME_ZH}</Text>
+            </Flexbox>
             <Flexbox paddingInline={8} gap={2} style={{flex: "none"}}>
                 <SidebarNavItem icon={MessageSquarePlus} label="开启新话题" onClick={onNewTopic}/>
                 <SidebarNavItem icon={Search} label="搜索" onClick={openSearch}/>
@@ -218,7 +205,6 @@ export function TopicListBody({
                 ) : null}
             </Flexbox>
 
-            {footer}
         </>
     );
 }
@@ -229,7 +215,7 @@ function SidebarNavItem({
                             onClick,
                             active,
                         }: {
-    icon: ComponentType<{ size?: number }>;
+    icon: ComponentType<{ size?: number; weight?: "regular" | "fill" }>;
     label: string;
     onClick: () => void;
     active?: boolean;
@@ -239,8 +225,9 @@ function SidebarNavItem({
             type="button"
             className={active ? "agent-sidebar-nav is-active" : "agent-sidebar-nav"}
             onClick={onClick}
+            aria-current={active ? "page" : undefined}
         >
-            <Icon size={16}/>
+            <Icon size={16} weight={active ? "fill" : "regular"}/>
             <span>{label}</span>
         </button>
     );

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040" role="img" aria-labelledby="title desc">
+  <title id="title">Windows 首次打开 Cuepoint 的操作示意</title>
+  <desc id="desc">确认安装包来自官方 Release 后，点击更多信息，核对文件名，愿意继续体验时点击仍要运行。图为操作示意，不是系统截图。</desc>
+  <style>
+    text { font-family: 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; }
+    .ink { fill: #202c2a; }
+    .muted { fill: #586864; }
+    .white { fill: #ffffff; }
+    .ui { fill: #edf5ff; }
+  </style>
+  <rect width="1600" height="1040" fill="#f6f7f3"/>
+  <rect x="0" y="0" width="1600" height="12" fill="#2d6654"/>
+  <text x="64" y="78" font-size="23" font-weight="700" letter-spacing="3" fill="#2d6654">CUEPOINT / 安装指南</text>
+  <rect x="1180" y="43" width="356" height="48" rx="24" fill="#e7ebe5"/>
+  <text x="1358" y="74" text-anchor="middle" font-size="20" class="muted">操作示意 · 非系统截图</text>
+  <text x="64" y="161" font-size="52" font-weight="700" class="ink">Windows · 首次打开</text>
+  <text x="64" y="211" font-size="26" class="muted">确认来自官方发布页后，再决定是否继续体验当前未签名版本。</text>
+  <circle cx="91" cy="289" r="27" fill="#2d6654"/>
+  <text x="91" y="300" text-anchor="middle" font-size="29" class="white">1</text>
+  <text x="134" y="300" font-size="29" font-weight="700" class="ink">点击「更多信息」</text>
+  <circle cx="853" cy="289" r="27" fill="#2d6654"/>
+  <text x="853" y="300" text-anchor="middle" font-size="29" class="white">2</text>
+  <text x="896" y="300" font-size="29" font-weight="700" class="ink">核对文件名，再选择是否运行</text>
+  <rect x="64" y="335" width="710" height="424" rx="16" fill="#0867aa"/>
+  <rect x="826" y="335" width="710" height="424" rx="16" fill="#0867aa"/>
+  <text x="100" y="412" font-size="35" font-weight="700" class="white">Windows 已保护你的电脑</text>
+  <text x="738" y="369" text-anchor="middle" font-size="25" class="ui">×</text>
+  <text x="100" y="465" font-size="22" class="ui">Microsoft Defender SmartScreen</text>
+  <text x="100" y="503" font-size="22" class="ui">阻止了无法识别的应用启动。</text>
+  <rect x="87" y="538" width="146" height="51" rx="6" fill="none" stroke="#ffcf91" stroke-width="4"/>
+  <text x="100" y="574" font-size="25" text-decoration="underline" class="white">更多信息</text>
+  <path d="M 264 564 H 239" fill="none" stroke="#ffcf91" stroke-width="4"/>
+  <path d="M 246 555 L 235 564 L 246 573" fill="none" stroke="#ffcf91" stroke-width="4"/>
+  <text x="280" y="572" font-size="21" fill="#ffdfb6">先展开应用信息</text>
+  <rect x="583" y="679" width="151" height="46" fill="#3584bd" stroke="#97bad5"/>
+  <text x="658" y="711" text-anchor="middle" font-size="22" class="white">不运行</text>
+  <text x="862" y="412" font-size="35" font-weight="700" class="white">Windows 已保护你的电脑</text>
+  <text x="1500" y="369" text-anchor="middle" font-size="25" class="ui">×</text>
+  <text x="862" y="465" font-size="22" class="ui">请核对应用文件名与下载来源</text>
+  <text x="862" y="519" font-size="20" class="ui">应用：</text>
+  <text x="862" y="554" font-size="20" class="white">Cuepoint_&lt;版本号&gt;_windows_x64_setup.exe</text>
+  <text x="862" y="598" font-size="21" class="ui">发布者：未知发布者</text>
+  <rect x="1130" y="679" width="175" height="46" fill="#3584bd" stroke="#97bad5"/>
+  <rect x="1120" y="669" width="195" height="66" rx="7" fill="none" stroke="#ffcf91" stroke-width="4"/>
+  <text x="1217" y="711" text-anchor="middle" font-size="22" class="white">仍要运行</text>
+  <rect x="1345" y="679" width="151" height="46" fill="#3584bd" stroke="#97bad5"/>
+  <text x="1420" y="711" text-anchor="middle" font-size="22" class="white">不运行</text>
+  <text x="64" y="805" font-size="23" class="muted">没有这个提示？按安装向导完成即可。</text>
+  <text x="826" y="805" font-size="23" class="muted">「未知发布者」无法验证作者身份，请以下载来源核对。</text>
+  <rect x="64" y="858" width="1472" height="132" rx="16" fill="#e8ede7"/>
+  <text x="92" y="901" font-size="24" font-weight="700" class="ink">如果没有「仍要运行」，请反馈完整提示或联系设备管理员。</text>
+  <text x="92" y="944" font-size="23" class="muted">若提示病毒、恶意软件或文件损坏，请停止安装并反馈；本图仅适用于应用未识别的提示。</text>
+  <text x="1536" y="1020" text-anchor="end" font-size="18" class="muted">按钮名称与位置以你的 Windows 界面为准</text>
+</svg>

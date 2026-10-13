@@ -33,7 +33,7 @@
       "evidence": [
         {
           "file": "src/styles.css",
-          "sha256": "70976f4bcd3a67f7938fb982da52432ab62fba0a75642ebcdc7a4e894be3cf3b"
+          "sha256": "4ff9ed3723dd65349ac253435a63381a8c91591cc915a6c08c8d3bd4d8dad643"
         },
         {
           "file": "vite.config.ts",
@@ -51,7 +51,7 @@
       "evidence": [
         {
           "file": "src/styles.css",
-          "sha256": "70976f4bcd3a67f7938fb982da52432ab62fba0a75642ebcdc7a4e894be3cf3b"
+          "sha256": "4ff9ed3723dd65349ac253435a63381a8c91591cc915a6c08c8d3bd4d8dad643"
         },
         {
           "file": "vite.config.ts",
@@ -105,7 +105,7 @@
         },
         {
           "file": ".trellis/spec/frontend/audio-music.md",
-          "sha256": "a8c2f93345033db1988fa7969bf47615c4af501e76d027da102f59a13961406c"
+          "sha256": "aacac36bc2666b07718d262069bf8f57d0525d16a5fac2043e121afa2bf0d6df"
         }
       ]
     },
@@ -123,7 +123,7 @@
         },
         {
           "file": ".trellis/spec/frontend/audio-music.md",
-          "sha256": "a8c2f93345033db1988fa7969bf47615c4af501e76d027da102f59a13961406c"
+          "sha256": "aacac36bc2666b07718d262069bf8f57d0525d16a5fac2043e121afa2bf0d6df"
         }
       ]
     },
@@ -132,7 +132,7 @@
       "file": "package.json",
       "symbol": "lucide-react",
       "count": 1,
-      "reason": "Immutable historical E02 topic and E04 library comparison sources import Lucide. The actual E02 baseline runner loads TopicSidebar through Vite transform, and the E04 harness imports the original gallery/project-kind closure. These runtime comparisons are outside the authored production graph; retain the pinned development dependency without changing snapshot bytes. Current application general UI imports Remix.",
+      "reason": "Immutable historical E02 topic and E04 library comparison sources import Lucide. The actual E02 baseline runner loads TopicSidebar through Vite transform, and the E04 harness imports the original gallery/project-kind closure. These runtime comparisons are outside the authored production graph; retain the pinned development dependency without changing snapshot bytes. Current application general UI imports Phosphor.",
       "owner": "Immutable source comparisons",
       "evidence": [
         {

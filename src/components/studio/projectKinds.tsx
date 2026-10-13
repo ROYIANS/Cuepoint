@@ -1,4 +1,4 @@
-import {Clapperboard, Image, Mic2, Music2, PenLine} from "@/components/ui/remixIcons";
+import {Clapperboard, Image, Mic2, Music2, PenLine} from "@/components/ui/icons";
 
 /** Presentation catalog only. Unavailable kinds must never create video records. */
 export const PROJECT_KINDS = [

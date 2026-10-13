@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import {cva, type VariantProps} from "class-variance-authority";
-import {XIcon} from "@/components/ui/remixIcons";
+import {XIcon} from "@/components/ui/icons";
 
 import {cn} from "@/lib/utils";
 import {createOverlayFocusReturn} from "@/lib/overlayFocusReturn";

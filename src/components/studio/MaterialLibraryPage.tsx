@@ -1,10 +1,10 @@
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Archive, ArrowUpRight, Image, Layers, Search, Upload} from "@/components/ui/remixIcons";
+import {Archive, Image, Layers, Search, Upload} from "@/components/ui/icons";
 import type {LibraryMaterial} from "@/domain/materials";
 import {Button} from "@/components/ui/button";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Input} from "@/components/ui/input";
 import {MaterialPreview} from "./materials/MaterialPreview";
 import {MaterialDetailPanel} from "./materials/MaterialDetailPanel";
@@ -64,29 +64,22 @@ function SharedMaterialLibraryPage({routeSearch}: {routeSearch: MaterialLibraryS
         return owner.kind === "global" ? "全局" : owner.kind === "ip" ? data?.ips.find((ip) => ip.id === owner.id)?.name ?? "IP" : data?.projects.find((project) => project.id === owner.id)?.name ?? "原项目";
     }
 
-    return <PageContent role="main" className="material-library">
+    return <ModuleLayout navigationLabel="素材导航" navigation={<>
+        <h2 className="module-nav-heading">素材库</h2><div className="module-nav-group" role="group" aria-label="素材视图">
+            <button type="button" className="module-nav-item" aria-pressed={view === "media"} onClick={() => changeView("media")}><Image size={16} weight={view === "media" ? "fill" : "regular"} aria-hidden/>媒体与资料</button>
+            <button type="button" className="module-nav-item" aria-pressed={view === "settings"} onClick={() => changeView("settings")}><Layers size={16} weight={view === "settings" ? "fill" : "regular"} aria-hidden/>创作设定</button>
+        </div><div className="module-nav-group"><h3 className="module-nav-heading text-xs">素材范围</h3><MaterialScopeSelect value={scope} filter onChange={next => navigateScope(next, view)}/></div>
+        <div className="module-nav-group"><h3 className="module-nav-heading text-xs">编辑库</h3>{([{to: "/characters", label: "角色"}, {to: "/scenes", label: "场景"}, {to: "/props", label: "道具"}, {to: "/styles", label: "风格"}] as const).map(entry => <Link key={entry.to} to={entry.to} className="module-nav-item">{entry.label}</Link>)}</div>
+    </>}><PageContent role="main" className="material-library">
         <PageHeader title="素材库" description="管理媒体、资料和创作设定的版本。"
             actions={<Button onClick={() => setImporting(true)}><Upload size={16} aria-hidden/>导入素材</Button>}/>
-        <Tabs className="gap-4" value={view} onValueChange={(next) => changeView(next as "media" | "settings")}><TabsList
-            className="h-auto flex-wrap" aria-label="素材视图"><TabsTrigger value="media"><Image size={16}
-                                                                                                   aria-hidden/>媒体与资料</TabsTrigger><TabsTrigger
-            value="settings"><Layers size={16} aria-hidden/>创作设定</TabsTrigger></TabsList><TabsContent value={view}>
-            {view === "settings" && <nav className="material-setting-links" aria-label="创建与编辑创作设定">{([{
-                to: "/characters",
-                label: "角色"
-            }, {to: "/scenes", label: "场景"}, {to: "/props", label: "道具"}, {
-                to: "/styles",
-                label: "风格"
-            }] as const).map((entry) => <Link key={entry.to} to={entry.to}>{entry.label}编辑库<ArrowUpRight size={12}
-                                                                                                            aria-hidden/></Link>)}</nav>}
             <PageToolbar className="material-filters">
                 <div className="material-search"><Search size={16} aria-hidden/><Input aria-label="搜索素材"
                                                                                        placeholder="搜索名称、标签或备注"
                                                                                        value={search}
                                                                                        onChange={(event) => setSearch(event.target.value)}/>
                 </div>
-                <MaterialScopeSelect value={scope} filter
-                                     onChange={(next) => navigateScope(next, view)}/><MaterialSelect label="素材类型"
+                <MaterialSelect label="素材类型"
                                                                                                      value={kind}
                                                                                                      onChange={setKind}
                                                                                                      options={[{
@@ -113,12 +106,12 @@ function SharedMaterialLibraryPage({routeSearch}: {routeSearch: MaterialLibraryS
                     action={view === "media" ? <Button variant="outline" onClick={() => setImporting(true)}>导入素材</Button> : undefined}/>}
             {status !== "archived" &&
                 <LegacyMaterialSources view={view} scope={scope} search={search} kind={kind} onCreated={setSelected}/>}
-        </TabsContent></Tabs><p className="material-storage-note">素材库与 IP 档案保存在当前设备本地。项目 ZIP
+        <p className="material-storage-note">素材库与 IP 档案保存在当前设备本地。项目 ZIP
         包含已加入项目的素材副本，不包含整个素材库或 IP 档案。</p>
         {selected && <MaterialDetailPanel id={selected} onClose={() => setSelected(null)} onSelect={setSelected}/>}
         {importing && <MaterialImportDialog initialScope={initialScope} onClose={() => setImporting(false)}
                                             onImported={setSelected}/>}
-    </PageContent>;
+    </PageContent></ModuleLayout>;
 }
 
 function MaterialCard({material, scopeLabel, onOpen}: {

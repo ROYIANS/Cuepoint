@@ -1,7 +1,7 @@
 import {useId, useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {Link} from "@tanstack/react-router";
-import {ChevronDown, LoaderCircle, Music2} from "@/components/ui/remixIcons";
+import {ChevronDown, LoaderCircle, Music2} from "@/components/ui/icons";
 import type {AgentToolCall} from "@/domain/agent";
 import {Button} from "@/components/ui/button";
 import {

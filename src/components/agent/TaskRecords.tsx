@@ -9,7 +9,7 @@ import {toolReferenceAttachments} from "@/lib/agent/referenceEvidence";
 import {useEffect, useRef, useState} from "react";
 import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "@/lib/useManualDraftGuard";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {BookOpen, ChevronDown, History, Pencil, Plus, Search} from "@/components/ui/remixIcons";
+import {BookOpen, ChevronDown, History, Pencil, Plus, Search} from "@/components/ui/icons";
 import {toast} from "sonner";
 import type {AgentTask} from "@/domain/agent";
 import type {ChatMessage} from "@/domain/types";

@@ -18,7 +18,7 @@ import {
     RefreshCw,
     Sparkles,
     X
-} from "@/components/ui/remixIcons";
+} from "@/components/ui/icons";
 import {toast} from "sonner";
 import type {AgentReasoningEffort, AgentTask} from "@/domain/agent";
 import type {ConnectorConfig} from "@/domain/types";

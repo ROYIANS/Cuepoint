@@ -24,7 +24,7 @@ import {
     X,
     ZoomIn,
     ZoomOut
-} from "@/components/ui/remixIcons";
+} from "@/components/ui/icons";
 import type {AudioClip, AudioExport, AudioProjectSnapshot, AudioTake, AudioTrack} from "@/domain/audio";
 import {addAudioTrack, patchAudioTrack} from "@/db/audio";
 import {AudioPreviewPlayer} from "@/lib/audio/engine";

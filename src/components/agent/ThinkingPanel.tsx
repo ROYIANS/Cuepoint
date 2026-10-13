@@ -1,5 +1,5 @@
 import {Markdown} from "@lobehub/ui";
-import {ChevronDown} from "@/components/ui/remixIcons";
+import {ChevronDown} from "@/components/ui/icons";
 import {useEffect, useId, useRef, useState} from "react";
 import {formatThinkingTitle} from "@/lib/thinkingTitle";
 

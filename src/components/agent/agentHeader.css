@@ -38,17 +38,17 @@
 }
 
 /* Scope the native ActionIcon buttons; dropdown content and title retain their own colors. */
-.agent-header-theme.agent-chat-header :is(.agent-header-topics, .agent-header-actions, .agent-header-title-group) button {
+.agent-header-theme.agent-chat-header :is(.agent-header-topics, .agent-header-actions, .agent-header-title-group, .agent-header-new-topic) button {
     min-width: 36px;
     min-height: 36px;
     color: var(--muted-foreground);
 }
 
-.agent-header-theme.agent-chat-header :is(.agent-header-topics, .agent-header-actions, .agent-header-title-group) button:not(:disabled, [aria-disabled=true]):is(:hover, :active) {
+.agent-header-theme.agent-chat-header :is(.agent-header-topics, .agent-header-actions, .agent-header-title-group, .agent-header-new-topic) button:not(:disabled, [aria-disabled=true]):is(:hover, :active) {
     color: var(--foreground);
 }
 
-.agent-header-theme.agent-chat-header :is(.agent-header-topics, .agent-header-actions, .agent-header-title-group) button svg {
+.agent-header-theme.agent-chat-header :is(.agent-header-topics, .agent-header-actions, .agent-header-title-group, .agent-header-new-topic) button svg {
     width: 16px;
     height: 16px;
 }
@@ -69,3 +69,5 @@
 @media (max-width: 767px) {
     .agent-header-theme.agent-chat-header { gap: 4px; }
 }
+
+.agent-header-new-topic { display: flex; flex: none; align-items: center; }

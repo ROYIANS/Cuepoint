@@ -24,7 +24,7 @@ import {useMemo, useState} from "react";
 import {contextPreviewIdentity, readAgentContextPreview} from "@/db/agentContextPreview";
 import {useProductQuery} from "@/lib/storage/hooks";
 import * as Popover from "@radix-ui/react-popover";
-import {X} from "@/components/ui/remixIcons";
+import {X} from "@/components/ui/icons";
 import {assembleSkills, DEFAULT_SKILL_IDS} from "@/lib/agent/skills";
 import {toolSchemas} from "@/lib/agent/tools";
 import {estimateContextUsage, formatTokenCount,} from "@/lib/agent/contextUsage";

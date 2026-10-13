@@ -1,4 +1,4 @@
-import {BookOpen} from "@/components/ui/remixIcons";
+import {BookOpen} from "@/components/ui/icons";
 import type {MemorySourceRef} from "@/domain/projectMemory";
 import {Button} from "@/components/ui/button";
 

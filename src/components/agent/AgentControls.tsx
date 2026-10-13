@@ -18,7 +18,7 @@ import {
     ShieldCheck,
     SlidersHorizontal,
     Upload
-} from "@/components/ui/remixIcons";
+} from "@/components/ui/icons";
 import {toast} from "sonner";
 import {type AgentPermissionMode, GENERAL_AGENT_ID} from "@/domain/agent";
 import {getGeneralAgentConfig, updateGeneralAgentConfig} from "@/db/agentSettings";

@@ -15,7 +15,7 @@ import {
     Play,
     Trash2,
     X
-} from "@/components/ui/remixIcons";
+} from "@/components/ui/icons";
 import {resolveConnector} from "@/db/connectors";
 import {
     applyBatchSelections,

@@ -12,15 +12,15 @@ import {
 import {Button} from "@/components/ui/button";
 
 export type ManualDraftState = { dirty: boolean; pending: boolean; routeDirty?: boolean; routePending?: boolean };
-export type ManualDraftDeparture = (leave: () => void, discard?: () => void | Promise<void>) => void;
+export type ManualDraftDeparture = (leave: () => void, discard?: () => void | Promise<void>, onCancel?: () => void) => void;
 
 /** Local owners read synchronous state before closing or replacing a keyed editor. */
 export function useManualDraftDeparture(
     dirty: boolean, pending: boolean, onDiscard: () => void | Promise<void>,
     options?: { readState?: () => ManualDraftState; route?: boolean },
 ) {
-    const [localLeave, setLocalLeave] = useState<{ run: () => void; discard?: () => void | Promise<void> }>();
-    const localRequest = useRef<{ run: () => void; discard?: () => void | Promise<void> } | undefined>(undefined);
+    const [localLeave, setLocalLeave] = useState<{ run: () => void; discard?: () => void | Promise<void>; cancel?: () => void }>();
+    const localRequest = useRef<{ run: () => void; discard?: () => void | Promise<void>; cancel?: () => void } | undefined>(undefined);
     const [discarding, setDiscarding] = useState(false);
     const [error, setError] = useState<string>();
     const current = useRef({dirty, pending, onDiscard, readState: options?.readState});
@@ -63,16 +63,18 @@ export function useManualDraftDeparture(
         withResolver: true,
         enableBeforeUnload: options?.route !== false && (dirty || waiting),
     });
-    const requestDeparture = useCallback<ManualDraftDeparture>((leave, onLocalDiscard) => {
+    const requestDeparture = useCallback<ManualDraftDeparture>((leave, onLocalDiscard, onCancel) => {
         const state = readState();
-        if (busy.current) return;
+        if (busy.current) {onCancel?.(); return;}
         if (localRequest.current) {
+            const existing = localRequest.current;
             if (!state.dirty && !state.pending) {
                 const request = localRequest.current;
                 localRequest.current = undefined;
                 setLocalLeave(undefined);
                 request.run();
             }
+            if (existing.run !== leave) onCancel?.();
             return;
         }
         if (!state.dirty && !state.pending) {
@@ -81,7 +83,7 @@ export function useManualDraftDeparture(
         }
         capturePosition();
         setError(undefined);
-        const request = {run: leave, discard: onLocalDiscard};
+        const request = {run: leave, discard: onLocalDiscard, cancel: onCancel};
         localRequest.current = request;
         setLocalLeave(request);
     }, [readState, capturePosition]);
@@ -111,7 +113,9 @@ export function useManualDraftDeparture(
 
     const confirmation = <AlertDialog open={!!localLeave || blocker.status === "blocked"} onOpenChange={(open) => {
         if (!open && !discarding) {
+            const cancelled = localRequest.current;
             localRequest.current = undefined;
+            cancelled?.cancel?.();
             setLocalLeave(undefined);
             if (blocker.status === "blocked") blocker.reset();
         }
@@ -143,7 +147,9 @@ export function useManualDraftDeparture(
             <AlertDialogFooter>
                 <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline" disabled={discarding} onClick={() => {
                     setError(undefined);
+                    const cancelled = localRequest.current;
                     localRequest.current = undefined;
+                    cancelled?.cancel?.();
                     setLocalLeave(undefined);
                     if (blocker.status === "blocked") blocker.reset();
                 }}>继续编辑</Button></AlertDialogCancel>

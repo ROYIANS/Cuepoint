@@ -15,8 +15,6 @@ export const TEXT_TERTIARY = "var(--muted-foreground)";
 /** 4px spacing scale from LobeHub DESIGN.md — round off-scale values here. */
 
 
-export const SIDEBAR_WIDTH = 260;
 export const CHAT_SAFE_X = 16;
 export const CHAT_COMPOSER_SAFE = 168;
 export const CHAT_CONTENT_MAX = 800;
-export const SIDEBAR_COLLAPSED_KEY = "cuepoint.agent.topicSidebarCollapsed";

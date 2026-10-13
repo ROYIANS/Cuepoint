@@ -1,6 +1,7 @@
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 import {SearchConnection} from "./SearchConnection";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Check, Plug} from "@/components/ui/remixIcons";
+import {Check, Plug} from "@/components/ui/icons";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import {Badge} from "@/components/ui/badge";
@@ -32,6 +33,7 @@ type EditorSession = EditorState & { baseUrl: string; apiKey: string };
 type EditorOperation = { session: EditorSession; kind: "probe" | "test" | "save" | "disconnect" };
 
 export function ConnectorsPage() {
+    const [section, setSection] = useState<"models" | "search">("models");
     const view = useProductQuery(async (db) => {
         try {
             return {connectors: await db.connectors.toArray()};
@@ -234,12 +236,17 @@ export function ConnectorsPage() {
     }
 
     return (
-        <PageContent mode="detail">
+        <ModuleLayout navigationLabel="连接导航" navigation={<>
+            <h2 className="module-nav-heading">连接与模型</h2><div className="module-nav-group">
+                <button type="button" className="module-nav-item" aria-pressed={section === "models"} onClick={() => setSection("models")}><Plug size={16} weight={section === "models" ? "fill" : "regular"} aria-hidden/>模型连接</button>
+                <button type="button" className="module-nav-item" aria-pressed={section === "search"} onClick={() => setSection("search")}>网络搜索连接</button>
+            </div>
+        </>}><PageContent mode="detail">
             <PageHeader title="连接与模型" description={<>
                 密钥仅保存在本机，配置一次后工作室与后续 Agent 共用。不会写入项目备份 ZIP。
                 具体聊天用哪个模型，在 Agent 对话里选择。
             </>}/>
-            {!view ? <PageState kind="loading" title="正在读取连接…"/> : view.error ?
+            <div hidden={section !== "models"}>{!view ? <PageState kind="loading" title="正在读取连接…"/> : view.error ?
                 <PageState kind="error" title="暂时无法读取连接" description={view.error}/> :
                 <div className="mt-6 divide-y border-y">
                     {CONNECTOR_CATALOG.map((definition) => {
@@ -282,7 +289,7 @@ export function ConnectorsPage() {
                         );
                     })}
                 </div>}
-            <SearchConnection/>
+            </div><div hidden={section !== "search"}><SearchConnection/></div>
 
             <Dialog open={Boolean(editor)} onOpenChange={(open) => !open && closeEditor()}>
                 <DialogContent
@@ -382,6 +389,6 @@ export function ConnectorsPage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </PageContent>
+        </PageContent></ModuleLayout>
     );
 }

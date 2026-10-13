@@ -14,11 +14,12 @@ import {ProjectSettingsPanel} from "./ProjectSettingsPanel";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {Link, Navigate, Outlet, useNavigate, useRouterState} from "@tanstack/react-router";
 import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
-import {ChevronLeft, Download, Library, Settings2} from "@/components/ui/remixIcons";
+import {Download, Library, MoreHorizontal, Settings2} from "@/components/ui/icons";
 import {useRef, useState} from "react";
 import {toast} from "sonner";
 import {Still} from "@/components/studio/Still";
 import {Button} from "@/components/ui/button";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
 import {episodeLabel, normalizeProjectMode,} from "@/domain/types";
 import {IMAGE_ACCEPT, pickMediaFile, uploadMediaFile} from "@/lib/media";
@@ -27,6 +28,7 @@ import {isPublishedSaveError} from "@/lib/runtimeSave";
 import {cn} from "@/lib/utils";
 import {shouldRedirectAudioMusicChild} from "@/lib/audio/workspaceRoute";
 import {AppFrame} from "@/components/layout/AppFrame";
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 import {AppHeaderPortal} from "@/components/layout/AppHeaderPortal";
 import {PageState} from "@/components/layout/PageLayout";
 import {importStudioProject} from "@/components/studio/importStudioProject";
@@ -69,7 +71,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
     );
     const firstEpisodeResult = useVideoWorkspaceQuery(async (repository) => {
         const rows = await repository.episodes(projectId);
-        return {projectId, episode: rows[0] ?? null};
+        return {projectId, episode: rows[0] ?? null, episodes: rows};
     }, [projectId]);
     const loadedProject = projectResult?.projectId === projectId ? projectResult.project : undefined;
     const lastProject = useRef(loadedProject);
@@ -144,7 +146,138 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
     const episode = currentEpisode || undefined;
     const filmEpisode = kind === "video" && mode === "film" ? firstProjectEpisode || undefined : undefined;
     const title = mode === "film" ? project.name : episode ? episodeLabel(episode) : project.name;
-    const backToStudio = mode === "film" || !episode;
+
+    const projectNavigation = unavailable ? undefined : (
+        <nav
+            aria-label="项目工作区"
+            data-tauri-drag-region="false"
+            className="module-navigation-section">
+            <p className="module-navigation-heading">{project.name}</p>
+            <Link to="/projects" className="module-navigation-row">全部项目</Link>
+            {kind === "video" && mode !== "film" && episode && <Link to="/p/$projectId" params={{projectId}} className="module-navigation-row">集列表</Link>}
+            {kind !== "video" ? <Link to="/p/$projectId" params={{projectId}}
+                                      className={cn("module-navigation-row", projectHome && "bg-accent text-foreground font-medium")}>{kind === "audio" ? "音频制作" : "音乐创作"}</Link> : filmEpisode ? (
+                <>
+                    <Link
+                        to="/p/$projectId/e/$episodeId"
+                        params={{projectId, episodeId: filmEpisode.id}}
+                        activeOptions={{exact: true}}
+                        className={cn(
+                            "module-navigation-row",
+                            (pathname === `/p/${projectId}/e/${filmEpisode.id}` ||
+                                pathname === `/p/${projectId}/e/${filmEpisode.id}/`) &&
+                            "bg-accent text-foreground font-medium",
+                        )}
+                    >
+                        故事
+                    </Link>
+                    <Link
+                        to="/p/$projectId/world"
+                        params={{projectId}}
+                        className={cn(
+                            "module-navigation-row",
+                            (pathname.startsWith(`/p/${projectId}/world`) ||
+                                pathname.startsWith(`/p/${projectId}/assets`)) &&
+                            "bg-accent text-foreground font-medium",
+                        )}
+                    >
+                        世界
+                    </Link>
+                    <Link
+                        to="/p/$projectId/e/$episodeId/shots"
+                        params={{projectId, episodeId: filmEpisode.id}}
+                        search={{shot: undefined}}
+                        className={cn(
+                            "module-navigation-row",
+                            pathname.startsWith(`/p/${projectId}/e/${filmEpisode.id}/shots`) &&
+                            "bg-accent text-foreground font-medium",
+                        )}
+                    >
+                        分镜
+                    </Link>
+                    <Link
+                        to="/p/$projectId/e/$episodeId/produce"
+                        params={{projectId, episodeId: filmEpisode.id}}
+                        className={cn(
+                            "module-navigation-row",
+                            pathname.startsWith(`/p/${projectId}/e/${filmEpisode.id}/produce`) &&
+                            "bg-accent text-foreground font-medium",
+                        )}
+                    >
+                        制作
+                    </Link>
+                </>
+            ) : mode === "film" ? null : episode ? (
+                <>
+                    {EPISODE_STEPS.map((step) => {
+                        const href = step.to
+                            .replace("$projectId", projectId)
+                            .replace("$episodeId", episode.id);
+                        const active = step.exact
+                            ? pathname === href || pathname === `${href}/`
+                            : pathname.startsWith(href);
+                        return (
+                            <Link
+                                key={step.id}
+                                to={step.to}
+                                params={{projectId, episodeId: episode.id}}
+                                search={step.id === "shots" ? {shot: undefined} : undefined}
+                                activeOptions={{exact: step.exact}}
+                                className={cn("module-navigation-row", active && "bg-accent text-foreground font-medium")}
+                            >
+                                {step.label}
+                            </Link>
+                        );
+                    })}
+                </>
+            ) : (
+                <>
+                    {SERIES_STEPS.map((step) => {
+                        const href = step.to.replace("$projectId", projectId);
+                        const active = step.exact
+                            ? pathname === href || pathname === `${href}/`
+                            : pathname.startsWith(`/p/${projectId}/world`) ||
+                            pathname.startsWith(`/p/${projectId}/assets`);
+                        return (
+                            <Link
+                                key={step.id}
+                                to={step.to}
+                                params={{projectId}}
+                                activeOptions={{exact: step.exact}}
+                                className={cn("module-navigation-row", active && "bg-accent text-foreground font-medium")}
+                            >
+                                {step.label}
+                            </Link>
+                        );
+                    })}
+                </>
+            )}
+            {kind === "video" && mode !== "film" && episode && <Link to="/p/$projectId/world" params={{projectId}} className={cn("module-navigation-row", pathname.startsWith(`/p/${projectId}/world`) && "bg-accent text-foreground font-medium")}>世界</Link>}
+            {kind === "video" && mode !== "film" && firstEpisodeResult?.projectId === projectId && firstEpisodeResult.episodes?.length ? <>
+                <p className="module-navigation-heading mt-4">项目各集</p>
+                {firstEpisodeResult.episodes.map((row) => <Link key={row.id} to="/p/$projectId/e/$episodeId" params={{projectId, episodeId: row.id}}
+                    className={cn("module-navigation-row", row.id === episodeId && "bg-accent text-foreground font-medium")}>{episodeLabel(row)}</Link>)}
+            </> : null}
+            <Link to="/p/$projectId/memory" params={{projectId}}
+                  className={cn("module-navigation-row", pathname === `/p/${projectId}/memory` && "bg-accent text-foreground font-medium")}>记忆</Link>
+        </nav>
+    );
+
+    const backupProject = () => {
+        setBackingUp(true);
+        void flushPendingDrafts(projectId)
+            .then(() => exportProjectZip(projectId))
+            .then(async (blob) => {
+                const outcome = await downloadBlob(blob, `${project.name}.zip`);
+                if (outcome === "saved") toast.success("项目备份已导出");
+                else toast.info("已取消保存项目备份");
+            })
+            .catch((error: unknown) => {
+                if (isPublishedSaveError(error)) toast.warning(error.message);
+                else toast.error(error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试");
+            })
+            .finally(() => setBackingUp(false));
+    };
 
     async function uploadCover() {
         try {
@@ -185,126 +318,10 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                 <AppHeaderPortal><div hidden={unavailable} style={unavailable ? {display: "none"} : undefined}
                         className="workspace-header">
                     <div className="workspace-header-title flex min-w-0 items-center gap-1">
-                        {backToStudio ? (
-                            <Button variant="ghost" size="icon-sm" asChild>
-                                <Link to="/projects" aria-label="返回工作室">
-                                    <ChevronLeft/>
-                                </Link>
-                            </Button>
-                        ) : (
-                            <Button variant="ghost" size="icon-sm" asChild>
-                                <Link to="/p/$projectId" params={{projectId}} aria-label="返回集列表">
-                                    <ChevronLeft/>
-                                </Link>
-                            </Button>
-                        )}
                         <span className="truncate text-sm font-medium" title={title}>{title}</span>
                     </div>
-                    <nav
-                        aria-label="项目工作区"
-                        data-tauri-drag-region="false"
-                        className="workspace-header-nav text-muted-foreground flex min-w-0 flex-wrap items-center justify-center gap-1 text-xs">
-                        {kind !== "video" ? <Link to="/p/$projectId" params={{projectId}}
-                                                  className={cn("hover:text-foreground", projectHome && "text-foreground font-medium")}>{kind === "audio" ? "音频制作" : "音乐创作"}</Link> : filmEpisode ? (
-                            <>
-                                <Link
-                                    to="/p/$projectId/e/$episodeId"
-                                    params={{projectId, episodeId: filmEpisode.id}}
-                                    activeOptions={{exact: true}}
-                                    className={cn(
-                                        "hover:text-foreground",
-                                        (pathname === `/p/${projectId}/e/${filmEpisode.id}` ||
-                                            pathname === `/p/${projectId}/e/${filmEpisode.id}/`) &&
-                                        "text-foreground font-medium",
-                                    )}
-                                >
-                                    故事
-                                </Link>
-                                <Link
-                                    to="/p/$projectId/world"
-                                    params={{projectId}}
-                                    className={cn(
-                                        "hover:text-foreground",
-                                        (pathname.startsWith(`/p/${projectId}/world`) ||
-                                            pathname.startsWith(`/p/${projectId}/assets`)) &&
-                                        "text-foreground font-medium",
-                                    )}
-                                >
-                                    世界
-                                </Link>
-                                <Link
-                                    to="/p/$projectId/e/$episodeId/shots"
-                                    params={{projectId, episodeId: filmEpisode.id}}
-                                    search={{shot: undefined}}
-                                    className={cn(
-                                        "hover:text-foreground",
-                                        pathname.startsWith(`/p/${projectId}/e/${filmEpisode.id}/shots`) &&
-                                        "text-foreground font-medium",
-                                    )}
-                                >
-                                    分镜
-                                </Link>
-                                <Link
-                                    to="/p/$projectId/e/$episodeId/produce"
-                                    params={{projectId, episodeId: filmEpisode.id}}
-                                    className={cn(
-                                        "hover:text-foreground",
-                                        pathname.startsWith(`/p/${projectId}/e/${filmEpisode.id}/produce`) &&
-                                        "text-foreground font-medium",
-                                    )}
-                                >
-                                    制作
-                                </Link>
-                            </>
-                        ) : mode === "film" ? null : episode ? (
-                            <>
-                                {EPISODE_STEPS.map((step) => {
-                                    const href = step.to
-                                        .replace("$projectId", projectId)
-                                        .replace("$episodeId", episode.id);
-                                    const active = step.exact
-                                        ? pathname === href || pathname === `${href}/`
-                                        : pathname.startsWith(href);
-                                    return (
-                                        <Link
-                                            key={step.id}
-                                            to={step.to}
-                                            params={{projectId, episodeId: episode.id}}
-                                            search={step.id === "shots" ? {shot: undefined} : undefined}
-                                            activeOptions={{exact: step.exact}}
-                                            className={cn("hover:text-foreground", active && "text-foreground font-medium")}
-                                        >
-                                            {step.label}
-                                        </Link>
-                                    );
-                                })}
-                            </>
-                        ) : (
-                            <>
-                                {SERIES_STEPS.map((step) => {
-                                    const href = step.to.replace("$projectId", projectId);
-                                    const active = step.exact
-                                        ? pathname === href || pathname === `${href}/`
-                                        : pathname.startsWith(`/p/${projectId}/world`) ||
-                                        pathname.startsWith(`/p/${projectId}/assets`);
-                                    return (
-                                        <Link
-                                            key={step.id}
-                                            to={step.to}
-                                            params={{projectId}}
-                                            activeOptions={{exact: step.exact}}
-                                            className={cn("hover:text-foreground", active && "text-foreground font-medium")}
-                                        >
-                                            {step.label}
-                                        </Link>
-                                    );
-                                })}
-                            </>
-                        )}
-                        <Link to="/p/$projectId/memory" params={{projectId}}
-                              className={cn("hover:text-foreground", pathname === `/p/${projectId}/memory` && "text-foreground font-medium")}>记忆</Link>
-                    </nav>
                     <div className="workspace-header-actions flex items-center justify-end gap-1" data-tauri-drag-region="false">
+                        <div className="hidden items-center gap-1 sm:flex">
                         <Button variant="ghost" size="sm" className="px-2" asChild><Link to="/assets" search={{project: projectId}}
                                                                         aria-label="项目素材"><Library/><span
                             className="hidden sm:inline">素材</span></Link></Button>
@@ -318,30 +335,27 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                             disabled={backingUp}
                             aria-label={backingUp ? "正在保存并备份…" : "备份项目"}
                             className="px-2"
-                            onClick={() => {
-                                setBackingUp(true);
-                                void flushPendingDrafts(projectId)
-                                    .then(() => exportProjectZip(projectId))
-                                    .then(async (blob) => {
-                                        const outcome = await downloadBlob(blob, `${project.name}.zip`);
-                                        if (outcome === "saved") toast.success("项目备份已导出");
-                                        else toast.info("已取消保存项目备份");
-                                    })
-                                    .catch((error: unknown) => {
-                                        if (isPublishedSaveError(error)) toast.warning(error.message);
-                                        else toast.error(error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试");
-                                    })
-                                    .finally(() => setBackingUp(false));
-                            }}
+                            onClick={backupProject}
                         >
                             <Download/>
                             <span className="hidden lg:inline">{backingUp ? "正在保存并备份…" : "备份项目"}</span>
                         </Button>
+                        </div>
+                        <DropdownMenu><DropdownMenuTrigger asChild><Button size="icon-sm" variant="ghost" className="sm:hidden" aria-label="项目操作"><MoreHorizontal/></Button></DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem asChild><Link to="/assets" search={{project: projectId}}><Library/>项目素材</Link></DropdownMenuItem>
+                                <DropdownMenuItem onSelect={() => changeSettingsOpen(true)}><Settings2/>项目设定</DropdownMenuItem>
+                                <DropdownMenuItem disabled={backingUp} onSelect={backupProject}><Download/>{backingUp ? "正在保存并备份…" : "备份项目"}</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div></AppHeaderPortal>
-                <div className={cn("app-scroll min-h-0 min-w-0 flex-1", kind === "video" ? "overflow-auto" : "overflow-hidden")} inert={unavailable}>
-                    <Outlet/>
-                </div>
+                <ModuleLayout navigation={kind !== "video" && projectHome ? undefined : projectNavigation}
+                              navigationLabel="项目工作区" mainClassName="overflow-hidden">
+                    <div className={cn("app-scroll min-h-0 min-w-0 flex-1", kind === "video" ? "overflow-auto" : "overflow-hidden")} inert={unavailable}>
+                        <Outlet/>
+                    </div>
+                </ModuleLayout>
 
                 <Dialog open={settingsOpen && (!unavailable || outputProtected)} onOpenChange={changeSettingsOpen}>
                     <DialogContent className="flex flex-col overflow-hidden sm:max-w-2xl">

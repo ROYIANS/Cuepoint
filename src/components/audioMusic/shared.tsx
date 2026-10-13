@@ -21,7 +21,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {DraftStatus} from "@/components/ui/draft-status";
 import {PageState} from "@/components/layout/PageLayout";
 import {useDebouncedDraft} from "@/lib/debouncedDraft";
-import {Download, LoaderCircle, RefreshCw, Volume2} from "@/components/ui/remixIcons";
+import {Download, LoaderCircle, RefreshCw, Volume2} from "@/components/ui/icons";
 import {toast} from "sonner";
 import "./workspace.css";
 

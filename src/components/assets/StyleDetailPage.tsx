@@ -1,7 +1,6 @@
 import {useRef, useState} from "react";
-import {Link, useNavigate} from "@tanstack/react-router";
+import {useNavigate} from "@tanstack/react-router";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {ChevronLeft} from "@/components/ui/remixIcons";
 import {patchStyle, setStyleSlot} from "@/db/assets";
 import {STUDIO_LIBRARY_ID, STYLE_SLOTS} from "@/domain/types";
 import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
@@ -66,23 +65,7 @@ function StyleDetailContent({
         <div className={back.kind === "project" ? "app-scroll h-full min-h-0 overflow-auto" : "min-h-full"}>
             {!loaded && <p role="alert" className="p-4">此设定已不可用，当前槽位草稿仍保留。可复制草稿或取消后离开。</p>}
             <PageContent mode="detail">
-                <PageHeader title="风格" back={back.kind === "studio" ? (
-                    <Link
-                        to="/styles"
-                        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
-                    >
-                        <ChevronLeft className="size-4" aria-hidden/> 视觉风格
-                    </Link>
-                ) : (
-                    <Link
-                        to="/p/$projectId/world"
-                        params={{projectId: back.projectId}}
-                        search={{tab: "styles"}}
-                        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
-                    >
-                        <ChevronLeft className="size-4" aria-hidden/> 世界
-                    </Link>
-                )}/>
+                <PageHeader title="风格"/>
                 <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
                     <div className="grid grid-cols-2 items-start gap-4">
                         {STYLE_SLOTS.map((slot) => (

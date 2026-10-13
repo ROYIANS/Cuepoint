@@ -1,5 +1,5 @@
 import {useRef, useState} from "react";
-import {Upload} from "@/components/ui/remixIcons";
+import {Upload} from "@/components/ui/icons";
 import {createFileMaterial} from "@/db/materials";
 import {Button} from "@/components/ui/button";
 import {

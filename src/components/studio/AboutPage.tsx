@@ -1,4 +1,4 @@
-import {ExternalLink, Heart, QrCode} from "@/components/ui/remixIcons";
+import {ExternalLink, Heart, QrCode} from "@/components/ui/icons";
 import {useRef, useState} from "react";
 import {toast} from "sonner";
 import {Button} from "@/components/ui/button";

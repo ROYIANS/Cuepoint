@@ -1,5 +1,6 @@
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 import {useMemo, useRef, useState} from "react";
-import {ArrowLeft, ArrowUpRight, Check, ListTodo, Plus, Search, Sparkles} from "@/components/ui/remixIcons";
+import {ArrowUpRight, Check, ListTodo, Plus, Search, Sparkles} from "@/components/ui/icons";
 import {toast} from "sonner";
 import type {AgentRun, AgentTask} from "@/domain/agent";
 import type {Id, Project} from "@/domain/types";
@@ -81,25 +82,18 @@ export function TaskBoard({tasks, runs, projects, onOpenTask, onBack}: {
         }
     }
 
-    return <section className="agent-task-board" aria-label="任务工作区">
+    return <ModuleLayout navigationLabel="任务导航" navigation={<>
+        <h2 className="module-nav-heading">任务</h2><div className="module-nav-group"><button type="button" className="module-nav-item" onClick={onBack}>创作助手</button></div>
+        <div className="module-nav-group" role="group" aria-label="筛选任务">{([{value: "active", label: "工作台"}, {value: "all", label: "全部"}, {value: "archived", label: "已归档"}] as const).map(({value, label}) => <button key={value} type="button" className="module-nav-item" aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}</button>)}</div>
+        <div className="module-nav-group"><h3 className="module-nav-heading text-xs">所属项目</h3><ProjectPicker projects={projects} projectId={filterProjectId} onChange={setFilterProjectId} allLabel="全部项目"/></div>
+    </>} mainClassName="agent-module-main"><section className="agent-task-board" aria-label="任务工作区">
         <PageHeader title="任务" description="管理项目目标、执行步骤与已确认的成果。"
-                    className="agent-task-board-heading" back={<Button variant="ghost" size="sm" className="agent-task-back"
-                         onClick={onBack}><ArrowLeft/>返回助手</Button>}
+                    className="agent-task-board-heading"
                     actions={<Button onClick={() => {
                 setProjectId(filterProjectId);
                 setCreating(true);
             }}><Plus/>新建任务</Button>}/>
         <PageToolbar className="agent-task-board-toolbar">
-            <ProjectPicker projects={projects} projectId={filterProjectId} onChange={setFilterProjectId}
-                           allLabel="全部项目"/>
-            <div className="agent-task-filters" role="group" aria-label="筛选任务">
-                {([{value: "active", label: "工作台"}, {value: "all", label: "全部"}, {
-                    value: "archived",
-                    label: "已归档"
-                }] as const).map(({value, label}) =>
-                    <Button key={value} type="button" size="sm" variant={filter === value ? "secondary" : "ghost"}
-                            aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}</Button>)}
-            </div>
             <span
                 className="agent-task-board-count">{ready ? `${scoped.length} 个任务 · ${completeCount} 个已完成` : "读取工作区…"}</span>
             <label className="agent-task-search"><Search size={16} aria-hidden/><Input aria-label="搜索任务"
@@ -175,5 +169,5 @@ export function TaskBoard({tasks, runs, projects, onOpenTask, onBack}: {
                 </form>
             </DialogContent>
         </Dialog>
-    </section>;
+    </section></ModuleLayout>;
 }

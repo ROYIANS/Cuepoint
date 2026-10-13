@@ -1,6 +1,6 @@
 import {useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Plus, Sparkles} from "@/components/ui/remixIcons";
+import {Plus, Sparkles} from "@/components/ui/icons";
 import {db} from "@/db/database";
 import {patchAudioSegment} from "@/db/audio";
 import type {AudioSegment, AudioSpeaker} from "@/domain/audio";

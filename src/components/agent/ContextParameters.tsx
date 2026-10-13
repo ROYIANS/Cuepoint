@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import {InputNumber, Switch} from "antd";
-import {ArrowLeft, Restore} from "@/components/ui/remixIcons";
+import {ArrowLeft, Restore} from "@/components/ui/icons";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {toast} from "sonner";
 import type {ProductStore} from "@/lib/storage/types";

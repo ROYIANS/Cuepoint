@@ -1,8 +1,9 @@
+import {cn} from "@/lib/utils";
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 import {VideoWorkspaceReadNotice} from "@/components/workspace/VideoWorkspaceReadNotice";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {Checkbox} from "@/components/ui/checkbox";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
-import {useNavigate} from "@tanstack/react-router";
+import {Link, useNavigate} from "@tanstack/react-router";
 import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
@@ -34,9 +35,8 @@ import {downloadBlob, exportProjectZip,} from "@/lib/projectPackage";
 import {isPublishedSaveError} from "@/lib/runtimeSave";
 import {ASPECT_PRESET_IDS, ASPECT_PRESETS, type AspectPresetId, type ProjectMode,} from "@/domain/types";
 import {ProjectIpPicker} from "./ProjectIpPicker";
-import {Plus} from "@/components/ui/remixIcons";
+import {Plus} from "@/components/ui/icons";
 import {PROJECT_KINDS, type ProjectKindId, ProjectKindPlaceholder} from "./projectKinds";
-import {cn} from "@/lib/utils";
 import {PageContent, PageState, PageToolbar} from "@/components/layout/PageLayout";
 
 export function ProjectGalleryPage() {
@@ -195,7 +195,18 @@ export function ProjectGalleryPage() {
     }
 
     return (
-        <PageContent>
+        <ModuleLayout navigationLabel="项目导航" navigation={<>
+            <h2 className="module-nav-heading">项目</h2>
+            <div className="module-nav-group" role="group" aria-label="按创作类型筛选">
+                <button type="button" className="module-nav-item" aria-pressed={kindFilter === "all"} onClick={() => setKindFilter("all")}>全部类型</button>
+                {PROJECT_KINDS.map(kind => <button key={kind.id} type="button" className="module-nav-item" aria-pressed={kindFilter === kind.id} onClick={() => setKindFilter(kind.id)}><kind.icon size={16} weight={kindFilter === kind.id ? "fill" : "regular"} aria-hidden/>{kind.label}{!kind.available && <span className="ml-auto text-xs">即将推出</span>}</button>)}
+            </div>
+            <div className="module-nav-group" role="group" aria-label="项目状态">
+                <button type="button" className="module-nav-item" aria-pressed={!showArchived} onClick={() => setShowArchived(false)}>使用中</button>
+                <button type="button" className="module-nav-item" aria-pressed={showArchived} onClick={() => setShowArchived(true)}>含已归档项目</button>
+            </div>
+            <div className="module-nav-group"><h3 className="module-nav-heading text-xs">当前项目</h3>{visible.map(project => <Link key={project.id} className="module-nav-item" to="/p/$projectId" params={{projectId: project.id}}>{project.name}</Link>)}</div>
+        </>}><PageContent>
             <VideoWorkspaceReadNotice {...readStatus}/>
             <LibraryHeader title="项目" query={query} onQuery={setQuery} sort={sort} onSort={setSort}
                            description="管理视频、音频与音乐项目。"
@@ -204,31 +215,10 @@ export function ProjectGalleryPage() {
                                setCreating(true);
                            }}><Plus aria-hidden/>新建项目</Button>}
             />
-            <div className="library-kind-filters" role="group" aria-label="按创作类型筛选">
-                <button type="button" aria-pressed={kindFilter === "all"} onClick={() => setKindFilter("all")}
-                        className={cn("rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-ring", kindFilter === "all" ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50")}>全部
-                </button>
-                {PROJECT_KINDS.map((kind) => {
-                    const Icon = kind.icon;
-                    return <button key={kind.id} type="button" aria-pressed={kindFilter === kind.id}
-                                   onClick={() => setKindFilter(kind.id)}
-                                   className={cn("flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-ring", kindFilter === kind.id ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/50")}>
-                        <Icon className="size-4" aria-hidden/>{kind.label}
-                        {(!kind.available) && <span className="text-muted-foreground text-[10px]">即将推出</span>}
-                    </button>;
-                })}
-            </div>
             <PageToolbar className="library-filter-row">
                 <label className="flex items-center gap-2">所属 IP
-                    <Select value={ipFilter} onValueChange={setIpFilter}><SelectTrigger aria-label="筛选所属 IP"
-                                                                                        className="max-w-52"><SelectValue/></SelectTrigger><SelectContent><SelectItem
-                        value="all">全部</SelectItem><SelectItem
-                        value="independent">独立项目</SelectItem>{profiles.map((ip) => <SelectItem key={ip.id}
-                                                                                                   value={ip.id}>{ip.name}{ip.archived ? "（已归档）" : ""}</SelectItem>)}
-                    </SelectContent></Select>
+                    <Select value={ipFilter} onValueChange={setIpFilter}><SelectTrigger aria-label="筛选所属 IP" className="max-w-52"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="all">全部</SelectItem><SelectItem value="independent">独立项目</SelectItem>{profiles.map(ip => <SelectItem key={ip.id} value={ip.id}>{ip.name}{ip.archived ? "（已归档）" : ""}</SelectItem>)}</SelectContent></Select>
                 </label>
-                <label className="flex items-center gap-2"><Checkbox checked={showArchived}
-                                                                     onCheckedChange={(checked) => setShowArchived(checked === true)}/>查看已归档项目</label>
             </PageToolbar>
             <div className="mt-4">
                 {filteredKind && !filteredKind.available ? <ProjectKindPlaceholder kind={filteredKind}/> : <>
@@ -499,6 +489,6 @@ export function ProjectGalleryPage() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </PageContent>
+        </PageContent></ModuleLayout>
     );
 }

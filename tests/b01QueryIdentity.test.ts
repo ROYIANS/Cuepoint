@@ -72,6 +72,7 @@ import {PageHeader, PageState} from "@/components/layout/PageLayout";
 import {Route as HomeRoute} from "@/routes/p.$projectId.index";
 import {Route as ProjectRoute} from "@/routes/p.$projectId";
 
+import {ModuleLayout} from "@/components/layout/ModuleLayout";
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(tree: unknown): Node[] {
     if (Array.isArray(tree)) return tree.flatMap(nodes);
@@ -83,7 +84,7 @@ function nodes(tree: unknown): Node[] {
     if (node.type === PageHeader || node.type === PageState) {
         return [node, ...nodes((node.type as (props: Record<string, unknown>) => unknown)(node.props))];
     }
-    return [node, ...nodes(node.props.children)];
+    return [node, ...nodes(node.props.children), ...(node.type === ModuleLayout ? nodes(node.props.navigation) : [])];
 }
 function unwrap(tree: unknown): unknown {
     const node = tree as Node;

@@ -291,9 +291,7 @@
     color: var(--muted-foreground);
 }
 
-.agent-task-inspector[data-slot="sheet-content"] {
-    width: min(100vw, 600px);
-    max-width: 600px;
+.agent-task-inspector[data-slot="context-panel-content"] {
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -321,13 +319,13 @@
     padding: 24px;
 }
 
-.agent-task-inspector-heading[data-slot="sheet-header"] {
+.agent-task-inspector-heading[data-slot="context-panel-header"] {
     padding: 0;
     gap: 12px;
     margin-bottom: 24px;
 }
 
-.agent-task-inspector-heading [data-slot="sheet-title"] {
+.agent-task-inspector-heading [data-slot="context-panel-title"] {
     font-size: 20px;
     font-weight: 600;
     line-height: 28px;
@@ -336,7 +334,7 @@
     padding: 0;
 }
 
-.agent-task-inspector-heading [data-slot="sheet-description"] {
+.agent-task-inspector-heading [data-slot="context-panel-description"] {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -345,7 +343,7 @@
     color: var(--muted-foreground);
 }
 
-.agent-task-inspector-heading [data-slot="sheet-description"] span {
+.agent-task-inspector-heading [data-slot="context-panel-description"] span {
     width: 100%;
     margin-top: 4px;
     color: var(--muted-foreground);
