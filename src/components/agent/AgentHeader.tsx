@@ -3,6 +3,7 @@ import {Dropdown} from "antd";
 import {ListTodo, MessageSquarePlus, MoreHorizontal, Pencil, Trash2} from "@/components/ui/icons";
 import type {ReactNode} from "react";
 import {AppHeaderPortal} from "@/components/layout/AppHeaderPortal";
+import {useModuleNavigation} from "@/components/layout/ModuleLayout";
 import type {ChatThread} from "@/domain/types";
 import "./agentHeader.css";
 
@@ -21,8 +22,12 @@ export function AgentHeader({title, thread, topicToggle: _topicToggle, onRename,
     taskTitle?: string;
     onNewTopic?: () => void;
 }) {
+    const navigation = useModuleNavigation();
     return <AppHeaderPortal>
         <div className="agent-header-theme css-var-agent-chat agent-chat-header" data-agent-header="">
+            {onNewTopic && !navigation.open && <div className="agent-header-new-topic" data-tauri-drag-region="false">
+                <ActionIcon icon={MessageSquarePlus} title="开启新话题" aria-label="开启新话题" onClick={onNewTopic}/>
+            </div>}
             <div className="agent-header-title-group">
                 <h1 className="agent-conversation-title" title={title}>{title}</h1>
                 {thread && onRename && onDelete && <Dropdown trigger={["click"]} getPopupContainer={headerPopupRoot}
@@ -37,7 +42,6 @@ export function AgentHeader({title, thread, topicToggle: _topicToggle, onRename,
             <div className="agent-header-actions" data-tauri-drag-region="false">
                 {onOpenTask && <ActionIcon icon={ListTodo} title={taskTitle ? "任务详情" : "创建关联任务"}
                     aria-label={taskTitle ? "任务详情" : "创建关联任务"} onClick={onOpenTask}/>}
-                {onNewTopic && <ActionIcon icon={MessageSquarePlus} title="开启新话题" aria-label="开启新话题" onClick={onNewTopic}/>}
             </div>
             <div className="agent-header-popup-host" data-agent-header-popup="" data-tauri-drag-region="false"/>
         </div>

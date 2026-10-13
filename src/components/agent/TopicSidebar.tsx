@@ -1,6 +1,5 @@
 import {Flexbox, Text} from "@lobehub/ui";
-import {ActionIcon} from "@lobehub/ui/base-ui";
-import {useNavigate} from "@tanstack/react-router";
+import {LOGO_SRC, PRODUCT_NAME_ZH} from "@/lib/brand";
 import {
     ChevronDown,
     ListTodo,
@@ -8,18 +7,17 @@ import {
     MessageSquarePlus,
     Pencil,
     Search,
-    Settings,
     Trash2,
     X,
 } from "@/components/ui/icons";
-import {type ComponentType, type ReactNode, useEffect, useMemo, useRef, useState,} from "react";
+import {type ComponentType, useEffect, useMemo, useRef, useState,} from "react";
 import {filterThreadsByTitle} from "@/components/agent/filterThreadsByTitle";
 import {groupThreadsByTime} from "@/components/agent/timeGroups";
 import type {ChatThread, Id} from "@/domain/types";
 
 /**
  * Topic sidebar — ghost nav
- * (开启新话题 / 搜索 / 话题…), date-grouped topic list, settings footer.
+ * (开启新话题 / 搜索 / 话题…), date-grouped topic list under the brand header.
  * Shared list body also powers the mobile topic Sheet.
  */
 export function TopicSidebar({
@@ -39,8 +37,6 @@ export function TopicSidebar({
     onRename: (thread: ChatThread) => void;
     onDelete: (thread: ChatThread) => void;
 }) {
-    const navigate = useNavigate();
-
     return (
         <Flexbox width="100%" height="100%" className="agent-topic-sidebar">
             <TopicListBody
@@ -51,16 +47,6 @@ export function TopicSidebar({
                 onOpenTasks={onOpenTasks}
                 onRename={onRename}
                 onDelete={onDelete}
-                footer={
-                    <Flexbox padding={8} style={{flex: "none"}}>
-                        <ActionIcon
-                            icon={Settings}
-                            title="设置"
-                            aria-label="设置"
-                            onClick={() => void navigate({to: "/settings"})}
-                        />
-                    </Flexbox>
-                }
             />
         </Flexbox>
     );
@@ -75,7 +61,6 @@ function TopicListBody({
                                   onOpenTasks,
                                   onRename,
                                   onDelete,
-                                  footer,
                               }: {
     threads: ChatThread[];
     activeThreadId?: Id;
@@ -84,7 +69,6 @@ function TopicListBody({
     onOpenTasks: () => void;
     onRename: (thread: ChatThread) => void;
     onDelete: (thread: ChatThread) => void;
-    footer?: ReactNode;
 }) {
     const [topicsOpen, setTopicsOpen] = useState(true);
     const [folded, setFolded] = useState<Record<string, boolean>>({});
@@ -116,6 +100,10 @@ function TopicListBody({
 
     return (
         <>
+            <Flexbox horizontal align="center" gap={8} paddingInline={16} paddingBlock={12} style={{flex: "none"}} className="agent-topic-brand">
+                <img src={LOGO_SRC} alt="" width={24} height={24} style={{objectFit: "contain"}}/>
+                <Text strong>{PRODUCT_NAME_ZH}</Text>
+            </Flexbox>
             <Flexbox paddingInline={8} gap={2} style={{flex: "none"}}>
                 <SidebarNavItem icon={MessageSquarePlus} label="开启新话题" onClick={onNewTopic}/>
                 <SidebarNavItem icon={Search} label="搜索" onClick={openSearch}/>
@@ -217,7 +205,6 @@ function TopicListBody({
                 ) : null}
             </Flexbox>
 
-            {footer}
         </>
     );
 }
