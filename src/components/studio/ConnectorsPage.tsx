@@ -4,6 +4,7 @@ import {useProductQuery} from "@/lib/storage/hooks";
 import {Check, Plug} from "@/components/ui/icons";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
+import {showError} from "@/components/errors/showError";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
 import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";
@@ -147,7 +148,8 @@ export function ConnectorsPage() {
             const result = await listConnectorModels(request);
             if (!currentOperation(operation)) return;
             if (!result.ok) {
-                toast.error(redactCredentials(result.message, request.apiKey).slice(0, 300));
+                showError({title: "拉取模型失败", cause: new Error(result.message), actionName: "discover-models",
+                    detail: redactCredentials(result.message, request.apiKey).slice(0, 300)});
                 setProbeModels([]);
                 return;
             }
@@ -160,7 +162,8 @@ export function ConnectorsPage() {
                         : "探活成功，但接口未返回模型列表",
             );
         } catch (error) {
-            if (currentOperation(operation)) toast.error(redactCredentials(error instanceof Error ? error.message : "拉取失败", request.apiKey).slice(0, 300));
+            if (currentOperation(operation)) showError({title: "拉取模型失败", cause: error, actionName: "discover-models",
+                detail: redactCredentials(error instanceof Error ? error.message : "拉取失败", request.apiKey).slice(0, 300)});
         } finally {
             finishOperation(operation);
         }

@@ -19,8 +19,14 @@ export function getLatestError(): ReportedError | null {
     return latest;
 }
 
+/** An abort anywhere in a short `cause` chain is a normal cancellation, not an error to report. */
 function isAbortError(cause: unknown): boolean {
-    return typeof cause === "object" && cause !== null && (cause as {name?: unknown}).name === "AbortError";
+    let current: unknown = cause;
+    for (let depth = 0; depth < 5 && typeof current === "object" && current !== null; depth++) {
+        if ((current as {name?: unknown}).name === "AbortError") return true;
+        current = (current as {cause?: unknown}).cause;
+    }
+    return false;
 }
 
 function fingerprint(info: ErrorInfo): string {

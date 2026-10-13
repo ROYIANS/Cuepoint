@@ -16,6 +16,13 @@ describe("sanitizeText", () => {
         expect(sanitizeText("api_key=SECRET123 x")).not.toContain("SECRET123");
         expect(sanitizeText('{"apiKey": "SECRET456"}')).not.toContain("SECRET456");
     });
+    it("redacts generic token, password, cookie and JWT shapes", () => {
+        const out = sanitizeText("token=T0K1 password: hunter2 secret_key=S3C access_token: AT1\nCookie: sid=COOKIE1\njwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig");
+        for (const leaked of ["T0K1", "hunter2", "S3C", "AT1", "COOKIE1", "eyJzdWIi", "eyJhbGci"]) expect(out).not.toContain(leaked);
+    });
+    it("replaces user names that contain spaces", () => {
+        expect(sanitizeText("open /Users/xiaomeng dao/Library/x.js failed")).toBe("open ~/Library/x.js failed");
+    });
     it("strips URL userinfo and query", () => {
         const out = sanitizeText("fetch https://user:pw@api.example.com/v1/chat?token=abc#x failed");
         expect(out).toBe("fetch https://api.example.com/v1/chat failed");
@@ -98,7 +105,12 @@ describe("reportError", () => {
     it("ignores AbortError", () => {
         expect(reportError(new DOMException("a", "AbortError"), {source: "global"})).toBeNull();
         expect(reportError(Object.assign(new Error("a"), {name: "AbortError"}), {source: "global"})).toBeNull();
-        expect(getLatestError()).toBeNull();
+        // A wrapper whose cause chain holds an abort is still a normal cancellation.
+        expect(reportError(new Error("wrapped", {cause: new DOMException("a", "AbortError")}), {source: "global"})).toBeNull();
+        expect(reportError(new Error("outer", {cause: new Error("mid", {cause: Object.assign(new Error("a"), {name: "AbortError"})})}), {source: "global"})).toBeNull();
+        // A cause chain without an abort is still reported.
+        expect(reportError(new Error("wrapped real", {cause: new Error("db down")}), {source: "global"})).not.toBeNull();
+        expect(getLatestError()?.info.message).toBe("wrapped real");
     });
     it("dedupes within one second only", () => {
         const make = () => new Error("same");

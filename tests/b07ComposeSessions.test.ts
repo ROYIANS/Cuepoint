@@ -169,7 +169,8 @@ describe("B07 actual compose callbacks", () => {
         io.create.mockRejectedValue(new Error("creation failed"));
         (ui.surface().props.onNewTopic as () => void)(); await settle();
         expect(ui.composer().value).toBe("unsent"); expect(ui.composer().attachments).toHaveLength(1);
-        expect(toast.error).toHaveBeenCalledWith("creation failed");
+        // Creation failures go through showError: a friendly title plus the 查看详情 action, never swallowed.
+        expect(toast.error).toHaveBeenCalledWith("创建对话失败", expect.objectContaining({action: expect.objectContaining({label: "查看详情"})}));
     });
     it("a late begin cannot clear edited-then-reverted text", async () => {
         const ui = page("A"); ui.type("same"); const gate = deferred<{id: string}>(); io.begin.mockReturnValue(gate.promise);

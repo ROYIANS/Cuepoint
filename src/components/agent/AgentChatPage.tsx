@@ -291,7 +291,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 });
                 armConfirmedDeparture();
                 void navigate({to: "/agent/$threadId", params: {threadId: thread.id}});
-            })().catch((error: unknown) => toast.error(error instanceof Error ? error.message : "创建对话失败"));
+            })().catch((error: unknown) => showError({title: "创建对话失败", cause: error, actionName: "create-thread"}));
         });
     }), [abortRef, navigate, selectedConnector?.id, modelValue, projectId, taskMode, leaveTask, requestDeparture, armConfirmedDeparture]);
     const handleNewTopic = useCallback(() => createTopic(), [createTopic]);
