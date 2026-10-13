@@ -9,7 +9,7 @@ if (!process.argv[2]) throw new Error('Usage: node scripts/e06-build.mjs NEW_OUT
 await mkdir(output); // Never overwrite evidence.
 const sha=b=>createHash('sha256').update(b).digest('hex');
 async function files(dir){const result=[];for(const e of await readdir(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())result.push(...await files(p));else result.push(p);}return result;}
-const inputs=[...(await files('src')),...(await files('public')),...(await files('scripts')),...(await files('tests')), 'index.html','package.json','pnpm-lock.yaml','vite.config.ts','tsconfig.json','tsconfig.app.json','tsconfig.node.json', 'vendor/lobehub/manifest.json'];
+const inputs=[...(await files('src')),...(await files('public')),...(await files('scripts')),...(await files('tests')), 'index.html','package.json','pnpm-lock.yaml','vite.config.ts','tsconfig.json','tsconfig.app.json','tsconfig.node.json'];
 async function fingerprints(paths){return Object.fromEntries(await Promise.all(paths.sort().map(async p=>{const b=await readFile(p);return [p,{sha256:sha(b),bytes:b.length}];})));}
 const originalRoute=await readFile('src/routeTree.gen.ts');
 const before=await fingerprints(inputs);

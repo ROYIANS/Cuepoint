@@ -6,9 +6,6 @@
   "type": "module",
   "packageManager": "pnpm@10.15.0",
   "scripts": {
-    "model-bank:compare": "node scripts/model-bank-snapshot.mjs verify",
-    "model-bank:verify": "node scripts/model-bank-snapshot.mjs verify",
-    "model-bank:sync": "node scripts/model-bank-snapshot.mjs sync",
     "dev": "vite",
     "build": "vite build",
     "test": "vitest run",

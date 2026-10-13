@@ -32,7 +32,7 @@ are excluded. Source originals are never edited. A reusable completed/activated 
 must cover an exact ordered prefix (ID, role AND content equality) of selected history.
 Disabling auto compression uses raw selected history instead of saved summaries.
 
-Capacity uses provider metadata, then local Model Bank, with explicit local ceiling.
+Capacity uses provider metadata, then the local model catalog (Models.dev), with explicit local ceiling.
 Budget uses serialized messages/tool definitions plus opaque reasoning continuation;
 apply 25% estimation drift. Reserve min(8192, max(256, floor(capacity × 15%))) output
 and ceil(capacity × 5%) safety margin. Trigger at min(input budget, 50% capacity), or
@@ -135,7 +135,7 @@ Maintain this contract when changing the chat context preview, usage ring/toolti
 
 ### 3. Contracts / Invariants
 
-- Resolve model-bank vision preparation outside the database transaction. Durable fact reading uses one outer read-only transaction over the explicit deduplicated preview table list, including every nested task/project/memory/reference/IP/audio reader store. Do not use `db.tables` or add out-of-transaction durable reads to the preview.
+- Resolve model-catalog vision preparation outside the database transaction. Durable fact reading uses one outer read-only transaction over the explicit deduplicated preview table list, including every nested task/project/memory/reference/IP/audio reader store. Do not use `db.tables` or add out-of-transaction durable reads to the preview.
 - Validate agent/thread/project existence and requested binding. Missing, unavailable/foreign scope and read failure return explicit discriminated states, never ready defaults or fake empty selections. Loaded empty history/memory/reference data is a legitimate ready result. Unknown capacity remains unknown.
 - The subscription's ready/error/missing/empty result is usable only for the current complete identity. A result retained from a previous thread, project, provider/model, metadata, draft or attachments cannot expose its percentage, budget, coverage or enabled memory action in a new scope.
 - Parent transcript/status queries keep their actual consumers. They are not preview snapshot inputs; temporarily retained or empty parent data cannot be treated as complete durable context.

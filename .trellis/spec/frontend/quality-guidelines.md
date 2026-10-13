@@ -6,7 +6,7 @@
 
 ## Overview
 
-Required gates include TypeScript, full Vitest, formal `quality`, its self-test, model verification and production build; the E07/QG contract below governs lint/architecture/unused evidence. `pnpm lint` still means `tsc -b`, not the formal ESLint gate. Current tests exercise pure helpers, business commands, production callback hosts and actual storage adapters. Read [Shared Product Storage](./shared-product-storage.md) for native transactions/binaries and acceptance boundaries.
+Required gates include TypeScript, full Vitest, formal `quality`, its self-test, `models-dev:verify` and production build; the E07/QG contract below governs lint/architecture/unused evidence. `pnpm lint` still means `tsc -b`, not the formal ESLint gate. Current tests exercise pure helpers, business commands, production callback hosts and actual storage adapters. Read [Shared Product Storage](./shared-product-storage.md) for native transactions/binaries and acceptance boundaries.
 
 ---
 
@@ -117,7 +117,7 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 
 ## Release gate
 
-`.github/workflows/ghcr.yml` runs locked dependency installation, TypeScript, the full Vitest suite, model snapshot verification and a production build on main pull requests, main pushes, release tags and manual runs. The Docker publication job depends on successful quality checks; pull requests never publish images. Only the publication job has package write permission. The pnpm setup uses the version pinned by `package.json`.
+`.github/workflows/ghcr.yml` runs locked dependency installation, TypeScript, the full Vitest suite, model catalog baseline verification (`pnpm models-dev:verify`) and a production build on main pull requests, main pushes, release tags and manual runs. The Docker publication job depends on successful quality checks; pull requests never publish images. Only the publication job has package write permission. The pnpm setup uses the version pinned by `package.json`.
 
 ## Desktop distribution gate
 

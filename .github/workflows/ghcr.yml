@@ -41,8 +41,8 @@ jobs:
         run: node --test scripts/prepare-native-test-probe.test.mjs
       - name: Test
         run: pnpm test
-      - name: Verify model snapshot
-        run: pnpm model-bank:verify
+      - name: Verify model catalog baseline
+        run: pnpm models-dev:verify
       - name: Build
         run: pnpm build
         env:

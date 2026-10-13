@@ -31,7 +31,7 @@ existing `v*` tags.
 ## Packaging and functional testing
 
 The desktop workflow only compiles and packages the application. It performs no
-Vitest, Rust test, lint, type, model-bank or quality suite, and does not launch
+Vitest, Rust test, lint, type, models-dev or quality suite, and does not launch
 the application or run UI, storage or payload smoke tests. The owner performs
 functional testing before publication. A successful workflow proves that all
 five installer files were produced and their source and file hashes match; it
@@ -105,6 +105,21 @@ The owner tests the installers and reviews the completed draft and checksums bef
 making it public. Repository workflow permission for the normal `GITHUB_TOKEN`
 is sufficient for draft delivery; no signing certificates or personal access
 token are part of this first package flow.
+
+## Refresh the model catalog baseline before each release
+
+The bundled Models.dev baseline (`src/lib/ai/modelCatalog/baseline.generated.json`)
+is a projection of the pinned `@opencode-ai/models` package. Before every release:
+
+1. `pnpm add -D -E @opencode-ai/models@latest` (exact version, no range).
+2. `pnpm models-dev:baseline` to regenerate the projection.
+3. `pnpm models-dev:verify` to confirm the committed file matches.
+4. Commit `package.json`, the lockfile and the baseline together; record the
+   package version in the commit message.
+
+The package is never upgraded automatically between releases. The baseline is
+currently about 10 KB gzipped; if it grows past a few tens of KB, review the
+projection scope before committing.
 
 ## Local development and data isolation
 

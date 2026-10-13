@@ -1,11 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { initModelCatalog } from "@/lib/ai/modelCatalog/store";
-import { getModelBankEntry, loadModelBank } from "@/lib/ai/modelBank";
+import { initModelCatalog, lookupModelByDefinition } from "@/lib/ai/modelCatalog/store";
 import { resolveModelMetadata } from "@/lib/ai/modelMetadata";
 import { getReasoningPolicy } from "@/lib/ai/reasoningPolicy";
 import { formatTokenCount } from "@/lib/agent/contextUsage";
-import { verifySnapshot, deriveDataset } from "../scripts/model-bank-snapshot.mjs";
-import { readFileSync } from "node:fs";
 
 describe("model catalog limits through resolveModelMetadata", () => {
   beforeAll(() => initModelCatalog());
@@ -19,7 +16,7 @@ describe("model catalog limits through resolveModelMetadata", () => {
   });
   it("does not infer aliases or expose prototype keys, but preserves unknown provider data", () => {
     for (const id of ["constructor", "__proto__", "vendor/gpt-5", "gpt-5-custom"]) {
-      expect(getModelBankEntry(id)).toBeUndefined();
+      expect(lookupModelByDefinition(undefined, id)).toBeUndefined();
       expect(resolveModelMetadata(id).contextWindow).toBeUndefined();
     }
     expect(resolveModelMetadata("custom", { source: "provider", contextWindow: 64000 }).contextWindow?.tokens).toBe(64000);
@@ -38,34 +35,5 @@ describe("model catalog limits through resolveModelMetadata", () => {
   it("preserves million-scale model capacity precision", () => {
     expect(formatTokenCount(1050000)).toBe("1.05M");
     expect(formatTokenCount(1000000)).toBe("1M");
-  });
-});
-
-describe("full upstream snapshot", () => {
-  it("verifies every copied file and reproduces every generated field", () => {
-    const manifest = verifySnapshot();
-    expect(Object.keys(manifest.files)).toHaveLength(197);
-    const generated = deriveDataset();
-    expect(generated.providers).toBe(85);
-    expect(generated.models).toBe(1855);
-    expect(generated.text).toBe(readFileSync("src/lib/ai/modelBank/models.generated.json", "utf8"));
-    expect(generated.lookup).toBe(readFileSync("src/lib/ai/modelBank/lookup.generated.json", "utf8"));
-  });
-  it("retains full records, prices, generation parameters and provider variants", async () => {
-    const bank = await loadModelBank();
-    const luna = bank.openai.find((model) => model.id === "gpt-5.6-luna")!;
-    expect(luna.contextWindowTokens).toBe(1050000);
-    expect(luna.pricing).toMatchObject({ units: expect.arrayContaining([expect.objectContaining({ strategy: "tiered", tiers: expect.arrayContaining([expect.objectContaining({ upTo: 272000 })]) })]) });
-    const image = bank.openai.find((model) => model.id === "gpt-image-2")!;
-    expect(image).toHaveProperty("parameters");
-    expect(bank.chatgpt.find((model) => model.id === "gpt-5.6-luna")?.contextWindowTokens).toBe(272000);
-    expect(new Set(Object.values(bank).flat().map((model) => model.type))).toEqual(new Set(["chat", "image", "video", "embedding", "tts", "asr", "realtime"]));
-  });
-  it("uses the requested provider variant before the original vendor fallback", () => {
-    expect(getModelBankEntry("gpt-5.6-luna", "chatgpt")?.contextWindow).toBe(272000);
-    expect(getModelBankEntry("gpt-5.6-luna", "openai")?.contextWindow).toBe(1050000);
-    expect(getModelBankEntry("gpt-5.6-luna", "apimart")?.contextWindow).toBe(1050000);
-    expect(getModelBankEntry("gpt-5-2025-08-07")).toBeUndefined();
-    expect(getModelBankEntry("claude-opus-4-6", "anthropic")?.providerId).toBe("anthropic");
   });
 });

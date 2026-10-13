@@ -2,7 +2,6 @@
   "$schema": "https://unpkg.com/knip@6.40.0/schema.json",
   "entry": [
     "src/main.tsx!",
-    "scripts/model-bank-snapshot.mjs!",
     "scripts/native-product-fixture.mjs",
     "scripts/native-product-fixture-check.mjs",
     "scripts/release-product-smoke.mjs",
