@@ -12,6 +12,7 @@ The desktop product stores project data in an internal SQLite database and copie
 
 ## Contents
 
+- [Download and install](#download-and-install)
 - [Features](#features)
 - [First steps](#first-steps)
 - [Creative workflows](#creative-workflows)
@@ -26,6 +27,23 @@ The desktop product stores project data in an internal SQLite database and copie
 - [Documentation and implementation scope](#documentation-and-implementation-scope)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
+
+## Download and install
+
+**[Download a desktop preview](https://github.com/ROYIANS/Cuepoint/releases) · [Illustrated installation guide (Chinese)](docs/desktop-installation.md)**
+
+Choose a desktop release with a `desktop-v<version>` tag, expand **Assets**, and select the installer for your device:
+
+| Device | File to choose |
+| --- | --- |
+| Apple silicon Mac (M series, macOS 14+) | `.dmg` with `macos_arm64` in its name |
+| Intel Mac (macOS 14+) | `.dmg` with `macos_x64` in its name |
+| x64 Windows | `_setup.exe` with `windows_x64` in its name |
+| x64 Linux | `.deb` or `.AppImage`; Ubuntu 22.04 build baseline, with compatible runtime dependencies |
+
+**Your system may show a warning on first installation or launch.** The Windows package is unsigned; the Mac application uses an ad-hoc signature and has not completed Developer ID signing or Apple notarization. Confirm that the file came from the official release above, then use the [Windows / Mac illustrated steps](docs/desktop-installation.md) to decide whether to continue. You do not need to disable system security features.
+
+If a warning reports malware, a virus, or a damaged file, stop installation and [report the full message](https://github.com/ROYIANS/Cuepoint/issues). **Source code (zip / tar.gz)** files are source archives, not installers. Windows ARM, Linux ARM, and universal Mac installers are not currently provided. There is no built-in automatic updater; export project ZIP backups before updating.
 
 ## Features
 
@@ -44,7 +62,7 @@ The desktop product stores project data in an internal SQLite database and copie
 
 ## First steps
 
-1. Start the image using [Deployment](#deployment), or launch the development server using [Local development](#local-development).
+1. Install a desktop preview using [Download and install](#download-and-install). For the browser version, start the image using [Deployment](#deployment), or launch the development server using [Local development](#local-development).
 2. Open **连接与模型** (Connections and models), add a service, enter its Base URL and API key, and test the connection or inspect available models.
 3. Create a video, audio, or music project from **项目** (Projects). Projects can stand alone or be linked to a profile under **我的 IP** (My IP).
 4. Add your manuscript and materials manually, or open **创作助手** (Creative assistant), choose a chat connection and model, and bind the target project.

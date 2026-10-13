@@ -1,9 +1,11 @@
-# 小光点 · 规划文档
+# 小光点 · 使用与规划文档
 
-本目录存放产品与架构规划，避免口头结论丢失。实现以代码与 `.trellis/tasks` 为准；此处是方向备忘。
+本目录存放安装指南、发布说明模板，以及产品与架构规划。实现以代码与 `.trellis/tasks` 为准；规划文档是方向备忘。
 
 | 文档 | 内容 |
 | --- | --- |
+| [desktop-installation.md](./desktop-installation.md) | 面向用户的下载、选包、首次打开图解、更新与反馈指南 |
+| [desktop-release-template.md](./desktop-release-template.md) | 手动填写的 GitHub Release 正文模板；含下载链接、签名状态解释和安装配图 |
 | [desktop-distribution.md](./desktop-distribution.md) | Shared desktop product, installer targets, verification and draft release ownership |
 | [product/film-agent-workflow.md](./product/film-agent-workflow.md) | 模仿 Trellis 的「影视任务」工作流：聊天建任务、约定/经验、Skills |
 | [product/ai-connectors.md](./product/ai-connectors.md) | 全局 BYOK 连接器（OpenAI 兼容优先） |

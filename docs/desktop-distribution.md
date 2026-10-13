@@ -162,6 +162,23 @@ cross-device synchronization is separate future work.
 
 ## Installing test packages
 
+The user-facing [illustrated installation guide](desktop-installation.md) explains
+installer selection and the first-launch prompts. Maintainers can fill in the
+[Release body template](desktop-release-template.md) before publication. This is
+a manual document template; the current publisher does not load it. It changes
+neither the signing policy nor the draft/ownership/upload gates.
+
+Use the template only after uploads complete and the owner performs functional
+testing. Do not edit notes during a running workflow or retry: the publisher's
+completion step can rewrite the draft body. Preserve the existing upload-status
+notice and ownership marker when
+editing an owned draft, retain every release-specific manifest limitation, and
+replace the version/tag/source/change placeholders. The linked PNG illustrations
+and guide must exist at the release tag before their URLs are used. A tag created
+before these files were added cannot serve those links; for that older release,
+use a verified documentation commit URL and keep the installer/source links tied
+to the actual release. Recheck the concrete links before making the draft public.
+
 Download the installer for the device's architecture from a completed Release
 and compare its SHA-256 with `SHA256SUMS`. These initial packages do not have
 formal developer certificates. macOS and Windows may therefore show security
