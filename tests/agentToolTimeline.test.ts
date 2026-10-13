@@ -88,6 +88,52 @@ describe("tool timeline", () => {
         expect(long.endsWith("…")).toBe(true);
     });
 
+    it("does not repeat the object when it equals or is contained in the title", async () => {
+        const preview = (label: string) => ({summary: "摘要", changes: [], target: {label, href: "/p/a"}});
+        await renderDetails([
+            call("c1", {title: "创建镜头", preview: preview("创建镜头")}),
+            call("c2", {title: "读取镜头 3", name: "x", preview: preview("镜头 3")}),
+        ], {status: "running"});
+        for (const row of container.querySelectorAll("[data-activity-call]")) expect(row.querySelector(".agent-tool-object")).toBeNull();
+        expect(text()).not.toContain("创建镜头 · 创建镜头");
+    });
+
+    it("shows a validation failure as a muted single line, a real failure as a failure", async () => {
+        await renderDetails([
+            call("c1", {status: "failed", error: "工具 创建镜头 的参数无效，未执行。时长必须为数字"}),
+            call("c2", {status: "failed", name: "other", title: "写入", error: "网络错误"}),
+        ], {status: "running"});
+        const errors = [...container.querySelectorAll<HTMLElement>(".agent-call-error")];
+        expect(errors[0].dataset.kind).toBe("validation");
+        expect(errors[0].textContent).toContain("工具 创建镜头 的参数无效");
+        expect(errors[1].dataset.kind).toBe("failure");
+        const toggles = container.querySelectorAll<HTMLElement>(".agent-tool-call-toggle");
+        expect(toggles[0].dataset.soft).toBe("true");
+        expect(toggles[1].dataset.soft).toBeUndefined();
+    });
+
+    it("folds parameters and results behind a collapsed disclosure inside the expanded call", async () => {
+        await renderDetails([call("c1", {result: '{"ok":true}'})], {status: "running"});
+        const toggle = buttons("参数与返回结果")[0];
+        expect(toggle.getAttribute("aria-expanded")).toBe("false");
+        const body = document.getElementById(toggle.getAttribute("aria-controls")!)!;
+        expect(body.hidden).toBe(true);
+        await act(async () => toggle.click());
+        expect(toggle.getAttribute("aria-expanded")).toBe("true");
+        expect(body.hidden).toBe(false);
+        expect(body.textContent).toContain('{"ok":true}');
+    });
+
+    it("writes plan status only for unfinished items", async () => {
+        await renderDetails([call("c1")], {
+            status: "completed",
+            plan: [{id: "a", title: "第一步", status: "completed"}, {id: "b", title: "第二步", status: "in_progress"}, {id: "c", title: "第三步", status: "pending"}],
+        } as Partial<AgentRun>);
+        await act(async () => container.querySelector<HTMLElement>(".agent-run-summary")!.click());
+        const items = [...container.querySelectorAll(".agent-run-plan li")].map(li => li.textContent);
+        expect(items).toEqual(["第一步", "第二步进行中", "第三步待办"]);
+    });
+
     it("keeps aria-expanded in step with the disclosure so the hover-only chevron stays accessible", async () => {
         await renderDetails([call("c1")], {status: "completed"});
         const summary = container.querySelector<HTMLElement>(".agent-run-summary")!;

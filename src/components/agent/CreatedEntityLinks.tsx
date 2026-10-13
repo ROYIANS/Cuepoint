@@ -1,7 +1,8 @@
 import {Link, useNavigate} from "@tanstack/react-router";
 import type {AgentToolCall} from "@/domain/agent";
 
-import {useRef, useState} from "react";
+import {useId, useRef, useState} from "react";
+import {ChevronDown} from "@/components/ui/icons";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {toast} from "sonner";
 import {Button} from "@/components/ui/button";
@@ -57,10 +58,26 @@ function CreatedProjectContinuation({projectId, call}: { projectId: string; call
     return <ProjectConversationButton projectId={projectId} sourceThreadId={call.threadId}/>;
 }
 
-export function CreatedEntityLinks({call, includePreview = false, allowProjectConversation = false}: {
+/** Per-entity links of a batch fold into one quiet "N 项明细" row; the preview's main link stays visible elsewhere. */
+function CollapsedLinks({links}: { links: [string, string][] }) {
+    const [open, setOpen] = useState(false);
+    const panelId = useId();
+    return <>
+        <button type="button" className="agent-quiet-toggle" aria-expanded={open} aria-controls={panelId}
+                onClick={() => setOpen((value) => !value)}>
+            <span>{links.length} 项明细</span><ChevronDown size={12} className={open ? "rotate-180" : ""} aria-hidden/>
+        </button>
+        <div id={panelId} className="agent-change-detail-list" hidden={!open}>
+            {links.map(([href, label]) => <Link key={href} to={href} className="agent-change-link">{label}</Link>)}
+        </div>
+    </>;
+}
+
+export function CreatedEntityLinks({call, includePreview = false, allowProjectConversation = false, collapseDetails = false}: {
     call: AgentToolCall;
     includePreview?: boolean;
-    allowProjectConversation?: boolean
+    allowProjectConversation?: boolean;
+    collapseDetails?: boolean;
 }) {
     if (call.status !== "completed" || call.effect !== "write" || !call.result) return null;
     let result: unknown;
@@ -81,6 +98,12 @@ export function CreatedEntityLinks({call, includePreview = false, allowProjectCo
     }
     if (!links.size) return null;
     const createdProjectId = allowProjectConversation && call.name === "project_create" && "id" in result && typeof result.id === "string" && links.has(`/p/${encodeURIComponent(result.id)}`) ? result.id : undefined;
+    if (collapseDetails && !createdProjectId) {
+        const entries = [...links];
+        return <div className="agent-change-results">{entries.length > 1
+            ? <CollapsedLinks links={entries}/>
+            : <Link to={entries[0][0]} className="agent-change-link">{entries[0][1]} ↗</Link>}</div>;
+    }
     return <div className="agent-change-results">{[...links].map(([href, label]) => <Link key={href} to={href}
                                                                                           className="agent-change-link">查看{label} ↗</Link>)}{createdProjectId &&
         <CreatedProjectContinuation key={createdProjectId} projectId={createdProjectId} call={call}/>}</div>;

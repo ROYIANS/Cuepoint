@@ -29,11 +29,11 @@ const STATUS: Partial<Record<AgentToolCall["status"], string>> = {
     running: "执行中", rejected: "已拒绝", unknown: "结果待核实",
 };
 
-function StepIcon({status}: { status: AgentToolCall["status"] }) {
+function StepIcon({status, soft}: { status: AgentToolCall["status"]; soft?: boolean }) {
     if (status === "completed") return <Check size={15} className="text-green-500"/>;
     if (status === "running") return <LoaderCircle size={15} className="animate-spin motion-reduce:animate-none"/>;
     if (status === "awaiting_approval") return <ShieldQuestion size={15} className="text-amber-500"/>;
-    if (status === "failed") return <CircleAlert size={15} className="text-destructive"/>;
+    if (status === "failed") return <CircleAlert size={15} className={soft ? "text-amber-500" : "text-destructive"}/>;
     if (status === "unknown") return <CircleAlert size={15} className="text-amber-500"/>;
     return <Circle size={15}/>;
 }
@@ -54,13 +54,42 @@ function failureLine(call: AgentToolCall, recovery?: ToolRecoveryFailure, valida
 
 const OBJECT_LIMIT = 40;
 
+/** Argument-validation failures are corrected by the model itself; they are not execution failures. */
+function isValidationFailure(call: AgentToolCall, validationError?: string): boolean {
+    return call.status === "failed" && (Boolean(validationError) || (call.error?.startsWith("工具") === true && call.error.includes("参数无效")));
+}
+
 /** Object of the call, read only from the validated preview: target label first, then a short summary. */
 function callObject(call: AgentToolCall): string | undefined {
     const preview = call.generationOverride?.preview ?? call.preview;
     const raw = (preview?.target?.label || preview?.summary || "").replace(/\s+/g, " ").trim();
-    if (!raw) return undefined;
+    if (!raw || call.title.includes(raw)) return undefined;
     const chars = [...raw];
     return chars.length > OBJECT_LIMIT ? `${chars.slice(0, OBJECT_LIMIT - 1).join("")}…` : raw;
+}
+
+/** Quiet fold for raw arguments and results; always the last item of an expanded call. */
+function TechnicalDetails({call}: { call: AgentToolCall }) {
+    const [open, setOpen] = useState(false);
+    const panelId = useId();
+    return <div className="agent-step-technical">
+        <button type="button" className="agent-quiet-toggle" aria-expanded={open} aria-controls={panelId}
+                onClick={() => setOpen((value) => !value)}>
+            <span>参数与返回结果</span><ChevronDown size={12} className={open ? "rotate-180" : ""} aria-hidden/>
+        </button>
+        <div id={panelId} className="agent-step-technical-body" hidden={!open}>
+            <div className="agent-step-payload-label">AI 原始参数</div>
+            <pre>{call.arguments}</pre>
+            {call.generationOverride && <>
+                <div className="agent-step-payload-label">用户确认的参数</div>
+                <pre>{call.generationOverride.arguments}</pre>
+            </>}
+            {call.result && <>
+                <div className="agent-step-payload-label">返回结果</div>
+                <pre>{call.result}</pre>
+            </>}
+        </div>
+    </div>;
 }
 
 function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: {
@@ -88,16 +117,18 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
     const decide = !readOnly && !reviewGeneration && !musicReview && awaiting && recoverable && !unknown && !executing;
     const status = STATUS[call.status];
     const object = callObject(call);
+    const soft = isValidationFailure(call, validationError);
     return <div className="agent-run-step" data-activity-call={call.id}>
         <button type="button" className="agent-tool-call-toggle" aria-expanded={open} aria-controls={panelId}
-                data-status={call.status} onClick={() => setOpen((value) => !value)}>
-            <StepIcon status={call.status}/><span className="agent-tool-verb">{call.title}{object &&
+                data-status={call.status} data-soft={soft ? "true" : undefined} onClick={() => setOpen((value) => !value)}>
+            <StepIcon status={call.status} soft={soft}/><span className="agent-tool-verb">{call.title}{object &&
                 <span className="agent-tool-object"> · {object}</span>}</span>{status && <small>{status}</small>}<ChevronDown
             size={12} className={open ? "rotate-180" : ""} aria-hidden/>
         </button>
         {call.status === "failed" && (recovery?.effectCertainty === "unknown"
             ? <RecoveryFailureNotice failure={recovery}/>
-            : <p className="agent-call-error text-destructive" role="alert">{failureLine(call, recovery, validationError)}</p>)}
+            : <p className={soft ? "agent-call-error agent-call-error-soft" : "agent-call-error text-destructive"}
+                 data-kind={soft ? "validation" : "failure"} role="alert">{failureLine(call, recovery, validationError)}</p>)}
         {/* Approval is never folded away: what will happen is the preview, the decision sits beside it. */}
         {decide && <div className="agent-step-actions">
             <Button size="sm" disabled={busy} onClick={() => onAction(run.id, "approve", call.id)}>批准</Button>
@@ -118,21 +149,9 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
                     </div>}
                 <WebResearchSources call={call}/>
                 <ProjectImageSources call={call}/>
-                <details className="agent-step-technical">
-                    <summary>参数与返回结果</summary>
-                    <div className="agent-step-payload-label">AI 原始参数</div>
-                    <pre>{call.arguments}</pre>
-                    {call.generationOverride && <>
-                        <div className="agent-step-payload-label">用户确认的参数</div>
-                        <pre>{call.generationOverride.arguments}</pre>
-                    </>}
-                    {call.result && <>
-                        <div className="agent-step-payload-label">返回结果</div>
-                        <pre>{call.result}</pre>
-                    </>}
-                </details>
             </div>
-            {call.name !== "project_create" && <CreatedEntityLinks call={call}/>}
+            {call.name !== "project_create" && <CreatedEntityLinks call={call} collapseDetails/>}
+            <TechnicalDetails call={call}/>
         </div>
         {call.name === "project_create" && <CreatedEntityLinks call={call} allowProjectConversation={!readOnly}/>}
     </div>;
@@ -270,7 +289,8 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
                     <ol className="agent-run-plan" aria-label="本次执行计划">{run.plan.map((step) => <li key={step.id}>
                         <StepIcon
                             status={step.status === "completed" ? "completed" : step.status === "in_progress" ? "running" : "pending"}/>
-                        <span>{step.title}<small>{step.status === "completed" ? "已完成" : step.status === "in_progress" ? "进行中" : "待办"}</small></span>
+                        <span>{step.title}{step.status !== "completed" &&
+                            <small>{step.status === "in_progress" ? "进行中" : "待办"}</small>}</span>
                     </li>)}</ol>
                 </details>}
             </>}
