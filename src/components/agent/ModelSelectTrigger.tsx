@@ -7,7 +7,8 @@ import {ActionIcon} from "@lobehub/ui/base-ui";
 import * as Popover from "@radix-ui/react-popover";
 import {ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench} from "@/components/ui/icons";
 import {type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore} from "react";
-import {getModelCatalog, subscribeModelCatalog} from "@/lib/ai/modelCatalog/store";
+import {formatPrice} from "@/lib/ai/modelCatalog/format";
+import {getModelCatalog, lookupModel, lookupModelByDefinition, subscribeModelCatalog} from "@/lib/ai/modelCatalog/store";
 import {SURFACE_ELEVATED, TEXT, TEXT_TERTIARY} from "@/components/agent/agentTheme";
 import type {ConnectorConfig, Id} from "@/domain/types";
 import {buildChatModelOptions, type ChatModelPolicy} from "@/lib/ai/chatModelPolicy";
@@ -18,10 +19,12 @@ function popupRoot(anchor: HTMLElement | null): HTMLElement {
     return anchor?.closest<HTMLElement>('[data-slot="context-panel-content"]') ?? anchor?.closest<HTMLElement>(".agent-chat-root") ?? document.body;
 }
 
-function ModelDetail({modelId, metadata, providerId}: {
+function ModelDetail({modelId, metadata, providerId, baseUrl}: {
     modelId: string;
     metadata?: ChatModelMetadata;
-    providerId?: string
+    providerId?: string;
+    /** The selected connector's base URL; lets an openai-compatible connector match its own provider. */
+    baseUrl?: string;
 }) {
     // Re-render when the catalog finishes loading (or is replaced), since lookups read memory.
     const catalog = useSyncExternalStore(subscribeModelCatalog, getModelCatalog);
@@ -46,6 +49,10 @@ function ModelDetail({modelId, metadata, providerId}: {
         return () => { current = false; };
     }, [modelId, providerId, providedVision, visionKey, catalog]);
     const vision = visionResult?.key === visionKey ? visionResult.capability : undefined;
+    // Memory-only lookup (re-evaluated when `catalog` changes); never a product query.
+    const price = catalog && providerId && baseUrl !== undefined
+        ? lookupModel({definitionId: providerId as ConnectorConfig["definitionId"], baseUrl}, modelId)?.price
+        : catalog ? lookupModelByDefinition(providerId, modelId)?.price : undefined;
     const abilities = [
         vision?.supported ? "视觉识别" : null,
         hints.tools ? "工具调用" : null,
@@ -72,6 +79,15 @@ function ModelDetail({modelId, metadata, providerId}: {
                     <dt>最大输出 · {resolved.maxOutputTokens.source === "provider" ? "供应商" : "模型目录"}</dt>
                     <dd title={resolved.maxOutputTokens.sourceUrl}>{formatTokenCount(resolved.maxOutputTokens.tokens)} tokens</dd>
                 </div>}
+                <div>
+                    <dt>价格 · USD / 每百万 tokens</dt>
+                    <dd data-testid="model-price" title={price ? `${price.provider}/${price.modelId}` : undefined}>
+                        {price ? <>
+                            输入 {formatPrice(price.input)} · 输出 {formatPrice(price.output)} · 缓存命中 {formatPrice(price.cacheRead)} · 缓存创建 {formatPrice(price.cacheWrite)}
+                            <div style={{fontSize: 12, color: "#aaa"}}>{price.reference ? "官方参考价 · " : ""}来源：{price.provider}/{price.modelId}</div>
+                        </> : "价格未知"}
+                    </dd>
+                </div>
                 <div>
                     <dt>能力</dt>
                     <dd>
@@ -244,7 +260,8 @@ export function ModelSelectTrigger({
                 </div>
             </div>
             {previewId ? <ModelDetail modelId={previewId} metadata={modelMetadata?.[previewId]}
-                                      providerId={connectors.find((item) => item.id === selectedConnectorId)?.definitionId}/> : null}
+                                      providerId={connectors.find((item) => item.id === selectedConnectorId)?.definitionId}
+                                      baseUrl={connectors.find((item) => item.id === selectedConnectorId)?.baseUrl}/> : null}
         </div>
     );
 

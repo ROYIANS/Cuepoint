@@ -2,7 +2,7 @@ import {afterEach, describe, expect, it, vi} from "vitest";
 import {db} from "@/db/database";
 import {DEVICE_SETTING_MAX_BYTES} from "@/db/deviceSettings";
 import {
-    CATALOG_SELECTION_KEY, clearSyncedCatalog, getCatalogSelection, MODEL_CATALOG_MAX_BYTES, putCatalogSelection, syncModelCatalog,
+    CATALOG_SELECTION_KEY, clearSyncedCatalog, fetchCatalogIndex, getCatalogSelection, MODEL_CATALOG_MAX_BYTES, putCatalogSelection, syncModelCatalog,
 } from "@/lib/ai/modelCatalog/sync";
 import {getModelCatalog, initModelCatalog, lookupModel, MODEL_CATALOG_KEY, resetModelCatalogForTests, subscribeModelCatalog} from "@/lib/ai/modelCatalog/store";
 import {parseSyncedSnapshot} from "@/lib/ai/modelCatalog/validate";
@@ -259,5 +259,88 @@ describe("catalog selection", () => {
         await putCatalogSelection({autoIncludeCommon: true, modelKeys: Array.from({length: 2000}, (_, i) => `p/${i}`)});
         expect((await getCatalogSelection()).modelKeys).toHaveLength(2000);
         expect(await db.deviceSettings.get(CATALOG_SELECTION_KEY)).toBeDefined();
+    });
+});
+
+describe("fetchCatalogIndex", () => {
+    it("returns light rows, merges equivalent ids behind one row and writes nothing", async () => {
+        await initModelCatalog();
+        const before = getModelCatalog();
+        const listener = vi.fn();
+        subscribeModelCatalog(listener);
+        const fetchImpl = respond(fixture());
+        const result = await fetchCatalogIndex({fetchImpl});
+        expect(fetchImpl).toHaveBeenCalledOnce();
+        expect(fetchImpl.mock.calls[0][0]).toBe("https://models.dev/api.json");
+        expect(result.ok).toBe(true);
+        if (!result.ok) return;
+        // gpt-4o: openai (original vendor) represents aihubmix + groq (same canonicalId). other/openai/gpt-4o has no
+        // canonicalId, so its normalized id differs and the sync rule keeps it as its own row.
+        const gpt = result.rows.find(r => r.modelKeys.includes("openai/gpt-4o"))!;
+        expect(gpt.provider).toBe("openai");
+        expect(gpt.modelKeys).toEqual(["aihubmix/gpt-4o", "groq/gpt-4o", "openai/gpt-4o"]);
+        expect(gpt.providers).toEqual(["aihubmix", "groq", "openai"]);
+        expect(gpt.cost).toEqual({input: 1, output: 2});
+        expect(gpt.providerName).toBe("openai");
+        // Non-chat/old/deprecated models are not filtered out of the picker; every key appears in exactly one row.
+        const keys = result.rows.flatMap(r => r.modelKeys);
+        expect(new Set(keys).size).toBe(keys.length);
+        expect(keys).toContain("anthropic/claude-old");
+        expect(Object.keys(result.rows[0]).sort()).toEqual(expect.arrayContaining(["id", "modelKeys", "name", "provider", "providers"]));
+        // Nothing persisted, memory snapshot and subscribers untouched.
+        expect(await row()).toBeUndefined();
+        expect(await db.deviceSettings.count()).toBe(0);
+        expect(getModelCatalog()).toBe(before);
+        expect(listener).not.toHaveBeenCalled();
+    });
+
+    it("selecting every key of a merged row syncs it once", async () => {
+        const result = await fetchCatalogIndex({fetchImpl: respond(fixture())});
+        if (!result.ok) throw new Error("index failed");
+        const gpt = result.rows.find(r => r.id === "gpt-4o" && r.provider === "openai")!;
+        const sync = await syncModelCatalog({autoIncludeCommon: false, modelKeys: gpt.modelKeys}, {fetchImpl: respond(fixture())});
+        expect(sync).toMatchObject({ok: true, count: 1});
+    });
+
+    const failing = async (run: () => ReturnType<typeof fetchCatalogIndex>, code: string) => {
+        await initModelCatalog();
+        const before = getModelCatalog();
+        const result = await run();
+        expect(result).toMatchObject({ok: false, code});
+        if (!result.ok) expect(result.message).not.toMatch(/models\.dev\/api|\?|undefined|Error/);
+        expect(getModelCatalog()).toBe(before);
+        expect(await db.deviceSettings.count()).toBe(0);
+    };
+    it("reports the same friendly failures as sync", async () => {
+        await failing(() => fetchCatalogIndex({fetchImpl: respond("x", {status: 503})}), "http-status");
+        await failing(() => fetchCatalogIndex({fetchImpl: respond("<html>", {headers: {"content-type": "text/html"}})}), "invalid-format");
+        await failing(() => fetchCatalogIndex({fetchImpl: respond("{oops")}), "invalid-format");
+        await failing(() => fetchCatalogIndex({fetchImpl: respond([])}), "invalid-format");
+        await failing(() => fetchCatalogIndex({fetchImpl: vi.fn<typeof fetch>().mockRejectedValue(new TypeError("net https://models.dev/api.json?secret=1"))}), "network");
+    });
+    it("stops a body over 8 MiB", async () => {
+        const chunk = new Uint8Array(1024 * 1024).fill(32);
+        let sent = 0;
+        const fetchImpl = vi.fn<typeof fetch>().mockImplementation(async () => new Response(new ReadableStream<Uint8Array>({
+            pull(c) { c.enqueue(chunk); sent++; if (sent > 20) c.close(); },
+        }, {highWaterMark: 0}), {status: 200, headers: {"content-type": "application/json"}}));
+        await failing(() => fetchCatalogIndex({fetchImpl}), "too-large");
+        expect(sent).toBeLessThanOrEqual(MODEL_CATALOG_MAX_BYTES / chunk.length + 1);
+    });
+    it("is cancellable before and during the request", async () => {
+        const pre = new AbortController();
+        pre.abort();
+        const fetchImpl = respond(fixture());
+        await failing(() => fetchCatalogIndex({fetchImpl, signal: pre.signal}), "cancelled");
+        expect(fetchImpl).not.toHaveBeenCalled();
+        const during = new AbortController();
+        const hang = vi.fn<typeof fetch>().mockImplementation((_input, init) => new Promise<Response>((_, reject) => {
+            init?.signal?.addEventListener("abort", () => reject(new DOMException("aborted", "AbortError")));
+        }));
+        await failing(() => {
+            const pending = fetchCatalogIndex({fetchImpl: hang, signal: during.signal});
+            queueMicrotask(() => during.abort());
+            return pending;
+        }, "cancelled");
     });
 });

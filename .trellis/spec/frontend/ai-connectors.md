@@ -1,5 +1,13 @@
 # AI connector and generation boundaries
 
+## Models.dev catalog (supersedes the LobeHub Model Bank; 2026-10-14)
+
+The Models.dev catalog in `src/lib/ai/modelCatalog/` replaces `vendor/lobehub` / `lib/ai/modelBank/` for limits, vision and prices. The LobeHub snapshot and its scripts are still in the tree and pending deletion; the Model Bank section below describes code that is being retired.
+- Sources: a committed baseline projection of the pinned `@opencode-ai/models` (`models-dev:verify`), lazily imported; or the user-synced snapshot stored in the device-local `deviceSettings` table under key `modelCatalog` (selection under `modelCatalogSelection`, never in project ZIPs). Sync and the full-list index are manual only.
+- Matching (exact, case-sensitive, no aliases): tier 1 the connector's own provider, tier 2 original-vendor providers, tier 3 same canonical id when candidates agree per field. Prices come only from tier 1 or tier 2; tier-2 prices are "官方参考价". Conflicts: smallest context/output, conflicting vision is unknown.
+- Lookups stay synchronous and memory-only (safe inside transactions); runs freeze a `modelPricing` snapshot.
+- UI contract: see [Model catalog page](./component-guidelines.md#model-catalog-page-2026-10-14).
+
 ## Complete Model Bank snapshot
 `vendor/lobehub/model-bank` is the full unmodified upstream package, with its root
 license and a per-file SHA-256 manifest. Never hand-edit upstream data. The full

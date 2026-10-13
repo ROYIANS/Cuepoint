@@ -6,14 +6,14 @@ import {isReadAbort, readResponseBytes, ResponseLimitError, utf8Bytes} from "../
 import {compareEntries, originOf, projectCommonScope, projectEntry, type ProjectionScope, type RawProvider} from "./projection.mjs";
 import scopeJson from "./scope.json";
 import {applySyncedSnapshot, MODEL_CATALOG_KEY, restoreBaselineSnapshot} from "./store";
-import type {CatalogEntry, CatalogSnapshot} from "./types";
+import type {CatalogCost, CatalogEntry, CatalogSnapshot} from "./types";
 import {MAX_CATALOG_ENTRIES, parseCatalogEntry} from "./validate";
 
 /** Independent of the 4 MiB ordinary-JSON limit: the full Models.dev document is about 5.6 MB. */
 export const MODEL_CATALOG_MAX_BYTES = 8 * 1024 * 1024;
 const MODEL_CATALOG_TIMEOUT_MS = 60_000;
 export const CATALOG_SELECTION_KEY = "modelCatalogSelection";
-const MAX_SELECTION_KEYS = 2000;
+export const MAX_SELECTION_KEYS = 2000;
 const MAX_SELECTION_KEY_LENGTH = 256;
 const scope: ProjectionScope = scopeJson;
 
@@ -82,6 +82,52 @@ function normalizedId(entry: CatalogEntry): string {
     return entry.canonicalId ?? entry.id.slice(entry.id.lastIndexOf("/") + 1).toLowerCase();
 }
 
+/** One entry per normalized id: an original vendor beats an aggregator, then provider/id order. */
+function representative(group: readonly CatalogEntry[]): CatalogEntry {
+    const isOrigin = (entry: CatalogEntry) => scope.originProviders.includes(entry.provider);
+    return [...group].sort((a, b) => Number(isOrigin(b)) - Number(isOrigin(a)) || compareEntries(a, b))[0];
+}
+
+/** A selectable line of the model picker: all equivalent entries (same normalized id) behind one row. */
+export interface CatalogRow {
+    /** Representative entry facts. */
+    provider: string;
+    providerName: string;
+    id: string;
+    name: string;
+    releaseDate?: string;
+    cost?: CatalogCost;
+    imageInput?: boolean;
+    /** Every provider the equivalent entries come from. */
+    providers: string[];
+    /** "provider/id" of every equivalent entry; ticking the row ticks all of them. */
+    modelKeys: string[];
+}
+
+/** Groups entries by the same normalized-id rule the sync uses for manual picks. */
+export function buildCatalogRows(entries: readonly CatalogEntry[], providerNames: Readonly<Record<string, string>> = {}): CatalogRow[] {
+    const groups = new Map<string, CatalogEntry[]>();
+    for (const entry of entries) {
+        const key = normalizedId(entry);
+        const group = groups.get(key);
+        if (group) group.push(entry);
+        else groups.set(key, [entry]);
+    }
+    const rows: CatalogRow[] = [];
+    for (const group of groups.values()) {
+        const main = representative(group);
+        rows.push({
+            provider: main.provider, providerName: providerNames[main.provider] ?? main.provider, id: main.id, name: main.name,
+            ...(main.releaseDate ? {releaseDate: main.releaseDate} : {}),
+            ...(main.cost ? {cost: main.cost} : {}),
+            ...(main.imageInput !== undefined ? {imageInput: main.imageInput} : {}),
+            providers: [...new Set(group.map(entry => entry.provider))].sort(),
+            modelKeys: group.map(entry => `${entry.provider}/${entry.id}`).sort(),
+        });
+    }
+    return rows.sort((a, b) => (a.releaseDate ?? "") < (b.releaseDate ?? "") ? 1 : (a.releaseDate ?? "") > (b.releaseDate ?? "") ? -1 : a.name.localeCompare(b.name));
+}
+
 /**
  * Sanitizes only the providers the selection can reach. The raw document (about 5.6 MB parsed) is not retained:
  * callers drop it right after this returns.
@@ -130,8 +176,7 @@ function projectSelection(root: Record<string, unknown>, selection: CatalogSelec
         const key = normalizedId(entry);
         groups.set(key, [...groups.get(key) ?? [], entry]);
     }
-    const isOrigin = (entry: CatalogEntry) => scope.originProviders.includes(entry.provider);
-    const picked = [...groups.values()].map(group => [...group].sort((a, b) => Number(isOrigin(b)) - Number(isOrigin(a)) || compareEntries(a, b))[0]);
+    const picked = [...groups.values()].map(representative);
     const entries: CatalogEntry[] = [];
     for (const raw of common.entries) {
         const entry = parseCatalogEntry(raw);
@@ -160,7 +205,7 @@ function fitBudget(entries: CatalogEntry[], providerOrigins: Record<string, stri
     return {entries: kept, truncated: true};
 }
 
-const fail = (code: CatalogSyncFailureCode, message: string): CatalogSyncResult => ({ok: false, code, message});
+const fail = (code: CatalogSyncFailureCode, message: string): {ok: false; code: CatalogSyncFailureCode; message: string} => ({ok: false, code, message});
 
 /** Reads and parses the document; the byte buffer and text are released when this returns. */
 async function readCatalogJson(response: Response, signal: AbortSignal): Promise<unknown> {
@@ -168,24 +213,19 @@ async function readCatalogJson(response: Response, signal: AbortSignal): Promise
     return JSON.parse(new TextDecoder("utf-8", {fatal: true}).decode(bytes));
 }
 
-/**
- * User-triggered only. Network and parsing finish before any database write; the single write is one transaction,
- * and any failure leaves both the stored row and the in-memory snapshot unchanged.
- */
-export async function syncModelCatalog(
-    selection: CatalogSelection, options: {signal?: AbortSignal; fetchImpl?: typeof fetch} = {},
-): Promise<CatalogSyncResult> {
-    if (options.signal?.aborted) return fail("cancelled", "已取消同步");
+type DownloadResult = {ok: true; root: Record<string, unknown>} | {ok: false; code: CatalogSyncFailureCode; message: string};
+
+/** The one models.dev download shared by sync and the picker index: bounded read, 60 s deadline, friendly failures. */
+async function downloadCatalog(options: {signal?: AbortSignal; fetchImpl?: typeof fetch}, verb: string): Promise<DownloadResult> {
+    if (options.signal?.aborted) return fail("cancelled", `已取消${verb}`);
     const controller = new AbortController();
     let timedOut = false;
     const abort = () => controller.abort();
     options.signal?.addEventListener("abort", abort, {once: true});
     const timer = setTimeout(() => { timedOut = true; controller.abort(); }, MODEL_CATALOG_TIMEOUT_MS);
-    const interrupted = (): CatalogSyncResult | undefined =>
-        timedOut ? fail("timeout", "同步超时，请稍后重试")
-            : controller.signal.aborted ? fail("cancelled", "已取消同步") : undefined;
-    let parsed: {entries: CatalogEntry[]; providerOrigins: Record<string, string>} | undefined;
-    const syncedAt = new Date().toISOString();
+    const interrupted = (): DownloadResult | undefined =>
+        timedOut ? fail("timeout", `${verb}超时，请稍后重试`)
+            : controller.signal.aborted ? fail("cancelled", `已取消${verb}`) : undefined;
     try {
         let response: Response;
         try {
@@ -193,7 +233,7 @@ export async function syncModelCatalog(
                 fetchImpl: options.fetchImpl, signal: controller.signal, credentials: "omit", redirect: "follow", runtimePurpose: "model-catalog",
             });
         } catch (error) {
-            return interrupted() ?? (isReadAbort(error) ? fail("cancelled", "已取消同步") : fail("network", "无法连接 models.dev，请检查网络后重试"));
+            return interrupted() ?? (isReadAbort(error) ? fail("cancelled", `已取消${verb}`) : fail("network", "无法连接 models.dev，请检查网络后重试"));
         }
         if (!response.ok) {
             await response.body?.cancel().catch(() => undefined);
@@ -208,20 +248,31 @@ export async function syncModelCatalog(
             root = await readCatalogJson(response, controller.signal);
         } catch (error) {
             if (error instanceof ResponseLimitError) return fail("too-large", "模型目录数据超过 8 MiB，已停止读取");
-            return interrupted() ?? (isReadAbort(error) ? fail("cancelled", "已取消同步") : error instanceof SyntaxError || error instanceof TypeError
+            return interrupted() ?? (isReadAbort(error) ? fail("cancelled", `已取消${verb}`) : error instanceof SyntaxError || error instanceof TypeError
                 ? fail("invalid-format", "模型目录数据无法解析")
                 : fail("network", "读取模型目录时连接中断，请重试"));
         }
-        if (!isRecord(root)) return fail("invalid-format", "模型目录数据格式不符");
-        parsed = projectSelection(root, selection, syncedAt);
-        root = undefined;
-        if (!parsed || !parsed.entries.length) return fail("invalid-format", "模型目录数据格式不符，或所选范围内没有可用模型");
+        return isRecord(root) ? {ok: true, root} : fail("invalid-format", "模型目录数据格式不符");
     } finally {
         clearTimeout(timer);
         options.signal?.removeEventListener("abort", abort);
     }
-    const early = interrupted();
-    if (early) return early;
+}
+
+/**
+ * User-triggered only. Network and parsing finish before any database write; the single write is one transaction,
+ * and any failure leaves both the stored row and the in-memory snapshot unchanged.
+ */
+export async function syncModelCatalog(
+    selection: CatalogSelection, options: {signal?: AbortSignal; fetchImpl?: typeof fetch} = {},
+): Promise<CatalogSyncResult> {
+    const syncedAt = new Date().toISOString();
+    const downloaded = await downloadCatalog(options, "同步");
+    if (!downloaded.ok) return downloaded;
+    // The parsed document is not retained: only `parsed` outlives this call's first statement.
+    const parsed = projectSelection(downloaded.root, selection, syncedAt);
+    if (!parsed || !parsed.entries.length) return fail("invalid-format", "模型目录数据格式不符，或所选范围内没有可用模型");
+    if (options.signal?.aborted) return fail("cancelled", "已取消同步");
     const fitted = fitBudget(parsed.entries, parsed.providerOrigins, syncedAt);
     if (!fitted) return fail("storage", "模型目录数据过大，无法保存到本机");
     try {
@@ -232,6 +283,30 @@ export async function syncModelCatalog(
     const snapshot: CatalogSnapshot = {source: "synced", syncedAt, providerOrigins: parsed.providerOrigins, entries: fitted.entries};
     applySyncedSnapshot(snapshot);
     return {ok: true, count: fitted.entries.length, syncedAt, truncated: fitted.truncated};
+}
+
+/**
+ * Picker-only full list: downloads the same public document and projects light rows for the dialog. It writes nothing
+ * and leaves the in-memory snapshot alone; the caller drops the rows when the dialog closes.
+ */
+export async function fetchCatalogIndex(
+    options: {signal?: AbortSignal; fetchImpl?: typeof fetch} = {},
+): Promise<{ok: true; rows: CatalogRow[]} | {ok: false; code: CatalogSyncFailureCode; message: string}> {
+    const downloaded = await downloadCatalog(options, "加载");
+    if (!downloaded.ok) return downloaded;
+    const entries: CatalogEntry[] = [];
+    const names: Record<string, string> = {};
+    for (const [providerId, raw] of Object.entries(downloaded.root)) {
+        if (!isRecord(raw) || !isRecord(raw.models)) continue;
+        if (typeof raw.name === "string" && raw.name) names[providerId] = raw.name.slice(0, 80);
+        for (const model of Object.values(raw.models)) {
+            const parsed = modelSchema.safeParse(model);
+            const entry = parsed.success ? parseCatalogEntry(projectEntry(providerId, parsed.data)) : undefined;
+            if (entry) entries.push(entry);
+        }
+    }
+    if (!entries.length) return fail("invalid-format", "模型目录数据格式不符，或没有可用模型");
+    return {ok: true, rows: buildCatalogRows(entries, names)};
 }
 
 /** "恢复为内置数据": removes the synced row and returns to the baseline. A failed delete keeps the current snapshot. */

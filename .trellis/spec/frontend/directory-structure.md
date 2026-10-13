@@ -91,3 +91,7 @@ Shot pages consume named commands, a keyboard adapter, typed text-column mapping
 ## Shared navigation presentation (2026-10-13)
 
 `layout/ModuleLayout.tsx` owns internal left navigation presentation; `layout/ContextPanelHost.tsx` coordinates feature-owned panels rendered by `ui/context-panel.tsx`. `ui/icons.tsx` adapts static Phosphor glyphs. `lib/historyNavigation.ts` tracks accepted app history capabilities beside product history; frame arrows never infer a parent route. These owners do not fetch or mutate business records.
+
+## Models.dev catalog (2026-10-14)
+
+`lib/ai/modelCatalog/` owns the Models.dev catalog (baseline, store, matching, price snapshot, sync, `fetchCatalogIndex`, `format.ts`); it replaces `lib/ai/modelBank/` (LobeHub, still present and pending deletion). `components/connectors/` holds the "模型目录" page of `/connectors`: `ModelCatalogSection` (sync card, restore), `ModelCatalogPicker` (selection dialog), `ModelPriceTable`, `PriceCells`, `VirtualRows` plus the pure `virtualWindow.ts` / `catalogRows.ts`. Device-local state lives in the `deviceSettings` table through `db/deviceSettings.ts`.

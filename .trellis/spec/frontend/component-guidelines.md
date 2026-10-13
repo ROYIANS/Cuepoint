@@ -302,3 +302,20 @@ Wrong: `onClick={onNewTopic}` on the plus (the event reaches `createTopic` as a 
 - Non-crash failures use `showError`, never a raw `toast.error(error.message)` for the listed sites. The details dialog is mounted as a sibling of `RootErrorBoundary` so it also opens when the root crashes; its action results are an inline `role="status"` line because the Toaster may not exist.
 - Prefer `role="alert"` markup and `Dialog`/`AlertDialog`; `window.alert/prompt/confirm` stay forbidden.
 
+
+## Model catalog page (2026-10-14)
+
+### 1. Scope / Trigger
+Read before changing the third `/connectors` section "模型目录", the selection dialog, the pricing table or the model-detail price row.
+
+### 2. Signatures / Owners
+`ConnectorsPage` mounts `<ModelCatalogSection/>` only while its section is active. Section reads the catalog with `useSyncExternalStore(subscribeModelCatalog, getModelCatalog)` and the saved selection in an effect plus state; never in `useProductQuery` (no database-unrelated awaits, see hook-guidelines). `ModelCatalogPicker({entries, onClose})` is mounted only while open, so its draft and any downloaded full list are released on close. `ModelPriceTable({entries})` lists raw entry prices. `ModelSelectTrigger`'s `ModelDetail` shows the price row from the memory-only `lookupModel`, given the selected connector's `definitionId` and `baseUrl`.
+
+### 3. Contracts
+- Sync card: source ("内置基线 · 包版本" / "已同步 · 时间"), count, last result, the notice that only the public catalog is fetched and no local data is sent. "立即同步" becomes "取消" while running (one AbortController, cancel is not an error). Failures use `showError` with the fixed action name `sync-model-catalog` and the friendly sync message as `detail`; success uses `toast.success`. "恢复为内置数据" lives in the "…" menu behind an `AlertDialog` confirmation and is disabled for a baseline. There is no open-folder/reload-file action.
+- Picker: the full list (about 8,800 models) is loaded only on the user's "加载完整清单" via `fetchCatalogIndex`, which downloads but never persists and never replaces the store snapshot. Until then it lists the current catalog only. Rows merge by the sync's normalized-id rule (`buildCatalogRows`, one function shared with the sync); ticking a row ticks every equivalent key. "全选/清空筛选结果" affect filtered rows only. Selection is capped at `MAX_SELECTION_KEYS` and refuses to exceed it. Save writes `putCatalogSelection`; cancel writes nothing.
+- Windowing: `VirtualRows` mounts only rows near the viewport, with a fixed row height and a fixed viewport height prop (no layout measurement), `role=list`/`listitem` with `aria-setsize`/`aria-posinset`. The arithmetic is the pure `computeWindow`. No virtualization dependency. Rows use native-button checkboxes (Tab, Space).
+- Prices: USD per million tokens; an unknown price is "—" in lists and "价格未知" in the detail pane, never `$0`; a known 0 stays `$0`. Original-vendor prices in the detail pane say "官方参考价" and name the source `provider/id`.
+
+### 4. Tests Required
+`tests/modelCatalogUiLogic.test.ts` (window bounds, filters, merged toggles, limit), `tests/modelCatalogUi.test.ts` (picker, price table, section sync/cancel/failure/restore), `tests/modelDetailPrice.test.ts`. jsdom cannot show real layout, scroll performance, or the 760 px dialog.
