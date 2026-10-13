@@ -22,6 +22,7 @@ import type {
     ProjectIpLink
 } from "@/domain/materials";
 import type {SearchConnection} from "@/domain/search";
+import type {DeviceSetting} from "@/domain/deviceSettings";
 import type {GenerationBatch, GenerationBatchItem} from "@/domain/agentGenerationBatch";
 import type {ProjectReference, ReferenceChunk} from "@/domain/references";
 import type {ProjectMemory, ProjectMemoryVersion} from "@/domain/projectMemory";
@@ -75,6 +76,7 @@ class BrowserDatabase extends Dexie {
     materialUses!: Table<MaterialUse, string>;
     materialEvents!: Table<MaterialEvent, string>;
     searchConnections!: Table<SearchConnection, string>;
+    deviceSettings!: Table<DeviceSetting, string>;
     projectReferences!: Table<ProjectReference, string>;
     referenceChunks!: Table<ReferenceChunk, string>;
     projectMemories!: Table<ProjectMemory, string>;
@@ -313,6 +315,7 @@ class BrowserDatabase extends Dexie {
             audioGenerationBatchItems: "id, projectId, chapterId, batchId, segmentId, &intentId, jobId",
             audioArrangementProposals: "id, projectId, chapterId, kind, state, updatedAt",
         });
+        this.version(25).stores({deviceSettings: "key"});
     }
 }
 

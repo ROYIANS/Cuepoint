@@ -20,6 +20,7 @@ import type {
     ProjectIpLink
 } from "@/domain/materials";
 import type {SearchConnection} from "@/domain/search";
+import type {DeviceSetting} from "@/domain/deviceSettings";
 import type {GenerationBatch, GenerationBatchItem} from "@/domain/agentGenerationBatch";
 import type {ProjectReference, ReferenceChunk} from "@/domain/references";
 import type {ProjectMemory, ProjectMemoryVersion} from "@/domain/projectMemory";
@@ -64,6 +65,7 @@ export interface ProductRows {
     materialUses: MaterialUse;
     materialEvents: MaterialEvent;
     searchConnections: SearchConnection;
+    deviceSettings: DeviceSetting;
     projectReferences: ProjectReference;
     referenceChunks: ReferenceChunk;
     projectMemories: ProjectMemory;

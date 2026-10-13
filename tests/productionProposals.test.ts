@@ -42,7 +42,7 @@ describe("reviewed production proposals", () => {
     await legacy.table("media").add(storedMedia);
     legacy.close();
     await db.open();
-    expect(db.verno).toBe(24);
+    expect(db.verno).toBe(25);
     expect(await db.audioGenerationBatches.count()).toBe(0);
     expect(await db.audioGenerationBatchItems.count()).toBe(0);
     expect(await db.audioArrangementProposals.count()).toBe(0);

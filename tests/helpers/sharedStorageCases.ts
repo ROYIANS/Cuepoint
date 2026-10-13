@@ -12,7 +12,8 @@ export function registerSharedStorageCases(owner:string, create:()=>Promise<{sto
         afterEach(async ()=> {await cleanup?.();});
 
     it("covers every current table with exact native registry parity",()=> {
-        expect(TABLE_NAMES).toHaveLength(49);
+        expect(TABLE_NAMES).toHaveLength(Object.keys(schema.tables).length);
+        expect(TABLE_NAMES).toContain("deviceSettings");
         expect(schema.tables).toEqual(PRODUCT_SCHEMA);
         expect(PRODUCT_SCHEMA.projectIpLinks.keyPath).toBe("projectId");
         expect(PRODUCT_SCHEMA.projectMemoryVersions.keyPath).toBe("versionId");

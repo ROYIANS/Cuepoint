@@ -119,7 +119,7 @@ fn all_current_tables_keys_and_own_undefined_reopen_losslessly() {
         })
         .collect();
     let receipt = finish(&mut store, &h, mutations).unwrap();
-    assert_eq!(receipt["tables"].as_array().unwrap().len(), 49);
+    assert_eq!(receipt["tables"].as_array().unwrap().len(), names.len());
     let root = store.root.clone();
     let workspace = store.workspace_id.clone();
     store.close().unwrap();

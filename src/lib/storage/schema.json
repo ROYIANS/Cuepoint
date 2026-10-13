@@ -1346,6 +1346,11 @@
           "unique": false
         }
       ]
+    },
+    "deviceSettings": {
+      "keyPath": "key",
+      "scope": "device",
+      "indexes": []
     }
   }
 }
