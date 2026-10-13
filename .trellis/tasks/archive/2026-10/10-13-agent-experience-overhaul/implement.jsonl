@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "finishing check / terminal states / abnormal paths changed by R1-R2"}
+{"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "tool timeline and message presentation rules (R3-R5)"}
+{"file": ".trellis/spec/frontend/agent-write-evidence.md", "reason": "AgentWriteOutcomes 已保存行 semantics (R3)"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "component and styling conventions for the chat surface"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "serialized writers, ownership and departure guards (R6)"}
+{"file": ".trellis/tasks/10-13-agent-experience-overhaul/research/ui-redundancy-audit.md", "reason": "36-element redundancy inventory driving R3-R4"}
+{"file": ".trellis/tasks/10-13-agent-experience-overhaul/research/code-defect-audit.md", "reason": "D1-D11 defects and complexity hotspots (R6-R7)"}
