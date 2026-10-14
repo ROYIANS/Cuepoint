@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>小光点 Cuepoint · 本地优先的 AI 创作工作室</title>
+    <meta name="description" content="本地优先的 AI 创作工作室，让故事、画面、声音和音乐在同一个项目中逐步成形。开源（MIT），可在浏览器体验，也可下载桌面版。" />
+    <link rel="canonical" href="https://cue.vidorra.life/" />
+    <meta name="theme-color" content="#101010" />
+    <meta name="color-scheme" content="dark" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="小光点 Cuepoint" />
+    <meta property="og:title" content="小光点 Cuepoint · 本地优先的 AI 创作工作室" />
+    <meta property="og:description" content="让故事、画面、声音和音乐在同一个项目中逐步成形。开源（MIT），浏览器与桌面版可用。" />
+    <meta property="og:url" content="https://cue.vidorra.life/" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:image" content="https://cue.vidorra.life/brand/logo-lockup.webp?v=20260922" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="小光点 Cuepoint · 本地优先的 AI 创作工作室" />
+    <meta name="twitter:description" content="让故事、画面、声音和音乐在同一个项目中逐步成形。开源（MIT），浏览器与桌面版可用。" />
+    <meta name="twitter:image" content="https://cue.vidorra.life/brand/logo-lockup.webp?v=20260922" />
+    <link rel="icon" type="image/png" sizes="256x256" href="/brand/logo-256.png?v=20260922" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/brand/logo-32.png?v=20260922" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/brand/logo-16.png?v=20260922" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap&text=%E5%B0%8F%E5%85%89%E7%82%B9%20Cuepoint"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "小光点 Cuepoint",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "macOS, Windows, Linux",
+        "description": "本地优先的 AI 创作工作室，让故事、画面、声音和音乐在同一个项目中逐步成形。",
+        "url": "https://cue.vidorra.life/",
+        "license": "https://github.com/ROYIANS/Cuepoint/blob/main/LICENSE",
+        "downloadUrl": "https://github.com/ROYIANS/Cuepoint/releases",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <div class="lp">
+        <a class="lp-skip" href="#main">跳到正文</a>
+        <header class="lp-header">
+          <a class="lp-brand" href="/"><img src="/brand/logo.webp?v=20260922" alt="" width="28" height="28" /><span>小光点</span></a>
+          <nav aria-label="主要"><a class="lp-btn lp-btn-quiet" href="/agent" data-umami-event="enter-app">进入应用</a></nav>
+        </header>
+        <main id="main">
+          <section class="lp-hero" aria-labelledby="lp-title">
+            <p class="lp-eyebrow">本地优先 · 开源 MIT</p>
+            <h1 id="lp-title">小光点 Cuepoint</h1>
+            <p class="lp-lead">本地优先的 AI 创作工作室，让故事、画面、声音和音乐在同一个项目中逐步成形。</p>
+            <div class="lp-actions">
+              <a class="lp-btn lp-btn-primary" href="/agent" data-umami-event="try-online">在浏览器中体验</a>
+              <a class="lp-btn" href="https://github.com/ROYIANS/Cuepoint/releases" rel="noopener noreferrer" data-umami-event="download">下载桌面版</a>
+              <a class="lp-btn" href="https://github.com/ROYIANS/Cuepoint" rel="noopener noreferrer" data-umami-event="github">GitHub</a>
+            </div>
+            <p class="lp-note">桌面版目前为测试版，未签名，首次打开可能出现系统安全提示。项目数据保存在当前浏览器或本机；使用 AI 功能需要自备模型服务的 API Key。</p>
+          </section>
+          <section class="lp-section" aria-labelledby="lp-features">
+            <h2 id="lp-features">能做什么</h2>
+            <ul class="lp-grid">
+              <li><h3>本机优先</h3><p>桌面版把数据放在本机 SQLite，浏览器版放在 IndexedDB，不需要服务端应用数据库。AI 与联网研究仍然需要联网。</p></li>
+              <li><h3>自带密钥</h3><p>可连接 OpenAI 兼容服务、DeepSeek、APIMart、AIHubMix、MiMo 等供应商。密钥保存在本机，请求直接发给你配置的供应商；小光点本身不提供模型服务。</p></li>
+              <li><h3>从故事到分镜</h3><p>视频项目覆盖单片与剧集、世界设定、故事与场次、镜头表和资产关联，可导出分集 CSV、可打印分镜板与项目 ZIP。</p></li>
+              <li><h3>创作助手</h3><p>流式对话、任务计划与三档权限；执行过程可回看，成果以工作台中实际保存的内容为准。</p></li>
+              <li><h3>视频、音频与音乐</h3><p>同一应用内的三类项目：影视分镜、多轨音频（支持 WAV 导出）、音乐生成与作品库。</p></li>
+              <li><h3>IP 与素材库</h3><p>多 IP 档案与三级素材库；项目采用素材时会创建副本并记录版本。</p></li>
+            </ul>
+          </section>
+        </main>
+        <footer class="lp-footer">
+          <p>项目数据只保存在你的浏览器或本机，不会上传到小光点的服务器；AI 请求直接发往你配置的供应商。浏览器版与桌面版的数据相互独立，请定期导出项目 ZIP。本页会加载 Google Fonts，站点可能启用 Umami 访问统计。</p>
+          <p class="lp-links">
+            <a href="https://github.com/ROYIANS/Cuepoint" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/ROYIANS/Cuepoint/blob/main/LICENSE" rel="noopener noreferrer">MIT 协议</a>
+            <a href="/agent">进入应用</a>
+          </p>
+        </footer>
+      </div>
+    </div>
+    <script type="module" src="/src/landing/main.tsx"></script>
+  </body>
+</html>

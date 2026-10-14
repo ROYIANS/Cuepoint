@@ -10,6 +10,7 @@
     "build": "vite build",
     "test": "vitest run",
     "preview": "vite preview",
+    "landing:budget": "node scripts/landing-budget.mjs",
     "lint": "tsc -b --pretty false",
     "quality": "node scripts/quality-check.mjs",
     "quality:self-test": "node scripts/quality/self-test.mjs",

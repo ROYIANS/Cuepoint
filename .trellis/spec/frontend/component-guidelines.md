@@ -319,3 +319,22 @@ Read before changing the third `/connectors` section "模型目录", the selecti
 
 ### 4. Tests Required
 `tests/modelCatalogUiLogic.test.ts` (window bounds, filters, merged toggles, limit), `tests/modelCatalogUi.test.ts` (picker, price table, section sync/cancel/failure/restore), `tests/modelDetailPrice.test.ts`. jsdom cannot show real layout, scroll performance, or the 760 px dialog.
+
+## Landing page (standalone entry) (2026-10-14)
+
+### 1. Scope / Trigger
+Read before touching `landing.html`, `src/landing/**`, `scripts/landing-budget.mjs` or the nginx `location = /` rule. Phase 1 is a static branded page; film engine, download card and WebGL layers land in later phases.
+
+### 2. Signatures / Owners
+`src/landing/main.tsx` mounts `Landing` (`Landing.tsx`) with `initUmami()`; styles are `src/landing/styles/landing.css` (own tokens, no Tailwind). `#root` in `landing.html` holds static markup identical to the React render; main renders beside it and swaps only after a successful commit, so a script or render failure leaves the readable static page. `pnpm landing:budget` runs `scripts/landing-budget.mjs` after `pnpm build`.
+
+### 3. Contracts
+- Imports are limited to relative `src/landing` modules, `react`, `react-dom`, `motion`, and the two dependency-free modules `@/lib/umami` and `@/lib/brand`. Never import `@/db`, `@/lib/storage`, Dexie, zod, TanStack Router, `@tauri-apps/*`, antd, `@lobehub/*`, `src/main.tsx`, `src/styles.css` or `@/components/*`. Guarded by `tests/landingBoundary.test.ts` (source) and the budget script (built module closure from the Rollup `moduleIds` report).
+- Token values in `landing.css` equal `src/styles.css` (`tests/landingTokens.test.ts`). Copy only states capabilities with code/README evidence; `tests/landingEntry.test.ts` holds the forbidden-claims list. Links to GitHub use `GITHUB_URL`; the landing page makes no storage or application requests.
+- Budget defaults: first-screen JS <= 120 KB gzip, CSS <= 15 KB gzip (`--js-kb`, `--css-kb`). The script also asserts that `landing.html` loads only the landing entry chunk and that the desktop build config cannot include the landing page.
+
+### 4. Degradation matrix (placeholder, completed by later phases)
+| Condition | Presentation |
+| --- | --- |
+| No JS / script or render failure | Static markup in `#root` |
+| `prefers-reduced-motion: reduce` | No transitions (phase 1 has no animation) |

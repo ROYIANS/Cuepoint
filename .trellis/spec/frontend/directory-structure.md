@@ -95,3 +95,7 @@ Shot pages consume named commands, a keyboard adapter, typed text-column mapping
 ## Models.dev catalog (2026-10-14)
 
 `lib/ai/modelCatalog/` owns the Models.dev catalog (baseline, store, matching, price snapshot, sync, `fetchCatalogIndex`, `format.ts`); it replaced the removed LobeHub `lib/ai/modelBank/`. `components/connectors/` holds the "模型目录" page of `/connectors`: `ModelCatalogSection` (sync card, restore), `ModelCatalogPicker` (selection dialog), `ModelPriceTable`, `PriceCells`, `VirtualRows` plus the pure `virtualWindow.ts` / `catalogRows.ts`. Device-local state lives in the `deviceSettings` table through `db/deviceSettings.ts`.
+
+## Landing page entry (2026-10-14)
+
+`landing.html` (repo root, beside `index.html`) plus `src/landing/` form a standalone Vite entry served by nginx at `/` only (`location = /` -> `landing.html`; every other path keeps the SPA fallback). `vite.config.ts` lists both HTML files in `build.rollupOptions.input` and emits `dist/.vite/manifest.json` and `chunk-modules.json` (nginx answers `/.vite/` with 404). `pnpm dev` serves it at `/landing.html`. The desktop frontend build uses its own isolated Vite config and never includes it. `src/routes/_studio.index.tsx` (`/` -> `/agent`) is unchanged; desktop hash history still depends on it. `public/robots.txt` and `public/sitemap.xml` belong to the site root. See [the landing section](./component-guidelines.md#landing-page-standalone-entry-2026-10-14).

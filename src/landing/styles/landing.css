@@ -1,0 +1,180 @@
+/* Standalone landing styles. Token values mirror src/styles.css :root
+   (tests/landingTokens.test.ts keeps them in sync). Do not import Tailwind. */
+:root {
+    --radius: 0.75rem;
+    --surface-app: #101010;
+    --surface-panel: #151515;
+    --surface-elevated: #202020;
+    --background: var(--surface-app);
+    --foreground: oklch(0.97 0 0);
+    --primary: oklch(0.97 0 0);
+    --primary-foreground: oklch(0.18 0 0);
+    --muted-foreground: oklch(0.7 0 0);
+    --border: oklch(1 0 0 / 10%);
+    --ring: oklch(1 0 0 / 55%);
+    --font-sans: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Source Han Sans SC",
+    "Segoe UI", sans-serif;
+    --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+    color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root { min-height: 100%; margin: 0; }
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Film grain, as in the application's .studio-grain (static in this phase). */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3, p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+img { display: block; max-width: 100%; }
+
+a { color: inherit; text-underline-offset: 3px; }
+
+a:focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: calc(var(--radius) - 4px);
+}
+
+.lp {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.lp-skip {
+    position: absolute;
+    left: 16px;
+    top: -100px;
+    padding: 8px 12px;
+    background: var(--surface-elevated);
+    border-radius: var(--radius);
+}
+
+.lp-skip:focus { top: 12px; }
+
+.lp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+}
+
+.lp-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.lp-brand img { border-radius: calc(var(--radius) - 4px); }
+
+.lp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-elevated);
+    color: var(--foreground);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lp-btn:hover { background: oklch(0.255 0 0); }
+
+.lp-btn-primary { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+.lp-btn-primary:hover { background: oklch(0.9 0 0); }
+.lp-btn-quiet { background: transparent; }
+
+.lp-hero { padding: 96px 0 72px; max-width: 760px; }
+
+.lp-eyebrow { color: var(--muted-foreground); font-size: 14px; letter-spacing: 0.08em; }
+
+.lp-hero h1 {
+    margin-top: 16px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(40px, 8vw, 72px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.lp-lead { margin-top: 24px; font-size: 20px; line-height: 1.6; }
+
+.lp-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+.lp-note { margin-top: 24px; color: var(--muted-foreground); font-size: 14px; line-height: 1.7; }
+
+.lp-section { padding: 24px 0 72px; }
+
+.lp-section h2 { font-size: 24px; font-weight: 600; line-height: 32px; }
+
+.lp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.lp-grid li {
+    padding: 24px;
+    background: var(--surface-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.lp-grid h3 { font-size: 16px; font-weight: 600; }
+.lp-grid p { margin-top: 8px; color: var(--muted-foreground); font-size: 14px; line-height: 1.7; }
+
+.lp-footer {
+    padding: 32px 0 48px;
+    border-top: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-size: 14px;
+}
+
+.lp-links { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 16px; }
+.lp-links a { color: var(--foreground); }
+
+@media (max-width: 767px) {
+    .lp { padding: 0 16px; }
+    .lp-hero { padding: 56px 0 48px; }
+    .lp-lead { font-size: 18px; }
+    .lp-grid li { padding: 16px; }
+}
+
+/* The static markup and the React tree swap after mount, so no entrance
+   animation runs in this phase (it would play twice). */
+@media (prefers-reduced-motion: reduce) {
+    .lp-btn { transition: none; }
+}

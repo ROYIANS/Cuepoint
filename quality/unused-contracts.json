@@ -24,42 +24,6 @@
       ]
     },
     {
-      "issue": "dependencies",
-      "file": "package.json",
-      "symbol": "tw-animate-css",
-      "count": 1,
-      "reason": "The actual application stylesheet imports this package via CSS @import. TS/JS Knip import reachability does not own stylesheet dependency discovery.",
-      "owner": "Frontend styling",
-      "evidence": [
-        {
-          "file": "src/styles.css",
-          "sha256": "4ff9ed3723dd65349ac253435a63381a8c91591cc915a6c08c8d3bd4d8dad643"
-        },
-        {
-          "file": "vite.config.ts",
-          "sha256": "7d3422e869a19565a17e33d93acc079bdbb50238fa741afbe7db8f5eb1e897a5"
-        }
-      ]
-    },
-    {
-      "issue": "devDependencies",
-      "file": "package.json",
-      "symbol": "tailwindcss",
-      "count": 1,
-      "reason": "The actual application stylesheet imports this package via CSS @import. TS/JS Knip import reachability does not own stylesheet dependency discovery.",
-      "owner": "Frontend styling",
-      "evidence": [
-        {
-          "file": "src/styles.css",
-          "sha256": "4ff9ed3723dd65349ac253435a63381a8c91591cc915a6c08c8d3bd4d8dad643"
-        },
-        {
-          "file": "vite.config.ts",
-          "sha256": "7d3422e869a19565a17e33d93acc079bdbb50238fa741afbe7db8f5eb1e897a5"
-        }
-      ]
-    },
-    {
       "issue": "unlisted",
       "file": "scripts/e02-browser-regression.mjs",
       "symbol": "playwright",
