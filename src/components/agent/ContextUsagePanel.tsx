@@ -28,6 +28,7 @@ import {X} from "@/components/ui/icons";
 import {assembleSkills, DEFAULT_SKILL_IDS} from "@/lib/agent/skills";
 import {toolSchemas} from "@/lib/agent/tools";
 import {estimateContextUsage, formatTokenCount,} from "@/lib/agent/contextUsage";
+import {popupCollisionPadding} from "@/components/ui/popupCollision";
 
 const EMPTY_ATTACHMENTS: ReferenceAttachment[] = [];
 
@@ -409,7 +410,7 @@ export function ContextUsageTrigger({
                         side="top"
                         align="end"
                         sideOffset={10}
-                        collisionPadding={16}
+                        collisionPadding={popupCollisionPadding(16)}
                         className="agent-context-popover"
                         aria-label="上下文明细"
                     >

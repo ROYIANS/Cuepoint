@@ -137,7 +137,7 @@
 .app-topbar-leading { display: flex; flex: none; align-items: center; justify-content: center; width: var(--shell-rail-width); min-height: 44px; }
 .app-topbar-brand { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; }
 .app-topbar-brand img { width: 24px; height: 24px; object-fit: contain; }
-.app-mobile-nav-trigger { display: none; }
+.app-header-shortcut.app-mobile-nav-trigger { display: none; }
 .app-header-slot { position: relative; display: flex; flex: 1; align-items: center; min-width: 0; min-height: 44px; }
 .app-header-slot:empty { display: none; }
 .app-header-slot:not(:empty) + .app-header-fallback { display: none; }
@@ -197,7 +197,7 @@
     .app-topbar { padding-right: 8px; }
     .app-topbar-leading { width: 48px; }
     .app-topbar-brand { display: none; }
-    .app-mobile-nav-trigger { display: flex; }
+    .app-header-shortcut.app-mobile-nav-trigger { display: flex; }
     .app-navigation-import { min-height: 44px; }
     .app-frame[data-window-chrome=macos-overlay] .app-topbar-leading { width: 132px; justify-content: flex-end; padding-right: 4px; }
     .workspace-header-nav { gap: 0; }

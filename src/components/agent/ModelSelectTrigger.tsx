@@ -14,6 +14,7 @@ import type {ConnectorConfig, Id} from "@/domain/types";
 import {buildChatModelOptions, type ChatModelPolicy} from "@/lib/ai/chatModelPolicy";
 import {connectorDisplayName, connectorProviderKey,} from "@/lib/ai/catalog";
 import {groupModelsByVendor, inferModelHints, lookupVendor, modelDisplayName,} from "@/lib/ai/modelVendors";
+import {popupCollisionPadding} from "@/components/ui/popupCollision";
 
 function popupRoot(anchor: HTMLElement | null): HTMLElement {
     return anchor?.closest<HTMLElement>('[data-slot="context-panel-content"]') ?? anchor?.closest<HTMLElement>(".agent-chat-root") ?? document.body;
@@ -285,7 +286,7 @@ export function ModelSelectTrigger({
                 </button>
             </Popover.Trigger>}
             <Popover.Portal container={popupRoot(anchorRef.current)}>
-                <Popover.Content side="top" align="end" sideOffset={10} collisionPadding={16}
+                <Popover.Content side="top" align="end" sideOffset={10} collisionPadding={popupCollisionPadding(16)}
                                  className="agent-model-popover" onOpenAutoFocus={(event) => {
                     event.preventDefault();
                     searchRef.current?.focus({preventScroll: true});

@@ -3,6 +3,7 @@ import {CheckIcon, ChevronDownIcon, ChevronUpIcon} from "@/components/ui/icons";
 import * as React from "react";
 
 import {cn} from "@/lib/utils";
+import {popupCollisionPadding} from "./popupCollision"
 
 function Select({...props}: React.ComponentProps<typeof SelectPrimitive.Root>) {
     return <SelectPrimitive.Root data-slot="select" {...props} />;
@@ -61,6 +62,7 @@ function SelectContent({
                 )}
                 position={position}
                 align={align}
+                collisionPadding={popupCollisionPadding(8)}
                 {...props}
             >
                 <SelectScrollUpButton/>

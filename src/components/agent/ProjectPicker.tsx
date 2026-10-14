@@ -8,6 +8,7 @@ import {createAudioMusicProject, createProject} from "@/db/projects";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {popupCollisionPadding} from "@/components/ui/popupCollision";
 
 export function ProjectPicker({projects, projectId, required, locked, onChange, allowClear = true, allLabel}: {
     projects: Project[]; projectId?: Id; required?: boolean; locked?: boolean;
@@ -82,7 +83,7 @@ export function ProjectPicker({projects, projectId, required, locked, onChange, 
         </Popover.Trigger>
         <Popover.Portal
             container={trigger.current?.closest<HTMLElement>('[role="dialog"]') ?? document.querySelector<HTMLElement>(".agent-chat-root") ?? undefined}>
-            <Popover.Content side="top" align="start" sideOffset={8} collisionPadding={12}
+            <Popover.Content side="top" align="start" sideOffset={8} collisionPadding={popupCollisionPadding(12)}
                              className="agent-project-picker" aria-label={creating ? "新建项目" : "选择项目"}
                              onKeyDown={(event) => {
                                  if (event.key === "Escape") return;

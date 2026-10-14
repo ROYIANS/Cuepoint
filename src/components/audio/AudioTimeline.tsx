@@ -53,6 +53,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {AudioClipHistory} from "@/lib/audio/commands";
 import "./timeline.css";
+import {popupCollisionPadding} from "@/components/ui/popupCollision";
 
 type DragState = {
     clip: AudioClip;
@@ -447,7 +448,7 @@ export function AudioTimeline({
                 top: menu?.y ?? 0
             }}/></DropdownMenuTrigger>
                 <DropdownMenuContent aria-label={menu?.track ? "音轨操作" : "片段操作"} className="w-60" align="start"
-                                     sideOffset={0} collisionPadding={8} onCloseAutoFocus={(event) => {
+                                     sideOffset={0} collisionPadding={popupCollisionPadding(8)} onCloseAutoFocus={(event) => {
                     event.preventDefault();
                     root.current?.focus({preventScroll: true});
                 }}>
