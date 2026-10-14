@@ -19,6 +19,9 @@ let root: Root;
 
 beforeEach(async () => {
     vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+    // Never resolves: the first render (loading state) is what must match landing.html, and no real request is made.
+    vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>(() => undefined)));
+    localStorage.clear();
     container = document.createElement("div");
     document.body.append(container);
     root = createRoot(container);
@@ -35,7 +38,8 @@ describe("landing page content", () => {
         const link = (name: string) => [...container.querySelectorAll("a")].find(a => a.textContent === name);
         expect(link("进入应用")?.getAttribute("href")).toBe("/agent");
         expect(link("在浏览器中体验")?.getAttribute("href")).toBe("/agent");
-        expect(link("下载桌面版")?.getAttribute("href")).toBe(`${GITHUB_URL}/releases`);
+        expect(link("下载桌面版")?.getAttribute("href")).toBe("#download");
+        expect(link("在 GitHub 查看所有版本")?.getAttribute("href")).toBe(`${GITHUB_URL}/releases`);
         expect(link("GitHub")?.getAttribute("href")).toBe(GITHUB_URL);
         expect(container.querySelector("h1")?.textContent).toBe("小光点 Cuepoint");
     });

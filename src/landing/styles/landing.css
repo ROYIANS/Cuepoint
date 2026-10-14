@@ -166,11 +166,60 @@ a:focus-visible {
 .lp-links { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 16px; }
 .lp-links a { color: var(--foreground); }
 
+/* Download area. min-height reserves space so the loaded state does not shift the page. */
+.lp-download {
+    min-height: 220px;
+    margin-top: 24px;
+    padding: 24px;
+    background: var(--surface-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.lp-download > * + * { margin-top: 16px; }
+
+.lp-dl-version { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 14px; color: var(--muted-foreground); }
+
+.lp-badge {
+    padding: 0 8px;
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) - 4px);
+    color: var(--foreground);
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.lp-dl-status { font-size: 16px; }
+.lp-dl-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+.lp-dl-meta { color: var(--muted-foreground); font-size: 14px; overflow-wrap: anywhere; }
+.lp-dl-meta a, .lp-dl-all a { color: var(--foreground); }
+.lp-dl-all { font-size: 14px; }
+
+.lp-dl-details { font-size: 14px; }
+.lp-dl-details summary { cursor: pointer; padding: 8px 0; }
+.lp-dl-details summary:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; border-radius: calc(var(--radius) - 4px); }
+.lp-dl-details ul { display: grid; gap: 8px; margin-top: 8px; }
+.lp-dl-details li { display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--muted-foreground); overflow-wrap: anywhere; }
+.lp-dl-details li a { color: var(--foreground); }
+.lp-dl-details code { font-size: 12px; color: var(--foreground); overflow-wrap: anywhere; }
+.lp-dl-details .lp-dl-meta { margin-top: 12px; }
+
+.lp-notes { display: grid; gap: 12px; margin-top: 24px; max-width: 760px; color: var(--muted-foreground); font-size: 14px; }
+.lp-notes li { padding-left: 16px; position: relative; }
+.lp-notes li::before { content: "·"; position: absolute; left: 4px; color: var(--foreground); }
+.lp-section > .lp-actions { margin-top: 24px; }
+
+.lp-star { margin-bottom: 24px; font-size: 14px; }
+.lp-star a { margin-left: 8px; color: var(--foreground); }
+.lp-star-count { color: var(--muted-foreground); }
+
 @media (max-width: 767px) {
     .lp { padding: 0 16px; }
     .lp-hero { padding: 56px 0 48px; }
     .lp-lead { font-size: 18px; }
     .lp-grid li { padding: 16px; }
+    .lp-download { padding: 16px; min-height: 260px; }
+    .lp-dl-buttons .lp-btn { flex: 1 1 100%; }
 }
 
 /* The static markup and the React tree swap after mount, so no entrance

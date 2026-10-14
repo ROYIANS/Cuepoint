@@ -1,6 +1,8 @@
 import {GITHUB_URL, LOGO_SRC} from "@/lib/brand";
+import {DownloadCard} from "./download/DownloadCard";
+import {StarPrompt} from "./download/StarPrompt";
+import {useDownloadData} from "./download/useReleases";
 
-const RELEASES_URL = `${GITHUB_URL}/releases`;
 const LICENSE_URL = `${GITHUB_URL}/blob/main/LICENSE`;
 
 // Every claim here has a README/code basis; see the task research (section 3).
@@ -13,9 +15,18 @@ const FEATURES: ReadonlyArray<{title: string; body: string}> = [
     {title: "IP 与素材库", body: "多 IP 档案与三级素材库；项目采用素材时会创建副本并记录版本。"},
 ];
 
+// Facts about the browser edition (task research, section 3.5).
+const ONLINE_NOTES: readonly string[] = [
+    "在浏览器中打开的是真实的工作室，不是演示视频或沙盒。",
+    "项目只保存在当前浏览器与站点来源：换浏览器、无痕窗口或清理站点数据后会看不到原项目，请定期导出项目 ZIP。",
+    "使用 AI 需要自备模型服务的 API Key，密钥保存在本机；部分供应商可能因跨域限制无法在浏览器直连，桌面版使用原生 HTTP 传输可避开。",
+    "浏览器版与桌面版的数据互不同步。",
+];
+
 // Keep the markup in sync with the static copy inside #root of landing.html
 // (tests/landingEntry.test.ts compares them).
 export function Landing() {
+    const download = useDownloadData();
     return (
         <div className="lp">
             <a className="lp-skip" href="#main">跳到正文</a>
@@ -30,10 +41,18 @@ export function Landing() {
                     <p className="lp-lead">本地优先的 AI 创作工作室，让故事、画面、声音和音乐在同一个项目中逐步成形。</p>
                     <div className="lp-actions">
                         <a className="lp-btn lp-btn-primary" href="/agent" data-umami-event="try-online">在浏览器中体验</a>
-                        <a className="lp-btn" href={RELEASES_URL} rel="noopener noreferrer" data-umami-event="download">下载桌面版</a>
+                        <a className="lp-btn" href="#download" data-umami-event="download">下载桌面版</a>
                         <a className="lp-btn" href={GITHUB_URL} rel="noopener noreferrer" data-umami-event="github">GitHub</a>
                     </div>
                     <p className="lp-note">桌面版目前为测试版，未签名，首次打开可能出现系统安全提示。项目数据保存在当前浏览器或本机；使用 AI 功能需要自备模型服务的 API Key。</p>
+                </section>
+                <DownloadCard release={download.release} platform={download.platform} />
+                <section className="lp-section" aria-labelledby="lp-online">
+                    <h2 id="lp-online">在线体验</h2>
+                    <ul className="lp-notes">
+                        {ONLINE_NOTES.map(note => <li key={note}>{note}</li>)}
+                    </ul>
+                    <p className="lp-actions"><a className="lp-btn lp-btn-primary" href="/agent" data-umami-event="try-online-section">在浏览器中体验</a></p>
                 </section>
                 <section className="lp-section" aria-labelledby="lp-features">
                     <h2 id="lp-features">能做什么</h2>
@@ -45,6 +64,7 @@ export function Landing() {
                 </section>
             </main>
             <footer className="lp-footer">
+                <StarPrompt stars={download.stars} />
                 <p>项目数据只保存在你的浏览器或本机，不会上传到小光点的服务器；AI 请求直接发往你配置的供应商。浏览器版与桌面版的数据相互独立，请定期导出项目 ZIP。本页会加载 Google Fonts，站点可能启用 Umami 访问统计。</p>
                 <p className="lp-links">
                     <a href={GITHUB_URL} rel="noopener noreferrer">GitHub</a>
