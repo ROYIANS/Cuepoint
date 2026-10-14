@@ -14,6 +14,10 @@ function fakeContext() {
         clearRect: () => { calls.clearRect += 1; },
         drawImage: () => { calls.drawImage += 1; },
         createRadialGradient: () => ({addColorStop: noop}),
+        createPattern: () => ({}),
+        createImageData: (w: number, h: number) => ({data: new Uint8ClampedArray(w * h * 4)}),
+        putImageData: noop,
+        quadraticCurveTo: noop,
         measureText: (text: string) => ({width: text.length * 10}),
         getImageData: (_x: number, _y: number, w: number, h: number) => ({width: w, height: h, data: new Uint8ClampedArray(w * h * 4).fill(255)}),
     };
@@ -291,5 +295,88 @@ describe("mountStage", () => {
             expect(handle.frames()).toBeGreaterThan(1);
             handle.destroy();
         }
+    });
+});
+
+describe("film look on the stage", () => {
+    function mountWithLook(frozen: () => boolean = () => false) {
+        const lookCanvas = document.createElement("canvas");
+        vi.spyOn(lookCanvas, "getContext").mockImplementation(() => fakeContext() as never);
+        const weave = document.createElement("div");
+        weave.dataset.filmWeave = "";
+        const reel = document.createElement("span");
+        reel.dataset.mark = "reel";
+        const scene = document.createElement("span");
+        scene.dataset.mark = "scene";
+        h.stage.append(weave, reel, scene);
+        const handle = mountStage({stage: h.stage, canvas: h.canvas, driver: h.driver, env: h.env, lookCanvas, isFrozen: frozen});
+        return {handle: handle!, lookCanvas, weave, reel, scene};
+    }
+
+    it("creates the overlay with the stage and removes its weave with it; no overlay without a canvas for it", () => {
+        const plain = h.mount()!;
+        expect(plain.look()).toBeUndefined();
+        plain.destroy();
+        h = harness();
+        const {handle, weave, reel, scene} = mountWithLook();
+        expect(handle.look()).toBeDefined();
+        h.run(30);
+        expect(reel.textContent).toMatch(/^REEL 01 {3}\d{4}$/);
+        expect(scene.textContent).toBe("SC 00 · TAKE 1");
+        expect(weave.style.transform).toMatch(/^translate3d\(/);
+        handle.destroy();
+        expect(weave.style.transform).toBe("");
+    });
+
+    it("keeps one shared frame loop alive for the film clock, without redrawing a settled picture", () => {
+        const {handle} = mountWithLook();
+        h.emit(0.3);
+        h.run(200); // particles settle...
+        const settled = handle.frames();
+        expect(h.queue.size).toBe(1); // ...but the loop stays: the grain keeps running
+        h.run(120);
+        expect(handle.frames()).toBe(settled); // the picture is not repainted
+        expect(h.queue.size).toBe(1);
+        const frame = handle.look()!.frame();
+        h.run(120);
+        expect(handle.look()!.frame()).toBeGreaterThan(frame + 30); // ~24 fps over ~2 s
+        handle.destroy();
+        expect(h.queue.size).toBe(0);
+    });
+
+    it("freezes while paused, resumes on wake, and stops when hidden or off screen", () => {
+        let frozen = false;
+        const {handle} = mountWithLook(() => frozen);
+        h.emit(0.3);
+        h.run(200);
+        frozen = true;
+        h.run(5);
+        expect(h.queue.size).toBe(0); // the loop ended: nothing runs while paused
+        const frame = handle.look()!.frame();
+        h.advance(5000);
+        frozen = false;
+        handle.wake();
+        expect(h.queue.size).toBe(1);
+        h.run(40);
+        expect(handle.look()!.frame()).toBeGreaterThan(frame);
+        expect(handle.look()!.frame()).toBeLessThan(frame + 30); // the paused time did not fast-forward the counter
+        h.setHidden(true);
+        h.handlers.hidden!();
+        expect(h.queue.size).toBe(0);
+        h.setHidden(false);
+        h.handlers.hidden!();
+        expect(h.queue.size).toBe(1);
+        h.handlers.visible!(false);
+        expect(h.queue.size).toBe(0);
+        handle.destroy();
+    });
+
+    it("plays on without an overlay when its context cannot be created", () => {
+        const lookCanvas = document.createElement("canvas");
+        vi.spyOn(lookCanvas, "getContext").mockReturnValue(null);
+        const handle = mountStage({stage: h.stage, canvas: h.canvas, driver: h.driver, env: h.env, lookCanvas})!;
+        expect(handle.look()).toBeUndefined();
+        expect(h.stage.dataset.canvas).toBe("on");
+        handle.destroy();
     });
 });

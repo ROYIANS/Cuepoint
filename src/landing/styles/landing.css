@@ -219,6 +219,8 @@ a:focus-visible {
 
 .lp-hero .lp-scene-title { font-size: clamp(40px, 8vw, 72px); line-height: 1.1; }
 
+.lp-subtitle { margin-top: 12px; font-family: var(--font-display); font-size: 20px; line-height: 1.5; letter-spacing: 0.08em; color: oklch(0.93 0.01 85); }
+
 .lp-narration { margin-top: 20px; font-size: 18px; line-height: 1.7; }
 
 .lp-points { display: grid; gap: 8px; margin-top: 20px; color: var(--muted-foreground); font-size: 14px; }
@@ -382,35 +384,95 @@ a:focus-visible {
     height: 100svh;
     overflow: hidden;
     contain: layout paint;
+    /* The ground colour follows the scene (film progress); JS writes --stage-tone, the fallback is the app's own grey. */
+    background: var(--stage-tone, #101010);
 }
 
 .lp-stage-bg {
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 50% 42%, oklch(0.24 0 0 / 70%), transparent 62%);
+    background: radial-gradient(ellipse at 50% 46%, oklch(0.3 0 0 / 34%), transparent 64%);
 }
 
+/* The picture (particles and film look) drifts by a pixel or so per film frame (gate weave); text never does. */
+.lp-picture { position: absolute; inset: 0; will-change: transform; }
+
 .lp-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* The film look reaches past the stage edges, so the weave never shows a seam. */
+.lp-look { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); pointer-events: none; }
+
+/* Static vignette (a CSS gradient, painted once): dark corners, a little brighter centre. */
+.lp-vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 46%, transparent 52%, oklch(0 0 0 / 52%) 100%);
+}
 
 .lp-layer {
     --o: clamp(0, min((var(--film-progress) - var(--s)) / var(--fade), (var(--e) - var(--film-progress)) / var(--fade)), 1);
     position: absolute;
     inset: 0;
-    display: flex;
-    align-items: center;
-    padding: 0 clamp(48px, 10vw, 160px);
     opacity: var(--o);
-    transform: translate3d(0, calc((1 - var(--o)) * 28px), 0);
+    transform: translate3d(0, calc((1 - var(--o)) * 14px), 0);
     will-change: transform, opacity;
 }
 
-.lp-layer-inner { max-width: 720px; }
-
-/* Wide screens keep the text in the left column; the right is the picture's (see artRect in renderers/targets.ts). */
-@media (min-width: 900px) {
-    .lp-layer:not([data-scene-layer="leader"]) .lp-layer-inner { max-width: min(720px, calc(44vw - 24px)); }
+/* What the stage says in words: the scene's slate label (top) and one subtitle line (bottom). Everything else is picture.
+   Colours are the STAGE_TEXT literals of film/tone.ts, contrast-checked on every scene ground (tests/landingTone.test.ts). */
+.lp-slate {
+    position: absolute;
+    top: 92px;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0 24px;
+    text-align: center;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.16em;
+    color: rgba(214, 208, 198, 0.82);
 }
-.lp-layer .lp-scene-title { font-size: clamp(32px, 7vw, 64px); }
+
+.lp-marks {
+    position: absolute;
+    z-index: 1;
+    top: 92px;
+    left: 56px;
+    right: 56px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.12em;
+    white-space: pre;
+    font-variant-numeric: tabular-nums;
+    color: rgba(214, 208, 198, 0.82);
+}
+
+.lp-stage-subtitle {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(72px, 13vh, 124px);
+    margin: 0;
+    padding: 0 24px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: clamp(18px, 2.2vw, 28px);
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.14em;
+    text-wrap: balance;
+    color: rgb(244, 240, 232);
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.75), 0 0 2px rgba(0, 0, 0, 0.6);
+    /* In once the picture has formed (scene-local 0.22), out as the scene leaves: fully visible at every hold. */
+    opacity: clamp(0, min((var(--scene-local) - 0.22) / 0.1, (0.93 - var(--scene-local)) / 0.07), 1);
+}
 
 .lp-stage-art { position: absolute; inset: 0; }
 
@@ -520,27 +582,13 @@ a:focus-visible {
     will-change: transform;
 }
 
-/* Leader: the point cloud draws the title, so the text layer is centred under it. While the Canvas is
-   pending or running the DOM title stays out of the way and the rest fades in only after the title has formed (local 0.74, TITLE_FORMED in renderers/leader.ts);
-   "off" (no usable canvas) leaves the plain text version. */
-.lp-layer[data-scene-layer="leader"] { justify-content: center; text-align: center; }
-.lp-layer[data-scene-layer="leader"] .lp-layer-inner { width: 100%; max-width: 820px; }
-.lp-layer[data-scene-layer="leader"] .lp-scene-title { white-space: nowrap; font-size: clamp(36px, 9vw, 88px); }
-.lp-layer[data-scene-layer="leader"] .lp-points { justify-items: center; }
-.lp-stage:not([data-canvas="off"]) [data-scene-layer="leader"] .lp-scene-title { visibility: hidden; }
-.lp-stage:not([data-canvas="off"]) [data-scene-layer="leader"] .lp-layer-inner > :not(.lp-scene-title) { opacity: clamp(0, calc((var(--scene-local) - 0.76) / 0.04), 1); }
-
 @media (max-width: 767px) {
-    .lp-layer { padding: 0 24px; }
-    .lp-layer:not([data-scene-layer="leader"]) { align-items: flex-start; padding-top: 112px; }
-    .lp-layer .lp-points { display: none; }
+    .lp-slate { top: 118px; }
+    .lp-marks { top: 92px; left: 24px; right: 24px; font-size: 11px; }
     .lp-hud { left: 24px; right: 24px; }
     .lp-hud-scene { display: none; }
     .lp-perf { width: 8px; }
     .lp-perf-left { left: 6px; }
     .lp-perf-right { right: 6px; }
-}
-
-@media (max-height: 560px) {
-    .lp-layer .lp-points, .lp-layer .lp-caption { display: none; }
+    .lp-stage-subtitle { bottom: clamp(84px, 15vh, 120px); font-size: 17px; letter-spacing: 0.06em; }
 }

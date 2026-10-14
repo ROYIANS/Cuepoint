@@ -9,6 +9,7 @@ import {resolveFilmMode, readSkipPreference, writeSkipPreference, SKIP_FILM_KEY}
 import {SCENES, STAGE_SCENES, TOTAL_WEIGHT} from "@/landing/film/scenes";
 import {frameToTimecode, progressToFrame, sceneProgressWindow} from "@/landing/film/timeline";
 import {FILM_PLAY_SECONDS, progressToPlaybackTime} from "@/landing/film/playback";
+import {toneCss} from "@/landing/film/tone";
 import {createFilmDriver, useFilmProgress, type FilmDriverEnv, type FilmState} from "@/landing/film/useFilmProgress";
 
 describe("scenes", () => {
@@ -297,11 +298,35 @@ describe("DOM", () => {
                 const copy = SCENE_COPY[scene.id];
                 expect(reading.textContent).toContain(copy.title);
                 expect(reading.textContent).toContain(copy.narration.text);
+                expect(reading.textContent).toContain(copy.subtitle.text);
                 for (const point of copy.points) expect(reading.textContent).toContain(point.text);
             }
+            // The stage is a picture: only the slate label and the subtitle are words; the readable copy carries the rest.
+            for (const layer of layers()) {
+                const copy = SCENE_COPY[layer.getAttribute("data-scene-layer") as keyof typeof SCENE_COPY];
+                expect([...layer.children].map(child => child.textContent)).toEqual([copy.kicker, copy.subtitle.text]);
+                expect(layer.querySelector("h1, h2, h3, ul, li, .lp-scene-title, .lp-narration, .lp-points")).toBeNull();
+                for (const text of [copy.title, copy.narration.text, ...copy.points.map(point => point.text)]) expect(art.textContent).not.toContain(text);
+            }
+            expect(art.querySelector("[data-film-look][aria-hidden='true']")).not.toBeNull();
+            expect(art.querySelectorAll(".lp-marks [data-mark]")).toHaveLength(2);
             expect(reading.querySelectorAll("a, button")).toHaveLength(0);
             expect(art.querySelectorAll("a, button")).toHaveLength(0);
             expect(container.querySelector(".lp-track")?.getAttribute("style")).toContain("--film-length: 6.5");
+        });
+
+        it("follows the scene's ground colour with the film progress, writing it only when it changes", async () => {
+            await renderLanding();
+            const page = container.querySelector<HTMLElement>(".lp-film")!;
+            const set = vi.spyOn(page.style, "setProperty");
+            for (const progress of [0, 0.5, 0.97]) {
+                await scrollTo(progress);
+                expect(page.style.getPropertyValue("--stage-tone")).toBe(toneCss(progress));
+            }
+            const writes = set.mock.calls.filter(call => call[0] === "--stage-tone").length;
+            await scrollTo(0.97);
+            expect(set.mock.calls.filter(call => call[0] === "--stage-tone").length).toBe(writes); // same ground: no write
+            expect(container.querySelector(".lp-stage")?.getAttribute("style") ?? "").not.toContain("--stage-tone");
         });
 
         it("makes the skip button the first focusable control and keeps the credits links focusable", async () => {
@@ -412,6 +437,17 @@ describe("DOM", () => {
             expect(container.querySelectorAll("h1")).toHaveLength(1);
             const hrefs = [...container.querySelectorAll("a")].map(a => a.getAttribute("href"));
             expect(hrefs).toEqual(expect.arrayContaining(["/agent", "#download", GITHUB_URL, `${GITHUB_URL}/releases`, `${GITHUB_URL}/blob/main/LICENSE`, "#main"]));
+            for (const section of sections) {
+                const copy = SCENE_COPY[section.getAttribute("data-scene") as keyof typeof SCENE_COPY];
+                expect(section.querySelector(".lp-subtitle")?.textContent).toBe(copy.subtitle.text);
+                expect(section.querySelector("h1, h2")?.nextElementSibling?.className).toBe("lp-subtitle"); // quoted under its title
+            }
+            for (const scene of STAGE_SCENES) {
+                const copy = SCENE_COPY[scene.id];
+                const section = container.querySelector(`section[data-scene="${scene.id}"]`)!;
+                for (const point of copy.points) expect(section.textContent).toContain(point.text); // every point stays in the readable page
+            }
+            expect(container.querySelector("[data-film-look], .lp-marks")).toBeNull();
             expect(container.querySelectorAll(".lp-faq details")).toHaveLength(5);
             expect(rafQueue.size).toBe(0);
             expect(buttonByText("跳过动画")).toBeUndefined();

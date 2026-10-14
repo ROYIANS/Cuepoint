@@ -1,5 +1,6 @@
-import {useEffect, useState, type RefObject} from "react";
+import {useEffect, useRef, useState, type RefObject} from "react";
 import {progressToFrame} from "./timeline";
+import {toneCss} from "./tone";
 
 export type FilmState = {progress: number; sceneIndex: number; local: number};
 
@@ -162,6 +163,8 @@ function readTrackProgress(track: HTMLElement | null): number {
  * its own subscription. Returns the stable driver (for `subscribe`).
  */
 export function useFilmProgress(rootRef: RefObject<HTMLElement | null>, trackRef: RefObject<HTMLElement | null>, env?: Partial<FilmDriverEnv>): FilmDriver {
+    // The stage ground colour is written only when its rounded value changes (a few times per scene change).
+    const lastTone = useRef("");
     const [driver] = useState(() => createFilmDriver({
         read: () => readTrackProgress(trackRef.current),
         write: state => {
@@ -170,6 +173,11 @@ export function useFilmProgress(rootRef: RefObject<HTMLElement | null>, trackRef
             style.setProperty("--film-progress", state.progress.toFixed(4));
             style.setProperty("--scene-index", String(state.sceneIndex));
             style.setProperty("--scene-local", state.local.toFixed(4));
+            const tone = toneCss(state.progress);
+            if (tone !== lastTone.current) {
+                lastTone.current = tone;
+                style.setProperty("--stage-tone", tone);
+            }
         },
         env,
     }));

@@ -1,5 +1,5 @@
 import {clamp01, smoothstep, type DeliveryGeom, type DeliverySets, type Plan, type SceneState, type Sets} from "./plan";
-import {createSet, rectSegments, scatterSet, segmentSamples, type Rect} from "./targets";
+import {artScale, createSet, rectSegments, scatterSet, segmentSamples, type Rect} from "./targets";
 
 // Scene 5 (delivery): a film strip splits into three, and each third folds into a file: a project
 // ZIP, a storyboard CSV and a printable storyboard page. Only deliverables the product really
@@ -37,11 +37,12 @@ export function deliveryGeometry(art: Rect): DeliveryGeom {
     const strip = {x: art.x, y: art.y + art.h * 0.02, w: art.w, h: stripH};
     const gap = art.w * 0.05;
     const column = (art.w - gap * 2) / 3;
-    const iconH = art.h * 0.44;
+    const k = artScale(art);
+    const iconH = art.h * 0.5;
     const iconW = Math.min(column, iconH * 0.8);
     const iconTop = art.y + art.h * 0.4;
     const icons = [0, 1, 2].map(index => ({x: art.x + index * (column + gap) + (column - iconW) / 2, y: iconTop, w: iconW, h: iconH}));
-    return {strip, icons, labelY: iconTop + iconH + (small ? 14 : 18), font: small ? 11 : 13};
+    return {strip, icons, labelY: iconTop + iconH + (small ? 14 : 18 * k), font: small ? 11 : Math.round(13 * k)};
 }
 
 function stripSegments(strip: Rect): number[] {

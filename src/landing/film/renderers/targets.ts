@@ -9,13 +9,22 @@ export function createSet(capacity: number): TargetSet {
     return {x: new Float32Array(capacity), y: new Float32Array(capacity), a: new Float32Array(capacity)};
 }
 
-/** Where the scenes paint their picture: the free half beside the text on wide screens, a strip below it on narrow ones. */
+/**
+ * Where the scenes paint their picture: the big central frame, the star of the stage. On wide screens it takes
+ * about two thirds of the width and 62% of the height, leaving the subtitle and the player bar below; on narrow
+ * ones it is the whole width under the slate, with the subtitle beneath it.
+ */
 export function artRect(width: number, height: number): Rect {
     if (width >= 900) {
-        const x = width * 0.54;
-        return {x, y: height * 0.2, w: Math.max(200, width - x - Math.max(72, width * 0.08)), h: height * 0.56};
+        const w = Math.max(200, Math.min(width * 0.66, height * 1.45));
+        return {x: (width - w) / 2, y: height * 0.15, w, h: height * 0.6};
     }
-    return {x: 28, y: height * 0.58, w: Math.max(120, width - 56), h: height * 0.26};
+    return {x: 20, y: height * 0.17, w: Math.max(120, width - 40), h: height * 0.5};
+}
+
+/** Scale of the pictures' fixed sizes (type, node radii, caps) with the frame: 1 on a phone, up to 1.45 on a wide stage. */
+export function artScale(art: Rect): number {
+    return art.w < 420 ? 1 : Math.min(1.45, Math.max(1, art.w / 600));
 }
 
 export type Bitmap = {readonly data: ArrayLike<number>; readonly width: number; readonly height: number};

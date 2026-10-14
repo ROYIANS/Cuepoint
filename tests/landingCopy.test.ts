@@ -8,7 +8,7 @@ import {FORBIDDEN_CLAIMS} from "./fixtures/landing/forbiddenClaims";
 
 const sceneCopy = Object.values(SCENE_COPY);
 const claims: Claim[] = [
-    ...sceneCopy.flatMap(copy => [copy.narration, ...copy.points, ...(copy.eyebrow ? [copy.eyebrow] : [])]),
+    ...sceneCopy.flatMap(copy => [copy.narration, copy.subtitle, ...copy.points, ...(copy.eyebrow ? [copy.eyebrow] : [])]),
     HERO_NOTE, ...ONLINE_NOTES, OPEN_SOURCE, PRIVACY, ...FAQ.map(item => item.answer),
 ];
 const allText = [
@@ -16,7 +16,25 @@ const allText = [
     ...claims.map(claim => claim.text), ...FAQ.map(item => item.question),
 ].join("\n");
 
+// The narrated subtitles, word for word as the user accepted them (research/narrative-script.md).
+const SUBTITLES = {
+    leader: "每部片子，都从一粒光点开始。",
+    spark: "先有一个念头，然后是一行字。",
+    script: "文字落成镜头，一格，一格。",
+    agent: "有个安静的帮手，你点头，它才动手。",
+    vault: "作品留在你这里，钥匙也是。",
+    delivery: "想带走，就整整齐齐地交出去。",
+    credits: "现在，轮到你开机。",
+} as const;
+
 describe("landing copy", () => {
+    it("has one accepted subtitle per scene, short enough to read in a glance", () => {
+        for (const [id, copy] of Object.entries(SCENE_COPY)) {
+            expect(copy.subtitle.text, id).toBe(SUBTITLES[id as keyof typeof SUBTITLES]);
+            expect(copy.subtitle.text.length, id).toBeLessThanOrEqual(18);
+        }
+    });
+
     it("has copy for every scene and keeps it short", () => {
         expect(Object.keys(SCENE_COPY).sort()).toEqual(SCENES.map(scene => scene.id).sort());
         for (const [id, copy] of Object.entries(SCENE_COPY)) {

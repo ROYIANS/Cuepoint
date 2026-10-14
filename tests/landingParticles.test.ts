@@ -256,13 +256,19 @@ describe("point-set helpers", () => {
         expect(fillSet(createSet(2), points, {rng: mulberry32(3), shuffle: false, width: 10, height: 10})).toBe(2);
     });
 
-    it("puts the picture beside the text on wide screens and under it on narrow ones", () => {
+    it("makes the picture the big centred frame on wide screens and the full width under the slate on narrow ones", () => {
         const wide = artRect(1280, 800);
-        expect(wide.x).toBeGreaterThan(1280 * 0.5);
-        expect(wide.x + wide.w).toBeLessThan(1280);
+        expect(wide.w / 1280).toBeGreaterThanOrEqual(0.62);
+        expect(wide.w / 1280).toBeLessThanOrEqual(0.7);
+        expect(wide.h / 800).toBeGreaterThanOrEqual(0.58);
+        expect(wide.h / 800).toBeLessThanOrEqual(0.66);
+        expect(wide.x + wide.w / 2).toBeCloseTo(640, 5); // centred
+        expect(wide.y + wide.h).toBeLessThan(800 * 0.78); // the subtitle and the player bar stay below it
         const narrow = artRect(390, 844);
-        expect(narrow.y).toBeGreaterThan(844 * 0.5);
+        expect(narrow.w).toBeGreaterThan(390 * 0.85);
         expect(narrow.x + narrow.w).toBeLessThanOrEqual(390);
+        expect(narrow.y).toBeGreaterThan(120); // under the header and the slate
+        expect(narrow.y + narrow.h).toBeLessThan(844 * 0.7);
     });
 });
 

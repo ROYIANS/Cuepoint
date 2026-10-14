@@ -11,6 +11,8 @@ export type SceneCopy = {
     readonly title: string;
     readonly eyebrow?: Claim;
     readonly narration: Claim;
+    /** The one narrated line shown on the stage (a film subtitle); the readable versions keep it under the title. */
+    readonly subtitle: Claim;
     /** At most three. */
     readonly points: readonly Claim[];
     /** Description of the painted frame; it is not a product screenshot. */
@@ -25,6 +27,7 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
         title: "小光点 Cuepoint",
         eyebrow: {text: "本地优先 · 开源 MIT", evidence: "README.md「许可」；LICENSE"},
         narration: {text: "本地优先的 AI 创作工作室，让故事、画面、声音和音乐在同一个项目中逐步成形。", evidence: "README.md 首句；src/lib/brand.ts"},
+        subtitle: {text: "每部片子，都从一粒光点开始。", evidence: "src/lib/brand.ts；README.md 首句"},
         points: [
             {text: "视频、音频与音乐，三类项目同在一个应用里", evidence: "README.md 模块表（视频项目 / 音频项目 / 音乐项目）"},
         ],
@@ -34,6 +37,7 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
         kicker: "第一幕 · 灵感 → 剧本",
         title: "从一个念头开始",
         narration: {text: "先把故事想清楚：世界设定、剧本与场次，都收在同一个项目里。", evidence: "README.md「视频：故事 → 分镜 → 制作 → 交付」建立设定、整理故事"},
+        subtitle: {text: "先有一个念头，然后是一行字。", evidence: "README.md「视频：故事 → 分镜 → 制作 → 交付」建立设定、整理故事"},
         points: [
             {text: "单片与剧集两种组织方式，剧集可在多集之间共享项目设定与资产", evidence: "README.md「视频」组织项目"},
             {text: "参考资料（图片、TXT/Markdown、文本 PDF、DOCX）在本机解析；选中的内容会随 AI 请求发给你所选的供应商", evidence: "README.md「参考资料」「助手」；src/lib/references/"},
@@ -45,6 +49,7 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
         kicker: "第二幕 · 剧本 → 分镜",
         title: "文字变成镜头",
         narration: {text: "把场次落到具体镜头：顺序、时长、提示词，以及与角色、场景、道具的关联。", evidence: "README.md「视频」编辑镜头"},
+        subtitle: {text: "文字落成镜头，一格，一格。", evidence: "README.md「视频」编辑镜头；src/lib/shotFilters.ts"},
         points: [
             {text: "镜头表可筛选、拖拽排序，并支持快捷操作", evidence: "README.md「视频」编辑镜头；src/lib/shotFilters.ts、src/lib/reorderIds.ts"},
             {text: "画面通过助手中的生成流程制作：供应商、模型与提示词由你确认，候选结果由你检查后采用", evidence: "README.md「视频」制作画面"},
@@ -55,6 +60,7 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
         kicker: "第三幕 · 创作助手",
         title: "一位安静的助手",
         narration: {text: "围绕你绑定的项目对话、制定任务计划、调用已启用的工具，并留下可回看的执行记录。", evidence: "README.md「助手：围绕项目执行并核对成果」"},
+        subtitle: {text: "有个安静的帮手，你点头，它才动手。", evidence: "README.md 权限模式表；src/domain/agent.ts"},
         points: [
             {text: "三档权限：请求批准、帮我批准、完全访问", evidence: "README.md 权限模式表；src/domain/agent.ts"},
             {text: "执行记录展示工具调用与实际写入的结果；模型说“完成”，不替代工作台里真正保存的内容", evidence: "README.md「助手」执行记录段落"},
@@ -67,6 +73,7 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
         kicker: "第四幕 · 本机优先",
         title: "数据留在你这里",
         narration: {text: "桌面版存入本机 SQLite 与受管理的文件，浏览器版存入当前站点来源的 IndexedDB，不需要服务端应用数据库。", evidence: "README.md「数据存放在哪里」；docs/desktop-distribution.md"},
+        subtitle: {text: "作品留在你这里，钥匙也是。", evidence: "README.md「数据存放在哪里」「AI 连接与模型」"},
         points: [
             {text: "AI 使用你自己的服务与 API Key，请求直接发往你配置的供应商；小光点本身不提供模型服务", evidence: "README.md「AI 连接与模型」"},
             {text: "“本地优先”不等于全部离线：AI 与联网研究需要联网，浏览器存储也不是系统钥匙串", evidence: "README.md「数据、隐私与备份」"},
@@ -78,6 +85,7 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
         kicker: "第五幕 · 成片与交付",
         title: "把成果交出去",
         narration: {text: "先检查资料与媒体的缺口，再导出可以移交、也可以备份的文件。", evidence: "README.md「视频」检查交付"},
+        subtitle: {text: "想带走，就整整齐齐地交出去。", evidence: "README.md「视频」检查交付；src/lib/episodeDelivery.ts"},
         points: [
             {text: "当前集的分镜 CSV、可打印分镜板与制作素材交付 ZIP", evidence: "README.md「视频」检查交付；src/lib/episodeDelivery.ts"},
             {text: "项目 ZIP 用于备份与迁移，可重新导入；它不含 API Key，也不是整个工作室的镜像", evidence: "README.md「项目 ZIP 的范围」"},
@@ -89,6 +97,7 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
         kicker: "片尾字幕",
         title: "开始使用",
         narration: {text: "在浏览器里直接体验，或下载桌面版装进电脑。", evidence: "README.md「第一次使用」；docs/desktop-installation.md"},
+        subtitle: {text: "现在，轮到你开机。", evidence: "README.md「第一次使用」；docs/desktop-installation.md"},
         points: [],
         caption: "字幕缓缓上升。",
     },

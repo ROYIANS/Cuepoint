@@ -90,6 +90,8 @@ function FilmPage({download, onToggle}: {download: DownloadData; onToggle: () =>
     const trackRef = useRef<HTMLDivElement>(null);
     const stageRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const lookRef = useRef<HTMLCanvasElement>(null);
+    const stageHandle = useRef<{wake: () => void} | undefined>(undefined);
     const driver = useFilmProgress(rootRef, trackRef);
     const playback = usePlayback(trackRef);
     const playbackState = usePlaybackState(playback);
@@ -103,25 +105,29 @@ function FilmPage({download, onToggle}: {download: DownloadData; onToggle: () =>
         const canvas = canvasRef.current;
         if (!stage || !canvas) return undefined;
         let cancelled = false;
-        let handle: {destroy: () => void} | undefined;
+        let handle: {destroy: () => void; wake: () => void} | undefined;
         import("./renderers/stage").then(module => {
             if (cancelled) return;
-            handle = module.mountStage({stage, canvas, driver});
+            handle = module.mountStage({stage, canvas, driver, lookCanvas: lookRef.current, isFrozen: () => playback.state() === "paused"});
+            stageHandle.current = handle;
             if (!handle) stage.dataset.canvas = "off";
         }).catch(() => {
             if (!cancelled) stage.dataset.canvas = "off";
         });
         return () => {
             cancelled = true;
+            stageHandle.current = undefined;
             handle?.destroy();
         };
-    }, [driver]);
+    }, [driver, playback]);
     // Scene changes are announced only while the film plays itself; scrolling by hand stays quiet.
     useEffect(() => driver.subscribe(({sceneIndex, progress}) => {
         setActive(sceneIndex);
         setAtStart(progress < 0.01);
         if (playback.state() === "playing") setAnnouncement(sceneLabel(sceneIndex));
     }), [driver, playback]);
+    // The film look freezes while paused; resuming (or finishing) wakes the stage's loop again.
+    useEffect(() => stageHandle.current?.wake(), [playbackState]);
     const showStart = atStart && playbackState !== "playing";
     const track = {"--film-length": TOTAL_WEIGHT, "--fade": SCENE_FADE} as CSSProperties;
     return (
@@ -140,15 +146,20 @@ function FilmPage({download, onToggle}: {download: DownloadData; onToggle: () =>
                     <div className="lp-stage" data-canvas="pending" ref={stageRef}>
                         <div className="lp-stage-art" aria-hidden="true">
                         <div className="lp-stage-bg" />
-                        <canvas className="lp-canvas" data-film-canvas aria-hidden="true" ref={canvasRef} />
+                        <div className="lp-picture" data-film-weave>
+                            <canvas className="lp-canvas" data-film-canvas aria-hidden="true" ref={canvasRef} />
+                            <canvas className="lp-look" data-film-look aria-hidden="true" ref={lookRef} />
+                        </div>
+                        <div className="lp-vignette" />
                         <Perforations />
+                        <div className="lp-marks"><span data-mark="reel" /><span data-mark="scene" /></div>
                         {STAGE_SCENES.map((scene, index) => {
                             const {start, end} = sceneProgressWindow(index);
                             // The first scene is fully visible at progress 0 and the last at 1.
                             const layerWindow = {"--s": index === 0 ? -SCENE_FADE : start, "--e": index === LAST_STAGE ? 1 + SCENE_FADE : end} as CSSProperties;
                             return (
                                 <div key={scene.id} className="lp-layer" data-scene-layer={scene.id} inert={index !== active} style={layerWindow}>
-                                    <div className="lp-layer-inner"><SceneBody id={scene.id} heading="p" stage /></div>
+                                    <SceneBody id={scene.id} stage />
                                 </div>
                             );
                         })}

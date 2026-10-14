@@ -1,4 +1,5 @@
 import {smoothstep, clamp01, type Plan, type Sets, type SceneState} from "./plan";
+import {artScale} from "./targets";
 
 /** Opacity of an unlit cell's outline particles; lit cells rise from here. */
 export const GRID_DIM = 0.3;
@@ -58,7 +59,7 @@ export function drawScript(ctx: CanvasRenderingContext2D, s: SceneState): void {
         ctx.lineTo(cell.x + cell.w * 0.92, cell.y + cell.h * 0.64);
         ctx.strokeStyle = `rgba(255,255,255,${0.12 * lit})`;
         ctx.stroke();
-        const fontSize = small ? 9 : 11;
+        const fontSize = small ? 9 : Math.round(11 * artScale(layout.art));
         ctx.font = `500 ${fontSize}px ${MONO}`;
         ctx.fillStyle = `rgba(255,255,255,${0.85 * lit})`;
         ctx.textAlign = "left";

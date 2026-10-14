@@ -15,6 +15,7 @@ export function Credits({download}: {download: DownloadData}) {
         <section className="lp-credits" data-scene="credits" aria-labelledby="lp-credits-title">
             <p className="lp-kicker">{copy.kicker}</p>
             <h2 id="lp-credits-title" className="lp-scene-title">{copy.title}</h2>
+            <p className="lp-subtitle">{copy.subtitle.text}</p>
             <p className="lp-narration">{copy.narration.text}</p>
             <div className="lp-actions">
                 <a className="lp-btn lp-btn-primary" href="/agent" data-umami-event="try-online">在浏览器中体验</a>

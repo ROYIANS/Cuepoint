@@ -1,5 +1,5 @@
 import {clamp01, smoothstep, type Plan, type SceneState, type Sets, type VaultGeom, type VaultSets} from "./plan";
-import {circleOutline, createSet, lineSamples, scatterSet, segmentSamples, type Rect, type TargetSet} from "./targets";
+import {artScale, circleOutline, createSet, lineSamples, scatterSet, segmentSamples, type Rect, type TargetSet} from "./targets";
 
 // Scene 4 (vault): a wireframe film can seen from above; material gathers into it, the lid closes,
 // the lock clicks, and a small lock appears. No cloud, no upload: a few specks stay outside.
@@ -36,19 +36,20 @@ function overall(local: number): number {
 
 export function vaultGeometry(art: Rect): VaultGeom {
     const small = art.w < 420;
-    const r = Math.min(art.w * 0.3, art.h * 0.3);
+    const k = artScale(art);
+    const r = Math.min(art.w * (small ? 0.34 : 0.3), art.h * 0.34);
     const cx = art.x + art.w / 2;
     const cy = art.y + art.h * 0.58;
-    const lockH = Math.min(art.h * 0.2, 70, cy - r - 8 - art.y);
+    const lockH = Math.min(art.h * 0.2, 70 * k, cy - r - 8 - art.y);
     const bodyW = lockH * 0.72;
     const bodyH = lockH * 0.55;
     const top = cy - r - 10 - lockH;
-    const labelFont = small ? 11 : 13;
+    const labelFont = small ? 11 : Math.round(13 * k);
     return {
         cx, cy, r, font: labelFont,
         lock: {cx, top, bodyW, bodyH, shackleR: bodyW * 0.32},
         keyLabel: {x: cx + bodyW / 2 + 12, y: top + bodyW * 0.32 + bodyH * 0.45 + bodyH / 2},
-        storeLabel: {x: cx, y: cy + r + 16},
+        storeLabel: {x: cx, y: cy + r + 16 * k},
     };
 }
 

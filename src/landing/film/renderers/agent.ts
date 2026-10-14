@@ -1,5 +1,5 @@
 import {clamp01, smoothstep, type AgentGeom, type AgentSets, type Plan, type SceneState, type Sets} from "./plan";
-import {circleOutline, createSet, lineSamples, scatterSet, type Rect, type TargetSet} from "./targets";
+import {artScale, circleOutline, createSet, lineSamples, scatterSet, type Rect, type TargetSet} from "./targets";
 
 // Scene 3 (agent): a quiet execution log, drawn as an illustration. A thin vertical line, nodes that
 // light one after another, a mono label per node. The words are invented sample content in the
@@ -53,11 +53,15 @@ function overall(local: number): number {
 
 export function agentGeometry(art: Rect): AgentGeom {
     const small = art.w < 420;
-    const gap = Math.min(art.h / 5.6, 58);
+    const k = artScale(art);
+    const gap = Math.min(art.h / 5.6, 58 * k);
     const top = art.y + (art.h - gap * (ROWS - 1)) / 2;
     const rowY = Array.from({length: ROWS}, (_, index) => top + gap * index);
-    const lineX = art.x + 14;
-    return {lineX, top, bottom: top + gap * (ROWS - 1), rowY, textX: lineX + 22, right: art.x + art.w, font: small ? 11 : 13, nodeR: small ? 4 : 5};
+    // The log is a column centred in the frame, not hugging its left edge.
+    const width = Math.min(art.w, 460 * k);
+    const left = art.x + (art.w - width) / 2;
+    const lineX = left + 14;
+    return {lineX, top, bottom: top + gap * (ROWS - 1), rowY, textX: lineX + 22 * k, right: left + width, font: small ? 12 : Math.round(13 * k), nodeR: small ? 4 : Math.round(5 * k)};
 }
 
 /** Particle budget, by fraction of the pool: node rings, guide line, flow dots, separators. */

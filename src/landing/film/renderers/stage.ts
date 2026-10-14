@@ -1,14 +1,16 @@
+import {SCENE_COPY} from "../../content/copy";
 import type {FilmDriver, FilmState} from "../useFilmProgress";
 import {agentGeometry, buildAgentSets, drawAgent, planAgent} from "./agent";
 import {buildDeliverySets, deliveryGeometry, drawDelivery, planDelivery} from "./delivery";
 import {buildVaultSets, drawVault, planVault, vaultGeometry} from "./vault";
+import {createFilmLook, type FilmLook} from "./filmLook";
 import {drawLeader, LEADER_REST, planLeader} from "./leader";
 import {clamp01, type Layout, type Plan, type SceneState, type Sets} from "./plan";
 import {createPool, MAX_PARTICLES, mulberry32, step, type Pool, type Quality} from "./particles";
 import {createAdaptiveQuality, detectQuality, type QualityInput} from "./quality";
 import {drawScript, GRID_DIM, planScript} from "./script";
 import {drawSpark, planSpark, SPARK_LINES} from "./spark";
-import {artRect, createSet, fillSet, rectOutline, scatterSet, textPoints, type CanvasLike, type Rect, type TargetSet} from "./targets";
+import {artRect, artScale, createSet, fillSet, rectOutline, scatterSet, textPoints, type CanvasLike, type Rect, type TargetSet} from "./targets";
 
 // Canvas 2D controller for the pinned stage. It is loaded lazily (dynamic import
 // from Film.tsx), so none of it is part of the first-screen bundle. Frames run
@@ -31,9 +33,29 @@ export type StageEnv = {
     seed: number;
 };
 
-export type StageHandle = {destroy: () => void; quality: () => Quality; frames: () => number};
+export type StageHandle = {
+    destroy: () => void;
+    quality: () => Quality;
+    frames: () => number;
+    /** Call when `isFrozen` may have changed back to false: restarts the loop for the film look. */
+    wake: () => void;
+    /** Whether the film look (grain, weave, marks) is running on this stage. */
+    look: () => FilmLook | undefined;
+};
 
-const WARM = "255,248,235";
+export type StageOptions = {
+    stage: HTMLElement;
+    canvas: HTMLCanvasElement;
+    driver: FilmDriver;
+    env?: Partial<StageEnv>;
+    /** The overlay canvas for the film look; without it the stage draws only the particles. */
+    lookCanvas?: HTMLCanvasElement | null;
+    /** True while the screening is paused: the film look freezes (grain and frame count stop). */
+    isFrozen?: () => boolean;
+};
+
+// The warm sprite leans a little amber: the picture's highlights carry the warm tint for free (no extra pass).
+const WARM = "255,240,216";
 const COOL = "96,177,255";
 const GLOW_RADIUS = 2.7;
 const MIN_GAP_MS = 2;
@@ -101,24 +123,17 @@ function makeSprite(env: StageEnv, rgb: string): CanvasLike {
     return canvas;
 }
 
-function readTitle(stage: HTMLElement, w: number, h: number): Layout["title"] {
-    const element = stage.querySelector<HTMLElement>('[data-scene-layer="leader"] .lp-scene-title');
-    const fallback = {cx: w / 2, cy: h / 2, size: Math.min(88, w * 0.09), text: "小光点 Cuepoint", fontFamily: '"Noto Serif SC", "Songti SC", serif', fontWeight: "700"};
-    if (!element || element.offsetWidth === 0) return fallback;
-    const style = getComputedStyle(element);
-    return {
-        cx: element.offsetLeft + element.offsetWidth / 2,
-        cy: element.offsetTop + element.offsetHeight / 2,
-        size: Number.parseFloat(style.fontSize) || fallback.size,
-        text: element.textContent || fallback.text,
-        fontFamily: style.fontFamily || fallback.fontFamily,
-        fontWeight: style.fontWeight || "700",
-    };
+// The leader's title card is the particles themselves (no DOM text on the stage): large, centred, a touch above the middle.
+function titleLayout(w: number, h: number): Layout["title"] {
+    const size = w >= 900 ? Math.min(w * 0.095, 132) : w * 0.105;
+    return {cx: w / 2, cy: h * 0.46, size, text: SCENE_COPY.leader.title, fontFamily: '"Noto Serif SC", "Songti SC", "STSong", serif', fontWeight: "700"};
 }
 
 function gridCells(art: Rect): Rect[] {
-    const cols = 3;
-    const rows = 2;
+    // Wide stages lay the six frames out 3 x 2; a phone's tall frame takes 2 x 3.
+    const tall = art.w < 420;
+    const cols = tall ? 2 : 3;
+    const rows = tall ? 3 : 2;
     const gap = 10;
     const cellW = (art.w - gap * (cols - 1)) / cols;
     const cellH = Math.min((art.h - gap * (rows - 1)) / rows, cellW * 0.66);
@@ -130,9 +145,9 @@ function gridCells(art: Rect): Rect[] {
     return cells;
 }
 
-function buildLayout(stage: HTMLElement, w: number, h: number): Layout {
+function buildLayout(w: number, h: number): Layout {
     const art = artRect(w, h);
-    return {w, h, art, title: readTitle(stage, w, h), cells: gridCells(art), agent: agentGeometry(art), vault: vaultGeometry(art), delivery: deliveryGeometry(art)};
+    return {w, h, art, title: titleLayout(w, h), cells: gridCells(art), agent: agentGeometry(art), vault: vaultGeometry(art), delivery: deliveryGeometry(art)};
 }
 
 const textFont = (size: number) => `500 ${size}px "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", sans-serif`;
@@ -152,8 +167,10 @@ function buildSets(layout: Layout, capacity: number, env: StageEnv): Sets {
     fillSet(titleSet, titlePoints.points, {rng, shuffle: true, width: w, height: h});
 
     const textSet = createSet(capacity);
-    const textSize = Math.max(14, Math.min(38, art.w / 12, art.h / 5.8));
-    const lines = textPoints(SPARK_LINES, {font: textFont, size: textSize, lineHeight: textSize * 1.9, x: art.x, y: art.y + art.h / 2, align: "left", maxWidth: art.w, maxPoints: Math.floor(capacity * 0.8), rng, createCanvas: env.createCanvas});
+    const textSize = Math.max(14, Math.min(38 * Math.min(artScale(art), 1.2), art.w / 12, art.h / 5.8));
+    // The script page sits in the middle of the frame (its lines stay left-aligned, like a screenplay).
+    const blockW = Math.max(...SPARK_LINES.map(line => line.length)) * textSize;
+    const lines = textPoints(SPARK_LINES, {font: textFont, size: textSize, lineHeight: textSize * 1.9, x: art.x + Math.max(0, (art.w - blockW) / 2), y: art.y + art.h / 2, align: "left", maxWidth: art.w, maxPoints: Math.floor(capacity * 0.8), rng, createCanvas: env.createCanvas});
     const textCount = fillSet(textSet, lines.points, {rng, shuffle: false, width: w, height: h});
 
     const gridSet = createSet(capacity);
@@ -192,22 +209,32 @@ function snapToTargets(pool: Pool): void {
     pool.alpha.set(pool.ta);
 }
 
-export function mountStage(options: {stage: HTMLElement; canvas: HTMLCanvasElement; driver: FilmDriver; env?: Partial<StageEnv>}): StageHandle | undefined {
+export function mountStage(options: StageOptions): StageHandle | undefined {
     const {stage, canvas, driver} = options;
     const env: StageEnv = {...defaultEnv(), ...options.env};
     try {
-        return start(stage, canvas, driver, env);
+        return start(stage, canvas, driver, env, options);
     } catch {
         // No usable canvas or fonts: the text-only film stays, without a picture.
         return undefined;
     }
 }
 
-function start(stage: HTMLElement, canvas: HTMLCanvasElement, driver: FilmDriver, env: StageEnv): StageHandle | undefined {
+function start(stage: HTMLElement, canvas: HTMLCanvasElement, driver: FilmDriver, env: StageEnv, options: StageOptions): StageHandle | undefined {
     const ctx = canvas.getContext("2d");
     if (!ctx) return undefined;
     const warm = makeSprite(env, WARM);
     const cool = makeSprite(env, COOL);
+    const look: FilmLook | undefined = options.lookCanvas
+        ? createFilmLook({
+            canvas: options.lookCanvas,
+            createCanvas: env.createCanvas,
+            weave: stage.querySelector<HTMLElement>("[data-film-weave]"),
+            reel: stage.querySelector<HTMLElement>("[data-mark=reel]"),
+            scene: stage.querySelector<HTMLElement>("[data-mark=scene]"),
+        })
+        : undefined;
+    const lookFrozen = () => options.isFrozen?.() === true;
 
     const adaptive = createAdaptiveQuality(detectQuality(env.device()));
     let quality = adaptive.current();
@@ -244,12 +271,13 @@ function start(stage: HTMLElement, canvas: HTMLCanvasElement, driver: FilmDriver
         const height = Math.round(size.h * dpr);
         if (canvas.width !== width) canvas.width = width;
         if (canvas.height !== height) canvas.height = height;
-        layout = buildLayout(stage, size.w, size.h);
+        layout = buildLayout(size.w, size.h);
         sets = buildSets(layout, capacity, env);
         if (!pool || pool.capacity !== capacity) pool = createPool(capacity, env.seed);
         planFor(state.sceneIndex, state.local);
         applyPlan(pool, plan);
         snapToTargets(pool);
+        look?.resize(size.w, size.h, env.dpr(), quality);
         needsBuild = false;
         if (!fontRequested) {
             // The display font may arrive after the first build: sample the title again once it has.
@@ -351,14 +379,22 @@ function start(stage: HTMLElement, canvas: HTMLCanvasElement, driver: FilmDriver
 
     const canRun = () => !destroyed && visible && !env.isHidden();
 
+    // The film look keeps the loop alive while the stage is on screen and not paused: its clock
+    // (24 fps) is checked on every frame, the particle picture is redrawn only when it changes.
+    const lookRunning = () => look !== undefined && canRun() && !lookFrozen();
+
     function loop(): void {
         frameId = undefined;
-        render();
-        if (needMore && canRun()) frameId = env.raf(loop);
+        if (!look || needMore || dirty || needsBuild) render();
+        if (look) {
+            if (lookRunning()) look.tick(env.now(), state.sceneIndex, quality);
+            else look.hold();
+        }
+        if ((needMore || lookRunning()) && canRun()) frameId = env.raf(loop);
     }
 
     function ensureLoop(): void {
-        if (frameId === undefined && needMore && canRun()) frameId = env.raf(loop);
+        if (frameId === undefined && (needMore || lookRunning()) && canRun()) frameId = env.raf(loop);
     }
 
     function requestFrame(): void {
@@ -412,6 +448,8 @@ function start(stage: HTMLElement, canvas: HTMLCanvasElement, driver: FilmDriver
     return {
         quality: () => quality,
         frames: () => frames,
+        wake: ensureLoop,
+        look: () => look,
         destroy() {
             destroyed = true;
             offDriver();
@@ -420,6 +458,7 @@ function start(stage: HTMLElement, canvas: HTMLCanvasElement, driver: FilmDriver
             offHidden();
             if (frameId !== undefined) env.caf(frameId);
             frameId = undefined;
+            look?.destroy();
         },
     };
 }

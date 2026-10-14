@@ -90,5 +90,7 @@ describe("landing.html", () => {
         const href = documentFromHtml.querySelector("link[href*='fonts.googleapis.com/css2']")!.getAttribute("href")!;
         expect(href).toContain("display=swap");
         expect(decodeURIComponent(href)).toContain("text=小光点 Cuepoint");
+        const text = decodeURIComponent(href).split("text=")[1];
+        for (const scene of Object.values(SCENE_COPY)) for (const ch of scene.subtitle.text) expect(text, `subtitle character ${ch}`).toContain(ch); // the subtitles are set in the display font too
     });
 });
