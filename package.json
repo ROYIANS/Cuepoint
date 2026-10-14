@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
-    "@opencode-ai/models": "0.0.103",
+    "@opencode-ai/models": "0.0.104",
     "@tailwindcss/vite": "^4.1.13",
     "@tanstack/router-plugin": "^1.131.50",
     "@types/node": "^22.20.3",

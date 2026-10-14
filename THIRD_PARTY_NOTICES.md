@@ -23,8 +23,8 @@ complete terms and retain the applicable notices when redistributing dependencie
 
 ## Models.dev model catalog
 
-- Upstream: https://models.dev (https://github.com/sst/models.dev); build-time package
-  `@opencode-ai/models` 0.0.103 (MIT).
+- Upstream: https://models.dev (https://github.com/anomalyco/models.dev); build-time package
+  `@opencode-ai/models` 0.0.104 (MIT).
 - Use: `src/lib/ai/modelCatalog/baseline.generated.json` is a compact projection of the
   pinned package snapshot. The app can also download `https://models.dev/api.json` when the
   user asks for a sync. Prices and limits are informational and may differ from a
