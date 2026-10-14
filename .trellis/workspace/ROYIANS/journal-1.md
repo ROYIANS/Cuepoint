@@ -1855,3 +1855,39 @@ Shipped split-pane module navigation, docked/overlay context panels, single-row 
 
 - 创建本地desktop-v0.1.3指向最终干净main，用户push main和该tag触发四宿主构建及七文件完整draft。
 - 上传完成后复制docs/desktop-release-0.1.3.md正文，保留原ownership marker、upload提示和全部manifest限制；用户真机验收后公开。任务保持in_progress。
+
+
+## Session 66: 归档设置页任务并衔接跨设备同步规划
+<!-- trellis-session: v=2 fp=7ec9a939b97a4dc7 -->
+
+**Date**: 2026-10-14
+**Task**: 归档设置页任务并衔接跨设备同步规划
+**Branch**: `main`
+
+### Summary
+
+用户确认本轮可以收尾，归档desktop-settings-update；核对0.1.3公开发布和四宿主构建，保留真机记录缺口并整理同步下一阶段边界。
+
+### Main Changes
+
+- 设置页任务移至archive/2026-10，修复两个JSONL清单的路径；发布tag仍指向cedb6cca，没有修改产品或远程状态。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `84bac7b1` | feat(settings): unify settings and add verified release downloads |
+| `69af8c11` | docs(release): prepare desktop 0.1.3 notes and readiness evidence |
+
+### Testing
+
+- [OK] 只读核对run38550667540七个job均success、Release412611571已公开prerelease、七资产及complete ownership marker；归档状态、清单引用、handoff链接与diff-check通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 单独规划生产数据checkpoint与双设备离线交接，沿用单人切换、完整原始历史、自动素材下载及密钥设备本地的既有决策。
+- A6/A9c/A10仍无逐项真机记录，保留后续复核；本轮未启动同步代码，未归档其他任务，未push。
