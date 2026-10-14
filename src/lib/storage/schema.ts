@@ -1350,6 +1350,11 @@ export const PRODUCT_SCHEMA = {
         "unique": false
       }
     ]
+  },
+  "deviceSettings": {
+    "keyPath": "key",
+    "scope": "device",
+    "indexes": []
   }
 } as const satisfies Record<TableName, TableDefinition>;
 

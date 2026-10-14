@@ -135,7 +135,7 @@ IP 是长期创作身份或世界设定的组织方式，不是另一种项目�
 | MiMo | 聊天、语音合成、音色设计与声音克隆 |
 | Tavily（独立搜索连接） | 助手网页搜索与页面正文提取 |
 
-模型列表与能力提示来自供应商信息及项目内的 Model Bank 快照，不能代替账户权限检查。「获取模型」也不一定意味着密钥已通过验证；连接测试、公开模型查询和真实生成是不同操作。
+模型列表与能力提示来自供应商信息及项目内置或用户手动同步的 Models.dev 模型目录，不能代替账户权限检查。「获取模型」也不一定意味着密钥已通过验证；连接测试、公开模型查询和真实生成是不同操作。
 
 通用 OpenAI 兼容连接测试优先读取模型列表；接口不支持或遇到部分网络错误时，可能使用最小聊天请求进行探测，因此可能产生少量供应商用量。专用连接器按各自协议测试。
 
@@ -199,9 +199,8 @@ pnpm dev
 | `pnpm lint` | 运行 `tsc -b`，即 TypeScript 类型检查 |
 | `pnpm test` | 运行完整 Vitest 测试集 |
 | `pnpm exec vitest run tests/umami.test.ts` | 运行指定测试文件 |
-| `pnpm model-bank:verify` | 校验供应商模型快照与生成数据 |
-| `pnpm model-bank:compare` | 当前与快照校验命令相同 |
-| `pnpm model-bank:sync /path/to/lobehub` | 从本地 LobeHub checkout 同步快照并生成数据；复核差异与许可 |
+| `pnpm models-dev:baseline` | 按已锁定的 `@opencode-ai/models` 重新生成内置模型目录基线 |
+| `pnpm models-dev:verify` | 校验内置基线与锁定的包版本一致 |
 
 ## 部署
 
@@ -289,7 +288,7 @@ docker compose up -d
 | 路由 | TanStack Router 文件路由与自动代码拆分 |
 | 本地数据 | 共用 ProductStore 命令与查询；桌面端 SQLite／文件，浏览器端 Dexie／IndexedDB |
 | 界面 | Tailwind CSS 4、Radix UI、Ant Design、Lobe UI、Lucide、Motion |
-| AI | 共用供应商适配与 Agent 工具运行时，原生或浏览器 HTTP，Model Bank 元数据 |
+| AI | 共用供应商适配与 Agent 工具运行时，原生或浏览器 HTTP，模型目录（Models.dev）元数据 |
 | 文档与媒体 | PDF.js、Mammoth、JSZip、Web Audio、MediaRecorder |
 | 桌面端 | Tauri 2／Rust、SQLite、原生 HTTP 与文件／系统服务 |
 | 验证与部署 | Vitest、fake-indexeddb、TypeScript、GitHub Actions、Docker／Nginx |
@@ -315,8 +314,7 @@ src/
     └── references/         # 资料导入、解析与打包
 public/brand/               # 产品标识与图标
 tests/                      # 单元与数据层／运行时测试
-vendor/lobehub/             # Model Bank 上游快照与许可
-scripts/                    # 模型快照维护
+scripts/                    # 模型目录基线与发布辅助脚本
 deploy/                     # Nginx 配置
 .github/workflows/          # 质量门禁与镜像发布
 docs/                       # 产品和架构规划
@@ -332,7 +330,7 @@ docs/                       # 产品和架构规划
 ```bash
 pnpm lint
 pnpm test
-pnpm model-bank:verify
+pnpm models-dev:verify
 pnpm build
 ```
 
@@ -386,8 +384,9 @@ pnpm build
 | 项目 | 使用与参考 |
 | --- | --- |
 | [PDF.js](https://github.com/mozilla/pdf.js)、[Mammoth.js](https://github.com/mwilliamson/mammoth.js) | 浏览器本地 PDF 正文与 DOCX 文本提取；分别采用 Apache-2.0、BSD-2-Clause 许可 |
-| [LobeHub](https://github.com/lobehub/lobehub) | 完整 Model Bank 数据来源；Agent、聊天输入区和上下文交互的实现参考。原始快照及许可保存在 [`vendor/lobehub`](vendor/lobehub/README.md) |
+| [LobeHub](https://github.com/lobehub/lobehub) | Agent、聊天输入区和上下文交互的实现参考 |
 | [Lobe UI](https://github.com/lobehub/lobe-ui)、[Lobe Icons](https://github.com/lobehub/lobe-icons)、[Fluent Emoji](https://github.com/lobehub/fluent-emoji) | 聊天组件、模型品牌图标与表情资源 |
+| [Models.dev](https://models.dev) | 模型规格与价格目录（内置基线与手动同步，MIT） |
 | [React](https://react.dev/)、[TypeScript](https://github.com/microsoft/TypeScript) | 应用界面与类型系统 |
 | [Vite](https://github.com/vitejs/vite)、[Vite React Plugin](https://github.com/vitejs/vite-plugin-react) | 开发服务与构建 |
 | [TanStack Router](https://github.com/TanStack/router) | 类型安全路由与路由生成 |
@@ -410,4 +409,4 @@ pnpm build
 
 小光点的原创代码采用 [MIT License](LICENSE)。
 
-第三方内容遵循各自的原始许可，详见 [第三方声明](THIRD_PARTY_NOTICES.md)。其中，迁入的 LobeHub Model Bank 源码和派生数据继续适用 [LobeHub Community License](vendor/lobehub/LICENSE)，不属于本项目 MIT 授权范围。
+第三方内容遵循各自的原始许可，详见 [第三方声明](THIRD_PARTY_NOTICES.md)。

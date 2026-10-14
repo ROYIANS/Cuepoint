@@ -1,4 +1,4 @@
-export type RuntimeHttpPurpose = "configured" | "result-download" | "search-probe";
+export type RuntimeHttpPurpose = "configured" | "result-download" | "search-probe" | "model-catalog";
 export type RuntimeHttpScope = {purpose: RuntimeHttpPurpose; probeOrigin?: string};
 
 /** Do not include rejected authored URLs (including signed query values) in errors. */
@@ -23,10 +23,22 @@ async function configuredOrigins(): Promise<Set<string>> {
     return origins;
 }
 
+/** Fixed, public Models.dev catalog document. Nothing else is reachable through the model-catalog purpose. */
+export const MODEL_CATALOG_URL = "https://models.dev/api.json";
+const CREDENTIAL_HEADERS = ["authorization", "proxy-authorization", "cookie", "cookie2", "x-api-key", "api-key", "x-goog-api-key"];
+
+/** Independent of configured connectors: exactly one anonymous GET, re-evaluated for every redirect hop. */
+function authorizeModelCatalog(url: URL, method: string, headers: Headers, body: BodyInit | null | undefined): {origin: string; allowHttp: boolean} {
+    if (url.href !== MODEL_CATALOG_URL || method !== "GET" || body != null || CREDENTIAL_HEADERS.some(key => headers.has(key)))
+        throw new Error("模型目录同步只能匿名 GET 访问 models.dev 的固定地址");
+    return {origin: url.origin, allowHttp: false};
+}
+
 /** Native ACL grants persist until restart; this policy rechecks current app configuration. */
 export async function authorizeRuntimeHttp(
     url: URL, method: string, headers: Headers, body: BodyInit | null | undefined, scope: RuntimeHttpScope,
 ): Promise<{origin: string; allowHttp: boolean}> {
+    if (scope.purpose === "model-catalog") return authorizeModelCatalog(url, method, headers, body);
     const origins = await configuredOrigins();
     const configured = origins.has(url.origin);
     if (scope.purpose === "result-download") {

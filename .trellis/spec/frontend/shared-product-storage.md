@@ -49,8 +49,17 @@ Table operations are `get`, `bulkGet`, `toArray`, `count`, `where`, `orderBy`,
 `filter`, `add`, `put`, `update`, `delete`, `bulkAdd`, `bulkPut`, `bulkDelete`,
 `clear`. Collections retain `first`, `filter`/`and`, `reverse`, `limit`, `sortBy`,
 `each`, `modify`, `delete`; `anyOf` accepts an array or variadic keys.
-`storage/schema.json` is the closed 49-table key/index/scope registry, shared
-with Rust and checked against the browser schema. Immutable version tables use
+`storage/schema.json` is the closed 50-table key/index/scope registry, shared
+with Rust and checked against the browser schema. The 50th table, `deviceSettings`
+(`key` primary key, free-form `value`, `updatedAt`; scope `device`), is a generic
+device-local key/value store: it never enters project packages or the future cloud
+checkpoint, values are validated by the reader (`getDeviceSetting(key, parse)`
+returns `undefined` for unreadable or invalid data), keys match `[A-Za-z0-9][A-Za-z0-9._:-]{0,127}`
+and one value is at most 2 MiB. New device-local state adds a key, not a table.
+Current keys: `modelCatalog`, `modelCatalogSelection`. Browser schema is Dexie
+version 25. Table counts in shared tests derive from `schema.json`; the Rust registry
+assertion is the one hand-maintained count (50). Adding a table changes the registry
+hash, so existing native workspaces refuse to open (no migration by design). Immutable version tables use
 their declared `versionId`, rather than an invented universal `id`.
 
 Existing business commands accept an optional final `ProductStore`. A `StoreTx`
@@ -222,7 +231,7 @@ transaction and loses atomicity.
 ## 6. Tests Required
 
 - Same shared cases on actual browser adapter and actual disposable Rust probe:
-  all 49 primary-key families and every registered index, optional/compound
+  all 50 primary-key families and every registered index, optional/compound
   uniqueness, ordering, clones/clear semantics, nested modes/scopes, overlays,
   rollback, closed handles and commit-only notifications.
 - Actual native loss/recovery at command/Agent boundaries: lost or malformed

@@ -1,4 +1,4 @@
-import {getModelBankEntry} from "@/lib/ai/modelBank";
+import {lookupModelByDefinition} from "@/lib/ai/modelCatalog/store";
 import type {AgentProtocol, AgentReasoningEffort} from "@/domain/agent";
 import type {ConnectorConfig} from "@/domain/types";
 
@@ -50,7 +50,7 @@ export function getReasoningPolicy(connector: ReasoningConnector | undefined, mo
     if (!wire) return undefined;
     const policy: ReasoningPolicy = {
         ...wire,
-        contextWindow: getModelBankEntry(id, connector.definitionId)?.contextWindow
+        contextWindow: lookupModelByDefinition(connector.definitionId, id)?.entry.context
     };
     // The generic connector explicitly uses the OpenAI Chat Completions contract.
     // It may be a user-configured proxy; this table is not a provider availability probe.

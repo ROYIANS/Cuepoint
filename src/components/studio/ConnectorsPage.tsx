@@ -1,7 +1,8 @@
 import {ModuleLayout} from "@/components/layout/ModuleLayout";
 import {SearchConnection} from "./SearchConnection";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Check, Plug} from "@/components/ui/icons";
+import {Check, Coins, Plug} from "@/components/ui/icons";
+import {ModelCatalogSection} from "@/components/connectors/ModelCatalogSection";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import {showError} from "@/components/errors/showError";
@@ -34,7 +35,7 @@ type EditorSession = EditorState & { baseUrl: string; apiKey: string };
 type EditorOperation = { session: EditorSession; kind: "probe" | "test" | "save" | "disconnect" };
 
 export function ConnectorsPage() {
-    const [section, setSection] = useState<"models" | "search">("models");
+    const [section, setSection] = useState<"models" | "search" | "catalog">("models");
     const view = useProductQuery(async (db) => {
         try {
             return {connectors: await db.connectors.toArray()};
@@ -243,6 +244,7 @@ export function ConnectorsPage() {
             <h2 className="module-nav-heading">连接与模型</h2><div className="module-nav-group">
                 <button type="button" className="module-nav-item" aria-pressed={section === "models"} onClick={() => setSection("models")}><Plug size={16} weight={section === "models" ? "fill" : "regular"} aria-hidden/>模型连接</button>
                 <button type="button" className="module-nav-item" aria-pressed={section === "search"} onClick={() => setSection("search")}>网络搜索连接</button>
+                <button type="button" className="module-nav-item" aria-pressed={section === "catalog"} onClick={() => setSection("catalog")}><Coins size={16} weight={section === "catalog" ? "fill" : "regular"} aria-hidden/>模型目录</button>
             </div>
         </>}><PageContent mode="detail">
             <PageHeader title="连接与模型" description={<>
@@ -293,6 +295,7 @@ export function ConnectorsPage() {
                     })}
                 </div>}
             </div><div hidden={section !== "search"}><SearchConnection/></div>
+            {section === "catalog" && <ModelCatalogSection/>}
 
             <Dialog open={Boolean(editor)} onOpenChange={(open) => !open && closeEditor()}>
                 <DialogContent

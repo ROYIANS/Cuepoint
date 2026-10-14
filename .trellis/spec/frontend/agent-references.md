@@ -57,7 +57,7 @@ Canonical messages keep lightweight `referenceInput` metadata. Wire materializer
 resolve it into Chat `image_url` or Responses `input_image` parts immediately before
 HTTP. Revalidate project, run and source availability after asynchronous encoding.
 Never store repeated base64 in messages, run audits or tool results. Explicit provider
-vision metadata overrides exact model-bank evidence; unsupported/unknown capability
+vision metadata overrides exact model-catalog evidence; unsupported/unknown capability
 fails with a model-switch/remove-image action, not a filename-only fallback.
 
 A completed read-image tool queues pixels for the next same-model request; it does

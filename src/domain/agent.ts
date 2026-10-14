@@ -169,9 +169,26 @@ export interface AgentToolLoading {
     loadedToolNames: string[];
 }
 
+/** Frozen price snapshot taken when a run starts. USD per million tokens; unknown figures are absent, never 0. */
+export interface ModelPricing {
+    source: "baseline" | "synced";
+    provider: string;
+    modelId: string;
+    /** True when the price comes from the model's original vendor, not the connector's own provider. */
+    reference: boolean;
+    currency: "USD";
+    unit: "per_million_tokens";
+    input?: number;
+    output?: number;
+    cacheRead?: number;
+    cacheWrite?: number;
+    capturedAt: string;
+}
+
 /** Frozen execution inputs. Credentials are resolved from the connector at dispatch. */
 export interface AgentRun {
     visionCapability?: AgentVisionCapability;
+    modelPricing?: ModelPricing;
     referenceAudit?: AgentReferenceAudit[];
     memorySelection?: MemorySelection;
     memoryAudit?: MemoryDispatchAudit[];

@@ -1,10 +1,14 @@
 import type {AgentVisionCapability} from "@/domain/referenceInput";
 import type {ChatModelMetadata} from "./modelMetadata";
-import {getModelBankVision} from "./modelBank";
+import {lookupModelByDefinition} from "./modelCatalog/store";
+import {MODELS_DEV_URL} from "./modelCatalog/types";
 
-export async function resolveVisionCapability(model: string, providerId?: string, metadata?: ChatModelMetadata): Promise<AgentVisionCapability> {
-    if (metadata?.vision !== undefined) return {supported: metadata.vision, source: "provider"};
-    return await getModelBankVision(model, providerId) ?? {supported: false, source: "unknown"};
+// Async by contract (callers await it) although the catalog read is synchronous.
+export function resolveVisionCapability(model: string, providerId?: string, metadata?: ChatModelMetadata): Promise<AgentVisionCapability> {
+    if (metadata?.vision !== undefined) return Promise.resolve({supported: metadata.vision, source: "provider"});
+    // Memory-only lookup (no dynamic import), so this is also safe inside a database transaction.
+    const imageInput = lookupModelByDefinition(providerId, model)?.entry.imageInput;
+    return Promise.resolve(imageInput === undefined ? {supported: false, source: "unknown"} : {supported: imageInput, source: "models-dev", sourceUrl: MODELS_DEV_URL});
 }
 
 export function requireVision(capability: AgentVisionCapability | undefined): void {

@@ -1,7 +1,10 @@
 import { getReasoningPolicy } from "../src/lib/ai/reasoningPolicy";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
+import { initModelCatalog } from "@/lib/ai/modelCatalog/store";
 import { collectModelMetadata, parseModelMetadata, resolveModelMetadata } from "../src/lib/ai/modelMetadata";
 import { discoverConnectorChatModels } from "../src/lib/ai/connectors";
+
+beforeAll(() => initModelCatalog());
 
 describe("provider model metadata", () => {
   it("uses conservative capacity for duplicate routes and supports special keys safely", () => {

@@ -135,7 +135,7 @@ Connections are studio-wide, so projects can reuse them. Choose the chat model i
 | MiMo | Chat, speech synthesis, voice design, and voice cloning |
 | Tavily, configured separately | Assistant web search and page extraction |
 
-Model lists and capability hints combine provider metadata with the bundled Model Bank snapshot. They do not establish account permissions. Public model discovery, authenticated connection tests, and actual generation are distinct operations.
+Model lists and capability hints combine provider metadata with the bundled or user-synced Models.dev model catalog. They do not establish account permissions. Public model discovery, authenticated connection tests, and actual generation are distinct operations.
 
 The generic OpenAI-compatible connection test first requests the model list. If the endpoint is unsupported or certain network errors occur, it may fall back to a minimal chat request, which can incur a small amount of provider usage. Dedicated connectors use their own test protocols.
 
@@ -199,9 +199,8 @@ Open the URL printed by Vite, usually `http://localhost:5173`. Basic startup req
 | `pnpm lint` | Run `tsc -b` for TypeScript checking |
 | `pnpm test` | Run the complete Vitest suite |
 | `pnpm exec vitest run tests/umami.test.ts` | Run one test file |
-| `pnpm model-bank:verify` | Verify model snapshots and generated data |
-| `pnpm model-bank:compare` | Currently an alias for snapshot verification |
-| `pnpm model-bank:sync /path/to/lobehub` | Sync the snapshot from a local LobeHub checkout and generate data; review changes and licenses |
+| `pnpm models-dev:baseline` | Regenerate the bundled model catalog baseline from the pinned `@opencode-ai/models` |
+| `pnpm models-dev:verify` | Verify the bundled baseline matches the pinned package version |
 
 ## Deployment
 
@@ -289,7 +288,7 @@ After deployment, inspect the browser's Network panel for the script and collect
 | Routing | TanStack Router file routes and automatic code splitting |
 | Local data | Shared ProductStore commands and queries; desktop SQLite / managed files; browser Dexie / IndexedDB |
 | UI | Tailwind CSS 4, Radix UI, Ant Design, Lobe UI, Lucide, Motion |
-| AI | Shared provider adapters and Agent tools/runtime, native or browser HTTP, Model Bank metadata |
+| AI | Shared provider adapters and Agent tools/runtime, native or browser HTTP, model catalog (Models.dev) metadata |
 | Documents and media | PDF.js, Mammoth, JSZip, Web Audio, MediaRecorder |
 | Desktop | Tauri 2 / Rust, SQLite, native HTTP and file/system services |
 | Verification and deployment | Vitest, fake-indexeddb, TypeScript, GitHub Actions, Docker / Nginx |
@@ -315,8 +314,7 @@ src/
     └── references/         # Reference import, extraction, packaging
 public/brand/               # Product identity and icons
 tests/                      # Unit, repository, and runtime tests
-vendor/lobehub/             # Upstream Model Bank snapshot and license
-scripts/                    # Model snapshot maintenance
+scripts/                    # Model catalog baseline and release helper scripts
 deploy/                     # Nginx configuration
 .github/workflows/          # Quality gate and image publication
 docs/                       # Product and architecture planning
@@ -332,7 +330,7 @@ Validate changes according to their scope. The complete release gate is:
 ```bash
 pnpm lint
 pnpm test
-pnpm model-bank:verify
+pnpm models-dev:verify
 pnpm build
 ```
 
@@ -386,8 +384,9 @@ Cuepoint builds on the work of these projects and their contributors:
 | Project | Role |
 | --- | --- |
 | [PDF.js](https://github.com/mozilla/pdf.js), [Mammoth.js](https://github.com/mwilliamson/mammoth.js) | Local PDF and DOCX text extraction; Apache-2.0 and BSD-2-Clause respectively |
-| [LobeHub](https://github.com/lobehub/lobehub) | Model Bank source; references for Agent chat and interaction patterns. Snapshot and license retained in [`vendor/lobehub`](vendor/lobehub/README.md) |
+| [LobeHub](https://github.com/lobehub/lobehub) | References for Agent chat and interaction patterns |
 | [Lobe UI](https://github.com/lobehub/lobe-ui), [Lobe Icons](https://github.com/lobehub/lobe-icons), [Fluent Emoji](https://github.com/lobehub/fluent-emoji) | Chat components, model branding, and emoji resources |
+| [Models.dev](https://models.dev) | Model specification and pricing catalog (built-in baseline and manual sync, MIT) |
 | [React](https://react.dev/), [TypeScript](https://github.com/microsoft/TypeScript) | Application UI and type system |
 | [Vite](https://github.com/vitejs/vite), [Vite React Plugin](https://github.com/vitejs/vite-plugin-react) | Development server and builds |
 | [TanStack Router](https://github.com/TanStack/router) | Typed routing and route generation |
@@ -410,4 +409,4 @@ See [`package.json`](package.json) and the lockfile for dependency versions. Eac
 
 Cuepoint's original code is licensed under the [MIT License](LICENSE).
 
-Third-party content remains under its original terms; see [Third-party notices](THIRD_PARTY_NOTICES.md). The imported LobeHub Model Bank source and derived data remain under the [LobeHub Community License](vendor/lobehub/LICENSE) and are outside Cuepoint's MIT grant.
+Third-party content remains under its original terms; see [Third-party notices](THIRD_PARTY_NOTICES.md).

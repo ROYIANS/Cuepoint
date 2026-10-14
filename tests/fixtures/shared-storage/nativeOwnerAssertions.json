@@ -170,6 +170,22 @@
     },
     {
       "tables": [
+        "deviceSettings"
+      ],
+      "file": "tests/deviceSettings.test.ts",
+      "case": "persists device-local keyed values through the shared store",
+      "commands": [
+        "putDeviceSetting",
+        "getDeviceSetting",
+        "deleteDeviceSetting"
+      ],
+      "assertions": [
+        "Valid values roundtrip and delete; corrupt or unvalidated values read as undefined.",
+        "Invalid keys and oversize values are rejected before any write."
+      ]
+    },
+    {
+      "tables": [
         "searchConnections"
       ],
       "file": "tests/webResearchRuntime.test.ts",

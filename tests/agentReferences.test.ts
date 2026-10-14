@@ -12,6 +12,7 @@ import { selectReferenceContext, referenceSelectionCharacterBudget } from "@/lib
 import { REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS } from "@/lib/agent/referenceTools";
 import { buildContextMessages, budgetContext, selectContextHistory } from "@/lib/agent/contextPlanner";
 import { materializeChatMessages, materializeResponseItems } from "@/lib/ai/referenceWire";
+import { initModelCatalog } from "@/lib/ai/modelCatalog/store";
 import { resolveVisionCapability } from "@/lib/ai/visionCapability";
 import { toResponseInput } from "@/lib/ai/responsesStream";
 import type { ConnectorConfig } from "@/domain/types";
@@ -58,8 +59,9 @@ describe("bounded project references and native same-model vision", () => {
     await expect(selectReferenceContext(a.id, [ref])).rejects.toThrow("已移除");
   });
   it("requires verified visual support rather than inferring it from names", async () => {
+    await initModelCatalog();
     expect(await resolveVisionCapability("unrecognized-image-supermodel")).toMatchObject({ supported: false, source: "unknown" });
-    expect(await resolveVisionCapability("gpt-6-astra", "openai-compatible")).toMatchObject({ supported: true, source: "model-bank" });
+    expect(await resolveVisionCapability("gpt-6-astra", "openai-compatible")).toMatchObject({ supported: true, source: "models-dev" });
     expect(await resolveVisionCapability("gpt-6-astra", "openai-compatible", { source: "provider", vision: false })).toEqual({ supported: false, source: "provider" });
     const p = await createProject("P"), image = await source(p.id, "image", "image"), thread = await createChatThread({ projectId: p.id });
     await expect(beginAgentRun({ threadId: thread.id, connector, model: "unknown", content: "look", attachments: [image] })).rejects.toThrow("尚未确认");

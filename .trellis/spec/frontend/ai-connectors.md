@@ -1,18 +1,12 @@
 # AI connector and generation boundaries
 
-## Complete Model Bank snapshot
-`vendor/lobehub/model-bank` is the full unmodified upstream package, with its root
-license and a per-file SHA-256 manifest. Never hand-edit upstream data. The full
-runtime model dataset and a compact limit index are derived outside that directory.
-`loadModelBank` lazily returns every raw provider/model record, including prices and
-media schemas. `getModelBankEntry` selects exact provider+ID before original-vendor
-fallback; conflicting fallback limits stay unknown. No guessed aliases or invented
-records. `resolveModelMetadata` overlays valid live provider limits per field and
-returns source provenance. Copied date is not independent factual verification.
-Model data does not authorize new gateway wire parameters; transport policy remains
-in reasoningPolicy. Manual `model-bank:sync` copies from a trusted local checkout;
-`model-bank:verify` checks every source hash and re-derives exact outputs. No scheduled
-sync. Upstream tests remain unmodified vendor source, excluded from our Vitest roots.
+## Models.dev catalog (replaced the LobeHub Model Bank; 2026-10-14)
+
+The Models.dev catalog in `src/lib/ai/modelCatalog/` is the only source for limits, vision and prices. The LobeHub Model Bank (`vendor/lobehub`, `lib/ai/modelBank/`, `model-bank:*` scripts) was removed on 2026-10-14. Historical `AgentRun.visionCapability.source: "model-bank"` markers and old "Model Bank" display strings in stored runs/messages are read as-is: `referenceInput.ts` keeps `"model-bank"` in its source union so old records stay valid; there is no migration and no code branches on it. Model data does not authorize new gateway wire parameters; transport policy remains in `reasoningPolicy`.
+- Sources: a committed baseline projection of the pinned `@opencode-ai/models` (`models-dev:verify`), lazily imported; or the user-synced snapshot stored in the device-local `deviceSettings` table under key `modelCatalog` (selection under `modelCatalogSelection`, never in project ZIPs). Sync and the full-list index are manual only.
+- Matching (exact, case-sensitive, no aliases): tier 1 the connector's own provider, tier 2 original-vendor providers, tier 3 same canonical id when candidates agree per field. Prices come only from tier 1 or tier 2; tier-2 prices are "官方参考价". Conflicts: smallest context/output, conflicting vision is unknown.
+- Lookups stay synchronous and memory-only (safe inside transactions); runs freeze a `modelPricing` snapshot.
+- UI contract: see [Model catalog page](./component-guidelines.md#model-catalog-page-2026-10-14).
 
 ## 1. Scope / Trigger
 

@@ -4,6 +4,7 @@ import {getMemorySelection} from "./memoryRetrieval";
 import {type AgentInteractionMode, type AgentRun, GENERAL_AGENT_ID} from "@/domain/agent";
 import type {ReferenceAttachment} from "@/domain/references";
 import type {ChatModelMetadata} from "@/lib/ai/modelMetadata";
+import {initModelCatalog} from "@/lib/ai/modelCatalog/store";
 import {requireVision, resolveVisionCapability} from "@/lib/ai/visionCapability";
 import {getTaskContext} from "@/lib/agent/taskContext";
 import {projectContextTables} from "@/lib/agent/projectContext";
@@ -114,11 +115,12 @@ export type ContextPreviewRead = Awaited<ReturnType<typeof readFacts>> | {
     message: string
 };
 
-/** External model-bank preparation finishes before the final coherent IndexedDB read. */
+/** Model catalog loading finishes before the final coherent IndexedDB read. */
 export async function readAgentContextPreview(input: ContextPreviewInput, store?: ProductStore): Promise<ContextPreviewRead> {
     const db = store ?? productDb;
     const identity = contextPreviewIdentity(input);
     try {
+        await initModelCatalog();
         const vision = await resolveVisionCapability(input.model, input.providerId, input.metadata);
         return await readFacts(input, identity, vision, db);
     } catch (error) {

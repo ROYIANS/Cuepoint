@@ -42,7 +42,7 @@ resolveProductStorage(native: boolean, profile: unknown): Readonly<{
 getProductStorage(): ReturnType<typeof resolveProductStorage>
 usesSqliteProductStorage(): boolean
 
-runtimeFetchFor(purpose?: "configured" | "result-download" | "search-probe"): typeof fetch
+runtimeFetchFor(purpose?: "configured" | "result-download" | "search-probe" | "model-catalog"): typeof fetch
 connectorProbeFetch(baseUrl: string, fetchImpl?: typeof fetch): typeof fetch
 authorizeRuntimeHttp(
   url: URL, method: string, headers: Headers,
@@ -190,6 +190,10 @@ Provenance is recorded in
 `desktop/tauri/src-tauri/vendor/tauri-plugin-http/CUEPOINT-PATCH.md`; task evidence
 retains `http-cancellation.patch` and `http-upstream-provenance.json`. Update the
 patch and hashes together whenever the vendored source changes.
+
+### Models.dev catalog purpose (`model-catalog`)
+
+`runtimeFetchFor("model-catalog")` allows exactly one request shape: `GET https://models.dev/api.json`, HTTPS, fixed host and path, no query, no `Authorization`/`Cookie`/credential headers and no body. Every redirect hop is reauthorized by the same rule. Its response ceiling (`MODEL_CATALOG_MAX_BYTES`, 8 MiB) and its 60 s total deadline are independent constants, not the 4 MiB ordinary-JSON limit. It needs no connector. Only user actions use it: `syncModelCatalog` (persists the chosen subset) and `fetchCatalogIndex` (selection dialog, persists nothing). Rust is unchanged: `https://models.dev` passes `validated_origin`; path and purpose limits live in JS. Packaged-window reachability and CSP for this origin have NOT been verified in a real Tauri window.
 
 Official IPC rejection can be a string; sanitize it to an ordinary Error, without
 inventing TypeError. Preserve genuine TypeError classification. The existing
