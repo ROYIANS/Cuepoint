@@ -40,11 +40,16 @@
 
 验证结论与证据见 `research/settings-checkpoint-validation.md`。A6（系统保存）、A9c（真实短窗口弹层）与 A10（安装版）仍待用户验收，任务不归档。
 
-## 发布（用户确认后）
-- [ ] 发布前核对实际 `desktop-v0.1.3` tag 与最终源码；本轮不做 tag 操作。
-- [ ] 刷新模型目录基线（`pnpm add -D -E @opencode-ai/models@latest` → `models-dev:baseline` → `models-dev:verify`，有变化才提交）。
-- [ ] 版本号已是 0.1.3，核对四处一致。
-- [ ] 用户 push `main` 与 tag；CI 四平台构建后真机验证：存储迁移（旧工作区能直接打开）、设置页、检查更新、下载保存、汉堡按钮与弹层。
+## 发布准备（2026-10-14 用户确认 0.1.3；用户负责 push）
+- [x] 已合并 main 并核对远端 main 包含本轮设置改动；准备开始时本地/远端均无 `desktop-v0.1.3`，GitHub 无同名 Release，无需删除旧 tag。
+- [x] 按发布契约刷新模型目录：精确升级 `@opencode-ai/models` 至 `0.0.104`，重新生成并验证基线；379 → 381 条、18 providers，只有该依赖的锁文件变化。
+- [x] 实际 `sourceVersion()` 的四个版本 owner 与 Cargo.lock 主包均为 0.1.3。
+- [x] 准备 `docs/desktop-release-0.1.3.md` 具体发布正文，修正通用模板的设置入口与更新说明；发布器不会自动读取该正文。
+- [x] 独立发布检查通过四宿主/五安装包、tag 情境 prepare dry-run、draft-only 权限与 65 项协议/HTTP 回归；原发布流水线保持仅打包模式。
+- [x] 最终模型/文档冻结后的十项完整门禁通过：4655 tests、88 quality self-tests、models verify/build/budget 与 desktop types/lint/quality；1260 个源码/配置/文档路径检查前后哈希一致。
+- [x] 本轮授权准备本地发布提交与 annotated `desktop-v0.1.3`，tag 绑定最终干净 main；确切源码通过本地 tag 与会话日志核对。
+- [ ] 用户 push `main` 与 `desktop-v0.1.3`；CI 四宿主打包五个安装包，核对完整七文件 draft。
+- [ ] 用户真机验证：存储迁移（旧工作区能直接打开）、设置页、检查更新、下载保存、汉堡按钮与弹层；上传完成后再整理草稿正文与公开发布。
 
 ## 回滚点
 - 阶段 0 的 shell 修复已在当前分支历史；本轮 feature/docs 提交可独立回退。

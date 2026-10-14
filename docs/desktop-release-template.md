@@ -68,9 +68,11 @@ __CHANGELOG__
 
 ## 开始使用
 
-- 在 **连接与模型** 添加自己的 AI 服务和 API Key；本地项目编辑与素材管理无需配置 AI 连接。
+- 在 **设置 → 连接与模型** 添加自己的 AI 服务和 API Key；本地项目编辑与素材管理无需配置 AI 连接。
 - 在 **项目** 创建视频、音频或音乐项目，再整理稿件与素材。
-- 当前版本需从 Release **手动下载更新**；更新前请导出项目 ZIP 备份。桌面版与浏览器版的数据目前不会自动同步。
+- 从 0.1.3 起，可在 **设置 → 关于与更新** 检查新版本、打开发布页并下载安装包。桌面应用内下载会核对文件大小与 SHA-256，再通过系统“另存为”对话框保存；超过 64 MiB 或缺少校验值时，提供浏览器下载入口。保存后仍需退出应用并**手动安装**，不会自动安装或重启。也可以直接从本页下载。
+- **设置 → 通用** 中的“启动时自动检查更新”默认关闭，可按需开启；成功检查后 24 小时内不再自动检查。
+- 更新前请导出项目 ZIP 备份。桌面版与浏览器版的数据目前不会自动同步。
 
 更多用法见 [项目 README](https://github.com/ROYIANS/Cuepoint/blob/__TAG__/README.md)。
 
@@ -81,7 +83,8 @@ __CHANGELOG__
 - 对应源码：[__SOURCE_SHA__](https://github.com/ROYIANS/Cuepoint/commit/__SOURCE_SHA__)。
 - 校验值：[SHA256SUMS](https://github.com/ROYIANS/Cuepoint/releases/download/__TAG__/SHA256SUMS)。操作方法见 [安装指南的 SHA-256 核对步骤](https://github.com/ROYIANS/Cuepoint/blob/__TAG__/docs/desktop-installation.md)。
 - 发布记录：[release-manifest.json](https://github.com/ROYIANS/Cuepoint/releases/download/__TAG__/release-manifest.json)。其中包含本版本实际限制，请以该发布记录为准。
-- 当前是早期桌面体验包。自动打包和文件校验不代表在你的设备上完成了安装、首次启动、音频、麦克风、打印、PDF 或 AI 服务的功能验证。
+- 当前是早期桌面体验包。发布工作流仅自动打包，未运行自动化测试、应用启动或运行时验收；上传完成不代表功能测试通过，公开发布前仍由维护者完成功能检查。
+- 构建来源与安装包哈希核对不代表已验证安装后的架构、界面、SQLite 持久保存、音频、麦克风、打印、PDF、AI 服务或媒体编解码器。
 - Linux 使用 Ubuntu 22.04 x64 构建基线；其他发行版、AppImage/FUSE 启动及媒体环境需要在对应设备上确认。
 - Windows 工作区要求本机 NTFS。现有恢复机制不保证突然断电或系统崩溃后所有新文件和目录均已持久保存，请定期导出项目备份。
 - 项目 ZIP 不包含整个工作室、全部连接/API Key 或完整聊天历史；范围见 [备份说明](https://github.com/ROYIANS/Cuepoint/blob/__TAG__/README.md#项目-zip-的范围)。
