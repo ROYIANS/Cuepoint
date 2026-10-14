@@ -1778,3 +1778,42 @@ Shipped split-pane module navigation, docked/overlay context panels, single-row 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 64: 设置页统一样式与 Tavily 自动填充修复
+<!-- trellis-session: v=2 fp=9bfcc56ec755637a -->
+
+**Date**: 2026-10-14
+**Task**: 设置页统一样式与 Tavily 自动填充修复
+**Branch**: `codex/desktop-settings-update`
+
+### Summary
+
+接续桌面设置页交接，统一五个分区样式，补网络搜索图标，修复自动填充卸载弹窗，完成独立检查和全量门禁后提交。
+
+### Main Changes
+
+- 设置分区统一页头、分组与搜索；连接与模型嵌入设置，保留旧路由跳转。
+- 编辑器同步锁住后台过滤，处理同轮填充、卸载和旧保存请求延迟回调；新增 ReactDOM 回归覆盖。
+- 共享发布库增加有界解析、策略和下载安装包校验，同步可执行规范与任务证据。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `84bac7b1` | feat(settings): unify settings and add verified release downloads |
+| `626fbcf2` | docs(settings): record update contracts and checkpoint validation |
+
+### Testing
+
+- [OK] 全量 4655 tests passed、7 skipped；quality self-test 88 cases；root lint/quality/models/build/landing budget 与 desktop types/lint/quality 均通过。
+- [OK] Headless Edge 1280×800、390×800 验证五分区标题一致、图标、过滤、空态和 Tavily 草稿保持；最终 47 个源码/测试路径哈希未变。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 任务保持 in_progress：用户真机验证顶栏、短窗口弹层、设置页、更新检查及系统保存对话框。
+- 后续核对 desktop-v0.1.3 tag 与 CI 四平台构建，验证旧工作区迁移；本轮未 push/merge/tag。
