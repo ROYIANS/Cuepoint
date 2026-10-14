@@ -2,8 +2,10 @@ import {SCENE_COPY} from "../content/copy";
 import type {SceneId} from "./scenes";
 
 // One scene's words. `heading` is a real heading in the readable (static and
-// screen-reader) versions and a plain paragraph on the decorative stage.
-export function SceneBody({id, heading, headingId}: {id: SceneId; heading: "h1" | "h2" | "p"; headingId?: string}) {
+// screen-reader) versions and a plain paragraph on the decorative stage. The
+// "画面" description is for the readable versions only: on the stage the picture
+// itself (the Canvas) says it, so `stage` leaves the caption out.
+export function SceneBody({id, heading, headingId, stage}: {id: SceneId; heading: "h1" | "h2" | "p"; headingId?: string; stage?: boolean}) {
     const copy = SCENE_COPY[id];
     const Heading = heading;
     return (
@@ -17,7 +19,7 @@ export function SceneBody({id, heading, headingId}: {id: SceneId; heading: "h1" 
                     {copy.points.map(point => <li key={point.text}>{point.text}</li>)}
                 </ul>
             ) : null}
-            <p className="lp-caption">{copy.schematic ? copy.caption : `画面：${copy.caption}`}</p>
+            {stage ? null : <p className="lp-caption">{copy.schematic ? copy.caption : `画面：${copy.caption}`}</p>}
         </>
     );
 }

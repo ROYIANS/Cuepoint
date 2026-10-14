@@ -274,7 +274,7 @@ describe("DOM", () => {
         await flushFrames();
     };
     const layers = () => [...container.querySelectorAll<HTMLElement>(".lp-layer")];
-    const buttonByText = (text: string) => [...container.querySelectorAll("button")].find(button => button.textContent === text);
+    const buttonByText = (label: string) => [...container.querySelectorAll("button")].find(button => button.getAttribute("aria-label") === label);
     const setReducedMotion = async (value: boolean) => {
         reduced = value;
         await act(async () => mediaListeners.forEach(listener => listener()));
@@ -307,7 +307,8 @@ describe("DOM", () => {
             await renderLanding();
             const first = container.querySelector("a[href], button, summary");
             expect(first?.tagName).toBe("BUTTON");
-            expect(first?.textContent).toBe("跳过动画");
+            expect(first?.getAttribute("aria-label")).toBe("跳过动画");
+            expect(first?.textContent).toBe(""); // icon only
             expect(first?.getAttribute("data-umami-event")).toBe("skip-animation");
             const credits = container.querySelector(".lp-credits")!;
             const hrefs = [...credits.querySelectorAll("a")].map(a => a.getAttribute("href"));
@@ -316,6 +317,40 @@ describe("DOM", () => {
                 expect(link.closest("[inert]")).toBeNull();
                 expect(link.closest("[aria-hidden='true']")).toBeNull();
             }
+        });
+
+        it("gives both header actions one icon-control component, named by aria-label", async () => {
+            await renderLanding();
+            const header = container.querySelector(".lp-header")!;
+            const controls = [...header.querySelectorAll(".lp-ic")];
+            expect(controls).toHaveLength(2);
+            const [skip, enter] = controls;
+            expect(skip.tagName).toBe("BUTTON");
+            expect(skip.getAttribute("aria-label")).toBe("跳过动画");
+            expect(skip.getAttribute("data-tip")).toBe("跳过动画");
+            expect(enter.tagName).toBe("A");
+            expect(enter.getAttribute("href")).toBe("/agent");
+            expect(enter.getAttribute("aria-label")).toBe("进入应用");
+            expect(enter.getAttribute("title")).toBe("进入应用");
+            for (const control of controls) {
+                expect(control.querySelector("svg[aria-hidden='true']")).not.toBeNull();
+                expect(control.getAttribute("data-umami-event")).toBeTruthy();
+            }
+            await act(async () => (skip as HTMLButtonElement).click());
+            const back = container.querySelector<HTMLElement>(".lp-header button.lp-ic")!;
+            expect(back.getAttribute("aria-label")).toBe("观看动画");
+            expect(back.getAttribute("data-umami-event")).toBe("play-animation");
+            expect(container.querySelectorAll(".lp-header .lp-ic")).toHaveLength(2); // static mode uses the same pair
+        });
+
+        it("leaves the stage text-only ('off') when the Canvas cannot be used, and shows no 画面 captions on the stage", async () => {
+            await renderLanding();
+            const stage = container.querySelector<HTMLElement>(".lp-stage")!;
+            // The fake 2D context is not a real one, so the lazy renderer declines to mount.
+            await act(async () => { await new Promise(resolve => setTimeout(resolve, 50)); });
+            expect(stage.dataset.canvas).toBe("off");
+            expect(stage.querySelector(".lp-caption")).toBeNull();
+            expect(container.querySelector(".lp-sr-only")!.textContent).toContain("画面：");
         });
 
         it("keeps only the active stage layer interactive and follows the scroll position", async () => {

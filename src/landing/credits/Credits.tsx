@@ -31,9 +31,13 @@ export function Credits({download}: {download: DownloadData}) {
             </section>
             <section className="lp-section" aria-labelledby="lp-open">
                 <h2 id="lp-open">开源与 Star</h2>
-                <p className="lp-narration">{OPEN_SOURCE.text}</p>
-                <p className="lp-links"><a href={LICENSE_URL} rel="noopener noreferrer">MIT 协议</a><a href={GITHUB_URL} rel="noopener noreferrer">GitHub 仓库</a></p>
-                <StarPrompt stars={download.stars} />
+                <div className="lp-open">
+                    <div className="lp-open-info">
+                        <p className="lp-narration">{OPEN_SOURCE.text}</p>
+                        <p className="lp-links lp-links-quiet"><a href={LICENSE_URL} rel="noopener noreferrer">MIT 协议</a><a href={GITHUB_URL} rel="noopener noreferrer">GitHub 仓库</a></p>
+                    </div>
+                    <StarPrompt stars={download.stars} />
+                </div>
             </section>
             <section className="lp-section" aria-labelledby="lp-faq">
                 <h2 id="lp-faq">常见问题</h2>

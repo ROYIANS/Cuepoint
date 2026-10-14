@@ -8,20 +8,22 @@ import {useFilmMode} from "./mode";
 import {SceneBody} from "./SceneBody";
 import {STAGE_SCENES, TOTAL_WEIGHT} from "./scenes";
 import {SkipButton} from "./SkipButton";
+import {IconControl} from "../ui/IconControl";
 import {SCENE_FADE, sceneProgressWindow} from "./timeline";
 import {useFilmProgress} from "./useFilmProgress";
 
 const LICENSE_URL = `${GITHUB_URL}/blob/main/LICENSE`;
 const LAST_STAGE = STAGE_SCENES.length - 1;
 
-// The toggle comes first in the DOM (first Tab stop) and is moved visually by CSS.
+// The toggle comes first in the DOM (first Tab stop) and is moved visually by CSS;
+// both header actions are the same round icon control.
 function Header({toggle}: {toggle: ReactNode}) {
     return (
         <header className="lp-header">
             <div className="lp-header-inner">
                 {toggle}
                 <a className="lp-brand" href="/"><img src={LOGO_SRC} alt="" width={28} height={28} /><span>小光点</span></a>
-                <nav aria-label="主要"><a className="lp-btn lp-btn-quiet" href="/agent" data-umami-event="enter-app">进入应用</a></nav>
+                <nav aria-label="主要"><IconControl icon="enter" label="进入应用" reveal="hover" umami="enter-app" href="/agent" /></nav>
             </div>
         </header>
     );
@@ -84,8 +86,30 @@ function StaticPage({download, skipped, onToggle}: {download: DownloadData; skip
 function FilmPage({download, onToggle}: {download: DownloadData; onToggle: () => void}) {
     const rootRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
+    const stageRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
     const driver = useFilmProgress(rootRef, trackRef);
     const [active, setActive] = useState(0);
+    // The Canvas 2D picture is a separate lazy chunk. Until it reports in, the stage is
+    // "pending" (CSS holds the leader's text back); if it cannot run, "off" restores the text.
+    useEffect(() => {
+        const stage = stageRef.current;
+        const canvas = canvasRef.current;
+        if (!stage || !canvas) return undefined;
+        let cancelled = false;
+        let handle: {destroy: () => void} | undefined;
+        import("./renderers/stage").then(module => {
+            if (cancelled) return;
+            handle = module.mountStage({stage, canvas, driver});
+            if (!handle) stage.dataset.canvas = "off";
+        }).catch(() => {
+            if (!cancelled) stage.dataset.canvas = "off";
+        });
+        return () => {
+            cancelled = true;
+            handle?.destroy();
+        };
+    }, [driver]);
     useEffect(() => driver.subscribe(({sceneIndex}) => setActive(sceneIndex)), [driver]);
     const track = {"--film-length": TOTAL_WEIGHT, "--fade": SCENE_FADE} as CSSProperties;
     return (
@@ -100,9 +124,9 @@ function FilmPage({download, onToggle}: {download: DownloadData; onToggle: () =>
                     ))}
                 </div>
                 <div className="lp-track" ref={trackRef} style={track}>
-                    <div className="lp-stage" aria-hidden="true">
+                    <div className="lp-stage" aria-hidden="true" data-canvas="pending" ref={stageRef}>
                         <div className="lp-stage-bg" />
-                        <canvas className="lp-canvas" data-film-canvas aria-hidden="true" />
+                        <canvas className="lp-canvas" data-film-canvas aria-hidden="true" ref={canvasRef} />
                         <Perforations />
                         {STAGE_SCENES.map((scene, index) => {
                             const {start, end} = sceneProgressWindow(index);
@@ -110,7 +134,7 @@ function FilmPage({download, onToggle}: {download: DownloadData; onToggle: () =>
                             const layerWindow = {"--s": index === 0 ? -SCENE_FADE : start, "--e": index === LAST_STAGE ? 1 + SCENE_FADE : end} as CSSProperties;
                             return (
                                 <div key={scene.id} className="lp-layer" data-scene-layer={scene.id} inert={index !== active} style={layerWindow}>
-                                    <div className="lp-layer-inner"><SceneBody id={scene.id} heading="p" /></div>
+                                    <div className="lp-layer-inner"><SceneBody id={scene.id} heading="p" stage /></div>
                                 </div>
                             );
                         })}
