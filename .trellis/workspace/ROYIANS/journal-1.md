@@ -1754,3 +1754,27 @@ Shipped split-pane module navigation, docked/overlay context panels, single-row 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 63: 官网落地页：电影式滚动与自动播放、下载与 star 引导
+<!-- trellis-session: v=2 fp=3900b011b3c26d66 -->
+
+**Date**: 2026-10-14
+**Task**: 官网落地页：电影式滚动与自动播放、下载与 star 引导
+**Branch**: `codex/landing-page`
+
+### Summary
+
+独立入口 landing.html，电影引擎+自动播放+粒子舞台+胶片层，下载卡与 GitHub star，预算门禁，独立检查加固，用户真机验证通过
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `885fa130` | feat(landing): make the film picture-first with a film look, scene tones and subtitles |
+| `5bd362f7` | fix(landing): harden release URL prefix check and close two test blind spots |
+| `7de8e4fa` | docs(landing): sync specs and task record with the final landing page |
+
+### Status
+
+[OK] **Completed**
