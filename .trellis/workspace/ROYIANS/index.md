@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 64
+- **Total Sessions**: 65
 - **Last Active**: 2026-10-14
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1819 | Active |
+| `journal-1.md` | ~1857 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 65 | 2026-10-14 | 桌面0.1.3发布准备与模型基线刷新 | `5fbfa4fe`, `69af8c11` | `codex/desktop-settings-update` |
 | 64 | 2026-10-14 | 设置页统一样式与 Tavily 自动填充修复 | `84bac7b1`, `626fbcf2` | `codex/desktop-settings-update` |
 | 63 | 2026-10-14 | 官网落地页：电影式滚动与自动播放、下载与 star 引导 | `885fa130`, `5bd362f7`, `7de8e4fa` | `codex/landing-page` |
 | 62 | 2026-10-14 | 模型库迁移到 Models.dev：基线、手动同步、价格展示、LobeHub 退役 | `85251d36`, `0daf8e90`, `a383cbb5`, `674b5c00`, `234a9298`, `808d87fe`, `aeede3a8`, `17513932` | `codex/models-dev-catalog` |

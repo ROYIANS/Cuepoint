@@ -1817,3 +1817,41 @@ Shipped split-pane module navigation, docked/overlay context panels, single-row 
 
 - 任务保持 in_progress：用户真机验证顶栏、短窗口弹层、设置页、更新检查及系统保存对话框。
 - 后续核对 desktop-v0.1.3 tag 与 CI 四平台构建，验证旧工作区迁移；本轮未 push/merge/tag。
+
+
+## Session 65: 桌面0.1.3发布准备与模型基线刷新
+<!-- trellis-session: v=2 fp=53eeb7be5c28b2ad -->
+
+**Date**: 2026-10-14
+**Task**: 桌面0.1.3发布准备与模型基线刷新
+**Branch**: `codex/desktop-settings-update`
+
+### Summary
+
+确认0.1.3，刷新模型目录，准备具体发布说明，完成独立协议审计和最终冻结门禁。准备本地annotated tag，用户负责推送。
+
+### Main Changes
+
+- 模型依赖精确升级0.0.104，基线379→381条、18 providers，notice元信息同步；release说明覆盖设置、Tavily、弹层与旧工作区迁移。
+- 四处版本及Cargo.lock一致0.1.3，准备时无旧tag或Release；发布workflow保持四宿主五安装包、tag-only draft。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `5fbfa4fe` | chore(models): refresh release baseline to 0.0.104 |
+| `69af8c11` | docs(release): prepare desktop 0.1.3 notes and readiness evidence |
+
+### Testing
+
+- [OK] 最终十门禁全部通过：4655 tests、88 quality self-tests、root lint/quality/models/build/budget与desktop types/lint/quality。1260文件检查前后哈希一致。
+- [OK] 独立发布审计通过57协议+8真实Node HTTP测试，0.1.3 dry-run正确、1.0.3被拒；旧main的远端GHCR run38548180332已success。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 创建本地desktop-v0.1.3指向最终干净main，用户push main和该tag触发四宿主构建及七文件完整draft。
+- 上传完成后复制docs/desktop-release-0.1.3.md正文，保留原ownership marker、upload提示和全部manifest限制；用户真机验收后公开。任务保持in_progress。
