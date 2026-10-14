@@ -323,18 +323,35 @@ Read before changing the third `/connectors` section "模型目录", the selecti
 ## Landing page (standalone entry) (2026-10-14)
 
 ### 1. Scope / Trigger
-Read before touching `landing.html`, `src/landing/**`, `scripts/landing-budget.mjs` or the nginx `location = /` rule. Phase 1 is a static branded page; film engine, download card and WebGL layers land in later phases.
+Read before touching `landing.html`, `src/landing/**`, `scripts/landing-budget.mjs`, `public/robots.txt|sitemap.xml` or the nginx `location = /` rule. The landing page is a second Vite entry (`landing.html` + `src/landing/main.tsx`), served at `/` by nginx; the app stays at `/agent`. The desktop (Tauri) build uses its own config and never contains it.
 
 ### 2. Signatures / Owners
-`src/landing/main.tsx` mounts `Landing` (`Landing.tsx`) with `initUmami()`; styles are `src/landing/styles/landing.css` (own tokens, no Tailwind). `#root` in `landing.html` holds static markup identical to the React render; main renders beside it and swaps only after a successful commit, so a script or render failure leaves the readable static page. `pnpm landing:budget` runs `scripts/landing-budget.mjs` after `pnpm build`.
+- `main.tsx` mounts `Landing` and calls `initUmami()`. `#root` in `landing.html` holds static markup equivalent to the React render; React renders beside it and swaps only after a successful commit, so a script or render failure leaves the readable static page (SEO included). There is no `<noscript>`; the static markup is the no-JS version.
+- Film engine (`film/`): sticky 100svh stage inside a track of `TOTAL_WEIGHT x 100svh`; six stage scenes plus normal-flow credits (`scenes.ts`, `timeline.ts`). `useFilmProgress` measures the track rect and a damped driver writes `--film-progress`, `--scene-index`, `--scene-local`, `--stage-tone`, `--film-time` once per frame, running only while converging. Mode is film or static (`mode.ts`): reduced motion (live matchMedia), stored skip (`localStorage cuepoint.landing.skipFilm`), or no canvas2d.
+- Playback (`playback.ts`, `usePlayback.ts`): `FILM_PLAY_SECONDS` (sum of per-scene beats: ease-in, hold, 1.6 s exit), `playbackToProgress`/`progressToPlaybackTime` are inverses; states idle|playing|paused|finished; wheel, touch, pointerdown and navigation keys interrupt, scroll events never do; Space toggles unless focus is on an interactive element; Esc pauses; programmatic `scrollTo({behavior:"instant"})`. HUD: play button, ARIA seek slider, aria-live scene announcements.
+- Stage is picture-first: only the slate label and one subtitle are visible; titles, narration and bullets exist only in the sr-only reading layer and the static version. Stage is `aria-hidden`, inactive layers `inert`.
+- Rendering (lazy chunk `film/renderers/stage.ts`): Canvas 2D particle pool (preallocated Float32Array, caps by quality tier, seeded RNG, never allocates per frame), per-scene `plan*`/`draw*`, adaptive tier downgrade on rolling p95 frame time (never upgrades), rAF only while needed. `renderers/filmLook.ts` is a separate canvas stepping at 24 fps (12 on low): grain tiles, dust, flicker, corner marks; gate weave moves only `.lp-picture`, never text; frozen when paused. Scene tone comes from `tone.ts` with contrast >= 4.5:1 asserted across progress.
+- Download/GitHub (`download/`): `GET api.github.com/repos/ROYIANS/Cuepoint/releases?per_page=30` (`releases/latest` 404s while only prereleases exist). Keep non-draft tags `^desktop-v\d+\.\d+\.\d+$`, numeric semver sort, assets matched by the strict names in `release-policy.mjs`, every URL must normalize (`new URL().href`) to under `https://github.com/ROYIANS/Cuepoint/releases/download/` (or the releases page for `html_url`). 6 h `localStorage` cache (`cuepoint.landing.release`, `cuepoint.landing.stars`), 8 s timeout, fallback to the Releases page. Stars are shown only at `STAR_DISPLAY_THRESHOLD` (50) or more.
 
 ### 3. Contracts
-- Imports are limited to relative `src/landing` modules, `react`, `react-dom`, `motion`, and the two dependency-free modules `@/lib/umami` and `@/lib/brand`. Never import `@/db`, `@/lib/storage`, Dexie, zod, TanStack Router, `@tauri-apps/*`, antd, `@lobehub/*`, `src/main.tsx`, `src/styles.css` or `@/components/*`. Guarded by `tests/landingBoundary.test.ts` (source) and the budget script (built module closure from the Rollup `moduleIds` report).
-- Token values in `landing.css` equal `src/styles.css` (`tests/landingTokens.test.ts`). Copy only states capabilities with code/README evidence; `tests/landingEntry.test.ts` holds the forbidden-claims list. Links to GitHub use `GITHUB_URL`; the landing page makes no storage or application requests.
-- Budget defaults: first-screen JS <= 120 KB gzip, CSS <= 15 KB gzip (`--js-kb`, `--css-kb`). The script also asserts that `landing.html` loads only the landing entry chunk and that the desktop build config cannot include the landing page.
+- Imports are limited to relative `src/landing` modules, `react`, `react-dom` and the dependency-free `@/lib/umami` and `@/lib/brand`. Never import `@/db`, `@/lib/storage`, Dexie, zod, TanStack Router, `@tauri-apps/*`, antd, `@lobehub/*`, `src/main.tsx`, `src/styles.css` or `@/components/*` (`tests/landingBoundary.test.ts` for source, `landing:budget` for the built closure). `motion` is not used.
+- Token values in `landing.css` equal `src/styles.css` (`tests/landingTokens.test.ts`). Every copy entry is `{text, evidence}` with an existing evidence path; no text may contain a phrase from `tests/fixtures/landing/forbiddenClaims.ts`.
+- External requests: only `api.github.com` (releases, repo stars) and Google Fonts (`text=` subset); no application or storage requests. Storage use: the three `cuepoint.landing.*` keys above, always inside try/catch.
+- Budgets: first-screen JS <= 120 KB gzip, CSS <= 15 KB gzip; the film renderers are a lazy chunk; the budget script also fails if the desktop output contains landing files.
 
-### 4. Degradation matrix (placeholder, completed by later phases)
+### 4. Degradation matrix
 | Condition | Presentation |
 | --- | --- |
 | No JS / script or render failure | Static markup in `#root` |
-| `prefers-reduced-motion: reduce` | No transitions (phase 1 has no animation) |
+| `prefers-reduced-motion: reduce`, stored skip, or no canvas2d | Static stacked version, all information and links kept |
+| Slow frames (p95 > 22 ms) | Particle tier steps down, film look to 12 fps; never back up |
+| GitHub API failure, timeout or invalid payload | Download card links to the Releases page |
+| Unknown or ambiguous platform | Show all matching installers (e.g. both Mac chips); never recommend x64 for ARM Windows/Linux |
+| Page hidden or paused | No rAF, film look frozen |
+
+### 5. Tests Required
+`landingTokens`, `landingEntry`, `landingBoundary`, `landingCopy` (evidence paths, forbidden claims), `landingFilm` (progress, modes), `landingPlayback` (inverse mapping, interrupts, Space/Esc), `landingParticles` and `landingStage` (pool, tier downgrade by p95), `landingScenes45`, `landingFilmLook`, `landingTone` (contrast), `landingPlatform`, `landingReleases` (filter, sort, asset names, URL escape via `../` and `%2e%2e`, cache validation), `landingDownloadCard`. Frame rate, iOS Safari sticky, trackpad/touch interruption, scrollbar dragging, grain intensity and web fonts need real devices.
+
+### 6. Wrong vs Correct
+Wrong: `url.startsWith(PREFIX)` on a server-provided address (`.../releases/download/../../x` passes). Correct: compare `new URL(url).href` to the prefix.
+Wrong: showing scene titles on the stage or reading `scrollY` events to interrupt playback. Correct: titles in the sr-only layer, interrupts only from wheel/touch/pointer/keys.

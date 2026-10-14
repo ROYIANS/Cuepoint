@@ -421,3 +421,7 @@ Good: a rejected send shows a friendly title with the sanitized original message
 ### 7. Wrong vs Correct
 Wrong: `toast.error(String(error))` or putting `error.request` into a report. Correct: `showError({title, cause, actionName: "send-message", detail})` and let the report builder read the fixed fields.
 
+
+## Landing page gates (2026-10-14)
+
+After `pnpm build`, run `pnpm landing:budget`: it checks the landing first-screen dependency closure (no Dexie, zod, antd, lobehub, TanStack Router, Tauri, `src/db`, `src/lib/storage`, other `src` paths), the gzip budgets (JS 120 KB, CSS 15 KB) and that the desktop output has no landing files. Landing tests live in `tests/landing*.test.ts`; copy checks share `tests/fixtures/landing/forbiddenClaims.ts`. Details: component-guidelines "Landing page (standalone entry)".

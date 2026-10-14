@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/desktop-ui.md", "reason": "verify desktop build excludes the landing page"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "verify gates and budget"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "verify accessibility and reduced-motion"}
+{"file": ".trellis/tasks/10-14-landing-page/research/tech-options-and-data.md", "reason": "verify copy only claims real capabilities"}

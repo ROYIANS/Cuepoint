@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "UI conventions, accessibility and animation rules"}
+{"file": ".trellis/spec/frontend/desktop-ui.md", "reason": "desktop vs browser runtime separation"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "quality gates and unused-export rules"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "where new source directories are registered"}
+{"file": ".trellis/tasks/10-14-landing-page/research/codebase-constraints.md", "reason": "routing, chunking, tokens, deployment, risks"}
+{"file": ".trellis/tasks/10-14-landing-page/research/tech-options-and-data.md", "reason": "GitHub data, motion tech options, evidence for copy"}
