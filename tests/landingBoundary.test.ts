@@ -1,5 +1,5 @@
 import {readdirSync, readFileSync} from "node:fs";
-import {join} from "node:path";
+import {dirname, join, resolve, sep} from "node:path";
 import {fileURLToPath} from "node:url";
 import {describe, expect, it} from "vitest";
 
@@ -48,7 +48,10 @@ describe("landing source boundary", () => {
 
     it("keeps relative imports inside src/landing", () => {
         const escaping = listFiles(landingRoot).filter(file => /\.tsx?$/.test(file)).flatMap(file =>
-            specifiers(readFileSync(file, "utf8")).filter(item => item.startsWith("../")).map(item => `${file}: ${item}`));
+            specifiers(readFileSync(file, "utf8")).filter(item => item.startsWith(".")).filter(item => {
+                const target = resolve(dirname(file), item);
+                return target !== landingRoot && !target.startsWith(landingRoot + sep);
+            }).map(item => `${file}: ${item}`));
         expect(escaping).toEqual([]);
     });
 });

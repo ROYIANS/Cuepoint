@@ -3,7 +3,7 @@ import {act, createElement} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {DownloadCard} from "@/landing/download/DownloadCard";
-import {StarPrompt} from "@/landing/download/StarPrompt";
+import {STAR_DISPLAY_THRESHOLD, StarPrompt} from "@/landing/download/StarPrompt";
 import type {DetectedPlatform} from "@/landing/download/platform";
 import type {LatestDesktopRelease, ReleaseResult} from "@/landing/download/releases";
 
@@ -127,7 +127,7 @@ describe("DownloadCard", () => {
 });
 
 describe("StarPrompt", () => {
-    it("links to the repository with a formatted count, and tracks the click", async () => {
+    it("links to the repository with a formatted count from the display threshold on, and tracks the click", async () => {
         await render(createElement(StarPrompt, {stars: 1234}));
         const link = container.querySelector("a")!;
         expect(link.getAttribute("href")).toBe("https://github.com/ROYIANS/Cuepoint");
@@ -135,13 +135,17 @@ describe("StarPrompt", () => {
         expect(link.getAttribute("rel")).toBe("noopener noreferrer");
         expect(container.textContent).toContain("1.2k");
         expect(container.querySelector("img")).toBeNull();
+        await render(createElement(StarPrompt, {stars: STAR_DISPLAY_THRESHOLD}));
+        expect(container.querySelector(".lp-star-count")?.textContent).toBe("（50）");
     });
 
-    it("renders no number or brackets when the count is unavailable", async () => {
-        await render(createElement(StarPrompt, {}));
-        expect(container.textContent).not.toMatch(/[0-9（）()]/);
-        expect(container.querySelector(".lp-star-count")).toBeNull();
-        await render(createElement(StarPrompt, {stars: 0}));
-        expect(container.querySelector(".lp-star-count")?.textContent).toBe("（0）");
+    it("renders no number or brackets when the count is unavailable or below the threshold", async () => {
+        expect(STAR_DISPLAY_THRESHOLD).toBe(50);
+        for (const stars of [undefined, 0, 3, STAR_DISPLAY_THRESHOLD - 1]) {
+            await render(createElement(StarPrompt, {stars}));
+            expect(container.textContent).not.toMatch(/[0-9（）()]/);
+            expect(container.querySelector(".lp-star-count")).toBeNull();
+            expect(container.textContent).toContain("点一颗 star");
+        }
     });
 });

@@ -55,9 +55,10 @@ a:focus-visible {
     border-radius: calc(var(--radius) - 4px);
 }
 
-.lp {
+.lp-page { position: relative; z-index: 1; }
+
+.lp-wrap {
     position: relative;
-    z-index: 1;
     max-width: 1080px;
     margin: 0 auto;
     padding: 0 24px;
@@ -74,13 +75,20 @@ a:focus-visible {
 
 .lp-skip:focus { top: 12px; }
 
-.lp-header {
+.lp-header { position: relative; z-index: 20; }
+
+.lp-header-inner {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 16px 0;
+    gap: 12px;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 16px 24px;
 }
+
+.lp-header-inner .lp-brand { order: 1; }
+.lp-header-inner nav { order: 2; margin-left: auto; }
+.lp-header-inner .lp-skip-film { order: 3; }
 
 .lp-brand {
     display: inline-flex;
@@ -116,20 +124,31 @@ a:focus-visible {
 .lp-btn-primary:hover { background: oklch(0.9 0 0); }
 .lp-btn-quiet { background: transparent; }
 
-.lp-hero { padding: 96px 0 72px; max-width: 760px; }
+.lp-scene { padding: 72px 0 48px; max-width: 760px; }
+.lp-hero { padding-top: 56px; }
 
-.lp-eyebrow { color: var(--muted-foreground); font-size: 14px; letter-spacing: 0.08em; }
+.lp-kicker { color: var(--muted-foreground); font-size: 12px; line-height: 18px; letter-spacing: 0.16em; }
 
-.lp-hero h1 {
-    margin-top: 16px;
+.lp-eyebrow { margin-top: 8px; color: var(--muted-foreground); font-size: 14px; letter-spacing: 0.08em; }
+
+.lp-scene-title {
+    margin-top: 12px;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(40px, 8vw, 72px);
-    line-height: 1.1;
+    font-size: clamp(32px, 6vw, 56px);
+    line-height: 1.15;
     letter-spacing: -0.02em;
 }
 
-.lp-lead { margin-top: 24px; font-size: 20px; line-height: 1.6; }
+.lp-hero .lp-scene-title { font-size: clamp(40px, 8vw, 72px); line-height: 1.1; }
+
+.lp-narration { margin-top: 20px; font-size: 18px; line-height: 1.7; }
+
+.lp-points { display: grid; gap: 8px; margin-top: 20px; color: var(--muted-foreground); font-size: 14px; }
+.lp-points li { position: relative; padding-left: 16px; }
+.lp-points li::before { content: "·"; position: absolute; left: 4px; color: var(--foreground); }
+
+.lp-caption { margin-top: 20px; color: var(--muted-foreground); font-size: 12px; line-height: 18px; }
 
 .lp-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 
@@ -139,24 +158,8 @@ a:focus-visible {
 
 .lp-section h2 { font-size: 24px; font-weight: 600; line-height: 32px; }
 
-.lp-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    margin-top: 24px;
-}
-
-.lp-grid li {
-    padding: 24px;
-    background: var(--surface-panel);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-}
-
-.lp-grid h3 { font-size: 16px; font-weight: 600; }
-.lp-grid p { margin-top: 8px; color: var(--muted-foreground); font-size: 14px; line-height: 1.7; }
-
 .lp-footer {
+    margin-top: 24px;
     padding: 32px 0 48px;
     border-top: 1px solid var(--border);
     color: var(--muted-foreground);
@@ -214,16 +217,162 @@ a:focus-visible {
 .lp-star-count { color: var(--muted-foreground); }
 
 @media (max-width: 767px) {
-    .lp { padding: 0 16px; }
-    .lp-hero { padding: 56px 0 48px; }
-    .lp-lead { font-size: 18px; }
+    .lp-wrap, .lp-header-inner { padding-left: 16px; padding-right: 16px; }
+    .lp-scene { padding: 48px 0 32px; }
+    .lp-narration { font-size: 16px; }
     .lp-grid li { padding: 16px; }
     .lp-download { padding: 16px; min-height: 260px; }
     .lp-dl-buttons .lp-btn { flex: 1 1 100%; }
 }
 
-/* The static markup and the React tree swap after mount, so no entrance
-   animation runs in this phase (it would play twice). */
 @media (prefers-reduced-motion: reduce) {
     .lp-btn { transition: none; }
+}
+
+/* Closing credits and FAQ. */
+.lp-credits { padding: 72px 0 24px; }
+.lp-credits .lp-scene-title { font-size: clamp(32px, 6vw, 56px); }
+.lp-credits .lp-section { padding-bottom: 48px; }
+.lp-credits .lp-narration { max-width: 760px; }
+.lp-faq { display: grid; gap: 8px; margin-top: 24px; max-width: 760px; }
+.lp-faq details { padding: 0 16px; background: var(--surface-panel); border: 1px solid var(--border); border-radius: var(--radius); }
+.lp-faq summary { cursor: pointer; padding: 12px 0; font-size: 14px; font-weight: 500; }
+.lp-faq summary:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; border-radius: calc(var(--radius) - 4px); }
+.lp-faq p { padding-bottom: 16px; color: var(--muted-foreground); font-size: 14px; line-height: 1.7; }
+
+.lp-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* ---- Film mode ----------------------------------------------------------
+   JS writes --film-progress (0..1), --scene-index and --scene-local on
+   .lp-film once per frame. Each layer's opacity and offset are derived in CSS
+   from that single variable and the layer's static window (--s, --e) and the
+   fade width (--fade), so a frame is three custom-property writes, not one per
+   scene. Only transform and opacity change per frame. */
+.lp-film { --film-progress: 0; --scene-index: 0; --scene-local: 0; }
+
+.lp-film .lp-header { position: fixed; inset: 0 0 auto 0; background: linear-gradient(to bottom, var(--background), transparent); }
+
+.lp-track {
+    height: calc(var(--film-length) * 100vh);
+    height: calc(var(--film-length) * 100svh);
+}
+
+.lp-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+    contain: layout paint;
+}
+
+.lp-stage-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 42%, oklch(0.24 0 0 / 70%), transparent 62%);
+}
+
+.lp-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.lp-layer {
+    --o: clamp(0, min((var(--film-progress) - var(--s)) / var(--fade), (var(--e) - var(--film-progress)) / var(--fade)), 1);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 clamp(48px, 10vw, 160px);
+    opacity: var(--o);
+    transform: translate3d(0, calc((1 - var(--o)) * 28px), 0);
+    will-change: transform, opacity;
+}
+
+.lp-layer-inner { max-width: 720px; }
+.lp-layer .lp-scene-title { font-size: clamp(32px, 7vw, 64px); }
+.lp-layer[data-scene-layer="leader"] .lp-scene-title { font-size: clamp(40px, 9vw, 88px); }
+
+.lp-scroll-hint {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 64px;
+    text-align: center;
+    color: var(--muted-foreground);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    opacity: clamp(0, calc(1 - var(--film-progress) * 24), 1);
+}
+
+.lp-hud {
+    position: absolute;
+    left: 56px;
+    right: 56px;
+    bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    color: var(--muted-foreground);
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.lp-hud-time { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
+.lp-hud-scene { letter-spacing: 0.16em; }
+
+.lp-hud-bar {
+    flex: 1;
+    align-self: center;
+    height: 2px;
+    background: var(--border);
+    transform-origin: left center;
+    position: relative;
+}
+
+.lp-hud-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--foreground);
+    transform: scaleX(var(--film-progress));
+    transform-origin: left center;
+}
+
+/* Sprocket holes: a strip taller than the stage by one full travel, moved with transform. */
+.lp-perf { position: absolute; top: 0; bottom: 0; width: 14px; overflow: hidden; }
+.lp-perf-left { left: 16px; }
+.lp-perf-right { right: 16px; }
+
+.lp-perf span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: calc(100% + 4800px);
+    background: repeating-linear-gradient(to bottom, transparent 0 14px, oklch(1 0 0 / 14%) 14px 34px, transparent 34px 48px);
+    transform: translate3d(0, calc(var(--film-progress) * -4800px), 0);
+    will-change: transform;
+}
+
+.lp-skip-film { min-height: 36px; padding: 0 14px; }
+
+@media (max-width: 767px) {
+    .lp-layer { padding: 0 24px; }
+    .lp-layer .lp-points { display: none; }
+    .lp-hud { left: 24px; right: 24px; }
+    .lp-hud-scene { display: none; }
+    .lp-perf { width: 8px; }
+    .lp-perf-left { left: 6px; }
+    .lp-perf-right { right: 6px; }
+}
+
+@media (max-height: 560px) {
+    .lp-layer .lp-points, .lp-layer .lp-caption { display: none; }
 }

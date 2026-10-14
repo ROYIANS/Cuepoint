@@ -6,9 +6,9 @@ import {resolve} from "node:path";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {GITHUB_URL} from "@/lib/brand";
 import {Landing} from "@/landing/Landing";
+import {SCENE_COPY} from "@/landing/content/copy";
+import {FORBIDDEN_CLAIMS} from "./fixtures/landing/forbiddenClaims";
 
-// Claims the product does not support (task research, section 3.3).
-const FORBIDDEN_CLAIMS = ["云同步", "跨设备自动同步", "多人协作", "实时协作", "一键成片", "完整英文", "账号登录", "自动渲染", "全自动", "免费额度", "试用 Key", "后台执行"];
 
 const html = readFileSync(resolve(process.cwd(), "landing.html"), "utf8");
 const documentFromHtml = new DOMParser().parseFromString(html, "text/html");
@@ -21,6 +21,8 @@ beforeEach(async () => {
     vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
     // Never resolves: the first render (loading state) is what must match landing.html, and no real request is made.
     vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>(() => undefined)));
+    // No 2D canvas (as in jsdom): the page renders its static, readable mode, which landing.html mirrors.
+    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
     localStorage.clear();
     container = document.createElement("div");
     document.body.append(container);
@@ -31,6 +33,7 @@ afterEach(async () => {
     await act(async () => root.unmount());
     container.remove();
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
 });
 
 describe("landing page content", () => {
@@ -39,6 +42,7 @@ describe("landing page content", () => {
         expect(link("进入应用")?.getAttribute("href")).toBe("/agent");
         expect(link("在浏览器中体验")?.getAttribute("href")).toBe("/agent");
         expect(link("下载桌面版")?.getAttribute("href")).toBe("#download");
+        expect(container.querySelectorAll("section[data-scene]")).toHaveLength(7);
         expect(link("在 GitHub 查看所有版本")?.getAttribute("href")).toBe(`${GITHUB_URL}/releases`);
         expect(link("GitHub")?.getAttribute("href")).toBe(GITHUB_URL);
         expect(container.querySelector("h1")?.textContent).toBe("小光点 Cuepoint");
