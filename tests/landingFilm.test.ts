@@ -7,7 +7,8 @@ import {Landing} from "@/landing/Landing";
 import {SCENE_COPY} from "@/landing/content/copy";
 import {resolveFilmMode, readSkipPreference, writeSkipPreference, SKIP_FILM_KEY} from "@/landing/film/mode";
 import {SCENES, STAGE_SCENES, TOTAL_WEIGHT} from "@/landing/film/scenes";
-import {FILM_SECONDS, frameToTimecode, progressToFrame, sceneProgressWindow} from "@/landing/film/timeline";
+import {frameToTimecode, progressToFrame, sceneProgressWindow} from "@/landing/film/timeline";
+import {FILM_PLAY_SECONDS, progressToPlaybackTime} from "@/landing/film/playback";
 import {createFilmDriver, useFilmProgress, type FilmDriverEnv, type FilmState} from "@/landing/film/useFilmProgress";
 
 describe("scenes", () => {
@@ -55,7 +56,6 @@ describe("timeline", () => {
     });
 
     it("formats the timecode as HH:MM:SS:FF and returns zeros for invalid input", () => {
-        expect(FILM_SECONDS).toBe(96);
         expect(frameToTimecode(0, 96)).toBe("00:00:00:00");
         expect(frameToTimecode(0.5, 96)).toBe("00:00:48:00");
         expect(frameToTimecode(1, 96)).toBe("00:01:36:00");
@@ -286,7 +286,8 @@ describe("DOM", () => {
             const page = container.querySelector(".lp-page")!;
             expect(page.getAttribute("data-film-mode")).toBe("film");
             const stage = container.querySelector(".lp-stage")!;
-            expect(stage.getAttribute("aria-hidden")).toBe("true");
+            const art = stage.querySelector(".lp-stage-art")!;
+            expect(art.getAttribute("aria-hidden")).toBe("true");
             expect(stage.querySelector("canvas[data-film-canvas]")?.getAttribute("aria-hidden")).toBe("true");
             expect(layers()).toHaveLength(6);
             const reading = container.querySelector(".lp-sr-only")!;
@@ -299,7 +300,7 @@ describe("DOM", () => {
                 for (const point of copy.points) expect(reading.textContent).toContain(point.text);
             }
             expect(reading.querySelectorAll("a, button")).toHaveLength(0);
-            expect(stage.querySelectorAll("a, button")).toHaveLength(0);
+            expect(art.querySelectorAll("a, button")).toHaveLength(0);
             expect(container.querySelector(".lp-track")?.getAttribute("style")).toContain("--film-length: 6.5");
         });
 
@@ -370,11 +371,12 @@ describe("DOM", () => {
             const time = container.querySelector(".lp-hud-time")!;
             const label = container.querySelector(".lp-hud-scene")!;
             expect(time.textContent).toBe("00:00:00:00");
+            const at = (progress: number) => frameToTimecode(progressToPlaybackTime(progress) / FILM_PLAY_SECONDS, FILM_PLAY_SECONDS);
             await scrollTo(0.5);
-            expect(time.textContent).toBe("00:00:48:00");
+            expect(time.textContent).toBe(at(0.5));
             expect(label.textContent).toBe(SCENES[progressToFrame(0.5).sceneIndex].short);
             await scrollTo(1);
-            expect(time.textContent).toBe("00:01:36:00");
+            expect(time.textContent).toBe("00:01:00:00");
         });
 
         it("registers passive scroll listeners and releases them, and its frames, on unmount", async () => {

@@ -9,8 +9,10 @@ import {SceneBody} from "./SceneBody";
 import {STAGE_SCENES, TOTAL_WEIGHT} from "./scenes";
 import {SkipButton} from "./SkipButton";
 import {IconControl} from "../ui/IconControl";
+import {sceneLabel} from "./playback";
 import {SCENE_FADE, sceneProgressWindow} from "./timeline";
 import {useFilmProgress} from "./useFilmProgress";
+import {usePlayback, usePlaybackState} from "./usePlayback";
 
 const LICENSE_URL = `${GITHUB_URL}/blob/main/LICENSE`;
 const LAST_STAGE = STAGE_SCENES.length - 1;
@@ -79,7 +81,7 @@ function StaticPage({download, skipped, onToggle}: {download: DownloadData; skip
 
 // Scroll-driven film. Layout: a track `TOTAL_WEIGHT` viewports tall holds a
 // sticky 100svh stage; the closing credits follow as normal flow once the stage
-// is released. The stage is decorative (aria-hidden); a visually hidden copy of
+// is released. The stage art is decorative (aria-hidden; the player controls beside it are not); a visually hidden copy of
 // the six stage scenes' text provides the reading order for assistive tech, and
 // the credits are the one real interactive region. Stage layers other than the
 // active scene are `inert`, so nothing hidden can take focus.
@@ -89,7 +91,11 @@ function FilmPage({download, onToggle}: {download: DownloadData; onToggle: () =>
     const stageRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const driver = useFilmProgress(rootRef, trackRef);
+    const playback = usePlayback(trackRef);
+    const playbackState = usePlaybackState(playback);
     const [active, setActive] = useState(0);
+    const [atStart, setAtStart] = useState(true);
+    const [announcement, setAnnouncement] = useState("");
     // The Canvas 2D picture is a separate lazy chunk. Until it reports in, the stage is
     // "pending" (CSS holds the leader's text back); if it cannot run, "off" restores the text.
     useEffect(() => {
@@ -110,7 +116,13 @@ function FilmPage({download, onToggle}: {download: DownloadData; onToggle: () =>
             handle?.destroy();
         };
     }, [driver]);
-    useEffect(() => driver.subscribe(({sceneIndex}) => setActive(sceneIndex)), [driver]);
+    // Scene changes are announced only while the film plays itself; scrolling by hand stays quiet.
+    useEffect(() => driver.subscribe(({sceneIndex, progress}) => {
+        setActive(sceneIndex);
+        setAtStart(progress < 0.01);
+        if (playback.state() === "playing") setAnnouncement(sceneLabel(sceneIndex));
+    }), [driver, playback]);
+    const showStart = atStart && playbackState !== "playing";
     const track = {"--film-length": TOTAL_WEIGHT, "--fade": SCENE_FADE} as CSSProperties;
     return (
         <div className="lp-page lp-film" data-film-mode="film" ref={rootRef}>
@@ -123,8 +135,10 @@ function FilmPage({download, onToggle}: {download: DownloadData; onToggle: () =>
                         </section>
                     ))}
                 </div>
+                <div className="lp-sr-only" role="status" aria-live="polite" data-playback-live>{announcement}</div>
                 <div className="lp-track" ref={trackRef} style={track}>
-                    <div className="lp-stage" aria-hidden="true" data-canvas="pending" ref={stageRef}>
+                    <div className="lp-stage" data-canvas="pending" ref={stageRef}>
+                        <div className="lp-stage-art" aria-hidden="true">
                         <div className="lp-stage-bg" />
                         <canvas className="lp-canvas" data-film-canvas aria-hidden="true" ref={canvasRef} />
                         <Perforations />
@@ -138,8 +152,12 @@ function FilmPage({download, onToggle}: {download: DownloadData; onToggle: () =>
                                 </div>
                             );
                         })}
-                        <p className="lp-scroll-hint">向下滚动，开始放映</p>
-                        <Hud driver={driver} />
+                        </div>
+                        <div className="lp-start" data-on={showStart} inert={!showStart}>
+                            <IconControl className="lp-ic-xl" icon="play" label="播放" reveal="none" umami="play-film" onClick={() => playback.play()} />
+                            <span className="lp-start-text" aria-hidden="true">点击播放</span>
+                        </div>
+                        <Hud driver={driver} playback={playback} />
                     </div>
                 </div>
                 <div className="lp-wrap"><Credits download={download} /></div>

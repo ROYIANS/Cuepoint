@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {mountStage, type StageEnv, type StageHandle} from "@/landing/film/renderers/stage";
-import {INTRO_MS} from "@/landing/film/renderers/leader";
 import {progressToFrame} from "@/landing/film/timeline";
 import type {FilmDriver, FilmState} from "@/landing/film/useFilmProgress";
 
@@ -102,17 +101,20 @@ describe("mountStage", () => {
         expect(h.listeners.size).toBe(1);
     });
 
-    it("keeps animating only through the leader's intro, then stops requesting frames", () => {
+    it("keeps breathing at rest at a reduced rate, and stops once the film has moved on and settled", () => {
         const handle = h.mount()!;
         expect(h.queue.size).toBe(1);
-        const frames = h.run();
+        const frames = h.run(300);
+        expect(frames).toBe(300); // never stops by itself while at rest
+        expect(h.queue.size).toBe(1);
+        expect(handle.frames()).toBeLessThan(200); // ~30 fps, not every 16 ms frame
+        h.emit(0.3);
+        h.run();
         expect(h.queue.size).toBe(0);
-        expect(frames).toBeGreaterThan(100); // ~3.4 s of 16 ms frames
-        expect(frames).toBeLessThan(Math.ceil(INTRO_MS / 16) + 10);
         const settled = handle.frames();
         h.advance(5000);
         h.run();
-        expect(handle.frames()).toBe(settled); // still page, no frames
+        expect(handle.frames()).toBe(settled);
     });
 
     it("resumes when the progress changes and stops again once the particles have settled", () => {

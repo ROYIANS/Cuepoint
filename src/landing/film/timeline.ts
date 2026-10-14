@@ -1,7 +1,5 @@
 import {STAGE_SCENES, TOTAL_WEIGHT} from "./scenes";
 
-/** Nominal running time shown by the HUD timecode (a presentation device, not a real duration). */
-export const FILM_SECONDS = 96;
 const FILM_FPS = 24;
 /** Width of a scene's fade in/out, in progress units. */
 export const SCENE_FADE = 0.03;

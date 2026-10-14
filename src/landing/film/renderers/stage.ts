@@ -1,5 +1,5 @@
 import type {FilmDriver, FilmState} from "../useFilmProgress";
-import {drawLeader, INTRO_MS, planLeader} from "./leader";
+import {drawLeader, LEADER_REST, planLeader} from "./leader";
 import {clamp01, type Layout, type Plan, type SceneState, type Sets} from "./plan";
 import {createPool, MAX_PARTICLES, mulberry32, step, type Pool, type Quality} from "./particles";
 import {createAdaptiveQuality, detectQuality, type QualityInput} from "./quality";
@@ -10,8 +10,8 @@ import {artRect, createSet, fillSet, rectOutline, scatterSet, textPoints, type C
 // Canvas 2D controller for the pinned stage. It is loaded lazily (dynamic import
 // from Film.tsx), so none of it is part of the first-screen bundle. Frames run
 // only while something is changing: scroll progress, particles still moving, or
-// the leader's automatic intro. Everything else (hidden tab, stage off screen,
-// unmounted) runs none.
+// the leader at rest (its point breathes, at half rate). Everything else (hidden
+// tab, stage off screen, unmounted, any other scene once settled) runs none.
 export type StageEnv = {
     raf: (callback: (time: number) => void) => number;
     caf: (id: number) => void;
@@ -35,6 +35,8 @@ const COOL = "96,177,255";
 const GLOW_RADIUS = 2.7;
 const MIN_GAP_MS = 2;
 const MAX_GAP_MS = 100;
+/** The resting leader only breathes: ~30 fps is plenty, and its frame times say nothing about device speed. */
+const REST_GAP_MS = 30;
 
 function defaultEnv(): StageEnv {
     return {
@@ -311,10 +313,13 @@ function start(stage: HTMLElement, canvas: HTMLCanvasElement, driver: FilmDriver
             }
             return;
         }
+        const resting = state.sceneIndex === 0 && state.local < LEADER_REST;
+        const breathingOnly = resting && !dirty && !needsBuild && rendered;
+        if (breathingOnly && gap < REST_GAP_MS) return;
         const continuous = rendered && gap < MAX_GAP_MS;
         lastRender = now;
         rendered = true;
-        if (continuous) {
+        if (continuous && !breathingOnly) {
             const lower = adaptive.push(gap);
             if (lower) {
                 quality = lower;
@@ -339,7 +344,7 @@ function start(stage: HTMLElement, canvas: HTMLCanvasElement, driver: FilmDriver
         else if (state.sceneIndex === 1) drawSpark(ctx!, scene);
         else if (state.sceneIndex === 2) drawScript(ctx!, scene);
         frames += 1;
-        needMore = unsettled > 0 || (state.sceneIndex === 0 && elapsed < INTRO_MS);
+        needMore = unsettled > 0 || resting;
     }
 
     const canRun = () => !destroyed && visible && !env.isHidden();

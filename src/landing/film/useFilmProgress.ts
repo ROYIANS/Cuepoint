@@ -127,13 +127,31 @@ export function createFilmDriver(options: {
     };
 }
 
-/** Film progress from the track element's position: 0 when its top meets the viewport top, 1 when the pinned stage reaches the end. */
-function readTrackProgress(track: HTMLElement | null): number {
-    if (!track) return 0;
+/** Where the film's track sits in the document, in px: `top` is where progress is 0, `range` the scroll distance to progress 1, `end` where the credits begin. */
+export type TrackMetrics = {top: number; range: number; end: number};
+
+export function readTrackMetrics(track: HTMLElement | null): TrackMetrics | undefined {
+    if (!track) return undefined;
     const rect = track.getBoundingClientRect();
     const range = rect.height - window.innerHeight;
-    if (!(range > 0)) return 0;
-    return Math.min(1, Math.max(0, -rect.top / range));
+    if (!(range > 0)) return undefined;
+    const top = rect.top + window.scrollY;
+    return {top, range, end: top + rect.height};
+}
+
+// The two conversions are exact inverses of each other (and of the driver's read below).
+export function scrollYToProgress(y: number, metrics: TrackMetrics): number {
+    return Math.min(1, Math.max(0, (y - metrics.top) / metrics.range));
+}
+
+export function progressToScrollY(progress: number, metrics: TrackMetrics): number {
+    return metrics.top + Math.min(1, Math.max(0, progress)) * metrics.range;
+}
+
+/** Film progress from the track element's position: 0 when its top meets the viewport top, 1 when the pinned stage reaches the end. */
+function readTrackProgress(track: HTMLElement | null): number {
+    const metrics = readTrackMetrics(track);
+    return metrics ? scrollYToProgress(window.scrollY, metrics) : 0;
 }
 
 /**

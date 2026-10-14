@@ -4,7 +4,7 @@ import {createAdaptiveQuality, detectQuality, FRAME_BUDGET_MS, lowerQuality, typ
 import {artRect, createSet, fillSet, rectOutline, samplePoints, sortPointsByX, textPoints, type Bitmap, type CanvasLike} from "@/landing/film/renderers/targets";
 import {cellLight, GRID_DIM, planScript} from "@/landing/film/renderers/script";
 import {planSpark, revealCount} from "@/landing/film/renderers/spark";
-import {planLeader} from "@/landing/film/renderers/leader";
+import {planLeader, TITLE_FORMED} from "@/landing/film/renderers/leader";
 import type {Plan, Sets} from "@/landing/film/renderers/plan";
 
 describe("mulberry32", () => {
@@ -323,13 +323,15 @@ describe("scene plans", () => {
         const plan = blank(sets);
         planLeader(0.2, sets, plan);
         expect([plan.from, plan.to, plan.t]).toEqual([sets.center, sets.center, 0]);
-        planLeader(0.55, sets, plan);
+        planLeader(0.5, sets, plan);
         expect([plan.from, plan.to]).toEqual([sets.center, sets.scatter]);
         expect(plan.t).toBeGreaterThan(0);
-        planLeader(0.7, sets, plan);
+        planLeader(0.6, sets, plan);
         expect([plan.from, plan.to, plan.t]).toEqual([sets.scatter, sets.scatter, 0]);
-        planLeader(0.8, sets, plan);
+        planLeader(0.7, sets, plan);
         expect([plan.from, plan.to]).toEqual([sets.scatter, sets.title]);
+        planLeader(TITLE_FORMED, sets, plan);
+        expect(plan.t).toBe(1);
         planLeader(1, sets, plan);
         expect(plan.t).toBe(1);
         expect(plan.behavior).toBe("form");

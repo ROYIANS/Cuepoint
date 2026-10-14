@@ -1,12 +1,22 @@
-import {clamp01, smoothstep, type Plan, type SceneState, type Sets} from "./plan";
+import {smoothstep, type Plan, type SceneState, type Sets} from "./plan";
 
-/** Length of the leader's automatic intro (the point fades in and breathes), after which the page is still. */
-export const INTRO_MS = 3400;
+// The leader is driven by progress (scroll or playback), never by a timer. At rest (progress 0,
+// before anyone has pressed play) only the breathing point is on screen; the countdown, the burst
+// and the title all belong to the progress range that follows.
+const COUNT_START = 0.05;
+const COUNT_STEP = 0.085;
+const CUE_START = 0.31;
+const CUE_SPAN = 0.14;
+const DOT_FADE_START = 0.4;
+const BURST = 0.46;
+const DUST_END = 0.56;
+const GATHER_START = 0.62;
+const FORM_START = 0.68;
+/** Local progress at which the title has been fully targeted; the DOM text layer waits for it (see landing.css). */
+export const TITLE_FORMED = 0.74;
 
-const COUNT_START = 0.06;
-const COUNT_STEP = 0.1;
-const CUE_START = 0.36;
-const BURST = 0.5;
+/** Below this local progress the leader is at rest: the point breathes and nothing else is on screen. */
+export const LEADER_REST = COUNT_START;
 
 export function planLeader(local: number, sets: Sets, out: Plan): void {
     out.alphaScale = 1;
@@ -15,19 +25,19 @@ export function planLeader(local: number, sets: Sets, out: Plan): void {
         out.from = sets.center;
         out.to = sets.center;
         out.t = 0;
-    } else if (local < 0.62) {
+    } else if (local < DUST_END) {
         out.from = sets.center;
         out.to = sets.scatter;
-        out.t = smoothstep((local - BURST) / 0.12);
-    } else if (local < 0.74) {
+        out.t = smoothstep((local - BURST) / (DUST_END - BURST));
+    } else if (local < GATHER_START) {
         out.from = sets.scatter;
         out.to = sets.scatter;
         out.t = 0;
     } else {
         out.from = sets.scatter;
         out.to = sets.title;
-        out.t = smoothstep((local - 0.74) / 0.16);
-        out.behavior = local < 0.86 ? "gather" : "form";
+        out.t = smoothstep((local - GATHER_START) / (TITLE_FORMED - GATHER_START));
+        out.behavior = local < FORM_START ? "gather" : "form";
     }
 }
 
@@ -41,8 +51,8 @@ export function drawLeader(ctx: CanvasRenderingContext2D, s: SceneState): void {
     const cy = h / 2;
     const unit = Math.min(w, h);
     const intro = smoothstep(t / 1400);
-    const breath = 1 + 0.14 * Math.sin(t / 540) * (1 - clamp01(t / INTRO_MS));
-    const burst = smoothstep((local - 0.44) / 0.08);
+    const breath = 1 + 0.14 * Math.sin(t / 540);
+    const burst = smoothstep((local - DOT_FADE_START) / 0.08);
     const guide = intro * (1 - burst);
     // Guide hairlines and registration rings.
     if (guide > 0.01) {
@@ -86,7 +96,7 @@ export function drawLeader(ctx: CanvasRenderingContext2D, s: SceneState): void {
         ctx.restore();
     }
     // Cue mark: ring, cross and label, flashing twice.
-    const cue = (local - CUE_START) / 0.16;
+    const cue = (local - CUE_START) / CUE_SPAN;
     if (cue > 0 && cue < 1) {
         const flash = 0.45 + 0.55 * Math.max(0, Math.sin(cue * Math.PI * 2.2) ** 2);
         const alpha = Math.sin(Math.PI * cue) * flash * 0.85 * (1 - burst);

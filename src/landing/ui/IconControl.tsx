@@ -7,6 +7,9 @@ const ICONS = {
     skip: <path d="M5 6.5 12 12l-7 5.5zM13 6.5 20 12l-7 5.5z" />,
     // Play: bring the animation back.
     play: <path d="M8 5.5v13l11-6.5z" />,
+    pause: <path d="M8 5.5v13M16 5.5v13" />,
+    // Replay: an arrow closing a circle.
+    replay: <path d="M5 12a7 7 0 1 0 2.2-5.1M5 4.5v4h4" />,
     star: <path d="m12 4 2.4 5 5.4.7-4 3.8 1 5.4-4.8-2.6-4.8 2.6 1-5.4-4-3.8 5.4-.7z" />,
 } as const;
 
@@ -25,8 +28,8 @@ type Common = {
     /** The control's name. Where it is not shown as text it becomes aria-label. */
     label: string;
     umami: string;
-    /** hover: the label slides out on hover/focus; tip: a CSS tooltip; always: the label is plain visible text. */
-    reveal: "hover" | "tip" | "always";
+    /** hover: the label slides out on hover/focus; tip: a CSS tooltip; always: the label is plain visible text; none: icon only, no tooltip. */
+    reveal: "hover" | "tip" | "always" | "none";
     className?: string;
 };
 
