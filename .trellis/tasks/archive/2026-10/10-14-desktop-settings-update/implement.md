@@ -38,7 +38,7 @@
 - [x] 全量门禁：`pnpm lint`、`pnpm test`、`pnpm quality`、`pnpm quality:self-test`、`pnpm models-dev:verify`、`pnpm build`、`pnpm landing:budget`、desktop 的 `types/lint/quality`。
 - [x] 真实渲染：本机 headless Edge 查看设置页在 1280×800 与 390 宽的布局（不能替代用户真机）。
 
-验证结论与证据见 `research/settings-checkpoint-validation.md`。A6（系统保存）、A9c（真实短窗口弹层）与 A10（安装版）仍待用户验收，任务不归档。
+源码/浏览器检查见 `research/settings-checkpoint-validation.md`。后续 0.1.3 已公开发布，用户于2026-10-14确认收尾归档；A6（系统保存）、A9c（短窗口弹层）与 A10（安装版）的逐项真机记录保留为发布后复核项。
 
 ## 发布准备（2026-10-14 用户确认 0.1.3；用户负责 push）
 - [x] 已合并 main 并核对远端 main 包含本轮设置改动；准备开始时本地/远端均无 `desktop-v0.1.3`，GitHub 无同名 Release，无需删除旧 tag。
@@ -48,10 +48,14 @@
 - [x] 独立发布检查通过四宿主/五安装包、tag 情境 prepare dry-run、draft-only 权限与 65 项协议/HTTP 回归；原发布流水线保持仅打包模式。
 - [x] 最终模型/文档冻结后的十项完整门禁通过：4655 tests、88 quality self-tests、models verify/build/budget 与 desktop types/lint/quality；1260 个源码/配置/文档路径检查前后哈希一致。
 - [x] 本轮授权准备本地发布提交与 annotated `desktop-v0.1.3`，tag 绑定最终干净 main；确切源码通过本地 tag 与会话日志核对。
-- [ ] 用户 push `main` 与 `desktop-v0.1.3`；CI 四宿主打包五个安装包，核对完整七文件 draft。
-- [ ] 用户真机验证：存储迁移（旧工作区能直接打开）、设置页、检查更新、下载保存、汉堡按钮与弹层；上传完成后再整理草稿正文与公开发布。
+- [x] 用户已 push `main` 与 `desktop-v0.1.3`；CI run `38550667540` 的四宿主 build、collect、draft 全部 success；公开 Release 含五安装包、SHA256SUMS 与 release-manifest.json 七个文件。
+- [ ] 用户真机验证：存储迁移（旧工作区能直接打开）、设置页、检查更新、下载保存、汉堡按钮与弹层；Release 已公开，此项保留为后续设备复核，不计为本次自动化已通过。
 
 ## 回滚点
 - 阶段 0 的 shell 修复已在当前分支历史；本轮 feature/docs 提交可独立回退。
 - 本轮共享库、设置页、策略和测试合并为一个 feature checkpoint；文档/规范另一个提交。
 - 阶段 2/3 是纯增量页面与 hook，回退不影响数据。
+
+## 收尾与下一阶段
+
+2026-10-14 用户确认归档本任务并准备跨设备同步。公开发行状态、保留的验收边界和既有同步决策集中记录在 `research/closeout-and-sync-handoff.md`；本轮只做任务归档，没有启动同步实现。

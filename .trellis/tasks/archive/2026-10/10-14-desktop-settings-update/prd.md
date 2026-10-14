@@ -1,6 +1,6 @@
 # 桌面端设置页与版本更新
 
-状态：实现、独立检查、完整门禁与浏览器渲染验证通过；本轮用户已授权提交。系统保存对话框、真机验收与发布仍待后续完成，任务保持 in_progress。验证证据见 `research/settings-checkpoint-validation.md`。
+状态：源码已合并 main，0.1.3 已完成四平台构建并公开发布；2026-10-14 用户确认本轮可以收尾并要求归档，下一阶段准备跨设备同步。A6、A9c、A10 没有逐项真机验收记录，保留为发布后复核项，不补写为测试通过。最终收尾与同步衔接见 `research/closeout-and-sync-handoff.md`。
 
 ## Goal
 
@@ -58,5 +58,5 @@
 ## Notes
 
 - Keep `prd.md` focused on requirements, constraints, and acceptance criteria.
-- 本次发布与已提交的存储迁移修复（`0.1.3` 版本号已提）一起验收。发布前重新核对实际 tag 状态；本轮提交不删除、创建或移动版本 tag。
-- 上线前需完成的既有事项：模型目录基线刷新（已在 0.1.2 前确认最新为 0.0.103，无变化）。
+- 0.1.3 与存储迁移修复一起交付；最终 `desktop-v0.1.3` 指向 `cedb6cca482bc35fd2592197b752943e62e98ccc`，GitHub Release 已公开，未移动已发布 tag。
+- 发布前模型基线已刷新至 `@opencode-ai/models` 0.0.104（381 条）；十项最终门禁与独立发布审计通过。
