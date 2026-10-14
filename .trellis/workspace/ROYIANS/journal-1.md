@@ -1725,3 +1725,32 @@ Shipped split-pane module navigation, docked/overlay context panels, single-row 
 ### Status
 
 [OK] **Completed**
+
+
+## Session 62: 模型库迁移到 Models.dev：基线、手动同步、价格展示、LobeHub 退役
+<!-- trellis-session: v=2 fp=be383b053907bbfd -->
+
+**Date**: 2026-10-14
+**Task**: 模型库迁移到 Models.dev：基线、手动同步、价格展示、LobeHub 退役
+**Branch**: `codex/models-dev-catalog`
+
+### Summary
+
+新增通用设备本地键值表 deviceSettings；用 @opencode-ai/models 0.0.103 生成内置基线（379 条，约 10KB gzip，懒加载）；目录 store 同步读内存，分层匹配（价格只取同供应商或原厂），成本估算不把缺失当 0；五个消费者迁移，运行记录写价格快照；新增极窄网络放行（仅 https://models.dev/api.json，每跳复检，用户配置连接路径零改动）与手动同步；/connectors 新增模型目录页（同步卡片、选择对话框、窗口化定价表）与模型详情价格行；LobeHub 整体退役；补 Models.dev MIT 许可致谢。同时用新错误面板修掉的 PrematureCommitError 根因已被移除（视觉判断不再动态导入大 JSON）。全量门禁通过。未验证：打包版 Tauri 能否请求 models.dev 与 CSP、真实窗口观感与 8800 行滚动、5.6MB 解析的主线程阻塞、Rust 侧（本机无 cargo，只改了表数量断言）。已知：新增表使本机旧原生工作区打不开（无迁移，需先导出备份）；__proto__ 加固无测试保护（私有函数，变异测试证明测试无效）；价格按 definitionId+baseUrl，上下文与视觉只按 definitionId。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `85251d36` | feat(storage): add a generic device-local key/value table |
+| `0daf8e90` | feat(model-catalog): add Models.dev baseline, catalog store, matching and cost estimate |
+| `a383cbb5` | feat(model-catalog): read model specs from the Models.dev catalog and snapshot prices |
+| `674b5c00` | feat(model-catalog): add a narrow models.dev network allowance and manual sync |
+| `234a9298` | feat(model-catalog): add the model catalog page, picker and price display |
+| `808d87fe` | chore(model-catalog): retire the LobeHub model-bank snapshot |
+| `aeede3a8` | fix(model-catalog): skip __proto__ ids in synced catalogs and sync specs |
+| `17513932` | docs: add the Models.dev MIT notice and README acknowledgement |
+
+### Status
+
+[OK] **Completed**
