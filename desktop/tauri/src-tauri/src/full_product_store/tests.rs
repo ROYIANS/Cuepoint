@@ -745,3 +745,66 @@ fn encoded_metadata_envelopes_are_bounded_even_for_control_heavy_chunks() {
     assert!(serde_json::to_vec(&response).unwrap().len() < 262144);
     dispose(store);
 }
+
+fn downgrade_to_legacy_registry(root: &std::path::Path, extra_missing: Option<&str>) {
+    let db = rusqlite::Connection::open(root.join(".local/state.sqlite")).unwrap();
+    db.execute("DELETE FROM product_tables WHERE name='deviceSettings'", [])
+        .unwrap();
+    if let Some(name) = extra_missing {
+        db.execute("DELETE FROM product_tables WHERE name=?", [name])
+            .unwrap();
+    }
+    db.execute(
+        "UPDATE product_workspace SET registry_hash=?",
+        ["a3405d1995059418dc36f69a9ff547c53ebe1c500a4aa64da642be4c6585af85"],
+    )
+    .unwrap();
+}
+#[test]
+fn legacy_registry_workspace_is_upgraded_in_place() {
+    let mut store = fixture(Hooks::default());
+    let root = store.root.clone();
+    let workspace = store.workspace_id.clone();
+    store.close().unwrap();
+    drop(store);
+    downgrade_to_legacy_registry(&root, None);
+    let mut store = FullProductStore::open(root.clone(), false, Hooks::default()).unwrap();
+    assert_eq!(store.workspace_id, workspace);
+    store.close().unwrap();
+    drop(store);
+    let db = rusqlite::Connection::open(root.join(".local/state.sqlite")).unwrap();
+    let (rows, hash): (i64, String) = db
+        .query_row(
+            "SELECT (SELECT count(*) FROM product_tables WHERE name='deviceSettings'),(SELECT registry_hash FROM product_workspace)",
+            [],
+            |r| Ok((r.get(0)?, r.get(1)?)),
+        )
+        .unwrap();
+    assert_eq!(rows, 1);
+    assert_eq!(hash, digest(registry::REGISTRY_JSON.as_bytes()));
+    drop(db);
+    dispose(FullProductStore::open(root, false, Hooks::default()).unwrap());
+}
+#[test]
+fn legacy_registry_with_other_differences_is_still_rejected() {
+    let mut store = fixture(Hooks::default());
+    let root = store.root.clone();
+    store.close().unwrap();
+    drop(store);
+    downgrade_to_legacy_registry(&root, Some("projects"));
+    let error = FullProductStore::open(root.clone(), false, Hooks::default())
+        .err()
+        .unwrap();
+    assert_eq!(error.code, "schema");
+    let db = rusqlite::Connection::open(root.join(".local/state.sqlite")).unwrap();
+    let rows: i64 = db
+        .query_row(
+            "SELECT count(*) FROM product_tables WHERE name='deviceSettings'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap();
+    assert_eq!(rows, 0);
+    drop(db);
+    fs::remove_dir_all(&root).unwrap();
+}

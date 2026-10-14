@@ -214,12 +214,15 @@ impl FullProductStore {
             db.execute_batch("COMMIT")?;
             paths::namespace_checkpoint(&root.join(".local"))?;
         }
-        let (id, schema, registry_hash): (String, u32, String) = db.query_row(
+        let (id, schema, mut registry_hash): (String, u32, String) = db.query_row(
             "SELECT id,schema,registry_hash FROM product_workspace",
             [],
             |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
         )?;
         registry::uuid(&id)?;
+        if schema == SCHEMA {
+            registry_hash = migrate_registry(&db, registry_hash)?;
+        }
         if schema != SCHEMA
             || db.pragma_query_value::<u32, _>(None, "user_version", |r| r.get(0))? != SCHEMA
             || registry_hash != digest(registry::REGISTRY_JSON.as_bytes())
@@ -1304,6 +1307,49 @@ fn string_chunk(text: &str, offset: usize, length: usize) -> Result<Value> {
         return Err(Error::new("invalid", "Chunk cannot hold UTF-8 codepoint"));
     }
     Ok(json!({"payload":&text[offset..end],"offset":end,"end":end==text.len()}))
+}
+// Registry hash of workspaces created by desktop-v0.1.0 and v0.1.1: the 49 tables before
+// `deviceSettings` was added. The SQL tables are fixed, so a new registry table only needs a
+// `product_tables` row; any other hash or table set is left to the schema check to reject.
+const LEGACY_REGISTRY_HASH: &str =
+    "a3405d1995059418dc36f69a9ff547c53ebe1c500a4aa64da642be4c6585af85";
+const LEGACY_REGISTRY_ADDED: &[&str] = &["deviceSettings"];
+fn migrate_registry(db: &Connection, stored: String) -> Result<String> {
+    let current = digest(registry::REGISTRY_JSON.as_bytes());
+    if stored != LEGACY_REGISTRY_HASH || stored == current {
+        return Ok(stored);
+    }
+    let actual: BTreeSet<String> = db
+        .prepare("SELECT name FROM product_tables")?
+        .query_map([], |r| r.get(0))?
+        .collect::<std::result::Result<_, _>>()?;
+    let expected: BTreeSet<String> = registry::tables()
+        .keys()
+        .filter(|name| !LEGACY_REGISTRY_ADDED.contains(&name.as_str()))
+        .cloned()
+        .collect();
+    if actual != expected {
+        return Ok(stored);
+    }
+    db.execute_batch("BEGIN IMMEDIATE")?;
+    let upgraded = (|| -> Result<()> {
+        for name in LEGACY_REGISTRY_ADDED {
+            db.execute("INSERT INTO product_tables VALUES (?,0)", [*name])?;
+        }
+        db.execute(
+            "UPDATE product_workspace SET registry_hash=?",
+            [current.as_str()],
+        )?;
+        Ok(())
+    })();
+    match upgraded {
+        Ok(()) => db.execute_batch("COMMIT")?,
+        Err(error) => {
+            let _ = db.execute_batch("ROLLBACK");
+            return Err(error);
+        }
+    }
+    Ok(current)
 }
 fn validate_open(db: &Connection) -> Result<()> {
     let integrity: String = db.query_row("PRAGMA integrity_check", [], |r| r.get(0))?;

@@ -44,6 +44,8 @@ function transportError(raw:unknown):Error {
         const codes=["conflict","constraint","invalid","unavailable","canceled","closed","scope"] as const;
         const code=codes.find(code=>code === raw.code);
         if (code) return new StorageError(code,raw.message,"rollback");
+        // Other Rust codes (for example "schema") are fixed literals; keep them so the report says why.
+        if (/^[a-z][a-z-]{0,31}$/.test(raw.code)) return new Error(`原生存储连接失败（${raw.code}）`,{cause:raw});
     }
     return new Error("原生存储连接失败",{cause:raw});
 }
