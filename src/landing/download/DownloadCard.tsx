@@ -1,6 +1,6 @@
 import {formatBytes, formatPublished} from "./format";
-import {pickAssets, type AssetChoice, type DetectedPlatform} from "./platform";
-import {INSTALL_GUIDE_URL, RELEASES_URL, type FallbackReason, type LatestDesktopRelease, type ReleaseResult} from "./releases";
+import {pickAssets, type AssetChoice, type DetectedPlatform} from "@/lib/desktopRelease/platform";
+import {INSTALL_GUIDE_URL, RELEASES_URL, type FallbackReason, type LatestDesktopRelease, type ReleaseResult} from "@/lib/desktopRelease/releases";
 
 const FALLBACK_TEXT: Record<FallbackReason, string> = {
     network: "暂时无法获取最新版本信息，请直接到 GitHub 查看所有版本。",

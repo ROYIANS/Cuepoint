@@ -1,6 +1,6 @@
 import {describe, expect, it} from "vitest";
-import {detectPlatform, pickAssets, type DetectedPlatform, type NavigatorInfo} from "@/landing/download/platform";
-import type {LatestDesktopRelease} from "@/landing/download/releases";
+import {detectPlatform, pickAssets, type DetectedPlatform, type NavigatorInfo} from "@/lib/desktopRelease/platform";
+import type {LatestDesktopRelease} from "@/lib/desktopRelease/releases";
 
 const BASE = "https://github.com/ROYIANS/Cuepoint/releases/download/desktop-v0.1.1/";
 const NAMES = [

@@ -99,6 +99,9 @@ import {WarningIcon as PhWarning} from "@phosphor-icons/react/dist/csr/Warning";
 import {WarningCircleIcon as PhWarningCircle} from "@phosphor-icons/react/dist/csr/WarningCircle";
 import {WrenchIcon as PhWrench} from "@phosphor-icons/react/dist/csr/Wrench";
 import {XIcon as PhX} from "@phosphor-icons/react/dist/csr/X";
+import {PaletteIcon as PhPalette} from "@phosphor-icons/react/dist/csr/Palette";
+import {DatabaseIcon as PhDatabase} from "@phosphor-icons/react/dist/csr/Database";
+import {InfoIcon as PhInfo} from "@phosphor-icons/react/dist/csr/Info";
 
 /** Application-owned glyphs; model/provider marks retain their brand owner. */
 function appIcon(Glyph: Icon, defaultWeight: IconWeight = "regular", mirror = false) {
@@ -241,3 +244,6 @@ export const ZoomOut = /* @__PURE__ */ appIcon(PhMagnifyingGlassMinus);
 export {InfinityIcon as Infinity};
 export const Home = /* @__PURE__ */ appIcon(PhHouse);
 export const Menu = /* @__PURE__ */ appIcon(PhList);
+export const Info = /* @__PURE__ */ appIcon(PhInfo);
+export const Palette = /* @__PURE__ */ appIcon(PhPalette);
+export const Database = /* @__PURE__ */ appIcon(PhDatabase);

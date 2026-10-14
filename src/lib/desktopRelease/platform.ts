@@ -1,7 +1,8 @@
 import type {LatestDesktopRelease, ReleaseAsset} from "./releases";
 
 // Visitor platform detection and installer selection. Pure: the caller passes
-// the navigator values, so nothing here reads a global.
+// the navigator values, so nothing here reads a global. Shared by the standalone
+// landing entry and the desktop settings update check.
 
 type OsName = "macos" | "windows" | "linux" | "ios" | "android" | "unknown";
 type ArchName = "arm64" | "x64" | "unknown";

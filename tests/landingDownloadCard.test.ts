@@ -4,8 +4,8 @@ import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {DownloadCard} from "@/landing/download/DownloadCard";
 import {STAR_DISPLAY_THRESHOLD, StarPrompt} from "@/landing/download/StarPrompt";
-import type {DetectedPlatform} from "@/landing/download/platform";
-import type {LatestDesktopRelease, ReleaseResult} from "@/landing/download/releases";
+import type {DetectedPlatform} from "@/lib/desktopRelease/platform";
+import type {LatestDesktopRelease, ReleaseResult} from "@/lib/desktopRelease/releases";
 
 const BASE = "https://github.com/ROYIANS/Cuepoint/releases/download/desktop-v0.1.1/";
 const NAMES = ["Cuepoint_0.1.1_macos_arm64.dmg", "Cuepoint_0.1.1_macos_x64.dmg", "Cuepoint_0.1.1_windows_x64_setup.exe", "Cuepoint_0.1.1_linux_x64.deb", "Cuepoint_0.1.1_linux_x64.AppImage"];

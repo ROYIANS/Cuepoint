@@ -1,14 +1,14 @@
-import {ModuleLayout} from "@/components/layout/ModuleLayout";
 import {SearchConnection} from "./SearchConnection";
 import {useProductQuery} from "@/lib/storage/hooks";
-import {Check, Coins, Plug} from "@/components/ui/icons";
+import {Check, Coins, Plug, Search} from "@/components/ui/icons";
 import {ModelCatalogSection} from "@/components/connectors/ModelCatalogSection";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import {showError} from "@/components/errors/showError";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
-import {PageContent, PageHeader, PageState} from "@/components/layout/PageLayout";
+import {PageState} from "@/components/layout/PageLayout";
+import {SettingsGroup} from "@/components/settings/SettingsCard";
 import {
     Dialog,
     DialogContent,
@@ -34,8 +34,13 @@ type EditorState = {
 type EditorSession = EditorState & { baseUrl: string; apiKey: string };
 type EditorOperation = { session: EditorSession; kind: "probe" | "test" | "save" | "disconnect" };
 
-export function ConnectorsPage() {
+/** Hosted by the settings page: keys live in settings, so the rail is the settings rail, not a second shell. */
+export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
+    visibleRowIds?: string[];
+    onEditorOpenChange?: (open: boolean) => void;
+} = {}) {
     const [section, setSection] = useState<"models" | "search" | "catalog">("models");
+    const activeSection = !visibleRowIds || visibleRowIds.includes(section) ? section : visibleRowIds[0];
     const view = useProductQuery(async (db) => {
         try {
             return {connectors: await db.connectors.toArray()};
@@ -73,6 +78,8 @@ export function ConnectorsPage() {
         };
     }, []);
 
+    useEffect(() => () => onEditorOpenChange?.(false), [onEditorOpenChange]);
+
     function writeLocked() {
         return operationRef.current?.kind === "save" || operationRef.current?.kind === "disconnect";
     }
@@ -91,6 +98,7 @@ export function ConnectorsPage() {
 
     function openEditor(definition: ConnectorDefinition, existing?: ConnectorConfig) {
         if (!mounted.current || writeLocked()) return;
+        onEditorOpenChange?.(true);
         sessionRef.current = {
             definition,
             existing,
@@ -109,6 +117,7 @@ export function ConnectorsPage() {
 
     function closeEditor() {
         if (!mounted.current || sessionRef.current !== session || writeLocked()) return;
+        onEditorOpenChange?.(false);
         sessionRef.current = undefined;
         operationRef.current = undefined;
         setEditor(undefined);
@@ -240,35 +249,30 @@ export function ConnectorsPage() {
     }
 
     return (
-        <ModuleLayout navigationLabel="连接导航" navigation={<>
-            <h2 className="module-nav-heading">连接与模型</h2><div className="module-nav-group">
-                <button type="button" className="module-nav-item" aria-pressed={section === "models"} onClick={() => setSection("models")}><Plug size={16} weight={section === "models" ? "fill" : "regular"} aria-hidden/>模型连接</button>
-                <button type="button" className="module-nav-item" aria-pressed={section === "search"} onClick={() => setSection("search")}>网络搜索连接</button>
-                <button type="button" className="module-nav-item" aria-pressed={section === "catalog"} onClick={() => setSection("catalog")}><Coins size={16} weight={section === "catalog" ? "fill" : "regular"} aria-hidden/>模型目录</button>
+        <div className="settings-connections">
+            <div className="settings-subtabs" role="group" aria-label="连接分组">
+                {(!visibleRowIds || visibleRowIds.includes("models")) && <button type="button" aria-pressed={activeSection === "models"} onClick={() => setSection("models")}><Plug size={16} weight={activeSection === "models" ? "fill" : "regular"} aria-hidden/>模型连接</button>}
+                {(!visibleRowIds || visibleRowIds.includes("search")) && <button type="button" aria-pressed={activeSection === "search"} onClick={() => setSection("search")}><Search size={16} weight={activeSection === "search" ? "fill" : "regular"} aria-hidden/>网络搜索连接</button>}
+                {(!visibleRowIds || visibleRowIds.includes("catalog")) && <button type="button" aria-pressed={activeSection === "catalog"} onClick={() => setSection("catalog")}><Coins size={16} weight={activeSection === "catalog" ? "fill" : "regular"} aria-hidden/>模型目录</button>}
             </div>
-        </>}><PageContent mode="detail">
-            <PageHeader title="连接与模型" description={<>
-                密钥仅保存在本机，配置一次后工作室与后续 Agent 共用。不会写入项目备份 ZIP。
-                具体聊天用哪个模型，在 Agent 对话里选择。
-            </>}/>
-            <div hidden={section !== "models"}>{!view ? <PageState kind="loading" title="正在读取连接…"/> : view.error ?
+            <div hidden={activeSection !== "models"}>{!view ? <PageState kind="loading" title="正在读取连接…"/> : view.error ?
                 <PageState kind="error" title="暂时无法读取连接" description={view.error}/> :
-                <div className="mt-6 divide-y border-y">
+                <SettingsGroup title="服务商">
                     {CONNECTOR_CATALOG.map((definition) => {
                         const existing = byDefinition.get(definition.id);
                         const connected = Boolean(existing);
                         return (
                             <section key={definition.id} aria-labelledby={`connector-${definition.id}`}
-                                     className="flex flex-wrap items-start gap-4 py-5">
+                                     className="settings-row settings-connector-row">
                                 <div className="bg-muted text-foreground flex size-10 shrink-0 items-center justify-center rounded-md text-xs font-semibold"
                                      aria-hidden>
                                     {definition.mark}
                                 </div>
-                                <div className="min-w-0 flex-1 basis-40">
-                                    <h2 id={`connector-${definition.id}`} className="text-base leading-6 font-semibold">{definition.title}</h2>
-                                    <p className="text-muted-foreground mt-1 text-sm leading-[22px]">{definition.blurb}</p>
+                                <div className="settings-row-copy">
+                                    <h3 id={`connector-${definition.id}`} className="settings-row-title">{definition.title}</h3>
+                                    <p className="settings-row-description">{definition.blurb}</p>
                                 </div>
-                                <div className="flex shrink-0 flex-wrap items-center gap-3">
+                                <div className="settings-row-control">
                                     {connected ? (
                                         <Badge variant="outline" className="gap-1">
                                             <Check className="size-3" aria-hidden/>
@@ -293,9 +297,9 @@ export function ConnectorsPage() {
                             </section>
                         );
                     })}
-                </div>}
-            </div><div hidden={section !== "search"}><SearchConnection/></div>
-            {section === "catalog" && <ModelCatalogSection/>}
+                </SettingsGroup>}
+            </div><div className="settings-search-connection" hidden={activeSection !== "search"}><SearchConnection onEditorOpenChange={onEditorOpenChange}/></div>
+            {activeSection === "catalog" && <div className="settings-model-catalog"><ModelCatalogSection/></div>}
 
             <Dialog open={Boolean(editor)} onOpenChange={(open) => !open && closeEditor()}>
                 <DialogContent
@@ -323,6 +327,8 @@ export function ConnectorsPage() {
                     <div className="grid min-h-0 gap-4 overflow-y-auto p-1">
                         <Field label="Base URL">
                             <Input
+                                type="url"
+                                name="connector-base-url"
                                 value={baseUrl}
                                 disabled={saving}
                                 onChange={(event) => changeCredential("baseUrl", event.target.value)}
@@ -333,6 +339,7 @@ export function ConnectorsPage() {
                         <Field label="API Key">
                             <Input
                                 type="password"
+                                name="connector-api-key"
                                 value={apiKey}
                                 disabled={saving}
                                 onChange={(event) => changeCredential("apiKey", event.target.value)}
@@ -341,7 +348,7 @@ export function ConnectorsPage() {
                                         ? `已保存 ${maskApiKey(editor.existing.apiKey)}（留空则保持）`
                                         : "sk-…"
                                 }
-                                autoComplete="off"
+                                autoComplete="new-password"
                             />
                         </Field>
                         {probeModels.length > 0 ? (
@@ -395,6 +402,6 @@ export function ConnectorsPage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </PageContent></ModuleLayout>
+        </div>
     );
 }

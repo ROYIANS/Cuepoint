@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {detectPlatform, type DetectedPlatform, type NavigatorInfo} from "./platform";
-import {fetchLatestDesktopRelease, fetchStars, type ReleaseResult} from "./releases";
+import {detectPlatform, type DetectedPlatform, type NavigatorInfo} from "@/lib/desktopRelease/platform";
+import {fetchLatestDesktopRelease, fetchStars, type ReleaseResult} from "@/lib/desktopRelease/releases";
 
 export type DownloadData = {release?: ReleaseResult; platform?: DetectedPlatform; stars?: number};
 

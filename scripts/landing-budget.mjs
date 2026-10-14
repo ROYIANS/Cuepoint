@@ -23,7 +23,7 @@ const cssBudgetKb = Number(option('css-kb', 15));
 
 const FORBIDDEN_PACKAGES = ['dexie', 'zod', 'antd', '@lobehub/', '@tanstack/react-router', '@tauri-apps/'];
 const FORBIDDEN_SOURCES = ['src/db/', 'src/lib/storage/', 'src/main.tsx', 'src/styles.css', 'src/components/'];
-const EXEMPT_SOURCES = new Set(['src/lib/umami.ts', 'src/lib/brand.ts']);
+const EXEMPT_SOURCES = new Set(['src/lib/umami.ts', 'src/lib/brand.ts', 'src/lib/desktopRelease/releases.ts', 'src/lib/desktopRelease/platform.ts']);
 
 const failures = [];
 const fail = message => failures.push(message);

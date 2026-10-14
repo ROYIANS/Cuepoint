@@ -59,7 +59,7 @@ import * as repoProjects from "@/db/projects";
 import * as repoEpisodes from "@/db/episodes";
 import * as repoConnectors from "@/db/connectors";
 import * as connectors from "@/lib/ai/connectors";
-import {ConnectorsPage} from "@/components/studio/ConnectorsPage";
+import {ConnectorsSection as ConnectorsPage} from "@/components/studio/ConnectorsPage";
 import {StoryPage} from "@/components/story/StoryPage";
 import {PageHeader} from "@/components/layout/PageLayout";
 import {Dialog, DialogContent} from "@/components/ui/dialog";

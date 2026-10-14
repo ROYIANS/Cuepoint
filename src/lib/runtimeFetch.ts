@@ -231,7 +231,7 @@ export function createRuntimeFetch(services: RuntimeFetchServices, scope: Runtim
             const wire = parts.init;
             for (let hop = 0; ; hop++) {
                 parts.signal?.throwIfAborted();
-                const grant = await services.authorize(url, wire.method, wire.headers, wire.body, scope);
+                const grant = await services.authorize(url, wire.method, wire.headers, wire.body, {...scope, redirected: hop > 0});
                 parts.signal?.throwIfAborted();
                 await services.grant(grant.origin, grant.allowHttp);
                 parts.signal?.throwIfAborted();
@@ -262,10 +262,14 @@ const runtimeFetch = createRuntimeFetch(services);
 export const runtimeResultFetch = createRuntimeFetch(services, {purpose: "result-download"});
 const searchProbeFetch = createRuntimeFetch(services, {purpose: "search-probe"});
 const modelCatalogFetch = createRuntimeFetch(services, {purpose: "model-catalog"});
+const releaseCheckFetch = createRuntimeFetch(services, {purpose: "release-check"});
+const releaseAssetFetch = createRuntimeFetch(services, {purpose: "release-asset"});
 
 export function runtimeFetchFor(purpose: RuntimeHttpPurpose = "configured"): typeof fetch {
     if (purpose === "result-download") return runtimeResultFetch;
     if (purpose === "model-catalog") return modelCatalogFetch;
+    if (purpose === "release-check") return releaseCheckFetch;
+    if (purpose === "release-asset") return releaseAssetFetch;
     return purpose === "search-probe" ? searchProbeFetch : runtimeFetch;
 }
 

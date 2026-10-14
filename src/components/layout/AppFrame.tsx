@@ -1,6 +1,7 @@
 import {Link, useRouter, useRouterState} from "@tanstack/react-router";
-import {ArrowLeft, ArrowRight, BookOpen, ListTodo, FolderOpen, Home, Menu, PanelLeft, Plug, Settings, Upload, Users} from "@/components/ui/icons";
+import {ArrowLeft, ArrowRight, BookOpen, ListTodo, FolderOpen, Home, Menu, PanelLeft, Settings, Upload, Users} from "@/components/ui/icons";
 import {type ReactNode, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore} from "react";
+import {useAutoUpdateCheck} from "@/components/settings/useAutoUpdateCheck";
 import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {AppHeaderContext} from "@/components/layout/AppHeaderPortal";
@@ -18,13 +19,13 @@ const NAV = [
     {to: "/projects", label: "项目", icon: FolderOpen, active: (path: string) => matchesPath(path,"/projects") || matchesPath(path,"/p")},
     {to: "/assets", label: "素材库", icon: BookOpen, active: (path: string) => ["/assets","/characters","/scenes","/props","/styles"].some(target => matchesPath(path,target))},
     {to: "/agent/tasks", label: "任务", icon: ListTodo, active: (path: string) => matchesPath(path,"/agent/tasks")},
-    {to: "/connectors", label: "连接与模型", icon: Plug, active: (path: string) => matchesPath(path,"/connectors")},
-    {to: "/settings", label: "设置", icon: Settings, active: (path: string) => matchesPath(path,"/settings") || matchesPath(path,"/about")},
+    {to: "/settings", label: "设置", icon: Settings, active: (path: string) => matchesPath(path,"/settings") || matchesPath(path,"/about") || matchesPath(path,"/connectors")},
 ] as const;
 const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-chrome)]";
 
 /** Window and navigation presentation. Studio and workspace retain their owners. */
 export function AppFrame({children,onImport,contentScroll = "auto"}: {children: ReactNode; onImport?: () => void; contentScroll?: "auto" | "hidden"}) {
+    useAutoUpdateCheck();
     const pathname = useRouterState({select: state => state.location.pathname});
     const router = useRouter();
     const history = getHistoryNavigation(router.history);

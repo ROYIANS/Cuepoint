@@ -2,6 +2,7 @@ import {GITHUB_URL} from "@/lib/brand";
 
 // Release and star data from the public GitHub API (unauthenticated, CORS-enabled).
 // Everything is injectable and nothing touches the network at module load.
+// Shared by the standalone landing entry and the desktop settings update check.
 
 export const RELEASES_URL = `${GITHUB_URL}/releases`;
 export const INSTALL_GUIDE_URL = `${GITHUB_URL}/blob/main/docs/desktop-installation.md`;
@@ -12,6 +13,7 @@ const DOWNLOAD_PREFIX = `${GITHUB_URL}/releases/download/`;
 const TAG_PATTERN = /^desktop-v(\d+)\.(\d+)\.(\d+)$/;
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 8000;
+const MAX_RELEASE_RESPONSE_BYTES = 1024 * 1024;
 const RELEASE_CACHE_KEY = "cuepoint.landing.release";
 const STARS_CACHE_KEY = "cuepoint.landing.stars";
 
@@ -87,7 +89,7 @@ function isValidAsset(asset: unknown): asset is ReleaseAsset {
     if (!isRecord(asset)) return false;
     const {name, size, url, sha256} = asset;
     return typeof name === "string" && name.length > 0
-        && typeof size === "number" && Number.isFinite(size) && size >= 0
+        && typeof size === "number" && Number.isSafeInteger(size) && size >= 0
         && typeof url === "string" && isUnder(url, DOWNLOAD_PREFIX)
         && (sha256 === undefined || (typeof sha256 === "string" && /^[a-f0-9]{64}$/.test(sha256)));
 }
@@ -141,7 +143,41 @@ type Reply =
     | {kind: "invalid"}
     | {kind: "json"; value: unknown};
 
+/** Standalone landing closure stays dependency-free; bound bytes before decoding JSON. */
+async function readBoundedJson(response: Response, signal: AbortSignal): Promise<unknown> {
+    if (Number(response.headers.get("content-length")) > MAX_RELEASE_RESPONSE_BYTES) {
+        await response.body?.cancel().catch(() => undefined);
+        throw new Error("release response too large");
+    }
+    if (!response.body) throw new Error("empty release response");
+    const reader = response.body.getReader();
+    const cancel = () => {void reader.cancel().catch(() => undefined);};
+    signal.addEventListener("abort", cancel, {once: true});
+    const chunks: Uint8Array[] = [];
+    let size = 0;
+    try {
+        while (true) {
+            signal.throwIfAborted();
+            const next = await reader.read();
+            signal.throwIfAborted();
+            if (next.done) break;
+            size += next.value.byteLength;
+            if (size > MAX_RELEASE_RESPONSE_BYTES) throw new Error("release response too large");
+            chunks.push(next.value);
+        }
+        const bytes = new Uint8Array(size);
+        let offset = 0;
+        for (const chunk of chunks) {bytes.set(chunk, offset); offset += chunk.byteLength;}
+        return JSON.parse(new TextDecoder("utf-8", {fatal: true}).decode(bytes)) as unknown;
+    } finally {
+        signal.removeEventListener("abort", cancel);
+        await reader.cancel().catch(() => undefined);
+        reader.releaseLock();
+    }
+}
+
 async function request(url: string, deps: FetchDeps): Promise<Reply> {
+    if (deps.signal?.aborted) return {kind: "error"};
     const fetchImpl = deps.fetchImpl ?? (typeof globalThis.fetch === "function" ? globalThis.fetch.bind(globalThis) : undefined);
     if (!fetchImpl) return {kind: "error"};
     const controller = new AbortController();
@@ -156,10 +192,11 @@ async function request(url: string, deps: FetchDeps): Promise<Reply> {
         const response = await Promise.race([fetchImpl(url, {headers: {Accept: "application/vnd.github+json"}, signal: controller.signal}), aborted]);
         if (response.status !== 200) {
             const exhausted = response.headers?.get?.("x-ratelimit-remaining") === "0";
+            await response.body?.cancel().catch(() => undefined);
             return {kind: "http", status: response.status, rateLimited: response.status === 429 || (response.status === 403 && exhausted)};
         }
         try {
-            return {kind: "json", value: await Promise.race([response.json() as Promise<unknown>, aborted])};
+            return {kind: "json", value: await Promise.race([readBoundedJson(response, controller.signal), aborted])};
         } catch {
             return controller.signal.aborted ? {kind: "error"} : {kind: "invalid"};
         }

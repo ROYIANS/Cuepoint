@@ -1,5 +1,5 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {fetchLatestDesktopRelease, fetchStars, type StorageLike} from "@/landing/download/releases";
+import {fetchLatestDesktopRelease, fetchStars, type StorageLike} from "@/lib/desktopRelease/releases";
 import {formatBytes, formatPublished, formatStars} from "@/landing/download/format";
 
 const PREFIX = "https://github.com/ROYIANS/Cuepoint/releases/download/";
@@ -90,6 +90,42 @@ describe("fetchLatestDesktopRelease", () => {
         const pending = fetchLatestDesktopRelease({...deps(fetchImpl as unknown as typeof fetch), signal: controller.signal});
         controller.abort();
         expect(await pending).toEqual({kind: "fallback", reason: "network"});
+    });
+
+    it("does not send an already-aborted check", async () => {
+        const controller = new AbortController();
+        controller.abort();
+        const fetchImpl = vi.fn(async () => json([]));
+        expect(await fetchLatestDesktopRelease({...deps(fetchImpl), signal: controller.signal})).toEqual({kind: "fallback", reason: "network"});
+        expect(fetchImpl).not.toHaveBeenCalled();
+    });
+
+    it("bounds actual release JSON bytes and cancels an oversized stream even without a length header", async () => {
+        const cancel = vi.fn();
+        const stream = new ReadableStream<Uint8Array>({start(controller) {
+            controller.enqueue(new Uint8Array(1024 * 1024));
+            controller.enqueue(new Uint8Array(1));
+        }, cancel}, {highWaterMark: 0});
+        const fetchImpl = vi.fn(async () => new Response(stream));
+        expect(await fetchLatestDesktopRelease(deps(fetchImpl))).toEqual({kind: "fallback", reason: "invalid"});
+        expect(cancel).toHaveBeenCalledOnce();
+    });
+
+    it("cancels oversized declared responses before consuming and non-success response bodies", async () => {
+        for (const init of [{headers: {"content-length": String(1024 * 1024 + 1)}}, {status: 429}]) {
+            const cancel = vi.fn();
+            const stream = new ReadableStream<Uint8Array>({cancel}, {highWaterMark: 0});
+            const result = await fetchLatestDesktopRelease(deps(vi.fn(async () => new Response(stream, init))));
+            expect(result).toEqual({kind: "fallback", reason: init.status === 429 ? "rate-limit" : "invalid"});
+            expect(cancel).toHaveBeenCalledOnce();
+        }
+    });
+
+    it("rejects fractional and unsafe declared asset lengths", async () => {
+        const result = await fetchLatestDesktopRelease(deps(vi.fn(async () => json([item("desktop-v0.1.1", {assets: [
+            asset("desktop-v0.1.1", "fraction", {size: 0.5}), asset("desktop-v0.1.1", "unsafe", {size: Number.MAX_SAFE_INTEGER + 1}),
+        ]})]))));
+        expect(result.kind === "ok" && result.release.assets).toEqual([]);
     });
 
     describe("cache", () => {
