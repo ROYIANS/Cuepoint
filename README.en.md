@@ -386,6 +386,7 @@ Cuepoint builds on the work of these projects and their contributors:
 | [PDF.js](https://github.com/mozilla/pdf.js), [Mammoth.js](https://github.com/mwilliamson/mammoth.js) | Local PDF and DOCX text extraction; Apache-2.0 and BSD-2-Clause respectively |
 | [LobeHub](https://github.com/lobehub/lobehub) | References for Agent chat and interaction patterns |
 | [Lobe UI](https://github.com/lobehub/lobe-ui), [Lobe Icons](https://github.com/lobehub/lobe-icons), [Fluent Emoji](https://github.com/lobehub/fluent-emoji) | Chat components, model branding, and emoji resources |
+| [Models.dev](https://models.dev) | Model specification and pricing catalog (built-in baseline and manual sync, MIT) |
 | [React](https://react.dev/), [TypeScript](https://github.com/microsoft/TypeScript) | Application UI and type system |
 | [Vite](https://github.com/vitejs/vite), [Vite React Plugin](https://github.com/vitejs/vite-plugin-react) | Development server and builds |
 | [TanStack Router](https://github.com/TanStack/router) | Typed routing and route generation |

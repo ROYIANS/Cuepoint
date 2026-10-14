@@ -386,6 +386,7 @@ pnpm build
 | [PDF.js](https://github.com/mozilla/pdf.js)、[Mammoth.js](https://github.com/mwilliamson/mammoth.js) | 浏览器本地 PDF 正文与 DOCX 文本提取；分别采用 Apache-2.0、BSD-2-Clause 许可 |
 | [LobeHub](https://github.com/lobehub/lobehub) | Agent、聊天输入区和上下文交互的实现参考 |
 | [Lobe UI](https://github.com/lobehub/lobe-ui)、[Lobe Icons](https://github.com/lobehub/lobe-icons)、[Fluent Emoji](https://github.com/lobehub/fluent-emoji) | 聊天组件、模型品牌图标与表情资源 |
+| [Models.dev](https://models.dev) | 模型规格与价格目录（内置基线与手动同步，MIT） |
 | [React](https://react.dev/)、[TypeScript](https://github.com/microsoft/TypeScript) | 应用界面与类型系统 |
 | [Vite](https://github.com/vitejs/vite)、[Vite React Plugin](https://github.com/vitejs/vite-plugin-react) | 开发服务与构建 |
 | [TanStack Router](https://github.com/TanStack/router) | 类型安全路由与路由生成 |
