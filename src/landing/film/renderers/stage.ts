@@ -1,4 +1,7 @@
 import type {FilmDriver, FilmState} from "../useFilmProgress";
+import {agentGeometry, buildAgentSets, drawAgent, planAgent} from "./agent";
+import {buildDeliverySets, deliveryGeometry, drawDelivery, planDelivery} from "./delivery";
+import {buildVaultSets, drawVault, planVault, vaultGeometry} from "./vault";
 import {drawLeader, LEADER_REST, planLeader} from "./leader";
 import {clamp01, type Layout, type Plan, type SceneState, type Sets} from "./plan";
 import {createPool, MAX_PARTICLES, mulberry32, step, type Pool, type Quality} from "./particles";
@@ -129,7 +132,7 @@ function gridCells(art: Rect): Rect[] {
 
 function buildLayout(stage: HTMLElement, w: number, h: number): Layout {
     const art = artRect(w, h);
-    return {w, h, art, title: readTitle(stage, w, h), cells: gridCells(art)};
+    return {w, h, art, title: readTitle(stage, w, h), cells: gridCells(art), agent: agentGeometry(art), vault: vaultGeometry(art), delivery: deliveryGeometry(art)};
 }
 
 const textFont = (size: number) => `500 ${size}px "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", sans-serif`;
@@ -161,7 +164,8 @@ function buildSets(layout: Layout, capacity: number, env: StageEnv): Sets {
     gridSet.a.fill(GRID_DIM, 0, outlined);
     const gridLit: TargetSet = {x: gridSet.x, y: gridSet.y, a: Float32Array.from(gridSet.a)};
 
-    return {center, scatter, title: titleSet, text: textSet, typed: createSet(capacity), grid: gridSet, gridLit, textCount, textSize: lines.size, cellSize, typedCount: -1};
+    return {center, scatter, title: titleSet, text: textSet, typed: createSet(capacity), grid: gridSet, gridLit, textCount, textSize: lines.size, cellSize, typedCount: -1,
+        agent: buildAgentSets(layout.agent, capacity, rng, w, h), vault: buildVaultSets(layout.vault, capacity, rng, w, h), delivery: buildDeliverySets(layout.delivery, capacity, rng, w, h)};
 }
 
 function applyPlan(pool: Pool, plan: Plan): void {
@@ -265,14 +269,9 @@ function start(stage: HTMLElement, canvas: HTMLCanvasElement, driver: FilmDriver
         if (sceneIndex === 0) planLeader(local, sets, plan);
         else if (sceneIndex === 1) planSpark(local, sets, plan);
         else if (sceneIndex === 2) planScript(local, sets, layout.cells.length, plan);
-        else {
-            // Later scenes are drawn in a later phase: the particles simply fade out.
-            plan.from = sets.scatter;
-            plan.to = sets.scatter;
-            plan.t = 0;
-            plan.behavior = "scatter";
-            plan.alphaScale = 0;
-        }
+        else if (sceneIndex === 3) planAgent(local, sets, layout.agent, plan);
+        else if (sceneIndex === 4) planVault(local, sets, plan);
+        else planDelivery(local, sets, layout.delivery, plan);
     }
 
     function drawParticles(target: CanvasRenderingContext2D, current: Pool): void {
@@ -343,6 +342,9 @@ function start(stage: HTMLElement, canvas: HTMLCanvasElement, driver: FilmDriver
         if (state.sceneIndex === 0) drawLeader(ctx!, scene);
         else if (state.sceneIndex === 1) drawSpark(ctx!, scene);
         else if (state.sceneIndex === 2) drawScript(ctx!, scene);
+        else if (state.sceneIndex === 3) drawAgent(ctx!, scene);
+        else if (state.sceneIndex === 4) drawVault(ctx!, scene);
+        else drawDelivery(ctx!, scene);
         frames += 1;
         needMore = unsettled > 0 || resting;
     }

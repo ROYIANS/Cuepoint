@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {mountStage, type StageEnv, type StageHandle} from "@/landing/film/renderers/stage";
-import {progressToFrame} from "@/landing/film/timeline";
+import {progressToFrame, sceneProgressWindow} from "@/landing/film/timeline";
 import type {FilmDriver, FilmState} from "@/landing/film/useFilmProgress";
 
 function fakeContext() {
@@ -275,5 +275,21 @@ describe("mountStage", () => {
         expect(phone.mount()!.quality()).toBe("low");
         const saver = harness({device: {saveData: true}});
         expect(saver.mount()!.quality()).toBe("low");
+    });
+    it.each([[3, "agent"], [4, "vault"], [5, "delivery"]])("paints the picture of stage scene %i (%s) on every tier and settles", (sceneIndex, _name) => {
+        for (const device of [{}, {hardwareConcurrency: 4, deviceMemory: 4}, {saveData: true}]) {
+            h = harness({device});
+            const handle = h.mount()!;
+            h.run();
+            const {start, end} = sceneProgressWindow(sceneIndex);
+            const drawn = h.ctx!.calls.drawImage;
+            h.advance(1000);
+            h.emit(start + (end - start) * 0.78);
+            expect(h.run()).toBeGreaterThan(5);
+            expect(h.queue.size).toBe(0);
+            expect(h.ctx!.calls.drawImage).toBeGreaterThan(drawn + 20);
+            expect(handle.frames()).toBeGreaterThan(1);
+            handle.destroy();
+        }
     });
 });

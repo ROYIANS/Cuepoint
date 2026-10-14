@@ -6,6 +6,16 @@ export type Plan = {from: TargetSet; to: TargetSet; t: number; behavior: Behavio
 
 type TitleLayout = {cx: number; cy: number; size: number; text: string; fontFamily: string; fontWeight: string};
 
+/** Geometry of the agent scene's execution log, computed once per stage size. */
+export type AgentGeom = {lineX: number; top: number; bottom: number; rowY: readonly number[]; textX: number; right: number; font: number; nodeR: number};
+export type VaultGeom = {
+    cx: number; cy: number; r: number; font: number;
+    lock: {cx: number; top: number; bodyW: number; bodyH: number; shackleR: number};
+    keyLabel: {x: number; y: number};
+    storeLabel: {x: number; y: number};
+};
+export type DeliveryGeom = {strip: Rect; icons: readonly Rect[]; labelY: number; font: number};
+
 export type Layout = {
     w: number;
     h: number;
@@ -13,6 +23,37 @@ export type Layout = {
     title: TitleLayout;
     /** Storyboard cells inside the art rectangle. */
     cells: readonly Rect[];
+    agent: AgentGeom;
+    vault: VaultGeom;
+    delivery: DeliveryGeom;
+};
+
+export type AgentSets = {
+    /** Resting positions: node rings, the guide line, flow dots and row separators. */
+    base: TargetSet;
+    /** Scratch composed every plan: base positions with live brightness, flow dots moving. */
+    live: TargetSet;
+    nodeK: number;
+    lineStart: number;
+    lineCount: number;
+    flowStart: number;
+    flowCount: number;
+    sepStart: number;
+    sepCount: number;
+};
+export type VaultSets = {
+    /** Rings, spokes and the outsiders; the lock's particles wait hidden in the hub. */
+    can: TargetSet;
+    /** The same with the lock formed and the outsiders pushed outward. */
+    lock: TargetSet;
+};
+export type DeliverySets = {
+    strip: TargetSet;
+    files: TargetSet;
+    /** Scratch: strip to file blend per group. */
+    live: TargetSet;
+    /** Particle ranges of the three groups: [0, a, b, end]. */
+    groups: readonly number[];
 };
 
 export type Sets = {
@@ -36,6 +77,9 @@ export type Sets = {
     cellSize: number;
     /** Reveal count currently composed into `typed`; -1 when stale. */
     typedCount: number;
+    agent: AgentSets;
+    vault: VaultSets;
+    delivery: DeliverySets;
 };
 
 export type SceneState = {

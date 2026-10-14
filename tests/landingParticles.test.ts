@@ -312,7 +312,9 @@ function makeSets(capacity: number): Sets {
         return set;
     };
     const grid = make(5);
-    return {center: make(1), scatter: make(2), title: make(3), text: make(4), typed: make(6), grid, gridLit: {x: grid.x, y: grid.y, a: Float32Array.from(grid.a)}, textCount: 40, textSize: 30, cellSize: 8, typedCount: -1};
+    return {center: make(1), scatter: make(2), title: make(3), text: make(4), typed: make(6), grid, gridLit: {x: grid.x, y: grid.y, a: Float32Array.from(grid.a)}, textCount: 40, textSize: 30, cellSize: 8, typedCount: -1,
+        agent: {base: make(0), live: make(0), nodeK: 1, lineStart: 0, lineCount: 0, flowStart: 0, flowCount: 0, sepStart: 0, sepCount: 0},
+        vault: {can: make(0), lock: make(0)}, delivery: {strip: make(0), files: make(0), live: make(0), groups: [0, 0, 0, 0]}};
 }
 
 describe("scene plans", () => {

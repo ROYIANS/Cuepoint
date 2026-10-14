@@ -27,15 +27,17 @@ export const EXIT_SECONDS = 1.6;
 //  leader   title targeted at 0.74 (TITLE_FORMED in renderers/leader.ts); the DOM text fades in 0.76-0.80
 //  spark    the last character is revealed at 0.78 (GATHER_END 0.16 + TYPE_SPAN 0.62)
 //  script   the sixth cell is 97% lit at 0.84 (LIGHT_START 0.2 + 5 * LIGHT_GAP 0.11 + 0.9 * LIGHT_SPAN)
-//  agent, vault, delivery: pictures arrive in phase 4b. Until then the text layer is the picture:
-//           0.80 is where it is fully opaque. 4b: recalibrate from the new renderers' plans.
+//  agent    the last row (summary) is fully lit at 0.77 (ROW_START[5] 0.70 + ROW_SPAN 0.07 in renderers/agent.ts);
+//           this scene is 1.2 long, so its text stays opaque to ~0.84
+//  vault    the storage label has faded in at 0.78 (STORE_LABEL_START 0.70 + 0.08 in renderers/vault.ts); text opaque to ~0.80
+//  delivery the third file lands at 0.71 (GROUP_START[2] 0.56 + GROUP_SPAN 0.15 in renderers/delivery.ts)
 export const SCENE_BEATS: readonly SceneBeat[] = [
     {id: "leader", seconds: 9, holdLocal: 0.8, holdSeconds: 2.4},
     {id: "spark", seconds: 10, holdLocal: 0.8, holdSeconds: 3.2},
     {id: "script", seconds: 11, holdLocal: 0.84, holdSeconds: 3.2},
-    {id: "agent", seconds: 10, holdLocal: 0.8, holdSeconds: 3.2},
-    {id: "vault", seconds: 10, holdLocal: 0.78, holdSeconds: 3},
-    {id: "delivery", seconds: 10, holdLocal: 0.8, holdSeconds: 3},
+    {id: "agent", seconds: 10, holdLocal: 0.82, holdSeconds: 3.2},
+    {id: "vault", seconds: 10, holdLocal: 0.8, holdSeconds: 3.2},
+    {id: "delivery", seconds: 10, holdLocal: 0.78, holdSeconds: 3.2},
 ];
 
 /** The one source of the film's running time (timecode, seek bar, controller). */

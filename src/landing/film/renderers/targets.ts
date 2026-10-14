@@ -147,6 +147,57 @@ export function rectOutline(rect: Rect, count: number): Float32Array {
     return out;
 }
 
+/** Edges of a rectangle as flat [x1, y1, x2, y2, ...] segments. */
+export function rectSegments(rect: Rect): number[] {
+    const {x, y, w, h} = rect;
+    return [x, y, x + w, y, x + w, y, x + w, y + h, x + w, y + h, x, y + h, x, y + h, x, y];
+}
+
+/**
+ * `count` points spread evenly (by length) over flat [x1, y1, x2, y2, ...] segments.
+ * Deterministic; a gap between segments costs nothing, so dashes are just short segments.
+ */
+export function segmentSamples(segments: readonly number[], count: number): Float32Array {
+    const n = Math.max(0, Math.floor(count));
+    const out = new Float32Array(n * 2);
+    const segmentCount = Math.floor(segments.length / 4);
+    if (n === 0 || segmentCount === 0) return out;
+    let total = 0;
+    for (let s = 0; s < segmentCount; s += 1) total += Math.hypot(segments[s * 4 + 2] - segments[s * 4], segments[s * 4 + 3] - segments[s * 4 + 1]);
+    let segment = 0;
+    let before = 0;
+    let length = Math.hypot(segments[2] - segments[0], segments[3] - segments[1]);
+    for (let i = 0; i < n; i += 1) {
+        const d = ((i + 0.5) / n) * total;
+        while (segment < segmentCount - 1 && d > before + length) {
+            before += length;
+            segment += 1;
+            length = Math.hypot(segments[segment * 4 + 2] - segments[segment * 4], segments[segment * 4 + 3] - segments[segment * 4 + 1]);
+        }
+        const u = length > 0 ? Math.min(1, Math.max(0, (d - before) / length)) : 0;
+        const o = segment * 4;
+        out[i * 2] = segments[o] + (segments[o + 2] - segments[o]) * u;
+        out[i * 2 + 1] = segments[o + 1] + (segments[o + 3] - segments[o + 1]) * u;
+    }
+    return out;
+}
+
+export function lineSamples(x1: number, y1: number, x2: number, y2: number, count: number): Float32Array {
+    return segmentSamples([x1, y1, x2, y2], count);
+}
+
+/** Evenly spaced points on a circle (or an arc: `start` and `sweep` in radians; angle 0 points right, y grows down). */
+export function circleOutline(cx: number, cy: number, r: number, count: number, start = 0, sweep = Math.PI * 2): Float32Array {
+    const n = Math.max(0, Math.floor(count));
+    const out = new Float32Array(n * 2);
+    for (let i = 0; i < n; i += 1) {
+        const angle = start + (sweep * (i + 0.5)) / n;
+        out[i * 2] = cx + Math.cos(angle) * r;
+        out[i * 2 + 1] = cy + Math.sin(angle) * r;
+    }
+    return out;
+}
+
 export type CanvasLike = {width: number; height: number; getContext: (kind: "2d", options?: CanvasRenderingContext2DSettings) => CanvasRenderingContext2D | null};
 
 export type TextPointsOptions = {
