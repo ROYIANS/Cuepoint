@@ -73,7 +73,7 @@ Project world owns project-scoped character, scene, prop, and style detail route
 
 ## Studio navigation and project kinds (2026-10-10)
 
-- `/` redirects to `/agent`; `/settings` redirects to `/about`. Shared `layout/AppFrame.tsx` owns navigation for both Studio and project shells. Chat, IP, projects, materials and tasks remain separate destinations, with connectors and bottom Settings below (Settings currently redirects to About). `/agent/tasks` must not activate chat.
+- `/` redirects to `/agent`; `/settings` renders the settings page; `/connectors` redirects to `/settings?section=connections`. Shared `layout/AppFrame.tsx` owns navigation for both Studio and project shells. Chat, IP, projects, materials and tasks remain separate destinations, with Settings last; connections are embedded inside settings. `/agent/tasks` must not activate chat.
 - `/ips` and `/ips/$ipId` are implemented persisted profile surfaces. Membership/context rules belong to [IP / Material Library](./ip-material-library.md); IP is not a project kind.
 - `/assets` owns the materials hub while retaining legacy Studio character/scene/prop/style list/detail URLs. Shared editors keep `STUDIO_LIBRARY_ID` versus project ownership checks.
 - `projectKinds.tsx` is the presentation availability catalog. Film/series, audio and music dispatch through `ProjectHomePage`; unavailable options are blocked both in the UI and submit handler. Project kind migrations belong to their database contracts.
@@ -94,7 +94,11 @@ Shot pages consume named commands, a keyboard adapter, typed text-column mapping
 
 ## Models.dev catalog (2026-10-14)
 
-`lib/ai/modelCatalog/` owns the Models.dev catalog (baseline, store, matching, price snapshot, sync, `fetchCatalogIndex`, `format.ts`); it replaced the removed LobeHub `lib/ai/modelBank/`. `components/connectors/` holds the "模型目录" page of `/connectors`: `ModelCatalogSection` (sync card, restore), `ModelCatalogPicker` (selection dialog), `ModelPriceTable`, `PriceCells`, `VirtualRows` plus the pure `virtualWindow.ts` / `catalogRows.ts`. Device-local state lives in the `deviceSettings` table through `db/deviceSettings.ts`.
+`lib/ai/modelCatalog/` owns the Models.dev catalog (baseline, store, matching, price snapshot, sync, `fetchCatalogIndex`, `format.ts`); it replaced the removed LobeHub `lib/ai/modelBank/`. `components/connectors/` holds the "模型目录" subsection of `/settings?section=connections`: `ModelCatalogSection` (sync card, restore), `ModelCatalogPicker` (selection dialog), `ModelPriceTable`, `PriceCells`, `VirtualRows` plus the pure `virtualWindow.ts` / `catalogRows.ts`. Device-local state lives in the `deviceSettings` table through `db/deviceSettings.ts`.
+
+## Settings and shared desktop releases (2026-10-14)
+
+`components/settings/` owns settings navigation, a common visible-section header, neutral rounded groups with divided rows, local preference reads/writes and update interaction hooks. `components/studio/ConnectorsPage.tsx` exports the embedded `ConnectorsSection`. `lib/desktopRelease/` owns the shared release listing, platform selection, version comparison and bounded installer verification. Landing imports only the lightweight release/platform modules; it must never acquire the runtime/download/storage/settings dependency closure. The former `landing/download/releases.ts` and `platform.ts` were moved, not duplicated. See [settings-update](./settings-update.md).
 
 ## Landing page entry (2026-10-14)
 

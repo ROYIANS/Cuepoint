@@ -42,7 +42,8 @@ resolveProductStorage(native: boolean, profile: unknown): Readonly<{
 getProductStorage(): ReturnType<typeof resolveProductStorage>
 usesSqliteProductStorage(): boolean
 
-runtimeFetchFor(purpose?: "configured" | "result-download" | "search-probe" | "model-catalog"): typeof fetch
+runtimeFetchFor(purpose?: "configured" | "result-download" | "search-probe" | "model-catalog" | "release-check" | "release-asset"): typeof fetch
+type RuntimeHttpScope = {purpose: RuntimeHttpPurpose; probeOrigin?: string; redirected?: boolean}
 connectorProbeFetch(baseUrl: string, fetchImpl?: typeof fetch): typeof fetch
 authorizeRuntimeHttp(
   url: URL, method: string, headers: Headers,
@@ -202,6 +203,8 @@ a GET-fetch TypeError. Native string/Error failure remains conservative and does
 not trigger that paid probe; abort/body-decode failure also cannot trigger it.
 
 ### Native Save and external links
+
+Desktop settings uses the `release-check` and `release-asset` purposes without expanding CSP or adding native commands. The former accepts only the fixed anonymous GitHub release-list GET; the latter accepts this repository's download prefix and, only on transport-followed redirects, the two exact GitHub asset CDN origins. `redirected` is transport-owned hop provenance (`hop > 0`), never inferred from an authored CDN URL. See [Settings and desktop updates](./settings-update.md) for limits, digest validation, cancellation and browser fallback.
 
 Every command uses the trusted packaged main window. Save commands take a
 closed `request` DTO; the external command takes a separately validated `url`:

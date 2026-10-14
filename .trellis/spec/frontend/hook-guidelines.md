@@ -84,7 +84,7 @@ Connector probe/test and script File.text reads may finish after close/reopen, c
 
 ### 2. Signatures
 
-Keep existing `ConnectorsPage` handlers and provider signatures: `listConnectorModels(connector, usage?, fetchImpl?)` and `testConnectorConnection(connector, fetchImpl?)` have no AbortSignal API. Guard publication locally without redesigning their transport. `StoryEditor.applyScriptFile(file: File)` captures episode ownership, request sequence and script edit revision; `DraftStatus.onUseLatest` participates in that lifetime. Alias an ordinary returned `useLatest` action as `adoptLatestDraft` when calling it behind guards, so Hook naming tools do not mistake it for a conditional React Hook.
+Keep existing `ConnectorsSection` handlers (in `components/studio/ConnectorsPage.tsx`) and provider signatures: `listConnectorModels(connector, usage?, fetchImpl?)` and `testConnectorConnection(connector, fetchImpl?)` have no AbortSignal API. Guard publication locally without redesigning their transport. `StoryEditor.applyScriptFile(file: File)` captures episode ownership, request sequence and script edit revision; `DraftStatus.onUseLatest` participates in that lifetime. Alias an ordinary returned `useLatest` action as `adoptLatestDraft` when calling it behind guards, so Hook naming tools do not mistake it for a conditional React Hook.
 
 ### 3. Contracts
 

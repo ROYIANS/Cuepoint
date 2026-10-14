@@ -98,7 +98,7 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 
 ## Accessibility
 
-- Studio utility navigation opens `/about` directly with the label 关于 on both desktop and mobile. The legacy `/settings` route redirects to `/about`. About owns sponsorship links and the original appreciation-code image, shown through the shared Dialog with a download link.
+- Studio utility navigation opens the real `/settings` page on desktop and mobile. Its five sections include connections and desktop update information; legacy `/connectors` redirects to `/settings?section=connections`. `/about` remains available and owns sponsorship links and the original appreciation-code image, shown through the shared Dialog with a download link. See [Settings and desktop updates](./settings-update.md).
 
 - Interactive primitives keep `focus-visible` ring tokens (`focus-visible:ring-ring/50 focus-visible:ring-[3px]` on `Button`, `Input`, `Select`, etc.).
 - Decorative canvases / icons that must not be announced: `aria-hidden` (`ClickSpark` canvas; shell SVG in `StudioShell`).
@@ -306,10 +306,10 @@ Wrong: `onClick={onNewTopic}` on the plus (the event reaches `createTopic` as a 
 ## Model catalog page (2026-10-14)
 
 ### 1. Scope / Trigger
-Read before changing the third `/connectors` section "模型目录", the selection dialog, the pricing table or the model-detail price row.
+Read before changing the third connections subsection "模型目录" inside `/settings?section=connections`, the selection dialog, the pricing table or the model-detail price row.
 
 ### 2. Signatures / Owners
-`ConnectorsPage` mounts `<ModelCatalogSection/>` only while its section is active. Section reads the catalog with `useSyncExternalStore(subscribeModelCatalog, getModelCatalog)` and the saved selection in an effect plus state; never in `useProductQuery` (no database-unrelated awaits, see hook-guidelines). `ModelCatalogPicker({entries, onClose})` is mounted only while open, so its draft and any downloaded full list are released on close. `ModelPriceTable({entries})` lists raw entry prices. `ModelSelectTrigger`'s `ModelDetail` shows the price row from the memory-only `lookupModel`, given the selected connector's `definitionId` and `baseUrl`.
+`ConnectorsSection` (retained in `components/studio/ConnectorsPage.tsx`) mounts `<ModelCatalogSection/>` only while its subsection is active. Settings supplies its page shell. Section reads the catalog with `useSyncExternalStore(subscribeModelCatalog, getModelCatalog)` and the saved selection in an effect plus state; never in `useProductQuery` (no database-unrelated awaits, see hook-guidelines). `ModelCatalogPicker({entries, onClose})` is mounted only while open, so its draft and any downloaded full list are released on close. `ModelPriceTable({entries})` lists raw entry prices. `ModelSelectTrigger`'s `ModelDetail` shows the price row from the memory-only `lookupModel`, given the selected connector's `definitionId` and `baseUrl`.
 
 ### 3. Contracts
 - Sync card: source ("内置基线 · 包版本" / "已同步 · 时间"), count, last result, the notice that only the public catalog is fetched and no local data is sent. "立即同步" becomes "取消" while running (one AbortController, cancel is not an error). Failures use `showError` with the fixed action name `sync-model-catalog` and the friendly sync message as `detail`; success uses `toast.success`. "恢复为内置数据" lives in the "…" menu behind an `AlertDialog` confirmation and is disabled for a baseline. There is no open-folder/reload-file action.

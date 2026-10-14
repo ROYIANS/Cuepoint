@@ -28,6 +28,20 @@ Tauri versions must agree. Distribution tags use `desktop-vMAJOR.MINOR.PATCH`
 with that exact source version. The separate container workflow retains its
 existing `v*` tags.
 
+## In-app version checks and installer downloads
+
+From source version 0.1.3, Settings contains an About and Updates section with
+manual public GitHub release checks, version comparison and installer downloads.
+Automatic startup checks are device-local and opt-in, with a 24-hour cooldown
+after a successful check; the default is off. Failed checks may retry at a later
+startup. Downloads within the 64 MiB limit require exact size and
+SHA-256 verification before the existing native Save dialog receives bytes.
+Oversized or digest-less installers use an explicit browser download option.
+Saving an installer does not install it or restart the product: the owner follows
+the [installation guide](desktop-installation.md). No Tauri updater, signing
+credentials, new native command or CSP allowance is introduced. Browser and
+unit checks do not establish packaged GitHub reachability or system Save behavior.
+
 ## Packaging and functional testing
 
 The desktop workflow only compiles and packages the application. It performs no

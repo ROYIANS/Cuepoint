@@ -4,7 +4,7 @@
 
 ## 目标
 
-- 工作室全局 BYOK「连接」页（`/connectors`，StudioShell 导航）
+- 工作室全局 BYOK「连接与模型」位于「设置」内（`/settings?section=connections`）；原 `/connectors` 地址会跳转到该分区。
 - MVP：OpenAI 兼容协议（**Base URL + API Key**）+ 测试连接 / 模型列表探活 + 持久化
 - 同协议可挂 DeepSeek 等目录卡片（预设 Base URL）
 - 供后续 **Agent 聊天**等跨项目能力使用，**不按项目配 Key**

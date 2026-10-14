@@ -1,14 +1,14 @@
 # 桌面端设置页与版本更新
 
-状态：规划中（等审阅后 task.py start）。
+状态：实现、独立检查、完整门禁与浏览器渲染验证通过；本轮用户已授权提交。系统保存对话框、真机验收与发布仍待后续完成，任务保持 in_progress。验证证据见 `research/settings-checkpoint-validation.md`。
 
 ## Goal
 
-桌面端新增设置页，替代当前 `/settings` 到 `/about` 的跳转。页面为左侧导航加右侧分组卡片，首版含四个分区：通用、外观、存储、关于与更新。其中「关于与更新」提供检查新版本、应用内下载安装包、打开发布页。发布方式为无签名，因此不接入 Tauri 自动更新。
+桌面端新增设置页，替代当前 `/settings` 到 `/about` 的跳转。页面为左侧导航加右侧分组卡片，含五个分区：通用、外观、连接与模型、存储、关于与更新。其中「关于与更新」提供检查新版本、应用内下载安装包、打开发布页。发布方式为无签名，因此不接入 Tauri 自动更新。2026-10-14 用户补充 Codex 设置截图作为样式参考，并要求连接与模型的标题位置和其他分区一致、去掉多余描述。
 
 ## Requirements
 
-- R1 设置页：`/settings` 不再是重定向，渲染独立页面。左导航含搜索框与四个分区，右侧为分组卡片（行 = 标题 + 说明 + 右侧控件），视觉参照 `ModuleLayout` 与现有 token，遵循 `desktop-ui.md`（h1 24/600，正文 14/22，元数据 12/18，不用嵌套卡片与装饰色条）。
+- R1 设置页：`/settings` 不再是重定向，渲染独立页面。左导航含圆角搜索框与五个带 Phosphor 图标的分区，右侧为中性圆角分组卡片（行 = 标题 + 说明 + 右侧控件，行间分隔线）。按用户参考图调整间距与选中态，复用 `ModuleLayout` 与现有 token，遵循 `desktop-ui.md`（h1 24/600，正文 14/22，元数据 12/18，不用嵌套卡片与装饰色条）。五个分区由同一外层负责标题，位置统一，不重复显示「设置」总标题和描述。
 - R2 搜索：输入关键字按分区标题、行标题、行说明做包含匹配，过滤后仍显示命中的分区；无结果时显示空状态文案。纯函数实现，可测。
 - R3 通用：启动时自动检查更新（开关，**默认关**：产品主打本地优先，启动即访问 GitHub 会暴露网络地址，由用户主动开启），并显示上次检查时间。开关与时间持久化。
 - R4 外观：展示当前主题（深色）与界面语言（简体中文）。本版本仅此一种取值，行内明确说明，不提供假的切换控件。
@@ -20,6 +20,8 @@
 - R11 窗口顶栏汉堡按钮（导航菜单）只在窄窗口（≤767px）显示；普通宽度隐藏。Windows 与 macOS 顶栏左侧不再出现该按钮，macOS 红绿灯区域不被覆盖。根因：`.app-mobile-nav-trigger{display:none}` 与后声明的 `.app-header-shortcut{display:flex}` 同优先级，被覆盖；已改为复合选择器并加契约测试，真实渲染验证（宽窗口 none、窄窗口 flex）。
 - R12 浮层不被顶栏遮挡：上下文明细、模型选择器等 Radix 弹层不得长到顶栏（44px，z-index 30）下面。统一通过 `popupCollisionPadding()`（顶部预留 `APP_TOPBAR_CLEARANCE` = 52px）接入 `ui/popover|dropdown-menu|select|tooltip` 与 `ContextUsagePanel`、`ModelSelectTrigger`、`ProjectPicker`、`AudioTimeline`；`tests/popupCollisionClearance.test.ts` 保证不回退到裸数字。根因判断来自截图几何（两处都切在顶栏下沿），未在真实窗口复现，需真机确认。
 - R10 卸载/安装包内不得触发应用自动重启或自动安装；不接入 Tauri updater，不引入签名凭据。
+- R13 连接与模型并入设置：保留现有连接、搜索与模型目录操作，作为 `ConnectorsSection` 嵌入设置外层；取消独立的页头、额外说明与二次内容包裹。`/connectors` 以 replace 跳转到 `/settings?section=connections`；AppFrame 移除独立连接入口，设置项在旧路径与 `/about` 仍保持正确高亮。
+- R14 网络搜索连接子分组有与其他子分组一致的图标。打开 Tavily 或模型连接配置弹窗时，浏览器自动填充不得把后台设置搜索框当作用户名字段，意外搜索变化也不得卸载连接编辑器或丢失草稿；关闭弹窗后手动搜索正常。
 
 ## Constraints
 
@@ -32,18 +34,19 @@
 
 ## Acceptance Criteria
 
-- [ ] A1 访问 `/settings` 渲染设置页；`routeTree.gen.ts`、AppFrame 导航高亮、`/about` 与相关测试都不回退。
-- [ ] A2 搜索框能按关键字过滤分区与行，输入无结果时显示空状态；有单元测试。
-- [ ] A3 「启动时自动检查更新」默认关闭；开启状态在重启后保持，且每 24 小时最多自动检查一次；关闭时启动不发任何 GitHub 请求。
-- [ ] A4 版本比较覆盖：更新、相同、当前更高、`dev`/缺失、线上没有正式版本（只有 draft/无匹配 tag）五种情况，均有单元测试。
-- [ ] A5 桌面端检查更新只经新 purpose 发一次匿名 GET；purpose 策略拒绝非该固定地址、非 GET、带凭据请求；有单元测试（照 `runtimeFetchModelCatalog.test.ts`）。
+- [x] A1 访问 `/settings` 渲染设置页；五个分区标题位置一致且只有一个 h1；连接分区无多余页头和描述；`/connectors` 跳转与 AppFrame 导航高亮正确；`routeTree.gen.ts`、`/about` 与相关测试都不回退。
+- [x] A2 搜索框能按关键字过滤分区与行，输入无结果时显示空状态；有单元测试。
+- [x] A3 「启动时自动检查更新」默认关闭；开启状态持久化，成功检查后 24 小时内不再自动检查（失败可在下次启动重试）；关闭时启动不发任何 GitHub 请求。存储与生命周期由自动化覆盖，安装版重启验收归 A10。
+- [x] A4 版本比较覆盖：更新、相同、当前更高、`dev`/缺失、线上没有正式版本（只有 draft/无匹配 tag）五种情况，均有单元测试。
+- [x] A5 桌面端检查更新只经新 purpose 发一次匿名 GET；purpose 策略拒绝非该固定地址、非 GET、带凭据请求；有单元测试（照 `runtimeFetchModelCatalog.test.ts`）。
 - [ ] A6 有新版本时可保存对应平台安装包；保存通道失败或用户取消都有明确反馈，不出现静默失败。
-- [ ] A7 「打开发布页」走 `nativeOpenExternalUrl`，桌面端打开系统浏览器。
-- [ ] A8 「存储」分区的数据规模与 `/about` 之外的信息一致；页面不触发任何写入数据目录的操作。
-- [ ] A9 门禁：`pnpm lint`、`pnpm test`、`pnpm quality`、`pnpm build`、`landing:budget`、desktop 的 `types/lint/quality` 全部通过。
-- [ ] A9b 汉堡按钮：宽于 767px 的窗口不显示，窄于等于 767px 显示并可打开导航；`tests/appNavTriggerVisibility.test.ts` 通过。（已完成并验证）
+- [x] A7 「打开发布页」通过既有外链拦截器走 `nativeOpenExternalUrl`；安装版系统浏览器的最终行为归 A10。
+- [x] A8 「存储」分区的数据规模与 `/about` 之外的信息一致；页面不触发任何写入数据目录的操作。
+- [x] A9 门禁：`pnpm lint`、`pnpm test`、`pnpm quality`、`pnpm build`、`landing:budget`、desktop 的 `types/lint/quality` 全部通过。
+- [x] A9b 汉堡按钮：宽于 767px 的窗口不显示，窄于等于 767px 显示并可打开导航；`tests/appNavTriggerVisibility.test.ts` 通过。（已完成并验证，安装版复核归 A10）
 - [ ] A9c 上下文明细与模型选择器在窗口较矮时，弹层顶部不被顶栏遮住（弹层内部滚动、可看到标题与第一项）。
 - [ ] A10 真机验证（用户）：Windows 与 macOS 顶栏不再有汉堡按钮、两个弹层的顶部不被遮挡；设置页在 1280×800 与窄窗口下的布局、检查更新成功与限流两条路径、下载与系统保存对话框、无签名安装提示、发布页跳转；本机无 Rust，更新流程的最终判定以真实安装包为准。
+- [x] A11 网络搜索子分组带图标；打开 Tavily 弹窗后模拟后台搜索框自动填充，弹窗与草稿仍保留；关闭后搜索恢复，有执行实际回调与浏览器渲染的回归验证。
 
 ## Out of scope
 
@@ -55,5 +58,5 @@
 ## Notes
 
 - Keep `prd.md` focused on requirements, constraints, and acceptance criteria.
-- 本次发布与已完成的存储迁移修复（`0.1.3` 版本号已提，本地 tag `desktop-v0.1.3` 需删除后随本任务重新打）一起上线。
+- 本次发布与已提交的存储迁移修复（`0.1.3` 版本号已提）一起验收。发布前重新核对实际 tag 状态；本轮提交不删除、创建或移动版本 tag。
 - 上线前需完成的既有事项：模型目录基线刷新（已在 0.1.2 前确认最新为 0.0.103，无变化）。

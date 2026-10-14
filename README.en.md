@@ -43,7 +43,7 @@ Choose a desktop release with a `desktop-v<version>` tag, expand **Assets**, and
 
 **Your system may show a warning on first installation or launch.** The Windows package is unsigned; the Mac application uses an ad-hoc signature and has not completed Developer ID signing or Apple notarization. Confirm that the file came from the official release above, then use the [Windows / Mac illustrated steps](docs/desktop-installation.md) to decide whether to continue. You do not need to disable system security features.
 
-If a warning reports malware, a virus, or a damaged file, stop installation and [report the full message](https://github.com/ROYIANS/Cuepoint/issues). **Source code (zip / tar.gz)** files are source archives, not installers. Windows ARM, Linux ARM, and universal Mac installers are not currently provided. There is no built-in automatic updater; export project ZIP backups before updating.
+If a warning reports malware, a virus, or a damaged file, stop installation and [report the full message](https://github.com/ROYIANS/Cuepoint/issues). **Source code (zip / tar.gz)** files are source archives, not installers. Windows ARM, Linux ARM, and universal Mac installers are not currently provided. From 0.1.3, **Settings → About and updates** can check versions, download and verify an installer, and save it for you to install. Export project ZIP backups before updating.
 
 ## Features
 
@@ -63,7 +63,7 @@ If a warning reports malware, a virus, or a damaged file, stop installation and 
 ## First steps
 
 1. Install a desktop preview using [Download and install](#download-and-install). For the browser version, start the image using [Deployment](#deployment), or launch the development server using [Local development](#local-development).
-2. Open **连接与模型** (Connections and models), add a service, enter its Base URL and API key, and test the connection or inspect available models.
+2. Open **设置 → 连接与模型** (Settings → Connections and models), add a service, enter its Base URL and API key, and test the connection or inspect available models.
 3. Create a video, audio, or music project from **项目** (Projects). Projects can stand alone or be linked to a profile under **我的 IP** (My IP).
 4. Add your manuscript and materials manually, or open **创作助手** (Creative assistant), choose a chat connection and model, and bind the target project.
 5. Review permissions and generation settings when using tools, then inspect saved results in the appropriate workspace.

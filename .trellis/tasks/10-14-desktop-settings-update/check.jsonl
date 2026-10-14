@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Quality gates the check agent must run and the unused-export contract rules"}
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Policy checks: no CSP widening, purpose restrictions, native command registration"}
+{"file": ".trellis/spec/frontend/desktop-ui.md", "reason": "Layout, single scroll owner, overlay focus return, banned dialogs"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Accessibility and component conventions for the new page"}
+{"file": ".trellis/tasks/10-14-desktop-settings-update/prd.md", "reason": "Acceptance criteria to verify against"}
+{"file": ".trellis/tasks/10-14-desktop-settings-update/design.md", "reason": "Contracts and degradation rules to verify"}
+{"file": ".trellis/tasks/10-14-desktop-settings-update/research/desktop-settings-landscape.md", "reason": "Prior verified constraints and known risks"}
+{"file": ".trellis/spec/frontend/settings-update.md", "reason": "Settings search/editor lifetimes, bounded release parsing, installer verification and redirect provenance"}

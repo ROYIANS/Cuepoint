@@ -17,6 +17,7 @@
 | [Directory Structure](./directory-structure.md) | Studio layout+index+$id vs project workspace | Filled |
 | [Component Guidelines](./component-guidelines.md) | Thin routes, feature pages, ui primitives, slots | Filled |
 | [Shared Desktop UI](./desktop-ui.md) | Frame/navigation, page typography, scroll owners, overlay focus and print | Filled |
+| [Settings and Desktop Updates](./settings-update.md) | Settings search, embedded connections, device preferences, anonymous release checks and verified installer saves | Filled |
 | [Shared Product Storage](./shared-product-storage.md) | All-table adapters, explicit transactions, durable certainty, observation and managed bytes | Filled |
 | [Agent IP / Materials / Tool Loading](./agent-library-tools.md) | Confirmed IP/library operations, real content and per-request capability loading | Filled |
 | [Agent Tools](./agent-tools.md) | Strict tools, permission snapshots, approval ledger and continuation | Filled |

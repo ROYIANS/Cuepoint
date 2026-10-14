@@ -1,0 +1,10 @@
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Component structure, props and accessibility conventions for the new settings components"}
+{"file": ".trellis/spec/frontend/desktop-ui.md", "reason": "Desktop shell layout, PageHeader/PageContent, ModuleLayout and real settings navigation"}
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Runtime HTTP purposes, CSP rules, native command registration, workspace registry compatibility"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Where shared libs and feature components live"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Test placement, quality gates and unused-export rules"}
+{"file": ".trellis/spec/frontend/desktop-distribution.md", "reason": "No updater/signing in this lane; release tags and version rules"}
+{"file": ".trellis/tasks/10-14-desktop-settings-update/research/desktop-settings-landscape.md", "reason": "Verified inventory of existing shell, Rust commands, HTTP purposes, download assets and copy-safe options"}
+{"file": ".trellis/tasks/10-14-desktop-settings-update/design.md", "reason": "Agreed module split, policy purpose design, version comparison table and update state machine"}
+{"file": ".trellis/tasks/10-14-desktop-settings-update/implement.md", "reason": "Phase order, per-phase gates and rollback points"}
+{"file": ".trellis/spec/frontend/settings-update.md", "reason": "Executable settings, autofill lifetime, bounded download and transport-owned redirected contracts"}

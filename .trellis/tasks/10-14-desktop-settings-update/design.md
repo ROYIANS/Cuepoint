@@ -14,7 +14,7 @@ src/lib/desktopRelease/            新：共享，无 React、无 Dexie
   platform.ts                      自 landing 迁入（detectPlatform、pickAssets）
   version.ts                       compareVersions、classifyUpdate（新）
   download.ts                      downloadAsset：取字节、限量、校验 sha256（新）
-src/landing/download/              改为 re-export 或直接 import 共享库；行为与既有测试等价
+src/landing/download/              直接 import 共享库；原 releases/platform 文件迁移删除，保留 landing 依赖隔离
 src/lib/runtimeHttpPolicy.ts       新增 purpose "release-check" 与 "release-asset"
 src/lib/runtimeFetch.ts            runtimeFetchFor 增加两个分支
 src/components/settings/           新
@@ -35,7 +35,7 @@ src/routes/_studio.settings.tsx    去掉 redirect，渲染 SettingsPage；valid
 - 两个 purpose 都与 `configuredOrigins()`（用户配置的连接）无关，不读 Dexie。
 - 响应体限制：release-check ≤ 1 MiB；release-asset 使用 asset 声明的 `size` 与 64 MB 上限的较小者，边读边计数，超过即取消。
 - 校验：优先用 GitHub 返回的 `digest`；缺失时拒绝应用内下载，只提供浏览器下载与发布页。校验在 `crypto.subtle.digest("SHA-256")`，不可用则回退 `src/lib/sha256.ts`。不一致时丢弃字节并提示，不触发保存。
-- 浏览器端（非 Tauri）：`runtimeFetchFor` 已按运行时回退到 `webFetch`；设置页的「关于与更新」在非桌面端只显示版本说明，不显示下载。
+- 浏览器端（非 Tauri）：保留手动版本检查，`runtimeFetchFor` 使用浏览器 fetch；下载安装包通过浏览器链接。两端均可显式开启启动检查，默认关闭。桌面端小于等于 64 MiB 且有 digest 的安装包走现有系统保存通道。
 
 ## 4. 版本比较
 
@@ -53,37 +53,39 @@ src/routes/_studio.settings.tsx    去掉 redirect，渲染 SettingsPage；valid
 ## 5. 设置页
 
 - 外壳：`StudioShell` 不改。设置路由自带 `ModuleLayout`，`navigation` 含搜索框与分区列表（`module-nav-heading / module-nav-item` 现成样式），`navigationLabel="设置导航"`。窄屏沿用 ModuleLayout 的 overlay 行为。不提供 "Back to app"：应用左侧 rail 已是返回入口，避免第二个壳。
-- 右侧：`PageHeader`（h1 "设置"）+ `PageContent`，每个分区是一张 `bg-card border rounded-md` 卡片，行为 `标题/说明 + 右侧控件`，行间 `border-b`，不嵌套卡片。
-- 分区与行（`settingsModel.ts` 为单一事实来源，搜索与渲染共用）：
+- 右侧：统一由 `SettingsPage` 的 `PageHeader` 渲染当前分区 h1，配合 `PageContent`；五个分区标题位置一致，无重复总标题、额外描述或连接页二次壳。按用户参考图采用圆角中性分组卡片、卡片外组标题、卡片内分隔行，控件在右侧；窄屏换行。
+- 分区与可检索行（`settingsModel.ts` 为单一事实来源，搜索与渲染共用；传入 `visibleRowIds` 过滤实际行）：
 
 | 分区 | 行 |
 | --- | --- |
 | 通用 | 启动时自动检查更新（开关，默认关）；上次检查时间（只读） |
 | 外观 | 主题：深色（只读）；界面语言：简体中文（只读） |
+| 连接与模型 | 原连接页的模型连接、网络搜索连接与模型目录；保留业务与编辑会话 |
 | 存储 | 数据存放位置说明；数据规模（项目数、素材条目数）；备份与导出指引（链接到现有导出入口与 `docs/desktop-installation.md`） |
 | 关于与更新 | 当前版本；检查更新；新版本卡片（版本、发布日期、安装包大小、下载、打开发布页）；隐私摘要；更多关于 Cuepoint（`/about`） |
 
 - 无 Switch 组件：在 `ui/` 新增一个最小的 `switch.tsx`（`role="switch"`、`aria-checked`、键盘空格切换），不引入新依赖。
 - 搜索：`filterSettings(sections, query)` 对 `title+description+keywords` 做不区分大小写的包含匹配，空查询返回全部；命中行所在的分区保留，其余分区隐藏；无命中显示空状态。查询不写入 URL。
-- 路由：`/settings?section=update` 可直达分区；`validateSearch` 只接受已知分区，其余忽略。AppFrame 的 NAV 高亮保持 `/settings` 与 `/about`。
+- 路由：`/settings?section=update` 可直达分区；`validateSearch` 只接受已知分区，其余忽略。`/connectors` replace 跳转到 `/settings?section=connections`；AppFrame 移除独立连接入口，设置高亮覆盖 `/settings`、`/about` 与旧 `/connectors`。
 
 ## 6. 更新状态机（`useUpdateCheck`）
 
-状态：`idle → checking → {result | failed}`；`result` 内含分类与发布信息；下载子状态 `idle → downloading(bytes) → verifying → saving → {saved | canceled | failed}`。规则：
-- 同一时刻只允许一个检查与一个下载；离开页面（卸载）时 `AbortController.abort()`。
+状态：`idle → checking → {result | failed}`；`result` 内含分类与发布信息；下载子状态 `idle → downloading(bytes) → verifying → saving → {saved | canceled | failed}`；`saved` 可带已发布文件的收尾警告。规则：
+- 同一时刻只允许一个检查与一个下载；同步 ref 锁阻止重复调用，保持 busy 直到系统保存结束。离开页面（卸载）时中止，并将 signal 传到保存通道；effect setup/cleanup 重放不能吞掉存活实例的启动检查。
 - 失败原因映射到用户文案：`network`（网络不可用）、`rate-limit`（请求过于频繁，稍后再试）、`no-release`（未找到可用发布）、`invalid`（返回内容异常）；所有失败都附带「打开发布页」。
 - 自动检查：`settings.autoCheckUpdates` 为真且距上次成功检查超过 24 小时，在设置页之外的应用启动时触发一次（`AppFrame` 挂载后空闲回调），仅静默更新缓存与时间戳，发现新版本时在「设置」导航项上不加红点，只在设置页内提示（首版不弹通知）。
+- macOS 架构未知时保留 Apple/Intel 选项；超过 64 MiB、无 digest 或浏览器运行时显示浏览器下载，不绕过应用内校验。发布页链接由 native external-link owner 接管到系统浏览器。
 - 保存成功后提示：文件名、安装步骤（macOS 打开 dmg 后拖入应用；Windows 运行 setup.exe；Linux AppImage 先赋予执行权限），以及无签名提示链接到 `INSTALL_GUIDE_URL`。覆盖安装前提醒先导出项目。
 
 ## 7. 存储（`settingsStore.ts`）
 
-沿用 `getDeviceSetting/putDeviceSetting`：键 `settings.autoCheckUpdates`（boolean）、`settings.lastUpdateCheckAt`（毫秒时间戳）。读取非法值一律回退默认值。写入失败只提示，不阻塞。注意 `deviceSettings` 表在 0.1.2 引入，0.1.3 起旧工作区可迁移后正常使用。
+沿用 `getDeviceSetting/putDeviceSetting`；通用页 live read 用 `useProductQueryState(tx => readSettings(tx))`，所有表读取来自传入 tx，读失败显示默认关闭与可见错误，数据规模加载/错误不显示虚假的零值：键 `settings.autoCheckUpdates`（boolean）、`settings.lastUpdateCheckAt`（毫秒时间戳）。读取非法值一律回退默认值。写入失败只提示，不阻塞。注意 `deviceSettings` 表在 0.1.2 引入，0.1.3 起旧工作区可迁移后正常使用。
 
 ## 8. 兼容性与回滚
 
 - 路由：`/settings` 由 redirect 变为真实页面；外部链接与 `/about` 不受影响。`routeTree.gen.ts` 由构建重新生成并提交。
 - 回滚：设置页、共享库、purpose 都是增量；landing 改为从共享库导入，若出问题可只回退该提交。无数据迁移。
-- 版本：与已完成的存储迁移（0.1.3）一起发布，`desktop-v0.1.3` tag 需要先删除再重打（旧 tag 指向修复提交，不含设置页）。
+- 版本：与已提交的存储迁移（0.1.3）一起验收；发布前核对实际 tag 状态，本轮只提交，不删除、移动或创建 tag。
 
 ## 9. 风险
 
