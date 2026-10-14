@@ -23,7 +23,7 @@ application icons are reused. The internal bundle identifier remains
 `dev.cuepoint.prototype.offline`; the executable remains `cuepoint-prototype`.
 Changing visible branding must not create a new data profile.
 
-The current source version is `0.1.0`. Root package, desktop package, Cargo and
+The current source version is `0.1.2`. Root package, desktop package, Cargo and
 Tauri versions must agree. Distribution tags use `desktop-vMAJOR.MINOR.PATCH`
 with that exact source version. The separate container workflow retains its
 existing `v*` tags.
