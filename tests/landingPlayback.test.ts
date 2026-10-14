@@ -378,6 +378,19 @@ describe("player UI", () => {
         expect(byLabel("播放")).toBeTruthy();
     });
 
+    it("never takes Space away from links, disclosure summaries or text fields", async () => {
+        await render();
+        for (const tag of ["a", "summary", "input", "textarea", "select"]) {
+            const element = document.createElement(tag);
+            container.append(element);
+            const event = new KeyboardEvent("keydown", {key: " ", code: "Space", bubbles: true, cancelable: true});
+            await act(async () => { element.dispatchEvent(event); });
+            expect(event.defaultPrevented, tag).toBe(false);
+            expect(byLabel("暂停"), tag).toBeNull();
+            element.remove();
+        }
+    });
+
     it("announces scene changes only while the film plays", async () => {
         await render();
         const live = container.querySelector("[data-playback-live]")!;

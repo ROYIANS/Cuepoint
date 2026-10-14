@@ -175,6 +175,17 @@ describe("createAdaptiveQuality", () => {
         expect(adaptive.current()).toBe("high");
     });
 
+    it("lowers a tier when one frame in ten is slow, although the median frame is fast", () => {
+        const adaptive = createAdaptiveQuality("high");
+        feed(adaptive, 20, 16);
+        const changes: string[] = [];
+        for (let i = 0; i < 40; i += 1) {
+            const next = adaptive.push(i % 10 === 0 ? FRAME_BUDGET_MS * 2 : 12);
+            if (next) changes.push(next);
+        }
+        expect(changes).toEqual(["medium"]);
+    });
+
     it("ignores invalid frame times", () => {
         const adaptive = createAdaptiveQuality("medium");
         for (const bad of [0, -3, Number.NaN, Number.POSITIVE_INFINITY]) expect(adaptive.push(bad)).toBeUndefined();

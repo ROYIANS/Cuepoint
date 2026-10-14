@@ -115,6 +115,9 @@ describe("fetchLatestDesktopRelease", () => {
             ["wrong envelope version", stored(NOW - HOUR, goodRelease, 2)],
             ["corrupt JSON", "{nope"],
             ["tampered asset url", stored(NOW - HOUR, {...goodRelease, assets: [{name: "a", size: 1, url: "https://evil.example/a"}]})],
+            ["asset url escaping the release path", stored(NOW - HOUR, {...goodRelease, assets: [{name: "a", size: 1, url: "https://github.com/ROYIANS/Cuepoint/releases/download/../../../evil/repo/releases/download/a"}]})],
+            ["release page url escaping the releases path", stored(NOW - HOUR, {...goodRelease, htmlUrl: "https://github.com/ROYIANS/Cuepoint/releases/%2e%2e/%2e%2e/evil"})],
+            ["tampered release page url", stored(NOW - HOUR, {...goodRelease, htmlUrl: "https://evil.example/release"})],
             ["version not matching tag", stored(NOW - HOUR, {...goodRelease, version: "9.9.9"})],
             ["bad shape", stored(NOW - HOUR, {tag: 1})],
         ])("ignores a %s entry and refetches", async (_name, value) => {

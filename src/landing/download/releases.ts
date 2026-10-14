@@ -37,6 +37,16 @@ export type FetchDeps = {
     signal?: AbortSignal;
 };
 
+// Prefix check on the normalized address: "…/releases/download/../../x" would otherwise pass a
+// plain startsWith and resolve to another path on the same host.
+function isUnder(url: string, prefix: string): boolean {
+    try {
+        return new URL(url).href.startsWith(prefix);
+    } catch {
+        return false;
+    }
+}
+
 function resolveStorage(deps: FetchDeps): StorageLike | null {
     if (deps.storage !== undefined) return deps.storage;
     try {
@@ -78,7 +88,7 @@ function isValidAsset(asset: unknown): asset is ReleaseAsset {
     const {name, size, url, sha256} = asset;
     return typeof name === "string" && name.length > 0
         && typeof size === "number" && Number.isFinite(size) && size >= 0
-        && typeof url === "string" && url.startsWith(DOWNLOAD_PREFIX)
+        && typeof url === "string" && isUnder(url, DOWNLOAD_PREFIX)
         && (sha256 === undefined || (typeof sha256 === "string" && /^[a-f0-9]{64}$/.test(sha256)));
 }
 
@@ -87,7 +97,7 @@ function parseCachedRelease(raw: Record<string, unknown>): LatestDesktopRelease 
     if (!isRecord(release)) return undefined;
     const {tag, version, prerelease, htmlUrl, publishedAt, assets} = release;
     if (typeof tag !== "string" || !TAG_PATTERN.test(tag) || version !== tag.slice("desktop-v".length)) return undefined;
-    if (typeof prerelease !== "boolean" || typeof htmlUrl !== "string" || !htmlUrl.startsWith(`${RELEASES_URL}/`)) return undefined;
+    if (typeof prerelease !== "boolean" || typeof htmlUrl !== "string" || !isUnder(htmlUrl, `${RELEASES_URL}/`)) return undefined;
     if (publishedAt !== undefined && typeof publishedAt !== "string") return undefined;
     if (!Array.isArray(assets) || !assets.every(isValidAsset)) return undefined;
     return {tag, version, prerelease, htmlUrl, ...(publishedAt !== undefined ? {publishedAt} : {}), assets: assets.map(a => ({...a}))};
@@ -114,7 +124,7 @@ function normalizeRelease(raw: Record<string, unknown>): LatestDesktopRelease {
         const asset = {name: item.name, size: item.size, url: item.browser_download_url, ...(digest ? {sha256: digest} : {})};
         if (isValidAsset(asset)) assets.push(asset);
     }
-    const htmlUrl = typeof raw.html_url === "string" && raw.html_url.startsWith(`${RELEASES_URL}/`) ? raw.html_url : `${RELEASES_URL}/tag/${tag}`;
+    const htmlUrl = typeof raw.html_url === "string" && isUnder(raw.html_url, `${RELEASES_URL}/`) ? raw.html_url : `${RELEASES_URL}/tag/${tag}`;
     return {
         tag,
         version: tag.slice("desktop-v".length),
