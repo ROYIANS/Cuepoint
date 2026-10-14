@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "verify the network policy only gains one path"}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "verify connector matching and removal of model-bank"}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "verify no schema change"}
+{"file": ".trellis/tasks/10-13-models-dev-catalog/research/storage-egress-ui-placement.md", "reason": "verify each requirement against the findings"}

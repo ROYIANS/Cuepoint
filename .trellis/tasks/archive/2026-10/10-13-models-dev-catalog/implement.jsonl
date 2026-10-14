@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "connector definitions and model-bank references to retire"}
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "runtime HTTP policy and purposes to extend"}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "why no new table; storage contracts"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "UI conventions for the new catalog page"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "quality gates"}
+{"file": ".trellis/tasks/10-13-models-dev-catalog/research/models-dev-migration.md", "reason": "Models.dev measured facts and current LobeHub mapping"}
+{"file": ".trellis/tasks/10-13-models-dev-catalog/research/storage-egress-ui-placement.md", "reason": "storage, egress policy, UI placement, matching findings"}
