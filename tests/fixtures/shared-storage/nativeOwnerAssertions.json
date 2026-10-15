@@ -497,6 +497,24 @@
         "Late failure sees actual changed shot inside the UoW.",
         "Reopen restores the original shot and pending proposal atomically."
       ]
+    },
+    {
+      "tables": [
+        "agentJobs",
+        "agentJobResultChunks"
+      ],
+      "file": "tests/agentJobs.test.ts",
+      "case": "publishes complete chunks and original bounded call result together and clears without rewriting history",
+      "commands": [
+        "admitAgentJob",
+        "publishAgentJob",
+        "readAgentJobPage",
+        "clearAgentJobResult"
+      ],
+      "assertions": [
+        "Actual retained chunks reconstruct exact UTF-16 text with bounded original result and same-transaction completed ledger.",
+        "Terminal clear drops chunks and byte reservation without rewriting original call history; replay remains original."
+      ]
     }
   ]
 }

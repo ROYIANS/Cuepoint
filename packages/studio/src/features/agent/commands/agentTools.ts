@@ -45,7 +45,7 @@ async function requireProject(run: AgentRun, store?: ProductStore) {
     if (thread?.projectId !== run.projectId || run.projectId && !await db.projects.get(run.projectId)) throw new Error("关联项目已不存在或归属不匹配");
 }
 
-const tables = (store?: ProductStore) => (db => [db.projects, db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentGenerationBatches, db.agentGenerationBatchItems])(store ?? productDb);
+const tables = (store?: ProductStore) => (db => [db.projects, db.agentRuns, db.agentToolCalls, db.agentJobs, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentGenerationBatches, db.agentGenerationBatchItems])(store ?? productDb);
 
 async function requireLatestRun(run: AgentRun, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
@@ -346,9 +346,13 @@ export async function markRunningToolsUnknown(runId: string, store?: ProductStor
     await db.transaction("rw", tables(db), async (db) => {
         if (!(await db.agentRuns.get(runId))) return;
         const running = await db.agentToolCalls.where("runId").equals(runId).filter((call) => call.status === "running").toArray();
-        for (const call of running) await db.agentToolCalls.update(call.id, unresolvedOutcome ? {
+        for (const call of running) {
+            const job = await db.agentJobs.where("callId").equals(call.id).first();
+            if (job && !["completed", "stopped", "failed", "unknown"].includes(job.status)) await db.agentJobs.update(job.id, {status: "unknown", revision: job.revision + 1, error: "作业结果尚未确认，请核对；不会自动重复执行。", updatedAt: nowIso()});
+            await db.agentToolCalls.update(call.id, unresolvedOutcome || job ? {
             status: "unknown", error: "操作结果尚不确定，不能自动重跑。", updatedAt: nowIso()
         } : await interruptedToolState(call, db));
+        }
     });
 }
 

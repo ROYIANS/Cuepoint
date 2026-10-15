@@ -1,3 +1,4 @@
+import type {AgentJob, AgentJobResultChunk} from "../../features/agent/models/agentJob";
 import {getProductStorage} from "../runtime/storageProfile";
 import {recoverLegacyText} from "../data/legacyScalar";
 import type {
@@ -47,6 +48,8 @@ import {parseShotPictureSlots} from "../../features/library/models/slot";
 import {createId, nowIso} from "../identity";
 
 class BrowserDatabase extends Dexie {
+    agentJobs!: Table<AgentJob, string>;
+    agentJobResultChunks!: Table<AgentJobResultChunk, string>;
     audioChapters!: Table<AudioChapter, string>;
     audioSpeakers!: Table<AudioSpeaker, string>;
     audioSegments!: Table<AudioSegment, string>;
@@ -307,6 +310,10 @@ class BrowserDatabase extends Dexie {
             audioArrangementProposals: "id, projectId, chapterId, kind, state, updatedAt",
         });
         this.version(25).stores({deviceSettings: "key"});
+        this.version(26).stores({
+            agentJobs: "id, &callId, threadId, runId, projectId, status, updatedAt",
+            agentJobResultChunks: "id, jobId, &[jobId+ordinal]",
+        });
     }
 }
 

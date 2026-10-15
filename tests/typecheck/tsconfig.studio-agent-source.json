@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.app.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false,
+    "rootDir": "../..",
+    "baseUrl": "../..",
+    "paths": {
+      "@/*": ["packages/studio/src/*"],
+      "@cuepoint/agent-core": ["packages/agent-core/src/index.ts"],
+      "@cuepoint/agent-providers": ["packages/agent-providers/src/index.ts"],
+      "@cuepoint/agent-providers/http": ["packages/agent-providers/src/http/index.ts"]
+    }
+  },
+  "include": [
+    "../../packages/studio/src/**/*.ts",
+    "../../packages/studio/src/**/*.tsx",
+    "../../packages/agent-core/src/**/*.ts",
+    "../../packages/agent-providers/src/**/*.ts",
+    "../agentJobs.test.ts",
+    "../agentJobProducers.test.ts",
+    "../agentJobsUi.test.ts"
+  ],
+  "exclude": [
+    "../../packages/studio/src/**/*.test.ts",
+    "../../packages/studio/src/**/*.test.tsx",
+    "../../packages/agent-core/src/**/*.test.ts",
+    "../../packages/agent-providers/src/**/*.test.ts"
+  ]
+}

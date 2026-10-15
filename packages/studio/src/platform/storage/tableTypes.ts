@@ -1,3 +1,4 @@
+import type {AgentJob, AgentJobResultChunk} from "../../features/agent/models/agentJob";
 import type {
     AudioChapter,
     AudioClip,
@@ -39,6 +40,8 @@ import type {Project} from "./../../features/projects/models/project";
 import type {Shot} from "./../../features/video/models/shots";
 
 export interface ProductRows {
+    agentJobs: AgentJob;
+    agentJobResultChunks: AgentJobResultChunk;
     audioChapters: AudioChapter;
     audioSpeakers: AudioSpeaker;
     audioSegments: AudioSegment;

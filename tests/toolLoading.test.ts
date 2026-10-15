@@ -35,6 +35,35 @@ function names(body: Record<string, unknown>): string[] {
 }
 
 describe("progressive tool loading", () => {
+  it("offers media inspection and retained-result reads through the actual enabled group loader", async () => {
+    await updateGeneralAgentConfig({ permissionMode: "full", enabledSkillIds: ["workspace", "planning", "business-read", "web-research"] });
+    const thread = await createChatThread();
+    const run = await beginAgentRun({ threadId: thread.id, connector, model: "test-model", content: "读取网页并检查视频素材" });
+    const bodies: Record<string, unknown>[] = [];
+    await executeChatRun(run, connector.apiKey, new AbortController(), async (_url, init) => {
+      bodies.push(JSON.parse(String(init?.body)));
+      return reply(run.protocol, bodies.length === 1 ? [load(["business-read", "web-research"])] : []);
+    });
+    expect(names(bodies[0])).not.toContain("project_media_check");
+    const offered = names(bodies[1]);
+    expect(offered).toEqual(expect.arrayContaining(["project_media_check", "web_read", "read_job_result"]));
+    expect(offered.filter(name => name === "read_job_result")).toHaveLength(1);
+    expect(offered.length).toBeLessThanOrEqual(36);
+    expect([...(await db.agentRuns.get(run.id))!.toolLoading!.loadedGroupIds].sort()).toEqual(["business-read", "web-research"]);
+  });
+  it("keeps the existing combined story and asset groups within 36 offered tools after adding report capabilities", async () => {
+    const run = await begin(), bodies: Record<string, unknown>[] = [];
+    await executeChatRun(run, connector.apiKey, new AbortController(), async (_url, init) => {
+      bodies.push(JSON.parse(String(init?.body)));
+      return reply(run.protocol, bodies.length === 1 ? [load(["story-edit", "asset-edit"])] : []);
+    });
+    expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
+    const offered = names(bodies[1]);
+    expect(offered).toContain("project_create"); expect(offered).toContain("character_create");
+    expect(offered.length).toBeLessThanOrEqual(36);
+    expect(offered).not.toContain("project_media_check");
+    expect((await db.agentRuns.get(run.id))?.toolLoading?.loadedGroupIds).toEqual(["story-edit", "asset-edit"]);
+  });
   it("keeps permission ceiling separate and reduces initial schema plus guidance by over 60%", async () => {
     const full = assembleSkills(DEFAULT_SKILL_IDS);
     const state = createToolLoading(DEFAULT_SKILL_IDS, full.enabledToolNames)!;

@@ -34,6 +34,7 @@ export type WebFailureCode =
     | 'transport'
     | 'invalid_response'
     | 'response_too_large'
+    | 'retention_unavailable'
     | 'extraction_failed';
 
 export interface WebFailure {
@@ -100,8 +101,20 @@ export function webResultSources(name: string, result?: string): { sources: WebS
             sources?: WebSource[];
             url?: string;
             retrievedAt?: string;
-            truncated?: boolean
+            truncated?: boolean;
+            kind?: string;
+            status?: string;
+            error?: string;
+            output?: {length?: number; preview?: string; metadata?: {urls?: string[]; retrievedAt?: string}};
         };
+        if (name === 'web_read' && value.kind === 'web_read') {
+            const urls = value.output?.metadata?.urls;
+            const url = Array.isArray(urls) ? urls.at(-1) : undefined;
+            return {
+                sources: typeof url === 'string' && publicWebUrl(url) ? [{id: 'page', title: '已读取网页', url: publicWebUrl(url)!, snippet: ''}] : [],
+                note: value.error?.slice(0, 1000) ?? `${value.output?.metadata?.retrievedAt?.slice(0, 40) ?? ''} · ${value.status === 'completed' ? '服务提取内容已保留，可分段读取；不保证完整网页' : '读取未完成；停止本地等待不代表服务已取消'}`
+            };
+        }
         if (!value.ok) return {
             sources: [],
             note: typeof value.message === 'string' ? value.message.slice(0, 1000) : '联网调研失败'

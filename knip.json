@@ -34,12 +34,14 @@
       "typescript": {
         "config": [
           "tsconfig.json",
-          "tests/typecheck/tsconfig.agent-source.json"
+          "tests/typecheck/tsconfig.agent-source.json",
+          "tests/typecheck/tsconfig.studio-agent-source.json"
         ]
       },
       "vitest": {
         "entry": [
-          "vitest.agent-source.config.ts"
+          "vitest.agent-source.config.ts",
+          "vitest.studio-source.config.ts"
         ]
       },
       "paths": {

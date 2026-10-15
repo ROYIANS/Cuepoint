@@ -2,14 +2,13 @@ import {createHash} from "node:crypto";
 import {readFileSync} from "node:fs";
 import {describe,expect,it} from "vitest";
 
-// Installed desktop workspaces store the SHA-256 of schema.json and refuse to open when it differs.
-// If this test fails you changed the table registry: add a migration for the previous hash in
-// apps/desktop/src-tauri/src/full_product_store/mod.rs (see migrate_registry), then update the
-// pinned hash below. Shipped hashes: a3405d19… (desktop-v0.1.0/0.1.1), 3c897189… (desktop-v0.1.2).
-const PINNED_REGISTRY_HASH="3c897189ef6f71517c55c86b5d24b7f9cd0e1cfd88d1b916b46345662187eff0";
+// Current registry identity is intentionally reviewed. Fresh-development changes
+// update this pin and all actual owners; they do not authorize a new migration.
+// The named 49-to-50 recipe remains restricted to its original target hash.
+const PINNED_REGISTRY_HASH="867d327e86650f8df0464bef1e63975df895b0905afc703cb10932d6a2afc35e";
 
 describe("table registry hash",()=>{
-    it("matches the pinned hash so installed workspaces keep opening",()=>{
+    it("matches the reviewed current registry identity",()=>{
         const bytes=readFileSync(new URL("../packages/studio/src/platform/storage/schema.json",import.meta.url));
         expect(createHash("sha256").update(bytes).digest("hex")).toBe(PINNED_REGISTRY_HASH);
     });

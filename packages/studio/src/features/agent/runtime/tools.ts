@@ -15,6 +15,8 @@ import {frozenProjectScope} from "./projectScope";
 import {TASK_TOOLS} from "./taskTools";
 import {GENERATION_TOOLS} from "../../video/agent/generationTools";
 import {BUSINESS_TOOLS} from "../../video/agent/businessTools";
+import {MEDIA_CHECK_TOOLS} from "../../video/agent/mediaCheckTools";
+import {JOB_TOOLS} from "./jobTools";
 import {z} from "zod";
 import {toolArgumentError, ToolUnavailableError, ToolValidationError} from "./toolErrors";
 import {db as productDb} from "../../../platform/product/store";
@@ -125,6 +127,8 @@ const definitions = [
     ...MEMORY_TOOLS,
     ...REFERENCE_TOOLS,
     ...WEB_TOOLS,
+    ...MEDIA_CHECK_TOOLS,
+    ...JOB_TOOLS,
 ];
 
 // Existential registry: dispatch must use the selected definition's own parser before

@@ -61,6 +61,13 @@ file or package-public execution API.
   requires Node >=24.11 and real SQLite. Keep default freshness checks intact;
   source evidence does not establish emitted/packed acceptance. Register these
   exact configuration/test/type inputs in discovery and quality identities.
+- Studio's separate `vitest.studio-source.config.ts` and
+  `tests/typecheck/tsconfig.studio-agent-source.json` reuse those three exact
+  public mappings for a finite consumer suite. The side-effect-free
+  `tooling/vitest.studio.ts` factory preserves ordinary fixture plugins, setup,
+  dependency aliases and native flags. Default Vitest retains its freshness
+  assertion; neither source lane changes dev/production package resolution.
+  Keep Studio Node22 support separate from the Todo Node24 SQLite prerequisite.
 - Retained native/reference harnesses may consume individually declared `./reference/...` Studio exports for existing behavior tests. They are deliberate current reference APIs, not wildcard access, a duplicate implementation or permanent old-path bridges. Normal product entries use bootstrap.
 - Browser/native startup selects the fixed existing ProductStore before render. Keep schema bytes/identity, routes, protocol contracts, product transactions and managed-file behavior unchanged during relocation. Rust schema inclusion follows the one Studio schema owner.
 - Distribution never imports Studio, application source, storage, Agent or native runtime. Installer verification/download/Save and device settings stay product-owned. Site budgets and dependency-closure checks cover both eager and lazy chunks.

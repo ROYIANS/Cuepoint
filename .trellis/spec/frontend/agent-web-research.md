@@ -10,6 +10,10 @@ Read before changing web search/extraction, search connection settings, source d
 - `web_search({query,maxResults?,timeRange?})` and `web_read({url})` in `features/references/agent/webTools.ts`, both strict network tools.
 - `executeWebRequest(kind,args,revision,options?)` returns discriminated `WebResult`. Expected failures are `{ok:false,code,message,serviceMayHaveRun,retrievedAt}`.
 - `webResultSources(name,result)` normalizes safe persisted source presentation. Task research observations cite existing tool-call IDs.
+- `web_read` publishes an owned foreground job with a bounded original result;
+  `read_job_result({jobId,offset?,limit?})` reads its retained text without HTTP.
+  See [Agent jobs and retained reports](./agent-jobs-results.md) for the concrete
+  ProductStore commands, quotas, scope and publication/recovery contracts.
 
 ## 3. Contracts
 Configuration is separate from chat/generation connectors. Enabling a saved search connection adds only web-research to future skill selection, preserving all other choices. Manual skill disable remains effective until explicit enabling. Ordinary conversation mode exposes no tools. Setup does not send service requests; test checks authentication, not search quality or paid availability.
@@ -18,7 +22,7 @@ Fixed service endpoint is `https://api.tavily.com`; only adapter reads saved cre
 
 Search uses basic depth, 1–500 character query, 1–10 results (default five), optional time range; answer/raw content/images/automatic parameters disabled. Read extracts one validated public HTTP(S) URL with basic depth and Markdown output. Return safe source URLs, retrieval time, optional provider publication date, coverage and truncation. Search snippets are not full reads; extraction is provider output, never a claim that every page element was read.
 
-Response bytes are capped at 2 MiB before JSON parsing; client timeout is 30 seconds. Search snippets and read text are bounded, with final serialized result size below the ledger limit. JSON escaping counts toward that limit. Do not truncate link targets into different URLs; reject overlong/invalid provider links. Preview text may truncate while original validated arguments remain intact. Secret-bearing service text is redacted; errors do not echo raw service bodies or keys.
+Response bytes are capped at 2 MiB before JSON parsing; client timeout is 30 seconds. Search snippets remain bounded. Read retains the complete accepted sanitized provider extraction within that ceiling and publishes a preview/reference with a 16,000-unit serialized budget, then supports authorized paging; this does not promise the whole original webpage. JSON escaping counts toward that budget. Do not truncate link targets into different URLs; reject overlong/invalid provider links. Preview text may truncate while original validated arguments and retained extraction remain intact. Secret-bearing service text is redacted; errors do not echo raw service bodies or keys.
 
 One tool attempt makes at most one service request. No automatic network retry or general repeatable flag. Completed results replay locally. Expected HTTP/extraction/network errors return structured failure; they do not claim no server work or no charge. Storage failure after transport retains the conservative unknown boundary. Cancel stops local waiting, not remote billing; deletion blocks late ledger publication. Preserve generation recovery semantics.
 

@@ -42,7 +42,7 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
     observe({...feedbackIdentity,type:'started',threadId:run.threadId,assistantMessageId:run.assistantMessageId});
     // This must use the original explicit transport, not the observation wrapper below.
     const credentials=createRunCredentials(db,apiKey,!!fetchImpl);
-    const scope:TableScope=[db.projects,db.agentRuns,db.agentToolCalls,db.chatThreads,db.chatMessages,db.agentTasks,db.agentGenerationJobs,db.agentTaskRecords,db.agentTaskRecordVersions,db.agentGenerationBatches,db.agentGenerationBatchItems];
+    const scope:TableScope=[db.projects,db.agentRuns,db.agentToolCalls,db.agentJobs,db.chatThreads,db.chatMessages,db.agentTasks,db.agentGenerationJobs,db.agentTaskRecords,db.agentTaskRecordVersions,db.agentGenerationBatches,db.agentGenerationBatchItems];
     const guard=async<T>(run:AgentRun,operation:(tx:StoreTx)=>Promise<T>,tables:TableScope=scope):Promise<T>=>db.transaction('rw',tables,async tx=>{
         assertThreadOwnership(ownership,run.threadId);
         if (ownership.threadId !== run.threadId) throw new Error('执行锁与对话归属不匹配');

@@ -1,0 +1,9 @@
+# E07 implementation sequence
+
+1. Review source-backed finite plan under standing sequential authorization, then activate after E06 commit/archive. No unresolved choice is needed to enable OS effects because none are introduced.
+2. Validation owner lands the actual Studio source config factory/profile/type project first, preserving default freshness and exact existing fixture plugins. Notify consumers before tests; no build wrappers.
+3. Storage owner lands typed models/table/registry/browser registration and concrete Agent job/result transactional commands. Notify producer/UI owners of actual exports before imports. Integrate terminal publication with original call ledger, real quotas, unknown acknowledgement, clear, recovery and thread/project deletion; necessary actual-store tests.
+4. Producer owner integrates existing web_read and new project_media_check plus result read tool into existing static registry/loading. Preserve no network retry, current credentials, serial foreground lifecycle, truthful stop/drain and final publication certainty; actual Chat+Responses and media held-read tests.
+5. UI owner integrates actual scoped progress/report/read/clear into call rows with minimal responsive styles and necessary actual DOM cases. No drawer/new run owner or bubble/preparing phase labels.
+6. Freeze all scopes; independent whole-scope checker verifies ProductStore flows, exact publication/continuation/ownership/cleanup/cancellation and necessary source suites/types/lint/architecture. Main captures executable specs/current schema policy, exact discovery/native-test registrations and frozen ledger. No duplicate broad checks.
+7. Commit checked E07 stage, archive/journal, then converge E08 backend/platform and actual directory/thumbnail/import design. Native/emitted/packed/full/build/package/live gates stay at batch end.

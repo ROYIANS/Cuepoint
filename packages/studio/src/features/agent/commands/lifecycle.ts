@@ -7,7 +7,9 @@ import {deleteMediaIfOrphans} from "../../library/commands/media";
 
 export async function deleteChatThread(id: Id, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
-    await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.agentTaskWrapupVersions], async (db) => {
+    await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentJobs, db.agentJobResultChunks, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.agentTaskWrapupVersions], async (db) => {
+        for (const job of await db.agentJobs.where("threadId").equals(id).toArray()) await db.agentJobResultChunks.where("jobId").equals(job.id).delete();
+        await db.agentJobs.where("threadId").equals(id).delete();
         const jobs = await db.agentGenerationJobs.where("threadId").equals(id).toArray();
         const batches = await db.agentGenerationBatches.where("threadId").equals(id).toArray();
         const items = await db.agentGenerationBatchItems.where("threadId").equals(id).toArray();

@@ -748,7 +748,7 @@ fn encoded_metadata_envelopes_are_bounded_even_for_control_heavy_chunks() {
 
 fn downgrade_to_legacy_registry(root: &std::path::Path, extra_missing: Option<&str>) {
     let db = rusqlite::Connection::open(root.join(".local/state.sqlite")).unwrap();
-    db.execute("DELETE FROM product_tables WHERE name='deviceSettings'", [])
+    db.execute("DELETE FROM product_tables WHERE name IN ('deviceSettings','agentJobs','agentJobResultChunks')", [])
         .unwrap();
     if let Some(name) = extra_missing {
         db.execute("DELETE FROM product_tables WHERE name=?", [name])
@@ -761,29 +761,24 @@ fn downgrade_to_legacy_registry(root: &std::path::Path, extra_missing: Option<&s
     .unwrap();
 }
 #[test]
-fn legacy_registry_workspace_is_upgraded_in_place() {
+fn legacy_49_registry_is_not_silently_migrated_to_current_52() {
     let mut store = fixture(Hooks::default());
     let root = store.root.clone();
-    let workspace = store.workspace_id.clone();
     store.close().unwrap();
     drop(store);
     downgrade_to_legacy_registry(&root, None);
-    let mut store = FullProductStore::open(root.clone(), false, Hooks::default()).unwrap();
-    assert_eq!(store.workspace_id, workspace);
-    store.close().unwrap();
-    drop(store);
+    let error = FullProductStore::open(root.clone(), false, Hooks::default()).err().unwrap();
+    assert_eq!(error.code, "schema");
     let db = rusqlite::Connection::open(root.join(".local/state.sqlite")).unwrap();
-    let (rows, hash): (i64, String) = db
-        .query_row(
-            "SELECT (SELECT count(*) FROM product_tables WHERE name='deviceSettings'),(SELECT registry_hash FROM product_workspace)",
-            [],
-            |r| Ok((r.get(0)?, r.get(1)?)),
-        )
-        .unwrap();
-    assert_eq!(rows, 1);
-    assert_eq!(hash, digest(registry::REGISTRY_JSON.as_bytes()));
+    let (rows, device, hash): (i64, i64, String) = db.query_row(
+        "SELECT (SELECT count(*) FROM product_tables),(SELECT count(*) FROM product_tables WHERE name='deviceSettings'),(SELECT registry_hash FROM product_workspace)", [],
+        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+    ).unwrap();
+    assert_eq!(rows, 49);
+    assert_eq!(device, 0);
+    assert_eq!(hash, LEGACY_REGISTRY_HASH);
     drop(db);
-    dispose(FullProductStore::open(root, false, Hooks::default()).unwrap());
+    std::fs::remove_dir_all(root).unwrap();
 }
 #[test]
 fn legacy_registry_with_other_differences_is_still_rejected() {

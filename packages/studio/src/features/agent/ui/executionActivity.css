@@ -333,3 +333,42 @@
         padding-left: 10px;
     }
 }
+
+.agent-chat-root .agent-job-report {
+    min-width: 0;
+    margin: 4px 0 8px 23px;
+    color: var(--muted-foreground);
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.agent-chat-root .agent-job-report p,
+.agent-chat-root .agent-job-report li {
+    margin-block: 4px;
+}
+
+.agent-chat-root .agent-job-report [hidden] {
+    display: none;
+}
+
+.agent-chat-root .agent-job-reader pre {
+    max-height: 24rem;
+    max-width: 100%;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: var(--foreground);
+}
+
+.agent-chat-root .agent-job-page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+}
+
+.agent-chat-root .agent-job-report button {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}

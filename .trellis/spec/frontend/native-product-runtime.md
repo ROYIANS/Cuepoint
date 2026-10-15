@@ -479,21 +479,34 @@ survival. Wrong: manufacture a zero inode, ignore a flush error or erase an
 unproven stage during cancel. Correct: retain real identity/provenance, keep
 published status truthful and refuse ambiguous recovery.
 
-## Workspace registry compatibility (2026-10-14)
+## Workspace registry identity and explicit compatibility
 
 `schema.json` (`packages/studio/src/platform/storage/schema.json`) is bundled into the Rust registry and its SHA-256 is
 stored in `product_workspace.registry_hash` when a workspace is created. An installed workspace only
-opens while that hash matches the running build, so adding a table to the registry breaks every
-existing local workspace.
+opens while that hash matches the running build or an explicitly supported
+historical transition succeeds. A changed current registry is a different
+workspace schema. The default [fresh-development policy](../guides/development-change-policy.md)
+requires fresh fixtures and does not authorize adding a new migration solely
+because a local workspace stores an earlier hash.
 
-- Adding a table means adding a migration in `apps/desktop/src-tauri/src/full_product_store/mod.rs`
-  (`migrate_registry`): keep the previous hash in `LEGACY_REGISTRY_HASH`, list the new tables in
-  `LEGACY_REGISTRY_ADDED`, and verify the stored `product_tables` set matches the registry minus
-  those names. Anything else is left for the schema check to reject.
-- The SQL schema in Rust does not change when the registry gains a table (tables are generic), so the
-  migration is a `product_tables` row plus the new hash, in one `BEGIN IMMEDIATE` transaction.
-- `tests/storageRegistryHash.test.ts` pins the current hash. When it fails, the migration for the
-  previous hash must land in the same change.
+- Adding a table requires synchronized current schema JSON/TypeScript,
+  table registration, browser fresh-store version/declarations, transaction and
+  lifecycle scopes, and intentionally reviewed current registry/hash fixtures.
+  A pinned hash is an identity check, not automatic approval for compatibility.
+- Preserve the existing explicitly scoped 49-to-50 transition in
+  `apps/desktop/src-tauri/src/full_product_store/mod.rs` (`migrate_registry`)
+  according to its named source/target registry. Do not silently reinterpret
+  its old source constant as permission to migrate into every later registry.
+  Any additional transition requires a recorded source version, preservation
+  rules, rollback and acceptance scope in the owning task.
+- SQL tables in Rust are generic. An explicitly authorized additive transition
+  can add a `product_tables` row and the named target hash in one
+  `BEGIN IMMEDIATE` transaction; this mechanism does not itself authorize a
+  transition to the current registry.
+- `tests/storageRegistryHash.test.ts` pins the reviewed current hash. A hash
+  change must be reviewed and synchronized with actual owners in the same
+  change. Only an explicitly requested compatibility exception requires a new
+  previous-hash migration; otherwise incompatible workspaces remain rejected.
 - Shipped hashes: `a3405d19…` (desktop-v0.1.0/v0.1.1, 49 tables), `3c897189…` (desktop-v0.1.2, 50 tables).
 - Bridge messages keep the Rust error code (`原生存储连接失败（schema）`). Codes outside the known
   storage set are fixed Rust literals, never user data.

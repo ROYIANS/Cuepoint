@@ -141,16 +141,16 @@ export async function executeWebRequest(kind: 'search' | 'read', args: WebSearch
         requestedUrl: url!,
         url: href,
         retrievedAt: nowIso(),
-        text: clean(item.raw_content, 24_000, config.apiKey),
-        availableLength: item.raw_content.length,
-        truncated: item.raw_content.length > 24_000,
+        // The transport already bounded the accepted response. Keep its complete
+        // sanitized extraction for owned retention; only the saved job preview is
+        // projected into model context by the caller.
+        text: clean(item.raw_content, Infinity, config.apiKey),
+        availableLength: 0,
+        truncated: false,
         coverage: 'provider_extraction' as const,
         requestId
     };
-    while (JSON.stringify(result).length > 60_000) {
-        result.text = result.text.slice(0, Math.floor(result.text.length * 0.8));
-        result.truncated = true;
-    }
+    result.availableLength = result.text.length;
     return result;
 }
 

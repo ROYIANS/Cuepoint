@@ -3,7 +3,7 @@
   "name": "agent-jobs-results",
   "title": "E07 · 长任务、工具结果回读与产物索引",
   "description": "Represent local work and large tool outputs as observable owned jobs/results without claiming persistence means continued execution.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "studio",
@@ -12,8 +12,8 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": null,
-  "base_branch": "main",
+  "branch": "codex/agent-jobs-results",
+  "base_branch": "codex/agent-resource-capabilities",
   "worktree_path": null,
   "commit": null,
   "pr_url": null,
@@ -21,15 +21,17 @@
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
   "relatedFiles": [],
-  "notes": "Planning backlog from the 2026-10-15 investigation. Task creation is authorized; delivery scope and implementation remain subject to this task review.",
+  "notes": "Delivered finite foreground media availability and retained web extraction with owned result pages/inline reports. Independent 11-suite/208-test source review, strict source/node types, scoped lint and architecture passed. No OS process/background lifetime, historical migration, native/emitted/packed/full/build acceptance claimed. Stage commit and archive follow standing sequential authorization.",
   "meta": {
     "epicCode": "E07",
-    "deliveryState": "planning-backlog",
-    "implementationApproved": false,
+    "deliveryState": "checked-awaiting-commit",
+    "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Needs child-specific requirement convergence, design, implementation/validation plan and review before start."
+    "readiness": "Source acceptance complete; actual native/process/emitted/packed/full/build/package/live gates remain at batch end. E08 must select actual backend/platform and verify owned process termination.",
+    "approvalDate": "2026-10-15",
+    "approvalText": "ok，继续，每个阶段完了就提交代码，然后再继续"
   }
 }

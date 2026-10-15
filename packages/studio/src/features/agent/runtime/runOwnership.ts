@@ -66,6 +66,7 @@ export async function withExecutionOwnership<T>(threadId:string,execute:(ownersh
 
 export async function withThreadRunLock<T>(threadId:string,execute:(ownership:ThreadOwnership)=>Promise<T>,locks:ThreadLockManager=browserLocks()):Promise<T> {
     return withExecutionOwnership(threadId,async ownership=>{
+        await (await import("../commands/agentJobs")).recoverAgentJobs(threadId, ownership);
         await recoverAbandonedGenerationBatches(threadId);
         await interruptThreadRuns(threadId);
         return execute(ownership);
@@ -78,11 +79,18 @@ export async function recoverAbandonedRuns(locks: ThreadLockManager = browserLoc
     const batches = await db.agentGenerationBatches.where("status").equals("running").toArray();
     // Repair known local-only history under the same lock, without running tools.
     const repairableCalls = await db.agentToolCalls.filter(call => isLegacyAtomicPlanCall(call) || isUnknownBatchPreparation(call)).toArray();
-    for (const threadId of new Set([...active, ...batches, ...repairableCalls].map((run) => run.threadId))) {
+    const jobs = await db.agentJobs.filter(job => ['accepted', 'running', 'stopping'].includes(job.status)).toArray();
+    for (const threadId of new Set([...active, ...batches, ...repairableCalls, ...jobs].map((run) => run.threadId))) {
         await locks.request(`cuepoint:agent:${threadId}`, {ifAvailable: true}, async (lock) => {
             if (lock) {
-                await recoverAbandonedGenerationBatches(threadId, db);
-                await interruptThreadRuns(threadId, db);
+                const state: CapabilityState = {held: true, executing: false, accepting: true, threadId};
+                const ownership: ThreadOwnership = {[ownershipBrand]: true, threadId, assertHeld() {assertThreadOwnership(ownership, threadId);}};
+                capabilities.set(ownership, state);
+                try {
+                    await (await import("../commands/agentJobs")).recoverAgentJobs(threadId, ownership, db);
+                    await recoverAbandonedGenerationBatches(threadId, db);
+                    await interruptThreadRuns(threadId, db);
+                } finally {state.held = false;}
             }
         });
     }

@@ -1364,6 +1364,75 @@ export const PRODUCT_SCHEMA = {
         "keyPath": "key",
         "scope": "device",
         "indexes": []
+    },
+    "agentJobs": {
+        "keyPath": "id",
+        "scope": "mixed",
+        "indexes": [
+            {
+                "name": "callId",
+                "keyPaths": [
+                    "callId"
+                ],
+                "unique": true
+            },
+            {
+                "name": "threadId",
+                "keyPaths": [
+                    "threadId"
+                ],
+                "unique": false
+            },
+            {
+                "name": "runId",
+                "keyPaths": [
+                    "runId"
+                ],
+                "unique": false
+            },
+            {
+                "name": "projectId",
+                "keyPaths": [
+                    "projectId"
+                ],
+                "unique": false
+            },
+            {
+                "name": "status",
+                "keyPaths": [
+                    "status"
+                ],
+                "unique": false
+            },
+            {
+                "name": "updatedAt",
+                "keyPaths": [
+                    "updatedAt"
+                ],
+                "unique": false
+            }
+        ]
+    },
+    "agentJobResultChunks": {
+        "keyPath": "id",
+        "scope": "mixed",
+        "indexes": [
+            {
+                "name": "jobId",
+                "keyPaths": [
+                    "jobId"
+                ],
+                "unique": false
+            },
+            {
+                "name": "[jobId+ordinal]",
+                "keyPaths": [
+                    "jobId",
+                    "ordinal"
+                ],
+                "unique": true
+            }
+        ]
     }
 } as const satisfies Record<TableName, TableDefinition>;
 

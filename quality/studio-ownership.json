@@ -5912,6 +5912,63 @@
       "owner": "features/library",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/models/agentJob.ts",
+      "file": "packages/studio/src/features/agent/models/agentJob.ts",
+      "target": "packages/studio/src/features/agent/models/agentJob.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": [
+        "AgentJob",
+        "AgentJobResult",
+        "AgentJobResultChunk",
+        "AgentJobMediaSelection",
+        "AgentJobObservation"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/video/agent/mediaCheckTools.ts",
+      "file": "packages/studio/src/features/video/agent/mediaCheckTools.ts",
+      "target": "packages/studio/src/features/video/agent/mediaCheckTools.ts",
+      "owner": "features/video",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "MEDIA_CHECK_TOOLS"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/agent/commands/agentJobs.ts",
+      "file": "packages/studio/src/features/agent/commands/agentJobs.ts",
+      "target": "packages/studio/src/features/agent/commands/agentJobs.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "admitAgentJob",
+        "markAgentJobRunning",
+        "stopAgentJob",
+        "checkpointAgentJob",
+        "publishAgentJob",
+        "AgentJobAdmissionError"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/agent/runtime/jobTools.ts",
+      "file": "packages/studio/src/features/agent/runtime/jobTools.ts",
+      "target": "packages/studio/src/features/agent/runtime/jobTools.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/AgentJobReport.tsx",
+      "file": "packages/studio/src/features/agent/ui/AgentJobReport.tsx",
+      "target": "packages/studio/src/features/agent/ui/AgentJobReport.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

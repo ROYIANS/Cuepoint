@@ -1313,10 +1313,12 @@ fn string_chunk(text: &str, offset: usize, length: usize) -> Result<Value> {
 // `product_tables` row; any other hash or table set is left to the schema check to reject.
 const LEGACY_REGISTRY_HASH: &str =
     "a3405d1995059418dc36f69a9ff547c53ebe1c500a4aa64da642be4c6585af85";
+const LEGACY_REGISTRY_TARGET_HASH: &str =
+    "3c897189ef6f71517c55c86b5d24b7f9cd0e1cfd88d1b916b46345662187eff0";
 const LEGACY_REGISTRY_ADDED: &[&str] = &["deviceSettings"];
 fn migrate_registry(db: &Connection, stored: String) -> Result<String> {
     let current = digest(registry::REGISTRY_JSON.as_bytes());
-    if stored != LEGACY_REGISTRY_HASH || stored == current {
+    if stored != LEGACY_REGISTRY_HASH || current != LEGACY_REGISTRY_TARGET_HASH {
         return Ok(stored);
     }
     let actual: BTreeSet<String> = db

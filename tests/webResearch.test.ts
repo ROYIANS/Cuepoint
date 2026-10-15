@@ -98,12 +98,14 @@ describe('bounded single-request Tavily adapter', () => {
     expect(cancel).toHaveBeenCalledTimes(1);
     expect(await executeWebRequest('search', { query: 'q' }, revision, { fetchImpl: async () => new Response('not-json') })).toMatchObject({ code: 'invalid_response' });
   });
-  it('extracts one page with truthful coverage and escaped serialized bounds', async () => {
+  it('retains the complete accepted extraction for later bounded publication', async () => {
     const revision = await config();
     const fetcher = vi.fn(async () => Response.json({ results: [{ url: 'https://example.com/', raw_content: '\u0000'.repeat(30000) }] }));
     const result = await executeWebRequest('read', { url: 'https://example.com/' }, revision, { fetchImpl: fetcher });
-    expect(result).toMatchObject({ ok: true, kind: 'read', availableLength: 30000, truncated: true, coverage: 'provider_extraction' });
-    expect(JSON.stringify(result).length).toBeLessThan(65536);
+    expect(result).toMatchObject({ ok: true, kind: 'read', availableLength: 30000, truncated: false, coverage: 'provider_extraction', text: '\u0000'.repeat(30000) });
+    // The provider adapter no longer discards accepted content. The real job
+    // publication owns the smaller call-result/continuation envelope.
+    expect(JSON.stringify(result).length).toBeGreaterThan(65536);
     expect(JSON.parse(String((fetcher.mock.calls[0] as unknown as [string, RequestInit])[1].body))).toEqual({ urls: ['https://example.com/'], extract_depth: 'basic', format: 'markdown', include_images: false });
   });
   it('returns explicit extraction failure and never invents a shortened returned URL', async () => {

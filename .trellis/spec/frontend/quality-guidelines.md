@@ -42,6 +42,21 @@ root configuration in quality input identities. Default test/quality artifact
 freshness and emitted/packed/native gates remain intact and deferred to the
 owner's final batch acceptance; never rebuild implicitly or forge a receipt.
 
+Studio consumers use the separate explicit `vitest.studio-source.config.ts`
+profile and `tests/typecheck/tsconfig.studio-agent-source.json` when those same
+public artifacts are stale. `tooling/vitest.studio.ts` owns the shared config
+factory: preserve the actual historical snapshot/storage fixture/tool coverage
+plugins, dependency resolution, `@` alias, fresh ProductStore setup and native
+owner flags. The default config still checks artifact freshness before calling
+the factory. The explicit source config selects only its finite affected suites
+and three exact public Agent aliases; it neither imports the default config nor
+adds production or dev source aliases. Preserve Studio's Node22 compatibility;
+the neutral Todo SQLite source runner retains its separate Node24 requirement.
+Register both explicit source configs as precise static Vitest plugin entries,
+their exact noEmit projects in TypeScript discovery, and consumed root configs
+in quality input identities. The factory is reached by real imports, never a
+dummy entry. Source tests do not establish current emitted or native execution.
+
 ---
 
 ## Required Patterns

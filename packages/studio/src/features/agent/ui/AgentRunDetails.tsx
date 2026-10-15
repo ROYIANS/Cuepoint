@@ -8,6 +8,7 @@ import {ProjectImageSources} from "./ProjectImageSources";
 import {GenerationReview} from "./GenerationReview";
 import {MusicGenerationReview} from "./MusicGenerationReview";
 import {AgentGenerationResults} from "./AgentGenerationResults";
+import {AgentJobReport} from "./AgentJobReport";
 
 import {useEffect, useId, useMemo, useRef, useState} from "react";
 
@@ -142,6 +143,7 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
                     onClick={() => onAction(run.id, "reject", call.id)}>拒绝</Button>
             {call.highRisk && <small className="agent-high-risk">高风险操作</small>}
         </div>}
+        <AgentJobReport run={run} call={call} readOnly={readOnly}/>
         <div id={panelId} hidden={!open}>
             <div className="agent-step-payload">
                 {musicReview ? <MusicGenerationReview key={call.id} call={call} busy={busy} active={activeMusicReview}

@@ -29,6 +29,7 @@
 | [Creative Skills](./agent-creative-skills.md) | Business CRUD, frozen previews, atomic writes and durable media generation | Filled |
 | [Batch Generation](./agent-batch-generation.md) | Reviewed 20-item queue, two-worker safety, candidate selection and current evidence | Filled |
 | [Web Research](./agent-web-research.md) | Independent search connection, bounded source reads and truthful network recovery | Filled |
+| [Agent Jobs / Retained Reports](./agent-jobs-results.md) | Owned foreground progress, bounded original results, authorized readback, retention and truthful Stop | Filled |
 | [Agent Tasks](./agent-tasks.md) | Shared task/chat identity, plan ownership, artifacts and explicit completion | Filled |
 | [Task Wrap-up](./agent-task-wrapup.md) | Evidence-backed review, durable summaries and explicit completion | Filled |
 | [Project Memory](./project-memory.md) | Reviewed project knowledge, provenance, revision CAS and ZIP transfer | Filled |

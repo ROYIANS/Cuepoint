@@ -132,7 +132,10 @@
     "tests/businessDetails.test.ts",
     "tests/e16AssetDetailPanel.test.ts",
     "tests/e16AssetDetailQueries.test.ts",
-    "tests/e16BatchDetailHandoff.test.ts"
+    "tests/e16BatchDetailHandoff.test.ts",
+    "tests/agentJobs.test.ts",
+    "tests/agentJobProducers.test.ts",
+    "tests/agentJobsUi.test.ts"
   ],
   "browserComparators": [
     "tests/connectorMigration.test.ts: explicit raw browser migration comparator",
