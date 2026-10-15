@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-2.md`
-- **Total Sessions**: 77
+- **Total Sessions**: 78
 - **Last Active**: 2026-10-15
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-2.md` | ~336 | Active |
+| `journal-2.md` | ~374 | Active |
 | `journal-1.md` | ~1968 | Archived |
 <!-- @@@/auto:active-documents -->
 
@@ -30,6 +30,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 78 | 2026-10-15 | E07 owned foreground jobs and retained reports | `c9fd6706` | `codex/agent-jobs-results` |
 | 77 | 2026-10-15 | E06 reusable capabilities and exact resource authority | `d4c2c877` | `codex/agent-resource-capabilities` |
 | 76 | 2026-10-15 | E16 finite business details and retained batch review | `8ac73652` | `codex/business-detail-links` |
 | 75 | 2026-10-15 | E05 guarded creative operations and serial import recovery | `04d47969` | `codex/creative-operation-feedback` |

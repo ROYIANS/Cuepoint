@@ -56,10 +56,10 @@
     "firstCandidate": "10-15-agent-parallel-details",
     "narrowDetailMode": "full-width working-surface detail, retained running conversation, explicit return; no modal drawer",
     "shotDetailScope": "view and edit one shot with existing save/conflict/draft guarantees",
-    "activeDelivery": "10-15-agent-jobs-results",
+    "activeDelivery": "10-15-desktop-workspace-media",
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "Converge reviewed E07 actual Studio job/result slice, retention and source-validation design, then implement under standing sequential authorization."
+    "nextAction": "E07 committed as c9fd6706 and archived; converge E08 selected directory scan/video thumbnail/project import, pending first supported desktop systems and concrete native backend/distribution. Retain batch-end full/native/emitted/packed/build gates."
   }
 }

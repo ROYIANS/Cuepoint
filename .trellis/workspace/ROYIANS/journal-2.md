@@ -334,3 +334,41 @@ Delivered public core registration and immutable binding plus real independent T
 ### Next Steps
 
 - Converge E07 actual Studio jobs/result readback, then proceed to owner-selected E08 directory scan/video thumbnails/project import.
+
+
+## Session 78: E07 owned foreground jobs and retained reports
+<!-- trellis-session: v=2 fp=3baafb9979c2e73d -->
+
+**Date**: 2026-10-15
+**Task**: E07 owned foreground jobs and retained reports
+**Package**: studio
+**Branch**: `codex/agent-jobs-results`
+
+### Summary
+
+Delivered and archived E07 with 11 source suites/208 tests, strict types, scoped lint and architecture; E08 native media flow investigation started, desktop systems pending.
+
+### Main Changes
+
+Delivered E07 foreground jobs and retained result reports under the standing sequential stage-commit authorization. Existing web extraction is retained before bounded model projection; actual project media availability work exposes committed findings and Stop drains the current read. Current caller and historical original report identities remain distinct. Publication, descriptor and original tool completion share one transaction, with quota reservation before effects and no replay after uncertain acknowledgement.
+
+The integrated UI run exposed a real missing-metadata JSON representation mismatch; the publication owner now canonicalizes finite metadata and preserves exact integrity checks. Actual loader coverage preserves the two-group/36-tool budget. Native current registry is 52 tables, browser version26, and the existing named49-to50 recipe stays pinned rather than silently widening to52.
+
+Final necessary evidence: explicit Studio source11 suites/208tests; strict Studio source and Node-config types;20-file typed lint0errors/31visible warnings; architecture660files/2591static/14literal dynamic/0cycles/0failures. A subsequent erased type-import repair received targeted type/lint/architecture checks; a final empty-line trim changes no runtime behavior. Source fixtures do not establish actual Rust/file/process/packaged behavior. Full tests/formal quality/Knip/build/package/emitted/packed/native/live gates remain deferred to batch end.
+
+E08 first flow remains directory scan -> video thumbnails -> project import. Read-only source/upstream investigation is recorded; first supported systems were asked asynchronously and remain pending. No directory was selected, no decoder/process ran and no E08 implementation is claimed.
+
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `c9fd6706` | feat: retain owned agent job reports and paged results |
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Converge E08 native directory scan, video thumbnail and project import; await supported-system answer, research actual backend/distribution, then design scoped paths, owned process stop and verified product import.
