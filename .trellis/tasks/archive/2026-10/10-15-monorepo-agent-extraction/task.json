@@ -3,7 +3,7 @@
   "name": "monorepo-agent-extraction",
   "title": "Monorepo 代码组织与可复用 Agent 能力抽离",
   "description": "Separate web, desktop and site applications; organize the shared studio by feature; extract a reusable Agent core and model providers with an independent consumer and preserved execution contracts.",
-  "status": "planning",
+  "status": "completed",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -11,11 +11,11 @@
   "creator": "ROYIANS",
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
-  "completedAt": null,
+  "completedAt": "2026-10-15",
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "928d723149b2f1bd7720edc8ee7becce74ef6f72",
   "pr_url": null,
   "subtasks": [],
   "children": [
@@ -26,5 +26,15 @@
   "parent": null,
   "relatedFiles": [],
   "notes": "",
-  "meta": {}
+  "meta": {
+    "closure_approval": "Owner confirmed both work commits and following child/parent archives+journal with 可以提交了 on 2026-10-15.",
+    "integration_review": "R1-R7 / AC1-AC6 and child AA1-AA5 accepted with explicit host/manual limits; see verification.md.",
+    "work_commits": {
+      "child1_source": "bb3a9580",
+      "child2_source": "6a2927f0",
+      "child3_source": "928d723149b2f1bd7720edc8ee7becce74ef6f72",
+      "child3_documents": "236b8c70aa4ad327e34760104b458e447b5b26f4"
+    },
+    "archive_branch_policy": "Coordination-only parent never had its own implementation/PR branch; products were implemented and checkpointed under ordered children."
+  }
 }
