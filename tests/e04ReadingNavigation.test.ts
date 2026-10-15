@@ -102,7 +102,9 @@ describe("E04 local reading intent", () => {
         await render([user("u1"), answer()]);
         expect(viewport().scrollTop).toBe(3500); expect(latest()).toBeNull();
         await scrollTo(200);
-        expect(latest()?.textContent).toBe("返回最新");
+        expect(latest()?.getAttribute("aria-label")).toBe("返回最新");
+        expect(latest()?.textContent).toBe("");
+        expect(latest()?.querySelector("svg[aria-hidden=true]")).toBeTruthy();
         await runFrames(); expect(viewport().scrollTop).toBe(200);
         await render([user("u1"), answer("answer", "更多输出")]);
         height = 4800; await resize(); await runFrames();

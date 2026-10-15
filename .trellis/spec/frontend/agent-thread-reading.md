@@ -24,7 +24,7 @@ The deferred thread-entry animation-frame snap also checks current following int
 
 Explicit topic identity stays stable across E02's provisional/durable handoff and does not derive from whether the first message has loaded. A genuine topic change resets following as before. Do not alter workspace/composer keys to implement scrolling or add per-topic reading-position persistence in this scope.
 
-Show one native `返回最新` button only while paused in the existing navigation shell above the composer-safe area. Activation restores following, instantly snaps and moves keyboard focus to the viewport with `focus({preventScroll: true})` before removing the focused button. Native Enter/Space and touch behavior suffice. Ordinary resize/streaming must not steal focus. No toast, unread counter or status narration is needed.
+Show one native icon button only while paused, horizontally centered within the current conversation navigation shell and immediately above the measured composer-safe area. Use a compact circular surface with a decorative downward arrow and accessible name `返回最新`; keep the label available to assistive technology without a visible text pill. Center within the chat column when a business detail is open, and preserve the same center on narrow screens. The owner selected this placement from the second reference image on 2026-10-15; do not anchor the action to the page’s right edge. Activation restores following, instantly snaps and moves keyboard focus to the viewport with `focus({preventScroll: true})` before removing the focused button. Native Enter/Space and touch behavior suffice. Ordinary resize/streaming must not steal focus. No toast, unread counter or status narration is needed.
 
 ## 4. Validation & Error Matrix
 

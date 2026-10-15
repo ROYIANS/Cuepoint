@@ -1,7 +1,7 @@
 import {AgentMarkdown as Markdown} from "./AgentMarkdown";
 import {ReferenceMessageSources} from "./ReferenceAttachments";
 import {ModelIcon} from "./ModelIcons";
-import {Coins, Gauge} from "../../../ui/icons";
+import {ArrowDown, Coins, Gauge} from "../../../ui/icons";
 import {formatTokenCount} from "../runtime/contextUsage";
 import {AgentRunDetails, type RunAction} from "./AgentRunDetails";
 import type {AgentRun, AgentToolCall} from "../models/agent";
@@ -168,10 +168,10 @@ export function MessageList({threadId, messages, runs, retryableRunId, onRetryRu
                 </div>
             </div>
             <TurnNavigation messages={list} listRef={listRef} contentRef={contentRef} onNavigate={pauseFollowing}/>
-            {followingPaused && <button type="button" className="agent-return-to-latest" onClick={() => {
+            {followingPaused && <button type="button" className="agent-return-to-latest" aria-label="返回最新" onClick={() => {
                 resumeFollowing();
                 listRef.current?.focus({preventScroll: true});
-            }}>返回最新</button>}
+            }}><ArrowDown size={18} aria-hidden/></button>}
         </div>
     );
 }

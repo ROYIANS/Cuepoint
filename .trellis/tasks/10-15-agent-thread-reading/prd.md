@@ -22,7 +22,7 @@ Tree position does not enforce these dependencies. If a dependency is deliberate
 
 - E04-R1: Return requested-thread identity with message/run queries, including empty results; retain old cached values only under a matching scope.
 - E04-R2: Use matching-thread runs in departure predicates and preserve genuine active-execution confirmation.
-- E04-R3: Provide an accessible back-to-latest action when following is paused; preserve user reading intent and existing instant stream scrolling.
+- E04-R3: Provide an accessible back-to-latest action when following is paused; preserve user reading intent and existing instant stream scrolling. The owner’s screenshot correction selects a circular downward-arrow icon centered above the composer within the conversation column, with accessible name `返回最新` and no visible text pill.
 
 ## Acceptance criteria
 

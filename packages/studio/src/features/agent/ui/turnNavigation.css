@@ -13,18 +13,20 @@
 .agent-chat-root .agent-return-to-latest {
     position: absolute;
     z-index: 12;
-    right: var(--agent-chat-safe-x, 16px);
+    left: 50%;
+    transform: translateX(-50%);
     bottom: calc(var(--agent-chat-composer-safe, 168px) + 8px);
-    min-height: 40px;
-    padding: 8px 12px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: 50%;
     background: var(--surface-elevated);
     color: var(--foreground);
     box-shadow: 0 2px 8px #0002;
     cursor: pointer;
-    font-size: 12px;
-    line-height: 20px;
 }
 
 .agent-chat-root .agent-return-to-latest:hover {
@@ -156,10 +158,6 @@
 }
 
 @media (max-width: 767px) {
-    .agent-chat-root .agent-return-to-latest {
-        right: 8px;
-    }
-
     .agent-chat-root .agent-message-navigation-shell.has-turn-navigation .agent-message-list {
         padding-left: 24px;
     }

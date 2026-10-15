@@ -15,3 +15,7 @@ The message viewport keeps local following refs and a transition boolean with on
 - Permanent native business discovery includes the new actual-query suite `e04AgentQueryDeparture.test.ts`; this registers future coverage and does not claim native execution. Pure controlled-geometry reading tests remain in ordinary Vitest discovery.
 
 Controlled observer/callback/DOM checks establish their scoped behavior, not physical pixel layout, real device keyboard/touch, live provider performance or native/package acceptance. Full regression/build/packaging/native acceptance remains at batch completion under the owner's explicit instruction. No new dependency, paid request or remote push.
+
+## Owner screenshot correction
+
+After the initial E04 commit `982dece3`, the owner selected a centered circular downward-arrow action above the composer. The follow-up removes the visible right-edge text pill and narrow-screen override while preserving the same native action, accessible name and scroll/focus handler. The reading suite remains 7/7, direct types pass and independent delta review found no issues. Actual Chromium normal/wide-detail/narrow measurements and screenshot inspection are recorded in [button-placement.md](./button-placement.md); see [delta review](./button-placement-review.md). This supersedes the earlier lack of browser layout evidence for this specific button placement only.
