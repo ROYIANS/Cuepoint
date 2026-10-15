@@ -1,11 +1,11 @@
 import {describe, expect, it} from "vitest";
-import {BEHAVIORS, createPool, MAX_PARTICLES, mulberry32, step, type Behavior} from "@/landing/film/renderers/particles";
-import {createAdaptiveQuality, detectQuality, FRAME_BUDGET_MS, lowerQuality, type QualityInput} from "@/landing/film/renderers/quality";
-import {artRect, createSet, fillSet, rectOutline, samplePoints, sortPointsByX, textPoints, type Bitmap, type CanvasLike} from "@/landing/film/renderers/targets";
-import {cellLight, GRID_DIM, planScript} from "@/landing/film/renderers/script";
-import {planSpark, revealCount} from "@/landing/film/renderers/spark";
-import {planLeader, TITLE_FORMED} from "@/landing/film/renderers/leader";
-import type {Plan, Sets} from "@/landing/film/renderers/plan";
+import {BEHAVIORS, createPool, MAX_PARTICLES, mulberry32, step, type Behavior} from "../apps/site/src/film/renderers/particles";
+import {createAdaptiveQuality, detectQuality, FRAME_BUDGET_MS, lowerQuality, type QualityInput} from "../apps/site/src/film/renderers/quality";
+import {artRect, createSet, fillSet, rectOutline, samplePoints, sortPointsByX, textPoints, type Bitmap, type CanvasLike} from "../apps/site/src/film/renderers/targets";
+import {cellLight, GRID_DIM, planScript} from "../apps/site/src/film/renderers/script";
+import {planSpark, revealCount} from "../apps/site/src/film/renderers/spark";
+import {planLeader, TITLE_FORMED} from "../apps/site/src/film/renderers/leader";
+import type {Plan, Sets} from "../apps/site/src/film/renderers/plan";
 
 describe("mulberry32", () => {
     it("is deterministic per seed and stays in [0, 1)", () => {

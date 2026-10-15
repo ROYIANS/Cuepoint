@@ -15,7 +15,7 @@ a workbench action, not an Agent export tool.
 
 ## 2. Signatures (API / DB)
 
-Domain records live in `src/domain/audio.ts`, `music.ts`, `audioGeneration.ts` and `types.ts`.
+Domain records live in `packages/studio/src/domain/audio.ts`, `music.ts`, `audioGeneration.ts` and `types.ts`.
 
 ```ts
 type ProjectKind = "video" | "audio" | "music";
@@ -53,7 +53,7 @@ deleteMusicWork(projectId, id, expectedRevision);
 | `musicDrafts` / `musicWorks` | `projectId`; works also index `mediaId` |
 | `audioGenerationJobs` | `projectId`, unique `intentId`, `status`, `updatedAt` |
 
-Generation entry points in `src/lib/audioGeneration/runtime.ts`:
+Generation entry points in `packages/studio/src/lib/audioGeneration/runtime.ts`:
 
 ```ts
 prepareAudioGeneration({ projectId, connectorId, input, intentId?, source? });
@@ -61,12 +61,12 @@ submitAudioGeneration(projectId, jobId, options?);
 refreshAudioGeneration(projectId, jobId, options?); // bounded GET/download pass; never paid POST
 ```
 
-The repository (`src/db/audioGeneration.ts`) provides
+The repository (`packages/studio/src/db/audioGeneration.ts`) provides
 `prepareAudioGenerationJob(projectId, input)`,
 `claimAudioGenerationJob(projectId, id, expectedRevision, owner)` and
 `patchAudioGenerationJob(projectId, id, expectedRevision, patch)`.
 
-Transport in `src/lib/ai/apimartAudio.ts` uses the configured `/v1` base URL:
+Transport in `packages/studio/src/lib/ai/apimartAudio.ts` uses the configured `/v1` base URL:
 `POST /audio/speech`, `POST /music/generations`, and
 `GET /music/tasks/{encodedTaskId}?language=zh`. CDN downloads use
 `downloadApimartAudio`; they never receive connector authorization headers.
@@ -104,7 +104,7 @@ Script deletion detaches and retains takes. Removing an in-use take rejects. Del
 chapter preserves completed exports with `scope: "chapter"` and `chapterTitle` while
 clearing the deleted local chapter reference.
 
-**Media and editing engine.** `src/lib/audio/` owns decode/cache, waveform reduction,
+**Media and editing engine.** `packages/studio/src/lib/audio/` owns decode/cache, waveform reduction,
 scheduling, synchronized Web Audio preview, OfflineAudioContext rendering, PCM WAV encoding,
 recording lifecycle and edit commands. Recording waits for final `dataavailable`/`stop` and
 cleans tracks/nodes; actual recorder MIME is retained. `detectAudioMime(blob)` recognizes
@@ -425,7 +425,7 @@ Wrong: every validator evolves independently, or apply new generation restrictio
 Audio project ZIP ID remapping and historical export freshness in AudioTimeline/AudioExports.
 
 ### 2. Signatures
-`createAudioExportFingerprint`, `getAudioExportFreshness`, `preserveAudioExportFreshness`, and `remapAudioExportFingerprint` share the scheduling contract in `src/lib/audio/fingerprint.ts`. All three consumers must use the accepted contract, including recognizable legacy JSON schedule fingerprints.
+`createAudioExportFingerprint`, `getAudioExportFreshness`, `preserveAudioExportFreshness`, and `remapAudioExportFingerprint` share the scheduling contract in `packages/studio/src/lib/audio/fingerprint.ts`. All three consumers must use the accepted contract, including recognizable legacy JSON schedule fingerprints.
 
 ### 3. Contracts
 An export fingerprint describes the schedule when the export was produced. An import cannot replace it with the current schedule unconditionally. Fresh exports stay fresh after entity/media/project ID remapping; stale exports remain stale. Version 1 uses a schedule envelope with an optional sticky stale marker when lossy optional reference repair could otherwise upgrade history. Legacy buildAudioSchedule spreads full AudioTake rows, so project/segment/provenance IDs, metadata/revision and object key ordering need explicit compatibility handling. Canonical object keys may fix serialization order drift without discarding meaningful metadata or array order. Capture recognized stale status against full original rows before either ZIP snapshot allowlisting or import parsing strips unknown source metadata; comparing only the already-filtered package can erase the reason the export became stale. Unknown or malformed historical strings are retained and never reported current. Missing historical entities must not abort an otherwise valid package or disappear from a comparison to fabricate freshness. Deleted chapter exports retain chapter scope/title as historical outputs.

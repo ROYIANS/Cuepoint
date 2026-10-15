@@ -1,5 +1,5 @@
 import {afterEach, expect, it, vi} from "vitest";
-import {native} from "../desktop/tauri/ui/bridge";
+import {native} from "../apps/desktop/ui/bridge";
 const invoke=vi.fn();
 
 afterEach(()=>{invoke.mockReset();vi.unstubAllGlobals();});

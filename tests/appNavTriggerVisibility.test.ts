@@ -1,7 +1,7 @@
 import {readFileSync} from "node:fs";
 import {describe,expect,it} from "vitest";
 
-const css=readFileSync(new URL("../src/styles.css",import.meta.url),"utf8");
+const css=readFileSync(new URL("../packages/studio/src/styles.css",import.meta.url),"utf8");
 
 // The hamburger trigger also carries .app-header-shortcut, which sets display:flex later in the file.
 // A lone .app-mobile-nav-trigger rule has equal specificity and loses, so the button showed at every

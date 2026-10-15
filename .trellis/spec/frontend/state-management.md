@@ -6,7 +6,7 @@
 
 ## Overview
 
-Durable state uses the shared `ProductStore` facade in `src/db/database.ts` and the D02 command owners below. Browser IndexedDB and complete native SQLite/files share those commands, Agent and React pages; ephemeral UI remains in React `useState`. Current reads use `useProductQuery(tx => ...)`. One trusted fixed startup profile selects the owner before routes mount; actual isolated acceptance precedes normal packaged SQLite activation. Browser identity remains `aifenjing`, separate from native profiles. The retained schema-4 prototype under `nativeWorkspace.ts` is an explicit reference/test lane. Read [Shared Product Storage](./shared-product-storage.md), [Native Product Runtime](./native-product-runtime.md) and [Shared Video Workspace](./video-workspace.md).
+Durable state uses the shared `ProductStore` facade in `packages/studio/src/db/database.ts` and the D02 command owners below. Browser IndexedDB and complete native SQLite/files share those commands, Agent and React pages; ephemeral UI remains in React `useState`. Current reads use `useProductQuery(tx => ...)`. One trusted fixed startup profile selects the owner before routes mount; actual isolated acceptance precedes normal packaged SQLite activation. Browser identity remains `aifenjing`, separate from native profiles. The retained schema-4 prototype under `nativeWorkspace.ts` is an explicit reference/test lane. Read [Shared Product Storage](./shared-product-storage.md), [Native Product Runtime](./native-product-runtime.md) and [Shared Video Workspace](./video-workspace.md).
 
 Fresh development is the default: do not import old browser/native data or add migration, backfill, compatibility-reader or preservation work unless explicitly requested. Historical schema descriptions below document isolated browser history; they do not authorize native legacy-data work. SQLite is one full-product owner, never a second catalog alongside Agent records.
 
@@ -18,7 +18,7 @@ Every command may accept an optional final `ProductStore`; pass the callback's `
 
 | Kind | Where | Examples |
 | --- | --- | --- |
-| Durable | ProductStore tables via business command owners in `src/db/` | Project, Episode, Character, Scene, Prop, VisualStyle, Shot, Media |
+| Durable | ProductStore tables via business command owners in `packages/studio/src/db/` | Project, Episode, Character, Scene, Prop, VisualStyle, Shot, Media |
 | URL | TanStack Router | `/characters/$characterId`, `/p/$projectId/world` |
 | Local UI | `useState` | library search, sort, pending delete |
 
@@ -765,7 +765,7 @@ Project Chrome is keyed by project ID; shot/print content by project+episode; fo
 
 ### 5. Verification
 
-`tests/b01QueryIdentity.test.ts` executes actual consumers and captured queriers against fake IndexedDB with explicit stale rows/null/empty envelopes; its lightweight hook host is not ReactDOM. `scripts/b01-browser-regression.mjs` with `tests/fixtures/b01` exercises actual ReactDOM, Radix, browser history/router blockers and isolated IndexedDB. It controls read/picker/mutation timing through documented fixture seams and simplifies surrounding routes. It must not be described as an unmodified full-app or paid-provider E2E test. Set installed browser tooling through B01_PLAYWRIGHT_PATH/B01_CHROMIUM_PATH when absent from normal resolution; do not install product dependencies for this fixture. Keep focused A04 regressions with this change.
+`tests/b01QueryIdentity.test.ts` executes actual consumers and captured queriers against fake IndexedDB with explicit stale rows/null/empty envelopes; its lightweight hook host is not ReactDOM. `tooling/b01-browser-regression.mjs` with `tests/fixtures/b01` exercises actual ReactDOM, Radix, browser history/router blockers and isolated IndexedDB. It controls read/picker/mutation timing through documented fixture seams and simplifies surrounding routes. It must not be described as an unmodified full-app or paid-provider E2E test. Set installed browser tooling through B01_PLAYWRIGHT_PATH/B01_CHROMIUM_PATH when absent from normal resolution; do not install product dependencies for this fixture. Keep focused A04 regressions with this change.
 
 
 ## Scenario: Changed-field and membership intent (B03 / AU-03, PU-04; 2026-09-30)

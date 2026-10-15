@@ -1,0 +1,47 @@
+{
+  "format": "cuepoint.synthetic-fixtures.v1",
+  "encoder": {
+    "package": "lamejs",
+    "version": "1.2.1",
+    "allInOneSha256": "026bd88846040f357a937cd85821a48492a362eff0812cda734f23fca55fea3b",
+    "license": "LGPL-3.0",
+    "source": "https://github.com/zhuker/lamejs"
+  },
+  "wavOwner": "packages/studio/src/lib/audio/wav.ts",
+  "pdfGenerator": "scripts/generate-fixtures.py",
+  "videoGenerator": "scripts/generate-video.swift",
+  "files": {
+    "image.png": {
+      "bytes": 177,
+      "sha256": "626815c78eaad46cad849732d1598b45b91700ce046c1ee3f4e2444db80aa32a"
+    },
+    "tone.wav": {
+      "bytes": 384044,
+      "sha256": "e4baf034e8b57f82d42dc121292b8684d087a73eba60475fbd0eb54cb052ace4"
+    },
+    "tone.mp3": {
+      "bytes": 16300,
+      "sha256": "36e3d42060787c920f505b69879fecd7417c017e78bb2c3b2255f8bd18b72a2c"
+    },
+    "tone.aac": {
+      "bytes": 8900,
+      "sha256": "9e3ec7c7e1a24b4c76730c12fe4737695cf8413fb00a6f9139b50325273d48b6"
+    },
+    "tone.m4a": {
+      "bytes": 12324,
+      "sha256": "2493423bb0a6636b1da138a5c2db6c258d788841a30f8e5e8a28860436ed5f6f"
+    },
+    "movie.mp4": {
+      "bytes": 11940,
+      "sha256": "91f3d0a1a72de8355add6814fa4ed8b47bc3cac5ebb02c62dcd8b5b7a5a32341"
+    },
+    "document.pdf": {
+      "bytes": 3033,
+      "sha256": "ee62307e225b723a2ed696922cfd849ddcdc14f35cd564d08a96b771a3d01717"
+    },
+    "document.docx": {
+      "bytes": 1084,
+      "sha256": "ce29dc1edf52d07a8d442e89dd5e44af208748a79c53092262dc661f94bad26a"
+    }
+  }
+}

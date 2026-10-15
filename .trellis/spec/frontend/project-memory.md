@@ -9,10 +9,10 @@ No global memory owner or legacy data backfill exists.
 
 ## 2. Signatures (API / DB)
 
-- `src/domain/projectMemory.ts`: `ProjectMemory`, `ProjectMemoryVersion`, `MemoryInput`,
+- `packages/studio/src/domain/projectMemory.ts`: `ProjectMemory`, `ProjectMemoryVersion`, `MemoryInput`,
   `MemorySourceRef`, `MemoryCandidate`, `MemorySaveOptions`.
 - Dexie v16: `projectMemories` and `projectMemoryVersions`. All repository calls in
-  `src/db/projectMemories.ts` require `projectId` explicitly.
+  `packages/studio/src/db/projectMemories.ts` require `projectId` explicitly.
 - `createProjectMemory(projectId, input, { replace?: { id, expectedRevision } })` and
   `promoteProjectMemory(projectId, ref, input, options)` return `{ memory, duplicate }`.
 - `updateProjectMemory(projectId, id, input, expectedRevision)`;

@@ -23,7 +23,7 @@ type NativeReport = {status: string; unchanged: boolean; cases: NativeCase[]};
 async function runNative(variant: "current" | "regression", directory: string) {
     const log: string[] = [];
     const exit = await new Promise<number | null>((resolve, reject) => {
-        const child = spawn(process.execPath, [path.join(root, "scripts/e07-draft-rebase-browser.mjs"), variant], {
+        const child = spawn(process.execPath, [path.join(root, "tooling/e07-draft-rebase-browser.mjs"), variant], {
             cwd: root, env: {...process.env, E07_DRAFT_REBASE_OUTPUT_DIR: directory}, stdio: ["ignore", "pipe", "pipe"],
         });
         child.stdout.on("data", data => log.push(String(data)));

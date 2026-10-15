@@ -3,51 +3,51 @@
   "contracts": [
     {
       "issue": "files",
-      "file": "scripts/e06-icon-data.d.mts",
+      "file": "tooling/e06-icon-data.d.mts",
       "symbol": "",
       "count": 1,
       "reason": "TypeScript companion declaration for the actual .mjs generator imported by the permanent icon entry regression. Not a runtime entry or unused implementation.",
       "owner": "Icon catalog",
       "evidence": [
         {
-          "file": "scripts/e06-icon-data.d.mts",
+          "file": "tooling/e06-icon-data.d.mts",
           "sha256": "d27e8b2247cec2c11a4b35f529d9d1012e185d6712739a4cbb56350a6d808e49"
         },
         {
-          "file": "scripts/e06-icon-data.mjs",
-          "sha256": "972ade191611a3f8d5404386eef59d8e312d0b9fc3f8d14df6305d6904b76267"
+          "file": "tooling/e06-icon-data.mjs",
+          "sha256": "7876e86eb20c53a1f685fd4e1b6e2392ade5996d3b25c979a85b73c1f2c2ca3c"
         },
         {
           "file": "tests/e06-icon-entries.test.ts",
-          "sha256": "cdb6f542aa6a08c6a7ee205c4e5477efb554f2ba74cd5f1d2e4a9e3bcaab41ae"
+          "sha256": "0349d53fd2d61702509c27c3eb02dded85f8a893c39338a4a1f488c8cbab6bc7"
         }
       ]
     },
     {
       "issue": "unlisted",
-      "file": "scripts/e02-browser-regression.mjs",
+      "file": "tooling/e02-browser-regression.mjs",
       "symbol": "playwright",
       "count": 1,
       "reason": "Optional native regression runtime is explicitly injected with the runner environment module path, or resolved as ordinary external Playwright. It is not a shipped application dependency; no machine cache path is embedded.",
       "owner": "Native regression",
       "evidence": [
         {
-          "file": "scripts/e02-browser-regression.mjs",
-          "sha256": "9569ddbf428a81c631d485d2d291da9f0a2efe5f7a728e6db179f072f4a82f14"
+          "file": "tooling/e02-browser-regression.mjs",
+          "sha256": "03e19ac2096f6ed3439ee1f41ae83e762b8c23a026a2de3cebf2743deeb6c839"
         }
       ]
     },
     {
       "issue": "unresolved",
-      "file": "scripts/e06-root-parity.mjs",
+      "file": "tooling/e06-root-parity.mjs",
       "symbol": "/e06-fixture-dexie.mjs",
       "count": 1,
       "reason": "The page imports this local virtual URL; the same runner intercepts this exact route and serves actual installed Dexie module bytes. No physical root module is expected.",
       "owner": "Native regression",
       "evidence": [
         {
-          "file": "scripts/e06-root-parity.mjs",
-          "sha256": "77a646c469a2c07c5874ecc3a338ab77e976ec5fd4f30dc4de36f00b42bc7446"
+          "file": "tooling/e06-root-parity.mjs",
+          "sha256": "fd39b657d1fbb7cf1f6d5a053e9993a9f883986d836e00e25fa969a80e6f3e59"
         },
         {
           "file": "tests/fixtures/e06/seeds.json",
@@ -57,37 +57,37 @@
     },
     {
       "issue": "exports",
-      "file": "src/db/audio.ts",
+      "file": "packages/studio/src/db/audio.ts",
       "symbol": "deleteAudioTrack",
       "count": 1,
       "reason": "Retain the explicitly documented audio repository deletion command for X=Chapter/Speaker/Segment/Track/Clip in the canonical audio API. Current UI exposes no caller; this is an intentional retained command contract with owner/CAS/atomic cleanup, not a claimed live UI feature.",
       "owner": "Audio repositories",
       "evidence": [
         {
-          "file": "src/db/audio.ts",
-          "sha256": "ee5e35ee8109948602adf3c16bb13a413462b3572401221a296df4996ce32ecb"
+          "file": "packages/studio/src/db/audio.ts",
+          "sha256": "f20489b6493f55ef1c22d87666a1b0770afa863e6121a171d697dfb024a15b0a"
         },
         {
           "file": ".trellis/spec/frontend/audio-music.md",
-          "sha256": "aacac36bc2666b07718d262069bf8f57d0525d16a5fac2043e121afa2bf0d6df"
+          "sha256": "d16c8f06835060a83cccd5308c01d568305eefd3b6b6234942c7897f464a1359"
         }
       ]
     },
     {
       "issue": "exports",
-      "file": "src/db/audio.ts",
+      "file": "packages/studio/src/db/audio.ts",
       "symbol": "deleteAudioSpeaker",
       "count": 1,
       "reason": "Retain the explicitly documented audio repository deletion command for X=Chapter/Speaker/Segment/Track/Clip in the canonical audio API. Current UI exposes no caller; this is an intentional retained command contract with owner/CAS/atomic cleanup, not a claimed live UI feature.",
       "owner": "Audio repositories",
       "evidence": [
         {
-          "file": "src/db/audio.ts",
-          "sha256": "ee5e35ee8109948602adf3c16bb13a413462b3572401221a296df4996ce32ecb"
+          "file": "packages/studio/src/db/audio.ts",
+          "sha256": "f20489b6493f55ef1c22d87666a1b0770afa863e6121a171d697dfb024a15b0a"
         },
         {
           "file": ".trellis/spec/frontend/audio-music.md",
-          "sha256": "aacac36bc2666b07718d262069bf8f57d0525d16a5fac2043e121afa2bf0d6df"
+          "sha256": "d16c8f06835060a83cccd5308c01d568305eefd3b6b6234942c7897f464a1359"
         }
       ]
     },
@@ -112,12 +112,246 @@
           "sha256": "97fef5bcd209e8dfff7b01a7c5ad6f2bf014690d6b869a0ac48c46680f4ee6db"
         },
         {
-          "file": "scripts/e02-browser-regression.mjs",
-          "sha256": "9569ddbf428a81c631d485d2d291da9f0a2efe5f7a728e6db179f072f4a82f14"
+          "file": "tooling/e02-browser-regression.mjs",
+          "sha256": "03e19ac2096f6ed3439ee1f41ae83e762b8c23a026a2de3cebf2743deeb6c839"
         },
         {
           "file": "tests/fixtures/e04-library/harness.tsx",
           "sha256": "a746f3758e71cc63cd5b32661a8212081ccbf0e5790b9f81afb15baa396e83e8"
+        }
+      ]
+    },
+    {
+      "issue": "exports",
+      "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+      "symbol": "projectEntry",
+      "count": 1,
+      "reason": "The projectEntry companion declaration describes the real projection.mjs API imported by runtime sync and the baseline CLI. TypeScript resolves this exact .d.mts for those .mjs imports; Knip separates the declaration exports from the implementation usage. Preserve this typed compiler boundary, with no runtime stub or dummy caller.",
+      "owner": "Models.dev projection types",
+      "evidence": [
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+          "sha256": "d22d5be067afd37d0aa7bc3a2c167c6cd7c71419bb967b265c67bef530b3803a"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.mjs",
+          "sha256": "90a8d61de26710b32dc040a13d7e99b24daf391ba334e0fea11fb246b018793f"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/sync.ts",
+          "sha256": "287e87d318cc92a6e9c656c792a40447412d5d2ab5e442307322586a7a1dba5f"
+        },
+        {
+          "file": "tooling/models-dev-baseline.mjs",
+          "sha256": "ffb8d245237e1631ee8e4b20401daff313c0b85aea104bf64be237a8bd784ab6"
+        }
+      ]
+    },
+    {
+      "issue": "exports",
+      "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+      "symbol": "originOf",
+      "count": 1,
+      "reason": "The originOf companion declaration describes the real projection.mjs API imported by runtime sync and the baseline CLI. TypeScript resolves this exact .d.mts for those .mjs imports; Knip separates the declaration exports from the implementation usage. Preserve this typed compiler boundary, with no runtime stub or dummy caller.",
+      "owner": "Models.dev projection types",
+      "evidence": [
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+          "sha256": "d22d5be067afd37d0aa7bc3a2c167c6cd7c71419bb967b265c67bef530b3803a"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.mjs",
+          "sha256": "90a8d61de26710b32dc040a13d7e99b24daf391ba334e0fea11fb246b018793f"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/sync.ts",
+          "sha256": "287e87d318cc92a6e9c656c792a40447412d5d2ab5e442307322586a7a1dba5f"
+        },
+        {
+          "file": "tooling/models-dev-baseline.mjs",
+          "sha256": "ffb8d245237e1631ee8e4b20401daff313c0b85aea104bf64be237a8bd784ab6"
+        }
+      ]
+    },
+    {
+      "issue": "exports",
+      "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+      "symbol": "compareEntries",
+      "count": 1,
+      "reason": "The compareEntries companion declaration describes the real projection.mjs API imported by runtime sync and the baseline CLI. TypeScript resolves this exact .d.mts for those .mjs imports; Knip separates the declaration exports from the implementation usage. Preserve this typed compiler boundary, with no runtime stub or dummy caller.",
+      "owner": "Models.dev projection types",
+      "evidence": [
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+          "sha256": "d22d5be067afd37d0aa7bc3a2c167c6cd7c71419bb967b265c67bef530b3803a"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.mjs",
+          "sha256": "90a8d61de26710b32dc040a13d7e99b24daf391ba334e0fea11fb246b018793f"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/sync.ts",
+          "sha256": "287e87d318cc92a6e9c656c792a40447412d5d2ab5e442307322586a7a1dba5f"
+        },
+        {
+          "file": "tooling/models-dev-baseline.mjs",
+          "sha256": "ffb8d245237e1631ee8e4b20401daff313c0b85aea104bf64be237a8bd784ab6"
+        }
+      ]
+    },
+    {
+      "issue": "exports",
+      "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+      "symbol": "projectCommonScope",
+      "count": 1,
+      "reason": "The projectCommonScope companion declaration describes the real projection.mjs API imported by runtime sync and the baseline CLI. TypeScript resolves this exact .d.mts for those .mjs imports; Knip separates the declaration exports from the implementation usage. Preserve this typed compiler boundary, with no runtime stub or dummy caller.",
+      "owner": "Models.dev projection types",
+      "evidence": [
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+          "sha256": "d22d5be067afd37d0aa7bc3a2c167c6cd7c71419bb967b265c67bef530b3803a"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.mjs",
+          "sha256": "90a8d61de26710b32dc040a13d7e99b24daf391ba334e0fea11fb246b018793f"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/sync.ts",
+          "sha256": "287e87d318cc92a6e9c656c792a40447412d5d2ab5e442307322586a7a1dba5f"
+        },
+        {
+          "file": "tooling/models-dev-baseline.mjs",
+          "sha256": "ffb8d245237e1631ee8e4b20401daff313c0b85aea104bf64be237a8bd784ab6"
+        }
+      ]
+    },
+    {
+      "issue": "exports",
+      "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+      "symbol": "projectBaseline",
+      "count": 1,
+      "reason": "The projectBaseline companion declaration describes the real projection.mjs API imported by runtime sync and the baseline CLI. TypeScript resolves this exact .d.mts for those .mjs imports; Knip separates the declaration exports from the implementation usage. Preserve this typed compiler boundary, with no runtime stub or dummy caller.",
+      "owner": "Models.dev projection types",
+      "evidence": [
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+          "sha256": "d22d5be067afd37d0aa7bc3a2c167c6cd7c71419bb967b265c67bef530b3803a"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.mjs",
+          "sha256": "90a8d61de26710b32dc040a13d7e99b24daf391ba334e0fea11fb246b018793f"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/sync.ts",
+          "sha256": "287e87d318cc92a6e9c656c792a40447412d5d2ab5e442307322586a7a1dba5f"
+        },
+        {
+          "file": "tooling/models-dev-baseline.mjs",
+          "sha256": "ffb8d245237e1631ee8e4b20401daff313c0b85aea104bf64be237a8bd784ab6"
+        }
+      ]
+    },
+    {
+      "issue": "types",
+      "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+      "symbol": "ProjectionScope",
+      "count": 1,
+      "reason": "The ProjectionScope companion declaration describes the real projection.mjs API imported by runtime sync and the baseline CLI. TypeScript resolves this exact .d.mts for those .mjs imports; Knip separates the declaration exports from the implementation usage. Preserve this typed compiler boundary, with no runtime stub or dummy caller.",
+      "owner": "Models.dev projection types",
+      "evidence": [
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+          "sha256": "d22d5be067afd37d0aa7bc3a2c167c6cd7c71419bb967b265c67bef530b3803a"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.mjs",
+          "sha256": "90a8d61de26710b32dc040a13d7e99b24daf391ba334e0fea11fb246b018793f"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/sync.ts",
+          "sha256": "287e87d318cc92a6e9c656c792a40447412d5d2ab5e442307322586a7a1dba5f"
+        },
+        {
+          "file": "tooling/models-dev-baseline.mjs",
+          "sha256": "ffb8d245237e1631ee8e4b20401daff313c0b85aea104bf64be237a8bd784ab6"
+        }
+      ]
+    },
+    {
+      "issue": "types",
+      "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+      "symbol": "RawProvider",
+      "count": 1,
+      "reason": "The RawProvider companion declaration describes the real projection.mjs API imported by runtime sync and the baseline CLI. TypeScript resolves this exact .d.mts for those .mjs imports; Knip separates the declaration exports from the implementation usage. Preserve this typed compiler boundary, with no runtime stub or dummy caller.",
+      "owner": "Models.dev projection types",
+      "evidence": [
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+          "sha256": "d22d5be067afd37d0aa7bc3a2c167c6cd7c71419bb967b265c67bef530b3803a"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.mjs",
+          "sha256": "90a8d61de26710b32dc040a13d7e99b24daf391ba334e0fea11fb246b018793f"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/sync.ts",
+          "sha256": "287e87d318cc92a6e9c656c792a40447412d5d2ab5e442307322586a7a1dba5f"
+        },
+        {
+          "file": "tooling/models-dev-baseline.mjs",
+          "sha256": "ffb8d245237e1631ee8e4b20401daff313c0b85aea104bf64be237a8bd784ab6"
+        }
+      ]
+    },
+    {
+      "issue": "types",
+      "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+      "symbol": "ProjectedEntry",
+      "count": 1,
+      "reason": "The ProjectedEntry companion declaration describes the real projection.mjs API imported by runtime sync and the baseline CLI. TypeScript resolves this exact .d.mts for those .mjs imports; Knip separates the declaration exports from the implementation usage. Preserve this typed compiler boundary, with no runtime stub or dummy caller.",
+      "owner": "Models.dev projection types",
+      "evidence": [
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.d.mts",
+          "sha256": "d22d5be067afd37d0aa7bc3a2c167c6cd7c71419bb967b265c67bef530b3803a"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/projection.mjs",
+          "sha256": "90a8d61de26710b32dc040a13d7e99b24daf391ba334e0fea11fb246b018793f"
+        },
+        {
+          "file": "packages/studio/src/lib/ai/modelCatalog/sync.ts",
+          "sha256": "287e87d318cc92a6e9c656c792a40447412d5d2ab5e442307322586a7a1dba5f"
+        },
+        {
+          "file": "tooling/models-dev-baseline.mjs",
+          "sha256": "ffb8d245237e1631ee8e4b20401daff313c0b85aea104bf64be237a8bd784ab6"
+        }
+      ]
+    },
+    {
+      "issue": "devDependencies",
+      "file": "apps/desktop/package.json",
+      "symbol": "@tauri-apps/cli",
+      "count": 1,
+      "reason": "The pinned Tauri executable is invoked by the approved tool resolver through pnpm exec tauri in the real app and release build scripts. This dynamic external CLI is required for native packaging; it is not a JavaScript import or an unused product dependency.",
+      "owner": "Desktop packaging",
+      "evidence": [
+        {
+          "file": "apps/desktop/package.json",
+          "sha256": "48279d8f14f55b574fba862d53433bc76c3f1dd4a09eb7b04c26412ebd535901"
+        },
+        {
+          "file": "apps/desktop/scripts/build-app.mjs",
+          "sha256": "15f6e4c998b339ababa622b8e43175cbdc897e20273745a5da546e45792cea70"
+        },
+        {
+          "file": "apps/desktop/scripts/build-release.mjs",
+          "sha256": "c0568ec87686137acf0f5907da2be21089389211d296458171dfabdf973358dc"
+        },
+        {
+          "file": "apps/desktop/scripts/tool-resolver.mjs",
+          "sha256": "bb12e79ec489ffc6e87f025b79d2fbd7e6102aed0afcec51fe4f43f56939ec11"
         }
       ]
     }

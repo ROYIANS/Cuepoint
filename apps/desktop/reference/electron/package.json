@@ -1,0 +1,26 @@
+{
+  "name": "cuepoint-native-storage-prototype",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/main.mjs",
+  "packageManager": "pnpm@10.15.0",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint --config eslint.config.mjs src renderer --no-warn-ignored",
+    "reachability": "knip --config knip.json --include files,exports,types,unlisted,unresolved",
+    "test": "node scripts/run-tests.mjs",
+    "probe": "node scripts/launch.mjs probe",
+    "ui-test": "node scripts/launch.mjs ui-test",
+    "start": "node scripts/launch.mjs"
+  },
+  "dependencies": {
+    "electron": "44.7.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
+  }
+}

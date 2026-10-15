@@ -1,7 +1,7 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {DownloadAssetResult} from "@/lib/desktopRelease/download";
-import type {LatestDesktopRelease, ReleaseResult} from "@/lib/desktopRelease/releases";
-import type {AssetChoice} from "@/lib/desktopRelease/platform";
+import type {LatestDesktopRelease, ReleaseResult} from "@cuepoint/distribution/releases";
+import type {AssetChoice} from "@cuepoint/distribution/platform";
 
 type Effect = {deps?: unknown[]; setup: () => void | (() => void); cleanup?: () => void};
 type Host = {cells: unknown[]; cursor: number; effects: Array<() => void>; mounted: boolean; lateWrites: number};
@@ -51,7 +51,7 @@ vi.mock("react", async original => {
         },
     };
 });
-vi.mock("@/lib/desktopRelease/releases", async original => ({...await original<typeof import("@/lib/desktopRelease/releases")>(), fetchLatestDesktopRelease: boundary.fetchRelease}));
+vi.mock("@cuepoint/distribution/releases", async original => ({...await original<typeof import("@cuepoint/distribution/releases")>(), fetchLatestDesktopRelease: boundary.fetchRelease}));
 vi.mock("@/lib/desktopRelease/download", () => ({downloadAsset: boundary.downloadAsset, MAX_RELEASE_ASSET_BYTES: 64 * 1024 * 1024}));
 vi.mock("@/lib/runtimeFetch", () => ({runtimeFetchFor: (purpose: string) => {boundary.transport(purpose); return fetch;}}));
 vi.mock("@/lib/runtimeSave", async original => ({...await original<typeof import("@/lib/runtimeSave")>(), downloadBlob: boundary.save}));

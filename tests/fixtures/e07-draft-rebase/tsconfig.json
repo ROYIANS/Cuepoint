@@ -5,5 +5,5 @@
     "tsBuildInfoFile": null,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["harness.tsx", "../../e07DraftRebase.test.ts", "../../../src/vite-env.d.ts"]
+  "include": ["harness.tsx", "../../e07DraftRebase.test.ts", "../../../packages/studio/src/vite-env.d.ts"]
 }

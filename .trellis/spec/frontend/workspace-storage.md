@@ -6,11 +6,11 @@ Apply when changing media-file import, workspace-relative references, managed bi
 
 ## 2. Signatures / Owners
 
-- `src/lib/workspace.ts`: `workspaceId(value)`, `mediaWorkspaceRef(workspaceId, projectId, mediaId)`, `resolveWorkspaceRef(ref, root)` and `copyIntoManagedWorkspace(input, metadata, signal?)`.
+- `packages/studio/src/lib/workspace.ts`: `workspaceId(value)`, `mediaWorkspaceRef(workspaceId, projectId, mediaId)`, `resolveWorkspaceRef(ref, root)` and `copyIntoManagedWorkspace(input, metadata, signal?)`.
 - `WorkspaceRef` contains workspace identity, project/studio owner and relative path. `WorkspaceRoot.absolutePath` is device-local and is never a portable field.
 - The copy function returns a stage with `copy: ManagedCopy`, `discard()` and `commit(persist)`. The copy contains a new media ID, display filename, MIME, byte length, SHA-256, independent Blob and owned reference.
-- `uploadMediaFile(projectId, file, signal?)` prepares the stage, then calls the existing `src/db/media.ts` `putMedia` command. `putMedia` retains parent validation, immutable insertion, project touch and atomic rollback.
-- `src/lib/sha256.ts`: incremental `Sha256.update(Uint8Array).digest()` and synchronous `sha256Bytes(input)`. `targetRevision` in `productionRevision.ts` retains canonicalization and the `sha256-v1:` prefix.
+- `uploadMediaFile(projectId, file, signal?)` prepares the stage, then calls the existing `packages/studio/src/db/media.ts` `putMedia` command. `putMedia` retains parent validation, immutable insertion, project touch and atomic rollback.
+- `packages/studio/src/lib/sha256.ts`: incremental `Sha256.update(Uint8Array).digest()` and synchronous `sha256Bytes(input)`. `targetRevision` in `productionRevision.ts` retains canonicalization and the `sha256-v1:` prefix.
 
 ## 3. Contracts / Invariants
 

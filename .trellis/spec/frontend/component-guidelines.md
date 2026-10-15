@@ -6,7 +6,7 @@
 
 ## Overview
 
-Routes are thin. Feature pages under `src/components/{studio,assets,shots,story,produce,workspace,slots,media}/` own UI and data wiring. Primitives live in `src/components/ui/` (shadcn new-york + Radix + CVA). Chinese UI copy is normal.
+Routes are thin. Feature pages under `packages/studio/src/components/{studio,assets,shots,story,produce,workspace,slots,media}/` own UI and data wiring. Primitives live in `packages/studio/src/components/ui/` (shadcn new-york + Radix + CVA). Chinese UI copy is normal.
 
 ---
 
@@ -14,12 +14,12 @@ Routes are thin. Feature pages under `src/components/{studio,assets,shots,story,
 
 | Layer | Responsibility | Example |
 | --- | --- | --- |
-| Route | Params + discriminant props only | `src/routes/_studio.characters.$characterId.tsx` → `CharacterDetailPage` with `back={{ kind: "studio" }}` |
-| Feature page | Live queries, layout, mutations | `src/components/assets/CharacterDetailPage.tsx` |
-| Shared feature widget | Reused editors/tiles | `EditableGenerationSlot` in `src/components/slots/GenerationSlotCard.tsx` |
-| UI primitive | Presentational, no ProductStore or adapter access | `src/components/ui/button.tsx`, `field.tsx` |
+| Route | Params + discriminant props only | `packages/studio/src/routes/_studio.characters.$characterId.tsx` → `CharacterDetailPage` with `back={{ kind: "studio" }}` |
+| Feature page | Live queries, layout, mutations | `packages/studio/src/components/assets/CharacterDetailPage.tsx` |
+| Shared feature widget | Reused editors/tiles | `EditableGenerationSlot` in `packages/studio/src/components/slots/GenerationSlotCard.tsx` |
+| UI primitive | Presentational, no ProductStore or adapter access | `packages/studio/src/components/ui/button.tsx`, `field.tsx` |
 
-Do not put library grids and detail editors in the same route file. Do not put durable writes in route files — call the concrete business command owner in `src/db/` from the feature page / widget (see the D02 owner map in state-management).
+Do not put library grids and detail editors in the same route file. Do not put durable writes in route files — call the concrete business command owner in `packages/studio/src/db/` from the feature page / widget (see the D02 owner map in state-management).
 
 ---
 
@@ -68,7 +68,7 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 
 ## Forms and Generation Slots
 
-- Label + control: wrap with `Field` from `src/components/ui/field.tsx` (`label` + `children`).
+- Label + control: wrap with `Field` from `packages/studio/src/components/ui/field.tsx` (`label` + `children`).
 - Asset text uses `AssetTextField` with a scoped keyed `useDebouncedDraft`, saving/error/retry feedback, and field-only repo patches. Do not bind an actively edited input directly to a live database row. `Field` associates label and child control IDs.
 - Slot dialogs track only uploads they created; cancellation/replacement cleans orphan uploads, including late completion after unmount. Disable overlapping save/upload/close while a commit is pending. Never delete shared committed media.
 - Preview tiles remain buttons; inspection inside dialogs uses full-image `object-contain` or video controls outside clickable tile buttons. Removal controls must remain keyboard-focusable and visible on touch devices.
@@ -78,21 +78,21 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 
 ## Styling Patterns
 
-- Explicit user preference (2026-09-22): build new audio/music and other workspaces with the existing `src/components/ui/` component library and shared theme tokens. Avoid a parallel visual system for one feature.
+- Explicit user preference (2026-09-22): build new audio/music and other workspaces with the existing `packages/studio/src/components/ui/` component library and shared theme tokens. Avoid a parallel visual system for one feature.
 - Do not use decorative left-border accent strips on panels, script rows, cards or selected list items. Communicate grouping/selection with typography, spacing, neutral separators and restrained surface changes. Functional track colors and visible keyboard focus remain meaningful UI.
 - Avoid excessive nested rounded rectangles and oversized corner radii by reducing redundant card wrappers. Keep the existing shadcn Button/Input/Textarea/Select default radius, borders, shadows and focus styling; do not flatten controls into sharp rectangles or override all controls with feature-level radius rules. User clarified this explicitly on 2026-09-22. Existing application-shell geometry remains its own contract.
 
-- Tailwind v4 + CSS variables in `src/styles.css`. Merge classes with `cn` from `src/lib/utils.ts`.
+- Tailwind v4 + CSS variables in `packages/studio/src/styles.css`. Merge classes with `cn` from `packages/studio/src/lib/utils.ts`.
 - Variants via `cva` on primitives (`buttonVariants` in `button.tsx`). Pass `className` through `cn(buttonVariants({ variant, size, className }))`.
-- General UI icons: the explicit Phosphor semantic mapping in `src/components/ui/icons.tsx`, backed by pinned `@phosphor-icons/react`. Use Regular/Fill weights on the same glyph for selection. Model/provider logos remain `@lobehub/icons`; Lucide is retained only for immutable historical development comparisons.
+- General UI icons: the explicit Phosphor semantic mapping in `packages/studio/src/components/ui/icons.tsx`, backed by pinned `@phosphor-icons/react`. Use Regular/Fill weights on the same glyph for selection. Model/provider logos remain `@lobehub/icons`; Lucide is retained only for immutable historical development comparisons.
 - shadcn config: `components.json` (style `new-york`, `cssVariables: true`, alias `@/components/ui`).
 - Shared frame and page presentation follow [Shared Desktop UI](./desktop-ui.md). Decorative motion respects reduced motion. `ClickSpark` remains only an immutable browser-regression fixture dependency; it is not mounted in the application shell.
-- Agent chat (`src/components/agent/`) is the only place that uses `@lobehub/ui` + antd ThemeProvider. Do not wrap StudioShell. Spacing uses the 4px scale (4 / 8 / 12 / 16 / 24 / 32). Body text is 12 / 14 / 16 — do not introduce 13px. Model chips in the composer use `@lobehub/icons` `ModelIcon`. Agent canvases are transparent and inherit AppFrame's single rounded working surface; do not add another rounded frame to the chat column. Its portalled header retains Agent provider context and a dedicated scoped popup host. Studio highlight tokens (`--brand` / `--primary` / `--ring`) are white, not teal.
+- Agent chat (`packages/studio/src/components/agent/`) is the only place that uses `@lobehub/ui` + antd ThemeProvider. Do not wrap StudioShell. Spacing uses the 4px scale (4 / 8 / 12 / 16 / 24 / 32). Body text is 12 / 14 / 16 — do not introduce 13px. Model chips in the composer use `@lobehub/icons` `ModelIcon`. Agent canvases are transparent and inherit AppFrame's single rounded working surface; do not add another rounded frame to the chat column. Its portalled header retains Agent provider context and a dedicated scoped popup host. Studio highlight tokens (`--brand` / `--primary` / `--ring`) are white, not teal.
 - Composer inset lives on native `.agent-composer` in `agentChat.css` (`padding: … !important`). Do **not** put that inset on `--lobe-flex-padding` / `.lobe-flex`: Tailwind v4 `* { padding: 0 }` and `:where(.lobe-flex) { padding: var(--lobe-flex-padding) }` both have zero specificity, so they cancel and the send control sits flush on the card. `ChatInputArea.Inner` also used `padding-block: 0` + `height: 100%` and made it worse. Host antd/lobe dropdowns with `getPopupContainer` → `.agent-chat-root` (theme CSS + ChatWorkspace `pointer-events: none` overlay).
 - Expanded `FloatingComposer` uses the same AntD `Input.TextArea` with `autoSize=false`. In `composerControls.css`, its direct flex item uses `flex: 1 1 auto; height: 100% !important; min-height: 0 !important` inside the existing full-height stack; footer/control rows stay nonshrinking and textarea owns overflow. `height: 0 !important` compressed the real WebKit editor to its padding at 760×520. Collapse removes the expanded selector and restores ordinary `autoSize`, without recreating the input or draft owner. Verify actual editable text and expand/collapse draft preservation in the macOS app; CSS parsing and a browser screenshot alone do not establish native layout.
 - Conversation detail (`ChatWorkspace`) and home use `AgentHeader` through the stable `AppHeaderPortal` target. Header DOM sits outside the working surface; do not retain the old absolute 52px ChatHeader mask/transcript offset. Header menus use an explicit `[data-agent-header-popup]` popup host marked `data-tauri-drag-region="false"`, avoiding an ambiguous first `.agent-chat-root` selector. `.agent-chat-column` fills its parent without additional margins, borders or corner rounding; expanded editing stays inside this same column. Agent containers use parent-relative heights, not viewport minimum heights. Body popovers retain their original `.agent-chat-root` host. Message list and `.agent-composer-dock` share `.agent-content` (`max-width: 800px`, centered) as the safe-width column — do not let the composer go full-bleed. Topic navigation uses the existing sessionStorage `cuepoint.agent.topicSidebarCollapsed`; collapse hides/inerts the retained topic body rather than remounting feature/runtime owners. Below `md`, open `TopicListBody` in a right Sheet. The external panel control is the single topic toggle. 「开启新话题」creates an empty thread via `createChatThread` and navigates to `/agent/$threadId` (not HomeWelcome). 「搜索」filters thread **titles** with `filterThreadsByTitle`. Existing header actions retain their real callbacks; no 分享 / 分栏 / 助理档案 stubs. Active thread is the route `/agent/$threadId` (home is `/agent`); do not keep it only in React state. Missing `$threadId` uses liveQuery `get() ?? null` and only redirects for the matching route ID. Empty streaming assistant rows use `ThinkingMatrix` through `renderMessage` (`message=""`) and ChatItem avatar loading while waiting for initial content. Run-backed reasoning stays in the unified execution process; legacy reasoning retains `ThinkingPanel`. Process folding, reminders and turn navigation follow [Agent Activity UI](./agent-activity-ui.md); transcript scroll, memo and avatars follow [Chat Performance](./chat-performance.md).
-- `StudioShell` and `WorkspaceChrome` share `AppFrame` from `src/components/layout/`. It owns one external top bar, a fixed 56px global icon rail at >=768, a left Sheet below 768 and one inset/rounded working surface. General application icons use the shared Phosphor mapping; selected navigation uses matching Regular/Fill weights; preserve route predicates and accessible labels. AppHeaderPortal moves actual Agent/project header presentation while retaining feature providers/callbacks. macOS uses real native traffic lights/Overlay; browser has no traffic-light placeholders and Windows/Linux retain their native title bars. `PageHeader`/`PageToolbar`/`PageContent`/`PageState` own typography/layout only; feature owners retain guards, commands, drafts and scrollports. See [Shared Desktop UI](./desktop-ui.md) for executable chrome, focus, theme and print contracts.
-- Model dropdown groups by vendor via `groupModelsByVendor` in `src/lib/ai/modelVendors.ts`. Catalog ids are often `cc-gpt-4o` / `cc-gemini-…` — do **not** `^`-anchor `gpt-` / `gemini`. Keep o-series on a word boundary (`/\bo[1-9]/`) so `photo1` stays 其他. Connector chips (not a footer Select) switch the BYOK connector inside that same panel.
+- `StudioShell` and `WorkspaceChrome` share `AppFrame` from `packages/studio/src/components/layout/`. It owns one external top bar, a fixed 56px global icon rail at >=768, a left Sheet below 768 and one inset/rounded working surface. General application icons use the shared Phosphor mapping; selected navigation uses matching Regular/Fill weights; preserve route predicates and accessible labels. AppHeaderPortal moves actual Agent/project header presentation while retaining feature providers/callbacks. macOS uses real native traffic lights/Overlay; browser has no traffic-light placeholders and Windows/Linux retain their native title bars. `PageHeader`/`PageToolbar`/`PageContent`/`PageState` own typography/layout only; feature owners retain guards, commands, drafts and scrollports. See [Shared Desktop UI](./desktop-ui.md) for executable chrome, focus, theme and print contracts.
+- Model dropdown groups by vendor via `groupModelsByVendor` in `packages/studio/src/lib/ai/modelVendors.ts`. Catalog ids are often `cc-gpt-4o` / `cc-gemini-…` — do **not** `^`-anchor `gpt-` / `gemini`. Keep o-series on a word boundary (`/\bo[1-9]/`) so `photo1` stays 其他. Connector chips (not a footer Select) switch the BYOK connector inside that same panel.
 
 ---
 
@@ -103,17 +103,17 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 - Interactive primitives keep `focus-visible` ring tokens (`focus-visible:ring-ring/50 focus-visible:ring-[3px]` on `Button`, `Input`, `Select`, etc.).
 - Decorative canvases / icons that must not be announced: `aria-hidden` (`ClickSpark` canvas; shell SVG in `StudioShell`).
 - Slot tiles expose an accessible name via `ariaLabel` / `title` into `GenerationSlotTile`.
-- Keyboard shortcuts in shot UI must yield when focus is in a form/overlay: gate with `isFormFieldTarget` from `src/lib/formFieldFocus.ts` (see `ShotEditorPage`).
+- Keyboard shortcuts in shot UI must yield when focus is in a form/overlay: gate with `isFormFieldTarget` from `packages/studio/src/lib/formFieldFocus.ts` (see `ShotEditorPage`).
 
 ---
 
 ## Examples
 
-- Thin studio route: `src/routes/_studio.characters.$characterId.tsx`
-- Shared asset editor: `src/components/assets/CharacterDetailPage.tsx` (also Scene/Prop/Style detail pages)
-- Generation UI: `EditableGenerationSlot` in `src/components/slots/GenerationSlotCard.tsx`
-- Primitive + CVA: `src/components/ui/button.tsx`
-- Form label wrapper: `src/components/ui/field.tsx`
+- Thin studio route: `packages/studio/src/routes/_studio.characters.$characterId.tsx`
+- Shared asset editor: `packages/studio/src/components/assets/CharacterDetailPage.tsx` (also Scene/Prop/Style detail pages)
+- Generation UI: `EditableGenerationSlot` in `packages/studio/src/components/slots/GenerationSlotCard.tsx`
+- Primitive + CVA: `packages/studio/src/components/ui/button.tsx`
+- Form label wrapper: `packages/studio/src/components/ui/field.tsx`
 
 ---
 
@@ -137,10 +137,10 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 
 ## References
 
-- `src/components/assets/CharacterDetailPage.tsx`
-- `src/components/slots/GenerationSlotCard.tsx`
-- `src/components/ui/button.tsx`, `field.tsx`
-- `src/lib/formFieldFocus.ts`
+- `packages/studio/src/components/assets/CharacterDetailPage.tsx`
+- `packages/studio/src/components/slots/GenerationSlotCard.tsx`
+- `packages/studio/src/components/ui/button.tsx`, `field.tsx`
+- `packages/studio/src/lib/formFieldFocus.ts`
 - `components.json`
 
 
@@ -216,7 +216,7 @@ Shot and beat scalar text uses `TextDraftField` through `ShotTextField`/`BeatTex
 ## E01 manual editor departure ownership (2026-10-09)
 
 ### 1. Scope / Trigger
-Manual dialogs/sheets whose draft must survive Escape, dismissal, owner replacement and route history changes; pending mutations must retain their owning UI. Source contracts live in `src/lib/useManualDraftGuard.tsx`.
+Manual dialogs/sheets whose draft must survive Escape, dismissal, owner replacement and route history changes; pending mutations must retain their owning UI. Source contracts live in `packages/studio/src/lib/useManualDraftGuard.tsx`.
 
 ### 2. Signatures
 `ManualDraftState = {dirty: boolean; pending: boolean; routeDirty?: boolean; routePending?: boolean}`. `ManualDraftDeparture = (leave: () => void, discard?: () => void | Promise<void>) => void`. `useManualDraftDeparture(dirty, pending, onDiscard, {readState?, route?})` returns stable `requestDeparture` and JSX `confirmation`. `useManualDraftGuard(dirty, pending, onDiscard)` retains its route-only JSX API.
@@ -238,7 +238,7 @@ Freeze the editor opening identity, revision and input baseline. Publish current
 Good: local close -> browser Back -> continue -> original draft remains; explicit discard resolves the original close. Base: an unchanged form closes immediately. Bad: clearing editing before departure resolves, treating every open form as dirty, or invoking setSelectionRange with null positions.
 
 ### 6. Tests Required
-`tests/e01ManualDraftDeparture.test.ts` executes synchronous refs, stale callbacks, failure/retry and overlapping requests. `scripts/e01-drafts-browser-regression.mjs` executes actual Radix/TanStack/IndexedDB forms; preserve B01 compatibility when changing the shared guard. E01 independent supplements cover nested promotion and real goal/plan/CAS/delete ownership. Full E01 accepted input hashes and limits are in the E task's independent review.
+`tests/e01ManualDraftDeparture.test.ts` executes synchronous refs, stale callbacks, failure/retry and overlapping requests. `tooling/e01-drafts-browser-regression.mjs` executes actual Radix/TanStack/IndexedDB forms; preserve B01 compatibility when changing the shared guard. E01 independent supplements cover nested promotion and real goal/plan/CAS/delete ownership. Full E01 accepted input hashes and limits are in the E task's independent review.
 
 ### 7. Wrong vs Correct
 Wrong: `void write(); close()` or a Dialog callback that unconditionally clears local editing. Correct: guard the frozen owner, await its command, retain rejected input, and close only its successful initiating session. Wrong: add the entire changing departure object to an effect. Correct: invoke/depend on its stable requestDeparture binding. Controlled Chromium evidence does not prove WebKit, OS unload UI or paid providers.
@@ -323,7 +323,7 @@ Read before changing the third connections subsection "模型目录" inside `/se
 ## Landing page (standalone entry) (2026-10-14)
 
 ### 1. Scope / Trigger
-Read before touching `landing.html`, `src/landing/**`, `scripts/landing-budget.mjs`, `public/robots.txt|sitemap.xml` or the nginx `location = /` rule. The landing page is a second Vite entry (`landing.html` + `src/landing/main.tsx`), served at `/` by nginx; the app stays at `/agent`. The desktop (Tauri) build uses its own config and never contains it.
+Read before touching `apps/site/landing.html`, `apps/site/src/**`, `tooling/landing-budget.mjs`, `apps/site/public/robots.txt|sitemap.xml` or nginx's `location = /` rule. The site builds separately from web; root build assembles both outputs. Production serves the site at `/` and the app at `/agent`. Desktop uses its own config and excludes the site.
 
 ### 2. Signatures / Owners
 - `main.tsx` mounts `Landing` and calls `initUmami()`. `#root` in `landing.html` holds static markup equivalent to the React render; React renders beside it and swaps only after a successful commit, so a script or render failure leaves the readable static page (SEO included). There is no `<noscript>`; the static markup is the no-JS version.
@@ -334,8 +334,8 @@ Read before touching `landing.html`, `src/landing/**`, `scripts/landing-budget.m
 - Download/GitHub (`download/`): `GET api.github.com/repos/ROYIANS/Cuepoint/releases?per_page=30` (`releases/latest` 404s while only prereleases exist). Keep non-draft tags `^desktop-v\d+\.\d+\.\d+$`, numeric semver sort, assets matched by the strict names in `release-policy.mjs`, every URL must normalize (`new URL().href`) to under `https://github.com/ROYIANS/Cuepoint/releases/download/` (or the releases page for `html_url`). 6 h `localStorage` cache (`cuepoint.landing.release`, `cuepoint.landing.stars`), 8 s timeout, fallback to the Releases page. Stars are shown only at `STAR_DISPLAY_THRESHOLD` (50) or more.
 
 ### 3. Contracts
-- Imports are limited to relative `src/landing` modules, `react`, `react-dom` and the dependency-free `@/lib/umami` and `@/lib/brand`. Never import `@/db`, `@/lib/storage`, Dexie, zod, TanStack Router, `@tauri-apps/*`, antd, `@lobehub/*`, `src/main.tsx`, `src/styles.css` or `@/components/*` (`tests/landingBoundary.test.ts` for source, `landing:budget` for the built closure). `motion` is not used.
-- Token values in `landing.css` equal `src/styles.css` (`tests/landingTokens.test.ts`). Every copy entry is `{text, evidence}` with an existing evidence path; no text may contain a phrase from `tests/fixtures/landing/forbiddenClaims.ts`.
+- Imports stay inside site source or declared React and lightweight distribution exports. Never import studio, product storage, Agent, Dexie, zod, TanStack Router, Tauri, antd or LobeHub through any direct/transitive path. Studio's private `@/` alias is unavailable to site. Source boundary tests and `landing:budget` verify the real built closure; no motion dependency is needed by the current site.
+- Token values in `landing.css` equal `packages/studio/src/styles.css` (`tests/landingTokens.test.ts`). Every copy entry is `{text, evidence}` with an existing evidence path; no text may contain a phrase from `tests/fixtures/landing/forbiddenClaims.ts`.
 - External requests: only `api.github.com` (releases, repo stars) and Google Fonts (`text=` subset); no application or storage requests. Storage use: the three `cuepoint.landing.*` keys above, always inside try/catch.
 - Budgets: first-screen JS <= 120 KB gzip, CSS <= 15 KB gzip; the film renderers are a lazy chunk; the budget script also fails if the desktop output contains landing files.
 

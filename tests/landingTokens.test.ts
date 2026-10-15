@@ -1,8 +1,8 @@
 import {readFileSync} from "node:fs";
 import {describe, expect, it} from "vitest";
 
-const appCss = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
-const landingCss = readFileSync(new URL("../src/landing/styles/landing.css", import.meta.url), "utf8");
+const appCss = readFileSync(new URL("../packages/studio/src/styles.css", import.meta.url), "utf8");
+const landingCss = readFileSync(new URL("../apps/site/src/styles/landing.css", import.meta.url), "utf8");
 
 const TOKENS = [
     "--radius", "--surface-app", "--surface-panel", "--surface-elevated", "--background", "--foreground",

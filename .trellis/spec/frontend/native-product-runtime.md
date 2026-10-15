@@ -100,7 +100,7 @@ path empty, `/` or `/index.html`; hash routes remain allowed. Do not broaden
 trusted document paths to repair renderer routing. Corresponding-host startup
 and fixed-profile acceptance remain independent from helper unit tests.
 
-The official `pnpm --dir desktop/tauri build:app` entry point defaults normal
+The official `pnpm --dir apps/desktop build:app` entry point defaults normal
 packaging to `product-sqlite`. `--sqlite-product` is optional for that normal
 lane. An explicit `--isolated-product` without it remains the IndexedDB reference;
 adding it selects the complete isolated SQLite product. `--acceptance` rejects
@@ -188,7 +188,7 @@ register_response closes resources immediately for JS null-body statuses
 official. Keep vendor licenses, exact patch, crate checksum/source hashes and
 regressions; a JS rejected read alone is insufficient disconnect proof.
 Provenance is recorded in
-`desktop/tauri/src-tauri/vendor/tauri-plugin-http/CUEPOINT-PATCH.md`; task evidence
+`apps/desktop/src-tauri/vendor/tauri-plugin-http/CUEPOINT-PATCH.md`; task evidence
 retains `http-cancellation.patch` and `http-upstream-provenance.json`. Update the
 patch and hashes together whenever the vendored source changes.
 
@@ -481,12 +481,12 @@ published status truthful and refuse ambiguous recovery.
 
 ## Workspace registry compatibility (2026-10-14)
 
-`schema.json` (`src/lib/storage/schema.json`) is bundled into the Rust registry and its SHA-256 is
+`schema.json` (`packages/studio/src/lib/storage/schema.json`) is bundled into the Rust registry and its SHA-256 is
 stored in `product_workspace.registry_hash` when a workspace is created. An installed workspace only
 opens while that hash matches the running build, so adding a table to the registry breaks every
 existing local workspace.
 
-- Adding a table means adding a migration in `desktop/tauri/src-tauri/src/full_product_store/mod.rs`
+- Adding a table means adding a migration in `apps/desktop/src-tauri/src/full_product_store/mod.rs`
   (`migrate_registry`): keep the previous hash in `LEGACY_REGISTRY_HASH`, list the new tables in
   `LEGACY_REGISTRY_ADDED`, and verify the stored `product_tables` set matches the registry minus
   those names. Anything else is left for the schema check to reject.

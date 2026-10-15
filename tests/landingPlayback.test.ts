@@ -2,11 +2,11 @@
 import {act, createElement} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {Landing} from "@/landing/Landing";
-import {EXIT_SECONDS, FILM_PLAY_SECONDS, playbackToProgress, progressToPlaybackTime, SCENE_BEATS, SCENE_TIMES, sceneIndexAtTime, sceneLabel} from "@/landing/film/playback";
-import {STAGE_SCENES} from "@/landing/film/scenes";
-import {progressToFrame, sceneProgressWindow} from "@/landing/film/timeline";
-import {CREDITS_SCROLL_SECONDS, createPlayback, type PlaybackEnv} from "@/landing/film/usePlayback";
+import {Landing} from "../apps/site/src/Landing";
+import {EXIT_SECONDS, FILM_PLAY_SECONDS, playbackToProgress, progressToPlaybackTime, SCENE_BEATS, SCENE_TIMES, sceneIndexAtTime, sceneLabel} from "../apps/site/src/film/playback";
+import {STAGE_SCENES} from "../apps/site/src/film/scenes";
+import {progressToFrame, sceneProgressWindow} from "../apps/site/src/film/timeline";
+import {CREDITS_SCROLL_SECONDS, createPlayback, type PlaybackEnv} from "../apps/site/src/film/usePlayback";
 
 describe("pacing", () => {
     it("has one beat per stage scene, adding up to the 60 s film", () => {

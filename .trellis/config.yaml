@@ -76,6 +76,20 @@ max_journal_lines: 2000
 # Default package used when --package is not specified.
 # default_package: frontend
 
+packages:
+  web:
+    path: apps/web
+  desktop:
+    path: apps/desktop
+  site:
+    path: apps/site
+  studio:
+    path: packages/studio
+  distribution:
+    path: packages/distribution
+
+default_package: studio
+
 #-------------------------------------------------------------------------------
 # Channel worker OOM guard
 #-------------------------------------------------------------------------------

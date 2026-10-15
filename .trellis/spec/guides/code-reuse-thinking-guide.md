@@ -85,7 +85,7 @@ shared type guard / normalizer / projection before adding a third reader.
 
 **Bad**: Copying LobeHub `virtua` + zustand Conversation store, or `scrollIntoView({ behavior: "smooth" })` on every SSE token.
 
-**Good**: Cuepoint helpers in `src/lib/chatScroll.ts` + memo rows. Read [Chat Performance](../frontend/chat-performance.md) before adding a list library.
+**Good**: Cuepoint helpers in `packages/studio/src/lib/chatScroll.ts` + memo rows. Read [Chat Performance](../frontend/chat-performance.md) before adding a list library.
 
 ---
 

@@ -6,7 +6,7 @@
 
 ## Overview
 
-Current product data reads use `useProductQuery(tx => ...)` or `useProductQueryState` from `src/lib/storage/hooks.ts`. The explicit readonly transaction must also reach nested readers. Dexie live-query observation stays inside the browser adapter. Mutations use the concrete business command owner under `src/db/`; the D02 map remains in [State Management](./state-management.md). Read the complete [shared storage contract](./shared-product-storage.md). Do not fetch live records with one-shot `useEffect` + `db.*.get`.
+Current product data reads use `useProductQuery(tx => ...)` or `useProductQueryState` from `packages/studio/src/lib/storage/hooks.ts`. The explicit readonly transaction must also reach nested readers. Dexie live-query observation stays inside the browser adapter. Mutations use the concrete business command owner under `packages/studio/src/db/`; the D02 map remains in [State Management](./state-management.md). Read the complete [shared storage contract](./shared-product-storage.md). Do not fetch live records with one-shot `useEffect` + `db.*.get`.
 
 ---
 
@@ -191,7 +191,7 @@ Execute the actual component in an isolated native browser; count executed compo
 
 ### 7. Wrong vs Correct / Attribution and Limits
 
-Wrong: request-only/fake-clock native performance claims; lifecycle freeze equals document.hidden; cross-RPC pending ID matching; whole-history max treated as current ownership; 2502 edges described as all value edges. Correct: finite executed-callback evidence and contemporaneous cancellation; explicit handler seam vs OS throttle; original/current contracts distinct. Current AST attribution is 420 TS files, 2502 total edges, zero parse errors and zero static value cycles. Writer root closure is 759 files (src/tests/scripts), current full gate is 766 inputs including seven configs. Typed additions remain separate from QG01 debt acceptance; full-app/device/CI/battery/latency claims require their own evidence.
+Wrong: request-only/fake-clock native performance claims; lifecycle freeze equals document.hidden; cross-RPC pending ID matching; whole-history max treated as current ownership; 2502 edges described as all value edges. Correct: finite executed-callback evidence and contemporaneous cancellation; explicit handler seam vs OS throttle; original/current contracts distinct. Current AST attribution is 420 TS files, 2502 total edges, zero parse errors and zero static value cycles. Writer root closure is 759 files (packages/studio/src/tests/scripts), current full gate is 766 inputs including seven configs. Typed additions remain separate from QG01 debt acceptance; full-app/device/CI/battery/latency claims require their own evidence.
 
 ## E07 effect ownership and deferred reconciliation
 
@@ -231,7 +231,7 @@ Wrong: automatic Hook autofix or fake hook rendering as proof of all React sched
 Read before writing or editing any `useProductQuery` / `useProductQueryState` callback. Found through the new error details dialog: opening a chat topic crashed with `PrematureCommitError` ("Transaction committed too early").
 
 ### 2. Signatures
-`useProductQuery(query, deps)` runs `liveQuery(() => transaction("r", ALL_TABLES, query))` (`src/lib/storage/browser.ts`). The hook rethrows a query failure during rendering, so a failed query surfaces as a page crash.
+`useProductQuery(query, deps)` runs `liveQuery(() => transaction("r", ALL_TABLES, query))` (`packages/studio/src/lib/storage/browser.ts`). The hook rethrows a query failure during rendering, so a failed query surfaces as a page crash.
 
 ### 3. Contracts
 The callback runs inside one read transaction over every table. Await only Dexie operations (`db.*`, or helpers that take the `db`/`tx` you were given). Any other await (a dynamic `import()`, a timer, `fetch`, `crypto.subtle`, a lock request, a file or blob read) lets the transaction commit early and the query fails with `PrematureCommitError`. Work that needs such an await runs before the query (and its result is passed in or kept in component state), or the value is read with `useEffect` + `useState`, discarding a stale result on cleanup.

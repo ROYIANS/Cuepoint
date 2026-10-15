@@ -1,9 +1,9 @@
 import {existsSync} from "node:fs";
 import {resolve} from "node:path";
 import {describe, expect, it} from "vitest";
-import {HERO_NOTE, ONLINE_NOTES, OPEN_SOURCE, PRIVACY, SCENE_COPY, type Claim} from "@/landing/content/copy";
-import {FAQ} from "@/landing/content/faq";
-import {SCENES} from "@/landing/film/scenes";
+import {HERO_NOTE, ONLINE_NOTES, OPEN_SOURCE, PRIVACY, SCENE_COPY, type Claim} from "../apps/site/src/content/copy";
+import {FAQ} from "../apps/site/src/content/faq";
+import {SCENES} from "../apps/site/src/film/scenes";
 import {FORBIDDEN_CLAIMS} from "./fixtures/landing/forbiddenClaims";
 
 const sceneCopy = Object.values(SCENE_COPY);

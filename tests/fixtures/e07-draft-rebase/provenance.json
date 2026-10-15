@@ -1,5 +1,5 @@
 {
-  "sourcePath": "src/lib/debouncedDraft.ts",
+  "sourcePath": "packages/studio/src/lib/debouncedDraft.ts",
   "snapshotPath": "tests/fixtures/e07-draft-rebase/debouncedDraft-before.ts",
   "sha256": "13b31cb3c090df4a3c5ad46a1a8b6897c58c109bf8d7df4e3da0b1ee78e1eebd",
   "capturedOn": "2026-10-09",

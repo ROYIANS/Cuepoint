@@ -122,7 +122,7 @@ token are part of this first package flow.
 
 ## Refresh the model catalog baseline before each release
 
-The bundled Models.dev baseline (`src/lib/ai/modelCatalog/baseline.generated.json`)
+The bundled Models.dev baseline (`packages/studio/src/lib/ai/modelCatalog/baseline.generated.json`)
 is a projection of the pinned `@opencode-ai/models` package. Before every release:
 
 1. `pnpm add -D -E @opencode-ai/models@latest` (exact version, no range).
@@ -140,15 +140,15 @@ projection scope before committing.
 On the project owner's Mac, use the approved local pnpm explicitly:
 
 ```sh
-/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir desktop/tauri build:app
+/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm --dir apps/desktop build:app
 ```
 
 The dedicated release helpers have closed named arguments:
 
 ```text
 build:release --target TARGET_ID --output ABSOLUTE_FRESH_DIRECTORY
-node desktop/tauri/scripts/collect-release.mjs --input DOWNLOAD_DIRECTORY --selection SELECTION_PATH --output ABSOLUTE_FRESH_DIRECTORY
-node desktop/tauri/scripts/publish-draft.mjs --directory COLLECTED_RELEASE_DIRECTORY
+node apps/desktop/scripts/collect-release.mjs --input DOWNLOAD_DIRECTORY --selection SELECTION_PATH --output ABSOLUTE_FRESH_DIRECTORY
+node apps/desktop/scripts/publish-draft.mjs --directory COLLECTED_RELEASE_DIRECTORY
 ```
 
 `TARGET_ID` is `macos-arm64`, `macos-x64`, `windows-x64` or `linux-x64`.
@@ -164,7 +164,7 @@ The existing `finalize-release.mjs --receipt RECEIPT_PATH --checks CHECK_REPORT_
 and external smoke tools are standalone test utilities. They accept actual
 check reports when invoked explicitly and are not part of packaging or draft
 delivery. Developer quality and test commands are documented in the
-[desktop README](../desktop/tauri/README.md).
+[desktop README](../apps/desktop/README.md).
 
 The release helper disables Tauri's bundle-type binary patching to prevent
 bundle-type mutations and records the built executable's hash. Packaging does
@@ -174,7 +174,7 @@ app and DMG internally to retain the signed app for hashing; the DMG is the only
 downloadable installer. These choices follow the behavior of the
 [pinned Tauri bundler](https://github.com/tauri-apps/tauri/blob/tauri-cli-v2.12.1/crates/tauri-bundler/src/bundle.rs).
 
-Local tool homes remain under `desktop/tauri/.tools`; no shell profile or global
+Local tool homes remain under `apps/desktop/.tools`; no shell profile or global
 Cargo/Rust home is changed. Hosted tool resolution is an explicit CI mode with
 pinned versions. Test hooks, storage probes, fixture acceptance assets and
 runner evidence do not belong in normal installer payloads.

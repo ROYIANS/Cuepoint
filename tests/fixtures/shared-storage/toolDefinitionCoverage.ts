@@ -1,11 +1,11 @@
 import {appendFileSync,mkdirSync} from "node:fs";
 import {join} from "node:path";
 import {expect} from "vitest";
-import {defineTool as originalDefineTool} from "../../../src/lib/agent/toolDefinition?coverage-original";
+import {defineTool as originalDefineTool} from "../../../packages/studio/src/lib/agent/toolDefinition?coverage-original";
 import type {TypedToolDefinition,ToolBody} from "@/lib/agent/toolDefinition";
 import type {Spec} from "@/lib/agent/businessSchemas";
 
-export * from "../../../src/lib/agent/toolDefinition?coverage-original";
+export * from "../../../packages/studio/src/lib/agent/toolDefinition?coverage-original";
 
 function record(name:string,method:"parse"|"prepare"|"execute",outcome:"fulfilled"|"rejected") {
     const directory=process.env.CUEPOINT_TOOL_COVERAGE_DIR;

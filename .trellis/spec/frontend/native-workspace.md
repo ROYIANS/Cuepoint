@@ -6,7 +6,7 @@ Apply when changing the Tauri 2 shell, retained Rust SQLite workspace bridge, pa
 
 ## 2. Signatures
 
-The retained prototype renderer owns the closed `workspace_request` envelope through `desktop/tauri/ui/bridge.ts`. Full-product storage uses the separate closed `product_store_request` protocol and the shared adapter; it never routes Agent/business commands through the prototype video API. Independent exports use the system Save service:
+The retained prototype renderer owns the closed `workspace_request` envelope through `apps/desktop/ui/bridge.ts`. Full-product storage uses the separate closed `product_store_request` protocol and the shared adapter; it never routes Agent/business commands through the prototype video API. Independent exports use the system Save service:
 
 ```ts
 nativeWorkspace.ensure(): Promise<NativeWorkspaceState>
@@ -19,7 +19,7 @@ native.save(blob, projectId, format, mode?, recordedMime?): Promise<Result>
 acceptanceRequest({type: "setup" | "ready" | "report" | "openDeniedProbe", json?})
 ```
 
-`nativeWorkspace` sends the closed `workspace_request` envelope through the Tauri runtime. It serializes requests, shares first-load initialization, and validates the entire reply with `nativeProductReplySchema` before accepting a monotonic `generation`. Explicit SQLite product-adapter tests and historical acceptance bridges import the same closed DTO schemas from `src/lib/nativeWorkspaceContract.ts`. Common normal-product export uses the independent `product_save_*` service documented in native-product-runtime.md; it does not invent a SQLite project for `saveGenerated`.
+`nativeWorkspace` sends the closed `workspace_request` envelope through the Tauri runtime. It serializes requests, shares first-load initialization, and validates the entire reply with `nativeProductReplySchema` before accepting a monotonic `generation`. Explicit SQLite product-adapter tests and historical acceptance bridges import the same closed DTO schemas from `packages/studio/src/lib/nativeWorkspaceContract.ts`. Common normal-product export uses the independent `product_save_*` service documented in native-product-runtime.md; it does not invent a SQLite project for `saveGenerated`.
 
 Product video actions include `createVideoProject {project, video}`,
 `patchVideoProject {projectId, patch, baseline?}`, `videoState {projectId}`,
@@ -128,7 +128,7 @@ await navigator.mediaDevices.getUserMedia({audio: deviceId ? {deviceId: {exact: 
 ## Native bundle icon
 
 Native icon generation is an asset contract, not a change to the shared Web
-artwork. `desktop/tauri/scripts/generate-native-icons.py` composites the existing
+artwork. `apps/desktop/scripts/generate-native-icons.py` composites the existing
 1024-pixel `public/brand/logo.webp` directly over opaque `#0c0c0c`, without cropping,
 resizing or reconstructing the source mark. It uses the installed pinned Tauri
 CLI and installs only desktop PNG, ICO and ICNS resources. The ICNS preserves the

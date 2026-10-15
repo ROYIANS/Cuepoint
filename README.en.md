@@ -193,8 +193,11 @@ Open the URL printed by Vite, usually `http://localhost:5173`. Basic startup req
 
 | Command | Purpose |
 | --- | --- |
-| `pnpm dev` | Start the Vite development server |
-| `pnpm build` | Produce static production files in `dist/` |
+| `pnpm dev` | Start the web application development server |
+| `pnpm dev:site` | Start the independent landing site |
+| `pnpm --filter @cuepoint/desktop build:frontend` | Build the normal desktop frontend |
+| `pnpm quality` / `pnpm quality:self-test` | Check all owned sources and verify gate failure cases |
+| `pnpm build` | Build web/site separately and assemble their checked output in `dist/` |
 | `pnpm preview` | Preview the production build locally |
 | `pnpm lint` | Run `tsc -b` for TypeScript checking |
 | `pnpm test` | Run the complete Vitest suite |
@@ -294,36 +297,28 @@ After deployment, inspect the browser's Network panel for the script and collect
 | Verification and deployment | Vitest, fake-indexeddb, TypeScript, GitHub Actions, Docker / Nginx |
 
 ```text
-src/
-├── routes/                 # Studio and project file routes
-├── components/
-│   ├── studio/             # Navigation, projects, IP, materials, connections
-│   ├── agent/              # Chat, tasks, references, execution, outcomes
-│   ├── story/ & shots/     # Story and shot editors
-│   ├── assets/ & produce/  # Creative assets, production checks, delivery
-│   ├── audio/ & music/     # Audio and music workspaces
-│   ├── memory/             # Project memory management
-│   └── ui/                 # Shared UI components
-├── db/                     # Database versions, repositories, transactions
-├── domain/                 # Project, Agent, audio, music types and rules
-└── lib/
-    ├── ai/                 # Model catalog, protocols, provider clients
-    ├── agent/              # Tools, context, execution, generation
-    ├── audio/              # Recording, playback, editing, mixdown, WAV
-    ├── audioGeneration/    # Audio/music generation runtime
-    └── references/         # Reference import, extraction, packaging
-public/brand/               # Product identity and icons
-tests/                      # Unit, repository, and runtime tests
-scripts/                    # Model catalog baseline and release helper scripts
-deploy/                     # Nginx configuration
-.github/workflows/          # Quality gate and image publication
-docs/                       # Product and architecture planning
-.trellis/                   # Development specs, tasks, session records
+apps/
+├── web/                    # Browser HTML, bootstrap and Vite configuration
+├── desktop/                # Tauri entry, Rust runtime, native/release tooling
+│   └── reference/electron/ # Retained historical prototype
+└── site/                   # Independent lightweight landing site
+packages/
+├── studio/                 # Shared product used by web and desktop
+│   └── src/                # Existing routes, components, db, domain and lib
+└── distribution/           # Brand, analytics, release/version/platform data
+    └── public/brand/       # Shared product identity assets
+tooling/                    # Workspace, build, quality, model/native helpers
+tests/                      # Cross-package integration and permanent tests
+quality/                    # Source ownership, exact debt/retention contracts
+deploy/                     # Nginx site-root and app SPA fallback
+.github/workflows/          # Root quality/GHCR and desktop packaging lanes
+docs/                       # Product and architecture documentation
+.trellis/                   # Development specs, tasks and session records
 ```
 
 ## Quality checks and contributing
 
-Read [`AGENTS.md`](AGENTS.md) and the relevant [Trellis development guidelines](.trellis/spec/frontend/index.md) before making changes. Persist project data through repositories and transactions in `src/db/`. Preserve project ownership, revision conflict checks, and import/export compatibility.
+Read [`AGENTS.md`](AGENTS.md) and the relevant [Trellis development guidelines](.trellis/spec/frontend/index.md) before making changes. Persist project data through repositories and transactions in `packages/studio/src/db/`. Preserve project ownership, revision conflict checks, and import/export compatibility.
 
 Validate changes according to their scope. The complete release gate is:
 

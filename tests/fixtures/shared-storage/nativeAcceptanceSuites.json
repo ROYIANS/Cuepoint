@@ -17,7 +17,7 @@
     "tests/agentBusiness.test.ts",
     "tests/agentContextualOwnerRecovery.test.ts",
     "tests/deviceSettings.test.ts",
-    "tests/agentExecutionSummary.test.ts",
+    "tests/agentMessagePresentation.test.ts",
     "tests/agentFilmScriptImpact.test.ts",
     "tests/agentFinishingCheck.test.ts",
     "tests/agentFinishingCheckPrompt.test.ts",

@@ -33,7 +33,7 @@ jobs:
           node-version: 24.11.0
       - name: Closed target and source-version policy
         id: policy
-        run: node desktop/tauri/scripts/prepare-release.mjs
+        run: node apps/desktop/scripts/prepare-release.mjs
 
   build:
     needs: prepare
@@ -63,11 +63,11 @@ jobs:
         # The shared tool resolver requires rustfmt's path; packaging never runs it.
         run: rustup toolchain install 1.99.0 --profile minimal --component rustfmt --target '${{ matrix.triple }}'
       - name: Deliberate hosted executable resolution
-        run: node desktop/tauri/scripts/configure-hosted-tools.mjs
+        run: node apps/desktop/scripts/configure-hosted-tools.mjs
       - name: Frozen dependencies
         run: |
-          node desktop/tauri/scripts/tools.mjs pnpm --dir ../.. install --frozen-lockfile
-          node desktop/tauri/scripts/tools.mjs pnpm install --frozen-lockfile
+          node apps/desktop/scripts/tools.mjs pnpm --dir ../.. install --frozen-lockfile
+          node apps/desktop/scripts/tools.mjs pnpm install --frozen-lockfile
       - name: Linux native and media dependencies
         if: runner.os == 'Linux'
         run: |
@@ -76,7 +76,7 @@ jobs:
       - name: Fresh normal product installers
         env:
           CARGO_TARGET_DIR: ${{ runner.temp }}/cuepoint-release-target
-        run: node desktop/tauri/scripts/build-release.mjs --target '${{ matrix.target }}' --output "$RUNNER_TEMP/target-package"
+        run: node apps/desktop/scripts/build-release.mjs --target '${{ matrix.target }}' --output "$RUNNER_TEMP/target-package"
       - name: Upload exact packaged target
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6, verified 2026-10-12
         with:
@@ -89,7 +89,7 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: desktop-diagnostics-${{ matrix.target }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: desktop/tauri/.release/builds
+          path: apps/desktop/.release/builds
           if-no-files-found: warn
           retention-days: 14
 
@@ -112,14 +112,14 @@ jobs:
         id: selection
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node desktop/tauri/scripts/select-release-artifacts.mjs --output "$RUNNER_TEMP/selected-artifacts.json"
+        run: node apps/desktop/scripts/select-release-artifacts.mjs --output "$RUNNER_TEMP/selected-artifacts.json"
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7, verified 2026-10-12
         with:
           artifact-ids: ${{ steps.selection.outputs.ids }}
           path: ${{ runner.temp }}/targets
           merge-multiple: false
       - name: Exact source, receipt and payload closure
-        run: node desktop/tauri/scripts/collect-release.mjs --input "$RUNNER_TEMP/targets" --selection "$RUNNER_TEMP/selected-artifacts.json" --output "$RUNNER_TEMP/release-set"
+        run: node apps/desktop/scripts/collect-release.mjs --input "$RUNNER_TEMP/targets" --selection "$RUNNER_TEMP/selected-artifacts.json" --output "$RUNNER_TEMP/release-set"
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: desktop-set-${{ github.run_id }}-${{ github.run_attempt }}
@@ -147,7 +147,7 @@ jobs:
         id: release-set
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node desktop/tauri/scripts/select-release-artifacts.mjs --kind set --output "$RUNNER_TEMP/selected-set.json"
+        run: node apps/desktop/scripts/select-release-artifacts.mjs --kind set --output "$RUNNER_TEMP/selected-set.json"
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           artifact-ids: ${{ steps.release-set.outputs.ids }}
@@ -156,4 +156,4 @@ jobs:
       - name: Create or exactly resume an owned draft prerelease
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node desktop/tauri/scripts/publish-draft.mjs --directory "$RUNNER_TEMP/release-set"
+        run: node apps/desktop/scripts/publish-draft.mjs --directory "$RUNNER_TEMP/release-set"

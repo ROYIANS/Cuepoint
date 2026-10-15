@@ -6,14 +6,20 @@
 
 ## Overview
 
-File routes under `src/routes/`. Feature UI under `src/components/`. Domain types in `src/domain/types.ts`. IndexedDB in `src/db/`.
+Application entries live in `apps/web`, `apps/desktop` and `apps/site`. Browser and desktop import the same `@cuepoint/studio/bootstrap`; the site consumes only lightweight `@cuepoint/distribution` exports. The repository uses pnpm workspaces, declared dependencies and explicit export maps.
+
+Shared product routes, components, domain types and business commands currently remain under `packages/studio/src/{routes,components,domain,db,lib}`. This is the application-boundary phase; the subsequent feature-organization task owns their vertical restructuring. Browser/native persistence already uses the shared ProductStore, rather than an IndexedDB-only db layer.
+
+Canonical product contracts remain in `.trellis/spec/frontend`. Package-specific indexes select them under `.trellis/spec/{web,desktop,site,studio,distribution}`; `get_context.py --mode packages` lists actual owners. Unqualified module names below refer to studio unless another owner is stated.
+
+See [Monorepo Boundaries](./monorepo-boundaries.md) for package exports, source coverage, build assembly and acceptance contracts.
 
 ---
 
 ## Directory Layout
 
 ```
-src/
+packages/studio/src/
 ├── routes/
 │   ├── _studio.tsx                  # StudioShell
 │   ├── _studio.index.tsx            # redirect → /agent
@@ -67,9 +73,9 @@ Project world owns project-scoped character, scene, prop, and style detail route
 
 ## Examples
 
-- Studio create: `src/components/studio/AssetLibraryPages.tsx` → `/characters/$characterId`
-- Studio detail: `src/routes/_studio.characters.$characterId.tsx` passes `back={{ kind: "studio" }}`
-- Project detail: `src/routes/p.$projectId.assets.characters.$characterId.tsx` passes `back={{ kind: "project", projectId }}`
+- Studio create: `packages/studio/src/components/studio/AssetLibraryPages.tsx` → `/characters/$characterId`
+- Studio detail: `packages/studio/src/routes/_studio.characters.$characterId.tsx` passes `back={{ kind: "studio" }}`
+- Project detail: `packages/studio/src/routes/p.$projectId.assets.characters.$characterId.tsx` passes `back={{ kind: "project", projectId }}`
 
 ## Studio navigation and project kinds (2026-10-10)
 
@@ -81,7 +87,7 @@ Project world owns project-scoped character, scene, prop, and style detail route
 
 ### Production database owners (D02)
 
-`src/db/` keeps a flat business responsibility structure. Use projects, episodes/beats, shots, creative assets, media retention, studio asset reuse, connectors and chat owners directly; complete cross-domain project/thread lifecycle commands live in `cascadeCommands.ts`. Pure constructors are in `productionRecords.ts`; shared persistence guards and `PRODUCTION_TABLES` are in `productionShared.ts`. Neither support owner imports command owners. Schema/migrations remain in `database.ts`; audio tables remain in `audioShared.ts`. The old omnibus `repo.ts` is removed, with no replacement aggregate facade. See the executable D02 contract in state-management for signatures, rollback/retention and test rules.
+`packages/studio/src/db/` keeps a flat business responsibility structure. Use projects, episodes/beats, shots, creative assets, media retention, studio asset reuse, connectors and chat owners directly; complete cross-domain project/thread lifecycle commands live in `cascadeCommands.ts`. Pure constructors are in `productionRecords.ts`; shared persistence guards and `PRODUCTION_TABLES` are in `productionShared.ts`. Neither support owner imports command owners. Schema/migrations remain in `database.ts`; audio tables remain in `audioShared.ts`. The old omnibus `repo.ts` is removed, with no replacement aggregate facade. See the executable D02 contract in state-management for signatures, rollback/retention and test rules.
 
 
 ## Feature command, session and codec owners
@@ -98,8 +104,8 @@ Shot pages consume named commands, a keyboard adapter, typed text-column mapping
 
 ## Settings and shared desktop releases (2026-10-14)
 
-`components/settings/` owns settings navigation, a common visible-section header, neutral rounded groups with divided rows, local preference reads/writes and update interaction hooks. `components/studio/ConnectorsPage.tsx` exports the embedded `ConnectorsSection`. `lib/desktopRelease/` owns the shared release listing, platform selection, version comparison and bounded installer verification. Landing imports only the lightweight release/platform modules; it must never acquire the runtime/download/storage/settings dependency closure. The former `landing/download/releases.ts` and `platform.ts` were moved, not duplicated. See [settings-update](./settings-update.md).
+`components/settings/` owns settings navigation, a common visible-section header, neutral rounded groups with divided rows, local preference reads/writes and update interaction hooks. `components/studio/ConnectorsPage.tsx` exports the embedded `ConnectorsSection`. `packages/distribution/src/{releases,platform,version}.ts` owns shared release listing, platform selection and version comparison. Studio's `lib/desktopRelease/download.ts` retains bounded installer verification and runtime Save integration. The site never acquires runtime/download/storage/settings dependencies. See [settings-update](./settings-update.md).
 
 ## Landing page entry (2026-10-14)
 
-`landing.html` (repo root, beside `index.html`) plus `src/landing/` form a standalone Vite entry served by nginx at `/` only (`location = /` -> `landing.html`; every other path keeps the SPA fallback). `vite.config.ts` lists both HTML files in `build.rollupOptions.input` and emits `dist/.vite/manifest.json` and `chunk-modules.json` (nginx answers `/.vite/` with 404). `pnpm dev` serves it at `/landing.html`. The desktop frontend build uses its own isolated Vite config and never includes it. `src/routes/_studio.index.tsx` (`/` -> `/agent`) is unchanged; desktop hash history still depends on it. `public/robots.txt` and `public/sitemap.xml` belong to the site root. See [the landing section](./component-guidelines.md#landing-page-standalone-entry-2026-10-14).
+`apps/site/landing.html` plus `apps/site/src/` form the standalone Vite site; `apps/web/index.html` owns the browser application. Each app builds independently. Root `build` builds both and assembles their outputs with merged manifest/module reports under `dist/.vite/`; nginx still serves `landing.html` at `/` and the app fallback elsewhere, and denies `/.vite/`. Use root `dev:site` for the site and `dev` for the browser app. Desktop uses its own isolated frontend config and excludes the site. Studio's root-route redirect (`/` -> `/agent`) and native hash history remain unchanged. Site robots/sitemap live under `apps/site/public`; shared public brand assets belong to distribution. See [the landing section](./component-guidelines.md#landing-page-standalone-entry-2026-10-14).

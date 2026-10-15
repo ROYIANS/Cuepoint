@@ -1,5 +1,5 @@
 {
   "extends": "../../../tsconfig.app.json",
   "compilerOptions": {"composite": false, "incremental": false},
-  "include": ["harness.tsx", "../../../src/vite-env.d.ts"]
+  "include": ["harness.tsx", "../../../packages/studio/src/vite-env.d.ts"]
 }

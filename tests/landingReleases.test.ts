@@ -1,6 +1,6 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {fetchLatestDesktopRelease, fetchStars, type StorageLike} from "@/lib/desktopRelease/releases";
-import {formatBytes, formatPublished, formatStars} from "@/landing/download/format";
+import {fetchLatestDesktopRelease, fetchStars, type StorageLike} from "@cuepoint/distribution/releases";
+import {formatBytes, formatPublished, formatStars} from "../apps/site/src/download/format";
 
 const PREFIX = "https://github.com/ROYIANS/Cuepoint/releases/download/";
 const NOW = 1_800_000_000_000;

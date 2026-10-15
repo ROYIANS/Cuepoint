@@ -2,15 +2,15 @@
 import {act, createElement, useRef} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {GITHUB_URL} from "@/lib/brand";
-import {Landing} from "@/landing/Landing";
-import {SCENE_COPY} from "@/landing/content/copy";
-import {resolveFilmMode, readSkipPreference, writeSkipPreference, SKIP_FILM_KEY} from "@/landing/film/mode";
-import {SCENES, STAGE_SCENES, TOTAL_WEIGHT} from "@/landing/film/scenes";
-import {frameToTimecode, progressToFrame, sceneProgressWindow} from "@/landing/film/timeline";
-import {FILM_PLAY_SECONDS, progressToPlaybackTime} from "@/landing/film/playback";
-import {toneCss} from "@/landing/film/tone";
-import {createFilmDriver, useFilmProgress, type FilmDriverEnv, type FilmState} from "@/landing/film/useFilmProgress";
+import {GITHUB_URL} from "@cuepoint/distribution/brand";
+import {Landing} from "../apps/site/src/Landing";
+import {SCENE_COPY} from "../apps/site/src/content/copy";
+import {resolveFilmMode, readSkipPreference, writeSkipPreference, SKIP_FILM_KEY} from "../apps/site/src/film/mode";
+import {SCENES, STAGE_SCENES, TOTAL_WEIGHT} from "../apps/site/src/film/scenes";
+import {frameToTimecode, progressToFrame, sceneProgressWindow} from "../apps/site/src/film/timeline";
+import {FILM_PLAY_SECONDS, progressToPlaybackTime} from "../apps/site/src/film/playback";
+import {toneCss} from "../apps/site/src/film/tone";
+import {createFilmDriver, useFilmProgress, type FilmDriverEnv, type FilmState} from "../apps/site/src/film/useFilmProgress";
 
 describe("scenes", () => {
     it("has seven scenes with the credits as the last, flow scene excluded from the stage total", () => {

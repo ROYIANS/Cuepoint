@@ -4,7 +4,7 @@
 
 Apply to the shared project gallery, video project home, episode list, story
 editor and shot workbench. The same React pages and route outlet serve browser
-and native runtimes. Both complete-product adapters use existing `src/db/`
+and native runtimes. Both complete-product adapters use existing `packages/studio/src/db/`
 commands through ProductStore and explicit StoreTx. The fixed startup profile
 selects persistence; it does not select reduced video-only features. The retained
 schema-4 prototype is separately constructed for reference tests. Read
@@ -13,7 +13,7 @@ default; no migration, compatibility reader or data mirror is implicit.
 
 ## 2. Signatures
 
-`src/lib/videoWorkspaceRepository.tsx` supplies
+`packages/studio/src/lib/videoWorkspaceRepository.tsx` supplies
 `getVideoWorkspaceRepository()`, `useVideoWorkspaceRepository()` and
 `useVideoWorkspaceQuery(query, dependencies)`. `VideoWorkspaceSnapshot` contains
 `project`, ordered `episodes`, episode-owned `beats`, project-owned `shots` and

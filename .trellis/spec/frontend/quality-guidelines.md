@@ -17,7 +17,7 @@ Required gates include TypeScript, full Vitest, formal `quality`, its self-test,
 | `pnpm lint` | `tsc -b --pretty false` (typecheck) |
 | `pnpm test` | `vitest run` |
 | `pnpm test:storage:native --evidence-dir <empty-directory>` | Rebuild the locked real Rust probe, run shared core/business suites on SQLite and record source/tool/table evidence |
-| `pnpm build` | `vite build` |
+| `pnpm build` | Build web/site separately and assemble their deployment output |
 | `pnpm quality` | Formal ESLint, architecture and full-scope unused checks |
 | `pnpm quality:self-test` | Regression of the quality gate and evidence identities |
 | `pnpm dev` | Vite dev server |
@@ -30,10 +30,10 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 
 ## Required Patterns
 
-- Durable mutations only through business command owners in `src/db/` (see the D02 map in state-management), `src/db/productionProposals.ts` and the `src/db/agent*.ts` repositories (`add*` / `patch*` / `delete*` / `set*Slot` / reorder helpers).
+- Durable mutations only through business command owners in `packages/studio/src/db/` (see the D02 map in state-management), `packages/studio/src/db/productionProposals.ts` and the `packages/studio/src/db/agent*.ts` repositories (`add*` / `patch*` / `delete*` / `set*Slot` / reorder helpers).
 - Live reads with `useProductQuery(tx => ...)`; detail `get` queries use `?? null`. Propagate readonly context to nested readers (see hook-guidelines).
 - Shot picture / generation data through `parseShotPictureSlots` / `parseGenerationSlot` so legacy fields stay readable.
-- Filter, reorder, undo, draft, delivery, and shortcut-gating logic live in `src/lib/` and are shared — UI calls helpers, does not reimplement:
+- Filter, reorder, undo, draft, delivery, and shortcut-gating logic live in `packages/studio/src/lib/` and are shared — UI calls helpers, does not reimplement:
   - `shotFilters`, `reorderIds`, `undo`, `debouncedDraft`, `episodeDelivery`, `formFieldFocus`, `shotKeyboard`
 - Studio asset create stays on studio routes with `STUDIO_LIBRARY_ID`; `touchProject` no-ops for the studio owner.
 - Episode-scoped shot queries and delivery exports filter by both `projectId` and `episodeId`.
@@ -52,7 +52,7 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 | Enabling export before live queries finish | Disable CSV/print until loaded (delivery-export) |
 | Component RTL / Playwright as the default new test | Prefer `tests/*.test.ts` on lib + repo |
 | Adding ESLint-only “fixes” without satisfying `tsc` | Both formal quality and TypeScript must pass |
-| `window.prompt` / `alert` / `confirm` | In-app `Dialog` (input) / `AlertDialog` (destructive) from `src/components/ui/` |
+| `window.prompt` / `alert` / `confirm` | In-app `Dialog` (input) / `AlertDialog` (destructive) from `packages/studio/src/components/ui/` |
 | `scrollIntoView({ behavior: "smooth" })` on Agent messages | `snapChatToBottom` on `.agent-message-list` (see chat-performance) |
 
 ---
@@ -69,10 +69,10 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 
 ## Accessibility and UX quality
 
-- Keep focus-visible rings on interactive primitives (`src/components/ui/*`).
+- Keep focus-visible rings on interactive primitives (`packages/studio/src/components/ui/*`).
 - Mark decorative motion/graphics `aria-hidden` (`ClickSpark`).
 - Prefer Chinese user-facing strings consistent with existing pages (加载中…, 找不到…).
-- Honor `prefers-reduced-motion` for decorative animation (`ClickSpark`, `src/styles.css`).
+- Honor `prefers-reduced-motion` for decorative animation (`ClickSpark`, `packages/studio/src/styles.css`).
 
 ---
 
@@ -92,8 +92,8 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 ## Examples
 
 - Repo invariants: `tests/repo.test.ts`
-- Shortcut gating helper: `src/lib/formFieldFocus.ts` + `tests/formFieldFocus.test.ts`
-- Delivery pure logic: `src/lib/episodeDelivery.ts` + `tests/episodeDelivery.test.ts`
+- Shortcut gating helper: `packages/studio/src/lib/formFieldFocus.ts` + `tests/formFieldFocus.test.ts`
+- Delivery pure logic: `packages/studio/src/lib/episodeDelivery.ts` + `tests/episodeDelivery.test.ts`
 - Typecheck gate: `package.json` script `lint`
 
 ---
@@ -102,7 +102,7 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 
 - Treating the TypeScript-only `lint` script as complete formal quality proof.
 - Adding a second state library “just for this page.”
-- Copy-pasting reorder or filter code into `ShotEditorPage` instead of extending `src/lib/`.
+- Copy-pasting reorder or filter code into `ShotEditorPage` instead of extending `packages/studio/src/lib/`.
 - Shipping package-import changes without updating `tests/projectPackage.test.ts`.
 
 ---
@@ -111,8 +111,8 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 
 - `package.json` scripts
 - `vitest.config.ts`, `tests/setup.ts`
-- `src/db/projects.ts`, `episodes.ts`, `shots.ts`, `assets.ts`, `media.ts`, `assetReuse.ts`, `connectors.ts`, `chat.ts`, `cascadeCommands.ts`
-- `src/lib/formFieldFocus.ts`, `reorderIds.ts`, `shotFilters.ts`, `episodeDelivery.ts`
+- `packages/studio/src/db/projects.ts`, `episodes.ts`, `shots.ts`, `assets.ts`, `media.ts`, `assetReuse.ts`, `connectors.ts`, `chat.ts`, `cascadeCommands.ts`
+- `packages/studio/src/lib/formFieldFocus.ts`, `reorderIds.ts`, `shotFilters.ts`, `episodeDelivery.ts`
 - `.trellis/spec/frontend/hook-guidelines.md`, `state-management.md`, `delivery-export.md`
 
 ## Release gate
@@ -151,10 +151,10 @@ job's prerequisite.
 
 ### 2. Signatures / Owners
 
-The shared preparation entry is `scripts/prepare-native-test-probe.mjs`:
+The shared preparation entry is `tooling/prepare-native-test-probe.mjs`:
 
 ```text
-node scripts/prepare-native-test-probe.mjs --cargo ABSOLUTE_CARGO --rustc ABSOLUTE_RUSTC --target-dir FRESH_ABSOLUTE_TARGET --evidence-dir FRESH_ABSOLUTE_EVIDENCE --github-env EXISTING_REGULAR_ENV_FILE
+node tooling/prepare-native-test-probe.mjs --cargo ABSOLUTE_CARGO --rustc ABSOLUTE_RUSTC --target-dir FRESH_ABSOLUTE_TARGET --evidence-dir FRESH_ABSOLUTE_EVIDENCE --github-env EXISTING_REGULAR_ENV_FILE
 ```
 
 `nativeProbeBuildArguments` and `nativeProbeOutputPath` in the existing desktop
@@ -223,8 +223,8 @@ quality and desktop Knip are separate gates; neither implies the other passed.
 
 ### 2. Signatures / Owners
 
-Run the unchanged desktop `quality` package command from `desktop/tauri`.
-`desktop/tauri/knip.json` declares `.` for the original desktop entry/project
+Run the desktop `quality` package command from `apps/desktop`.
+`apps/desktop/knip.json` declares `.` for the original desktop entry/project
 lists and `../..` for real root CLI ownership. The preparation CLI is an explicit
 entry; `test:storage:native` in the root package supplies its actual CLI entry.
 
@@ -266,7 +266,7 @@ the parent caller workspace; both must fail. Keep original source untouched.
 
 ### 7. Wrong vs Correct
 
-Wrong: add `../../scripts/...` globs alone or suppress the two export names.
+Wrong: add external root tooling globs alone or suppress the two export names.
 Correct: establish their real workspace owners, preserve the original desktop
 scope and verify a newly unused export is still rejected.
 
@@ -274,7 +274,7 @@ scope and verify a newly unused export is still rejected.
 
 `VITE_UMAMI_SCRIPT_URL` and `VITE_UMAMI_WEBSITE_ID` are public build-time settings supplied by GitHub Actions repository variables. Keep the workflow's Vite build environment and Docker build arguments aligned. The Docker arguments belong only to the build stage; Compose and the Nginx runtime need no analytics environment variables. Local `.env` files are excluded from Git and Docker contexts, with `.env.example` as the documented template.
 
-Initialize Umami once from `src/main.tsx` outside React lifecycles, only for production builds with both settings. Use the tracker’s own SPA pageviews; adding router listeners or manual pageview calls would duplicate visits. Analytics loading must not block React rendering. Do not attach project contents, prompts, or provider credentials to analytics events. Clearing configuration takes effect only after rebuilding and redeploying the image.
+Initialize Umami once from `packages/studio/src/bootstrap.tsx` outside React lifecycles, only for production builds with both settings. Use the tracker’s own SPA pageviews; adding router listeners or manual pageview calls would duplicate visits. Analytics loading must not block React rendering. Do not attach project contents, prompts, or provider credentials to analytics events. Clearing configuration takes effect only after rebuilding and redeploying the image.
 
 
 ## Audit evidence contract (2026-09-30)
@@ -287,7 +287,7 @@ Tool success, passing tests and long-file inspection alone do not establish full
 - Review ordinary code in full. For generated data/code, state the generator/source and exact verification performed; do not claim manual line review of generated JSON.
 - Confirmed findings need location, triggering input/call sequence, mechanism, impact, recommendation and behavior validation. Label untested runtime/browser concerns as risk; structural debt alone does not prove a current failure.
 - Separate type-only edges from value imports when reporting cycles. A cycle reporter may filter its first edge yet include type edges later in the path; validate the complete value cycle.
-- Knip export/file candidates require entry-point, ambient declaration, CSS import and test-only usage checks. In this project `src/lib/references/mammoth.d.ts` contributes the declaration for the browser import and must not be removed solely because no runtime import points at it.
+- Knip export/file candidates require entry-point, ambient declaration, CSS import and test-only usage checks. In this project `packages/studio/src/lib/references/mammoth.d.ts` contributes the declaration for the browser import and must not be removed solely because no runtime import points at it.
 - React rule matches for ordinary business functions named `useX` require inspecting whether they actually call React Hooks; naming matches alone are not runtime Hook evidence.
 - Clone/complexity counts are locating signals. Compare business contracts before consolidating retries, validators or CRUD; do not reduce complexity by removing safety checks or adding forwarding abstractions.
 - Preserve raw commands, versions, exit status and diagnostics. JSON reporters can exit zero while their summary contains violations; inspect both.
@@ -331,7 +331,7 @@ This correction preserves comparison semantics and evidence while making test in
 Maintain when changing the standalone B01 browser runner or its local Vite setup, particularly repeated runs across different fixture configurations.
 
 ### 2. Signatures / Owners
-`scripts/b01-browser-regression.mjs` creates a fresh temporary `cacheDir`, explicitly scans the actual B01 fixture HTML via `optimizeDeps.entries`, and removes its cache after closing Vite. Main-frame document requests are counted; only initial fixture loading is allowed during the SPA regression sequence.
+`tooling/b01-browser-regression.mjs` creates a fresh temporary `cacheDir`, explicitly scans the actual B01 fixture HTML via `optimizeDeps.entries`, and removes its cache after closing Vite. Main-frame document requests are counted; only initial fixture loading is allowed during the SPA regression sequence.
 
 ### 3. Contracts / Invariants
 Keep every existing business assertion and timeout. Unexpected full-document reload is a failure, not authority to reinitialize fixtures, retry interactions, ignore missing bridge objects or increase waits. Cache separation is test isolation, not a product fix or proof of the original failure cause. Keep prior failures and configuration/runtime inputs.
@@ -363,7 +363,7 @@ All authored src changes and necessary regression runners/configuration use the 
 
 ### 2. Signatures / Owners
 
-`quality` runs `scripts/quality-check.mjs`; `quality:self-test` runs its actual CLI synthetic contracts. Root `eslint.config.mjs`, `knip.json`, pinned package/lock, exact `quality/debt.json` and `quality/unused-contracts.json` own policy. CI runs both commands before tests while retaining Node22, existing triggers, image publication and permissions. Local commands use the authorized explicit machine pnpm executable.
+`quality` runs `tooling/quality-check.mjs`; `quality:self-test` runs its actual CLI synthetic contracts. Root `eslint.config.mjs`, `knip.json`, pinned package/lock, exact `quality/debt.json` and `quality/unused-contracts.json` own policy. CI runs both commands before tests while retaining Node22, existing triggers, image publication and permissions. Local commands use the authorized explicit machine pnpm executable.
 
 ### 3. Contracts / Invariants
 
@@ -375,7 +375,9 @@ Mutation/owner transfer, changed multiplicity, duplicated JSON keys, stale remov
 
 ### 5. Good / Base / Bad Cases
 
-Good: narrow unknown values at actual boundaries and remove unused internal exports without changing bodies. The original baseline had thirteen reviewed diagnostics. Shared-storage certainty handling removed the cause-discarding ambiguous-tool node in runChat, so its stale exact allowance was removed; the current twelve retain four sanitized wrappers, seven original failure/cancellation transports and one guarded every-render draft reconciliation. Eight unused contracts retain two stylesheet imports, one TypeScript companion declaration, two explicit native runtime/virtual imports, two documented audio deletion APIs without current UI callers, and the development-only Lucide dependency actually imported by three immutable historical comparison sources outside production discovery. The latter is tied to those unchanged source hashes and the real E02/E04 comparison loaders; it does not permit application Lucide use. Bad: blanket ignores, automatic import of all baseline errors, every-src-as-entry reachability, arbitrary test deletion or assertions that hide unsafe inputs.
+Good: narrow unknown values at actual boundaries and remove unused internal exports without changing bodies. The original baseline had thirteen reviewed diagnostics. Shared-storage certainty handling removed the cause-discarding ambiguous-tool node in runChat, so its stale exact allowance was removed; the current twelve retain four sanitized wrappers, seven original failure/cancellation transports and one guarded every-render draft reconciliation.
+
+Workspace discovery currently has fifteen exact unused contracts: six retained contracts (one icon-generator companion declaration, two explicit optional-runtime/virtual imports, two documented audio deletion APIs without current UI callers, and the development-only Lucide dependency), eight individual projection companion declaration symbols, and the pinned desktop Tauri CLI dependency invoked through the actual package scripts. Projection contracts bind real `.mjs` implementation/consumer hashes and TypeScript's `.d.mts` resolution; they are not dummy consumers. The Lucide contract is tied to unchanged historical comparison sources and the real E02/E04 loaders; it does not permit application Lucide use. Former stylesheet allowances are no longer needed by the actual workspace graph and were removed. Counts describe reviewed findings, not a target or permission to broaden scope. Bad: blanket ignores, automatic import of all baseline errors, every-source-as-entry reachability, arbitrary test deletion or assertions that hide unsafe inputs.
 
 ### 6. Required Tests
 
@@ -388,10 +390,10 @@ Wrong: zero warnings claim, counted unresolved historical metadata imports as re
 ## Error diagnostics and redaction (2026-10-14)
 
 ### 1. Scope / Trigger
-Read before adding any UI error output, changing `src/lib/diagnostics/` or `src/components/errors/`, or putting new data into a diagnostic report. Diagnostics are user-initiated only: nothing is persisted or sent automatically.
+Read before adding any UI error output, changing `packages/studio/src/lib/diagnostics/` or `packages/studio/src/components/errors/`, or putting new data into a diagnostic report. Diagnostics are user-initiated only: nothing is persisted or sent automatically.
 
 ### 2. Signatures
-`sanitizeText(input, limit?)`, `sanitizePath(pathname)` (`sanitize.ts`); `addBreadcrumb(kind: "route" | "action", label)`, `getBreadcrumbs()` (ring of 30, memory only); `toErrorInfo(cause)`, `buildDiagnosticReport(info, context)`, `buildIssueUrl(info, context)` (`errorReport.ts`); `friendlyMessage(cause)`; `reportError(cause, {source: "boundary" | "global" | "action", actionName?})`, `getLatestError()`, `subscribeLatestError` (`reportError.ts`); `showError({title?, cause, actionName?, detail?})`, `installGlobalErrorHandlers()` (`showError.ts`); `openErrorDetails()` / `ErrorDetailsDialog`. Build-time `__APP_VERSION__` is defined in both `vite.config.ts` and `desktop/tauri/scripts/build-frontend-worker.mjs`; `appVersion()` falls back to `"dev"`.
+`sanitizeText(input, limit?)`, `sanitizePath(pathname)` (`sanitize.ts`); `addBreadcrumb(kind: "route" | "action", label)`, `getBreadcrumbs()` (ring of 30, memory only); `toErrorInfo(cause)`, `buildDiagnosticReport(info, context)`, `buildIssueUrl(info, context)` (`errorReport.ts`); `friendlyMessage(cause)`; `reportError(cause, {source: "boundary" | "global" | "action", actionName?})`, `getLatestError()`, `subscribeLatestError` (`reportError.ts`); `showError({title?, cause, actionName?, detail?})`, `installGlobalErrorHandlers()` (`showError.ts`); `openErrorDetails()` / `ErrorDetailsDialog`. Browser Vite config and `apps/desktop/scripts/build-frontend-worker.mjs` define `__APP_VERSION__` from the root app release version; `appVersion()` falls back to `"dev"`.
 
 ### 3. Contracts
 - One export point: every displayed, copied, saved or URL-embedded string goes through `sanitizeText`; a failure inside sanitizing returns the placeholder, never the raw text. Patterns cover URLs (userinfo and query removed), `sk-` keys, Bearer/Authorization/Cookie, generic `token|secret|password|api_key` pairs, JWTs, local paths (including user names with spaces), 32+ character random runs.
@@ -424,4 +426,4 @@ Wrong: `toast.error(String(error))` or putting `error.request` into a report. Co
 
 ## Landing page gates (2026-10-14)
 
-After `pnpm build`, run `pnpm landing:budget`: it checks the landing first-screen dependency closure (no Dexie, zod, antd, lobehub, TanStack Router, Tauri, `src/db`, `src/lib/storage`, other `src` paths), the gzip budgets (JS 120 KB, CSS 15 KB) and that the desktop output has no landing files. Landing tests live in `tests/landing*.test.ts`; copy checks share `tests/fixtures/landing/forbiddenClaims.ts`. Details: component-guidelines "Landing page (standalone entry)".
+After root `pnpm build`, run `pnpm landing:budget`: it checks the site's eager/lazy built dependency closure excludes studio, storage, Agent, Dexie, zod, antd, LobeHub, TanStack Router and Tauri. Retain gzip budgets (JS 120 KB, CSS 15 KB) and desktop site exclusion. Web/site build separately; deployment assembly merges complete manifests/module reports and rejects conflicting files/reports or missing references before replacing the output. Landing tests live in `tests/landing*.test.ts`; copy checks share `tests/fixtures/landing/forbiddenClaims.ts`. Details: component-guidelines "Landing page (standalone entry)".

@@ -1,8 +1,8 @@
 import {beforeEach,describe,expect,it,vi} from 'vitest';
 import {db} from '@/db/database';
-import {checkTavilyNative} from '../desktop/tauri/ui/tavilyProbe';
-import {fixtureTavilyFetch} from '../desktop/tauri/ui/tavilyProbeFetch';
-import {Evidence} from '../desktop/tauri/ui/acceptanceEvidence';
+import {checkTavilyNative} from '../apps/desktop/ui/tavilyProbe';
+import {fixtureTavilyFetch} from '../apps/desktop/ui/tavilyProbeFetch';
+import {Evidence} from '../apps/desktop/ui/acceptanceEvidence';
 
 const state=vi.hoisted(()=>({native:true,profile:'dev.cuepoint.review.tavily.source-test',transport:vi.fn<typeof fetch>()}));
 vi.mock('@/lib/runtimeIdentity',()=>({isTauriRuntime:()=>state.native}));

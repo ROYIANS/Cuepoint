@@ -17,10 +17,10 @@ runtime validation from a successful package build.
 
 ## 2. Signatures / Owners
 
-Owners are `desktop/tauri/scripts/tool-resolver.mjs`, `release-policy.mjs`,
+Owners are `apps/desktop/scripts/tool-resolver.mjs`, `release-policy.mjs`,
 `build-release.mjs`, `release-source-hashes.mjs`, `release-artifacts.mjs`, `finalize-release.mjs`,
 `collect-release.mjs`, `publish-draft.mjs`, the dedicated workflow, and the external
-`scripts/release-product-smoke.mjs` / `verify-release-smoke-store.py` harness.
+`tooling/release-product-smoke.mjs` / `verify-release-smoke-store.py` harness.
 
 ```text
 build:release --target TARGET --output FRESH_ABSOLUTE_DIRECTORY
@@ -66,7 +66,7 @@ unchanged.
 
 Any independent root quality job runs real Rust SQLite bridge tests. Its own job
 must install pinned Rust and call the shared
-`scripts/prepare-native-test-probe.mjs` with actual Cargo/rustc paths, a fresh
+`tooling/prepare-native-test-probe.mjs` with actual Cargo/rustc paths, a fresh
 target/evidence directory and `GITHUB_ENV` before the full root suite. The probe
 must build locked with no default features/test-hooks, acknowledge ready/close
 and exit before its exact path is exported. GHCR's full root suite has the same

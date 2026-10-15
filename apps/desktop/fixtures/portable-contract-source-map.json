@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "sources": [
+    {
+      "original": "src/lib/workspace.ts",
+      "originalSha256": "bef1650cee404e8cf50460edf3fd90315dbeb64ffb5125c0be621734d0f69df9",
+      "current": "packages/studio/src/lib/workspace.ts",
+      "currentSha256": "adbbfd57e761534da95001866a0e959c6b5fe9073d740aa2592d968d3b621403"
+    },
+    {
+      "original": "src/lib/sha256.ts",
+      "originalSha256": "639e86426c7ba06930e5820c9fa13fc1d565f15b16dde58783a011139f7b5dc4",
+      "current": "packages/studio/src/lib/sha256.ts",
+      "currentSha256": "639e86426c7ba06930e5820c9fa13fc1d565f15b16dde58783a011139f7b5dc4"
+    },
+    {
+      "original": "src/domain/types.ts",
+      "originalSha256": "2fd6270b0a2a97ed725148046ef67d2875fee04d7107ef22d8f212cdd9cce78f",
+      "current": "packages/studio/src/domain/types.ts",
+      "currentSha256": "a86d86a9e698640b90df55b39727c4b9f27a4d2713a62552b09de19f9af3937b"
+    },
+    {
+      "original": "desktop/tauri/scripts/contract-oracle.ts",
+      "originalSha256": "b16d44fa4146cdf4b0edf2826306ad0ce8ba6b966de92adfade73bc76ac0b9ae",
+      "current": "apps/desktop/scripts/contract-oracle.ts",
+      "currentSha256": "599de3f07ebef7af5287bdd5b73e8d3e8b94b307c51cae9bf916ffcd9468f071"
+    }
+  ]
+}

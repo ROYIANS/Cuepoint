@@ -22,7 +22,7 @@ vi.mock("@/lib/nativeSystemServices", () => ({saveNativeBlob: host.save}));
 
 import {AboutPage} from "@/components/studio/AboutPage";
 import {Button} from "@/components/ui/button";
-import {GITHUB_URL} from "@/lib/brand";
+import {GITHUB_URL} from "@cuepoint/distribution/brand";
 
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(value: unknown): Node[] {

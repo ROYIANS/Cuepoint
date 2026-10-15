@@ -5,9 +5,9 @@ import sonar from 'eslint-plugin-sonarjs';
 import {fileURLToPath} from 'node:url';
 
 export default [
-    {ignores: ['src/routeTree.gen.ts', 'vendor/**', 'node_modules/**', 'dist/**', '.trellis/**']},
+    {ignores: ['packages/studio/src/routeTree.gen.ts', 'vendor/**', '**/node_modules/**', '**/dist/**', '.trellis/**']},
     {
-        files: ['src/**/*.{ts,tsx}'],
+        files: ['src/**/*.{ts,tsx}', 'packages/*/src/**/*.{ts,tsx}', 'apps/*/src/**/*.{ts,tsx}'],
         languageOptions: {
             parser: tseslint.parser,
             parserOptions: {project: ['./tsconfig.app.json'], tsconfigRootDir: fileURLToPath(new URL('.', import.meta.url)), ecmaFeatures: {jsx: true}},

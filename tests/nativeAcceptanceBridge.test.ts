@@ -1,5 +1,5 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {native} from "../desktop/tauri/ui/bridge";
+import {native} from "../apps/desktop/ui/bridge";
 
 afterEach(() => {
     vi.unstubAllGlobals();

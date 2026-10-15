@@ -1,27 +1,86 @@
 {
   "$schema": "https://unpkg.com/knip@6.40.0/schema.json",
-  "entry": [
-    "src/main.tsx!",
-    "src/landing/main.tsx!",
-    "scripts/native-product-fixture.mjs",
-    "scripts/native-product-fixture-check.mjs",
-    "scripts/release-product-smoke.mjs",
-    "scripts/release-smoke-support.test.mjs",
-    "scripts/prepare-native-test-probe.mjs",
-    "scripts/prepare-native-test-probe.test.mjs",
-    "scripts/*-browser-regression.mjs",
-    "scripts/e06-*.mjs",
-    "tests/**/*.test.{ts,tsx}",
-    "tests/typecheck/agentToolDefinition.ts",
-    "tests/fixtures/*/index.html",
-    "tests/fixtures/*/harness.{ts,tsx}",
-    "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx",
-    "scripts/e07-draft-rebase-browser.mjs",
-    "desktop/tauri/ui/bridge.ts!"
-  ],
-  "project": [
-    "src/**/*.{ts,tsx}!",
-    "scripts/**/*.{mjs,mts}"
-  ],
+  "workspaces": {
+    ".": {
+      "entry": [
+        "tooling/native-product-fixture.mjs",
+        "tooling/native-product-fixture-check.mjs",
+        "tooling/release-product-smoke.mjs",
+        "tooling/release-smoke-support.test.mjs",
+        "tooling/prepare-native-test-probe.mjs",
+        "tooling/prepare-native-test-probe.test.mjs",
+        "tooling/*-browser-regression.mjs",
+        "tooling/e06-*.mjs",
+        "tests/**/*.test.{ts,tsx}",
+        "tests/typecheck/agentToolDefinition.ts",
+        "tests/fixtures/*/index.html",
+        "tests/fixtures/*/harness.{ts,tsx}",
+        "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx",
+        "tooling/e07-draft-rebase-browser.mjs",
+        "tooling/build-web.mjs",
+        "tooling/assemble-web.mjs",
+        "tooling/workspace.mjs",
+        "tooling/quality-check.mjs",
+        "tooling/quality/self-test.mjs"
+      ],
+      "project": [
+        "tooling/**/*.{mjs,mts,ts}"
+      ]
+    },
+    "apps/web": {
+      "entry": [
+        "src/main.tsx!"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}!"
+      ]
+    },
+    "apps/site": {
+      "entry": [
+        "src/main.tsx!"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}!"
+      ]
+    },
+    "packages/studio": {
+      "entry": [
+        "src/bootstrap.tsx!"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx,mts,mjs}!"
+      ]
+    },
+    "packages/distribution": {
+      "entry": [],
+      "project": [
+        "src/**/*.{ts,tsx}!"
+      ]
+    },
+    "apps/desktop": {
+      "entry": [
+        "scripts/contract-oracle.ts!",
+        "scripts/fixture-audio.ts!",
+        "ui/main.tsx",
+        "ui/tavilyProbeMain.tsx",
+        "scripts/prepare-release.mjs",
+        "scripts/configure-hosted-tools.mjs",
+        "scripts/finalize-release.mjs",
+        "scripts/collect-release.mjs",
+        "scripts/select-release-artifacts.mjs",
+        "scripts/publish-draft.mjs",
+        "scripts/release-native-checks.mjs",
+        "scripts/run-release-smokes.mjs",
+        "scripts/*.test.mjs",
+        "src/main.tsx!"
+      ],
+      "project": [
+        "scripts/**/*.{ts,mjs}",
+        "ui/**/*.{ts,tsx}",
+        "src/**/*.{ts,tsx}!"
+      ],
+      "includeEntryExports": false
+    }
+  },
   "includeEntryExports": true
 }

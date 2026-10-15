@@ -4,13 +4,13 @@ import {createRoot, type Root} from "react-dom/client";
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {GITHUB_URL} from "@/lib/brand";
-import {Landing} from "@/landing/Landing";
-import {SCENE_COPY} from "@/landing/content/copy";
+import {GITHUB_URL} from "@cuepoint/distribution/brand";
+import {Landing} from "../apps/site/src/Landing";
+import {SCENE_COPY} from "../apps/site/src/content/copy";
 import {FORBIDDEN_CLAIMS} from "./fixtures/landing/forbiddenClaims";
 
 
-const html = readFileSync(resolve(process.cwd(), "landing.html"), "utf8");
+const html = readFileSync(resolve(process.cwd(), "apps/site/landing.html"), "utf8");
 const documentFromHtml = new DOMParser().parseFromString(html, "text/html");
 const compact = (text: string | null) => (text ?? "").replace(/\s+/g, "");
 
@@ -62,7 +62,7 @@ describe("landing page content", () => {
     });
 });
 
-describe("landing.html", () => {
+describe("apps/site/landing.html", () => {
     it("holds static content identical to the React render, so a script failure still shows the page", () => {
         const staticRoot = documentFromHtml.getElementById("root");
         expect(compact(staticRoot?.textContent ?? null)).toBe(compact(container.textContent));
@@ -83,7 +83,7 @@ describe("landing.html", () => {
         expect(ld.downloadUrl).toBe(`${GITHUB_URL}/releases`);
         expect(JSON.stringify(ld)).not.toMatch(/\d+\.\d+\.\d+/);
         expect(html).not.toContain("styles.css");
-        expect([...documentFromHtml.querySelectorAll("script[src]")].map(s => s.getAttribute("src"))).toEqual(["/src/landing/main.tsx"]);
+        expect([...documentFromHtml.querySelectorAll("script[src]")].map(s => s.getAttribute("src"))).toEqual(["/src/main.tsx"]);
     });
 
     it("subsets the display font and falls back without blocking", () => {

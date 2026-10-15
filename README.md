@@ -193,8 +193,11 @@ pnpm dev
 
 | 命令 | 作用 |
 | --- | --- |
-| `pnpm dev` | 启动 Vite 开发服务 |
-| `pnpm build` | 生成 `dist/` 生产静态文件 |
+| `pnpm dev` | 启动 Web 应用开发服务 |
+| `pnpm dev:site` | 启动独立官网开发服务 |
+| `pnpm --filter @cuepoint/desktop build:frontend` | 构建正常桌面前端 |
+| `pnpm quality` / `pnpm quality:self-test` | 检查全部源码及门禁失败用例 |
+| `pnpm build` | 分别构建 Web／官网并校验合并到 `dist/` |
 | `pnpm preview` | 本地预览生产构建 |
 | `pnpm lint` | 运行 `tsc -b`，即 TypeScript 类型检查 |
 | `pnpm test` | 运行完整 Vitest 测试集 |
@@ -294,36 +297,28 @@ docker compose up -d
 | 验证与部署 | Vitest、fake-indexeddb、TypeScript、GitHub Actions、Docker／Nginx |
 
 ```text
-src/
-├── routes/                 # 工作室和项目文件路由
-├── components/
-│   ├── studio/             # 导航、项目、IP、素材、连接
-│   ├── agent/              # 对话、任务、参考资料、执行与成果展示
-│   ├── story/ & shots/     # 故事与镜头编辑
-│   ├── assets/ & produce/  # 设定资产、制作检查与交付
-│   ├── audio/ & music/     # 音频和音乐工作台
-│   ├── memory/             # 项目记忆管理
-│   └── ui/                 # 通用界面组件
-├── db/                     # 数据库版本、持久化读写与事务边界
-├── domain/                 # 项目、Agent、音频、音乐等类型与规则
-└── lib/
-    ├── ai/                 # 模型目录、协议和供应商客户端
-    ├── agent/              # 工具、上下文、执行和生成流程
-    ├── audio/              # 录音、播放、剪辑、混音和 WAV
-    ├── audioGeneration/    # 音频／音乐生成任务运行时
-    └── references/         # 资料导入、解析与打包
-public/brand/               # 产品标识与图标
-tests/                      # 单元与数据层／运行时测试
-scripts/                    # 模型目录基线与发布辅助脚本
-deploy/                     # Nginx 配置
-.github/workflows/          # 质量门禁与镜像发布
-docs/                       # 产品和架构规划
+apps/
+├── web/                    # 浏览器 HTML、启动入口与 Vite 配置
+├── desktop/                # Tauri 入口、Rust 运行时、原生与发布工具
+│   └── reference/electron/ # 保留的历史原型
+└── site/                   # 独立的轻量官网
+packages/
+├── studio/                 # Web 与桌面端共用的产品实现
+│   └── src/                # 现有 routes、components、db、domain 和 lib
+└── distribution/           # 品牌、统计、发布版本与平台信息
+    └── public/brand/       # 共用产品标识资源
+tooling/                    # 工作区、构建、质量、模型与原生验证工具
+tests/                      # 跨包集成与永久测试
+quality/                    # 源码归属、精确债务与保留契约
+deploy/                     # 官网根路径与应用 SPA 回退的 Nginx 配置
+.github/workflows/          # 根质量／GHCR 与桌面打包流程
+docs/                       # 产品与架构文档
 .trellis/                   # 开发规范、任务与会话记录
 ```
 
 ## 质量检查与贡献
 
-开始修改前阅读 [`AGENTS.md`](AGENTS.md) 和相关 [Trellis 开发规范](.trellis/spec/frontend/index.md)。项目数据写入通过 `src/db/` 中的仓储函数和事务完成；新增功能应保持项目归属、版本冲突检查和导入导出兼容。
+开始修改前阅读 [`AGENTS.md`](AGENTS.md) 和相关 [Trellis 开发规范](.trellis/spec/frontend/index.md)。项目数据写入通过 `packages/studio/src/db/` 中的仓储函数和事务完成；新增功能应保持项目归属、版本冲突检查和导入导出兼容。
 
 提交前按改动范围验证，完整发布门禁为：
 

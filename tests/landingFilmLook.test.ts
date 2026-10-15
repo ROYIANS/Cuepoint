@@ -3,7 +3,7 @@ import {describe, expect, it} from "vitest";
 import {
     createFilmLook, drawLook, dustCount, dustFor, flickerFor, frameRandom, grainPixels, lookFps, reelMark, sceneMark, weaveFor,
     FILM_FPS, FLICKER_MAX, GRAIN_ALPHA, GRAIN_TILE, GRAIN_TILES, MAX_DUST, WEAVE_PX, type Dust, type LookResources,
-} from "@/landing/film/renderers/filmLook";
+} from "../apps/site/src/film/renderers/filmLook";
 
 type Call = unknown[];
 

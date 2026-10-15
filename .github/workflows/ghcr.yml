@@ -36,9 +36,9 @@ jobs:
         run: rustup toolchain install 1.99.0 --profile minimal
       - name: Prepare fresh native SQLite test probe
         run: |
-          node scripts/prepare-native-test-probe.mjs --cargo "$(rustup which --toolchain 1.99.0 cargo)" --rustc "$(rustup which --toolchain 1.99.0 rustc)" --target-dir "$RUNNER_TEMP/cuepoint-quality-probe-target" --evidence-dir "$RUNNER_TEMP/native-test-probe" --github-env "$GITHUB_ENV"
+          node tooling/prepare-native-test-probe.mjs --cargo "$(rustup which --toolchain 1.99.0 cargo)" --rustc "$(rustup which --toolchain 1.99.0 rustc)" --target-dir "$RUNNER_TEMP/cuepoint-quality-probe-target" --evidence-dir "$RUNNER_TEMP/native-test-probe" --github-env "$GITHUB_ENV"
       - name: Verify native probe failure contracts
-        run: node --test scripts/prepare-native-test-probe.test.mjs
+        run: node --test tooling/prepare-native-test-probe.test.mjs
       - name: Test
         run: pnpm test
       - name: Verify model catalog baseline

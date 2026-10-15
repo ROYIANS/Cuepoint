@@ -1,0 +1,22 @@
+{
+  "name": "@cuepoint/web",
+  "version": "0.1.3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "types": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@cuepoint/studio": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.2",
+    "@tailwindcss/vite": "^4.1.13",
+    "vite": "^7.1.5",
+    "typescript": "^5.9.2",
+    "@types/node": "^22.20.3",
+    "@tanstack/router-plugin": "^1.131.50"
+  }
+}

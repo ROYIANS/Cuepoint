@@ -3,10 +3,11 @@ import {dirname, join, resolve, sep} from "node:path";
 import {fileURLToPath} from "node:url";
 import {describe, expect, it} from "vitest";
 
-const sourceRoot = fileURLToPath(new URL("../src", import.meta.url));
-const landingRoot = join(sourceRoot, "landing");
+const sourceRoot = fileURLToPath(new URL("../packages/studio/src", import.meta.url));
+const landingRoot = fileURLToPath(new URL("../apps/site/src", import.meta.url));
+const distributionRoot = fileURLToPath(new URL("../packages/distribution/src", import.meta.url));
 // The only application modules the standalone entry may use: dependency-free ones.
-const APP_ALLOWED = new Set(["@/lib/umami", "@/lib/brand", "@/lib/desktopRelease/releases", "@/lib/desktopRelease/platform"]);
+const APP_ALLOWED = new Set(["@cuepoint/distribution/analytics", "@cuepoint/distribution/brand", "@cuepoint/distribution/releases", "@cuepoint/distribution/platform"]);
 const PACKAGE_ALLOWED = /^(react|react-dom|react\/jsx-runtime|react-dom\/client|motion|motion\/.+)$/;
 
 function listFiles(directory: string): string[] {
@@ -23,7 +24,7 @@ function specifiers(source: string): string[] {
 
 function isAllowed(specifier: string): boolean {
     if (specifier.startsWith(".")) return true;
-    if (specifier.startsWith("@/")) return APP_ALLOWED.has(specifier);
+    if (specifier.startsWith("@cuepoint/")) return APP_ALLOWED.has(specifier);
     return PACKAGE_ALLOWED.test(specifier);
 }
 
@@ -43,7 +44,7 @@ describe("landing source boundary", () => {
     });
 
     it("keeps the shared modules dependency-free", () => {
-        for (const file of ["lib/umami.ts", "lib/brand.ts"]) expect(specifiers(readFileSync(join(sourceRoot, file), "utf8")), file).toEqual([]);
+        for (const file of ["analytics.ts", "brand.ts"]) expect(specifiers(readFileSync(join(distributionRoot, file), "utf8")), file).toEqual([]);
     });
 
     // The modules the standalone entry actually reaches must stay dependency-free.
@@ -51,9 +52,9 @@ describe("landing source boundary", () => {
     // excluded by the allowlist above, so the landing closure cannot grow silently.
     it("keeps the landing-reachable shared release modules free of application, storage, router and Tauri imports", () => {
         const reachable = ["releases.ts", "platform.ts", "version.ts"];
-        const allowed = (item: string) => item.startsWith("./") || item === "@/lib/brand";
+        const allowed = (item: string) => item.startsWith("./") || item === "@cuepoint/distribution/brand";
         const bad = reachable.flatMap(name => {
-            const file = join(sourceRoot, "lib/desktopRelease", name);
+            const file = join(distributionRoot, name);
             return specifiers(readFileSync(file, "utf8")).filter(item => !allowed(item)).map(item => `lib/desktopRelease/${name}: ${item}`);
         });
         expect(bad).toEqual([]);
@@ -62,12 +63,12 @@ describe("landing source boundary", () => {
 
     it("never lets the landing entry reach the settings-only download helper", () => {
         const files = listFiles(landingRoot).filter(file => /\.tsx?$/.test(file));
-        const bad = files.flatMap(file => specifiers(readFileSync(file, "utf8")).filter(item => item.includes("desktopRelease/download")).map(item => `${file}: ${item}`));
+        const bad = files.flatMap(file => specifiers(readFileSync(file, "utf8")).filter(item => item.includes("desktopRelease/download") || item.includes("@cuepoint/studio")).map(item => `${file}: ${item}`));
         expect(bad).toEqual([]);
         expect(APP_ALLOWED.has("@/lib/desktopRelease/download")).toBe(false);
     });
 
-    it("keeps relative imports inside src/landing", () => {
+    it("keeps relative imports inside packages/studio/src/landing", () => {
         const escaping = listFiles(landingRoot).filter(file => /\.tsx?$/.test(file)).flatMap(file =>
             specifiers(readFileSync(file, "utf8")).filter(item => item.startsWith(".")).filter(item => {
                 const target = resolve(dirname(file), item);

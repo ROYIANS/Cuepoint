@@ -1,7 +1,7 @@
 import {describe, expect, it, vi} from "vitest";
 import {MAX_RELEASE_ASSET_BYTES, downloadAsset} from "@/lib/desktopRelease/download";
 import {sha256Bytes} from "@/lib/sha256";
-import type {ReleaseAsset} from "@/lib/desktopRelease/releases";
+import type {ReleaseAsset} from "@cuepoint/distribution/releases";
 
 const URL_OK = "https://github.com/ROYIANS/Cuepoint/releases/download/desktop-v0.1.3/Cuepoint_0.1.3_windows_x64_setup.exe";
 const BODY = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]);

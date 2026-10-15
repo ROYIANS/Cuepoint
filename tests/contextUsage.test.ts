@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { estimateContextUsage, estimateTokens } from "../src/lib/agent/contextUsage";
+import { estimateContextUsage, estimateTokens } from "../packages/studio/src/lib/agent/contextUsage";
 import { buildContextMessages, selectContextHistory } from "@/lib/agent/contextPlanner";
 import { DEFAULT_CONTEXT_POLICY } from "@/lib/agent/contextPolicy";
-import type { ChatMessage } from "../src/domain/types";
+import type { ChatMessage } from "../packages/studio/src/domain/types";
 
 describe("context preview", () => {
   it("shares eligible history rules with sending and trims the draft", () => {

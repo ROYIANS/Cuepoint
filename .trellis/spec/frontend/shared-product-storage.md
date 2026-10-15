@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read before changing `src/db/`, Agent transaction dependencies, reactive reads,
+Read before changing `packages/studio/src/db/`, Agent transaction dependencies, reactive reads,
 managed bytes, or the full-product native worker. The product has one React page
 tree, one set of TypeScript commands and one Agent/tool registry. Persistence is
 an adapter boundary: browser IndexedDB and the complete native SQLite/files
@@ -261,7 +261,7 @@ handles (`tests/helpers/storeFaults.ts`), not root-table spies that the actual
 mutation never uses. Preserve fault-reached, rollback and uncommitted-read
 assertions. Missing real-native executable must fail an explicit native gate.
 
-`scripts/native-storage-regression.mjs`, exposed as `test:storage:native`, owns
+`tooling/native-storage-regression.mjs`, exposed as `test:storage:native`, owns
 the permanent complete core/business lane. Its current suite manifest is
 `tests/fixtures/shared-storage/nativeAcceptanceSuites.json`. The gate rebuilds
 the locked probe, requires an empty evidence directory, rejects source changes

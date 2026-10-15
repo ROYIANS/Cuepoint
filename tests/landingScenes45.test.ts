@@ -1,13 +1,13 @@
 import {describe, expect, it} from "vitest";
 import {FORBIDDEN_CLAIMS} from "./fixtures/landing/forbiddenClaims";
-import {SCENE_COPY} from "@/landing/content/copy";
-import {agentGeometry, AGENT_APPROVED, AGENT_PENDING, AGENT_ROWS, AGENT_SCHEMATIC, buildAgentSets, drawAgent, planAgent, ROW_START, rowLight} from "@/landing/film/renderers/agent";
-import {buildDeliverySets, DELIVERY_FILES, deliveryGeometry, drawDelivery, fileProgress, planDelivery} from "@/landing/film/renderers/delivery";
-import {buildVaultSets, drawVault, planVault, vaultGeometry, VAULT_KEY_LABEL, VAULT_STORE_LABEL} from "@/landing/film/renderers/vault";
-import {createPool, MAX_PARTICLES, mulberry32, type Quality} from "@/landing/film/renderers/particles";
-import type {Layout, Plan, SceneState, Sets} from "@/landing/film/renderers/plan";
-import {artRect, circleOutline, createSet, lineSamples, rectOutline, rectSegments, segmentSamples, type TargetSet} from "@/landing/film/renderers/targets";
-import {SCENE_BEATS} from "@/landing/film/playback";
+import {SCENE_COPY} from "../apps/site/src/content/copy";
+import {agentGeometry, AGENT_APPROVED, AGENT_PENDING, AGENT_ROWS, AGENT_SCHEMATIC, buildAgentSets, drawAgent, planAgent, ROW_START, rowLight} from "../apps/site/src/film/renderers/agent";
+import {buildDeliverySets, DELIVERY_FILES, deliveryGeometry, drawDelivery, fileProgress, planDelivery} from "../apps/site/src/film/renderers/delivery";
+import {buildVaultSets, drawVault, planVault, vaultGeometry, VAULT_KEY_LABEL, VAULT_STORE_LABEL} from "../apps/site/src/film/renderers/vault";
+import {createPool, MAX_PARTICLES, mulberry32, type Quality} from "../apps/site/src/film/renderers/particles";
+import type {Layout, Plan, SceneState, Sets} from "../apps/site/src/film/renderers/plan";
+import {artRect, circleOutline, createSet, lineSamples, rectOutline, rectSegments, segmentSamples, type TargetSet} from "../apps/site/src/film/renderers/targets";
+import {SCENE_BEATS} from "../apps/site/src/film/playback";
 
 const QUALITIES: readonly Quality[] = ["high", "medium", "low"];
 const SIZES: readonly [number, number][] = [[1280, 800], [390, 844]];

@@ -30,7 +30,7 @@ route: detail wrap-up recovery also takes that lock and otherwise can reject Sen
 
 Snapshot includes bounded project facts, separately bounded worldview/background/rules,
 logline, whitelisted generation defaults, project-owned default style, first 20 episodes,
-first 40 assets and shot count. Full scripts/shot descriptions/assets remain on-demand.
+first 40 assets and shot count. Full tooling/shot descriptions/assets remain on-demand.
 Never serialize arbitrary `extra` data into automatic context. Reuse businessStore's
 projection whitelist. Coverage is visible in the context inspector; its token estimate
 includes these facts in the instruction envelope and never counts them twice.

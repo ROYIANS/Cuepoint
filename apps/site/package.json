@@ -1,0 +1,24 @@
+{
+  "name": "@cuepoint/site",
+  "version": "0.1.3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --open /landing.html",
+    "build": "vite build",
+    "types": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@cuepoint/distribution": "workspace:*",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.2",
+    "vite": "^7.1.5",
+    "typescript": "^5.9.2",
+    "@types/node": "^22.20.3",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9"
+  }
+}

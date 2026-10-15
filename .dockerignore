@@ -21,3 +21,11 @@ agent-transcripts
 docs
 *.md
 !README.md
+
+**/node_modules
+**/dist
+**/.tools
+**/.acceptance
+**/.release
+**/src-tauri/target
+**/src-tauri/gen

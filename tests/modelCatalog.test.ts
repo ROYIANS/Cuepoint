@@ -12,7 +12,7 @@ import type {CatalogEntry, CatalogSnapshot} from "@/lib/ai/modelCatalog/types";
 import {parseBaselineSnapshot, parseSyncedSnapshot} from "@/lib/ai/modelCatalog/validate";
 import baseline from "@/lib/ai/modelCatalog/baseline.generated.json";
 // @ts-expect-error plain ESM script without declarations
-import {BASELINE_PATH, compareBaseline, projectBaseline} from "../scripts/models-dev-baseline.mjs";
+import {BASELINE_PATH, compareBaseline, projectBaseline} from "../tooling/models-dev-baseline.mjs";
 
 afterEach(() => resetModelCatalogForTests());
 
@@ -40,7 +40,7 @@ describe("committed baseline", () => {
     it("regenerates identically from the installed package; only real drift fails verify", async () => {
         const snapshot = await import("@opencode-ai/models/snapshot");
         const pkg = JSON.parse(readFileSync("node_modules/@opencode-ai/models/package.json", "utf8"));
-        const scope = JSON.parse(readFileSync("src/lib/ai/modelCatalog/scope.json", "utf8"));
+        const scope = JSON.parse(readFileSync("packages/studio/src/lib/ai/modelCatalog/scope.json", "utf8"));
         const fresh = projectBaseline({providers: snapshot.providers, snapshotGeneratedAt: snapshot.generatedAt, packageVersion: pkg.version}, scope);
         const committed = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
         expect(compareBaseline(committed, fresh)).toEqual([]);

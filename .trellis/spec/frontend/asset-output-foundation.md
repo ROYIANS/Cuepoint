@@ -19,7 +19,7 @@ validateGenerationDefaults(raw: unknown): string[]
 generationParameters(config: ProjectGenerationDefaults, kind: 'image' | 'video'): Record<string, string | number>
 ```
 
-`src/domain/output.ts` owns versioned provider capabilities and validation. `src/lib/shotRelations.ts` owns effective relationship names for UI and delivery. Optional creative strings live on domain entities; missing legacy fields display as empty without a DB version change. Package parsers validate their types.
+`packages/studio/src/domain/output.ts` owns versioned provider capabilities and validation. `packages/studio/src/lib/shotRelations.ts` owns effective relationship names for UI and delivery. Optional creative strings live on domain entities; missing legacy fields display as empty without a DB version change. Package parsers validate their types.
 
 ## 3. Contracts
 - Project creative target aspect and image/video generation defaults are separate. Expanding target aspects does not change existing dimension mappings or authored shot durations.

@@ -1,0 +1,9 @@
+{
+  "packages": [
+    {"path": "apps/web", "name": "@cuepoint/web", "sources": ["src"], "dependencies": ["@cuepoint/studio"]},
+    {"path": "apps/desktop", "name": "@cuepoint/desktop", "sources": ["src"], "dependencies": ["@cuepoint/studio"]},
+    {"path": "apps/site", "name": "@cuepoint/site", "sources": ["src"], "dependencies": ["@cuepoint/distribution"]},
+    {"path": "packages/studio", "name": "@cuepoint/studio", "sources": ["src"], "dependencies": ["@cuepoint/distribution"]},
+    {"path": "packages/distribution", "name": "@cuepoint/distribution", "sources": ["src"], "dependencies": []}
+  ]
+}

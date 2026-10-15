@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {mountStage, type StageEnv, type StageHandle} from "@/landing/film/renderers/stage";
-import {progressToFrame, sceneProgressWindow} from "@/landing/film/timeline";
-import type {FilmDriver, FilmState} from "@/landing/film/useFilmProgress";
+import {mountStage, type StageEnv, type StageHandle} from "../apps/site/src/film/renderers/stage";
+import {progressToFrame, sceneProgressWindow} from "../apps/site/src/film/timeline";
+import type {FilmDriver, FilmState} from "../apps/site/src/film/useFilmProgress";
 
 function fakeContext() {
     const calls = {drawImage: 0, clearRect: 0};

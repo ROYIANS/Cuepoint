@@ -5,5 +5,5 @@
     "incremental": false,
     "tsBuildInfoFile": "../../node_modules/.tmp/d05.typecheck.tsbuildinfo"
   },
-  "include": ["../../src", "./agentToolDefinition.ts"]
+  "include": ["../../packages/studio/src", "./agentToolDefinition.ts"]
 }

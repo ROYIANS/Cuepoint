@@ -10,7 +10,7 @@ import type {NativeSession} from "@/lib/storage/protocol";
 import type {NativeInvoke} from "@/lib/storage/nativeBridge";
 
 if (process.env.CUEPOINT_TOOL_MODE === "hosted" && !process.env.CUEPOINT_NATIVE_STORE_PROBE) throw new Error("Hosted native suites require the runner-resolved probe path");
-export const nativeProbePath=resolve(process.env.CUEPOINT_NATIVE_STORE_PROBE ?? "desktop/tauri/.tools/target/debug/product_store_probe");
+export const nativeProbePath=resolve(process.env.CUEPOINT_NATIVE_STORE_PROBE ?? "apps/desktop/.tools/target/debug/product_store_probe");
 
 export async function createNativeProbe(options:{intercept?:(command:string,args:Record<string,unknown>,next:()=>Promise<unknown>)=>Promise<unknown>} = {}) {
     const temporary=await mkdtemp(join(tmpdir(),"cuepoint-shared-contract-")),root=join(temporary,"fresh-workspace");

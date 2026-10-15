@@ -17,9 +17,9 @@ vi.mock("@/lib/appVersion", () => ({appVersion: () => "0.1.3"}));
 vi.mock("@tanstack/react-router", () => ({Link: ({to, children}: {to: string; children: ReactNode}) => createElement("a", {href: to}, children)}));
 
 import {UpdateSection} from "@/components/settings/sections/UpdateSection";
-import {classifyUpdate} from "@/lib/desktopRelease/version";
-import type {LatestDesktopRelease} from "@/lib/desktopRelease/releases";
-import type {AssetChoice} from "@/lib/desktopRelease/platform";
+import {classifyUpdate} from "@cuepoint/distribution/version";
+import type {LatestDesktopRelease} from "@cuepoint/distribution/releases";
+import type {AssetChoice} from "@cuepoint/distribution/platform";
 
 function release(version: string): LatestDesktopRelease {
     return {version, tag: `desktop-v${version}`, htmlUrl: `https://github.com/ROYIANS/Cuepoint/releases/tag/desktop-v${version}`,

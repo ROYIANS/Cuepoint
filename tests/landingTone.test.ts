@@ -1,9 +1,9 @@
 import {readFileSync} from "node:fs";
 import {describe, expect, it} from "vitest";
-import {sceneProgressWindow} from "@/landing/film/timeline";
-import {CREDITS_TONE, SCENE_TONES, STAGE_TEXT, TONE_ENTER, TONE_LEAVE, toneAt, toneCss, type Rgb} from "@/landing/film/tone";
+import {sceneProgressWindow} from "../apps/site/src/film/timeline";
+import {CREDITS_TONE, SCENE_TONES, STAGE_TEXT, TONE_ENTER, TONE_LEAVE, toneAt, toneCss, type Rgb} from "../apps/site/src/film/tone";
 
-const landingCss = readFileSync(new URL("../src/landing/styles/landing.css", import.meta.url), "utf8");
+const landingCss = readFileSync(new URL("../apps/site/src/styles/landing.css", import.meta.url), "utf8");
 
 // WCAG 2.x relative luminance and contrast ratio of sRGB colours (0..255 channels).
 function luminance([r, g, b]: Rgb): number {

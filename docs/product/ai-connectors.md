@@ -12,15 +12,15 @@
 
 ## 存储
 
-- IndexedDB 表 `connectors`（`src/db/database.ts`）
-- 读写经 `listConnectors` / `upsertConnector` / `deleteConnector`（`src/db/repo.ts`）
+- IndexedDB 表 `connectors`（`packages/studio/src/db/database.ts`）
+- 读写经 `listConnectors` / `upsertConnector` / `deleteConnector`（`packages/studio/src/db/repo.ts`）
 - **不进** `exportProjectZip`
 - **范围：工作室全局**
 
 ## 协议客户端
 
-- `src/lib/ai/openaiCompatible.ts`：规范化 Base URL、Bearer、`testConnection`、`listModels`
-- 目录：`src/lib/ai/catalog.ts`（`openai-compatible`、`deepseek`、`apimart`、`aihubmix`）
+- `packages/studio/src/lib/ai/openaiCompatible.ts`：规范化 Base URL、Bearer、`testConnection`、`listModels`
+- 目录：`packages/studio/src/lib/ai/catalog.ts`（`openai-compatible`、`deepseek`、`apimart`、`aihubmix`）
 
 ## MVP 范围（已定）
 
@@ -44,11 +44,11 @@
 
 APIMart uses the existing studio-global connector storage with default Base URL `https://api.apimart.ai/v1`. The catalog distinguishes provider capabilities (`chat`, `image`, `video`) from the OpenAI-compatible chat protocol. No database migration is required.
 
-`src/lib/ai/connectors.ts` owns provider dispatch for connection testing and model discovery. APIMart probes only `GET /models?expand=category`; it never falls back to a paid POST. The connection page lists every visible model; the chat picker lists only models categorized as `chat`. Unknown or missing categories require manual model entry. Other providers retain their existing behavior.
+`packages/studio/src/lib/ai/connectors.ts` owns provider dispatch for connection testing and model discovery. APIMart probes only `GET /models?expand=category`; it never falls back to a paid POST. The connection page lists every visible model; the chat picker lists only models categorized as `chat`. Unknown or missing categories require manual model entry. Other providers retain their existing behavior.
 
 Chat also excludes known image/video/audio models from manual search and saved-selection reinsertion. Old conversations keep their messages, but an incompatible saved model prompts the user to choose a chat model. A send validates the actual provider/model before any message writes or chat POST; a failed APIMart metadata query leaves the draft intact. Unknown custom model IDs remain allowed after a successful metadata query. Classification is scoped to the connector and relies on provider metadata, not a model-name blocklist.
 
-`src/lib/ai/apimart.ts` provides:
+`packages/studio/src/lib/ai/apimart.ts` provides:
 
 | Export | Purpose |
 | --- | --- |
@@ -73,7 +73,7 @@ AIHubMix is available in the existing connector catalog with default Base URL `h
 
 Chat discovery uses `types`, `endpoints` and `output_modalities`. Text LLMs with Chat Completions support (or unannotated protocols) are suggested. Image/video **input** does not disqualify a text model. Known media/non-chat types, media outputs and explicitly incompatible protocol sets are excluded from suggestions, saved selections and manual search. Unknown aliases remain manual-only after successful metadata discovery. The existing send boundary validates again before any thread/message mutation or chat request; failures preserve history and draft.
 
-The independent `src/lib/ai/aihubmix.ts` client provides:
+The independent `packages/studio/src/lib/ai/aihubmix.ts` client provides:
 
 | Operation | Purpose |
 | --- | --- |
