@@ -1927,3 +1927,42 @@ Shipped split-pane module navigation, docked/overlay context panels, single-row 
 ### Next Steps
 
 - 按用户授权启动 child2，以 audio 试点完成 app/features/platform/ui 纵向组织，Agent通用库留到child3。
+
+
+## Session 68: Studio 按业务功能重组 checkpoint
+<!-- trellis-session: v=2 fp=b6342221bbba32a3 -->
+
+**Date**: 2026-10-15
+**Task**: Studio 按业务功能重组 checkpoint
+**Package**: studio
+**Branch**: `codex/studio-feature-organization`
+
+### Summary
+
+完成 Studio 九个业务 feature、平台边界、所有权门禁与完整验收，归档 child2，进入可复用 Agent 抽离。
+
+### Main Changes
+
+- 按 app/features/platform/ui 组织 Studio，保留产品事务、历史快照和供应商行为。
+- 建立所有权、公有导出、依赖方向和真实 CLI 负例门禁，补齐规范与任务验收证据。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `6a2927f0` | refactor: 按业务功能组织 Studio 代码 |
+| `7ddeed11` | docs(task): 记录 Studio 重组与验收 |
+
+### Testing
+
+- [OK] 最终质量门禁、88 项质量自测及 5 项 CLI 回归通过；120 文件 1918 项原生测试和附加 6 项 self-hosted、5 项 browser 验收通过。
+- [OK] 原生完整验收使用单 worker 和原有 20 秒限制；默认双 worker 的超时记录及 E04 历史基线失败保留在 verification.md。
+- [OK] 六文件仅空白修复，AST、TypeScript 与 Vite/esbuild 输出等价；最终质量、原生及冻结输入哈希零漂移。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 启动 reusable-agent-runtime 子任务，抽离实际 Agent 循环与模型适配，新增独立持久化 consumer。

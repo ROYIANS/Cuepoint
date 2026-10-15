@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 67
+- **Total Sessions**: 68
 - **Last Active**: 2026-10-15
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1929 | Active |
+| `journal-1.md` | ~1968 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 68 | 2026-10-15 | Studio 按业务功能重组 checkpoint | `6a2927f0`, `7ddeed11` | `codex/studio-feature-organization` |
 | 67 | 2026-10-15 | Monorepo 应用边界检查点 | `bb3a9580`, `4a149e55` | `codex/monorepo-app-boundaries` |
 | 66 | 2026-10-14 | 归档设置页任务并衔接跨设备同步规划 | `84bac7b1`, `69af8c11` | `main` |
 | 65 | 2026-10-14 | 桌面0.1.3发布准备与模型基线刷新 | `5fbfa4fe`, `69af8c11` | `codex/desktop-settings-update` |
