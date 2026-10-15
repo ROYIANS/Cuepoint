@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-2.md`
-- **Total Sessions**: 73
+- **Total Sessions**: 74
 - **Last Active**: 2026-10-15
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-2.md` | ~185 | Active |
+| `journal-2.md` | ~223 | Active |
 | `journal-1.md` | ~1968 | Archived |
 <!-- @@@/auto:active-documents -->
 
@@ -30,6 +30,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 74 | 2026-10-15 | E04 owned topic reads and centered return to latest | `982dece3`, `8220faf5` | `codex/agent-thread-reading` |
 | 73 | 2026-10-15 | E03 execution feedback and quiet preparation | `9e3b8dcb` | `codex/agent-execution-feedback` |
 | 72 | 2026-10-15 | E02 immediate Agent send and quiet recovery | `447a9fb7` | `codex/agent-optimistic-send` |
 | 71 | 2026-10-15 | E01 Agent 并排镜头详情完成 | `a0c8171d`, `5f8b6ab0` | `codex/agent-parallel-details` |

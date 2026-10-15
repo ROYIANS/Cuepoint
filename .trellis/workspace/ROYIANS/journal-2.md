@@ -183,3 +183,41 @@ Completed E03 with immediate repeat-safe Stop and bounded private timing; remove
 ### Next Steps
 
 - Continue E04 owned topic queries, departure scope and accessible return-to-latest under standing sequential authorization.
+
+
+## Session 74: E04 owned topic reads and centered return to latest
+<!-- trellis-session: v=2 fp=a9e663b67feb8ffe -->
+
+**Date**: 2026-10-15
+**Task**: E04 owned topic reads and centered return to latest
+**Package**: studio
+**Branch**: `codex/agent-thread-reading`
+
+### Summary
+
+Completed scoped topic loading/departure and local reading intent; applied owner screenshot correction to the centered circular down-arrow and archived the stage.
+
+### Main Changes
+
+- Message/run/compaction request envelopes govern all parent consumers; confirmed departure bypass stays with its topic and covered execution.
+- Pause preserves reading; native return action resumes following and focus. Owner-selected centered icon treatment works within current chat column including parallel details.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `982dece3` | feat: scope agent topic reads and preserve reading intent |
+| `8220faf5` | fix: center the conversation return-to-latest button |
+
+### Testing
+
+- [OK] Necessary query/departure and reading suites passed; direct types, scoped lint, independent review and architecture passed. Screenshot delta reading 7/7 and direct types; actual Chromium desktop/detail/narrow measured zero center offset, 36px circle, 24px dock gap; no page exceptions.
+- [OK] No broad suites, build, packaging, native or paid calls; future E05/E06/E16 planning remains separate.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Activate designed E05 asset create/delete, archived label and serial material import feedback, then independently check and commit.
