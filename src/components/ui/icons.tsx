@@ -4,7 +4,9 @@ import {ArchiveIcon as PhArchive} from "@phosphor-icons/react/dist/csr/Archive";
 import {ArrowBendUpLeftIcon as PhArrowBendUpLeft} from "@phosphor-icons/react/dist/csr/ArrowBendUpLeft";
 import {ArrowBendUpRightIcon as PhArrowBendUpRight} from "@phosphor-icons/react/dist/csr/ArrowBendUpRight";
 import {ArrowClockwiseIcon as PhArrowClockwise} from "@phosphor-icons/react/dist/csr/ArrowClockwise";
-import {ArrowCounterClockwiseIcon as PhArrowCounterClockwise} from "@phosphor-icons/react/dist/csr/ArrowCounterClockwise";
+import {
+    ArrowCounterClockwiseIcon as PhArrowCounterClockwise
+} from "@phosphor-icons/react/dist/csr/ArrowCounterClockwise";
 import {ArrowDownIcon as PhArrowDown} from "@phosphor-icons/react/dist/csr/ArrowDown";
 import {ArrowLeftIcon as PhArrowLeft} from "@phosphor-icons/react/dist/csr/ArrowLeft";
 import {ArrowRightIcon as PhArrowRight} from "@phosphor-icons/react/dist/csr/ArrowRight";
@@ -27,7 +29,9 @@ import {ChecksIcon as PhChecks} from "@phosphor-icons/react/dist/csr/Checks";
 import {CircleIcon as PhCircle} from "@phosphor-icons/react/dist/csr/Circle";
 import {CircleNotchIcon as PhCircleNotch} from "@phosphor-icons/react/dist/csr/CircleNotch";
 import {ClipboardTextIcon as PhClipboardText} from "@phosphor-icons/react/dist/csr/ClipboardText";
-import {ClockCounterClockwiseIcon as PhClockCounterClockwise} from "@phosphor-icons/react/dist/csr/ClockCounterClockwise";
+import {
+    ClockCounterClockwiseIcon as PhClockCounterClockwise
+} from "@phosphor-icons/react/dist/csr/ClockCounterClockwise";
 import {CoinsIcon as PhCoins} from "@phosphor-icons/react/dist/csr/Coins";
 import {ColumnsIcon as PhColumns} from "@phosphor-icons/react/dist/csr/Columns";
 import {CopyIcon as PhCopy} from "@phosphor-icons/react/dist/csr/Copy";
@@ -106,22 +110,22 @@ import {InfoIcon as PhInfo} from "@phosphor-icons/react/dist/csr/Info";
 /** Application-owned glyphs; model/provider marks retain their brand owner. */
 function appIcon(Glyph: Icon, defaultWeight: IconWeight = "regular", mirror = false) {
     return forwardRef<SVGSVGElement, IconProps>(function AppIcon({
-        fill: _fill,
-        stroke: _stroke,
-        strokeWidth: _strokeWidth,
-        strokeLinecap: _strokeLinecap,
-        strokeLinejoin: _strokeLinejoin,
-        strokeMiterlimit: _strokeMiterlimit,
-        strokeDasharray: _strokeDasharray,
-        strokeDashoffset: _strokeDashoffset,
-        width: _width,
-        height: _height,
-        viewBox: _viewBox,
-        size = 24,
-        weight = defaultWeight,
-        mirrored = mirror,
-        ...props
-    }, ref) {
+                                                                     fill: _fill,
+                                                                     stroke: _stroke,
+                                                                     strokeWidth: _strokeWidth,
+                                                                     strokeLinecap: _strokeLinecap,
+                                                                     strokeLinejoin: _strokeLinejoin,
+                                                                     strokeMiterlimit: _strokeMiterlimit,
+                                                                     strokeDasharray: _strokeDasharray,
+                                                                     strokeDashoffset: _strokeDashoffset,
+                                                                     width: _width,
+                                                                     height: _height,
+                                                                     viewBox: _viewBox,
+                                                                     size = 24,
+                                                                     weight = defaultWeight,
+                                                                     mirrored = mirror,
+                                                                     ...props
+                                                                 }, ref) {
         // LobeUI forwards transparent fill and stroke props. Official geometry
         // owns those attributes; preserve semantic size, color, weight and ref.
         return <Glyph {...props} ref={ref} size={size} weight={weight} mirrored={mirrored}/>;

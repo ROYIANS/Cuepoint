@@ -10,7 +10,7 @@ import {normalizeContextPolicy} from "@/lib/agent/contextPolicy";
 import {resetThreadContextPolicy, saveContextPolicyAsDefault, updateContextPolicy} from "@/db/contextSettings";
 import "./contextParameters.css";
 
-async function readPolicySource(threadId: string | undefined, scopeKey: string, db:ProductStore) {
+async function readPolicySource(threadId: string | undefined, scopeKey: string, db: ProductStore) {
     try {
         return {
             scopeKey,

@@ -18,10 +18,16 @@ import {MemoryRunHistory} from "./MemoryContextDetails";
 import {TurnNavigation} from "./TurnNavigation";
 
 /** One quiet status line, only for outcomes the reader must notice. */
-export function presentMessageStatus(message: Pick<ChatMessage, "status" | "error">, run?: Pick<AgentRun, "pauseReason">): { text: string; tone: "error" | "muted" } | undefined {
+export function presentMessageStatus(message: Pick<ChatMessage, "status" | "error">, run?: Pick<AgentRun, "pauseReason">): {
+    text: string;
+    tone: "error" | "muted"
+} | undefined {
     if (message.status === "error") return {text: message.error || "生成失败", tone: "error"};
     if (message.status === "aborted") return {text: "已停止", tone: "muted"};
-    if (message.status === "interrupted") return {text: message.error || (run?.pauseReason === "model_step_limit" ? "执行已暂停" : "生成中断"), tone: "muted"};
+    if (message.status === "interrupted") return {
+        text: message.error || (run?.pauseReason === "model_step_limit" ? "执行已暂停" : "生成中断"),
+        tone: "muted"
+    };
     return undefined;
 }
 
@@ -174,7 +180,8 @@ const AgentChatMessageItem = memo(
 
         if (isUser) {
             return (
-                <div className="agent-transcript-item agent-transcript-user" data-turn-anchor={message.id} title={timeLabel}>
+                <div className="agent-transcript-item agent-transcript-user" data-turn-anchor={message.id}
+                     title={timeLabel}>
                     <div className="agent-user-bubble">
                         <ReferenceMessageSources context={message.referenceContext} content={message.content}/>
                         <Markdown {...MARKDOWN_PROPS}>{message.content}</Markdown>
@@ -208,7 +215,8 @@ const AgentChatMessageItem = memo(
                         </span>
                     </div>
                     {(statusLine || (retryable && message.runId)) && <div className="agent-message-status">
-                        {statusLine && <span role="status" className={statusLine.tone === "error" ? "agent-message-error" : undefined}>{statusLine.text}</span>}
+                        {statusLine && <span role="status"
+                                             className={statusLine.tone === "error" ? "agent-message-error" : undefined}>{statusLine.text}</span>}
                         {retryable && message.runId && <Button size="sm" variant="outline"
                                                                onClick={() => onRetryRun(message.runId!)}>重新生成</Button>}
                     </div>}

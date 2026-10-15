@@ -53,7 +53,13 @@ async function request(path: 'search' | 'extract' | 'usage', key: string, body: 
             method: path === 'usage' ? 'GET' : 'POST',
             headers: {Authorization: `Bearer ${key}`, ...(path !== 'usage' ? {'Content-Type': 'application/json'} : {})},
             ...(path !== 'usage' ? {body: JSON.stringify(body)} : {}),
-        }, {fetchImpl: options.fetchImpl, signal: controller.signal, credentials: 'omit', redirect: 'error', runtimePurpose: path === 'usage' ? 'search-probe' : undefined});
+        }, {
+            fetchImpl: options.fetchImpl,
+            signal: controller.signal,
+            credentials: 'omit',
+            redirect: 'error',
+            runtimePurpose: path === 'usage' ? 'search-probe' : undefined
+        });
         if (!response.ok) {
             await response.body?.cancel();
             const code = response.status === 401 || response.status === 403 ? 'authentication' : response.status === 429 ? 'rate_limit' : [402, 432, 433].includes(response.status) ? 'quota' : 'http';

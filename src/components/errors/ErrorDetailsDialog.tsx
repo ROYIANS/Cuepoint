@@ -1,6 +1,13 @@
 import {useMemo, useRef, useState, useSyncExternalStore} from "react";
 import {Button} from "@/components/ui/button";
-import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+} from "@/components/ui/dialog";
 import {buildDiagnosticReport, buildIssueUrl, collectDiagnosticContext} from "@/lib/diagnostics/errorReport";
 import {getLatestError, subscribeLatestError} from "@/lib/diagnostics/reportError";
 import {isTauriRuntime} from "@/lib/runtimeIdentity";
@@ -70,7 +77,12 @@ export function ErrorDetailsDialog() {
     };
 
     return (
-        <Dialog open={open} onOpenChange={next => { if (!next) { setStatus(""); closeErrorDetails(); } }}>
+        <Dialog open={open} onOpenChange={next => {
+            if (!next) {
+                setStatus("");
+                closeErrorDetails();
+            }
+        }}>
             <DialogContent className="sm:max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>错误详情</DialogTitle>
@@ -87,8 +99,10 @@ export function ErrorDetailsDialog() {
                 ) : <p className="text-sm text-muted-foreground">暂无可导出的错误记录。</p>}
                 <p role="status" className="min-h-5 text-sm text-muted-foreground">{status}</p>
                 <DialogFooter>
-                    <Button type="button" variant="outline" disabled={!latest} onClick={() => void openIssue()}>在 GitHub 反馈</Button>
-                    <Button type="button" variant="outline" disabled={!latest} onClick={() => void save()}>保存为文件</Button>
+                    <Button type="button" variant="outline" disabled={!latest} onClick={() => void openIssue()}>在
+                        GitHub 反馈</Button>
+                    <Button type="button" variant="outline" disabled={!latest}
+                            onClick={() => void save()}>保存为文件</Button>
                     <Button type="button" disabled={!latest} onClick={() => void copy()}>复制诊断信息</Button>
                 </DialogFooter>
             </DialogContent>

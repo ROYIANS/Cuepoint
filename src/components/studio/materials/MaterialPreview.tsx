@@ -18,10 +18,11 @@ export function MaterialPreview({payload, inspect = false}: { payload?: Material
     const preview = useBinaryPreview(blob, mime.startsWith("image/") || mime.startsWith("video/") || (inspect && (mime.startsWith("audio/") || !native)));
     const url = preview.status === "ready" ? preview.url : undefined;
     const onPreviewError = preview.status === "ready" ? preview.onError : undefined;
-    const [document, setDocument] = useState<{source: typeof blob; blob: Blob}>();
+    const [document, setDocument] = useState<{ source: typeof blob; blob: Blob }>();
     const [text, setText] = useState("");
     const saving = useRef(false);
     const [savingFile, setSavingFile] = useState(false);
+
     async function saveOriginal() {
         if (saving.current || payload?.type !== "file") return;
         saving.current = true;
@@ -38,6 +39,7 @@ export function MaterialPreview({payload, inspect = false}: { payload?: Material
             setSavingFile(false);
         }
     }
+
     useEffect(() => {
         const controller = new AbortController();
         setText("");
@@ -59,24 +61,29 @@ export function MaterialPreview({payload, inspect = false}: { payload?: Material
     if (!payload) return <div className="material-preview"><PackageOpen aria-hidden/><span>读取预览…</span></div>;
     return <>
         <div className={`material-preview ${inspect ? "material-preview-inspect" : ""}`}>
-            {blob && ["missing", "corrupt", "error"].includes(preview.status) ? <p role="alert">{binaryPreviewMessage(preview)}</p> : url && /^image\/(png|jpeg|webp|gif|avif|bmp)$/.test(mime) ?
-                <img src={url} onError={onPreviewError} alt={inspect ? "素材预览" : ""} loading="lazy"/>
-                : url && mime.startsWith("video/") ?
-                    <video src={url} onError={onPreviewError} controls={inspect} muted={!inspect} playsInline preload="metadata"
-                           aria-label="视频素材预览"/>
-                    : mime.startsWith("audio/") ? <><Music2 aria-hidden/>{inspect && url ?
-                            <audio src={url} onError={onPreviewError} controls preload="metadata" aria-label="音频素材预览"/> : <span>音频</span>}</>
-                        : payload.type === "setting" ? <><PackageOpen
-                                aria-hidden/><span>{payload.entity.name || "创作设定"}</span></>
-                            : inspect && text ?
-                                <pre>{text}{blob && binaryByteLength(blob) > 16000 ? "\n…仅预览前 16000 字节" : ""}</pre>
-                                : <><FileText aria-hidden/><span>{payload.filename}</span>{inspect &&
-                                    <p>文档以文件形式保存，可提取文字预览或下载查看完整内容。</p>}{inspect && blob && ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(mime) &&
-                                    document && document.source === blob && <MaterialDocumentPreview blob={document.blob} mime={mime}/>}</>}
+            {blob && ["missing", "corrupt", "error"].includes(preview.status) ?
+                <p role="alert">{binaryPreviewMessage(preview)}</p> : url && /^image\/(png|jpeg|webp|gif|avif|bmp)$/.test(mime) ?
+                    <img src={url} onError={onPreviewError} alt={inspect ? "素材预览" : ""} loading="lazy"/>
+                    : url && mime.startsWith("video/") ?
+                        <video src={url} onError={onPreviewError} controls={inspect} muted={!inspect} playsInline
+                               preload="metadata"
+                               aria-label="视频素材预览"/>
+                        : mime.startsWith("audio/") ? <><Music2 aria-hidden/>{inspect && url ?
+                                <audio src={url} onError={onPreviewError} controls preload="metadata"
+                                       aria-label="音频素材预览"/> : <span>音频</span>}</>
+                            : payload.type === "setting" ? <><PackageOpen
+                                    aria-hidden/><span>{payload.entity.name || "创作设定"}</span></>
+                                : inspect && text ?
+                                    <pre>{text}{blob && binaryByteLength(blob) > 16000 ? "\n…仅预览前 16000 字节" : ""}</pre>
+                                    : <><FileText aria-hidden/><span>{payload.filename}</span>{inspect &&
+                                        <p>文档以文件形式保存，可提取文字预览或下载查看完整内容。</p>}{inspect && blob && ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(mime) &&
+                                        document && document.source === blob &&
+                                        <MaterialDocumentPreview blob={document.blob} mime={mime}/>}</>}
             {inspect && payload.type === "file" && (native ?
                 <Button variant="outline" size="sm" disabled={savingFile} onClick={() => void saveOriginal()}>
                     {savingFile ? "正在保存原文件…" : "下载原文件"}
-                </Button> : url && <a href={url} download={payload.filename} className="material-download">下载原文件</a>)}
+                </Button> : url &&
+                <a href={url} download={payload.filename} className="material-download">下载原文件</a>)}
         </div>
         {inspect && payload.type === "setting" &&
             <dl className="material-setting-preview">{Object.entries(payload.entity).filter(([key, value]) => ["name", "bio", "appearance", "personality", "motivation", "voice", "location", "timeOfDay", "atmosphere", "geography", "lighting", "notes", "kind", "material", "size", "usage", "continuity", "palette", "lens", "composition", "negativePrompt"].includes(key) && typeof value === "string" && value.trim()).map(([key, value]) =>

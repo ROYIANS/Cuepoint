@@ -55,42 +55,51 @@ const input = z.discriminatedUnion("kind", [
     }),
     z.object({kind: z.literal("music"), settings, draftId: id.optional(), draftRevision: number.optional()}),
 ]);
-const batchSource = z.object({kind: z.literal("batch"), batchId: id, itemId: id, owner: z.object({kind: z.literal("manual")})});
+const batchSource = z.object({
+    kind: z.literal("batch"),
+    batchId: id,
+    itemId: id,
+    owner: z.object({kind: z.literal("manual")})
+});
 const speechSnapshot = z.object({
-    input: input.options[0], connector: z.object({id, provider: z.enum(["apimart", "mimo"]), baseUrl: z.string()}),
-    speakerId: id.optional(), speakerRevision: number.optional(), fingerprint: z.string(), referenceFingerprint: z.string().optional()
+    input: input.options[0],
+    connector: z.object({id, provider: z.enum(["apimart", "mimo"]), baseUrl: z.string()}),
+    speakerId: id.optional(),
+    speakerRevision: number.optional(),
+    fingerprint: z.string(),
+    referenceFingerprint: z.string().optional()
 });
 /** Explicit allowlist: credentials, chat permission data and live claims cannot travel. */
 const segmentSchema = z.object({
-        ...base,
-        chapterId: id,
-        speakerId: id.optional(),
-        order: number,
-        text: z.string(),
-        notes: z.string(),
-        selectedTakeId: id.optional()
-    });
+    ...base,
+    chapterId: id,
+    speakerId: id.optional(),
+    order: number,
+    text: z.string(),
+    notes: z.string(),
+    selectedTakeId: id.optional()
+});
 const takeSchema = z.object({
-        ...base, ...meta,
-        segmentId: id.optional(),
-        mediaId: id,
-        name: z.string(),
-        source: z.enum(["recording", "upload", "library", "tts", "music"]),
-        textSnapshot: z.string().optional(),
-        provenance: provenance.optional()
-    });
+    ...base, ...meta,
+    segmentId: id.optional(),
+    mediaId: id,
+    name: z.string(),
+    source: z.enum(["recording", "upload", "library", "tts", "music"]),
+    textSnapshot: z.string().optional(),
+    provenance: provenance.optional()
+});
 const clipSchema = z.object({
-        ...base,
-        chapterId: id,
-        trackId: id,
-        takeId: id,
-        startSec: number,
-        trimStartSec: number,
-        trimEndSec: number,
-        gain: number,
-        fadeInSec: number,
-        fadeOutSec: number
-    });
+    ...base,
+    chapterId: id,
+    trackId: id,
+    takeId: id,
+    startSec: number,
+    trimStartSec: number,
+    trimEndSec: number,
+    gain: number,
+    fadeInSec: number,
+    fadeOutSec: number
+});
 const schemas = {
     audioChapters: z.object({...base, title: z.string(), order: number}),
     audioSpeakers: z.object({
@@ -161,15 +170,35 @@ const schemas = {
         dormant: z.literal(true)
     }),
     audioGenerationBatches: z.object({
-        ...base, version: z.literal(1), chapterId: id, title: z.string(), owner: z.object({kind: z.literal("manual")}),
-        status: z.enum(["draft", "ready", "running", "paused", "settled", "cancelled"]), itemIds: z.array(id),
-        confirmedItemIds: z.array(id).max(0), retrySourceBatchId: id.optional(), pauseReason: z.string().optional(), dormant: z.literal(true)
+        ...base,
+        version: z.literal(1),
+        chapterId: id,
+        title: z.string(),
+        owner: z.object({kind: z.literal("manual")}),
+        status: z.enum(["draft", "ready", "running", "paused", "settled", "cancelled"]),
+        itemIds: z.array(id),
+        confirmedItemIds: z.array(id).max(0),
+        retrySourceBatchId: id.optional(),
+        pauseReason: z.string().optional(),
+        dormant: z.literal(true)
     }),
     audioGenerationBatchItems: z.object({
-        ...base, batchId: id, chapterId: id, segmentId: id, order: number, included: z.boolean(),
-        state: z.enum(["draft", "queued", "linked", "cancelled"]), snapshot: speechSnapshot, intentId: id, jobId: id.optional()
+        ...base,
+        batchId: id,
+        chapterId: id,
+        segmentId: id,
+        order: number,
+        included: z.boolean(),
+        state: z.enum(["draft", "queued", "linked", "cancelled"]),
+        snapshot: speechSnapshot,
+        intentId: id,
+        jobId: id.optional()
     }),
-    audioArrangementProposals: createAudioArrangementPackageSchema({segment: segmentSchema, take: takeSchema, clip: clipSchema}),
+    audioArrangementProposals: createAudioArrangementPackageSchema({
+        segment: segmentSchema,
+        take: takeSchema,
+        clip: clipSchema
+    }),
 };
 type TableName = keyof typeof schemas;
 const schema = z.object({
@@ -244,7 +273,10 @@ export function remapAudioPackage(value: AudioPackage | undefined, projectId: st
     };
     const historical = (id: string) => {
         let next = map.get(id);
-        if (!next) {next = createId("history"); map.set(id, next);}
+        if (!next) {
+            next = createId("history");
+            map.set(id, next);
+        }
         return next;
     };
     const fingerprintInput = {
@@ -272,7 +304,12 @@ export function remapAudioPackage(value: AudioPackage | undefined, projectId: st
     for (const job of next.audioGenerationJobs) {
         job.intentId = createId("imported");
         job.connector = {id: "imported", provider: job.connector.provider, baseUrl: ""};
-        if (job.source.kind === "batch") job.source = {...job.source, batchId: reference(job.source.batchId), itemId: reference(job.source.itemId), owner: {kind: "manual"}};
+        if (job.source.kind === "batch") job.source = {
+            ...job.source,
+            batchId: reference(job.source.batchId),
+            itemId: reference(job.source.itemId),
+            owner: {kind: "manual"}
+        };
         else job.source = {kind: "manual"};
         job.dormant = true;
         if (job.input.kind === "speech" && job.input.mimo?.referenceMediaId) job.input.mimo.referenceMediaId = media(job.input.mimo.referenceMediaId);
@@ -286,7 +323,9 @@ export function remapAudioPackage(value: AudioPackage | undefined, projectId: st
         }
     }
     for (const batch of next.audioGenerationBatches) {
-        batch.owner = {kind: "manual"}; batch.dormant = true; batch.confirmedItemIds = [];
+        batch.owner = {kind: "manual"};
+        batch.dormant = true;
+        batch.confirmedItemIds = [];
         batch.itemIds = batch.itemIds.map(reference);
         batch.retrySourceBatchId = batch.retrySourceBatchId ? map.get(batch.retrySourceBatchId) : undefined;
     }
@@ -303,6 +342,10 @@ export function remapAudioPackage(value: AudioPackage | undefined, projectId: st
         const job = next.audioGenerationJobs.find(row => row.id === item.jobId);
         if (job) job.intentId = item.intentId;
     }
-    next.audioArrangementProposals = next.audioArrangementProposals.map(row => schemas.audioArrangementProposals.parse(remapAudioArrangementHistory(row, {projectId, historical, media: id => mediaMap.get(id)})));
+    next.audioArrangementProposals = next.audioArrangementProposals.map(row => schemas.audioArrangementProposals.parse(remapAudioArrangementHistory(row, {
+        projectId,
+        historical,
+        media: id => mediaMap.get(id)
+    })));
     return next;
 }

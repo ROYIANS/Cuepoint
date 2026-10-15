@@ -23,7 +23,9 @@ const router = createRouter({
     history: createProductRouterHistory(),
     defaultErrorComponent: ErrorFallback,
     defaultNotFoundComponent: NotFound,
-    defaultOnCatch: error => { reportError(error, {source: "boundary"}); },
+    defaultOnCatch: error => {
+        reportError(error, {source: "boundary"});
+    },
 });
 getHistoryNavigation(router.history);
 router.subscribe("onResolved", event => addBreadcrumb("route", event.toLocation.pathname));
@@ -39,12 +41,18 @@ const root = document.getElementById("root");
 if (!root) throw new Error("root element missing");
 
 const applicationRoot = createRoot(root, {
-    onCaughtError: error => { reportError(error, {source: "boundary"}); },
-    onUncaughtError: error => { reportError(error, {source: "global"}); },
-    onRecoverableError: error => { reportError(error, {source: "global"}); },
+    onCaughtError: error => {
+        reportError(error, {source: "boundary"});
+    },
+    onUncaughtError: error => {
+        reportError(error, {source: "global"});
+    },
+    onRecoverableError: error => {
+        reportError(error, {source: "global"});
+    },
 });
 
-async function startApplication():Promise<void> {
+async function startApplication(): Promise<void> {
     try {
         await initializeProductStorage();
         // Not awaited: the catalog is advisory and must not delay first paint. It never rejects, and

@@ -1,6 +1,10 @@
 import {VideoWorkspaceReadNotice} from "@/components/workspace/VideoWorkspaceReadNotice";
 import {useNavigate} from "@tanstack/react-router";
-import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
+import {
+    useVideoWorkspaceQuery,
+    useVideoWorkspaceReadStatus,
+    useVideoWorkspaceRepository
+} from "@/lib/videoWorkspaceRepository";
 import {useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
 import {Plus} from "@/components/ui/icons";
@@ -66,7 +70,10 @@ function EpisodeList({projectId}: { projectId: string }) {
     const {registerUndo} = useUndo();
 
     if (project === undefined) {
-        return <PageContent><PageState kind={readStatus.error ? "error" : "loading"} title={readStatus.error ? "读取工作区失败" : "正在读取集列表…"} description={readStatus.error} action={readStatus.error ? <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/></PageContent>;
+        return <PageContent><PageState kind={readStatus.error ? "error" : "loading"}
+                                       title={readStatus.error ? "读取工作区失败" : "正在读取集列表…"}
+                                       description={readStatus.error} action={readStatus.error ?
+            <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/></PageContent>;
     }
     if (project === null) {
         return <PageContent><PageState kind="missing" title="找不到这个项目"/></PageContent>;
@@ -90,7 +97,9 @@ function EpisodeList({projectId}: { projectId: string }) {
             const committed = await repository.reorderEpisodes(projectId, next);
             if (activeRef.current) registerUndo({
                 label: "已调整分集顺序",
-                restore: committed?.restore ?? (async () => {await repository.reorderEpisodes(projectId, previous);}),
+                restore: committed?.restore ?? (async () => {
+                    await repository.reorderEpisodes(projectId, previous);
+                }),
             });
         } catch (error) {
             if (activeRef.current) toast.error(error instanceof Error && error.message ? error.message : "调整顺序失败，请重试");
@@ -142,7 +151,9 @@ function EpisodeList({projectId}: { projectId: string }) {
             <VideoWorkspaceReadNotice {...readStatus}/>
             <PageContent mode="collection">
                 <PageHeader title="集" description="按集整理故事与分镜，各集共用项目世界。"
-                            actions={<Button disabled={Boolean(pending)} onClick={() => void createEpisode()}><Plus aria-hidden/>{pending === "add" ? "创建中…" : `新建第 ${episodes.length + 1} 集`}</Button>}/>
+                            actions={<Button disabled={Boolean(pending)} onClick={() => void createEpisode()}><Plus
+                                aria-hidden/>{pending === "add" ? "创建中…" : `新建第 ${episodes.length + 1} 集`}
+                            </Button>}/>
 
                 <SeriesLoglineEditor
                     key={project.id}
@@ -152,43 +163,46 @@ function EpisodeList({projectId}: { projectId: string }) {
 
                 {pending && <p role="status" className="text-muted-foreground mt-4 text-sm">{pendingLabel}</p>}
                 <div className="mt-6">
-                    {loadedEpisodes === undefined ? <PageState kind={readStatus.error ? "error" : "loading"} title={readStatus.error ? "读取工作区失败" : "正在读取集列表…"} description={readStatus.error} action={readStatus.error ? <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/> : !episodes.length ?
+                    {loadedEpisodes === undefined ? <PageState kind={readStatus.error ? "error" : "loading"}
+                                                               title={readStatus.error ? "读取工作区失败" : "正在读取集列表…"}
+                                                               description={readStatus.error} action={readStatus.error ?
+                        <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/> : !episodes.length ?
                         <PageState title="暂无分集" description="新建第一集，开始整理故事与分镜。"/> :
-                    <LibraryGrid>
-                        {episodes.map((episode, index) => (
-                            <CoverCard
-                                key={episode.id}
-                                title={episodeLabel(episode)}
-                                subtitle={`更新 ${formatUpdatedAt(episode.updatedAt)}`}
-                                mediaId={coverOfEpisode(shots, episode.id)}
-                                onOpen={() =>
-                                    void navigate({
-                                        to: "/p/$projectId/e/$episodeId",
-                                        params: {projectId, episodeId: episode.id},
-                                    })
-                                }
-                                actions={[
-                                    ...(index > 0
-                                        ? [{label: "上移", onSelect: () => void moveEpisode(index, -1)}]
-                                        : []),
-                                    ...(index < episodes.length - 1
-                                        ? [{label: "下移", onSelect: () => void moveEpisode(index, 1)}]
-                                        : []),
-                                    ...(canDelete
-                                        ? [{
-                                            label: "删除",
-                                            tone: "danger" as const,
-                                            onSelect: () => {
-                                                if (writingRef.current) return;
-                                                setDeleteError("");
-                                                setDeleteId(episode.id);
-                                            },
-                                        }]
-                                        : []),
-                                ]}
-                            />
-                        ))}
-                    </LibraryGrid>}
+                        <LibraryGrid>
+                            {episodes.map((episode, index) => (
+                                <CoverCard
+                                    key={episode.id}
+                                    title={episodeLabel(episode)}
+                                    subtitle={`更新 ${formatUpdatedAt(episode.updatedAt)}`}
+                                    mediaId={coverOfEpisode(shots, episode.id)}
+                                    onOpen={() =>
+                                        void navigate({
+                                            to: "/p/$projectId/e/$episodeId",
+                                            params: {projectId, episodeId: episode.id},
+                                        })
+                                    }
+                                    actions={[
+                                        ...(index > 0
+                                            ? [{label: "上移", onSelect: () => void moveEpisode(index, -1)}]
+                                            : []),
+                                        ...(index < episodes.length - 1
+                                            ? [{label: "下移", onSelect: () => void moveEpisode(index, 1)}]
+                                            : []),
+                                        ...(canDelete
+                                            ? [{
+                                                label: "删除",
+                                                tone: "danger" as const,
+                                                onSelect: () => {
+                                                    if (writingRef.current) return;
+                                                    setDeleteError("");
+                                                    setDeleteId(episode.id);
+                                                },
+                                            }]
+                                            : []),
+                                    ]}
+                                />
+                            ))}
+                        </LibraryGrid>}
                 </div>
             </PageContent>
 
@@ -242,11 +256,11 @@ function SeriesLoglineEditor({
                 <DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatest}/>
             </div>
             <Field label="整部戏一句话">
-            <Input
-                value={draft}
-                placeholder="这部戏，用一句话说完（可选）"
-                onChange={(event) => setDraft(event.target.value)}
-            />
+                <Input
+                    value={draft}
+                    placeholder="这部戏，用一句话说完（可选）"
+                    onChange={(event) => setDraft(event.target.value)}
+                />
             </Field>
         </>
     );

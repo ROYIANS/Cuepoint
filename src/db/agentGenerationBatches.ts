@@ -99,7 +99,7 @@ export async function prepareGenerationBatch(title: string, candidates: Generati
         if (error instanceof StorageError && error.certainty === "unknown") throw error;
         // Preparation never submits a remote request. Preflight failures happen before
         // the atomic batch/items/result write, and transaction failures roll it back.
-        throw new AtomicToolRollbackError(error instanceof Error ? error.message : '批量草稿准备失败，未提交生成',{cause:error});
+        throw new AtomicToolRollbackError(error instanceof Error ? error.message : '批量草稿准备失败，未提交生成', {cause: error});
     }
 }
 
@@ -115,7 +115,7 @@ async function prepareGenerationBatchDraft(title: string, candidates: Generation
     const prepared: Prepared[] = [];
     for (const candidate of candidates) prepared.push(await prepareGenerationSnapshot(candidate, context.signal, db));
     return executeAtomicTool(context, async (db) => {
-        const boundContext = {...context, store:db};
+        const boundContext = {...context, store: db};
         for (const item of prepared) await recheck(item, db);
         const run = (await db.agentRuns.get(boundContext.runId))!;
         const at = nowIso(), id = createId('genbatch');
@@ -368,7 +368,8 @@ export async function settleGenerationBatch(id: string, threadId: string, store?
 export async function selectBatchCandidate(id: string, threadId: string, itemId: string, store?: ProductStore) {
     const db = store ?? productDb;
     return db.transaction('rw', db.tables, async (db) => {
-        const batch = await ownedGenerationBatch(id, threadId, undefined, db), item = await db.agentGenerationBatchItems.get(itemId);
+        const batch = await ownedGenerationBatch(id, threadId, undefined, db),
+            item = await db.agentGenerationBatchItems.get(itemId);
         const job = item?.jobId ? await db.agentGenerationJobs.get(item.jobId) : undefined;
         if (!item || item.batchId !== id || !job?.result || !terminal(job)) throw new Error('候选尚无本地结果');
         const media = await db.media.get(job.result.mediaId);
@@ -455,7 +456,7 @@ export async function applyBatchSelections(id: string, threadId: string, store?:
             });
             outcomes.push(...items.map(item => ({targetKey: item.targetKey, applied: true})));
         } catch (error) {
-        if (error instanceof StorageError && error.certainty === "unknown") throw error;
+            if (error instanceof StorageError && error.certainty === "unknown") throw error;
             outcomes.push(...items.map(item => ({
                 targetKey: item.targetKey,
                 applied: false,

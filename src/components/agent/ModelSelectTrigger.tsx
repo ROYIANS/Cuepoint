@@ -8,7 +8,12 @@ import * as Popover from "@radix-ui/react-popover";
 import {ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench} from "@/components/ui/icons";
 import {type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore} from "react";
 import {formatPrice} from "@/lib/ai/modelCatalog/format";
-import {getModelCatalog, lookupModel, lookupModelByDefinition, subscribeModelCatalog} from "@/lib/ai/modelCatalog/store";
+import {
+    getModelCatalog,
+    lookupModel,
+    lookupModelByDefinition,
+    subscribeModelCatalog
+} from "@/lib/ai/modelCatalog/store";
 import {SURFACE_ELEVATED, TEXT, TEXT_TERTIARY} from "@/components/agent/agentTheme";
 import type {ConnectorConfig, Id} from "@/domain/types";
 import {buildChatModelOptions, type ChatModelPolicy} from "@/lib/ai/chatModelPolicy";
@@ -40,14 +45,25 @@ function ModelDetail({modelId, metadata, providerId, baseUrl}: {
     // Only the primitive facts that decide the result are dependencies, so a fresh `metadata`
     // object each render does not restart the lookup.
     const providedVision = metadata?.vision;
-    const [visionResult, setVisionResult] = useState<{key: string; capability: Awaited<ReturnType<typeof resolveVisionCapability>>}>();
+    const [visionResult, setVisionResult] = useState<{
+        key: string;
+        capability: Awaited<ReturnType<typeof resolveVisionCapability>>
+    }>();
     useEffect(() => {
         let current = true;
-        void resolveVisionCapability(modelId, providerId, providedVision === undefined ? undefined : {source: "provider", vision: providedVision}).then(
-            capability => { if (current) setVisionResult({key: visionKey, capability}); },
-            () => { /* An unreadable catalog leaves the capability unknown. */ },
+        void resolveVisionCapability(modelId, providerId, providedVision === undefined ? undefined : {
+            source: "provider",
+            vision: providedVision
+        }).then(
+            capability => {
+                if (current) setVisionResult({key: visionKey, capability});
+            },
+            () => { /* An unreadable catalog leaves the capability unknown. */
+            },
         );
-        return () => { current = false; };
+        return () => {
+            current = false;
+        };
     }, [modelId, providerId, providedVision, visionKey, catalog]);
     const vision = visionResult?.key === visionKey ? visionResult.capability : undefined;
     // Memory-only lookup (re-evaluated when `catalog` changes); never a product query.
@@ -84,8 +100,12 @@ function ModelDetail({modelId, metadata, providerId, baseUrl}: {
                     <dt>价格 · USD / 每百万 tokens</dt>
                     <dd data-testid="model-price" title={price ? `${price.provider}/${price.modelId}` : undefined}>
                         {price ? <>
-                            输入 {formatPrice(price.input)} · 输出 {formatPrice(price.output)} · 缓存命中 {formatPrice(price.cacheRead)} · 缓存创建 {formatPrice(price.cacheWrite)}
-                            <div style={{fontSize: 12, color: "#aaa"}}>{price.reference ? "官方参考价 · " : ""}来源：{price.provider}/{price.modelId}</div>
+                            输入 {formatPrice(price.input)} · 输出 {formatPrice(price.output)} ·
+                            缓存命中 {formatPrice(price.cacheRead)} · 缓存创建 {formatPrice(price.cacheWrite)}
+                            <div style={{
+                                fontSize: 12,
+                                color: "#aaa"
+                            }}>{price.reference ? "官方参考价 · " : ""}来源：{price.provider}/{price.modelId}</div>
                         </> : "价格未知"}
                     </dd>
                 </div>
@@ -269,22 +289,25 @@ export function ModelSelectTrigger({
     return (
         <Popover.Root open={open} onOpenChange={setOpen}>
             {trigger ? <Popover.Anchor asChild><span ref={anchorRef}
-                className="agent-model-settings-anchor">{trigger}</span></Popover.Anchor> : <Popover.Trigger asChild>
-                <button ref={node => {anchorRef.current = node;}} type="button" className="agent-chip" aria-label={model || "选择模型"} aria-haspopup="dialog"
-                        aria-expanded={open}>
-                    {model ? <ModelIcon model={model} size={16} type="color"/> : null}
-                    <span
-                        style={{
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                        }}
-                    >
+                                                     className="agent-model-settings-anchor">{trigger}</span></Popover.Anchor> :
+                <Popover.Trigger asChild>
+                    <button ref={node => {
+                        anchorRef.current = node;
+                    }} type="button" className="agent-chip" aria-label={model || "选择模型"} aria-haspopup="dialog"
+                            aria-expanded={open}>
+                        {model ? <ModelIcon model={model} size={16} type="color"/> : null}
+                        <span
+                            style={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                            }}
+                        >
           {model ? modelDisplayName(model) : probingModels ? "拉取模型中…" : "选择模型"}
         </span>
-                    <ChevronDown size={12} style={{flexShrink: 0, opacity: 0.7}}/>
-                </button>
-            </Popover.Trigger>}
+                        <ChevronDown size={12} style={{flexShrink: 0, opacity: 0.7}}/>
+                    </button>
+                </Popover.Trigger>}
             <Popover.Portal container={popupRoot(anchorRef.current)}>
                 <Popover.Content side="top" align="end" sideOffset={10} collisionPadding={popupCollisionPadding(16)}
                                  className="agent-model-popover" onOpenAutoFocus={(event) => {

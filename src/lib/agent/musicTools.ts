@@ -5,13 +5,13 @@ import {addMusicDraft, patchMusicDraft, patchMusicWork, validateMusicSettings} f
 import {libraryReadTool, libraryWriteTool} from "./libraryToolHelpers";
 import {
     assertAudioMusicToolScope,
+    assertAudioToolRevision,
     audioMusicRevision,
     audioMusicTarget,
     audioMusicUnion,
     boundedAudioText,
-    resolveAudioMusicArgs,
     ownedAudioToolRow,
-    assertAudioToolRevision
+    resolveAudioMusicArgs
 } from "./audioTools";
 import type {AgentToolContext} from "./tools";
 import * as s from "./businessSchemas";
@@ -68,7 +68,7 @@ export const MUSIC_TOOLS = [
             textOffset: s.optional(s.number(0, 1e7, true)), ...s.page
         }),
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const projectId = await assertAudioMusicToolScope(args.projectId, context, "music", db);
             const data = await state(projectId, db);
             const rows = data[args.kind].filter((row) => !args.id || row.id === args.id);
@@ -131,7 +131,7 @@ export const MUSIC_TOOLS = [
         owners: (args) => [args.projectId],
         spec: s.object({...base, id: s.optional(s.id), revision: s.optional(audioMusicRevision), settings}),
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             if (Boolean(args.id) !== (args.revision !== undefined)) throw new Error("更新草稿必须同时提供 id 和 revision");
             if (args.id) assertAudioToolRevision(await ownedAudioToolRow(db.musicDrafts, args.projectId, args.id), args.revision!);
             return {
@@ -140,7 +140,10 @@ export const MUSIC_TOOLS = [
                 changes: [`${args.id ? "更新" : "创建"} ${args.settings.engine} 草稿：${JSON.stringify(args.settings).slice(0, 2000)}`, "仅保存创作参数，不提交生成。"]
             };
         },
-        execute: (args, context) => { const db=context.store ?? productDb; return args.id ? patchMusicDraft(args.projectId, args.id, args.revision!, {settings: args.settings}, db) : addMusicDraft(args.projectId, {settings: args.settings}, db); }
+        execute: (args, context) => {
+            const db = context.store ?? productDb;
+            return args.id ? patchMusicDraft(args.projectId, args.id, args.revision!, {settings: args.settings}, db) : addMusicDraft(args.projectId, {settings: args.settings}, db);
+        }
     }),
     libraryWriteTool({
         name: "music_update_work",
@@ -158,7 +161,7 @@ export const MUSIC_TOOLS = [
             }))
         }),
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const row = await ownedAudioToolRow(db.musicWorks, args.projectId, args.id);
             assertAudioToolRevision(row, args.revision);
             return {
@@ -167,7 +170,10 @@ export const MUSIC_TOOLS = [
                 changes: [`作品修改：${JSON.stringify(args.patch).slice(0, 1800)}`]
             };
         },
-        execute: (args, context) => { const db=context.store ?? productDb; return patchMusicWork(args.projectId, args.id, args.revision, args.patch, db); }
+        execute: (args, context) => {
+            const db = context.store ?? productDb;
+            return patchMusicWork(args.projectId, args.id, args.revision, args.patch, db);
+        }
     }),
     libraryWriteTool({
         name: "music_reuse_work",
@@ -178,7 +184,7 @@ export const MUSIC_TOOLS = [
         owners: (args) => [args.projectId],
         spec: s.object(identity),
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const work = await ownedAudioToolRow(db.musicWorks, args.projectId, args.id);
             assertAudioToolRevision(work, args.revision);
             if (!work.settings) throw new Error("此作品没有可复用的生成参数");
@@ -190,7 +196,7 @@ export const MUSIC_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const work = await ownedAudioToolRow(db.musicWorks, args.projectId, args.id);
             assertAudioToolRevision(work, args.revision);
             if (!work.settings) throw new Error("此作品没有生成参数");

@@ -91,7 +91,11 @@ export async function saveAgentFinishingCheck(
         const at = nowIso();
         signal?.throwIfAborted();
         await db.agentRuns.update(run.id, {
-            finishingCheck: {step: expectedStep, createdAt: at, reason: saved && plan?.some(item => item.status !== "completed") ? "unfinished_plan" : "terminal_reply"},
+            finishingCheck: {
+                step: expectedStep,
+                createdAt: at,
+                reason: saved && plan?.some(item => item.status !== "completed") ? "unfinished_plan" : "terminal_reply"
+            },
             activitySteps: [...(run.activitySteps ?? []), {
                 step: expectedStep,
                 content: output.content,

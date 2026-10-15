@@ -1,4 +1,4 @@
-import {MAX_SELECTION_KEYS, type CatalogRow} from "@/lib/ai/modelCatalog/sync";
+import {type CatalogRow, MAX_SELECTION_KEYS} from "@/lib/ai/modelCatalog/sync";
 import type {CatalogEntry} from "@/lib/ai/modelCatalog/types";
 
 export interface RowFilter {
@@ -28,9 +28,9 @@ export function toggleRow(row: CatalogRow, selected: ReadonlySet<string>, on: bo
 export function setRows(rows: readonly CatalogRow[], selected: ReadonlySet<string>, on: boolean): Set<string> | undefined {
     const next = new Set(selected);
     for (const row of rows) for (const key of row.modelKeys) {
-            if (on) next.add(key);
-            else next.delete(key);
-        }
+        if (on) next.add(key);
+        else next.delete(key);
+    }
     return next.size > MAX_SELECTION_KEYS ? undefined : next;
 }
 

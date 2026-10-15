@@ -15,7 +15,7 @@ async function readScale(tx: StoreTx) {
     return {projects, assets: characters + scenes + props + styles};
 }
 
-export function StorageSection({visibleRowIds}: {visibleRowIds?: string[]}) {
+export function StorageSection({visibleRowIds}: { visibleRowIds?: string[] }) {
     const native = isTauriRuntime();
     const {value: scale, error: readError} = useProductQueryState(tx => readScale(tx));
     return <>
@@ -33,7 +33,8 @@ export function StorageSection({visibleRowIds}: {visibleRowIds?: string[]}) {
             {(!visibleRowIds || visibleRowIds.includes("backup")) && <SettingsRow
                 title="备份与迁移"
                 description="升级或换机前请先在项目里导出备份。安装包为未签名版本，系统会给出安全提示，属正常现象。"
-                control={<a className="settings-link" href={INSTALL_GUIDE_URL} target="_blank" rel="noreferrer">安装与备份说明<ExternalLink aria-hidden/></a>}
+                control={<a className="settings-link" href={INSTALL_GUIDE_URL} target="_blank" rel="noreferrer">安装与备份说明<ExternalLink
+                    aria-hidden/></a>}
             />}
         </SettingsGroup>
     </>;

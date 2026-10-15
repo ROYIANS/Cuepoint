@@ -5,8 +5,8 @@ import {provesCompletedEffect, taskGenerationEvidenceId} from "@/db/agentTaskRec
 import {
     ownedTaskAudioGenerationJob,
     SOUND_GENERATION_TOOLS,
-    taskAudioGenerationSource,
     taskAudioGenerationOutputSources,
+    taskAudioGenerationSource,
     taskAudioToolSource
 } from "@/db/taskAudioGenerationEvidence";
 import {db as productDb} from "@/db/database";
@@ -55,7 +55,7 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
     // Callers adopt this native promise through the transaction-zone Promise; a long
     // loop of bare awaits otherwise exhausts Dexie's zone tracking in real browsers.
     async function entity(kind: BusinessKind, id: string, ownerId?: string, episodeId?: string, label?: string, store?: ProductStore) {
-    const db = store ?? productDb;
+        const db = store ?? productDb;
         const key = `entity:${kind}:${id}`;
         if (entityIds.has(key)) return;
         entityIds.add(key);
@@ -222,9 +222,13 @@ export async function collectWrapupSnapshot(task: AgentTask, includeAllEvidence 
             href: source.available ? `/p/${encodeURIComponent(job.projectId)}` : undefined
         }, {jobRevision: job.revision, jobFingerprint: targetRevision(job), source: source.body});
         for (const output of await Promise.resolve(taskAudioGenerationOutputSources(task, job, db))) add({
-            id: taskGenerationEvidenceId(job.id, output.resultKey), kind: "generation", label: output.label, body: output.body,
+            id: taskGenerationEvidenceId(job.id, output.resultKey),
+            kind: "generation",
+            label: output.label,
+            body: output.body,
             outcome: output.supportsResult ? output.applied ? "applied" : "downloaded" : "unresolved",
-            available: output.available, supportsResult: output.supportsResult,
+            available: output.available,
+            supportsResult: output.supportsResult,
             href: output.available ? `/p/${encodeURIComponent(job.projectId)}` : undefined
         }, {jobRevision: job.revision, source: output.body});
     }

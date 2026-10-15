@@ -63,10 +63,18 @@ export function IpProfilesPage() {
     const filtered = profiles.filter(profile => profile.archived === archived && `${profile.name} ${profile.positioning} ${profile.topics}`.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
     const projectIds = useMemo(() => new Set(view?.projects?.map(project => project.id) ?? []), [view?.projects]);
     return <ModuleLayout navigationLabel="IP 导航" navigation={<>
-        <h2 className="module-nav-heading">IP</h2><div className="module-nav-group" role="group" aria-label="IP 状态">
-            <button type="button" className="module-nav-item" aria-pressed={!archived} onClick={() => setArchived(false)}>使用中 <span>{profiles.filter(profile => !profile.archived).length}</span></button>
-            <button type="button" className="module-nav-item" aria-pressed={archived} onClick={() => setArchived(true)}>已归档 <span>{profiles.filter(profile => profile.archived).length}</span></button>
-        </div><div className="module-nav-group">{filtered.map(profile => <Link key={profile.id} to="/ips/$ipId" params={{ipId: profile.id}} className="module-nav-item">{profile.name}</Link>)}</div>
+        <h2 className="module-nav-heading">IP</h2>
+        <div className="module-nav-group" role="group" aria-label="IP 状态">
+            <button type="button" className="module-nav-item" aria-pressed={!archived}
+                    onClick={() => setArchived(false)}>使用中 <span>{profiles.filter(profile => !profile.archived).length}</span>
+            </button>
+            <button type="button" className="module-nav-item" aria-pressed={archived}
+                    onClick={() => setArchived(true)}>已归档 <span>{profiles.filter(profile => profile.archived).length}</span>
+            </button>
+        </div>
+        <div className="module-nav-group">{filtered.map(profile => <Link key={profile.id} to="/ips/$ipId"
+                                                                         params={{ipId: profile.id}}
+                                                                         className="module-nav-item">{profile.name}</Link>)}</div>
     </>}><PageContent role="main" mode="collection" className="ip-page">
         <PageHeader title="IP" description="管理创作定位、表达偏好与关联项目。"
                     actions={<Button onClick={() => setCreateOpen(true)}><Plus aria-hidden/>新建 IP</Button>}/>
@@ -81,7 +89,8 @@ export function IpProfilesPage() {
             <PageState kind="error" title="暂时无法读取 IP" description={view.error}/> : !filtered.length ?
                 <PageState title={search.trim() ? "没有匹配的 IP" : archived ? "暂无归档的 IP" : "暂无 IP"}
                            description={search.trim() ? "试试其他名称或主题词。" : archived ? "归档后的档案会保留原有关联，也可以随时恢复。" : "新建 IP，记录定位与创作偏好，再关联项目和素材。"}
-                           action={!search.trim() && !archived ? <Button variant="outline" onClick={() => setCreateOpen(true)}><Plus aria-hidden/>新建 IP</Button> : undefined}/>
+                           action={!search.trim() && !archived ?
+                               <Button variant="outline" onClick={() => setCreateOpen(true)}><Plus aria-hidden/>新建 IP</Button> : undefined}/>
                 : <div className="ip-profile-grid">{filtered.map(profile => {
                     const projectCount = view.links?.filter(link => link.ipId === profile.id && projectIds.has(link.projectId)).length ?? 0;
                     const materialCount = view.materials?.filter(material => material.scope.kind === "ip" && material.scope.id === profile.id && !material.archived).length ?? 0;
@@ -117,28 +126,56 @@ export function IpProfilePage({ipId}: { ipId: string }) {
             const links = await db.projectIpLinks.where("ipId").equals(ipId).toArray();
             const projects = (await db.projects.bulkGet(links.map(link => link.projectId))).filter(project => project !== undefined);
             const materials = await db.libraryMaterials.filter(material => material.scope.kind === "ip" && material.scope.id === ipId && !material.archived).toArray();
-            return {ipId, profile, projects, materials, profiles: await db.ipProfiles.orderBy("updatedAt").reverse().toArray()};
+            return {
+                ipId,
+                profile,
+                projects,
+                materials,
+                profiles: await db.ipProfiles.orderBy("updatedAt").reverse().toArray()
+            };
         } catch (cause) {
             return {ipId, error: errorMessage(cause)};
         }
     }, [ipId]);
     const navigation = <>
-        <h2 className="module-nav-heading">IP</h2><div className="module-nav-group"><Link to="/ips" className="module-nav-item">全部 IP</Link></div>
-        {view?.ipId === ipId && view.profile && <div className="module-nav-group" role="group" aria-label="IP 内容"><h3 className="module-nav-heading text-xs">{view.profile.name}</h3>{([{id: "profile", label: "档案"}, {id: "projects", label: "关联项目"}, {id: "materials", label: "专属素材"}] as const).map(item => <button key={item.id} type="button" className="module-nav-item" aria-pressed={tab === item.id} onClick={() => setTab(item.id)}>{item.label}</button>)}</div>}
-        <div className="module-nav-group" role="group" aria-label="IP 状态">{([{id: "all", label: "全部"}, {id: "active", label: "使用中"}, {id: "archived", label: "已归档"}] as const).map(item => <button key={item.id} type="button" className="module-nav-item" aria-pressed={profileFilter === item.id} onClick={() => setProfileFilter(item.id)}>{item.label}</button>)}</div>
-        <div className="module-nav-group">{view?.ipId === ipId && view.profiles?.filter(profile => profile.id === ipId || profileFilter === "all" || profile.archived === (profileFilter === "archived")).map(profile => <Link key={profile.id} to="/ips/$ipId" params={{ipId: profile.id}} className="module-nav-item" aria-current={profile.id === ipId ? "page" : undefined}>{profile.name}{profile.archived && <span className="ml-auto text-xs">已归档</span>}</Link>)}</div>
+        <h2 className="module-nav-heading">IP</h2>
+        <div className="module-nav-group"><Link to="/ips" className="module-nav-item">全部 IP</Link></div>
+        {view?.ipId === ipId && view.profile && <div className="module-nav-group" role="group" aria-label="IP 内容"><h3
+            className="module-nav-heading text-xs">{view.profile.name}</h3>{([{
+            id: "profile",
+            label: "档案"
+        }, {id: "projects", label: "关联项目"}, {id: "materials", label: "专属素材"}] as const).map(item => <button
+            key={item.id} type="button" className="module-nav-item" aria-pressed={tab === item.id}
+            onClick={() => setTab(item.id)}>{item.label}</button>)}</div>}
+        <div className="module-nav-group" role="group" aria-label="IP 状态">{([{
+            id: "all",
+            label: "全部"
+        }, {id: "active", label: "使用中"}, {id: "archived", label: "已归档"}] as const).map(item => <button
+            key={item.id} type="button" className="module-nav-item" aria-pressed={profileFilter === item.id}
+            onClick={() => setProfileFilter(item.id)}>{item.label}</button>)}</div>
+        <div
+            className="module-nav-group">{view?.ipId === ipId && view.profiles?.filter(profile => profile.id === ipId || profileFilter === "all" || profile.archived === (profileFilter === "archived")).map(profile =>
+            <Link key={profile.id} to="/ips/$ipId" params={{ipId: profile.id}} className="module-nav-item"
+                  aria-current={profile.id === ipId ? "page" : undefined}>{profile.name}{profile.archived &&
+                <span className="ml-auto text-xs">已归档</span>}</Link>)}</div>
     </>;
-    if (!view || view.ipId !== ipId) return <ModuleLayout navigation={navigation} navigationLabel="IP 导航"><PageContent role="main" mode="detail" className="ip-page"><PageState kind="loading" title="正在读取 IP 档案…"/></PageContent></ModuleLayout>;
-    if (view.error || !view.profile) return <ModuleLayout navigation={navigation} navigationLabel="IP 导航"><PageContent role="main" mode="detail" className="ip-page">
+    if (!view || view.ipId !== ipId) return <ModuleLayout navigation={navigation} navigationLabel="IP 导航"><PageContent
+        role="main" mode="detail" className="ip-page"><PageState kind="loading"
+                                                                 title="正在读取 IP 档案…"/></PageContent></ModuleLayout>;
+    if (view.error || !view.profile) return <ModuleLayout navigation={navigation} navigationLabel="IP 导航"><PageContent
+        role="main" mode="detail" className="ip-page">
         <PageHeader title="IP 档案"/>
-        <PageState kind={view.error ? "error" : "missing"} title={view.error ? "暂时无法读取档案" : "找不到这个 IP"} description={view.error ?? "这个档案可能已不可用，请返回列表查看。"}/>
+        <PageState kind={view.error ? "error" : "missing"} title={view.error ? "暂时无法读取档案" : "找不到这个 IP"}
+                   description={view.error ?? "这个档案可能已不可用，请返回列表查看。"}/>
     </PageContent></ModuleLayout>;
     const {profile, projects, materials} = view;
-    return <ModuleLayout navigation={navigation} navigationLabel="IP 导航"><PageContent role="main" mode="detail" className="ip-page ip-detail-page">
-        <PageHeader title={profile.name} description={<span className="whitespace-pre-wrap">{profile.positioning || "还没有填写定位，可在档案中补充。"}</span>}
+    return <ModuleLayout navigation={navigation} navigationLabel="IP 导航"><PageContent role="main" mode="detail"
+                                                                                        className="ip-page ip-detail-page">
+        <PageHeader title={profile.name} description={<span
+            className="whitespace-pre-wrap">{profile.positioning || "还没有填写定位，可在档案中补充。"}</span>}
                     actions={<div className="ip-detail-actions">{!profile.archived &&
-                <Button variant="outline" onClick={() => setEditing(profile)}><Pencil
-                    aria-hidden/>编辑档案</Button>}<IpArchiveAction profile={profile}/></div>}/>
+                        <Button variant="outline" onClick={() => setEditing(profile)}><Pencil
+                            aria-hidden/>编辑档案</Button>}<IpArchiveAction profile={profile}/></div>}/>
         {profile.archived && <p className="ip-archive-note"><Archive size={15} aria-hidden/>档案已归档，原有项目和素材仍保留。恢复后可继续编辑和关联新项目。
         </p>}
         {tab === "profile" && <>
@@ -161,7 +198,8 @@ export function IpProfilePage({ipId}: { ipId: string }) {
                         <strong>{project.name}</strong><span>{project.archivedAt ? "已归档 · " : ""}{PROJECT_KINDS.find(kind => kind.id === (project.kind ?? "video"))?.label ?? "未知类型"} · 更新于 {dateLabel(project.updatedAt)}</span>
                     </div>
                     <ArrowUpRight size={16} aria-hidden/></Link>)}</div> :
-                <PageState compact title="还没有关联项目" description={`在项目列表中新建项目，或为已有项目选择“${profile.name}”。`}/>}
+                <PageState compact title="还没有关联项目"
+                           description={`在项目列表中新建项目，或为已有项目选择“${profile.name}”。`}/>}
         </section>}
         {tab === "materials" && <section className="ip-related-section">
             <div className="ip-section-heading">
@@ -223,9 +261,11 @@ function IpArchiveAction({profile}: { profile: IpProfile }) {
                                                                                             onOpenChange={open => {
                                                                                                 if (!pending) setConfirm(open);
                                                                                             }}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{profile.archived ? "恢复这个 IP？" : "归档这个 IP？"}</AlertDialogTitle><AlertDialogDescription>{profile.archived ? "恢复后可以继续编辑档案，并关联新的创作项目。" : "归档后不再用于新的项目关联，已有项目、素材和档案内容全部保留。之后可以随时恢复。"}</AlertDialogDescription></AlertDialogHeader>{error &&
-        <p role="alert" className="text-destructive text-sm">{error}</p>}<AlertDialogFooter><AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline"
-                                                                                                    disabled={pending}
-                                                                                                    onClick={() => setConfirm(false)}>取消</Button></AlertDialogCancel><Button
+        <p role="alert" className="text-destructive text-sm">{error}</p>}<AlertDialogFooter><AlertDialogCancel asChild
+                                                                                                               onClick={event => event.preventDefault()}><Button
+        variant="outline"
+        disabled={pending}
+        onClick={() => setConfirm(false)}>取消</Button></AlertDialogCancel><Button
         disabled={pending} onClick={() => void change()}>{pending &&
         <LoaderCircle className="animate-spin motion-reduce:animate-none"
                       aria-hidden/>}{pending ? "正在保存…" : profile.archived ? "恢复 IP" : "确认归档"}</Button></AlertDialogFooter></AlertDialogContent></AlertDialog></>;

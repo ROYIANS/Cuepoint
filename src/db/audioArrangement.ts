@@ -1,9 +1,24 @@
-import {binaryByteLength,binaryMimeType} from "@/domain/binary";
+import {binaryByteLength, binaryMimeType} from "@/domain/binary";
 import type {ProductStore} from "@/lib/storage/types";
 import {db as productDb} from "./database";
 import {assertAudioClipDocument, changeAudioClipMembership} from "./audio";
-import {assertAudioProject, assertOwnedAudioMedia, AUDIO_TRANSACTION_TABLES, ownedAudioRow, touchAudioProject, validateAudioMetadata} from "./audioShared";
-import {AUDIO_ARRANGEMENT_LIMIT, AudioArrangementConflictError, type AudioArrangementOwner, type AudioArrangementProposal, type AudioArrangementReceipt, type AudioArrangementRequest, type AudioTakeChoice} from "@/domain/audioArrangement";
+import {
+    assertAudioProject,
+    assertOwnedAudioMedia,
+    AUDIO_TRANSACTION_TABLES,
+    ownedAudioRow,
+    touchAudioProject,
+    validateAudioMetadata
+} from "./audioShared";
+import {
+    AUDIO_ARRANGEMENT_LIMIT,
+    AudioArrangementConflictError,
+    type AudioArrangementOwner,
+    type AudioArrangementProposal,
+    type AudioArrangementReceipt,
+    type AudioArrangementRequest,
+    type AudioTakeChoice
+} from "@/domain/audioArrangement";
 import {planAudioArrangement} from "@/lib/audio/arrangement";
 import {createId, nowIso} from "@/lib/ids";
 import {targetRevision} from "@/lib/productionRevision";
@@ -21,9 +36,23 @@ async function snapshot(projectId: string, chapterId: string, store?: ProductSto
     const related = new Set([...takes.filter(take => segments.some(segment => segment.id === take.segmentId)).map(take => take.id), ...clips.map(clip => clip.takeId)]);
     const scopedTakes = takes.filter(take => related.has(take.id));
     const media = await db.media.bulkGet(scopedTakes.map(take => take.mediaId));
-    const descriptors = media.map((row,index) => row ? {id: row.id, projectId: row.projectId, filename: row.filename, mimeType: row.mimeType, size: binaryByteLength(row.blob), type: binaryMimeType(row.blob)} : {missing: scopedTakes[index].mediaId});
-    const ordered = <T extends {id: string}>(rows: T[]) => rows.slice().sort((a,b) => a.id.localeCompare(b.id));
-    const fingerprint = targetRevision({chapter, segments: ordered(segments), takes: ordered(scopedTakes), tracks: ordered(tracks), clips: ordered(clips), media: descriptors});
+    const descriptors = media.map((row, index) => row ? {
+        id: row.id,
+        projectId: row.projectId,
+        filename: row.filename,
+        mimeType: row.mimeType,
+        size: binaryByteLength(row.blob),
+        type: binaryMimeType(row.blob)
+    } : {missing: scopedTakes[index].mediaId});
+    const ordered = <T extends { id: string }>(rows: T[]) => rows.slice().sort((a, b) => a.id.localeCompare(b.id));
+    const fingerprint = targetRevision({
+        chapter,
+        segments: ordered(segments),
+        takes: ordered(scopedTakes),
+        tracks: ordered(tracks),
+        clips: ordered(clips),
+        media: descriptors
+    });
     return {chapter, segments, takes, tracks, clips, fingerprint};
 }
 
@@ -45,10 +74,29 @@ export async function previewAudioSelection(projectId: string, chapterId: string
             if (segment.revision !== choice.segmentRevision || take.revision !== choice.takeRevision) throw new Error("段落或声音版本已更新，请重新预览");
             validateAudioMetadata(take);
             await assertOwnedAudioMedia(projectId, take.mediaId, db);
-            selections.push({segment, take, textMismatch: take.textSnapshot !== undefined && take.textSnapshot !== segment.text});
+            selections.push({
+                segment,
+                take,
+                textMismatch: take.textSnapshot !== undefined && take.textSnapshot !== segment.text
+            });
         }
         const at = nowIso();
-        return {id, projectId, chapterId, revision: 1, createdAt: at, updatedAt: at, kind: "selection", state: "prepared", owner, fingerprint: state.fingerprint, choices, selections, items: [], before: state.clips};
+        return {
+            id,
+            projectId,
+            chapterId,
+            revision: 1,
+            createdAt: at,
+            updatedAt: at,
+            kind: "selection",
+            state: "prepared",
+            owner,
+            fingerprint: state.fingerprint,
+            choices,
+            selections,
+            items: [],
+            before: state.clips
+        };
     });
 }
 
@@ -63,7 +111,23 @@ export async function previewAudioArrangement(projectId: string, chapterId: stri
             validateAudioMetadata(take);
             await assertOwnedAudioMedia(projectId, take.mediaId, db);
         }
-        return {id, projectId, chapterId, revision: 1, createdAt: at, updatedAt: at, kind: "arrangement", state: "prepared", owner, fingerprint: state.fingerprint, choices: [], request, selections: [], items, before: state.clips};
+        return {
+            id,
+            projectId,
+            chapterId,
+            revision: 1,
+            createdAt: at,
+            updatedAt: at,
+            kind: "arrangement",
+            state: "prepared",
+            owner,
+            fingerprint: state.fingerprint,
+            choices: [],
+            request,
+            selections: [],
+            items,
+            before: state.clips
+        };
     });
 }
 
@@ -80,7 +144,7 @@ export async function saveAudioArrangementProposal(proposal: AudioArrangementPro
 export async function readAudioArrangementProposal(projectId: string, id: string, store?: ProductStore) {
     const db = store ?? productDb;
     return db.transaction("r", AUDIO_TRANSACTION_TABLES, async (db) => {
-        await assertAudioProject(projectId,"audio", db);
+        await assertAudioProject(projectId, "audio", db);
         return ownedAudioRow(db.audioArrangementProposals, projectId, id);
     });
 }
@@ -94,13 +158,17 @@ export async function applyAudioArrangementProposal(projectId: string, id: strin
     signal?.throwIfAborted();
     return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async (db) => {
         signal?.throwIfAborted();
-        await assertAudioProject(projectId,"audio", db);
+        await assertAudioProject(projectId, "audio", db);
         const proposal = await ownedAudioRow(db.audioArrangementProposals, projectId, id);
         await ownedAudioRow(db.audioChapters, projectId, proposal.chapterId);
         assertOwner(proposal, owner);
         if (proposal.state === "applied" && proposal.receipt) {
             const current = await db.audioClips.bulkGet(proposal.receipt.added.map(row => row.id));
-            return {...proposal.receipt, replayed: true, currentAddedIds: current.filter(row => row?.projectId === projectId && row.chapterId === proposal.chapterId).map(row => row!.id)};
+            return {
+                ...proposal.receipt,
+                replayed: true,
+                currentAddedIds: current.filter(row => row?.projectId === projectId && row.chapterId === proposal.chapterId).map(row => row!.id)
+            };
         }
         if (proposal.revision !== revision || proposal.state !== "prepared") throw new AudioArrangementConflictError("proposal_changed", "预览已更新，请重新确认");
         const state = await snapshot(projectId, proposal.chapterId, db);
@@ -109,16 +177,37 @@ export async function applyAudioArrangementProposal(projectId: string, id: strin
         for (const item of proposal.selections) {
             const segment = state.segments.find(row => row.id === item.segment.id)!;
             if (segment.selectedTakeId !== item.take.id) {
-                const next = {...segment, selectedTakeId: item.take.id, revision: segment.revision + 1, updatedAt: nowIso()};
+                const next = {
+                    ...segment,
+                    selectedTakeId: item.take.id,
+                    revision: segment.revision + 1,
+                    updatedAt: nowIso()
+                };
                 await db.audioSegments.put(next);
                 selected.push(next);
             }
         }
         const added = proposal.items.flatMap(item => item.status === "add" && item.clip ? [item.clip] : []);
         const after = proposal.kind === "arrangement" ? await changeAudioClipMembership(projectId, proposal.chapterId, proposal.before, [...proposal.before, ...added], db) : state.clips;
-        const receipt: AudioArrangementReceipt = {proposalId: id, projectId, kind: proposal.kind, selected, added, preserved: proposal.items.filter(item => item.status !== "add").length, conflicts: proposal.items.filter(item => item.status === "manual_conflict").length, before: state.clips, after};
+        const receipt: AudioArrangementReceipt = {
+            proposalId: id,
+            projectId,
+            kind: proposal.kind,
+            selected,
+            added,
+            preserved: proposal.items.filter(item => item.status !== "add").length,
+            conflicts: proposal.items.filter(item => item.status === "manual_conflict").length,
+            before: state.clips,
+            after
+        };
         signal?.throwIfAborted();
-        await db.audioArrangementProposals.put({...proposal, state: "applied", receipt, revision: proposal.revision + 1, updatedAt: nowIso()});
+        await db.audioArrangementProposals.put({
+            ...proposal,
+            state: "applied",
+            receipt,
+            revision: proposal.revision + 1,
+            updatedAt: nowIso()
+        });
         if (selected.length) await touchAudioProject(projectId, db);
         return receipt;
     });
@@ -129,12 +218,17 @@ export async function revertAudioArrangementProposal(projectId: string, id: stri
     const db = store ?? productDb;
     return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async (db) => {
         signal?.throwIfAborted();
-        await assertAudioProject(projectId,"audio", db);
-        const proposal = await ownedAudioRow(db.audioArrangementProposals,projectId,id);
+        await assertAudioProject(projectId, "audio", db);
+        const proposal = await ownedAudioRow(db.audioArrangementProposals, projectId, id);
         if (proposal.dormant || proposal.kind !== "arrangement" || proposal.state !== "applied" || !proposal.receipt || proposal.revision !== revision || proposal.reverted) throw new Error("此排列不能撤销，请刷新后检查");
         await assertAudioClipDocument(projectId, proposal.chapterId, proposal.receipt.after, db);
         await changeAudioClipMembership(projectId, proposal.chapterId, proposal.receipt.after, proposal.receipt.before, db);
-        await db.audioArrangementProposals.put({...proposal, reverted: true, revision: proposal.revision + 1, updatedAt: nowIso()});
+        await db.audioArrangementProposals.put({
+            ...proposal,
+            reverted: true,
+            revision: proposal.revision + 1,
+            updatedAt: nowIso()
+        });
         signal?.throwIfAborted();
         return proposal.receipt.added.map(row => row.id);
     });

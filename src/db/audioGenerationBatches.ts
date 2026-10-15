@@ -2,7 +2,12 @@ import type {ProductStore} from "@/lib/storage/types";
 import {db as productDb} from "./database";
 import {assertAudioProject, assertAudioRevision, newAudioRow, ownedAudioRow} from "./audioShared";
 import {prepareAudioGenerationJob} from "./audioGeneration";
-import type {AudioBatchOwner, AudioBatchSnapshot, AudioGenerationBatch, AudioGenerationBatchItem} from "@/domain/audioGenerationBatch";
+import type {
+    AudioBatchOwner,
+    AudioBatchSnapshot,
+    AudioGenerationBatch,
+    AudioGenerationBatchItem
+} from "@/domain/audioGenerationBatch";
 import {AUDIO_BATCH_LIMIT, audioBatchItemState, type AudioBatchItemState} from "@/domain/audioGenerationBatch";
 import type {AudioGenerationJob} from "@/domain/audioGeneration";
 import {assertAudioBatchSnapshot, prepareAudioBatchSnapshot} from "@/lib/audioGeneration/batchPreparation";
@@ -18,7 +23,8 @@ export async function ownedAudioGenerationBatch(projectId: string, id: string, m
     if (mutate && batch.dormant) throw new Error("导入的历史批次不能确认或继续发送");
     if (batch.owner.kind === "agent" && !batch.dormant) {
         const owner = batch.owner;
-        const run = await db.agentRuns.get(owner.runId), thread = await db.chatThreads.get(owner.threadId), call = await db.agentToolCalls.get(owner.callId);
+        const run = await db.agentRuns.get(owner.runId), thread = await db.chatThreads.get(owner.threadId),
+            call = await db.agentToolCalls.get(owner.callId);
         if (!run || !thread || !call || run.threadId !== owner.threadId || thread.projectId !== projectId || run.projectId !== projectId || call.runId !== run.id || call.threadId !== owner.threadId || call.name !== "prepare_audio_generation_batch") throw new Error("批次的原始助手来源或项目归属已失效");
         if (owner.taskId) {
             const task = await db.agentTasks.get(owner.taskId);
@@ -35,6 +41,7 @@ export async function ownedAudioGenerationBatch(projectId: string, id: string, m
 }
 
 const itemsFor = (id: string, store?: ProductStore) => (db => db.audioGenerationBatchItems.where("batchId").equals(id).sortBy("order"))(store ?? productDb);
+
 async function writeBatch(batch: AudioGenerationBatch, patch: Partial<Pick<AudioGenerationBatch, "status" | "pauseReason" | "confirmedAt" | "confirmedItemIds">>, store?: ProductStore) {
     const db = store ?? productDb;
     const next = {...batch, ...patch, revision: batch.revision + 1, updatedAt: nowIso()};
@@ -47,13 +54,19 @@ export async function readAudioGenerationBatch(projectId: string, id: string, st
     return db.transaction("r", db.tables, async (db) => {
         const batch = await ownedAudioGenerationBatch(projectId, id, undefined, db), items = await itemsFor(id, db);
         const jobs: AudioGenerationJob[] = [];
-        const rows: Array<{item: AudioGenerationBatchItem; job?: AudioGenerationJob; state: AudioBatchItemState; selected: boolean; placed: boolean}> = [];
+        const rows: Array<{
+            item: AudioGenerationBatchItem;
+            job?: AudioGenerationJob;
+            state: AudioBatchItemState;
+            selected: boolean;
+            placed: boolean
+        }> = [];
         for (const item of items) {
             const candidate = item.jobId ? await db.audioGenerationJobs.get(item.jobId) : undefined;
             const job = candidate?.projectId === projectId && candidate.input.kind === "speech" && candidate.input.segmentId === item.segmentId &&
-                candidate.source.kind === "batch" && candidate.source.batchId === batch.id && candidate.source.itemId === item.id &&
-                batch.itemIds.includes(item.id) && item.chapterId === batch.chapterId && item.intentId === candidate.intentId && targetRevision(candidate.source.owner) === targetRevision(batch.owner) &&
-                targetRevision(candidate.input) === targetRevision(item.snapshot.input) && targetRevision(candidate.connector) === targetRevision(item.snapshot.connector) ? candidate : undefined;
+            candidate.source.kind === "batch" && candidate.source.batchId === batch.id && candidate.source.itemId === item.id &&
+            batch.itemIds.includes(item.id) && item.chapterId === batch.chapterId && item.intentId === candidate.intentId && targetRevision(candidate.source.owner) === targetRevision(batch.owner) &&
+            targetRevision(candidate.input) === targetRevision(item.snapshot.input) && targetRevision(candidate.connector) === targetRevision(item.snapshot.connector) ? candidate : undefined;
             if (job) jobs.push(job);
             let state = audioBatchItemState(item, job);
             let selected = false, placed = false;
@@ -71,14 +84,23 @@ export async function readAudioGenerationBatch(projectId: string, id: string, st
 }
 
 export async function prepareAudioGenerationBatch(args: {
-    projectId: string; chapterId: string; segmentIds: string[]; connectorId?: string; title?: string; owner?: AudioBatchOwner; retrySourceBatchId?: string;
+    projectId: string;
+    chapterId: string;
+    segmentIds: string[];
+    connectorId?: string;
+    title?: string;
+    owner?: AudioBatchOwner;
+    retrySourceBatchId?: string;
 }, store?: ProductStore): Promise<AudioGenerationBatch> {
     const db = store ?? productDb;
     if (!args.segmentIds.length || args.segmentIds.length > AUDIO_BATCH_LIMIT || new Set(args.segmentIds).size !== args.segmentIds.length) throw new Error("每批请选择 1–20 个不重复段落");
     const snapshots: AudioBatchSnapshot[] = [];
     for (const [index, id] of args.segmentIds.entries()) {
-        try {snapshots.push(await prepareAudioBatchSnapshot(args.projectId, args.chapterId, id, args.connectorId, db));}
-        catch (cause) {throw new Error(`第 ${index + 1} 个所选段落未准备：${cause instanceof Error ? cause.message : "请检查文本、音色和连接"}`, {cause});}
+        try {
+            snapshots.push(await prepareAudioBatchSnapshot(args.projectId, args.chapterId, id, args.connectorId, db));
+        } catch (cause) {
+            throw new Error(`第 ${index + 1} 个所选段落未准备：${cause instanceof Error ? cause.message : "请检查文本、音色和连接"}`, {cause});
+        }
     }
     return db.transaction("rw", db.tables, async (db) => {
         const owner = args.owner ?? {kind: "manual"};
@@ -89,13 +111,26 @@ export async function prepareAudioGenerationBatch(args: {
         for (const snapshot of snapshots) await assertAudioBatchSnapshot(args.projectId, args.chapterId, snapshot, db);
         const id = createId("audiobatch");
         const items = snapshots.map((snapshot, order) => newAudioRow<AudioGenerationBatchItem>(args.projectId, "audioitem", {
-            batchId: id, chapterId: args.chapterId, segmentId: args.segmentIds[order], order, included: true, state: "draft", snapshot,
+            batchId: id,
+            chapterId: args.chapterId,
+            segmentId: args.segmentIds[order],
+            order,
+            included: true,
+            state: "draft",
+            snapshot,
             intentId: createId("batch-intent")
         }));
         const row: AudioGenerationBatch = {
             ...newAudioRow<AudioGenerationBatch>(args.projectId, "audiobatch", {
-                version: 1, chapterId: args.chapterId, title: args.title?.trim().slice(0, 160) || "批量配音", owner,
-                ...(owner.kind === "agent" && !args.retrySourceBatchId ? {sourceCallId: owner.callId} : {}), retrySourceBatchId: args.retrySourceBatchId, status: "draft", itemIds: items.map(item => item.id), confirmedItemIds: []
+                version: 1,
+                chapterId: args.chapterId,
+                title: args.title?.trim().slice(0, 160) || "批量配音",
+                owner,
+                ...(owner.kind === "agent" && !args.retrySourceBatchId ? {sourceCallId: owner.callId} : {}),
+                retrySourceBatchId: args.retrySourceBatchId,
+                status: "draft",
+                itemIds: items.map(item => item.id),
+                confirmedItemIds: []
             }), id
         };
         await db.audioGenerationBatches.add(row);
@@ -111,7 +146,11 @@ export async function includeAudioBatchItem(projectId: string, id: string, revis
         assertAudioRevision(batch, revision);
         const item = await ownedAudioRow(db.audioGenerationBatchItems, projectId, itemId);
         if (batch.status !== "draft" || item.batchId !== id) throw new Error("确认后的批次不能修改包含项");
-        await db.audioGenerationBatchItems.update(item.id, {included, revision: item.revision + 1, updatedAt: nowIso()});
+        await db.audioGenerationBatchItems.update(item.id, {
+            included,
+            revision: item.revision + 1,
+            updatedAt: nowIso()
+        });
         return writeBatch(batch, {}, db);
     });
 }
@@ -124,8 +163,17 @@ export async function confirmAudioGenerationBatch(projectId: string, id: string,
         const items = await itemsFor(id, db), included = items.filter(item => item.included);
         if (batch.status !== "draft" || !included.length) throw new Error("请检查草稿并至少包含一个段落");
         for (const item of included) await assertAudioBatchSnapshot(projectId, batch.chapterId, item.snapshot, db);
-        for (const item of items) await db.audioGenerationBatchItems.update(item.id, {state: item.included ? "queued" : "cancelled", revision: item.revision + 1, updatedAt: nowIso()});
-        return writeBatch(batch, {status: "ready", confirmedAt: nowIso(), confirmedItemIds: included.map(item => item.id), pauseReason: undefined}, db);
+        for (const item of items) await db.audioGenerationBatchItems.update(item.id, {
+            state: item.included ? "queued" : "cancelled",
+            revision: item.revision + 1,
+            updatedAt: nowIso()
+        });
+        return writeBatch(batch, {
+            status: "ready",
+            confirmedAt: nowIso(),
+            confirmedItemIds: included.map(item => item.id),
+            pauseReason: undefined
+        }, db);
     });
 }
 
@@ -144,7 +192,11 @@ export async function controlAudioGenerationBatch(projectId: string, id: string,
         }
         if (action === "cancel") for (const item of items) {
             const job = item.jobId ? await db.audioGenerationJobs.get(item.jobId) : undefined;
-            if (!job || job.status === "prepared") await db.audioGenerationBatchItems.update(item.id, {state: "cancelled", revision: item.revision + 1, updatedAt: nowIso()});
+            if (!job || job.status === "prepared") await db.audioGenerationBatchItems.update(item.id, {
+                state: "cancelled",
+                revision: item.revision + 1,
+                updatedAt: nowIso()
+            });
         }
         let status: AudioGenerationBatch["status"] = "paused";
         if (action === "run") status = "running";
@@ -162,10 +214,18 @@ export async function linkAudioBatchJob(projectId: string, id: string, itemId: s
         if (item.jobId) return ownedAudioRow(db.audioGenerationJobs, projectId, item.jobId);
         await assertAudioBatchSnapshot(projectId, batch.chapterId, item.snapshot, db);
         const job = await prepareAudioGenerationJob(projectId, {
-            intentId: item.intentId, input: item.snapshot.input, connector: item.snapshot.connector,
-            source: {kind: "batch", batchId: id, itemId: item.id, owner: batch.owner}, referenceFingerprint: item.snapshot.referenceFingerprint
+            intentId: item.intentId,
+            input: item.snapshot.input,
+            connector: item.snapshot.connector,
+            source: {kind: "batch", batchId: id, itemId: item.id, owner: batch.owner},
+            referenceFingerprint: item.snapshot.referenceFingerprint
         }, db);
-        await db.audioGenerationBatchItems.update(item.id, {jobId: job.id, state: "linked", revision: item.revision + 1, updatedAt: nowIso()});
+        await db.audioGenerationBatchItems.update(item.id, {
+            jobId: job.id,
+            state: "linked",
+            revision: item.revision + 1,
+            updatedAt: nowIso()
+        });
         return job;
     });
 }
@@ -192,7 +252,10 @@ export async function settleAudioGenerationBatch(projectId: string, id: string, 
         const view = await readAudioGenerationBatch(projectId, id, db);
         if (view.batch.status === "cancelled") return view.batch;
         const pending = view.rows.some(row => ["queued", "submitting", "pending", "uncertain", "recovery"].includes(row.state));
-        return writeBatch(view.batch, {status: pending ? "paused" : "settled", pauseReason: pending ? view.batch.pauseReason ?? "进度已保存；继续发送需明确操作，已有音频仅恢复保存" : undefined}, db);
+        return writeBatch(view.batch, {
+            status: pending ? "paused" : "settled",
+            pauseReason: pending ? view.batch.pauseReason ?? "进度已保存；继续发送需明确操作，已有音频仅恢复保存" : undefined
+        }, db);
     });
 }
 
@@ -204,6 +267,13 @@ export async function retryFailedAudioBatch(projectId: string, id: string, itemI
         const before = await readAudioGenerationBatch(projectId, id, db);
         const failed = before.rows.filter(row => itemIds.includes(row.item.id));
         if (failed.length !== itemIds.length || failed.some(row => row.job?.status !== "failed" || row.job.failureStage !== "provider" || row.job.results.length !== 0)) throw new Error("仅明确的供应商失败可创建付费重试；已保存、未知和本地恢复项不可重发");
-        return prepareAudioGenerationBatch({projectId, chapterId: source.chapterId, segmentIds: failed.map(row => row.item.segmentId), title: `${source.title} · 重试`, owner: source.owner, retrySourceBatchId: id}, db);
+        return prepareAudioGenerationBatch({
+            projectId,
+            chapterId: source.chapterId,
+            segmentIds: failed.map(row => row.item.segmentId),
+            title: `${source.title} · 重试`,
+            owner: source.owner,
+            retrySourceBatchId: id
+        }, db);
     });
 }

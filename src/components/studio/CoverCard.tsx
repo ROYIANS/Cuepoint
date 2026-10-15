@@ -36,7 +36,8 @@ export function CoverCard({
 }) {
     return (
         <div className="group relative min-w-0">
-            <button type="button" onClick={onOpen} aria-label={title} className="block w-full rounded-lg text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
+            <button type="button" onClick={onOpen} aria-label={title}
+                    className="block w-full rounded-lg text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
                 <div
                     className={cn(
                         coverShell(frame),
@@ -48,7 +49,8 @@ export function CoverCard({
                 </div>
                 <div className={CAPTION}>
                     <p className="truncate text-sm font-medium leading-5" title={title}>{title}</p>
-                    <p className="text-muted-foreground mt-0.5 truncate text-xs leading-[18px]" title={subtitle}>{subtitle}</p>
+                    <p className="text-muted-foreground mt-0.5 truncate text-xs leading-[18px]"
+                       title={subtitle}>{subtitle}</p>
                 </div>
             </button>
             {actions && actions.length > 0 ? (
@@ -95,7 +97,8 @@ export function CreateTile({
     frame?: CoverFrame;
 }) {
     return (
-        <button type="button" onClick={onClick} className="group block w-full rounded-lg text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
+        <button type="button" onClick={onClick}
+                className="group block w-full rounded-lg text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
             <div
                 className={cn(
                     coverShell(frame),

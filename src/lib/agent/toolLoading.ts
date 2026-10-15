@@ -70,10 +70,10 @@ export const DISCOVERY_TOOLS = [defineTool({
     atomic: true,
     highRisk: () => false,
     async execute(raw, context) {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const args = loadingSchema.parse(raw);
         return executeAtomicTool(context, async (db) => {
-        const boundContext = {...context, store:db};
+            const boundContext = {...context, store: db};
             const run = await db.agentRuns.get(boundContext.runId);
             const state = run?.toolLoading;
             const call = await db.agentToolCalls.get(boundContext.callId);

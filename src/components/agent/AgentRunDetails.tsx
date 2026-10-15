@@ -39,7 +39,7 @@ function StepIcon({status, soft}: { status: AgentToolCall["status"]; soft?: bool
 }
 
 /** Only an uncertain outcome keeps its own notice; certain failures fold into one error line. */
-function RecoveryFailureNotice({failure}: {failure: ToolRecoveryFailure}) {
+function RecoveryFailureNotice({failure}: { failure: ToolRecoveryFailure }) {
     return <div className="agent-tool-failure" role="alert">
         <strong>操作结果待核实</strong>
         <p>{failure.error}</p>
@@ -120,19 +120,23 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
     const soft = isValidationFailure(call, validationError);
     return <div className="agent-run-step" data-activity-call={call.id}>
         <button type="button" className="agent-tool-call-toggle" aria-expanded={open} aria-controls={panelId}
-                data-status={call.status} data-soft={soft ? "true" : undefined} onClick={() => setOpen((value) => !value)}>
+                data-status={call.status} data-soft={soft ? "true" : undefined}
+                onClick={() => setOpen((value) => !value)}>
             <StepIcon status={call.status} soft={soft}/><span className="agent-tool-verb">{call.title}{object &&
-                <span className="agent-tool-object"> · {object}</span>}</span>{status && <small>{status}</small>}<ChevronDown
+            <span className="agent-tool-object"> · {object}</span>}</span>{status &&
+            <small>{status}</small>}<ChevronDown
             size={12} className={open ? "rotate-180" : ""} aria-hidden/>
         </button>
         {call.status === "failed" && (recovery?.effectCertainty === "unknown"
             ? <RecoveryFailureNotice failure={recovery}/>
             : <p className={soft ? "agent-call-error agent-call-error-soft" : "agent-call-error text-destructive"}
-                 data-kind={soft ? "validation" : "failure"} role="alert">{failureLine(call, recovery, validationError)}</p>)}
+                 data-kind={soft ? "validation" : "failure"}
+                 role="alert">{failureLine(call, recovery, validationError)}</p>)}
         {/* Approval is never folded away: what will happen is the preview, the decision sits beside it. */}
         {decide && <div className="agent-step-actions">
             <Button size="sm" disabled={busy} onClick={() => onAction(run.id, "approve", call.id)}>批准</Button>
-            <Button size="sm" variant="outline" disabled={busy} onClick={() => onAction(run.id, "reject", call.id)}>拒绝</Button>
+            <Button size="sm" variant="outline" disabled={busy}
+                    onClick={() => onAction(run.id, "reject", call.id)}>拒绝</Button>
             {call.highRisk && <small className="agent-high-risk">高风险操作</small>}
         </div>}
         <div id={panelId} hidden={!open}>
@@ -170,7 +174,8 @@ function MergedCalls({calls, ...props}: RowProps & { calls: AgentToolCall[] }) {
     return <div className="agent-tool-merged">
         <button type="button" className="agent-tool-call-toggle" aria-expanded={open} aria-controls={panelId}
                 onClick={() => setOpen((value) => !value)}>
-            <Check size={15} className="text-green-500" aria-hidden/><span className="agent-tool-verb">{calls[0].title} · {calls.length} 项</span><ChevronDown
+            <Check size={15} className="text-green-500" aria-hidden/><span
+            className="agent-tool-verb">{calls[0].title} · {calls.length} 项</span><ChevronDown
             size={12} className={open ? "rotate-180" : ""} aria-hidden/>
         </button>
         <div id={panelId} className="agent-tool-group-calls" hidden={!open}>
@@ -262,7 +267,8 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
     return <section ref={sectionRef} className="agent-run-activity agent-execution-activity" aria-label="执行过程"
                     data-activity-run={run.id}>
         {hasProcess && <button type="button" className="agent-run-summary agent-execution-summary"
-                aria-expanded={expanded} aria-controls={panelId} onClick={() => setExpanded((value) => !value)}>
+                               aria-expanded={expanded} aria-controls={panelId}
+                               onClick={() => setExpanded((value) => !value)}>
             {running && <LoaderCircle size={12} className="animate-spin motion-reduce:animate-none" aria-hidden/>}
             <span>{running ? (toolCount > 0 ? `进行中 · 已用 ${toolCount} 个工具` : "进行中") : toolCount > 0 ? `用了 ${toolCount} 个工具` : "过程记录"}</span>
             <ChevronDown size={14} className={expanded ? "rotate-180" : ""} aria-hidden/>

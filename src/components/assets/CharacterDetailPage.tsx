@@ -42,9 +42,10 @@ function CharacterDetailContent({
         return (
             <PageContent mode="detail">
                 <PageHeader title="角色"/>
-                <PageState kind="missing" title="找不到这个角色" action={<Button className="mt-3" onClick={() => void goBack(navigate, back)}>
-                    {back.kind === "studio" ? "返回角色库" : "返回世界"}
-                </Button>}/>
+                <PageState kind="missing" title="找不到这个角色"
+                           action={<Button className="mt-3" onClick={() => void goBack(navigate, back)}>
+                               {back.kind === "studio" ? "返回角色库" : "返回世界"}
+                           </Button>}/>
             </PageContent>
         );
     }
@@ -108,7 +109,10 @@ function CharacterDetailContent({
                             multiline
                         />
                         <details className="border-t pt-4">
-                            <summary className="focus-visible:ring-ring/50 cursor-pointer rounded-md text-sm leading-5 font-semibold focus-visible:outline-none focus-visible:ring-[3px]">创作细节 · 选填</summary>
+                            <summary
+                                className="focus-visible:ring-ring/50 cursor-pointer rounded-md text-sm leading-5 font-semibold focus-visible:outline-none focus-visible:ring-[3px]">创作细节
+                                · 选填
+                            </summary>
                             <p className="text-muted-foreground mt-2 text-xs leading-5">记录人物的行为、目标与声音，让表演前后一致。所有信息均为选填。</p>
                             <div className="mt-4 space-y-4">
                                 <AssetTextField

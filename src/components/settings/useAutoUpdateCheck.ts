@@ -16,6 +16,9 @@ export function useAutoUpdateCheck() {
                 await runCheck(true);
             })();
         }, 3000);
-        return () => {live = false;window.clearTimeout(timer);};
+        return () => {
+            live = false;
+            window.clearTimeout(timer);
+        };
     }, [runCheck]);
 }

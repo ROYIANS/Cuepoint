@@ -1,9 +1,10 @@
 import type {ProductStore} from "@/lib/storage/types";
 import {AUDIO_TABLES} from "./audioShared";
 import {db as productDb} from "./database";
-const db = productDb;
 import {nowIso} from "@/lib/ids";
 import {getProjectKind, type Id, isStudioLibrary, normalizeEpisodeStory, type Project, type Shot} from "@/domain/types";
+
+const db = productDb;
 
 // Media recycling must hold the same lock as every committed slot/cover writer.
 export const PRODUCTION_TABLES = [

@@ -3,7 +3,11 @@ import {useManualDraftGuard} from "@/lib/useManualDraftGuard";
 import {BeatTextField} from "./BeatTextField";
 import {type TextDraftStatusChange, useTextDraftRetention} from "@/lib/useTextDraftRetention";
 import {changedDraftFields} from "@/lib/draftConflict";
-import {useVideoWorkspaceQuery, useVideoWorkspaceReadStatus, useVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
+import {
+    useVideoWorkspaceQuery,
+    useVideoWorkspaceReadStatus,
+    useVideoWorkspaceRepository
+} from "@/lib/videoWorkspaceRepository";
 import {ArrowDown, ArrowUp, Copy, CopyPlus, Plus, Trash2} from "@/components/ui/icons";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {type Episode, normalizeEpisodeStory, type StoryBeat} from "@/domain/types";
@@ -56,7 +60,10 @@ function StoryScope({projectId, episodeId}: { projectId: string; episodeId: stri
     const unavailable = !loadedProject || !loadedEpisode || beatText.retainedCount > 0;
     const textNavigationGuard = useManualDraftGuard(false, beatText.pending, () => undefined);
     if (episode === undefined || project === undefined) {
-        return <PageContent><PageState kind={readStatus.error ? "error" : "loading"} title={readStatus.error ? "读取工作区失败" : "正在读取故事…"} description={readStatus.error} action={readStatus.error ? <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/></PageContent>;
+        return <PageContent><PageState kind={readStatus.error ? "error" : "loading"}
+                                       title={readStatus.error ? "读取工作区失败" : "正在读取故事…"}
+                                       description={readStatus.error} action={readStatus.error ?
+            <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/></PageContent>;
     }
     if (project === null || episode === null || episode.projectId !== projectId) {
         return <PageContent><PageState kind="missing" title="找不到这一集"/></PageContent>;
@@ -220,7 +227,9 @@ function StoryEditor({
         const committed = await repository.reorderBeats(episode.id, next);
         registerUndo({
             label: "已调整场次顺序",
-            restore: committed?.restore ?? (async () => {await repository.reorderBeats(episode.id, previous);}),
+            restore: committed?.restore ?? (async () => {
+                await repository.reorderBeats(episode.id, previous);
+            }),
         });
     }
 
@@ -252,216 +261,226 @@ function StoryEditor({
             <PageContent mode="workbench">
                 <PageHeader title={film ? "故事" : "本集故事"}
                             description={film ? "整理故事正文与场次，继续制作分镜。" : "整理本集故事正文与场次，继续制作分镜。"}
-                            actions={<DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatestStory}/>}/>
-            <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.8fr)]">
-                <section className="min-w-0">
-                    <Label htmlFor={`story-title-${episode.id}`}>{film ? "故事标题（可选）" : "集标题（可选）"}</Label>
-                    <Input
-                        id={`story-title-${episode.id}`}
-                        className="mt-2"
-                        value={draft.title}
-                        placeholder={film ? "可填写这一稿的标题" : "不填就显示第几集"}
-                        onChange={(event) => {
-                            const value = event.target.value;
-                            setDraft((current) => ({...current, title: value}));
-                        }}
-                    />
-                    <Label className="mt-6" htmlFor={`story-logline-${episode.id}`}>{film ? "一句话故事" : "本集一句话"}</Label>
-                    <Input
-                        id={`story-logline-${episode.id}`}
-                        className="mt-2"
-                        value={draft.logline}
-                        placeholder={film ? "这个故事，用一句话说完" : "这一集，用一句话说完"}
-                        onChange={(event) => {
-                            const value = event.target.value;
-                            setDraft((current) => ({...current, logline: value}));
-                        }}
-                    />
-                    <Label className="mt-6" htmlFor={`story-script-${episode.id}`}>剧本</Label>
-                    <p className="text-muted-foreground mt-1 text-xs">可拖入 .txt / .md，写入正文，不会自动拆场。</p>
-                    <div
-                        className={cn("mt-2 rounded-xl", dragging && "ring-brand ring-2")}
-                        onDragEnter={(event) => {
-                            event.preventDefault();
-                            setDragging(true);
-                        }}
-                        onDragOver={(event) => {
-                            event.preventDefault();
-                            setDragging(true);
-                        }}
-                        onDragLeave={() => setDragging(false)}
-                        onDrop={(event) => {
-                            event.preventDefault();
-                            if (!currentSession()) return;
-                            setDragging(false);
-                            const file = event.dataTransfer.files[0];
-                            if (file) void applyScriptFile(file);
-                        }}
-                    >
-                        <Textarea
-                            id={`story-script-${episode.id}`}
-                            ref={scriptRef}
-                            className="min-h-[28rem] resize-y bg-card/60 text-[14px] leading-7"
-                            value={draft.script}
-                            placeholder="直接贴剧本，或把 txt / md 拖进来。"
-                            onChange={(event) => changeScript(event.target.value)}
+                            actions={<DraftStatus status={status} error={error} onRetry={() => void retry()}
+                                                  onUseLatest={useLatestStory}/>}/>
+                <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.8fr)]">
+                    <section className="min-w-0">
+                        <Label htmlFor={`story-title-${episode.id}`}>{film ? "故事标题（可选）" : "集标题（可选）"}</Label>
+                        <Input
+                            id={`story-title-${episode.id}`}
+                            className="mt-2"
+                            value={draft.title}
+                            placeholder={film ? "可填写这一稿的标题" : "不填就显示第几集"}
+                            onChange={(event) => {
+                                const value = event.target.value;
+                                setDraft((current) => ({...current, title: value}));
+                            }}
                         />
-                    </div>
-                    {importError ? <p role="alert" className="text-destructive mt-2 text-xs">{importError}</p> : null}
-                    {candidate ? (
-                        <div className="bg-muted/40 mt-3 rounded-lg border p-3">
-                            <p className="text-sm">读取 {candidate.name} 期间正文已修改，当前正文已保留。</p>
-                            <pre
-                                className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap text-xs">{candidate.text}</pre>
-                            <div className="mt-3 flex gap-2">
-                                <Button size="sm" onClick={() => decideImport(true)}>采用导入正文</Button>
-                                <Button size="sm" variant="outline"
-                                        onClick={() => decideImport(false)}>放弃导入</Button>
+                        <Label className="mt-6"
+                               htmlFor={`story-logline-${episode.id}`}>{film ? "一句话故事" : "本集一句话"}</Label>
+                        <Input
+                            id={`story-logline-${episode.id}`}
+                            className="mt-2"
+                            value={draft.logline}
+                            placeholder={film ? "这个故事，用一句话说完" : "这一集，用一句话说完"}
+                            onChange={(event) => {
+                                const value = event.target.value;
+                                setDraft((current) => ({...current, logline: value}));
+                            }}
+                        />
+                        <Label className="mt-6" htmlFor={`story-script-${episode.id}`}>剧本</Label>
+                        <p className="text-muted-foreground mt-1 text-xs">可拖入 .txt / .md，写入正文，不会自动拆场。</p>
+                        <div
+                            className={cn("mt-2 rounded-xl", dragging && "ring-brand ring-2")}
+                            onDragEnter={(event) => {
+                                event.preventDefault();
+                                setDragging(true);
+                            }}
+                            onDragOver={(event) => {
+                                event.preventDefault();
+                                setDragging(true);
+                            }}
+                            onDragLeave={() => setDragging(false)}
+                            onDrop={(event) => {
+                                event.preventDefault();
+                                if (!currentSession()) return;
+                                setDragging(false);
+                                const file = event.dataTransfer.files[0];
+                                if (file) void applyScriptFile(file);
+                            }}
+                        >
+                            <Textarea
+                                id={`story-script-${episode.id}`}
+                                ref={scriptRef}
+                                className="min-h-[28rem] resize-y bg-card/60 text-[14px] leading-7"
+                                value={draft.script}
+                                placeholder="直接贴剧本，或把 txt / md 拖进来。"
+                                onChange={(event) => changeScript(event.target.value)}
+                            />
+                        </div>
+                        {importError ?
+                            <p role="alert" className="text-destructive mt-2 text-xs">{importError}</p> : null}
+                        {candidate ? (
+                            <div className="bg-muted/40 mt-3 rounded-lg border p-3">
+                                <p className="text-sm">读取 {candidate.name} 期间正文已修改，当前正文已保留。</p>
+                                <pre
+                                    className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap text-xs">{candidate.text}</pre>
+                                <div className="mt-3 flex gap-2">
+                                    <Button size="sm" onClick={() => decideImport(true)}>采用导入正文</Button>
+                                    <Button size="sm" variant="outline"
+                                            onClick={() => decideImport(false)}>放弃导入</Button>
+                                </div>
+                            </div>
+                        ) : null}
+                    </section>
+                    <aside className="min-w-0">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <h2 className="text-base leading-6 font-semibold">场次</h2>
+                            <div className="flex flex-wrap gap-2">
+                                <Button size="sm" variant="outline" disabled={unavailable}
+                                        onClick={() => void addBeatFromSelection().catch(reportCommandError)}>
+                                    从选中内容建场
+                                </Button>
+                                <Button size="sm" variant="outline" disabled={unavailable}
+                                        onClick={() => void repository.addStoryBeat(episode.id).catch(reportCommandError)}>
+                                    <Plus/>
+                                    加一场
+                                </Button>
                             </div>
                         </div>
-                    ) : null}
-                </section>
-                <aside className="min-w-0">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                        <h2 className="text-base leading-6 font-semibold">场次</h2>
-                        <div className="flex flex-wrap gap-2">
-                            <Button size="sm" variant="outline" disabled={unavailable}
-                                onClick={() => void addBeatFromSelection().catch(reportCommandError)}>
-                                从选中内容建场
-                            </Button>
-                            <Button size="sm" variant="outline" disabled={unavailable}
-                                onClick={() => void repository.addStoryBeat(episode.id).catch(reportCommandError)}>
-                                <Plus/>
-                                加一场
-                            </Button>
-                        </div>
-                    </div>
-                    <p className="text-muted-foreground mt-1 text-xs leading-5">
-                        {relationsAvailable ? "加一场，分镜里就会出现对应的空场。出场角色和地点从本戏世界选。" : "加一场，分镜里就会出现对应的空场。原生世界与角色关系尚未接入。"}
-                    </p>
-                    <ul className="mt-4 space-y-3">
-                        {beats.length === 0 ? (
-                            <li><PageState compact title="还没有场次"/></li>
-                        ) : (
-                            beats.map((beat, index) => (
-                                <li key={beat.id} className="border-t py-4">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <span className="text-muted-foreground w-6 text-xs">{index + 1}</span>
-                                        <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat}
-                                                       field="title"
-                                                       onDraftStatus={onBeatDraftStatus} unavailable={unavailable}
-                                                       ariaLabel="场次标题" className="h-8" containerClassName="min-w-28 flex-1"/>
-                                        <Button
-                                            size="icon-sm"
-                                            variant="ghost"
-                                            aria-label="上移场次"
-                                            disabled={unavailable || index === 0}
-                                            onClick={() => void moveBeat(index, -1).catch(reportCommandError)}
-                                        >
-                                            <ArrowUp/>
-                                        </Button>
-                                        <Button
-                                            size="icon-sm"
-                                            variant="ghost"
-                                            aria-label="下移场次"
-                                            disabled={unavailable || index === beats.length - 1}
-                                            onClick={() => void moveBeat(index, 1).catch(reportCommandError)}
-                                        >
-                                            <ArrowDown/>
-                                        </Button>
-                                        <Button
-                                            size="icon-sm"
-                                            variant="ghost"
-                                            disabled={unavailable}
-                                            aria-label="复制场次"
-                                            onClick={() => void copyBeat(beat.id, false).catch(reportCommandError)}
-                                        >
-                                            <Copy/>
-                                        </Button>
-                                        <Button
-                                            size="icon-sm"
-                                            variant="ghost"
-                                            disabled={unavailable}
-                                            aria-label="复制场次及其镜头"
-                                            onClick={() => void copyBeat(beat.id, true).catch(reportCommandError)}
-                                        >
-                                            <CopyPlus/>
-                                        </Button>
-                                        <Button
-                                            size="icon-sm"
-                                            variant="ghost"
-                                            disabled={unavailable}
-                                            aria-label="删除场次"
-                                            onClick={() => void removeBeat(beat, index).catch(reportCommandError)}
-                                        >
-                                            <Trash2/>
-                                        </Button>
-                                    </div>
-                                    <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat}
-                                                   field="content"
-                                                   onDraftStatus={onBeatDraftStatus} unavailable={unavailable} multiline
-                                                   containerClassName="mt-2" className="min-h-20 resize-none"
-                                                   placeholder="这场发生什么" ariaLabel="场次内容"/>
-                                    <Label className="mt-3 text-xs">出场角色</Label>
-                                    <div
-                                        className="mt-1 max-h-28 space-y-1 overflow-auto rounded-lg border px-2 py-1.5">
-                                        {characters.length === 0 ? (
-                                            <p className="text-muted-foreground text-xs">世界里还没有角色</p>
-                                        ) : (
-                                            characters.map((character) => (
-                                                <label key={character.id} className="flex items-center gap-2 text-xs">
-                                                    <Checkbox
-                                                        checked={beat.characterIds.includes(character.id)}
-                                                        onCheckedChange={(checked) => {
-                                                            const ids = checked
-                                                                ? [...beat.characterIds, character.id]
-                                                                : beat.characterIds.filter((item) => item !== character.id);
-                                                            updateBeat(beat.id, {characterIds: ids});
-                                                        }}
-                                                    />
-                                                    {character.name}
-                                                </label>
-                                            ))
-                                        )}
-                                    </div>
-                                    <div className="mt-3 grid grid-cols-2 gap-2">
-                                        <div>
-                                            <Label htmlFor={`beat-scene-${beat.id}`} className="text-xs">地点</Label>
-                                            <Select
-                                                disabled={!relationsAvailable || unavailable}
-                                                value={beat.sceneId ?? "none"}
-                                                onValueChange={(value) =>
-                                                    updateBeat(beat.id, {sceneId: value === "none" ? undefined : value})
-                                                }
-                                            >
-                                                <SelectTrigger id={`beat-scene-${beat.id}`} className="mt-1 h-8 w-full">
-                                                    <SelectValue placeholder="未选择"/>
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="none">未选择</SelectItem>
-                                                    {scenes.map((scene) => (
-                                                        <SelectItem key={scene.id} value={scene.id}>
-                                                            {scene.name}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                        <div>
-                                            <Label className="text-xs">时段</Label>
+                        <p className="text-muted-foreground mt-1 text-xs leading-5">
+                            {relationsAvailable ? "加一场，分镜里就会出现对应的空场。出场角色和地点从本戏世界选。" : "加一场，分镜里就会出现对应的空场。原生世界与角色关系尚未接入。"}
+                        </p>
+                        <ul className="mt-4 space-y-3">
+                            {beats.length === 0 ? (
+                                <li><PageState compact title="还没有场次"/></li>
+                            ) : (
+                                beats.map((beat, index) => (
+                                    <li key={beat.id} className="border-t py-4">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className="text-muted-foreground w-6 text-xs">{index + 1}</span>
                                             <BeatTextField projectId={episode.projectId} episodeId={episode.id}
-                                                           beat={beat} field="timeOfDay"
+                                                           beat={beat}
+                                                           field="title"
                                                            onDraftStatus={onBeatDraftStatus} unavailable={unavailable}
-                                                           className="h-8" containerClassName="mt-1"
-                                                           placeholder="日 / 夜" ariaLabel="时段"/>
+                                                           ariaLabel="场次标题" className="h-8"
+                                                           containerClassName="min-w-28 flex-1"/>
+                                            <Button
+                                                size="icon-sm"
+                                                variant="ghost"
+                                                aria-label="上移场次"
+                                                disabled={unavailable || index === 0}
+                                                onClick={() => void moveBeat(index, -1).catch(reportCommandError)}
+                                            >
+                                                <ArrowUp/>
+                                            </Button>
+                                            <Button
+                                                size="icon-sm"
+                                                variant="ghost"
+                                                aria-label="下移场次"
+                                                disabled={unavailable || index === beats.length - 1}
+                                                onClick={() => void moveBeat(index, 1).catch(reportCommandError)}
+                                            >
+                                                <ArrowDown/>
+                                            </Button>
+                                            <Button
+                                                size="icon-sm"
+                                                variant="ghost"
+                                                disabled={unavailable}
+                                                aria-label="复制场次"
+                                                onClick={() => void copyBeat(beat.id, false).catch(reportCommandError)}
+                                            >
+                                                <Copy/>
+                                            </Button>
+                                            <Button
+                                                size="icon-sm"
+                                                variant="ghost"
+                                                disabled={unavailable}
+                                                aria-label="复制场次及其镜头"
+                                                onClick={() => void copyBeat(beat.id, true).catch(reportCommandError)}
+                                            >
+                                                <CopyPlus/>
+                                            </Button>
+                                            <Button
+                                                size="icon-sm"
+                                                variant="ghost"
+                                                disabled={unavailable}
+                                                aria-label="删除场次"
+                                                onClick={() => void removeBeat(beat, index).catch(reportCommandError)}
+                                            >
+                                                <Trash2/>
+                                            </Button>
                                         </div>
-                                    </div>
-                                </li>
-                            ))
-                        )}
-                    </ul>
-                </aside>
-            </div>
+                                        <BeatTextField projectId={episode.projectId} episodeId={episode.id} beat={beat}
+                                                       field="content"
+                                                       onDraftStatus={onBeatDraftStatus} unavailable={unavailable}
+                                                       multiline
+                                                       containerClassName="mt-2" className="min-h-20 resize-none"
+                                                       placeholder="这场发生什么" ariaLabel="场次内容"/>
+                                        <Label className="mt-3 text-xs">出场角色</Label>
+                                        <div
+                                            className="mt-1 max-h-28 space-y-1 overflow-auto rounded-lg border px-2 py-1.5">
+                                            {characters.length === 0 ? (
+                                                <p className="text-muted-foreground text-xs">世界里还没有角色</p>
+                                            ) : (
+                                                characters.map((character) => (
+                                                    <label key={character.id}
+                                                           className="flex items-center gap-2 text-xs">
+                                                        <Checkbox
+                                                            checked={beat.characterIds.includes(character.id)}
+                                                            onCheckedChange={(checked) => {
+                                                                const ids = checked
+                                                                    ? [...beat.characterIds, character.id]
+                                                                    : beat.characterIds.filter((item) => item !== character.id);
+                                                                updateBeat(beat.id, {characterIds: ids});
+                                                            }}
+                                                        />
+                                                        {character.name}
+                                                    </label>
+                                                ))
+                                            )}
+                                        </div>
+                                        <div className="mt-3 grid grid-cols-2 gap-2">
+                                            <div>
+                                                <Label htmlFor={`beat-scene-${beat.id}`}
+                                                       className="text-xs">地点</Label>
+                                                <Select
+                                                    disabled={!relationsAvailable || unavailable}
+                                                    value={beat.sceneId ?? "none"}
+                                                    onValueChange={(value) =>
+                                                        updateBeat(beat.id, {sceneId: value === "none" ? undefined : value})
+                                                    }
+                                                >
+                                                    <SelectTrigger id={`beat-scene-${beat.id}`}
+                                                                   className="mt-1 h-8 w-full">
+                                                        <SelectValue placeholder="未选择"/>
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="none">未选择</SelectItem>
+                                                        {scenes.map((scene) => (
+                                                            <SelectItem key={scene.id} value={scene.id}>
+                                                                {scene.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                            <div>
+                                                <Label className="text-xs">时段</Label>
+                                                <BeatTextField projectId={episode.projectId} episodeId={episode.id}
+                                                               beat={beat} field="timeOfDay"
+                                                               onDraftStatus={onBeatDraftStatus}
+                                                               unavailable={unavailable}
+                                                               className="h-8" containerClassName="mt-1"
+                                                               placeholder="日 / 夜" ariaLabel="时段"/>
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))
+                            )}
+                        </ul>
+                    </aside>
+                </div>
             </PageContent>
         </div>
     );

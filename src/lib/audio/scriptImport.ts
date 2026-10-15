@@ -12,8 +12,8 @@ export function splitAudioScript(text: string): string[] {
 }
 
 /** Appends whole nonempty script lines atomically, preserving each line without truncation. */
-export async function appendAudioScript(projectId: string, chapterId: string, text: string,store?:ProductStore) {
-    const db=store ?? productDb;
+export async function appendAudioScript(projectId: string, chapterId: string, text: string, store?: ProductStore) {
+    const db = store ?? productDb;
     const paragraphs = splitAudioScript(text);
     return db.transaction("rw", AUDIO_TRANSACTION_TABLES, async (db) => {
         const existing = await db.audioSegments.where("chapterId").equals(chapterId).toArray();
@@ -24,7 +24,7 @@ export async function appendAudioScript(projectId: string, chapterId: string, te
             order: start + index + 1,
             text: paragraph,
             notes: ""
-        },db));
+        }, db));
         return added;
     });
 }
@@ -36,8 +36,8 @@ export async function editAudioScriptLines(args: {
     start: number;
     end: number;
     pasted?: string
-},store?:ProductStore) {
-    const db=store ?? productDb;
+}, store?: ProductStore) {
+    const db = store ?? productDb;
     const {projectId, segmentId, baseline, start, end, pasted} = args;
     if (!Number.isInteger(start) || !Number.isInteger(end) || start < 0 || end < start || end > baseline.length) throw new Error("正文选区无效");
     const lines = pasted === undefined
@@ -52,14 +52,14 @@ export async function editAudioScriptLines(args: {
         const next = rows[rows.findIndex((row) => row.id === segmentId) + 1];
         const step = next ? (next.order - current.order) / lines.length : 1;
         if (!(step > 0) || current.order + step === current.order) throw new Error("段落顺序过于接近，请调整顺序后重试");
-        const result = [await patchAudioSegment(projectId, segmentId, current.revision, {text: lines[0]},db)];
+        const result = [await patchAudioSegment(projectId, segmentId, current.revision, {text: lines[0]}, db)];
         for (let index = 1; index < lines.length; index++) result.push(await addAudioSegment(projectId, {
             chapterId: current.chapterId,
             speakerId: current.speakerId,
             order: current.order + step * index,
             text: lines[index],
             notes: ""
-        },db));
+        }, db));
         return result;
     });
 }

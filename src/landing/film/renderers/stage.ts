@@ -6,11 +6,22 @@ import {buildVaultSets, drawVault, planVault, vaultGeometry} from "./vault";
 import {createFilmLook, type FilmLook} from "./filmLook";
 import {drawLeader, LEADER_REST, planLeader} from "./leader";
 import {clamp01, type Layout, type Plan, type SceneState, type Sets} from "./plan";
-import {createPool, MAX_PARTICLES, mulberry32, step, type Pool, type Quality} from "./particles";
+import {createPool, MAX_PARTICLES, mulberry32, type Pool, type Quality, step} from "./particles";
 import {createAdaptiveQuality, detectQuality, type QualityInput} from "./quality";
 import {drawScript, GRID_DIM, planScript} from "./script";
 import {drawSpark, planSpark, SPARK_LINES} from "./spark";
-import {artRect, artScale, createSet, fillSet, rectOutline, scatterSet, textPoints, type CanvasLike, type Rect, type TargetSet} from "./targets";
+import {
+    artRect,
+    artScale,
+    type CanvasLike,
+    createSet,
+    fillSet,
+    type Rect,
+    rectOutline,
+    scatterSet,
+    type TargetSet,
+    textPoints
+} from "./targets";
 
 // Canvas 2D controller for the pinned stage. It is loaded lazily (dynamic import
 // from Film.tsx), so none of it is part of the first-screen bundle. Frames run
@@ -23,7 +34,7 @@ export type StageEnv = {
     now: () => number;
     isHidden: () => boolean;
     dpr: () => number;
-    measure: (stage: HTMLElement) => {w: number; h: number};
+    measure: (stage: HTMLElement) => { w: number; h: number };
     createCanvas: () => CanvasLike;
     observeResize: (element: Element, callback: () => void) => () => void;
     observeVisible: (element: Element, callback: (visible: boolean) => void) => () => void;
@@ -93,7 +104,7 @@ function defaultEnv(): StageEnv {
         },
         loadFont: (font, text) => document.fonts?.load(font, text) ?? Promise.resolve(),
         device: () => {
-            const nav = navigator as Navigator & {deviceMemory?: number; connection?: {saveData?: boolean}};
+            const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
             return {
                 hardwareConcurrency: nav.hardwareConcurrency,
                 deviceMemory: nav.deviceMemory,
@@ -126,7 +137,14 @@ function makeSprite(env: StageEnv, rgb: string): CanvasLike {
 // The leader's title card is the particles themselves (no DOM text on the stage): large, centred, a touch above the middle.
 function titleLayout(w: number, h: number): Layout["title"] {
     const size = w >= 900 ? Math.min(w * 0.095, 132) : w * 0.105;
-    return {cx: w / 2, cy: h * 0.46, size, text: SCENE_COPY.leader.title, fontFamily: '"Noto Serif SC", "Songti SC", "STSong", serif', fontWeight: "700"};
+    return {
+        cx: w / 2,
+        cy: h * 0.46,
+        size,
+        text: SCENE_COPY.leader.title,
+        fontFamily: '"Noto Serif SC", "Songti SC", "STSong", serif',
+        fontWeight: "700"
+    };
 }
 
 function gridCells(art: Rect): Rect[] {
@@ -140,14 +158,28 @@ function gridCells(art: Rect): Rect[] {
     const top = art.y + (art.h - (cellH * rows + gap * (rows - 1))) / 2;
     const cells: Rect[] = [];
     for (let row = 0; row < rows; row += 1) {
-        for (let col = 0; col < cols; col += 1) cells.push({x: art.x + col * (cellW + gap), y: top + row * (cellH + gap), w: cellW, h: cellH});
+        for (let col = 0; col < cols; col += 1) cells.push({
+            x: art.x + col * (cellW + gap),
+            y: top + row * (cellH + gap),
+            w: cellW,
+            h: cellH
+        });
     }
     return cells;
 }
 
 function buildLayout(w: number, h: number): Layout {
     const art = artRect(w, h);
-    return {w, h, art, title: titleLayout(w, h), cells: gridCells(art), agent: agentGeometry(art), vault: vaultGeometry(art), delivery: deliveryGeometry(art)};
+    return {
+        w,
+        h,
+        art,
+        title: titleLayout(w, h),
+        cells: gridCells(art),
+        agent: agentGeometry(art),
+        vault: vaultGeometry(art),
+        delivery: deliveryGeometry(art)
+    };
 }
 
 const textFont = (size: number) => `500 ${size}px "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", sans-serif`;
@@ -163,14 +195,36 @@ function buildSets(layout: Layout, capacity: number, env: StageEnv): Sets {
 
     const titleSet = createSet(capacity);
     const titleFont = (size: number) => `${title.fontWeight} ${size}px ${title.fontFamily}`;
-    const titlePoints = textPoints([title.text], {font: titleFont, size: title.size, lineHeight: title.size * 1.2, x: title.cx, y: title.cy, align: "center", maxWidth: w * 0.9, maxPoints: Math.floor(capacity * 0.86), rng, createCanvas: env.createCanvas});
+    const titlePoints = textPoints([title.text], {
+        font: titleFont,
+        size: title.size,
+        lineHeight: title.size * 1.2,
+        x: title.cx,
+        y: title.cy,
+        align: "center",
+        maxWidth: w * 0.9,
+        maxPoints: Math.floor(capacity * 0.86),
+        rng,
+        createCanvas: env.createCanvas
+    });
     fillSet(titleSet, titlePoints.points, {rng, shuffle: true, width: w, height: h});
 
     const textSet = createSet(capacity);
     const textSize = Math.max(14, Math.min(38 * Math.min(artScale(art), 1.2), art.w / 12, art.h / 5.8));
     // The script page sits in the middle of the frame (its lines stay left-aligned, like a screenplay).
     const blockW = Math.max(...SPARK_LINES.map(line => line.length)) * textSize;
-    const lines = textPoints(SPARK_LINES, {font: textFont, size: textSize, lineHeight: textSize * 1.9, x: art.x + Math.max(0, (art.w - blockW) / 2), y: art.y + art.h / 2, align: "left", maxWidth: art.w, maxPoints: Math.floor(capacity * 0.8), rng, createCanvas: env.createCanvas});
+    const lines = textPoints(SPARK_LINES, {
+        font: textFont,
+        size: textSize,
+        lineHeight: textSize * 1.9,
+        x: art.x + Math.max(0, (art.w - blockW) / 2),
+        y: art.y + art.h / 2,
+        align: "left",
+        maxWidth: art.w,
+        maxPoints: Math.floor(capacity * 0.8),
+        rng,
+        createCanvas: env.createCanvas
+    });
     const textCount = fillSet(textSet, lines.points, {rng, shuffle: false, width: w, height: h});
 
     const gridSet = createSet(capacity);
@@ -181,8 +235,22 @@ function buildSets(layout: Layout, capacity: number, env: StageEnv): Sets {
     gridSet.a.fill(GRID_DIM, 0, outlined);
     const gridLit: TargetSet = {x: gridSet.x, y: gridSet.y, a: Float32Array.from(gridSet.a)};
 
-    return {center, scatter, title: titleSet, text: textSet, typed: createSet(capacity), grid: gridSet, gridLit, textCount, textSize: lines.size, cellSize, typedCount: -1,
-        agent: buildAgentSets(layout.agent, capacity, rng, w, h), vault: buildVaultSets(layout.vault, capacity, rng, w, h), delivery: buildDeliverySets(layout.delivery, capacity, rng, w, h)};
+    return {
+        center,
+        scatter,
+        title: titleSet,
+        text: textSet,
+        typed: createSet(capacity),
+        grid: gridSet,
+        gridLit,
+        textCount,
+        textSize: lines.size,
+        cellSize,
+        typedCount: -1,
+        agent: buildAgentSets(layout.agent, capacity, rng, w, h),
+        vault: buildVaultSets(layout.vault, capacity, rng, w, h),
+        delivery: buildDeliverySets(layout.delivery, capacity, rng, w, h)
+    };
 }
 
 function applyPlan(pool: Pool, plan: Plan): void {

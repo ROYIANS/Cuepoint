@@ -154,7 +154,10 @@ export function ReferenceLibrary({projectId, open, onOpenChange, selected, onSel
 
 function ProjectImage({media, disabled, onSelect}: { media: MediaRecord; disabled: boolean; onSelect: () => void }) {
     const image = useBinaryPreview(media.blob);
-    return <button type="button" className="reference-project-image" disabled={disabled || image.status !== "ready"} onClick={onSelect}
-                   title={`附加 ${media.filename}`}>{image.status === "ready" ? <img src={image.url} onError={image.onError} alt={media.filename} loading="lazy"/> : <small>{binaryPreviewMessage(image)}</small>}<span>{media.filename}</span><small>附加图片</small>
+    return <button type="button" className="reference-project-image" disabled={disabled || image.status !== "ready"}
+                   onClick={onSelect}
+                   title={`附加 ${media.filename}`}>{image.status === "ready" ?
+        <img src={image.url} onError={image.onError} alt={media.filename} loading="lazy"/> :
+        <small>{binaryPreviewMessage(image)}</small>}<span>{media.filename}</span><small>附加图片</small>
     </button>;
 }

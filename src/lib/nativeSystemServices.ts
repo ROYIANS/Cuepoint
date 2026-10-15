@@ -6,8 +6,17 @@ const CHUNK_BYTES = 262_144;
 const receiptSchema = z.discriminatedUnion("type", [
     z.object({type: z.literal("canceled")}).strict(),
     z.object({type: z.literal("ready"), session: z.string().uuid(), chunkBytes: z.literal(CHUNK_BYTES)}).strict(),
-    z.object({type: z.literal("saved"), byteLength: z.number().int().nonnegative().safe(), contentHash: z.string().regex(/^[a-f0-9]{64}$/)}).strict(),
-    z.object({type: z.literal("publishedWithError"), byteLength: z.number().int().nonnegative().safe(), contentHash: z.string().regex(/^[a-f0-9]{64}$/), code: z.enum(["directorySync", "stageCleanup", "fileSync"])}).strict(),
+    z.object({
+        type: z.literal("saved"),
+        byteLength: z.number().int().nonnegative().safe(),
+        contentHash: z.string().regex(/^[a-f0-9]{64}$/)
+    }).strict(),
+    z.object({
+        type: z.literal("publishedWithError"),
+        byteLength: z.number().int().nonnegative().safe(),
+        contentHash: z.string().regex(/^[a-f0-9]{64}$/),
+        code: z.enum(["directorySync", "stageCleanup", "fileSync"])
+    }).strict(),
 ]);
 type PublishedSaveCode = "directorySync" | "stageCleanup" | "fileSync";
 const publishedSaveMessages: Record<PublishedSaveCode, string> = {
@@ -19,6 +28,7 @@ const publishedSaveMessages: Record<PublishedSaveCode, string> = {
 /** The native file exists; callers must not display cancellation or retry this export automatically. */
 class NativeSavePublishedError extends Error {
     readonly published = true;
+
     constructor(readonly byteLength: number, readonly contentHash: string, readonly code: PublishedSaveCode) {
         super(publishedSaveMessages[code]);
         this.name = "NativeSavePublishedError";
@@ -34,14 +44,18 @@ export async function saveNativeBlob(blob: Blob, filename: string, signal?: Abor
     const cancel = async () => {
         await invoke("product_save_cancel", {request: {version: 1, session}});
     };
-    const onAbort = () => {void cancel().catch(() => undefined);};
+    const onAbort = () => {
+        void cancel().catch(() => undefined);
+    };
     signal?.addEventListener("abort", onAbort, {once: true});
     let finished = false;
     let finalizing = false;
     try {
-        const begin = receiptSchema.parse(await invoke("product_save_begin", {request: {
-            version: 1, operationId, fileName: filename, mimeType: blob.type, byteLength: blob.size,
-        }}));
+        const begin = receiptSchema.parse(await invoke("product_save_begin", {
+            request: {
+                version: 1, operationId, fileName: filename, mimeType: blob.type, byteLength: blob.size,
+            }
+        }));
         if (begin.type === "canceled") return "canceled";
         if (begin.type !== "ready") throw new Error("文件保存返回了错误的阶段。");
         session = begin.session;
@@ -50,14 +64,27 @@ export async function saveNativeBlob(blob: Blob, filename: string, signal?: Abor
             if (signal?.aborted) return "canceled";
             const bytes = new Uint8Array(await blob.slice(offset, offset + CHUNK_BYTES).arrayBuffer());
             if (signal?.aborted) return "canceled";
-            const written = await invoke<unknown>("product_save_chunk", {request: {version: 1, session, offset, bytes: Array.from(bytes)}});
+            const written = await invoke<unknown>("product_save_chunk", {
+                request: {
+                    version: 1,
+                    session,
+                    offset,
+                    bytes: Array.from(bytes)
+                }
+            });
             if (written !== offset + bytes.byteLength) throw new Error("文件传输未确认正确的字节位置。");
             hash.update(bytes);
         }
         if (signal?.aborted) return "canceled";
         // Do not race this promise with abort: publication may win. Its truthful result takes priority.
         finalizing = true;
-        const result = receiptSchema.parse(await invoke("product_save_finish", {request: {version: 1, session, contentHash: hash.digest()}}));
+        const result = receiptSchema.parse(await invoke("product_save_finish", {
+            request: {
+                version: 1,
+                session,
+                contentHash: hash.digest()
+            }
+        }));
         finished = true;
         if (result.type === "canceled") return "canceled";
         if (result.type !== "saved" && result.type !== "publishedWithError") throw new Error("文件保存未返回完成结果。");

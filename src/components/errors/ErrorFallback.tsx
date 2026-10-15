@@ -1,5 +1,5 @@
-import {useRouter} from "@tanstack/react-router";
 import type {ErrorComponentProps} from "@tanstack/react-router";
+import {useRouter} from "@tanstack/react-router";
 import {Button} from "@/components/ui/button";
 import {friendlyMessage} from "@/lib/diagnostics/friendlyMessage";
 import {openErrorDetails} from "./errorDetailsStore";
@@ -38,13 +38,15 @@ export function ErrorFallback({error, reset}: ErrorComponentProps) {
             error={error}
             pathname={window.location.pathname}
             onRetry={reset}
-            onHome={() => { void router.navigate({to: "/"}); }}
+            onHome={() => {
+                void router.navigate({to: "/"});
+            }}
             onDetails={openErrorDetails}
         />
     );
 }
 
-export function NotFoundView({onHome}: {onHome: () => void}) {
+export function NotFoundView({onHome}: { onHome: () => void }) {
     return (
         <div className="mx-auto flex max-w-lg flex-col gap-4 p-8">
             <h1 className="text-2xl font-semibold">页面不存在</h1>
@@ -56,5 +58,7 @@ export function NotFoundView({onHome}: {onHome: () => void}) {
 
 export function NotFound() {
     const router = useRouter();
-    return <NotFoundView onHome={() => { void router.navigate({to: "/"}); }}/>;
+    return <NotFoundView onHome={() => {
+        void router.navigate({to: "/"});
+    }}/>;
 }

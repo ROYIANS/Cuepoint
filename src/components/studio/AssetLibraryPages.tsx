@@ -75,7 +75,7 @@ async function readLibraryRows<T extends LibraryAsset>(table: StoreTable<T>, cov
     }));
 }
 
-function readStudioLibrary(kind: LibraryKind, db:ProductStore): Promise<LibraryRow[]> {
+function readStudioLibrary(kind: LibraryKind, db: ProductStore): Promise<LibraryRow[]> {
     switch (kind) {
         case "character":
             return readLibraryRows(db.characters, characterCover);
@@ -235,12 +235,16 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
 
     return (
         <PageContent mode="collection">
-            <LibraryHeader title={copy.title} description={copy.hint} query={query} onQuery={setQuery} sort={sort} onSort={setSort}
-                           extra={<Button disabled={creating || deleting} onClick={() => void handleCreate()}><Plus aria-hidden/>{creating ? "创建中…" : copy.create}</Button>}/>
+            <LibraryHeader title={copy.title} description={copy.hint} query={query} onQuery={setQuery} sort={sort}
+                           onSort={setSort}
+                           extra={<Button disabled={creating || deleting} onClick={() => void handleCreate()}><Plus
+                               aria-hidden/>{creating ? "创建中…" : copy.create}</Button>}/>
             <div>
                 {(!view || view.kind !== kind) && <PageState kind="loading" title="正在读取设定…"/>}
-                {view?.kind === kind && view.error && <PageState kind="error" title="暂时无法读取设定" description={view.error}/>}
-                {view?.kind === kind && !view.error && !items.length && <PageState title={query.trim() ? "没有匹配的设定" : `暂无${copy.title}`}
+                {view?.kind === kind && view.error &&
+                    <PageState kind="error" title="暂时无法读取设定" description={view.error}/>}
+                {view?.kind === kind && !view.error && !items.length &&
+                    <PageState title={query.trim() ? "没有匹配的设定" : `暂无${copy.title}`}
                                description={query.trim() ? "试试其他关键词。" : "创建后可在工作室编辑，添加到项目时使用独立副本。"}/>}
                 {view?.kind === kind && !view.error && items.length > 0 && <LibraryGrid>
                     {items.map((item) => (

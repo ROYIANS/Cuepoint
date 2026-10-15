@@ -9,7 +9,7 @@ const LICENSE_URL = `${GITHUB_URL}/blob/main/LICENSE`;
 
 // The closing credits: online experience, download, star, open source, FAQ.
 // Real, focusable document flow in both modes (never inside the pinned stage).
-export function Credits({download}: {download: DownloadData}) {
+export function Credits({download}: { download: DownloadData }) {
     const copy = SCENE_COPY.credits;
     return (
         <section className="lp-credits" data-scene="credits" aria-labelledby="lp-credits-title">
@@ -23,7 +23,7 @@ export function Credits({download}: {download: DownloadData}) {
                 <a className="lp-btn" href={GITHUB_URL} rel="noopener noreferrer" data-umami-event="github">GitHub</a>
             </div>
             <p className="lp-note">{HERO_NOTE.text}</p>
-            <DownloadCard release={download.release} platform={download.platform} />
+            <DownloadCard release={download.release} platform={download.platform}/>
             <section className="lp-section" aria-labelledby="lp-online">
                 <h2 id="lp-online">在线体验</h2>
                 <ul className="lp-notes">
@@ -35,9 +35,10 @@ export function Credits({download}: {download: DownloadData}) {
                 <div className="lp-open">
                     <div className="lp-open-info">
                         <p className="lp-narration">{OPEN_SOURCE.text}</p>
-                        <p className="lp-links lp-links-quiet"><a href={LICENSE_URL} rel="noopener noreferrer">MIT 协议</a><a href={GITHUB_URL} rel="noopener noreferrer">GitHub 仓库</a></p>
+                        <p className="lp-links lp-links-quiet"><a href={LICENSE_URL} rel="noopener noreferrer">MIT
+                            协议</a><a href={GITHUB_URL} rel="noopener noreferrer">GitHub 仓库</a></p>
                     </div>
-                    <StarPrompt stars={download.stars} />
+                    <StarPrompt stars={download.stars}/>
                 </div>
             </section>
             <section className="lp-section" aria-labelledby="lp-faq">

@@ -2,6 +2,29 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "main",
   "description": "Only the bundled main window may call closed native services and print. HTTP origins are individually granted at runtime.",
-  "windows": ["main"],
-  "permissions": ["allow-product-store-request", "allow-product-binary-request", "allow-product-binary-read", "allow-product-binary-write", "allow-product-media-preview", "allow-product-media-release", "allow-workspace-request", "allow-workspace-cancel", "allow-authorize-http-origin", "allow-product-save-begin", "allow-product-save-chunk", "allow-product-save-finish", "allow-product-save-cancel", "allow-product-print-storyboard", "allow-product-open-external", "core:webview:allow-print", "core:event:allow-listen", "core:event:allow-unlisten", "core:window:allow-start-dragging", "core:window:allow-internal-toggle-maximize"]
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "allow-product-store-request",
+    "allow-product-binary-request",
+    "allow-product-binary-read",
+    "allow-product-binary-write",
+    "allow-product-media-preview",
+    "allow-product-media-release",
+    "allow-workspace-request",
+    "allow-workspace-cancel",
+    "allow-authorize-http-origin",
+    "allow-product-save-begin",
+    "allow-product-save-chunk",
+    "allow-product-save-finish",
+    "allow-product-save-cancel",
+    "allow-product-print-storyboard",
+    "allow-product-open-external",
+    "core:webview:allow-print",
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "core:window:allow-start-dragging",
+    "core:window:allow-internal-toggle-maximize"
+  ]
 }

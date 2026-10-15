@@ -72,9 +72,9 @@ export function ProjectMemoryPage({
         <main className={`memory-page${selected ? " has-selection" : ""}`}>
             <PageHeader title="项目记忆" description="管理这个项目已确认的规范、偏好与决策。"
                         className="memory-page-heading" actions={<Button onClick={() => setEditor("new")}>
-                    <Plus/>
-                    添加记忆
-                </Button>}/>
+                <Plus/>
+                添加记忆
+            </Button>}/>
             <div className="memory-workbench">
                 <section className="memory-list-panel" aria-label="项目记忆列表">
                     <div className="memory-filters">

@@ -18,21 +18,28 @@ function publishedOn(value: string | undefined): string {
     return new Date(value).toLocaleDateString("zh-CN");
 }
 
-export function UpdateSection({visibleRowIds}: {visibleRowIds?: string[]}) {
+export function UpdateSection({visibleRowIds}: { visibleRowIds?: string[] }) {
     const native = isTauriRuntime();
     const {state, download, runCheck, startDownload, cancelDownload} = useUpdateCheck();
     useEffect(() => {
         // StrictMode replays setup/cleanup; only the surviving page starts a request.
         let live = true;
-        queueMicrotask(() => {if (live) void runCheck();});
-        return () => {live = false;};
+        queueMicrotask(() => {
+            if (live) void runCheck();
+        });
+        return () => {
+            live = false;
+        };
     }, [runCheck]);
 
     const release = state.kind === "ready" ? state.release : undefined;
     const choices = state.kind === "ready" ? [...(state.asset ? [state.asset] : []), ...(state.alternatives ?? [])] : [];
     const busy = download.kind === "downloading" || download.kind === "verifying" || download.kind === "saving";
     const visible = (id: string) => !visibleRowIds || visibleRowIds.includes(id);
-    const releaseLink = <Button variant="outline" size="sm" asChild><a href={release?.htmlUrl ?? RELEASES_URL} target="_blank" rel="noreferrer">打开发布页<ExternalLink aria-hidden/></a></Button>;
+    const releaseLink = <Button variant="outline" size="sm" asChild><a href={release?.htmlUrl ?? RELEASES_URL}
+                                                                       target="_blank"
+                                                                       rel="noreferrer">打开发布页<ExternalLink
+        aria-hidden/></a></Button>;
     const date = publishedOn(release?.publishedAt);
     const installSteps = download.kind === "saved"
         ? download.format === "dmg" ? "打开 dmg 后将小光点拖入应用程序文件夹。"
@@ -49,9 +56,12 @@ export function UpdateSection({visibleRowIds}: {visibleRowIds?: string[]}) {
                     description={state.kind === "checking" ? "正在检查…" : release
                         ? `最新桌面版本 ${release.version}${release.prerelease ? "（预发布）" : ""}${date ? ` · 发布于 ${date}` : ""}`
                         : "从 GitHub 发布页获取最新桌面版本信息"}
-                    control={<Button variant="outline" size="sm" disabled={state.kind === "checking" || busy} onClick={() => void runCheck()}><RefreshCw aria-hidden/>检查更新</Button>}
+                    control={<Button variant="outline" size="sm" disabled={state.kind === "checking" || busy}
+                                     onClick={() => void runCheck()}><RefreshCw aria-hidden/>检查更新</Button>}
                 />
-                {state.kind === "failed" && <div role="alert"><SettingsRow title="检查失败" description={state.reason} control={releaseLink}/></div>}
+                {state.kind === "failed" &&
+                    <div role="alert"><SettingsRow title="检查失败" description={state.reason} control={releaseLink}/>
+                    </div>}
                 {state.kind === "ready" && state.verdict === "update-available" && <>
                     <SettingsRow
                         title={`发现新版本 ${release?.version ?? ""}`}
@@ -63,18 +73,26 @@ export function UpdateSection({visibleRowIds}: {visibleRowIds?: string[]}) {
                     {choices.map(choice => {
                         const inApp = native && Boolean(choice.asset.sha256) && choice.asset.size <= MAX_RELEASE_ASSET_BYTES;
                         return <SettingsRow key={choice.asset.name} title={choice.label}
-                            description={`${choice.asset.name}${!inApp ? ` · ${native ? !choice.asset.sha256 ? "此版本未提供校验值，" : "安装包超过 64 MB，" : ""}通过系统浏览器下载` : ""}`}
-                            control={inApp
-                                ? <Button size="sm" disabled={busy} onClick={() => void startDownload(choice)}><Download aria-hidden/>下载（{megabytes(choice.asset.size)}）</Button>
-                                : <Button size="sm" asChild><a href={choice.asset.url} target="_blank" rel="noreferrer"><Download aria-hidden/>浏览器下载（{megabytes(choice.asset.size)}）</a></Button>}
+                                            description={`${choice.asset.name}${!inApp ? ` · ${native ? !choice.asset.sha256 ? "此版本未提供校验值，" : "安装包超过 64 MB，" : ""}通过系统浏览器下载` : ""}`}
+                                            control={inApp
+                                                ? <Button size="sm" disabled={busy}
+                                                          onClick={() => void startDownload(choice)}><Download
+                                                    aria-hidden/>下载（{megabytes(choice.asset.size)}）</Button>
+                                                : <Button size="sm" asChild><a href={choice.asset.url} target="_blank"
+                                                                               rel="noreferrer"><Download
+                                                    aria-hidden/>浏览器下载（{megabytes(choice.asset.size)}）</a></Button>}
                         />;
                     })}
                 </>}
-                {state.kind === "ready" && state.verdict === "up-to-date" && <SettingsRow title="已是最新版本" description="当前版本与线上最新版本一致。"/>}
-                {state.kind === "ready" && state.verdict === "ahead" && <SettingsRow title="当前版本高于线上" description="你使用的是开发或更新的版本，无需升级。"/>}
-                {state.kind === "ready" && state.verdict === "unknown" && <SettingsRow title="无法比较版本" description="当前或线上版本号无法比较，仍可前往发布页查看最新版本。"/>}
+                {state.kind === "ready" && state.verdict === "up-to-date" &&
+                    <SettingsRow title="已是最新版本" description="当前版本与线上最新版本一致。"/>}
+                {state.kind === "ready" && state.verdict === "ahead" &&
+                    <SettingsRow title="当前版本高于线上" description="你使用的是开发或更新的版本，无需升级。"/>}
+                {state.kind === "ready" && state.verdict === "unknown" && <SettingsRow title="无法比较版本"
+                                                                                       description="当前或线上版本号无法比较，仍可前往发布页查看最新版本。"/>}
             </>}
-            {visible("release") && <SettingsRow title="发布页" description="查看所有版本、更新说明与校验文件。" control={releaseLink}/>}
+            {visible("release") &&
+                <SettingsRow title="发布页" description="查看所有版本、更新说明与校验文件。" control={releaseLink}/>}
         </SettingsGroup>}
         {download.kind !== "idle" && <div role={download.kind === "failed" ? "alert" : "status"}>
             <SettingsGroup title="安装包">
@@ -85,14 +103,23 @@ export function UpdateSection({visibleRowIds}: {visibleRowIds?: string[]}) {
                             : download.kind === "canceled" ? "没有保存安装包，可以重新下载。"
                                 : download.kind === "saving" ? "请选择保存位置，正在等待系统保存完成…"
                                     : download.kind === "verifying" ? "正在校验文件完整性…" : `${megabytes(download.loaded)} / ${megabytes(download.total)}`}
-                    control={busy ? <Button variant="outline" size="sm" onClick={cancelDownload}>取消</Button> : undefined}
+                    control={busy ?
+                        <Button variant="outline" size="sm" onClick={cancelDownload}>取消</Button> : undefined}
                 />
-                {(download.kind === "saved" || download.kind === "failed") && <SettingsRow title="安装与备份说明" description="覆盖安装前请先导出项目备份。" control={<Button variant="outline" size="sm" asChild><a href={INSTALL_GUIDE_URL} target="_blank" rel="noreferrer">查看说明<ExternalLink aria-hidden/></a></Button>}/>}
+                {(download.kind === "saved" || download.kind === "failed") &&
+                    <SettingsRow title="安装与备份说明" description="覆盖安装前请先导出项目备份。"
+                                 control={<Button variant="outline" size="sm" asChild><a href={INSTALL_GUIDE_URL}
+                                                                                         target="_blank"
+                                                                                         rel="noreferrer">查看说明<ExternalLink
+                                     aria-hidden/></a></Button>}/>}
             </SettingsGroup>
         </div>}
         {(visible("privacy") || visible("about")) && <SettingsGroup title="关于小光点">
-            {visible("privacy") && <SettingsRow title="数据与隐私" description="项目与密钥保存在本机。检查更新仅请求公开发布信息；本地项目内容与密钥不会发送到 GitHub。"/>}
-            {visible("about") && <SettingsRow title="更多关于 Cuepoint" control={<Button variant="outline" size="sm" asChild><Link to="/about">关于小光点</Link></Button>}/>}
+            {visible("privacy") && <SettingsRow title="数据与隐私"
+                                                description="项目与密钥保存在本机。检查更新仅请求公开发布信息；本地项目内容与密钥不会发送到 GitHub。"/>}
+            {visible("about") && <SettingsRow title="更多关于 Cuepoint"
+                                              control={<Button variant="outline" size="sm" asChild><Link
+                                                  to="/about">关于小光点</Link></Button>}/>}
         </SettingsGroup>}
     </>;
 }

@@ -1,6 +1,5 @@
 import type {ProductStore} from "@/lib/storage/types";
 import {db as productDb} from "./database";
-const db = productDb;
 import {getTaskWrapupState} from "./agentTaskWrapups";
 import type {AgentTaskWrapup} from "@/domain/agentTaskWrapup";
 import type {
@@ -16,6 +15,8 @@ import type {
 } from "@/domain/projectMemory";
 import {memorySourceRefSchema, normalizeMemoryText, parseMemoryInput,} from "@/lib/memory/schema";
 import {createId, nowIso} from "@/lib/ids";
+
+const db = productDb;
 
 // Complete read/write closure for the five manual commands, including ownership,
 // normalized duplicate/conflict checks, CAS and immutable history writes.

@@ -1,6 +1,6 @@
 import {isStudioLibrary} from "@/domain/types";
-import {BROWSER_WORKSPACE_ID, mediaWorkspaceRef, workspaceId} from "@/lib/workspace";
 import type {WorkspaceId, WorkspaceRef} from "@/lib/workspace";
+import {BROWSER_WORKSPACE_ID, mediaWorkspaceRef, workspaceId} from "@/lib/workspace";
 import {Sha256} from "@/lib/sha256";
 
 /** The only portable checkpoint format implemented by this protocol child. */
@@ -219,7 +219,11 @@ function readCoverage(value: unknown): PartialCheckpointCoverage {
     const values: unknown[] = raw.omitted;
     const omitted = values.map(value => text(value, "coverage omitted field")).sort(exactCompare);
     if (new Set(omitted).size !== omitted.length) throw new CheckpointValidationError("coverage omitted fields contain duplicates");
-    return Object.freeze({kind: CHECKPOINT_COVERAGE_KIND, included: ["project", "media"] as ["project", "media"], omitted: Object.freeze(omitted)});
+    return Object.freeze({
+        kind: CHECKPOINT_COVERAGE_KIND,
+        included: ["project", "media"] as ["project", "media"],
+        omitted: Object.freeze(omitted)
+    });
 }
 
 function readRecord(value: unknown, workspace: WorkspaceId, projectId: string): CheckpointRecord {
@@ -245,7 +249,20 @@ function readRecord(value: unknown, workspace: WorkspaceId, projectId: string): 
         throw new CheckpointValidationError("media record workspace reference is not canonical");
     }
     const title = raw.title === undefined ? undefined : authoredText(raw.title, "media record title");
-    return Object.freeze(title === undefined ? {kind: "media", id, projectId: owner, mediaWorkspaceRef: ref, binaryId: identifier(raw.binaryId, "media record binaryId")} : {kind: "media", id, projectId: owner, title, mediaWorkspaceRef: ref, binaryId: identifier(raw.binaryId, "media record binaryId")});
+    return Object.freeze(title === undefined ? {
+        kind: "media",
+        id,
+        projectId: owner,
+        mediaWorkspaceRef: ref,
+        binaryId: identifier(raw.binaryId, "media record binaryId")
+    } : {
+        kind: "media",
+        id,
+        projectId: owner,
+        title,
+        mediaWorkspaceRef: ref,
+        binaryId: identifier(raw.binaryId, "media record binaryId")
+    });
 }
 
 function readBinary(value: unknown, workspace: WorkspaceId, projectId: string): CheckpointBinaryEntry {
@@ -259,7 +276,15 @@ function readBinary(value: unknown, workspace: WorkspaceId, projectId: string): 
     if (ref.workspaceId !== expected.workspaceId || ref.projectId !== expected.projectId || ref.relativePath !== expected.relativePath) {
         throw new CheckpointValidationError("binary workspace reference is not canonical");
     }
-    return Object.freeze({binaryId, mediaId, projectId: owner, mediaWorkspaceRef: ref, mimeType: mime(raw.mimeType), byteLength: safeByteLength(raw.byteLength), sha256: hash(raw.sha256, "binary sha256")});
+    return Object.freeze({
+        binaryId,
+        mediaId,
+        projectId: owner,
+        mediaWorkspaceRef: ref,
+        mimeType: mime(raw.mimeType),
+        byteLength: safeByteLength(raw.byteLength),
+        sha256: hash(raw.sha256, "binary sha256")
+    });
 }
 
 function canonicalValue(value: unknown): string {
@@ -288,7 +313,7 @@ function revisionFor(input: Omit<CheckpointManifest, "revisionId">): string {
     return `sha256-v1:${new Sha256().update(new TextEncoder().encode(canonicalValue(revisionContent(input)))).digest()}`;
 }
 
-function freezeManifest(input: Omit<CheckpointManifest, "revisionId"> & {revisionId: string}): CheckpointManifest {
+function freezeManifest(input: Omit<CheckpointManifest, "revisionId"> & { revisionId: string }): CheckpointManifest {
     return Object.freeze({
         format: input.format,
         schemaVersion: input.schemaVersion,
@@ -296,7 +321,11 @@ function freezeManifest(input: Omit<CheckpointManifest, "revisionId"> & {revisio
         projectId: input.projectId,
         revisionId: input.revisionId,
         parentRevisionIds: Object.freeze([...input.parentRevisionIds]),
-        coverage: Object.freeze({kind: input.coverage.kind, included: Object.freeze(["project", "media"] as ["project", "media"]), omitted: Object.freeze([...input.coverage.omitted])}),
+        coverage: Object.freeze({
+            kind: input.coverage.kind,
+            included: Object.freeze(["project", "media"] as ["project", "media"]),
+            omitted: Object.freeze([...input.coverage.omitted])
+        }),
         records: Object.freeze([...input.records]),
         binaries: Object.freeze([...input.binaries]),
     });
@@ -341,22 +370,46 @@ export function validateCheckpointManifest(value: unknown): CheckpointManifest {
         const record = mediaById.get(binary.mediaId);
         if (!record || record.binaryId !== binary.binaryId || record.projectId !== binary.projectId) throw new CheckpointValidationError("binary is not referenced by a media record");
     }
-    const candidate: Omit<CheckpointManifest, "revisionId"> = {format: CHECKPOINT_FORMAT, schemaVersion: CHECKPOINT_SCHEMA_VERSION, workspaceId: workspace, projectId, parentRevisionIds: parents, coverage, records, binaries};
+    const candidate: Omit<CheckpointManifest, "revisionId"> = {
+        format: CHECKPOINT_FORMAT,
+        schemaVersion: CHECKPOINT_SCHEMA_VERSION,
+        workspaceId: workspace,
+        projectId,
+        parentRevisionIds: parents,
+        coverage,
+        records,
+        binaries
+    };
     if (revisionFor(candidate) !== revisionId) throw new CheckpointValidationError("manifest revision does not match canonical content");
     return freezeManifest({...revisionContent(candidate), revisionId});
 }
 
 /** Build a canonical immutable manifest. Binary bytes are prepared separately. */
-export function createCheckpointManifest(input: Omit<CheckpointBuildInput, "binaries"> & {binaries: readonly CheckpointBinaryEntry[]}): CheckpointManifest {
+export function createCheckpointManifest(input: Omit<CheckpointBuildInput, "binaries"> & {
+    binaries: readonly CheckpointBinaryEntry[]
+}): CheckpointManifest {
     const workspace = ensurePortableWorkspace(input.workspaceId);
     object(input, ["workspaceId", "projectId", "parentRevisionIds", "coverage", "records", "binaries"], "checkpoint build input");
     const projectId = identifier(input.projectId, "projectId");
     if (isStudioLibrary(projectId)) throw new CheckpointValidationError("Studio codecs are outside this single-project fixture");
-    const coverage = input.coverage === undefined ? Object.freeze({kind: CHECKPOINT_COVERAGE_KIND, included: ["project", "media"] as ["project", "media"], omitted: Object.freeze(["all-production-tables", "credentials", "runtime-claims", "opaque-history-results"])}) : readCoverage(input.coverage);
+    const coverage = input.coverage === undefined ? Object.freeze({
+        kind: CHECKPOINT_COVERAGE_KIND,
+        included: ["project", "media"] as ["project", "media"],
+        omitted: Object.freeze(["all-production-tables", "credentials", "runtime-claims", "opaque-history-results"])
+    }) : readCoverage(input.coverage);
     const records = input.records.map(record => readRecord(record, workspace, projectId));
     const binaries = input.binaries.map(binary => readBinary(binary, workspace, projectId));
     const parentRevisionIds = (input.parentRevisionIds ?? []).map(parent => text(parent, "parentRevisionId")).sort(exactCompare);
-    const candidate: Omit<CheckpointManifest, "revisionId"> = {format: CHECKPOINT_FORMAT, schemaVersion: CHECKPOINT_SCHEMA_VERSION, workspaceId: workspace, projectId, parentRevisionIds, coverage, records, binaries};
+    const candidate: Omit<CheckpointManifest, "revisionId"> = {
+        format: CHECKPOINT_FORMAT,
+        schemaVersion: CHECKPOINT_SCHEMA_VERSION,
+        workspaceId: workspace,
+        projectId,
+        parentRevisionIds,
+        coverage,
+        records,
+        binaries
+    };
     const manifest = freezeManifest({...candidate, revisionId: revisionFor(candidate)});
     return validateCheckpointManifest(manifest);
 }
@@ -387,7 +440,10 @@ function snapshotSource(source: BinarySource): BinarySource {
     throw new CheckpointValidationError("binary source type is unsupported");
 }
 
-async function sourceBytes(source: BinarySource, signal?: AbortSignal): Promise<{readonly bytes: Uint8Array; readonly sha256: string}> {
+async function sourceBytes(source: BinarySource, signal?: AbortSignal): Promise<{
+    readonly bytes: Uint8Array;
+    readonly sha256: string
+}> {
     assertNotAborted(signal);
     const size = source instanceof Blob ? source.size : source instanceof ArrayBuffer ? source.byteLength : source.byteLength;
     if (!Number.isSafeInteger(size) || size <= 0) throw new CheckpointValidationError("binary source size is invalid");
@@ -416,7 +472,11 @@ export function assertPreparedCheckpoint(value: PreparedCheckpoint): void {
 function clonePreparedBinary(entry: CheckpointBinaryEntry, bytes: Uint8Array): PreparedBinary {
     const snapshot = new Uint8Array(bytes);
     const result = {entry, bytes: snapshot} as PreparedBinary;
-    Object.defineProperty(result, "bytes", {enumerable: true, configurable: false, get: () => new Uint8Array(snapshot)});
+    Object.defineProperty(result, "bytes", {
+        enumerable: true,
+        configurable: false,
+        get: () => new Uint8Array(snapshot)
+    });
     return Object.freeze(result);
 }
 
@@ -441,17 +501,47 @@ export async function prepareCheckpoint(input: CheckpointBuildInput, signal?: Ab
         return Object.freeze({binaryId, mediaId, projectId: owner, mimeType, bytes: snapshotSource(binary.bytes)});
     });
     // Validate the complete descriptor/reference graph before any asynchronous binary reading.
-    createCheckpointManifest({workspaceId: workspaceSnapshot, projectId: projectSnapshot, parentRevisionIds: parentRevisionIdsSnapshot, coverage: coverageSnapshot, records: recordsSnapshot, binaries: descriptors.map(descriptor => ({binaryId: descriptor.binaryId, mediaId: descriptor.mediaId, projectId: descriptor.projectId, mimeType: descriptor.mimeType, mediaWorkspaceRef: mediaWorkspaceRef(workspaceSnapshot, descriptor.projectId, descriptor.mediaId), byteLength: descriptor.bytes instanceof Blob ? descriptor.bytes.size : descriptor.bytes.byteLength, sha256: "0".repeat(64)}))});
+    createCheckpointManifest({
+        workspaceId: workspaceSnapshot,
+        projectId: projectSnapshot,
+        parentRevisionIds: parentRevisionIdsSnapshot,
+        coverage: coverageSnapshot,
+        records: recordsSnapshot,
+        binaries: descriptors.map(descriptor => ({
+            binaryId: descriptor.binaryId,
+            mediaId: descriptor.mediaId,
+            projectId: descriptor.projectId,
+            mimeType: descriptor.mimeType,
+            mediaWorkspaceRef: mediaWorkspaceRef(workspaceSnapshot, descriptor.projectId, descriptor.mediaId),
+            byteLength: descriptor.bytes instanceof Blob ? descriptor.bytes.size : descriptor.bytes.byteLength,
+            sha256: "0".repeat(64)
+        }))
+    });
     const entries: CheckpointBinaryEntry[] = [];
     const results = new Map<string, Uint8Array>();
     for (const descriptor of descriptors) {
         const result = await sourceBytes(descriptor.bytes, signal);
         results.set(descriptor.binaryId, result.bytes);
-        entries.push({binaryId: descriptor.binaryId, mediaId: descriptor.mediaId, projectId: descriptor.projectId, mediaWorkspaceRef: mediaWorkspaceRef(workspaceSnapshot, descriptor.projectId, descriptor.mediaId), mimeType: descriptor.mimeType, byteLength: result.bytes.byteLength, sha256: result.sha256});
+        entries.push({
+            binaryId: descriptor.binaryId,
+            mediaId: descriptor.mediaId,
+            projectId: descriptor.projectId,
+            mediaWorkspaceRef: mediaWorkspaceRef(workspaceSnapshot, descriptor.projectId, descriptor.mediaId),
+            mimeType: descriptor.mimeType,
+            byteLength: result.bytes.byteLength,
+            sha256: result.sha256
+        });
         if (entries.length < descriptors.length) await macrotask(signal);
     }
     assertNotAborted(signal);
-    const manifest = createCheckpointManifest({workspaceId: workspaceSnapshot, projectId: projectSnapshot, parentRevisionIds: parentRevisionIdsSnapshot, coverage: coverageSnapshot, records: recordsSnapshot, binaries: entries});
+    const manifest = createCheckpointManifest({
+        workspaceId: workspaceSnapshot,
+        projectId: projectSnapshot,
+        parentRevisionIds: parentRevisionIdsSnapshot,
+        coverage: coverageSnapshot,
+        records: recordsSnapshot,
+        binaries: entries
+    });
     const prepared = manifest.binaries.map(entry => {
         const bytes = results.get(entry.binaryId);
         if (!bytes) throw new CheckpointValidationError("prepared checkpoint binary identity changed");

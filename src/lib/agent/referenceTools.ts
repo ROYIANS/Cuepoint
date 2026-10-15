@@ -71,7 +71,7 @@ export const REFERENCE_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(raw, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const projectId = await scope(context, db), args = search.parse(raw);
             const found = await searchProjectReferences(projectId, args.query, args.limit ?? 10, db);
             const results = found.map(({reference, excerpt, chunkIndex}) => ({
@@ -110,7 +110,7 @@ export const REFERENCE_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(raw, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const projectId = await scope(context, db), args = read.parse(raw);
             const result = await readProjectReference(projectId, args, {
                 start: args.start,
@@ -170,7 +170,7 @@ export const REFERENCE_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(raw, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             context.signal.throwIfAborted();
             const args = image.parse(raw), bound = await frozenProjectScope(context, db),
                 run = await db.agentRuns.get(context.runId);

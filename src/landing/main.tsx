@@ -1,4 +1,4 @@
-import {StrictMode, useEffect, type ReactNode} from "react";
+import {type ReactNode, StrictMode, useEffect} from "react";
 import {createRoot} from "react-dom/client";
 import {initUmami} from "@/lib/umami";
 import {Landing} from "./Landing";
@@ -10,7 +10,7 @@ const warn = (reason: unknown) => console.warn("[landing]", reason);
 window.addEventListener("error", event => warn(event.message));
 window.addEventListener("unhandledrejection", event => warn(event.reason));
 
-function Reveal({onReady, children}: {onReady: () => void; children: ReactNode}) {
+function Reveal({onReady, children}: { onReady: () => void; children: ReactNode }) {
     useEffect(onReady, [onReady]);
     return children;
 }
@@ -31,7 +31,7 @@ function start() {
             staticNodes.forEach(node => node.remove());
         };
         createRoot(host, {onUncaughtError: warn, onCaughtError: warn, onRecoverableError: warn}).render(
-            <StrictMode><Reveal onReady={swap}><Landing /></Reveal></StrictMode>,
+            <StrictMode><Reveal onReady={swap}><Landing/></Reveal></StrictMode>,
         );
     } catch (error) {
         warn(error);

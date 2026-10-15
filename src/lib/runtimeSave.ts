@@ -35,7 +35,7 @@ export function nativeSaveFilename(filename: string): string {
 }
 
 /** Distinguish a saved file with a finalization warning from an unpublished failure. */
-export function isPublishedSaveError(error: unknown): error is Error & {published: true} {
+export function isPublishedSaveError(error: unknown): error is Error & { published: true } {
     return error instanceof Error && "published" in error && error.published === true;
 }
 

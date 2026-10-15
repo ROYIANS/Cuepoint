@@ -22,8 +22,8 @@ export type DownloadAssetOptions = {
 };
 
 export type DownloadAssetResult =
-    | {kind: "ok"; bytes: Uint8Array; contentType: string}
-    | {kind: "canceled"};
+    | { kind: "ok"; bytes: Uint8Array; contentType: string }
+    | { kind: "canceled" };
 
 /** A digest mismatch is a discard, never a partial save: the returned bytes are dropped by the caller. */
 class AssetDigestError extends Error {
@@ -100,7 +100,11 @@ export async function downloadAsset(options: DownloadAssetOptions): Promise<Down
     const limit = Math.min(MAX_RELEASE_ASSET_BYTES, options.maxBytes ?? MAX_RELEASE_ASSET_BYTES, asset.size);
     let response: Response;
     try {
-        response = await fetchOf(options)(asset.url, {method: "GET", headers: {Accept: "application/octet-stream"}, signal: options.signal});
+        response = await fetchOf(options)(asset.url, {
+            method: "GET",
+            headers: {Accept: "application/octet-stream"},
+            signal: options.signal
+        });
     } catch (error) {
         if (isReadAbort(error, options.signal)) return {kind: "canceled"};
         throw error;

@@ -53,7 +53,7 @@ export function grainPixels(index: number, size = GRAIN_TILE): Uint8ClampedArray
     return data;
 }
 
-export type Dust = {kind: "speck" | "hair"; x: number; y: number; size: number; angle: number};
+export type Dust = { kind: "speck" | "hair"; x: number; y: number; size: number; angle: number };
 
 /** How many marks dirty this frame: usually none or one, at most MAX_DUST. */
 export function dustCount(frame: number): number {
@@ -76,11 +76,11 @@ export function dustFor(frame: number, w: number, h: number, out: Dust[]): numbe
     return count;
 }
 
-export function flickerFor(frame: number): {alpha: number; warm: boolean} {
+export function flickerFor(frame: number): { alpha: number; warm: boolean } {
     return {alpha: frameRandom(frame, 1) * FLICKER_MAX, warm: frameRandom(frame, 2) >= 0.5};
 }
 
-export function weaveFor(frame: number): {x: number; y: number} {
+export function weaveFor(frame: number): { x: number; y: number } {
     return {x: (frameRandom(frame, 6) * 2 - 1) * WEAVE_PX, y: (frameRandom(frame, 7) * 2 - 1) * WEAVE_PX};
 }
 
@@ -91,7 +91,7 @@ export const sceneMark = (sceneIndex: number): string => `SC ${String(Math.max(0
 /** Painted frames per second for the quality tier. */
 export const lookFps = (quality: Quality): number => (quality === "low" ? LOW_FPS : FILM_FPS);
 
-export type LookResources = {patterns: readonly CanvasPattern[]; dust: Dust[]};
+export type LookResources = { patterns: readonly CanvasPattern[]; dust: Dust[] };
 
 /**
  * Paints one overlay frame. `w`/`h` are the overlay's size in CSS px (stage plus padding on every side);
@@ -180,7 +180,10 @@ export function createFilmLook(targets: LookTargets): FilmLook | undefined {
             if (!pattern) return undefined;
             patterns.push(pattern);
         }
-        return createLook(ctx, targets, {patterns, dust: Array.from({length: MAX_DUST}, (): Dust => ({kind: "speck", x: 0, y: 0, size: 1, angle: 0}))});
+        return createLook(ctx, targets, {
+            patterns,
+            dust: Array.from({length: MAX_DUST}, (): Dust => ({kind: "speck", x: 0, y: 0, size: 1, angle: 0}))
+        });
     } catch {
         return undefined;
     }

@@ -19,8 +19,16 @@ export function useManualDraftDeparture(
     dirty: boolean, pending: boolean, onDiscard: () => void | Promise<void>,
     options?: { readState?: () => ManualDraftState; route?: boolean },
 ) {
-    const [localLeave, setLocalLeave] = useState<{ run: () => void; discard?: () => void | Promise<void>; cancel?: () => void }>();
-    const localRequest = useRef<{ run: () => void; discard?: () => void | Promise<void>; cancel?: () => void } | undefined>(undefined);
+    const [localLeave, setLocalLeave] = useState<{
+        run: () => void;
+        discard?: () => void | Promise<void>;
+        cancel?: () => void
+    }>();
+    const localRequest = useRef<{
+        run: () => void;
+        discard?: () => void | Promise<void>;
+        cancel?: () => void
+    } | undefined>(undefined);
     const [discarding, setDiscarding] = useState(false);
     const [error, setError] = useState<string>();
     const current = useRef({dirty, pending, onDiscard, readState: options?.readState});
@@ -65,7 +73,10 @@ export function useManualDraftDeparture(
     });
     const requestDeparture = useCallback<ManualDraftDeparture>((leave, onLocalDiscard, onCancel) => {
         const state = readState();
-        if (busy.current) {onCancel?.(); return;}
+        if (busy.current) {
+            onCancel?.();
+            return;
+        }
         if (localRequest.current) {
             const existing = localRequest.current;
             if (!state.dirty && !state.pending) {
@@ -145,14 +156,16 @@ export function useManualDraftDeparture(
             </AlertDialogHeader>
             {error && <p role="alert" className="text-destructive text-sm">{error}</p>}
             <AlertDialogFooter>
-                <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline" disabled={discarding} onClick={() => {
-                    setError(undefined);
-                    const cancelled = localRequest.current;
-                    localRequest.current = undefined;
-                    cancelled?.cancel?.();
-                    setLocalLeave(undefined);
-                    if (blocker.status === "blocked") blocker.reset();
-                }}>继续编辑</Button></AlertDialogCancel>
+                <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline"
+                                                                                             disabled={discarding}
+                                                                                             onClick={() => {
+                                                                                                 setError(undefined);
+                                                                                                 const cancelled = localRequest.current;
+                                                                                                 localRequest.current = undefined;
+                                                                                                 cancelled?.cancel?.();
+                                                                                                 setLocalLeave(undefined);
+                                                                                                 if (blocker.status === "blocked") blocker.reset();
+                                                                                             }}>继续编辑</Button></AlertDialogCancel>
                 {!waiting && <Button variant="destructive" onClick={() => void discard()}>放弃并离开</Button>}
             </AlertDialogFooter>
         </AlertDialogContent>

@@ -53,7 +53,9 @@ export function getModelCatalog(): CatalogSnapshot | undefined {
 
 export function subscribeModelCatalog(listener: () => void): () => void {
     listeners.add(listener);
-    return () => { listeners.delete(listener); };
+    return () => {
+        listeners.delete(listener);
+    };
 }
 
 /**

@@ -80,7 +80,8 @@ async function completionBlockers(task: AgentTask, confirmed: AgentTaskWrapup | 
         if (batch.owner.kind !== "agent" || batch.owner.taskId !== task.id || batch.projectId !== task.projectId || batch.dormant) continue;
         const view = await readAudioGenerationBatch(batch.projectId, batch.id, db);
         if (batch.status === "draft" || view.rows.some(row => ["queued", "submitting", "pending", "uncertain", "recovery"].includes(row.state))) {
-            reasons.push("批量配音还有未确认草稿、排队或待核实结果"); break;
+            reasons.push("批量配音还有未确认草稿、排队或待核实结果");
+            break;
         }
     }
     const ownedBatches = await db.agentGenerationBatches.where('taskId').equals(task.id).toArray();
@@ -105,7 +106,10 @@ async function completionBlockers(task: AgentTask, confirmed: AgentTaskWrapup | 
     return reasons;
 }
 
-export async function assertTaskWrapupCompletion(task: AgentTask, expected?: { id: string; revision: number }, store?: ProductStore) {
+export async function assertTaskWrapupCompletion(task: AgentTask, expected?: {
+    id: string;
+    revision: number
+}, store?: ProductStore) {
     const db = store ?? productDb;
     if (!expected) throw new Error('请从当前已确认总结完成任务');
     const record = await db.agentTaskWrapups.get(expected.id);

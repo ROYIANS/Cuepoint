@@ -101,8 +101,9 @@ function AssetStill({
     );
 }
 
-function MediaSlotCapability({reason}: {reason?: string}) {
-    return <div role="status" className="flex h-full w-full items-center justify-center px-2 text-center text-xs text-muted-foreground">{reason ?? "媒体槽尚未接入"}</div>;
+function MediaSlotCapability({reason}: { reason?: string }) {
+    return <div role="status"
+                className="flex h-full w-full items-center justify-center px-2 text-center text-xs text-muted-foreground">{reason ?? "媒体槽尚未接入"}</div>;
 }
 
 const FLUSH_SELECT_TRIGGER =
@@ -315,43 +316,46 @@ export function ShotRow({
                     {workspaceView === "media" ? (
                         <>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full")}>
-                                {mediaCapability.status === "unavailable" ? <MediaSlotCapability reason={mediaCapability.reason}/> : <EditableGenerationSlot
-                                    unavailable={unavailable}
-                                    onEditorOpenChange={onSlotOpenChange}
-                                    projectId={projectId}
-                                    targetKey={JSON.stringify([projectId, "shot", shot.id, "firstFrame"])}
-                                    slot={shot.firstFrame ?? emptySlot()}
-                                    variant="frame"
-                                    size="row"
-                                    title={`镜头 ${shot.shotNumber} · 首帧`}
-                                    onSave={(slot, baseline) => repository.setShotSlot(shot.id, "firstFrame", slot, baseline)}
-                                />}
+                                {mediaCapability.status === "unavailable" ?
+                                    <MediaSlotCapability reason={mediaCapability.reason}/> : <EditableGenerationSlot
+                                        unavailable={unavailable}
+                                        onEditorOpenChange={onSlotOpenChange}
+                                        projectId={projectId}
+                                        targetKey={JSON.stringify([projectId, "shot", shot.id, "firstFrame"])}
+                                        slot={shot.firstFrame ?? emptySlot()}
+                                        variant="frame"
+                                        size="row"
+                                        title={`镜头 ${shot.shotNumber} · 首帧`}
+                                        onSave={(slot, baseline) => repository.setShotSlot(shot.id, "firstFrame", slot, baseline)}
+                                    />}
                             </div>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
-                                {mediaCapability.status === "unavailable" ? <MediaSlotCapability reason={mediaCapability.reason}/> : <EditableGenerationSlot
-                                    unavailable={unavailable}
-                                    onEditorOpenChange={onSlotOpenChange}
-                                    projectId={projectId}
-                                    targetKey={JSON.stringify([projectId, "shot", shot.id, "lastFrame"])}
-                                    slot={shot.lastFrame ?? emptySlot()}
-                                    variant="frame"
-                                    size="row"
-                                    title={`镜头 ${shot.shotNumber} · 尾帧`}
-                                    onSave={(slot, baseline) => repository.setShotSlot(shot.id, "lastFrame", slot, baseline)}
-                                />}
+                                {mediaCapability.status === "unavailable" ?
+                                    <MediaSlotCapability reason={mediaCapability.reason}/> : <EditableGenerationSlot
+                                        unavailable={unavailable}
+                                        onEditorOpenChange={onSlotOpenChange}
+                                        projectId={projectId}
+                                        targetKey={JSON.stringify([projectId, "shot", shot.id, "lastFrame"])}
+                                        slot={shot.lastFrame ?? emptySlot()}
+                                        variant="frame"
+                                        size="row"
+                                        title={`镜头 ${shot.shotNumber} · 尾帧`}
+                                        onSave={(slot, baseline) => repository.setShotSlot(shot.id, "lastFrame", slot, baseline)}
+                                    />}
                             </div>
                             <div className={cn(DESIGN_CELL_CHROME, "w-full border-l")}>
-                                {mediaCapability.status === "unavailable" ? <MediaSlotCapability reason={mediaCapability.reason}/> : <EditableGenerationSlot
-                                    unavailable={unavailable}
-                                    onEditorOpenChange={onSlotOpenChange}
-                                    projectId={projectId}
-                                    targetKey={JSON.stringify([projectId, "shot", shot.id, "clip"])}
-                                    slot={shot.clip ?? emptySlot()}
-                                    variant="clip"
-                                    size="row"
-                                    title={`镜头 ${shot.shotNumber} · 成片`}
-                                    onSave={(slot, baseline) => repository.setShotSlot(shot.id, "clip", slot, baseline)}
-                                />}
+                                {mediaCapability.status === "unavailable" ?
+                                    <MediaSlotCapability reason={mediaCapability.reason}/> : <EditableGenerationSlot
+                                        unavailable={unavailable}
+                                        onEditorOpenChange={onSlotOpenChange}
+                                        projectId={projectId}
+                                        targetKey={JSON.stringify([projectId, "shot", shot.id, "clip"])}
+                                        slot={shot.clip ?? emptySlot()}
+                                        variant="clip"
+                                        size="row"
+                                        title={`镜头 ${shot.shotNumber} · 成片`}
+                                        onSave={(slot, baseline) => repository.setShotSlot(shot.id, "clip", slot, baseline)}
+                                    />}
                             </div>
                             <div className="flex h-full min-w-0 border-l">
                                 <ShotTextField shot={shot} field="content" onDraftStatus={onDraftStatus}
@@ -478,7 +482,8 @@ export function ShotRow({
                                         if (open) onActivate();
                                     }}
                                 >
-                                    <SelectTrigger aria-label={`镜头 ${shot.shotNumber} 场景`} className={FLUSH_SELECT_TRIGGER}>
+                                    <SelectTrigger aria-label={`镜头 ${shot.shotNumber} 场景`}
+                                                   className={FLUSH_SELECT_TRIGGER}>
                   <span className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5">
                     {selectedScene ? (
                         <>

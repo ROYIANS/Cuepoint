@@ -3,7 +3,7 @@ import {isStudioLibrary} from "@/domain/types";
 import {createId} from "@/lib/ids";
 import {Sha256} from "@/lib/sha256";
 
-export type WorkspaceId = string & {readonly __workspaceId: unique symbol};
+export type WorkspaceId = string & { readonly __workspaceId: unique symbol };
 
 export interface WorkspaceRef {
     workspaceId: WorkspaceId;

@@ -8,7 +8,9 @@ function emit(): void {
 /** Minimal subscribable open state; the details dialog subscribes in a later step. */
 export function subscribeErrorDetails(listener: () => void): () => void {
     listeners.add(listener);
-    return () => { listeners.delete(listener); };
+    return () => {
+        listeners.delete(listener);
+    };
 }
 
 export function getErrorDetailsOpen(): boolean {

@@ -5,7 +5,7 @@ import type {AgentRequestMessage, AgentResponseItem} from "@/domain/agent";
 import type {AgentReferenceInput, AgentVisionCapability} from "@/domain/referenceInput";
 import {validateReferenceInput} from "@/lib/agent/referenceContext";
 import {requireVision, resolveVisionCapability} from "./visionCapability";
-import {withBinaryReadLease, verifyBinaryAvailable} from "@/lib/storage/binary";
+import {verifyBinaryAvailable, withBinaryReadLease} from "@/lib/storage/binary";
 import type {BinaryContent} from "@/domain/binary";
 
 export interface ReferenceWireScope {

@@ -26,7 +26,9 @@ export async function requireBoundProjectScope(context: AgentToolContext, reques
 }
 
 /** Resolve an omitted owner only from durable scope; retain every explicitly supplied ID. */
-export async function resolveBusinessOwner<T extends { ownerId?: string }>(args: T, context: AgentToolContext, store?: ProductStore): Promise<T> {
+export async function resolveBusinessOwner<T extends {
+    ownerId?: string
+}>(args: T, context: AgentToolContext, store?: ProductStore): Promise<T> {
     const db = store ?? context.store ?? productDb;
     context.signal.throwIfAborted();
     const projectId = await frozenProjectScope(context, db);

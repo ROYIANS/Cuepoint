@@ -55,13 +55,16 @@ export async function updateGenerationJob(id: string, patch: Partial<Pick<AgentG
 }
 
 /** A stale parallel observation cannot overwrite an acknowledgement received meanwhile. */
-export async function markUnacknowledgedGeneration(id:string,store?:ProductStore):Promise<AgentGenerationJob> {
-    const db=store ?? productDb;
-    return db.transaction("rw",["agentGenerationJobs","agentGenerationBatches","projects","agentRuns","chatThreads"],async tx=> {
-        const current=await tx.agentGenerationJobs.get(id);
+export async function markUnacknowledgedGeneration(id: string, store?: ProductStore): Promise<AgentGenerationJob> {
+    const db = store ?? productDb;
+    return db.transaction("rw", ["agentGenerationJobs", "agentGenerationBatches", "projects", "agentRuns", "chatThreads"], async tx => {
+        const current = await tx.agentGenerationJobs.get(id);
         if (!current) throw new Error("生成记录已删除");
         if (current.status !== "submitting" || current.providerTaskId) return current;
-        return updateGenerationJob(id,{status:"unknown",error:"付费提交结果尚未确认；无任务标识，不能自动再次提交。请到供应商后台核实。"},tx);
+        return updateGenerationJob(id, {
+            status: "unknown",
+            error: "付费提交结果尚未确认；无任务标识，不能自动再次提交。请到供应商后台核实。"
+        }, tx);
     });
 }
 

@@ -17,7 +17,8 @@ export function MemorySelect({id, label, value, onValueChange, options, emptyLab
         <SelectTrigger id={id} aria-label={label} className="memory-select"><SelectValue/></SelectTrigger>
         <SelectContent>
             {emptyLabel && <SelectItem value={ALL_VALUE}>{emptyLabel}</SelectItem>}
-            {Object.entries(options).map(([option, text]) => <SelectItem key={option} value={option}>{text}</SelectItem>)}
+            {Object.entries(options).map(([option, text]) => <SelectItem key={option}
+                                                                         value={option}>{text}</SelectItem>)}
         </SelectContent>
     </Select>;
 }

@@ -734,10 +734,24 @@
     background: transparent;
 }
 
-.agent-chat-root .agent-topic-navigation { width: 260px; overflow: hidden; }
-.agent-chat-root .agent-topic-navigation.is-collapsed { width: 0; }
-.agent-chat-root .agent-topic-sidebar { padding-top: 8px; }
-.agent-chat-root .agent-topic-brand { height: 32px; margin: 0 8px 4px; padding: 0 10px; }
+.agent-chat-root .agent-topic-navigation {
+    width: 260px;
+    overflow: hidden;
+}
+
+.agent-chat-root .agent-topic-navigation.is-collapsed {
+    width: 0;
+}
+
+.agent-chat-root .agent-topic-sidebar {
+    padding-top: 8px;
+}
+
+.agent-chat-root .agent-topic-brand {
+    height: 32px;
+    margin: 0 8px 4px;
+    padding: 0 10px;
+}
 
 .agent-chat-root .agent-message-list {
     flex: 1;
@@ -1880,11 +1894,28 @@
 }
 
 @media (max-width: 767px) {
-    .agent-chat-root .agent-home { padding: 56px 16px 24px; }
-    .agent-chat-root .agent-home-title { font-size: 20px; line-height: 28px; }
+    .agent-chat-root .agent-home {
+        padding: 56px 16px 24px;
+    }
+
+    .agent-chat-root .agent-home-title {
+        font-size: 20px;
+        line-height: 28px;
+    }
 }
 
 /* Shared module columns keep transcript/composer as the only chat scroll owners. */
-.agent-chat-root .agent-conversation > .module-layout { width: 100%; flex: 1; }
-.agent-chat-root .agent-module-main { height: 100%; overflow: hidden; }
-.agent-chat-root .module-navigation .agent-topic-sidebar { width: 100%; border: 0; }
+.agent-chat-root .agent-conversation > .module-layout {
+    width: 100%;
+    flex: 1;
+}
+
+.agent-chat-root .agent-module-main {
+    height: 100%;
+    overflow: hidden;
+}
+
+.agent-chat-root .module-navigation .agent-topic-sidebar {
+    width: 100%;
+    border: 0;
+}

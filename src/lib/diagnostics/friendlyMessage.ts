@@ -1,4 +1,4 @@
-export type FriendlyMessage = {title: string; hint?: string};
+export type FriendlyMessage = { title: string; hint?: string };
 
 function str(value: unknown): string {
     return typeof value === "string" ? value : "";

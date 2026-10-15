@@ -6,7 +6,12 @@ import type {
     PreparedCheckpoint,
     VerifiedCheckpoint,
 } from "@/lib/checkpoint";
-import {assertPreparedCheckpoint, CheckpointCanceledError, validateCheckpointManifest, verifyCheckpointDelivery} from "@/lib/checkpoint";
+import {
+    assertPreparedCheckpoint,
+    CheckpointCanceledError,
+    validateCheckpointManifest,
+    verifyCheckpointDelivery
+} from "@/lib/checkpoint";
 import type {WorkspaceId} from "@/lib/workspace";
 
 interface ProviderCapabilities {
@@ -42,14 +47,25 @@ export interface CheckpointTransport {
     readonly providerId: string;
     readonly capabilities: ProviderCapabilities;
     readonly lifecycle: "open" | "closed";
+
     /** Object keys are content addresses; logical binary IDs remain in the manifest. */
     putBinary(workspaceId: WorkspaceId, objectKey: string, bytes: Uint8Array, signal?: AbortSignal, onProgress?: (progress: ProviderProgress) => void): Promise<void>;
+
     putManifest(workspaceId: WorkspaceId, manifest: CheckpointManifest, signal?: AbortSignal): Promise<void>;
+
     readManifest(workspaceId: WorkspaceId, revisionId: string, signal?: AbortSignal): Promise<unknown>;
+
     readBinary(workspaceId: WorkspaceId, objectKey: string, signal?: AbortSignal): Promise<BinarySource>;
+
     readHead(workspaceId: WorkspaceId, signal?: AbortSignal): Promise<string | null>;
-    compareAndSwapHead(workspaceId: WorkspaceId, expectedHead: string | null, revisionId: string, signal?: AbortSignal): Promise<{readonly updated: boolean; readonly currentHead: string | null}>;
+
+    compareAndSwapHead(workspaceId: WorkspaceId, expectedHead: string | null, revisionId: string, signal?: AbortSignal): Promise<{
+        readonly updated: boolean;
+        readonly currentHead: string | null
+    }>;
+
     listRevisions?(workspaceId: WorkspaceId, signal?: AbortSignal): Promise<readonly string[]>;
+
     close?(): Promise<void>;
 }
 
@@ -61,6 +77,7 @@ export interface ProviderFactoryContext {
 export interface TrustedProviderFactory {
     readonly id: string;
     readonly capabilities: ProviderCapabilities;
+
     open(context: ProviderFactoryContext): Promise<CheckpointTransport>;
 }
 
@@ -69,6 +86,7 @@ export interface ProviderSession {
     readonly capabilities: ProviderCapabilities;
     readonly transport: CheckpointTransport;
     readonly lifecycle: "open" | "closed";
+
     close(): Promise<void>;
 }
 
@@ -81,7 +99,11 @@ export class ProviderRegistry {
             throw new Error("trusted provider factory is invalid");
         }
         if (this.factories.has(factory.id)) throw new Error(`provider ${factory.id} is already registered`);
-        this.factories.set(factory.id, Object.freeze({id: factory.id, capabilities: snapshotCapabilities(factory.capabilities), open: factory.open.bind(factory)}));
+        this.factories.set(factory.id, Object.freeze({
+            id: factory.id,
+            capabilities: snapshotCapabilities(factory.capabilities),
+            open: factory.open.bind(factory)
+        }));
     }
 
     has(id: string): boolean {
@@ -103,7 +125,9 @@ export class ProviderRegistry {
             providerId: id,
             capabilities: Object.freeze({...factory.capabilities}),
             transport,
-            get lifecycle() { return closed ? "closed" : "open"; },
+            get lifecycle() {
+                return closed ? "closed" : "open";
+            },
             close: async () => {
                 if (closed) return;
                 closed = true;
@@ -112,7 +136,6 @@ export class ProviderRegistry {
         });
     }
 }
-
 
 
 class ProviderProtocolError extends Error {
@@ -165,7 +188,11 @@ function snapshotCapabilities(value: ProviderCapabilities): ProviderCapabilities
     return Object.freeze({...value});
 }
 
-function sessionTransport(sessionOrTransport: ProviderSession | CheckpointTransport, operation: "publication" | "delivery"): {readonly transport: CheckpointTransport; readonly providerId: string; readonly capabilities: ProviderCapabilities} {
+function sessionTransport(sessionOrTransport: ProviderSession | CheckpointTransport, operation: "publication" | "delivery"): {
+    readonly transport: CheckpointTransport;
+    readonly providerId: string;
+    readonly capabilities: ProviderCapabilities
+} {
     if (sessionOrTransport.lifecycle !== "open") throw new ProviderProtocolError("provider session is closed");
     const transport = "transport" in sessionOrTransport ? sessionOrTransport.transport : sessionOrTransport;
     if (transport.lifecycle !== "open") throw new ProviderProtocolError("provider transport is closed");
@@ -176,7 +203,7 @@ function sessionTransport(sessionOrTransport: ProviderSession | CheckpointTransp
 }
 
 /** A versioned immutable object key; a stable logical ID never overwrites old bytes. */
-export function checkpointObjectKey(entry: {readonly sha256: string}): string {
+export function checkpointObjectKey(entry: { readonly sha256: string }): string {
     if (!/^[0-9a-f]{64}$/.test(entry.sha256)) throw new ProviderProtocolError("binary content address is invalid");
     return `sha256:${entry.sha256}`;
 }
@@ -209,7 +236,11 @@ export async function publishCheckpoint(sessionOrTransport: ProviderSession | Ch
         sessionTransport(sessionOrTransport, "publication");
         await transport.putBinary(manifest.workspaceId, checkpointObjectKey(binary.entry), binary.bytes, signal, capabilities.progress ? onProgress : undefined);
         binaryIds.push(binary.entry.binaryId);
-        if (capabilities.progress) onProgress?.({phase: "binary", completed: index + 1, total: checkpoint.binaries.length});
+        if (capabilities.progress) onProgress?.({
+            phase: "binary",
+            completed: index + 1,
+            total: checkpoint.binaries.length
+        });
     }
     assertNotAborted(signal);
     sessionTransport(sessionOrTransport, "publication");
@@ -223,11 +254,26 @@ export async function publishCheckpoint(sessionOrTransport: ProviderSession | Ch
     const cas = await transport.compareAndSwapHead(manifest.workspaceId, expectedHead, manifest.revisionId, signal);
     if (typeof cas !== "object" || cas === null || Array.isArray(cas) || typeof cas.updated !== "boolean" || (cas.currentHead !== null && (typeof cas.currentHead !== "string" || !/^sha256-v1:[0-9a-f]{64}$/.test(cas.currentHead)))) throw new ProviderProtocolError("provider returned an invalid head outcome");
     if (!cas.updated) {
-        return Object.freeze({kind: "publication-conflict", providerId, workspaceId: manifest.workspaceId, revisionId: manifest.revisionId, expectedHead: expectedHead, currentHead: cas.currentHead});
+        return Object.freeze({
+            kind: "publication-conflict",
+            providerId,
+            workspaceId: manifest.workspaceId,
+            revisionId: manifest.revisionId,
+            expectedHead: expectedHead,
+            currentHead: cas.currentHead
+        });
     }
     if (cas.currentHead !== manifest.revisionId) throw new ProviderProtocolError("provider reported an inconsistent committed head");
     // Once CAS starts, its actual committed result wins over a later cancellation signal.
-    return Object.freeze({kind: "publication-acknowledgement", providerId, workspaceId: manifest.workspaceId, revisionId: manifest.revisionId, expectedHead: expectedHead, head: manifest.revisionId, binaryIds: Object.freeze(binaryIds)});
+    return Object.freeze({
+        kind: "publication-acknowledgement",
+        providerId,
+        workspaceId: manifest.workspaceId,
+        revisionId: manifest.revisionId,
+        expectedHead: expectedHead,
+        head: manifest.revisionId,
+        binaryIds: Object.freeze(binaryIds)
+    });
 }
 
 export interface DeliveryOptions {
@@ -260,7 +306,11 @@ export async function deliverCheckpoint(sessionOrTransport: ProviderSession | Ch
         if (!entry) throw new ProviderProtocolError("provider returned an invalid binary entry");
         sessionTransport(sessionOrTransport, "delivery");
         sources.set(entry.binaryId, await transport.readBinary(workspaceId, checkpointObjectKey(entry), signal));
-        if (capabilities.progress) onProgress?.({phase: "download", completed: index + 1, total: manifest.binaries.length});
+        if (capabilities.progress) onProgress?.({
+            phase: "download",
+            completed: index + 1,
+            total: manifest.binaries.length
+        });
     }
     const verified: VerifiedCheckpoint = await verifyCheckpointDelivery(manifest, sources, signal);
     assertNotAborted(signal);
@@ -269,7 +319,17 @@ export async function deliverCheckpoint(sessionOrTransport: ProviderSession | Ch
     sessionTransport(sessionOrTransport, "delivery");
     const receipt = await apply(verified, signal);
     if (typeof receipt !== "object" || receipt === null || Array.isArray(receipt) || receipt.kind !== "application-receipt" || receipt.workspaceId !== workspaceId || receipt.revisionId !== revisionId || typeof receipt.applied !== "boolean" || typeof receipt.alreadyApplied !== "boolean" || receipt.applied === receipt.alreadyApplied) throw new ProviderProtocolError("application port returned an invalid receipt");
-    return Object.freeze({kind: "application-receipt", providerId, receipt: Object.freeze({kind: receipt.kind, workspaceId: receipt.workspaceId, revisionId: receipt.revisionId, applied: receipt.applied, alreadyApplied: receipt.alreadyApplied})});
+    return Object.freeze({
+        kind: "application-receipt",
+        providerId,
+        receipt: Object.freeze({
+            kind: receipt.kind,
+            workspaceId: receipt.workspaceId,
+            revisionId: receipt.revisionId,
+            applied: receipt.applied,
+            alreadyApplied: receipt.alreadyApplied
+        })
+    });
 }
 
 

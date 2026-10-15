@@ -1,4 +1,4 @@
-import type {ProductStore} from "@/lib/storage/types";
+import type {ProductStore, StoreTable} from "@/lib/storage/types";
 import {db as productDb} from "./database";
 import type {
     AudioChapter,
@@ -14,7 +14,6 @@ import type {
     AudioTrack
 } from "@/domain/audio";
 import type {MediaRecord} from "@/domain/types";
-import type {StoreTable} from "@/lib/storage/types";
 import {
     assertAudioProject,
     assertAudioRevision,

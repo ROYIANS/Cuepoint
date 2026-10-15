@@ -1,5 +1,14 @@
-import {clamp01, smoothstep, type Plan, type SceneState, type Sets, type VaultGeom, type VaultSets} from "./plan";
-import {artScale, circleOutline, createSet, lineSamples, scatterSet, segmentSamples, type Rect, type TargetSet} from "./targets";
+import {clamp01, type Plan, type SceneState, type Sets, smoothstep, type VaultGeom, type VaultSets} from "./plan";
+import {
+    artScale,
+    circleOutline,
+    createSet,
+    lineSamples,
+    type Rect,
+    scatterSet,
+    segmentSamples,
+    type TargetSet
+} from "./targets";
 
 // Scene 4 (vault): a wireframe film can seen from above; material gathers into it, the lid closes,
 // the lock clicks, and a small lock appears. No cloud, no upload: a few specks stay outside.

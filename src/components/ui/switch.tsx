@@ -2,7 +2,13 @@ import type {ComponentProps} from "react";
 import {cn} from "@/lib/utils";
 
 /** Minimal switch: no dependency, keyboard toggles on Space/Enter like a native button. */
-export function Switch({checked, onCheckedChange, disabled, className, ...props}: Omit<ComponentProps<"button">, "onChange" | "role"> & {
+export function Switch({
+                           checked,
+                           onCheckedChange,
+                           disabled,
+                           className,
+                           ...props
+                       }: Omit<ComponentProps<"button">, "onChange" | "role"> & {
     checked: boolean;
     onCheckedChange: (checked: boolean) => void;
 }) {

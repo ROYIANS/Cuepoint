@@ -24,7 +24,9 @@ async function readTargetEntity(target: ProductionTarget, store?: ProductStore) 
 
 type GenerationEntity = NonNullable<Awaited<ReturnType<typeof readTargetEntity>>>;
 
-async function assertShotEpisode(target: Extract<ProductionTarget, { kind: "shot" }>, entity: GenerationEntity, store?: ProductStore) {
+async function assertShotEpisode(target: Extract<ProductionTarget, {
+    kind: "shot"
+}>, entity: GenerationEntity, store?: ProductStore) {
     const db = store ?? productDb;
     const episode = await db.episodes.get(target.episodeId);
     if (!episode || episode.projectId !== target.projectId || !("episodeId" in entity) || entity.episodeId !== target.episodeId) throw new Error("生成目标不属于当前故事");

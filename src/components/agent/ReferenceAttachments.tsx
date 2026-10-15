@@ -57,7 +57,9 @@ function SourcePreview({projectId, attachment, chunkIndex}: {
         {reference.coverage.emptyUnits.length > 0 &&
             <p className="reference-warning">没有可提取文字的单元：{reference.coverage.emptyUnits.join("、")}</p>}
         <div className="reference-preview">
-            {reference.kind === "image" ? image.status === "ready" ? <img src={image.url} onError={image.onError} alt={reference.filename}/> : <p role="status">{binaryPreviewMessage(image)}</p> : chunks.length ? <>{chunks.slice(0, visible).map((chunk) =>
+            {reference.kind === "image" ? image.status === "ready" ?
+                <img src={image.url} onError={image.onError} alt={reference.filename}/> :
+                <p role="status">{binaryPreviewMessage(image)}</p> : chunks.length ? <>{chunks.slice(0, visible).map((chunk) =>
                     <section key={chunk.id} ref={chunk.index === chunkIndex ? targetRef : undefined}
                              className={chunk.index === chunkIndex ? "reference-cited-chunk" : undefined}><span
                         className="reference-locator">{referenceLocatorLabel(chunk.locator)} · 片段 {chunk.index + 1}</span>
@@ -169,6 +171,8 @@ function ProjectImageSource({image}: { image: AgentImageReference }) {
             className="reference-dialog"><DialogHeader><DialogTitle>{image.filename}</DialogTitle><DialogDescription>为本次请求准备的项目图片；不代表请求已经发出。图像
             token 用量为估算。</DialogDescription></DialogHeader>
             <div className="reference-preview">{media === undefined ? <p>加载中…</p> : !media ?
-                <p>原始图片已不可用，历史引用记录仍保留。</p> : preview.status === "ready" ? <img src={preview.url} onError={preview.onError} alt={image.filename}/> : <p role="status">{binaryPreviewMessage(preview)}</p>}</div>
+                <p>原始图片已不可用，历史引用记录仍保留。</p> : preview.status === "ready" ?
+                    <img src={preview.url} onError={preview.onError} alt={image.filename}/> :
+                    <p role="status">{binaryPreviewMessage(preview)}</p>}</div>
         </DialogContent></Dialog></>;
 }

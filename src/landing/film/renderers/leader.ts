@@ -1,4 +1,4 @@
-import {smoothstep, type Plan, type SceneState, type Sets} from "./plan";
+import {type Plan, type SceneState, type Sets, smoothstep} from "./plan";
 
 // The leader is driven by progress (scroll or playback), never by a timer. At rest (progress 0,
 // before anyone has pressed play) only the breathing point is on screen; the countdown, the burst

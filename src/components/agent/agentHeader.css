@@ -64,10 +64,18 @@
     pointer-events: none;
 }
 
-.agent-header-popup-host .ant-dropdown { pointer-events: auto; }
-
-@media (max-width: 767px) {
-    .agent-header-theme.agent-chat-header { gap: 4px; }
+.agent-header-popup-host .ant-dropdown {
+    pointer-events: auto;
 }
 
-.agent-header-new-topic { display: flex; flex: none; align-items: center; }
+@media (max-width: 767px) {
+    .agent-header-theme.agent-chat-header {
+        gap: 4px;
+    }
+}
+
+.agent-header-new-topic {
+    display: flex;
+    flex: none;
+    align-items: center;
+}

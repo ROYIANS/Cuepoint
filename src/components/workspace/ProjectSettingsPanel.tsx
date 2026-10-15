@@ -222,7 +222,8 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
 
     return <>{navigationGuard}<Section title="画幅与生成默认值"
                                        description="画幅表达作品的目标。图片和视频可分别选择模型参数，也可以保持手动制作；保存配置不会发起生成。">
-        {!generationAvailable && <p role="status" className="text-muted-foreground text-xs">原生生成配置尚未接入，可先设置项目画幅。</p>}
+        {!generationAvailable &&
+            <p role="status" className="text-muted-foreground text-xs">原生生成配置尚未接入，可先设置项目画幅。</p>}
         <fieldset disabled={saving || unavailable} className="min-w-0 space-y-5">
             <SettingSelect label="项目目标画幅" value={ratio} options={ASPECT_PRESET_IDS}
                            onChange={(value) => setRatio(value as AspectPresetId)}/>

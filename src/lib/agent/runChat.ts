@@ -9,7 +9,7 @@ import {continuationExtraTokens, prepareRunContext} from "./contextCompaction";
 import {refreshRunMemoryContext} from "./memoryContext";
 import {refreshRunProjectContext} from "./projectContext";
 import {frozenProjectScope} from "./projectScope";
-import {ToolPendingError, ToolUnavailableError, toolFailureResult} from "./toolErrors";
+import {toolFailureResult, ToolPendingError, ToolUnavailableError} from "./toolErrors";
 import {redactCredentials} from "@/lib/ai/safeError";
 import {type ResponsesResult, streamResponses} from "@/lib/ai/responsesStream";
 import {db as productDb} from "@/db/database";
@@ -86,7 +86,8 @@ export function createRunWriter(persist: (sequence: number, output: AgentRunOutp
 const MAX_MODEL_STEPS = MODEL_STEPS_PER_SEGMENT;
 
 /** A failed completion lookup cannot certify that an atomic operation rolled back. */
-class UnresolvedToolOutcomeError extends Error {}
+class UnresolvedToolOutcomeError extends Error {
+}
 
 /** A name the registry does not own has no real title; keep the bounded display label neutral. */
 function unavailableToolTitle(name: string): string {
@@ -202,9 +203,11 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
             await transitionToolCall(run.id, call.id, ["running"], "completed", {result}, db);
         } catch (cause) {
             // An atomic tool may already have committed its result before a later failure.
-            let persisted:AgentToolCall|undefined;
-            try {persisted=await db.agentToolCalls.get(call.id);} catch (lookupError) {
-                if (tool.effect !== "read") throw new UnresolvedToolOutcomeError("无法核实已保存的工具结果，不能自动重跑。",{cause:lookupError});
+            let persisted: AgentToolCall | undefined;
+            try {
+                persisted = await db.agentToolCalls.get(call.id);
+            } catch (lookupError) {
+                if (tool.effect !== "read") throw new UnresolvedToolOutcomeError("无法核实已保存的工具结果，不能自动重跑。", {cause: lookupError});
                 throw lookupError;
             }
             if (persisted?.status === "completed") continue;
@@ -222,10 +225,10 @@ async function executePendingTools(run: AgentRun, controller: AbortController, r
                     ...(!ambiguous ? {result: JSON.stringify(toolFailureResult(cause, certainty) ?? {error})} : {})
                 }, db);
             } catch (saveError) {
-                if (ambiguous) throw new UnresolvedToolOutcomeError(error,{cause:saveError});
+                if (ambiguous) throw new UnresolvedToolOutcomeError(error, {cause: saveError});
                 throw saveError;
             }
-            if (ambiguous) throw new UnresolvedToolOutcomeError(error,{cause});
+            if (ambiguous) throw new UnresolvedToolOutcomeError(error, {cause});
         }
         controller.signal.throwIfAborted();
     }
@@ -336,7 +339,10 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
                         title: unavailableToolTitle(call.function.name),
                         effect: "read" as const,
                         highRisk: false,
-                        failure: {error: failure.message, result: JSON.stringify(toolFailureResult(failure, "not_started"))}
+                        failure: {
+                            error: failure.message,
+                            result: JSON.stringify(toolFailureResult(failure, "not_started"))
+                        }
                     };
                 }
                 let highRisk = tool.effect !== "read";
@@ -360,7 +366,7 @@ export async function executeChatRun(initialRun: AgentRun, apiKey: string, contr
         const aborted = controller.signal.aborted;
         controller.abort();
         // Close claimed calls conservatively on unexpected interruption. Completed calls remain immutable.
-        await markRunningToolsUnknown(run.id, db,error instanceof UnresolvedToolOutcomeError || error instanceof StorageError && error.certainty === "unknown");
+        await markRunningToolsUnknown(run.id, db, error instanceof UnresolvedToolOutcomeError || error instanceof StorageError && error.certainty === "unknown");
         // Shared redaction: an empty key must not explode the message into characters.
         const message = error instanceof Error ? redactCredentials(error.message, apiKey).slice(0, 300) : "执行或本地保存失败";
         // One fresh read decides whether preserved work needs an explicit resume. The

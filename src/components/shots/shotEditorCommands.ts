@@ -1,11 +1,21 @@
 import type {VideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
-import type {EpisodeShotBulkPatch} from "@/db/shots";
 import {getVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
+import type {EpisodeShotBulkPatch} from "@/db/shots";
 import {reorderGroupInFullOrder, sameIdOrder} from "@/lib/reorderIds";
 import type {UndoAction} from "@/lib/undo";
 
-export async function applyShotBulkCommand({repository = getVideoWorkspaceRepository(), episodeId, selectedIds, patch, label}: {
-    repository?: VideoWorkspaceRepository; episodeId: string; selectedIds: string[]; patch: EpisodeShotBulkPatch; label: string;
+export async function applyShotBulkCommand({
+                                               repository = getVideoWorkspaceRepository(),
+                                               episodeId,
+                                               selectedIds,
+                                               patch,
+                                               label
+                                           }: {
+    repository?: VideoWorkspaceRepository;
+    episodeId: string;
+    selectedIds: string[];
+    patch: EpisodeShotBulkPatch;
+    label: string;
 }): Promise<UndoAction | undefined> {
     const inverse = await repository.patchEpisodeShots(episodeId, selectedIds, patch);
     return inverse ? {label, restore: () => repository.undoEpisodeShotBulkPatch(inverse)} : undefined;
@@ -22,12 +32,28 @@ export async function deleteShotSelectionCommand({repository = getVideoWorkspace
     };
 }
 
-export async function reorderShotGroupCommand({repository = getVideoWorkspaceRepository(), episodeId, fullOrder, groupIds, activeId, overId}: {
-    repository?: VideoWorkspaceRepository; episodeId: string; fullOrder: string[]; groupIds: string[]; activeId: string; overId: string;
+export async function reorderShotGroupCommand({
+                                                  repository = getVideoWorkspaceRepository(),
+                                                  episodeId,
+                                                  fullOrder,
+                                                  groupIds,
+                                                  activeId,
+                                                  overId
+                                              }: {
+    repository?: VideoWorkspaceRepository;
+    episodeId: string;
+    fullOrder: string[];
+    groupIds: string[];
+    activeId: string;
+    overId: string;
 }): Promise<UndoAction | undefined> {
     const previous = [...fullOrder];
     const next = reorderGroupInFullOrder(previous, groupIds, activeId, overId);
     if (!next || sameIdOrder(previous, next)) return undefined;
     const committed = await repository.reorderShots(episodeId, next);
-    return {label: "已调整镜头顺序", restore: committed?.restore ?? (async () => {await repository.reorderShots(episodeId, previous);})};
+    return {
+        label: "已调整镜头顺序", restore: committed?.restore ?? (async () => {
+            await repository.reorderShots(episodeId, previous);
+        })
+    };
 }

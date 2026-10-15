@@ -65,7 +65,7 @@ export const GENERATION_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             await frozenProjectScope(context, db);
             const state = await readGenerationBatch(args.batchId, context.threadId, db);
             await assertProjectToolScope(context, "read_generation_batch", {projectId: state.batch.projectId}, false, db);
@@ -104,7 +104,7 @@ export const GENERATION_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const {signal} = context;
             const boundProject = await frozenProjectScope(context, db);
             signal.throwIfAborted();
@@ -146,7 +146,7 @@ export const GENERATION_TOOLS = [
         highRisk: () => false,
         prepare: (args, context) => prepareAgentGeneration(args, context, context.store),
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const job = await submitAgentGeneration(args, context, undefined, db);
             return {
                 ...generationJobSummary(job),
@@ -163,7 +163,7 @@ export const GENERATION_TOOLS = [
         recovery: "repeatable",
         highRisk: () => false,
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             return generationJobSummary(await monitorAgentGeneration(args.jobId, context, undefined, db));
         }
     }),
@@ -184,7 +184,7 @@ export const GENERATION_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(_args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             context.signal.throwIfAborted();
             await frozenProjectScope(context, db);
             return (await db.agentGenerationJobs.where("threadId").equals(context.threadId).toArray()).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)).slice(0, 30).map(generationJobSummary);

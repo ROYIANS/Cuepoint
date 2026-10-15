@@ -13,7 +13,13 @@ export type QualityInput = {
  * Initial quality tier from the device. Unknown values (Safari and Firefox expose
  * no deviceMemory) are not penalised. Narrow or touch screens never get "high".
  */
-export function detectQuality({hardwareConcurrency, deviceMemory, width, coarsePointer, saveData}: QualityInput): Quality {
+export function detectQuality({
+                                  hardwareConcurrency,
+                                  deviceMemory,
+                                  width,
+                                  coarsePointer,
+                                  saveData
+                              }: QualityInput): Quality {
     if (saveData) return "low";
     const cores = hardwareConcurrency ?? 4;
     const memory = deviceMemory ?? 8;

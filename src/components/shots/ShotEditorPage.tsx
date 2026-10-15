@@ -27,7 +27,11 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
-import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
+import {
+    useVideoWorkspaceQuery,
+    useVideoWorkspaceReadStatus,
+    useVideoWorkspaceRepository
+} from "@/lib/videoWorkspaceRepository";
 import {
     CheckSquare,
     ChevronDown,
@@ -389,7 +393,10 @@ function ShotEditorPageContent({
     }
 
     if (project === undefined || episode === undefined || loadedShots === undefined || loadedCharacters === undefined || loadedScenes === undefined || props === undefined || styles === undefined) {
-        return <PageContent><PageState kind={readStatus.error ? "error" : "loading"} title={readStatus.error ? "读取工作区失败" : "正在读取分镜…"} description={readStatus.error} action={readStatus.error ? <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/></PageContent>;
+        return <PageContent><PageState kind={readStatus.error ? "error" : "loading"}
+                                       title={readStatus.error ? "读取工作区失败" : "正在读取分镜…"}
+                                       description={readStatus.error} action={readStatus.error ?
+            <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/></PageContent>;
     }
     if (project === null) {
         return <PageContent><PageState kind="missing" title="找不到这个项目"/></PageContent>;
@@ -416,7 +423,9 @@ function ShotEditorPageContent({
         const committed = await repository.reorderBeats(episodeId, next);
         registerUndo({
             label: "已调整场次顺序",
-            restore: committed?.restore ?? (async () => {await repository.reorderBeats(episodeId, previous);}),
+            restore: committed?.restore ?? (async () => {
+                await repository.reorderBeats(episodeId, previous);
+            }),
         });
     }
 
@@ -510,34 +519,43 @@ function ShotEditorPageContent({
             <div className="flex h-full min-h-0 min-w-0 flex-col">
                 {unavailable && <p role="alert" className="p-4">当前项目、故事或镜头已不可用，未完成的修改仍保留。</p>}
                 <PageHeader dense title="分镜" className="shrink-0 border-b px-4 py-3 sm:px-5" actions={
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button size="sm" variant="brand">
-                                    <Plus/>
-                                    新建
-                                    <ChevronDown/>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="w-48">
-                                <DropdownMenuItem onClick={() => void repository.addShot(projectId, episodeId).catch(reportCommandError)}>
-                                    <Plus/>
-                                    创建分镜
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => void repository.addShots(projectId, episodeId, 5).catch(reportCommandError)}>
-                                    <CopyPlus/>
-                                    创建5个分镜
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => void repository.addShots(projectId, episodeId, 10).catch(reportCommandError)}>
-                                    <CopyPlus/>
-                                    创建10个分镜
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator/>
-                                <DropdownMenuItem onClick={() => void repository.addStoryBeat(episodeId).catch(reportCommandError)}>
-                                    <SquareStack/>
-                                    创建场
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>}/>
+                                                                                                    <DropdownMenu>
+                                                                                                       <DropdownMenuTrigger
+                                                                                                           asChild>
+                                                                                                           <Button
+                                                                                                               size="sm"
+                                                                                                               variant="brand">
+                                                                                                               <Plus/>
+                                                                                                               新建
+                                                                                                               <ChevronDown/>
+                                                                                                           </Button>
+                                                                                                       </DropdownMenuTrigger>
+                                                                                                       <DropdownMenuContent
+                                                                                                           align="start"
+                                                                                                           className="w-48">
+                                                                                                           <DropdownMenuItem
+                                                                                                               onClick={() => void repository.addShot(projectId, episodeId).catch(reportCommandError)}>
+                                                                                                               <Plus/>
+                                                                                                               创建分镜
+                                                                                                           </DropdownMenuItem>
+                                                                                                           <DropdownMenuItem
+                                                                                                               onClick={() => void repository.addShots(projectId, episodeId, 5).catch(reportCommandError)}>
+                                                                                                               <CopyPlus/>
+                                                                                                               创建5个分镜
+                                                                                                           </DropdownMenuItem>
+                                                                                                           <DropdownMenuItem
+                                                                                                               onClick={() => void repository.addShots(projectId, episodeId, 10).catch(reportCommandError)}>
+                                                                                                               <CopyPlus/>
+                                                                                                               创建10个分镜
+                                                                                                           </DropdownMenuItem>
+                                                                                                           <DropdownMenuSeparator/>
+                                                                                                           <DropdownMenuItem
+                                                                                                               onClick={() => void repository.addStoryBeat(episodeId).catch(reportCommandError)}>
+                                                                                                               <SquareStack/>
+                                                                                                               创建场
+                                                                                                           </DropdownMenuItem>
+                                                                                                       </DropdownMenuContent>
+                                                                                                   </DropdownMenu>}/>
                 <PageToolbar className="shrink-0 px-4 py-2 sm:px-5" style={{marginBlock: 0}}>
                     <div className="flex flex-wrap items-center gap-1">
                         <Button size="sm" variant="outline" disabled={visibleShots.length === 0}
@@ -1023,7 +1041,8 @@ function ShotEditorPageContent({
                                 />
                             ) : null}
                         </div>
-                        {empty ? <PageState className="pb-16" title="还没有镜头" description="点击「新建」添加第一条分镜。"/> : null}
+                        {empty ? <PageState className="pb-16" title="还没有镜头"
+                                            description="点击「新建」添加第一条分镜。"/> : null}
                         {filterEmpty ? (
                             <PageState className="pb-16" title="没有符合当前筛选的镜头" action={<Button
                                 size="sm"

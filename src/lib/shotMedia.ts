@@ -12,6 +12,7 @@ export function verifiedShotMediaIndex(rows: Iterable<readonly [string, MediaRec
     verified.set(index, new Map(states));
     return index;
 }
+
 export function shotBinaryState(media: ShotMediaIndex, id: string): ShotBinaryState | "pending" {
     const record = media.get(id);
     if (!record) return "missing";

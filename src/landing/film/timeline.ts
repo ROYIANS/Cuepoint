@@ -22,7 +22,7 @@ function clamp01(value: number): number {
 }
 
 /** Progress window of a stage scene; flow scenes and invalid indexes get an empty window at 1. */
-export function sceneProgressWindow(sceneIndex: number): {start: number; end: number} {
+export function sceneProgressWindow(sceneIndex: number): { start: number; end: number } {
     if (!Number.isInteger(sceneIndex) || sceneIndex < 0 || sceneIndex >= STAGE_SCENES.length) return {start: 1, end: 1};
     return {start: BOUNDS[sceneIndex], end: BOUNDS[sceneIndex + 1]};
 }
@@ -33,7 +33,7 @@ export function sceneProgressWindow(sceneIndex: number): {start: number; end: nu
  * boundary belongs to the following scene; progress 1 belongs to the last stage scene
  * with local = 1.
  */
-export function progressToFrame(progress: number): {sceneIndex: number; local: number; progress: number} {
+export function progressToFrame(progress: number): { sceneIndex: number; local: number; progress: number } {
     const p = clamp01(progress);
     const last = STAGE_SCENES.length - 1;
     let sceneIndex = last;

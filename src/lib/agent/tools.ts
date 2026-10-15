@@ -47,7 +47,7 @@ const definitions = [
         effect: "read",
         highRisk: () => false,
         async execute(_args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const {signal} = context;
             signal.throwIfAborted();
             const projectId = await frozenProjectScope(context, db);
@@ -109,8 +109,8 @@ const definitions = [
         atomic: true,
         highRisk: () => false,
         async execute(args, context) {
-            const {runId,callId,signal}=context;
-    const db = context.store ?? productDb;
+            const {runId, callId, signal} = context;
+            const db = context.store ?? productDb;
             signal.throwIfAborted();
             const result: unknown = JSON.parse(await updateRunPlanAndComplete(runId, callId, args.steps, args.reason, db));
             return result;

@@ -50,7 +50,7 @@ async function inspect(expected: AgentToolCall, store?: ProductStore): Promise<M
             callId: call.id,
             projectId: run.projectId,
             signal: new AbortController().signal,
-            store:db
+            store: db
         });
         const current = parseMusicGenerationReview(fresh.music);
         if (!current || fresh.revision !== expected.preview.revision || targetRevision(current) !== targetRevision(snapshot)) return stale();

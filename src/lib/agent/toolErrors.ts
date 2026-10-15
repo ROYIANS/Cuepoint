@@ -63,6 +63,7 @@ export type ToolEffectCertainty = "not_started" | "rolled_back" | "unknown";
 export type ToolRecoveryCode = "PROJECT_REQUIRED" | "PROJECT_SCOPE_MISMATCH" | "PROJECT_NOT_FOUND" |
     "TARGET_NOT_FOUND" | "TARGET_SCOPE_MISMATCH" | "EPISODE_REQUIRED" | "EPISODE_SCOPE_MISMATCH" |
     "STALE_TOOL_PREVIEW";
+
 export interface ToolRecoveryFailure {
     code: ToolRecoveryCode;
     executed: false | "unknown";
@@ -89,7 +90,13 @@ export class ToolRecoveryError extends Error {
     constructor(code: ToolRecoveryCode, message: string) {
         super(message.slice(0, 2_048));
         this.name = "ToolRecoveryError";
-        this.failure = {code, executed: false, effectCertainty: "not_started", error: this.message, recovery: RECOVERY_BY_CODE[code]};
+        this.failure = {
+            code,
+            executed: false,
+            effectCertainty: "not_started",
+            error: this.message,
+            recovery: RECOVERY_BY_CODE[code]
+        };
     }
 }
 
@@ -99,7 +106,10 @@ export function toolFailureResult(cause: unknown, effectCertainty: ToolEffectCer
     for (let depth = 0; depth < 6; depth++) {
         // An unavailable name was never claimed or executed, regardless of caller certainty.
         if (current instanceof ToolUnavailableError) return current.failure();
-        if (current instanceof ToolValidationError) return effectCertainty === "unknown" ? undefined : {...current.failure, effectCertainty};
+        if (current instanceof ToolValidationError) return effectCertainty === "unknown" ? undefined : {
+            ...current.failure,
+            effectCertainty
+        };
         if (current instanceof ToolRecoveryError) return {
             ...current.failure, effectCertainty, executed: effectCertainty === "unknown" ? "unknown" : false,
             ...(effectCertainty === "unknown" ? {recovery: "操作结果尚不确定。先检查已有任务和保存结果，必要时停止执行；不得根据此提示自动重跑或重复提交。"} : {}),
@@ -193,8 +203,10 @@ export function readToolValidationFailure(result?: string): ToolValidationFailur
             });
         }
         if (value.effectCertainty !== undefined && value.effectCertainty !== "not_started" && value.effectCertainty !== "rolled_back") return;
-        return {code: "INVALID_TOOL_ARGUMENTS", executed: false, error: value.error, issues, recovery: value.recovery,
-            ...(value.effectCertainty === undefined ? {} : {effectCertainty: value.effectCertainty})};
+        return {
+            code: "INVALID_TOOL_ARGUMENTS", executed: false, error: value.error, issues, recovery: value.recovery,
+            ...(value.effectCertainty === undefined ? {} : {effectCertainty: value.effectCertainty})
+        };
     } catch {
         return;
     }
@@ -209,7 +221,13 @@ export function readToolRecoveryFailure(result?: string): ToolRecoveryFailure | 
             typeof value.error !== "string" || value.error.length > 2_048 || typeof value.recovery !== "string" || value.recovery.length > 2_048 ||
             (value.effectCertainty !== "not_started" && value.effectCertainty !== "rolled_back" && value.effectCertainty !== "unknown") ||
             value.executed !== (value.effectCertainty === "unknown" ? "unknown" : false)) return;
-        return {code: value.code as ToolRecoveryCode, executed: value.effectCertainty === "unknown" ? "unknown" : false, effectCertainty: value.effectCertainty, error: value.error, recovery: value.recovery};
+        return {
+            code: value.code as ToolRecoveryCode,
+            executed: value.effectCertainty === "unknown" ? "unknown" : false,
+            effectCertainty: value.effectCertainty,
+            error: value.error,
+            recovery: value.recovery
+        };
     } catch {
         return;
     }

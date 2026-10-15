@@ -1,11 +1,11 @@
 import {binaryByteLength} from "@/domain/binary";
-import type {ProductStore} from "@/lib/storage/types";
-import type {StoreTable} from "@/lib/storage/types";
+import type {ProductStore, StoreTable} from "@/lib/storage/types";
 import {db as productDb} from "./database";
-const db = productDb;
 import {getProjectKind, type ProjectKind} from "@/domain/types";
 import type {AudioInput, AudioPatch, AudioRow, AudioSourceMetadata} from "@/domain/audio";
 import {createId, nowIso} from "@/lib/ids";
+
+const db = productDb;
 
 export const AUDIO_TABLES = [db.audioChapters, db.audioSpeakers, db.audioSegments, db.audioTakes, db.audioTracks, db.audioClips, db.audioExports, db.musicDrafts, db.musicWorks, db.audioGenerationJobs, db.audioGenerationBatches, db.audioGenerationBatchItems, db.audioArrangementProposals];
 export const AUDIO_TRANSACTION_TABLES = [db.projects, db.media, ...AUDIO_TABLES];

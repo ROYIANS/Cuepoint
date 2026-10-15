@@ -10,7 +10,10 @@ export async function getSearchConnectionState(store?: ProductStore): Promise<Se
     return {configured: !!config?.apiKey, enabled: !!config?.enabled, revision: config?.revision};
 }
 
-export async function saveSearchConnection(input: { apiKey?: string; enabled: boolean }, store?: ProductStore): Promise<void> {
+export async function saveSearchConnection(input: {
+    apiKey?: string;
+    enabled: boolean
+}, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
     await db.transaction('rw', [db.searchConnections, db.agents].flat(), async (db) => {
         const previous = await db.searchConnections.get('tavily');

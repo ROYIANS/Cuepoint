@@ -69,7 +69,7 @@ export async function startGenerationBatch(id: string, threadId: string, options
         // successful pause write to prevent another paid request in this process.
         let dispatchPaused = false;
         const pause = async (reason: string, store?: ProductStore) => {
-    const db = store ?? productDb;
+            const db = store ?? productDb;
             dispatchPaused = true;
             await controlGenerationBatch(id, threadId, 'pause', reason, db);
         };
@@ -84,7 +84,7 @@ export async function startGenerationBatch(id: string, threadId: string, options
             const recover = saved.jobs.filter(j => !['downloaded', 'applied', 'conflict', 'failed', 'unknown'].includes(j.status));
             let recoveryIndex = 0;
             const retrieve = async (store?: ProductStore) => {
-    const db = store ?? productDb;
+                const db = store ?? productDb;
                 while (!controller.signal.aborted) {
                     const job = recover[recoveryIndex++];
                     if (!job) return;
@@ -99,7 +99,7 @@ export async function startGenerationBatch(id: string, threadId: string, options
             const items = (await readGenerationBatch(id, threadId)).items;
             let index = 0;
             const dispatch = async (store?: ProductStore) => {
-    const db = store ?? productDb;
+                const db = store ?? productDb;
                 while (!controller.signal.aborted && !dispatchPaused) {
                     const item = items[index++];
                     if (!item) return;

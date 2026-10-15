@@ -16,47 +16,47 @@ export function isUnknownBatchPreparation(call: AgentToolCall): boolean {
 export async function recoverBatchPreparationCalls(runId: string, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
     await db.transaction("rw", [db.agentRuns, db.agentToolCalls, db.agentGenerationBatches, db.agentGenerationBatchItems, db.agentGenerationJobs].flat(), async (db) => {
-            const run = await db.agentRuns.get(runId);
-            if (!run || !["running", "interrupted", "failed", "waiting_approval"].includes(run.status)) return;
-            const calls = await db.agentToolCalls.where("runId").equals(runId).filter(isUnknownBatchPreparation).toArray();
-            for (const call of calls) {
-                if (call.threadId !== run.threadId) continue;
-                // A paid-job record contradicts this tool's local-only contract.
-                if (await db.agentGenerationJobs.where("callId").equals(call.id).count()) continue;
-                const batches = await db.agentGenerationBatches.where("sourceCallId").equals(call.id).toArray();
-                if (batches.length > 1) continue;
-                const batch = batches[0];
-                if (batch) {
-                    const items = await db.agentGenerationBatchItems.where("batchId").equals(batch.id).toArray();
-                    if (batch.runId !== run.id || batch.threadId !== run.threadId || batch.originCallId !== call.id ||
-                        batch.taskId !== run.taskId || run.projectId && batch.projectId !== run.projectId ||
-                        !items.length || items.length !== batch.itemIds.length || new Set(batch.itemIds).size !== items.length ||
-                        items.some(item => !batch.itemIds.includes(item.id) || item.threadId !== run.threadId || item.projectId !== batch.projectId)) continue;
-                    await db.agentToolCalls.update(call.id, {
-                        status: "completed", error: undefined, updatedAt: nowIso(),
-                        result: JSON.stringify({
-                            batchId: batch.id,
-                            status: batch.status,
-                            targetCount: new Set(items.map(item => item.targetKey)).size,
-                            candidateCount: items.length,
-                            submitted: false,
-                            recovered: true
-                        })
-                    });
-                } else {
-                    const error = '已核实本地没有此次操作创建的批量草稿，未提交生成。原失败原因未保存，请检查参数后重新准备草稿；图片比例使用 size，不要传 aspectRatio 或 mode。';
-                    await db.agentToolCalls.update(call.id, {
-                        status: "failed", error, updatedAt: nowIso(),
-                        result: JSON.stringify({
-                            error,
-                            code: "BATCH_PREPARATION_NOT_COMMITTED",
-                            submitted: false,
-                            recovered: true
-                        })
-                    });
-                }
+        const run = await db.agentRuns.get(runId);
+        if (!run || !["running", "interrupted", "failed", "waiting_approval"].includes(run.status)) return;
+        const calls = await db.agentToolCalls.where("runId").equals(runId).filter(isUnknownBatchPreparation).toArray();
+        for (const call of calls) {
+            if (call.threadId !== run.threadId) continue;
+            // A paid-job record contradicts this tool's local-only contract.
+            if (await db.agentGenerationJobs.where("callId").equals(call.id).count()) continue;
+            const batches = await db.agentGenerationBatches.where("sourceCallId").equals(call.id).toArray();
+            if (batches.length > 1) continue;
+            const batch = batches[0];
+            if (batch) {
+                const items = await db.agentGenerationBatchItems.where("batchId").equals(batch.id).toArray();
+                if (batch.runId !== run.id || batch.threadId !== run.threadId || batch.originCallId !== call.id ||
+                    batch.taskId !== run.taskId || run.projectId && batch.projectId !== run.projectId ||
+                    !items.length || items.length !== batch.itemIds.length || new Set(batch.itemIds).size !== items.length ||
+                    items.some(item => !batch.itemIds.includes(item.id) || item.threadId !== run.threadId || item.projectId !== batch.projectId)) continue;
+                await db.agentToolCalls.update(call.id, {
+                    status: "completed", error: undefined, updatedAt: nowIso(),
+                    result: JSON.stringify({
+                        batchId: batch.id,
+                        status: batch.status,
+                        targetCount: new Set(items.map(item => item.targetKey)).size,
+                        candidateCount: items.length,
+                        submitted: false,
+                        recovered: true
+                    })
+                });
+            } else {
+                const error = '已核实本地没有此次操作创建的批量草稿，未提交生成。原失败原因未保存，请检查参数后重新准备草稿；图片比例使用 size，不要传 aspectRatio 或 mode。';
+                await db.agentToolCalls.update(call.id, {
+                    status: "failed", error, updatedAt: nowIso(),
+                    result: JSON.stringify({
+                        error,
+                        code: "BATCH_PREPARATION_NOT_COMMITTED",
+                        submitted: false,
+                        recovered: true
+                    })
+                });
             }
-        });
+        }
+    });
 }
 
 /** Only this historic built-in already committed its mutation and result atomically.

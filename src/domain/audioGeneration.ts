@@ -55,7 +55,7 @@ export interface AudioGenerationJob extends AudioRow {
     input: AudioGenerationInput;
     connector: { id: Id; provider: "apimart" | "mimo"; baseUrl: string };
     source: { kind: "manual" } | { kind: "agent"; callId: Id; runId: Id }
-        | {kind: "batch"; batchId: Id; itemId: Id; owner: AudioBatchOwner};
+        | { kind: "batch"; batchId: Id; itemId: Id; owner: AudioBatchOwner };
     status: AudioGenerationStatus;
     taskIds: string[];
     taskObservations?: AudioTaskObservation[];

@@ -102,7 +102,15 @@ export async function deleteChatThread(id: Id, store?: ProductStore): Promise<vo
         const audioBatches = await db.audioGenerationBatches.where("owner.threadId").equals(id).toArray();
         const audioBatchIds = new Set(audioBatches.map(batch => batch.id));
         for (const batch of audioBatches) {
-            await db.audioGenerationBatches.update(batch.id, {dormant: true, status: "cancelled", confirmedAt: undefined, confirmedItemIds: [], sourceCallId: undefined, revision: batch.revision + 1, updatedAt: nowIso()});
+            await db.audioGenerationBatches.update(batch.id, {
+                dormant: true,
+                status: "cancelled",
+                confirmedAt: undefined,
+                confirmedItemIds: [],
+                sourceCallId: undefined,
+                revision: batch.revision + 1,
+                updatedAt: nowIso()
+            });
             await db.audioGenerationBatchItems.where("batchId").equals(batch.id).filter(item => !item.jobId).modify({state: "cancelled"});
         }
         await db.audioGenerationJobs.filter(job => job.source.kind === "batch" && audioBatchIds.has(job.source.batchId)).modify({dormant: true});

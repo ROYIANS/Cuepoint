@@ -8,18 +8,18 @@ import {
     Copy,
     Download,
     Expand,
-    Snap,
     MoreHorizontal,
     Music2,
     Pause,
     Play,
     Plus,
-    Undo2,
     Redo2,
     Scissors,
     SkipBack,
     SlidersHorizontal,
+    Snap,
     Trash2,
+    Undo2,
     Volume2,
     X,
     ZoomIn,
@@ -425,11 +425,11 @@ export function AudioTimeline({
                 size="icon-sm" variant="ghost" disabled={busy || !history.canRedo} aria-label="重做时间线编辑"
                 title="重做 · ⌘/Ctrl Shift Z"
                 onClick={() => void action(() => history.redo())}><Redo2/></Button><Button size="icon-sm"
-                                                                                              variant="ghost"
-                                                                                              disabled={busy || !splitAvailable}
-                                                                                              aria-label="在播放位置分割"
-                                                                                              title="在播放位置分割 · S"
-                                                                                              onClick={() => selected && void action(() => history.split(selected, position))}><Scissors/></Button>
+                                                                                           variant="ghost"
+                                                                                           disabled={busy || !splitAvailable}
+                                                                                           aria-label="在播放位置分割"
+                                                                                           title="在播放位置分割 · S"
+                                                                                           onClick={() => selected && void action(() => history.split(selected, position))}><Scissors/></Button>
             </div>
             <Button size="icon-sm" variant="ghost" disabled={busy || !selected} className="at-quick-delete"
                     aria-label="删除选中片段" title="删除片段 · Delete / Backspace（可撤销）"
@@ -448,10 +448,11 @@ export function AudioTimeline({
                 top: menu?.y ?? 0
             }}/></DropdownMenuTrigger>
                 <DropdownMenuContent aria-label={menu?.track ? "音轨操作" : "片段操作"} className="w-60" align="start"
-                                     sideOffset={0} collisionPadding={popupCollisionPadding(8)} onCloseAutoFocus={(event) => {
-                    event.preventDefault();
-                    root.current?.focus({preventScroll: true});
-                }}>
+                                     sideOffset={0} collisionPadding={popupCollisionPadding(8)}
+                                     onCloseAutoFocus={(event) => {
+                                         event.preventDefault();
+                                         root.current?.focus({preventScroll: true});
+                                     }}>
                     {menu?.clip && <><DropdownMenuLabel
                         className="max-w-56 truncate">{timelineClipLabel(menu.clip, snapshot).title}</DropdownMenuLabel><DropdownMenuSeparator/>
                         <DropdownMenuItem disabled={busy} onSelect={() => {

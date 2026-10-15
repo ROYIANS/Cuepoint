@@ -9,7 +9,10 @@ import {StorageSection} from "./sections/StorageSection";
 import {UpdateSection} from "./sections/UpdateSection";
 import {filterSettings, isSettingsSectionId, SETTINGS_SECTIONS, type SettingsSectionId} from "./settingsModel";
 
-export function SettingsPage({section, onSectionChange}: {section?: string; onSectionChange: (id: SettingsSectionId) => void}) {
+export function SettingsPage({section, onSectionChange}: {
+    section?: string;
+    onSectionChange: (id: SettingsSectionId) => void
+}) {
     const [query, setQuery] = useState("");
     const [editingConnection, setEditingConnection] = useState(false);
     const editingConnectionRef = useRef(false);
@@ -70,7 +73,8 @@ export function SettingsPage({section, onSectionChange}: {section?: string; onSe
             <div className="settings-body">
                 {visible === "general" ? <GeneralSection visibleRowIds={visibleRowIds}/> : null}
                 {visible === "appearance" ? <AppearanceSection visibleRowIds={visibleRowIds}/> : null}
-                {visible === "connections" ? <ConnectorsSection visibleRowIds={visibleRowIds} onEditorOpenChange={onEditorOpenChange}/> : null}
+                {visible === "connections" ?
+                    <ConnectorsSection visibleRowIds={visibleRowIds} onEditorOpenChange={onEditorOpenChange}/> : null}
                 {visible === "storage" ? <StorageSection visibleRowIds={visibleRowIds}/> : null}
                 {visible === "update" ? <UpdateSection visibleRowIds={visibleRowIds}/> : null}
                 {!visible ? <div role="status" className="settings-empty-state">

@@ -10,11 +10,7 @@ import {useAgentTopicNavigation} from "@/components/agent/AgentTopicNavigation";
 import type {ComposerProps} from "@/components/agent/composerTypes";
 import {FloatingComposer} from "@/components/agent/FloatingComposer";
 import {appendStartPrompt} from "@/components/agent/startPrompt";
-import {
-    CHAT_COMPOSER_SAFE,
-    CHAT_CONTENT_MAX,
-    CHAT_SAFE_X,
-} from "@/components/agent/agentTheme";
+import {CHAT_COMPOSER_SAFE, CHAT_CONTENT_MAX, CHAT_SAFE_X,} from "@/components/agent/agentTheme";
 import type {ChatMessage, ChatThread, Id} from "@/domain/types";
 // Rich transcript rendering (markdown, diagrams, syntax highlighting) is needed only
 // once a thread contains messages. Keep the Agent runtime and composer mounted.
@@ -81,8 +77,10 @@ export function ChatWorkspace({
         resize.observe(dock);
         return () => resize.disconnect();
     }, []);
-    const topics = useAgentTopicNavigation({threads, activeThreadId, projects: composer.projects, onNewTopicInProject, onSelect: onSelectThread,
-        onNewTopic, onRename: onRenameThread, onDelete: onDeleteThread, onOpenTasks});
+    const topics = useAgentTopicNavigation({
+        threads, activeThreadId, projects: composer.projects, onNewTopicInProject, onSelect: onSelectThread,
+        onNewTopic, onRename: onRenameThread, onDelete: onDeleteThread, onOpenTasks
+    });
 
     return (
         <Flexbox
@@ -102,37 +100,38 @@ export function ChatWorkspace({
             }
         >
             <AgentHeader title={activeThread?.title ?? "对话"} thread={activeThread}
-                topicToggle={topics.toggle} onRename={onRenameThread} onDelete={onDeleteThread}
-                taskTitle={taskTitle} onNewTopic={onNewTopic}
-                onOpenTask={taskTitle || (composer.projectId && !composer.blocked) ? onOpenTask : undefined}/>
+                         topicToggle={topics.toggle} onRename={onRenameThread} onDelete={onDeleteThread}
+                         taskTitle={taskTitle} onNewTopic={onNewTopic}
+                         onOpenTask={taskTitle || (composer.projectId && !composer.blocked) ? onOpenTask : undefined}/>
             <ModuleLayout navigationLabel="话题导航" navigation={topics.navigation} mainClassName="agent-module-main">
-            <Flexbox flex={1} height="100%" className="agent-chat-column min-w-0">
-                <div className="agent-transcript-container" inert={expanded}
-                     style={expanded ? {visibility: "hidden"} : undefined}>
-                    {taskTitle && messages?.length === 0 ?
-                        <div className="agent-task-conversation-empty"><ListTodo size={28}/><span>准备开始</span>
-                            <h2>{taskTitle}</h2><p>{taskGoal}</p>
-                            <div>
-                                <button type="button" onClick={onOpenTask}>整理目标与清单</button>
-                                {!composer.blocked && <button type="button"
-                                                              onClick={() => composer.onChange(appendStartPrompt(composer.value))}>与助手一起开始</button>}
-                            </div>
-                            <small>也可以独立完成清单，随时回来确认成果。</small></div> : messages?.length ? <Suspense
-                                fallback={<div className="agent-message-list" role="status">
-                                    <div className="agent-content">正在加载对话…</div>
-                                </div>}><MessageList messages={messages} runs={runs} retryableRunId={retryableRunId}
-                                                     onRetryRun={onRetryRun} busy={composer.sending}
-                                                     readOnly={composer.readOnly} onRunAction={onRunAction}/></Suspense> :
-                            <div className="agent-message-list"
-                                 aria-busy={messages === undefined}>{messages === undefined &&
-                                <div className="agent-content" role="status">加载中…</div>}</div>}</div>
-                <div ref={dockRef} className={`agent-composer-dock${expanded ? " is-expanded" : ""}`}>
-                    <div className="agent-content">
-                        <FloatingComposer {...composer} surface="detail" expanded={expanded}
-                                          onExpandedChange={setExpanded}/>
+                <Flexbox flex={1} height="100%" className="agent-chat-column min-w-0">
+                    <div className="agent-transcript-container" inert={expanded}
+                         style={expanded ? {visibility: "hidden"} : undefined}>
+                        {taskTitle && messages?.length === 0 ?
+                            <div className="agent-task-conversation-empty"><ListTodo size={28}/><span>准备开始</span>
+                                <h2>{taskTitle}</h2><p>{taskGoal}</p>
+                                <div>
+                                    <button type="button" onClick={onOpenTask}>整理目标与清单</button>
+                                    {!composer.blocked && <button type="button"
+                                                                  onClick={() => composer.onChange(appendStartPrompt(composer.value))}>与助手一起开始</button>}
+                                </div>
+                                <small>也可以独立完成清单，随时回来确认成果。</small></div> : messages?.length ? <Suspense
+                                    fallback={<div className="agent-message-list" role="status">
+                                        <div className="agent-content">正在加载对话…</div>
+                                    </div>}><MessageList messages={messages} runs={runs} retryableRunId={retryableRunId}
+                                                         onRetryRun={onRetryRun} busy={composer.sending}
+                                                         readOnly={composer.readOnly}
+                                                         onRunAction={onRunAction}/></Suspense> :
+                                <div className="agent-message-list"
+                                     aria-busy={messages === undefined}>{messages === undefined &&
+                                    <div className="agent-content" role="status">加载中…</div>}</div>}</div>
+                    <div ref={dockRef} className={`agent-composer-dock${expanded ? " is-expanded" : ""}`}>
+                        <div className="agent-content">
+                            <FloatingComposer {...composer} surface="detail" expanded={expanded}
+                                              onExpandedChange={setExpanded}/>
+                        </div>
                     </div>
-                </div>
-            </Flexbox>
+                </Flexbox>
             </ModuleLayout>
         </Flexbox>
     );

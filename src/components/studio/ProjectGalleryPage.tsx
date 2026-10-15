@@ -4,7 +4,11 @@ import {VideoWorkspaceReadNotice} from "@/components/workspace/VideoWorkspaceRea
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {Link, useNavigate} from "@tanstack/react-router";
-import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
+import {
+    useVideoWorkspaceQuery,
+    useVideoWorkspaceReadStatus,
+    useVideoWorkspaceRepository
+} from "@/lib/videoWorkspaceRepository";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {toast} from "sonner";
 import {CoverCard, LibraryGrid} from "@/components/studio/CoverCard";
@@ -198,14 +202,29 @@ export function ProjectGalleryPage() {
         <ModuleLayout navigationLabel="项目导航" navigation={<>
             <h2 className="module-nav-heading">项目</h2>
             <div className="module-nav-group" role="group" aria-label="按创作类型筛选">
-                <button type="button" className="module-nav-item" aria-pressed={kindFilter === "all"} onClick={() => setKindFilter("all")}>全部类型</button>
-                {PROJECT_KINDS.map(kind => <button key={kind.id} type="button" className="module-nav-item" aria-pressed={kindFilter === kind.id} onClick={() => setKindFilter(kind.id)}><kind.icon size={16} weight={kindFilter === kind.id ? "fill" : "regular"} aria-hidden/>{kind.label}{!kind.available && <span className="ml-auto text-xs">即将推出</span>}</button>)}
+                <button type="button" className="module-nav-item" aria-pressed={kindFilter === "all"}
+                        onClick={() => setKindFilter("all")}>全部类型
+                </button>
+                {PROJECT_KINDS.map(kind => <button key={kind.id} type="button" className="module-nav-item"
+                                                   aria-pressed={kindFilter === kind.id}
+                                                   onClick={() => setKindFilter(kind.id)}>
+                    <kind.icon size={16} weight={kindFilter === kind.id ? "fill" : "regular"} aria-hidden/>
+                    {kind.label}{!kind.available && <span className="ml-auto text-xs">即将推出</span>}</button>)}
             </div>
             <div className="module-nav-group" role="group" aria-label="项目状态">
-                <button type="button" className="module-nav-item" aria-pressed={!showArchived} onClick={() => setShowArchived(false)}>使用中</button>
-                <button type="button" className="module-nav-item" aria-pressed={showArchived} onClick={() => setShowArchived(true)}>含已归档项目</button>
+                <button type="button" className="module-nav-item" aria-pressed={!showArchived}
+                        onClick={() => setShowArchived(false)}>使用中
+                </button>
+                <button type="button" className="module-nav-item" aria-pressed={showArchived}
+                        onClick={() => setShowArchived(true)}>含已归档项目
+                </button>
             </div>
-            <div className="module-nav-group"><h3 className="module-nav-heading text-xs">当前项目</h3>{visible.map(project => <Link key={project.id} className="module-nav-item" to="/p/$projectId" params={{projectId: project.id}}>{project.name}</Link>)}</div>
+            <div className="module-nav-group"><h3
+                className="module-nav-heading text-xs">当前项目</h3>{visible.map(project => <Link key={project.id}
+                                                                                                  className="module-nav-item"
+                                                                                                  to="/p/$projectId"
+                                                                                                  params={{projectId: project.id}}>{project.name}</Link>)}
+            </div>
         </>}><PageContent>
             <VideoWorkspaceReadNotice {...readStatus}/>
             <LibraryHeader title="项目" query={query} onQuery={setQuery} sort={sort} onSort={setSort}
@@ -217,17 +236,23 @@ export function ProjectGalleryPage() {
             />
             <PageToolbar className="library-filter-row">
                 <label className="flex items-center gap-2">所属 IP
-                    <Select value={ipFilter} onValueChange={setIpFilter}><SelectTrigger aria-label="筛选所属 IP" className="max-w-52"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="all">全部</SelectItem><SelectItem value="independent">独立项目</SelectItem>{profiles.map(ip => <SelectItem key={ip.id} value={ip.id}>{ip.name}{ip.archived ? "（已归档）" : ""}</SelectItem>)}</SelectContent></Select>
+                    <Select value={ipFilter} onValueChange={setIpFilter}><SelectTrigger aria-label="筛选所属 IP"
+                                                                                        className="max-w-52"><SelectValue/></SelectTrigger><SelectContent><SelectItem
+                        value="all">全部</SelectItem><SelectItem
+                        value="independent">独立项目</SelectItem>{profiles.map(ip => <SelectItem key={ip.id}
+                                                                                                 value={ip.id}>{ip.name}{ip.archived ? "（已归档）" : ""}</SelectItem>)}
+                    </SelectContent></Select>
                 </label>
             </PageToolbar>
             <div className="mt-4">
                 {filteredKind && !filteredKind.available ? <ProjectKindPlaceholder kind={filteredKind}/> : <>
                     {projects === undefined && !readStatus.error && <PageState kind="loading" title="加载项目中…"/>}
                     {projects !== undefined && !visible.length &&
-                        <PageState title={query.trim() || ipFilter !== "all" || showArchived ? "没有找到匹配的项目" : "还没有项目"}
+                        <PageState
+                            title={query.trim() || ipFilter !== "all" || showArchived ? "没有找到匹配的项目" : "还没有项目"}
                             description={query.trim() ? "试试其他关键词，或清除搜索。" : "选择视频、音频或音乐类型，新建项目开始制作。"}
                             action={query.trim() ? <Button variant="outline"
-                                                    onClick={() => setQuery("")}>清除搜索</Button> :
+                                                           onClick={() => setQuery("")}>清除搜索</Button> :
                                 <Button variant="outline" onClick={() => {
                                     setCreateKind(kindFilter === "all" ? "video" : kindFilter);
                                     setCreating(true);
@@ -317,89 +342,90 @@ export function ProjectGalleryPage() {
                         <DialogDescription>选择视频、音频或音乐项目，也可以关联已有 IP。</DialogDescription>
                     </DialogHeader>
                     <div className="app-scroll min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
-                    <fieldset disabled={submitting}>
-                        <legend className="text-sm font-medium">创作类型</legend>
-                        <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">
-                            {PROJECT_KINDS.map((kind) => {
-                                const Icon = kind.icon;
-                                return <button type="button" key={kind.id} aria-pressed={createKind === kind.id}
-                                               onClick={() => setCreateKind(kind.id)}
-                                               className={cn("flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl border px-2 py-3 text-sm focus-visible:outline-2 focus-visible:outline-ring", createKind === kind.id ? "border-brand bg-brand/5" : "text-muted-foreground hover:bg-muted/50")}>
-                                    <Icon className="size-5" aria-hidden/><span>{kind.label}</span>
-                                    <span className="text-[10px]">{kind.available ? "已开放" : "即将推出"}</span>
-                                </button>;
-                            })}
-                        </div>
-                    </fieldset>
-                    {!selectedKind.available ? <ProjectKindPlaceholder kind={selectedKind}/> : <>
-                        <label htmlFor="new-project-name" className="text-sm font-medium">项目名称</label>
-                        <Input
-                            id="new-project-name"
-                            disabled={submitting}
-                            value={name}
-                            onChange={(event) => setName(event.target.value)}
-                            placeholder="项目名称"
-                        />
-                        {createKind === "video" && <>
-                            <fieldset disabled={submitting}>
-                                <legend className="text-sm font-medium">视频形式</legend>
-                                <div className="mt-2 grid grid-cols-2 gap-3">
-                                    {(
-                                        [
-                                            {value: "film", title: "单片", hint: "直接进入故事，适合短片和电影"},
-                                            {value: "series", title: "连载", hint: "按集管理故事、分镜和制作"},
-                                        ] satisfies { value: ProjectMode; title: string; hint: string }[]
-                                    ).map((option) => (
-                                        <button
-                                            key={option.value}
-                                            type="button"
-                                            aria-pressed={mode === option.value}
-                                            className={cn(
-                                                "rounded-xl border p-4 text-left transition-colors",
-                                                mode === option.value
-                                                    ? "border-brand bg-brand/5"
-                                                    : "hover:bg-muted/50",
-                                            )}
-                                            onClick={() => setMode(option.value)}
-                                        >
-                                            <span className="block text-sm font-medium">{option.title}</span>
-                                            <span className="text-muted-foreground mt-1 block text-xs leading-5">
+                        <fieldset disabled={submitting}>
+                            <legend className="text-sm font-medium">创作类型</legend>
+                            <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">
+                                {PROJECT_KINDS.map((kind) => {
+                                    const Icon = kind.icon;
+                                    return <button type="button" key={kind.id} aria-pressed={createKind === kind.id}
+                                                   onClick={() => setCreateKind(kind.id)}
+                                                   className={cn("flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl border px-2 py-3 text-sm focus-visible:outline-2 focus-visible:outline-ring", createKind === kind.id ? "border-brand bg-brand/5" : "text-muted-foreground hover:bg-muted/50")}>
+                                        <Icon className="size-5" aria-hidden/><span>{kind.label}</span>
+                                        <span className="text-[10px]">{kind.available ? "已开放" : "即将推出"}</span>
+                                    </button>;
+                                })}
+                            </div>
+                        </fieldset>
+                        {!selectedKind.available ? <ProjectKindPlaceholder kind={selectedKind}/> : <>
+                            <label htmlFor="new-project-name" className="text-sm font-medium">项目名称</label>
+                            <Input
+                                id="new-project-name"
+                                disabled={submitting}
+                                value={name}
+                                onChange={(event) => setName(event.target.value)}
+                                placeholder="项目名称"
+                            />
+                            {createKind === "video" && <>
+                                <fieldset disabled={submitting}>
+                                    <legend className="text-sm font-medium">视频形式</legend>
+                                    <div className="mt-2 grid grid-cols-2 gap-3">
+                                        {(
+                                            [
+                                                {value: "film", title: "单片", hint: "直接进入故事，适合短片和电影"},
+                                                {value: "series", title: "连载", hint: "按集管理故事、分镜和制作"},
+                                            ] satisfies { value: ProjectMode; title: string; hint: string }[]
+                                        ).map((option) => (
+                                            <button
+                                                key={option.value}
+                                                type="button"
+                                                aria-pressed={mode === option.value}
+                                                className={cn(
+                                                    "rounded-xl border p-4 text-left transition-colors",
+                                                    mode === option.value
+                                                        ? "border-brand bg-brand/5"
+                                                        : "hover:bg-muted/50",
+                                                )}
+                                                onClick={() => setMode(option.value)}
+                                            >
+                                                <span className="block text-sm font-medium">{option.title}</span>
+                                                <span className="text-muted-foreground mt-1 block text-xs leading-5">
                     {option.hint}
                   </span>
-                                        </button>
-                                    ))}
-                                </div>
-                            </fieldset>
-                            <fieldset disabled={submitting}>
-                                <legend className="text-sm font-medium">画幅比例</legend>
-                                <div className="mt-2 grid grid-cols-3 gap-2">
-                                    {ASPECT_PRESET_IDS.map((preset) => (
-                                        <button
-                                            key={preset}
-                                            type="button"
-                                            aria-pressed={aspectPreset === preset}
-                                            className={cn(
-                                                "rounded-xl border px-3 py-2.5 text-center text-sm font-medium transition-colors",
-                                                aspectPreset === preset
-                                                    ? "border-brand bg-brand/5"
-                                                    : "hover:bg-muted/50",
-                                            )}
-                                            onClick={() => setAspectPreset(preset)}
-                                        >
-                                            {ASPECT_PRESETS[preset].label}
-                                        </button>
-                                    ))}
-                                </div>
-                                <p className="text-muted-foreground mt-2 text-xs">
-                                    生成模型与分辨率可在创建后的项目设定中分别配置
-                                </p>
-                            </fieldset>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </fieldset>
+                                <fieldset disabled={submitting}>
+                                    <legend className="text-sm font-medium">画幅比例</legend>
+                                    <div className="mt-2 grid grid-cols-3 gap-2">
+                                        {ASPECT_PRESET_IDS.map((preset) => (
+                                            <button
+                                                key={preset}
+                                                type="button"
+                                                aria-pressed={aspectPreset === preset}
+                                                className={cn(
+                                                    "rounded-xl border px-3 py-2.5 text-center text-sm font-medium transition-colors",
+                                                    aspectPreset === preset
+                                                        ? "border-brand bg-brand/5"
+                                                        : "hover:bg-muted/50",
+                                                )}
+                                                onClick={() => setAspectPreset(preset)}
+                                            >
+                                                {ASPECT_PRESETS[preset].label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <p className="text-muted-foreground mt-2 text-xs">
+                                        生成模型与分辨率可在创建后的项目设定中分别配置
+                                    </p>
+                                </fieldset>
+                            </>}
+                            {<div className="space-y-2"><span
+                                className="text-sm font-medium">所属 IP</span><ProjectIpPicker
+                                value={createIpId} onChange={setCreateIpId} disabled={submitting}/></div>}
+                            <p className="text-muted-foreground text-xs leading-5">项目类型创建后固定。可选择所属
+                                IP，也可以独立创作。</p>
                         </>}
-                        {<div className="space-y-2"><span className="text-sm font-medium">所属 IP</span><ProjectIpPicker
-                            value={createIpId} onChange={setCreateIpId} disabled={submitting}/></div>}
-                        <p className="text-muted-foreground text-xs leading-5">项目类型创建后固定。可选择所属
-                            IP，也可以独立创作。</p>
-                    </>}
                     </div>
                     <DialogFooter>
                         <Button disabled={submitting} variant="outline" onClick={() => {
@@ -421,8 +447,8 @@ export function ProjectGalleryPage() {
                 <DialogContent><DialogHeader><DialogTitle>项目所属 IP</DialogTitle><DialogDescription>{binding?.name} ·
                     关联仅整理项目归属，不会改写已有内容。</DialogDescription></DialogHeader>
                     {<ProjectIpPicker value={binding?.ipId ?? null}
-                                     onChange={(ipId) => setBinding((value) => value ? {...value, ipId} : value)}
-                                     disabled={bindingBusy}/>}
+                                      onChange={(ipId) => setBinding((value) => value ? {...value, ipId} : value)}
+                                      disabled={bindingBusy}/>}
                     {bindingError && <p role="alert" className="text-destructive text-sm">{bindingError}</p>}
                     <DialogFooter><Button variant="outline" disabled={bindingBusy}
                                           onClick={() => {

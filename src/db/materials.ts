@@ -1,8 +1,7 @@
 import {readBinaryBlob} from "@/lib/storage/binary";
 import {binaryByteLength} from "@/domain/binary";
-import type {ProductStore} from "@/lib/storage/types";
+import type {ProductStore, StoreTable} from "@/lib/storage/types";
 import {db as productDb} from './database';
-import type {StoreTable} from "@/lib/storage/types";
 import type {
     LibraryMaterial,
     MaterialEntity,
@@ -176,7 +175,10 @@ async function snapshotSetting(kind: SettingMaterialKind, entityId: string, stor
     }
     for (const id of ids) {
         const item = (await db.media.get(id))!;
-        media.push({...item, blob: (await db.waitFor(readBinaryBlob(item.blob))).slice(0, binaryByteLength(item.blob), item.mimeType)});
+        media.push({
+            ...item,
+            blob: (await db.waitFor(readBinaryBlob(item.blob))).slice(0, binaryByteLength(item.blob), item.mimeType)
+        });
     }
     return {type: 'setting', kind, entity: structuredClone(entity), media};
 }

@@ -21,7 +21,13 @@ import type {ChatMessage} from "@/domain/types";
 import {pinAgentTaskResult, setAgentTaskLifecycle, unpinAgentTaskResult, updateAgentTask} from "@/db/agentTasks";
 import {getTaskDisplayState, isTaskBusy, TASK_STATE_LABELS} from "@/lib/agent/taskState";
 import {Button} from "@/components/ui/button";
-import {ContextPanel, ContextPanelContent, ContextPanelDescription, ContextPanelHeader, ContextPanelTitle} from "@/components/ui/context-panel";
+import {
+    ContextPanel,
+    ContextPanelContent,
+    ContextPanelDescription,
+    ContextPanelHeader,
+    ContextPanelTitle
+} from "@/components/ui/context-panel";
 import {
     Dialog,
     DialogContent,
@@ -231,10 +237,13 @@ function TaskInspectorContent({
         void mutate(() => updateAgentTask(task.id, {plan}, editRevision), "执行清单已保存", () => setEditor(null));
     }
 
-    return <ContextPanel open={open} onRequestDeparture={(proceed, cancel) => requestDeparture(proceed, undefined, cancel)} onOpenChange={(next) => {
-        onOpenChange(next);
-    }}>
-        <ContextPanelContent className="agent-chat-root css-var-agent-chat agent-task-inspector" showCloseButton={false}>
+    return <ContextPanel open={open}
+                         onRequestDeparture={(proceed, cancel) => requestDeparture(proceed, undefined, cancel)}
+                         onOpenChange={(next) => {
+                             onOpenChange(next);
+                         }}>
+        <ContextPanelContent className="agent-chat-root css-var-agent-chat agent-task-inspector"
+                             showCloseButton={false}>
             <div className="agent-task-inspector-nav"><Button variant="ghost" size="sm"
                                                               disabled={pending || reviewPending}
                                                               onClick={() => requestDeparture(onOpenBoard)}><ArrowLeft/>任务工作台</Button><Button

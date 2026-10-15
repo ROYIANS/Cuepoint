@@ -3,12 +3,7 @@ import {addMusicDraft} from "@/db/music";
 import {AUDIO_TRANSACTION_TABLES} from "@/db/audioShared";
 import type {ProductStore} from "@/lib/storage/types";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
-import {
-    linkMusicVariants,
-    musicVariant,
-    type MusicVariant,
-    newVariantSettings
-} from "./draftVariants";
+import {linkMusicVariants, musicVariant, type MusicVariant, newVariantSettings} from "./draftVariants";
 
 export async function switchMusicVariant({projectId, draftId, target}: {
     projectId: string; draftId: string; target: MusicVariant;

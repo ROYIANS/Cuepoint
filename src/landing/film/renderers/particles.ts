@@ -54,7 +54,7 @@ export function createPool(capacity: number, seed = 1): Pool {
 export type Behavior = "scatter" | "gather" | "form";
 
 // k: spring stiffness (1/s^2), zeta: damping ratio, fade: opacity easing rate (1/s).
-export const BEHAVIORS: Readonly<Record<Behavior, {k: number; zeta: number; fade: number}>> = {
+export const BEHAVIORS: Readonly<Record<Behavior, { k: number; zeta: number; fade: number }>> = {
     scatter: {k: 8, zeta: 0.7, fade: 4},
     gather: {k: 40, zeta: 0.9, fade: 6},
     form: {k: 70, zeta: 1, fade: 8},

@@ -56,7 +56,10 @@ async function affectedState(ip: IpProfile, store?: ProductStore) {
     return {ip, links: links.sort((a, b) => a.projectId.localeCompare(b.projectId))};
 }
 
-async function editableIp(args: { id: string; expectedRevision: number }, context: AgentToolContext, store?: ProductStore) {
+async function editableIp(args: {
+    id: string;
+    expectedRevision: number
+}, context: AgentToolContext, store?: ProductStore) {
     const db = store ?? context.store ?? productDb;
     const ip = await requireIp(args.id, context, db);
     if (ip.revision !== args.expectedRevision) throw new Error('IP 档案已更新，请重新读取当前版本后提出修改');
@@ -79,7 +82,7 @@ export const IP_TOOLS = [
         description: '按名称查找 IP，返回 ID、名称、版本和归档状态；最多50项。候选不代表授权，不可根据同名结果猜测操作对象。绑定项目对话也可查询名称目录以明确关联。',
         spec: s.object({query: s.optional(s.text(200)), includeArchived: s.optional(s.bool), ...s.page}),
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const query = args.query?.trim().toLocaleLowerCase() ?? '';
             const rows = (await db.ipProfiles.toArray()).filter(ip => (args.includeArchived || !ip.archived) && ip.name.toLocaleLowerCase().includes(query)).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || a.id.localeCompare(b.id));
             const offset = args.offset ?? 0, limit = args.limit ?? 20;
@@ -101,7 +104,7 @@ export const IP_TOOLS = [
             limit: s.optional(s.number(1, 12000, true))
         }),
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const ip = await requireIp(args.id, context, db);
             if (args.field) {
                 const value = ip[args.field], offset = args.offset ?? 0, limit = args.limit ?? 4000;
@@ -131,7 +134,7 @@ export const IP_TOOLS = [
         spec: s.object({name: s.text(300, 1), ...optionalFields}),
         requiresConfirmation: true,
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const matching = (await db.ipProfiles.toArray()).filter(ip => ip.name.toLocaleLowerCase() === args.name.trim().toLocaleLowerCase()).map(brief);
             return {
                 state: {matching},
@@ -139,7 +142,7 @@ export const IP_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             return brief(await createIpProfile(args, db));
         },
     }),
@@ -154,7 +157,7 @@ export const IP_TOOLS = [
         }),
         requiresConfirmation: true,
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const ip = await editableIp(args, context, db);
             if (ip.archived) throw new Error('请先恢复已归档的 IP');
             const state = await affectedState(ip, db);
@@ -165,7 +168,7 @@ export const IP_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             await updateIpProfile(args.id, args.patch, args.expectedRevision, db);
             return brief((await db.ipProfiles.get(args.id))!);
         },
@@ -178,7 +181,7 @@ export const IP_TOOLS = [
         requiresConfirmation: true,
         highRisk: true,
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const ip = await editableIp(args, context, db), state = await affectedState(ip, db);
             return {
                 state,
@@ -187,7 +190,7 @@ export const IP_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             await setIpArchived(args.id, args.archived, db);
             return brief((await db.ipProfiles.get(args.id))!);
         },
@@ -200,11 +203,11 @@ export const IP_TOOLS = [
         requiresConfirmation: true,
         owners: args => [args.projectId],
         async scope(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             await bindingProject(args.projectId, context, db);
         },
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const project = await bindingProject(args.projectId, context, db);
             const link = await db.projectIpLinks.get(project.id);
             const previous = link ? await db.ipProfiles.get(link.ipId) : undefined;
@@ -217,7 +220,7 @@ export const IP_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             await bindProjectIp(args.projectId, args.ipId, db);
             return {
                 projectId: args.projectId,

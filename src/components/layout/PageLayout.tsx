@@ -14,7 +14,8 @@ export function PageHeader({title, description, count, back, actions, dense = fa
     return <header className={cn("page-header", dense && "page-header-dense", className)}>
         <div className="page-header-copy">
             {back ? <div className="page-header-back">{back}</div> : null}
-            <div className="page-header-heading"><h1>{title}</h1>{count != null ? <span className="page-header-count">{count}</span> : null}</div>
+            <div className="page-header-heading"><h1>{title}</h1>{count != null ?
+                <span className="page-header-count">{count}</span> : null}</div>
             {description ? <div className="page-header-description">{description}</div> : null}
         </div>
         {actions ? <div className="page-header-actions">{actions}</div> : null}
@@ -39,7 +40,8 @@ export function PageState({title, description, action, kind = "empty", compact =
     compact?: boolean;
     className?: string;
 }) {
-    return <div className={cn("page-state", compact && "page-state-compact", className)} role={kind === "error" ? "alert" : kind === "loading" ? "status" : undefined}>
+    return <div className={cn("page-state", compact && "page-state-compact", className)}
+                role={kind === "error" ? "alert" : kind === "loading" ? "status" : undefined}>
         <p className="page-state-title">{title}</p>
         {description ? <div className="page-state-description">{description}</div> : null}
         {action ? <div className="page-state-action">{action}</div> : null}

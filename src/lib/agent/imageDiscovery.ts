@@ -1,7 +1,6 @@
-import type {StoreTable} from "@/lib/storage/types";
+import type {ProductStore, StoreTable} from "@/lib/storage/types";
 import {readBinaryBlob} from "@/lib/storage/binary";
 import {binaryByteLength} from "@/domain/binary";
-import type {ProductStore} from "@/lib/storage/types";
 import {z} from 'zod';
 import {db as productDb} from '@/db/database';
 import {getReferenceSource} from '@/db/references';

@@ -5,7 +5,12 @@ import type {SceneId} from "./scenes";
 // everything: heading (`h1`/`h2`), subtitle, narration, points and the "画面" description.
 // The stage (`stage`) is a picture: it keeps only the scene label and the one subtitle
 // line; title, narration and points stay out of the picture (they are in the readable copy).
-export function SceneBody({id, heading, headingId, stage}: {id: SceneId; heading: "h1" | "h2"; headingId?: string; stage?: false} | {id: SceneId; stage: true; heading?: undefined; headingId?: undefined}) {
+export function SceneBody({id, heading, headingId, stage}: {
+    id: SceneId;
+    heading: "h1" | "h2";
+    headingId?: string;
+    stage?: false
+} | { id: SceneId; stage: true; heading?: undefined; headingId?: undefined }) {
     const copy = SCENE_COPY[id];
     if (stage) {
         return (

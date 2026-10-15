@@ -107,7 +107,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
 
     useEffect(() => {
         if (!activeThreadId) return;
-        const pause = () => {pauseThreadGeneration(activeThreadId); pauseAudioGenerationBatches({threadId: activeThreadId});};
+        const pause = () => {
+            pauseThreadGeneration(activeThreadId);
+            pauseAudioGenerationBatches({threadId: activeThreadId});
+        };
         window.addEventListener('pagehide', pause);
         return () => {
             window.removeEventListener('pagehide', pause);
@@ -168,7 +171,11 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         return db.agentRuns.where("threadId").equals(activeThreadId).sortBy("createdAt");
     }, [activeThreadId]);
 
-    const {request: requestDeparture, confirmation: departureConfirmation, armOnce: armConfirmedDeparture} = useThreadDeparture(activeThreadId, runs);
+    const {
+        request: requestDeparture,
+        confirmation: departureConfirmation,
+        armOnce: armConfirmedDeparture
+    } = useThreadDeparture(activeThreadId, runs);
 
     const openThread = useCallback(
         (id: Id) => {
@@ -291,7 +298,11 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 });
                 armConfirmedDeparture();
                 void navigate({to: "/agent/$threadId", params: {threadId: thread.id}});
-            })().catch((error: unknown) => showError({title: "创建对话失败", cause: error, actionName: "create-thread"}));
+            })().catch((error: unknown) => showError({
+                title: "创建对话失败",
+                cause: error,
+                actionName: "create-thread"
+            }));
         });
     }), [abortRef, navigate, selectedConnector?.id, modelValue, projectId, taskMode, leaveTask, requestDeparture, armConfirmedDeparture]);
     const handleNewTopic = useCallback(() => createTopic(), [createTopic]);
@@ -352,7 +363,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         };
         // A declined task-departure guard must not silently discard this confirmation:
         // the dialog stays open until removal actually starts.
-        if (currentThread.current !== target.id) {remove(); return;}
+        if (currentThread.current !== target.id) {
+            remove();
+            return;
+        }
         leaveTask(() => requestDeparture(remove));
     }, [abortRef, deleteTarget, executionThreadRef, navigate, leaveTask, requestDeparture, armConfirmedDeparture]);
 
@@ -411,9 +425,18 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     sameChatModelConnector(selectionRef.current.connector, connector) &&
                     selectionRef.current.model === model && selectionRef.current.threadId === activeThreadId
             });
-            if (checked && !checked.ok && !checked.aborted) showError({title: "发送失败", cause: new Error(checked.message), actionName: "send-message", detail: checked.message});
+            if (checked && !checked.ok && !checked.aborted) showError({
+                title: "发送失败",
+                cause: new Error(checked.message),
+                actionName: "send-message",
+                detail: checked.message
+            });
         } catch (error) {
-            showError({title: "发送失败", cause: error, actionName: "send-message", ...(error instanceof Error ? {detail: error.message} : {})});
+            showError({
+                title: "发送失败",
+                cause: error,
+                actionName: "send-message", ...(error instanceof Error ? {detail: error.message} : {})
+            });
         } finally {
             releaseExecution(token);
         }
@@ -433,9 +456,18 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 runId, activeThreadId, controller,
                 isThreadCurrent: id => selectionRef.current.threadId === id
             });
-            if (checked && !checked.ok && !checked.aborted) showError({title: "重新生成失败", cause: new Error(checked.message), actionName: "retry-run", detail: checked.message});
+            if (checked && !checked.ok && !checked.aborted) showError({
+                title: "重新生成失败",
+                cause: new Error(checked.message),
+                actionName: "retry-run",
+                detail: checked.message
+            });
         } catch (error) {
-            showError({title: "重新生成失败", cause: error, actionName: "retry-run", ...(error instanceof Error ? {detail: error.message} : {})});
+            showError({
+                title: "重新生成失败",
+                cause: error,
+                actionName: "retry-run", ...(error instanceof Error ? {detail: error.message} : {})
+            });
         } finally {
             releaseExecution(token);
         }
@@ -455,9 +487,18 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 runId, action, callId, activeThreadId, controller,
                 isThreadCurrent: id => selectionRef.current.threadId === id
             });
-            if (checked && !checked.ok && !checked.aborted) showError({title: "处理执行失败", cause: new Error(checked.message), actionName: "run-action", detail: checked.message});
+            if (checked && !checked.ok && !checked.aborted) showError({
+                title: "处理执行失败",
+                cause: new Error(checked.message),
+                actionName: "run-action",
+                detail: checked.message
+            });
         } catch (error) {
-            showError({title: "处理执行失败", cause: error, actionName: "run-action", ...(error instanceof Error ? {detail: error.message} : {})});
+            showError({
+                title: "处理执行失败",
+                cause: error,
+                actionName: "run-action", ...(error instanceof Error ? {detail: error.message} : {})
+            });
         } finally {
             releaseExecution(token);
         }
@@ -485,11 +526,15 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             (routedThread.forId === activeThreadId && routedThread.thread === null));
 
     const unavailableNavigation = <TopicSidebar threads={threadList} activeThreadId={activeThreadId}
-        onSelect={openThread} onNewTopic={handleNewTopic} onNewTopicInProject={handleNewTopicInProject} onOpenTasks={openBoard}
-        onRename={handleRenameThread} onDelete={handleDeleteThread}/>;
+                                                onSelect={openThread} onNewTopic={handleNewTopic}
+                                                onNewTopicInProject={handleNewTopicInProject} onOpenTasks={openBoard}
+                                                onRename={handleRenameThread} onDelete={handleDeleteThread}/>;
     if (!loaded || routedThreadPending) {
         return (
-            <ModuleLayout navigation={unavailableNavigation} navigationLabel="话题导航"><Flexbox align="center" justify="center" height="100%" style={{minHeight: "100%"}}>加载中…</Flexbox></ModuleLayout>
+            <ModuleLayout navigation={unavailableNavigation} navigationLabel="话题导航"><Flexbox align="center"
+                                                                                                 justify="center"
+                                                                                                 height="100%"
+                                                                                                 style={{minHeight: "100%"}}>加载中…</Flexbox></ModuleLayout>
         );
     }
 
@@ -598,7 +643,12 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
 
         reasoningEffort,
         onReasoningEffortChange: value => {
-            void handleReasoningEffortChange(value).catch((error: unknown) => showError({title: "推理设置保存失败", cause: error, actionName: "save-reasoning-effort", detail: "当前页面仍保留所选值"}));
+            void handleReasoningEffortChange(value).catch((error: unknown) => showError({
+                title: "推理设置保存失败",
+                cause: error,
+                actionName: "save-reasoning-effort",
+                detail: "当前页面仍保留所选值"
+            }));
         },
         value: draft,
         sending,
@@ -620,14 +670,27 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         onSend: () => void handleSend(),
         onStop: handleStop,
         onConnectorChange: (id) => {
-            void handleConnectorChange(id).catch((error: unknown) => showError({title: "连接设置保存失败", cause: error, actionName: "save-connector"}));
+            void handleConnectorChange(id).catch((error: unknown) => showError({
+                title: "连接设置保存失败",
+                cause: error,
+                actionName: "save-connector"
+            }));
         },
         onModelChange: (model) => {
-            void handleModelChange(model).catch((error: unknown) => showError({title: "模型设置保存失败", cause: error, actionName: "save-model"}));
+            void handleModelChange(model).catch((error: unknown) => showError({
+                title: "模型设置保存失败",
+                cause: error,
+                actionName: "save-model"
+            }));
         },
         onChatModeChange: handleChatModeChange,
         onInteractionModeChange: mode => {
-            void handleInteractionModeChange(mode).catch((error: unknown) => showError({title: "对话模式保存失败", cause: error, actionName: "save-interaction-mode", detail: "请重试"}));
+            void handleInteractionModeChange(mode).catch((error: unknown) => showError({
+                title: "对话模式保存失败",
+                cause: error,
+                actionName: "save-interaction-mode",
+                detail: "请重试"
+            }));
         },
     };
 

@@ -102,8 +102,11 @@ export async function inspectAudioGenerationOutputs(job: AudioGenerationJob, opt
             item.availability = "invalid-media";
             continue;
         }
-        const availability=await db.waitFor(binaryAvailability(media.blob));
-        if (availability !== "ready") {item.availability=availability === "missing" ? "missing-media" : "invalid-media";continue;}
+        const availability = await db.waitFor(binaryAvailability(media.blob));
+        if (availability !== "ready") {
+            item.availability = availability === "missing" ? "missing-media" : "invalid-media";
+            continue;
+        }
         try {
             validateAudioMetadata(output);
         } catch {

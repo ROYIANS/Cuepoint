@@ -7,7 +7,11 @@ const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
 type StorageLike = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
-export function resolveFilmMode({reducedMotion, skipped, canvas2d}: {reducedMotion: boolean; skipped: boolean; canvas2d: boolean}): FilmMode {
+export function resolveFilmMode({reducedMotion, skipped, canvas2d}: {
+    reducedMotion: boolean;
+    skipped: boolean;
+    canvas2d: boolean
+}): FilmMode {
     return reducedMotion || skipped || !canvas2d ? "static" : "film";
 }
 
@@ -49,7 +53,7 @@ function prefersReducedMotion(): boolean {
     return typeof window.matchMedia === "function" && window.matchMedia(REDUCED_MOTION_QUERY).matches;
 }
 
-export function useFilmMode(): {mode: FilmMode; skipped: boolean; setSkipped: (value: boolean) => void} {
+export function useFilmMode(): { mode: FilmMode; skipped: boolean; setSkipped: (value: boolean) => void } {
     const [skipped, setSkippedState] = useState(() => readSkipPreference());
     const [reducedMotion, setReducedMotion] = useState(prefersReducedMotion);
     const [canvas2d] = useState(detectCanvas2d);

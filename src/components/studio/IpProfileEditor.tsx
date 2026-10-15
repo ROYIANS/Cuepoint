@@ -176,10 +176,12 @@ export function IpProfileEditor({profile, onClose, onSaved}: {
             }
         }}>
             <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{pending ? "档案正在保存" : "保留这次编辑吗？"}</AlertDialogTitle><AlertDialogDescription>{pending ? "请等待保存结束，避免遗漏刚刚填写的内容。" : "还有未保存的内容。可以返回继续编辑，或放弃本次修改。"}</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter>
-                <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline" disabled={pending} onClick={() => {
-                    setDiscardOpen(false);
-                    blocker.reset?.();
-                }}>继续编辑</Button></AlertDialogCancel>
+                <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline"
+                                                                                             disabled={pending}
+                                                                                             onClick={() => {
+                                                                                                 setDiscardOpen(false);
+                                                                                                 blocker.reset?.();
+                                                                                             }}>继续编辑</Button></AlertDialogCancel>
                 <Button variant="destructive" disabled={pending} onClick={() => {
                     saved.current = true;
                     setDiscardOpen(false);

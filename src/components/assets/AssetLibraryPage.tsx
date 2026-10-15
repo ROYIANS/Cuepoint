@@ -134,7 +134,12 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
     >();
 
     const assets: Record<AssetTab, WorldAsset[]> = {characters, scenes, props, styles};
-    const loading = {characters: charactersResult === undefined, scenes: scenesResult === undefined, props: propsResult === undefined, styles: stylesResult === undefined};
+    const loading = {
+        characters: charactersResult === undefined,
+        scenes: scenesResult === undefined,
+        props: propsResult === undefined,
+        styles: stylesResult === undefined
+    };
     const activeAssets = tab === "setting" ? [] : assets[tab].filter((asset) => matchesAssetSearch(asset, query));
 
     async function createLocal(activeTab: AssetTab) {
@@ -170,40 +175,42 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
             <PageContent mode="collection">
                 <PageHeader title="世界" description="管理项目共用的世界设定、角色、场景、道具与风格。"
                             actions={tab !== "setting" ? (
-                        <div className="flex flex-wrap gap-2">
-                            <Button variant="outline" onClick={() => setPickerOpen(true)}>
-                                <Library/> 从工作室添加
-                            </Button>
-                            <Button variant="brand" onClick={() => void createLocal(tab)}>
-                                <Plus/> {TAB_COPY[tab].create}
-                            </Button>
-                        </div>
-                    ) : undefined}/>
+                                <div className="flex flex-wrap gap-2">
+                                    <Button variant="outline" onClick={() => setPickerOpen(true)}>
+                                        <Library/> 从工作室添加
+                                    </Button>
+                                    <Button variant="brand" onClick={() => void createLocal(tab)}>
+                                        <Plus/> {TAB_COPY[tab].create}
+                                    </Button>
+                                </div>
+                            ) : undefined}/>
 
                 <PageToolbar>
-                <Tabs
-                    value={tab}
-                    onValueChange={(value) => {
-                        setQuery("");
-                        onTabChange(value as WorldTab);
-                    }}
-                >
-                    <TabsList className="h-auto flex-wrap">
-                        <TabsTrigger value="setting">设定</TabsTrigger>
-                        <TabsTrigger value="characters">角色 {characters.length}</TabsTrigger>
-                        <TabsTrigger value="scenes">场景 {scenes.length}</TabsTrigger>
-                        <TabsTrigger value="props">道具 {props.length}</TabsTrigger>
-                        <TabsTrigger value="styles">风格 {styles.length}</TabsTrigger>
-                    </TabsList>
-                </Tabs>
+                    <Tabs
+                        value={tab}
+                        onValueChange={(value) => {
+                            setQuery("");
+                            onTabChange(value as WorldTab);
+                        }}
+                    >
+                        <TabsList className="h-auto flex-wrap">
+                            <TabsTrigger value="setting">设定</TabsTrigger>
+                            <TabsTrigger value="characters">角色 {characters.length}</TabsTrigger>
+                            <TabsTrigger value="scenes">场景 {scenes.length}</TabsTrigger>
+                            <TabsTrigger value="props">道具 {props.length}</TabsTrigger>
+                            <TabsTrigger value="styles">风格 {styles.length}</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
 
-                {tab !== "setting" ? <Input className="max-w-sm md:ml-auto" aria-label={`搜索项目${TAB_COPY[tab].singular}`}
-                                            placeholder={`搜索${TAB_COPY[tab].singular}名称与设定…`} value={query}
-                                            onChange={(event) => setQuery(event.target.value)}/> : null}
+                    {tab !== "setting" ?
+                        <Input className="max-w-sm md:ml-auto" aria-label={`搜索项目${TAB_COPY[tab].singular}`}
+                               placeholder={`搜索${TAB_COPY[tab].singular}名称与设定…`} value={query}
+                               onChange={(event) => setQuery(event.target.value)}/> : null}
                 </PageToolbar>
                 {tab === "setting" ? (
                     <WorldSettingPanel projectId={projectId}/>
-                ) : loading[tab] ? <PageState kind="loading" title={`正在读取${TAB_COPY[tab].singular}…`}/> : activeAssets.length === 0 ? (
+                ) : loading[tab] ? <PageState kind="loading"
+                                              title={`正在读取${TAB_COPY[tab].singular}…`}/> : activeAssets.length === 0 ? (
                     query.trim() ?
                         <PageState title={`没有匹配的${TAB_COPY[tab].singular}`} description="试试其他关键词。"/> :
                         <EmptyWorldTab singular={TAB_COPY[tab].singular}/>
@@ -414,42 +421,43 @@ function StudioAssetPicker({
                 <Input aria-label="搜索工作室资产" placeholder="搜索名称与设定…" value={query}
                        disabled={copying} onChange={(event) => setQuery(event.target.value)}/>
                 <div className="min-h-0 space-y-2 overflow-auto p-1">
-                    {studioAssetsResult === undefined ? <PageState compact kind="loading" title="正在读取工作室设定…"/> : available.length === 0 ? (
-                        <p className="text-muted-foreground py-8 text-center text-sm">
-                            {query.trim() ? "没有匹配的" : "没有可添加的"}工作室{TAB_COPY[tab].singular}
-                        </p>
-                    ) : (
-                        available.map((asset) => (
-                            <label
-                                key={asset.id}
-                                className="hover:bg-muted/50 flex cursor-pointer items-center gap-3 rounded-md border p-3"
-                            >
-                                <Checkbox
-                                    disabled={copying}
-                                    checked={selected.has(asset.id)}
-                                    onCheckedChange={(checked) =>
-                                        setSelected((current) => {
-                                            const next = new Set(current);
-                                            if (checked) next.add(asset.id);
-                                            else next.delete(asset.id);
-                                            return next;
-                                        })
-                                    }
-                                />
-                                <MediaPreview
-                                    mediaId={coverOf(asset, tab)}
-                                    className="size-12 shrink-0 rounded-lg"
-                                    empty={TAB_COPY[tab].singular}
-                                />
-                                <span className="min-w-0">
+                    {studioAssetsResult === undefined ?
+                        <PageState compact kind="loading" title="正在读取工作室设定…"/> : available.length === 0 ? (
+                            <p className="text-muted-foreground py-8 text-center text-sm">
+                                {query.trim() ? "没有匹配的" : "没有可添加的"}工作室{TAB_COPY[tab].singular}
+                            </p>
+                        ) : (
+                            available.map((asset) => (
+                                <label
+                                    key={asset.id}
+                                    className="hover:bg-muted/50 flex cursor-pointer items-center gap-3 rounded-md border p-3"
+                                >
+                                    <Checkbox
+                                        disabled={copying}
+                                        checked={selected.has(asset.id)}
+                                        onCheckedChange={(checked) =>
+                                            setSelected((current) => {
+                                                const next = new Set(current);
+                                                if (checked) next.add(asset.id);
+                                                else next.delete(asset.id);
+                                                return next;
+                                            })
+                                        }
+                                    />
+                                    <MediaPreview
+                                        mediaId={coverOf(asset, tab)}
+                                        className="size-12 shrink-0 rounded-lg"
+                                        empty={TAB_COPY[tab].singular}
+                                    />
+                                    <span className="min-w-0">
                   <span className="block truncate text-sm font-medium">{asset.name}</span>
                   <span className="text-muted-foreground block truncate text-xs">
                     {assetDetail(asset, tab)}
                   </span>
                 </span>
-                            </label>
-                        ))
-                    )}
+                                </label>
+                            ))
+                        )}
                 </div>
                 <DialogFooter className="shrink-0">
                     <Button variant="outline" disabled={copying} onClick={closePicker}>

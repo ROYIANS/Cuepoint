@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
-import {detectPlatform, type DetectedPlatform, type NavigatorInfo} from "@/lib/desktopRelease/platform";
+import {type DetectedPlatform, detectPlatform, type NavigatorInfo} from "@/lib/desktopRelease/platform";
 import {fetchLatestDesktopRelease, fetchStars, type ReleaseResult} from "@/lib/desktopRelease/releases";
 
-export type DownloadData = {release?: ReleaseResult; platform?: DetectedPlatform; stars?: number};
+export type DownloadData = { release?: ReleaseResult; platform?: DetectedPlatform; stars?: number };
 
 // Requests start after mount, so they never block the first render. The three
 // lookups are independent: a slow or failed one does not delay the others.

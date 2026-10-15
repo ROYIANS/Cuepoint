@@ -18,33 +18,41 @@ export interface MediaView {
     kind: MediaKind;
     onError: () => void;
 }
-export type MediaState = {status: "ready";media: MediaView}
-    | {status: "empty" | "loading" | "missing" | "corrupt" | "error"};
+
+export type MediaState = { status: "ready"; media: MediaView }
+    | { status: "empty" | "loading" | "missing" | "corrupt" | "error" };
 
 export function useMedia(mediaId: Id | undefined): MediaView | undefined {
     const state = useMediaState(mediaId);
     return state.status === "ready" ? state.media : undefined;
 }
 
-export type BinaryPreviewState = {status: "ready"; url: string; onError: () => void}
-    | {status: "empty" | "loading" | "missing" | "corrupt" | "error"};
+export type BinaryPreviewState = { status: "ready"; url: string; onError: () => void }
+    | { status: "empty" | "loading" | "missing" | "corrupt" | "error" };
 
 /** One lifecycle for project files and immutable material snapshots. */
 export function useBinaryPreview(binary: BinaryContent | undefined, enabled = true): BinaryPreviewState {
-    const [view, setView] = useState<{binary: BinaryContent; state: BinaryPreviewState}>();
+    const [view, setView] = useState<{ binary: BinaryContent; state: BinaryPreviewState }>();
     const [revision, setRevision] = useState(0);
     const wanted = useRef({binary, enabled});
     wanted.current = {binary, enabled};
     const current = useRef<object | undefined>(undefined);
     useEffect(() => {
-        if (!binary || !enabled) {setView(undefined);return;}
+        if (!binary || !enabled) {
+            setView(undefined);
+            return;
+        }
         const owner = {};
         current.current = owner;
         const controller = new AbortController();
         let release: (() => void) | undefined;
         let failed = false;
         const isCurrent = () => current.current === owner && wanted.current.binary === binary && wanted.current.enabled && !controller.signal.aborted;
-        const releaseOwned = () => {const owned = release;release = undefined;owned?.();};
+        const releaseOwned = () => {
+            const owned = release;
+            release = undefined;
+            owned?.();
+        };
         const onError = () => {
             if (!isCurrent() || failed) return;
             failed = true;
@@ -63,11 +71,17 @@ export function useBinaryPreview(binary: BinaryContent | undefined, enabled = tr
         } else {
             setView(undefined);
             void createBinaryObjectUrl(binary, controller.signal).then(preview => {
-                if (!isCurrent()) {preview.release();return;}
+                if (!isCurrent()) {
+                    preview.release();
+                    return;
+                }
                 release = () => preview.release();
                 setView({binary, state: {status: "ready", url: preview.url, onError}});
             }).catch((error: unknown) => {
-                if (isCurrent()) setView({binary, state: {status: error instanceof BinaryUnavailableError ? error.availability : "error"}});
+                if (isCurrent()) setView({
+                    binary,
+                    state: {status: error instanceof BinaryUnavailableError ? error.availability : "error"}
+                });
             });
         }
         return () => {
@@ -91,12 +105,18 @@ export function useBinaryPreview(binary: BinaryContent | undefined, enabled = tr
 
 export function binaryPreviewMessage(state: BinaryPreviewState): string {
     switch (state.status) {
-        case "missing": return "素材已丢失，请重新导入";
-        case "corrupt": return "素材内容已损坏，无法预览";
-        case "error": return "读取素材失败，请重新打开后重试";
-        case "empty": return "没有素材";
-        case "loading": return "正在读取素材…";
-        case "ready": return "素材已就绪";
+        case "missing":
+            return "素材已丢失，请重新导入";
+        case "corrupt":
+            return "素材内容已损坏，无法预览";
+        case "error":
+            return "读取素材失败，请重新打开后重试";
+        case "empty":
+            return "没有素材";
+        case "loading":
+            return "正在读取素材…";
+        case "ready":
+            return "素材已就绪";
     }
 }
 
@@ -106,7 +126,10 @@ export function useMediaState(mediaId: Id | undefined): MediaState {
     if (!mediaId) return {status: "empty"};
     if (record === null) return {status: "missing"};
     if (!record || record.id !== mediaId) return {status: "loading"};
-    return view.status === "ready" ? {status: "ready", media: {url: view.url, mimeType: record.mimeType, kind: kindFromMime(record.mimeType), onError: view.onError}} : view;
+    return view.status === "ready" ? {
+        status: "ready",
+        media: {url: view.url, mimeType: record.mimeType, kind: kindFromMime(record.mimeType), onError: view.onError}
+    } : view;
 }
 
 export async function uploadMediaFile(projectId: Id, file: File, signal?: AbortSignal): Promise<{

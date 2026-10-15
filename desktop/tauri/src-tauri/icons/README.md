@@ -28,8 +28,8 @@ to the product. The script composes at 1024 pixels without upscaling a favicon,
 runs the pinned CLI in a temporary directory, validates the complete desktop
 set, then installs only those reviewed resources. ICNS member order is sorted
 by tag because the CLI uses hash-map iteration; member image bytes are retained
-unchanged. ICNS retains the repository's original modern PNG member set
-(`ic07`–`ic14`, 32–1024 physical pixels, including 16pt at 2×). Small legacy
+unchanged. ICNS retains the repository's original modern PNG member set (`ic07`–`ic14`, 32–1024 physical pixels,
+including 16pt at 2×). Small legacy
 RGB/alpha entries are omitted: macOS `iconutil` emits incorrect blue-channel
 corner bytes from them despite Pillow decoding correctly, and the same issue
 also reproduces with Apple's own iconset compiler. The retained PNG members

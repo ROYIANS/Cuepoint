@@ -16,7 +16,7 @@ import {
     DialogTitle
 } from '@/components/ui/dialog';
 
-export function SearchConnection({onEditorOpenChange}: {onEditorOpenChange?: (open: boolean) => void}) {
+export function SearchConnection({onEditorOpenChange}: { onEditorOpenChange?: (open: boolean) => void }) {
     const enabledId = useId();
     const view = useProductQuery(async (db) => {
         try {
@@ -35,7 +35,9 @@ export function SearchConnection({onEditorOpenChange}: {onEditorOpenChange?: (op
     const mounted = useRef(true);
     useEffect(() => {
         mounted.current = true;
-        return () => {mounted.current = false;};
+        return () => {
+            mounted.current = false;
+        };
     }, []);
 
     async function act(action: 'save' | 'remove' | 'test') {
@@ -94,13 +96,15 @@ export function SearchConnection({onEditorOpenChange}: {onEditorOpenChange?: (op
                 <DialogHeader><DialogTitle>Tavily 联网搜索</DialogTitle><DialogDescription>密钥仅保存在本机，不进入项目备份或
                     AI 上下文。保存不发送请求；测试仅查询鉴权，不执行搜索。</DialogDescription></DialogHeader>
                 <div className="grid min-h-0 gap-4 overflow-y-auto p-1">
-                    <Field label="Tavily API Key"><Input type="password" name="tavily-api-key" value={key} disabled={busy}
+                    <Field label="Tavily API Key"><Input type="password" name="tavily-api-key" value={key}
+                                                         disabled={busy}
                                                          onChange={(event) => setKey(event.target.value)}
                                                          placeholder={state?.configured ? '已保存密钥（留空则保持）' : 'tvly-…'}
                                                          autoComplete="new-password"/></Field>
                     <div className="flex items-center gap-2 text-sm"><Checkbox id={enabledId} checked={enabled}
-                                                                              disabled={busy}
-                                                                              onCheckedChange={(value) => setEnabled(value === true)}/><label htmlFor={enabledId}>启用联网搜索</label></div>
+                                                                               disabled={busy}
+                                                                               onCheckedChange={(value) => setEnabled(value === true)}/><label
+                        htmlFor={enabledId}>启用联网搜索</label></div>
                     <p className="text-muted-foreground text-xs leading-5">启用后会为后续智能对话开启「联网调研」技能；你仍可在对话的技能菜单中关闭。搜索和读取网页可能消耗服务额度。</p>
                     {feedback && <p role="status" className="text-sm leading-6">{feedback}</p>}
                 </div>

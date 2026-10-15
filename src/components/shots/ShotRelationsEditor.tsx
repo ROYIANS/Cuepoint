@@ -50,7 +50,8 @@ export function ShotRelationsEditor({project, shot, props, styles, unavailable, 
 
     return (
         <div className="space-y-5">
-            {!relationsAvailable && <p role="status" className="text-muted-foreground text-sm">原生道具、风格与关系库尚未接入。</p>}
+            {!relationsAvailable &&
+                <p role="status" className="text-muted-foreground text-sm">原生道具、风格与关系库尚未接入。</p>}
             <div className="space-y-2">
                 <Label htmlFor={`shot-style-${shot.id}`}>镜头风格</Label>
                 <Select value={styleValue} disabled={saving || unavailable || !relationsAvailable}

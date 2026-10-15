@@ -17,8 +17,8 @@ import {
     type AgentTaskRecord,
     TASK_RECORD_CLAIMS,
     TASK_RECORD_KINDS,
-    taskRecordSourceIdentity,
-    type TaskRecordInput
+    type TaskRecordInput,
+    taskRecordSourceIdentity
 } from "@/domain/agentTaskRecords";
 import {CreatedEntityLinks} from "./CreatedEntityLinks";
 import {Button} from "@/components/ui/button";
@@ -272,20 +272,25 @@ export function TaskRecords({task, messages, editable, onDraftStateChange, reque
                         const identity = taskRecordSourceIdentity(item);
                         const selected = editing.input.sources.some((source) => taskRecordSourceIdentity(source) === identity);
                         return <label key={identity}><input type="checkbox" checked={selected}
-                                                                             disabled={pending || (!selected && editing.input.sources.length >= 12)}
-                                                                             onChange={() => change({
-                                                                                 sources: selected ? editing.input.sources.filter((source) => taskRecordSourceIdentity(source) !== identity) : [...editing.input.sources, {
-                                                                                     type: item.type,
-                                                                                     id: item.id,
-                                                                                     ...("resultKey" in item && item.resultKey !== undefined ? {resultKey: item.resultKey} : {})
-                                                                                 }]
-                                                                             })}/><span>{item.label}</span></label>;
+                                                            disabled={pending || (!selected && editing.input.sources.length >= 12)}
+                                                            onChange={() => change({
+                                                                sources: selected ? editing.input.sources.filter((source) => taskRecordSourceIdentity(source) !== identity) : [...editing.input.sources, {
+                                                                    type: item.type,
+                                                                    id: item.id,
+                                                                    ...("resultKey" in item && item.resultKey !== undefined ? {resultKey: item.resultKey} : {})
+                                                                }]
+                                                            })}/><span>{item.label}</span></label>;
                     })}</div>
-                    {!!generationEvidence?.coverage.omitted && <p className="agent-task-muted">生成依据共 {generationEvidence.coverage.total} 项，本页列出 {generationEvidence.coverage.included} 项，其余 {generationEvidence.coverage.omitted} 项未列出。选中的其他页来源仍会保留。</p>}
-                    {(generationOffset > 0 || generationEvidence?.coverage.nextOffset !== null && generationEvidence?.coverage.nextOffset !== undefined) && <div>
-                        <Button type="button" variant="ghost" size="sm" disabled={pending || generationOffset === 0} onClick={() => setGenerationOffset(Math.max(0, generationOffset - 100))}>上一页生成依据</Button>
-                        <Button type="button" variant="ghost" size="sm" disabled={pending || generationEvidence?.coverage.nextOffset == null} onClick={() => setGenerationOffset(generationEvidence!.coverage.nextOffset!)}>下一页生成依据</Button>
-                    </div>}
+                    {!!generationEvidence?.coverage.omitted &&
+                        <p className="agent-task-muted">生成依据共 {generationEvidence.coverage.total} 项，本页列出 {generationEvidence.coverage.included} 项，其余 {generationEvidence.coverage.omitted} 项未列出。选中的其他页来源仍会保留。</p>}
+                    {(generationOffset > 0 || generationEvidence?.coverage.nextOffset !== null && generationEvidence?.coverage.nextOffset !== undefined) &&
+                        <div>
+                            <Button type="button" variant="ghost" size="sm" disabled={pending || generationOffset === 0}
+                                    onClick={() => setGenerationOffset(Math.max(0, generationOffset - 100))}>上一页生成依据</Button>
+                            <Button type="button" variant="ghost" size="sm"
+                                    disabled={pending || generationEvidence?.coverage.nextOffset == null}
+                                    onClick={() => setGenerationOffset(generationEvidence!.coverage.nextOffset!)}>下一页生成依据</Button>
+                        </div>}
                 </details>}
                 {error && <p className="agent-task-record-error"
                              role="alert">{error}。草稿仍在，可以复制内容后重新打开最新版本。</p>}

@@ -44,7 +44,8 @@ export interface LibraryMaterial {
     source?: { projectId?: string; entityId?: string; materialId?: string; revision?: number };
 }
 
-export type MaterialPayload = { type: 'file'; blob: import('./binary').BinaryContent; filename: string; mimeType: string }
+export type MaterialPayload =
+    { type: 'file'; blob: import('./binary').BinaryContent; filename: string; mimeType: string }
     | { type: 'setting'; kind: SettingMaterialKind; entity: MaterialEntity; media: MediaRecord[] };
 
 export interface MaterialVersion {

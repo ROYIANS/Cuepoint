@@ -95,7 +95,7 @@ function tool<T, const Name extends string>(name: Name, title: string, descripti
         atomic: true,
         highRisk: () => false,
         execute: (args, context) => executeAtomicTool(context, async (db) => {
-        const boundContext = {...context, store:db};
+            const boundContext = {...context, store: db};
             const value = await execute(spec.schema.parse(args), boundContext, await owner(boundContext, name, db));
             return name === "task_read" ? {...(value as Record<string, unknown>), sourceProjectionVersion: 1} : value;
         }, context.store)
@@ -110,7 +110,7 @@ export const TASK_TOOLS = [
         contentOffset: optional(number(0, 10000000, true)),
         contentLimit: optional(number(1, 6000, true))
     }), async (args, _context, {task, thread}) => {
-    const db = _context.store ?? productDb;
+        const db = _context.store ?? productDb;
         if (args.source?.resultKey !== undefined && args.source.type !== "generation") throw new Error("结果键只能用于声音生成来源");
         const offset = args.offset ?? 0, limit = args.limit ?? 5;
         const messages = (await db.chatMessages.where("threadId").equals(thread.id).sortBy("createdAt")).filter((m) => m.role === "user" && !!m.content.trim()).reverse();
@@ -118,7 +118,8 @@ export const TASK_TOOLS = [
         const calls = (await db.agentToolCalls.where("threadId").equals(thread.id).toArray()).filter((c) => c.status === "completed" && c.effect !== "bookkeeping" && !!c.result && taskRunIds.has(c.runId)).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
         if (args.source?.type === "generation") {
             if (!task) throw new Error("当前任务不存在");
-            const item = await taskGenerationSource(task, args.source.id, args.source.resultKey, db), contentOffset = args.contentOffset ?? 0,
+            const item = await taskGenerationSource(task, args.source.id, args.source.resultKey, db),
+                contentOffset = args.contentOffset ?? 0,
                 contentLimit = args.contentLimit ?? 6000;
             return {
                 source: args.source,
@@ -202,7 +203,7 @@ export const TASK_TOOLS = [
         ...taskFieldsSpec,
         sources: array(source, 12, 1)
     }), async (args, _context, {run, thread, task}) => {
-    const db = _context.store ?? productDb;
+        const db = _context.store ?? productDb;
         if (task) return {task: taskResult(task), reused: true};
         if (!run.taskMode) throw new Error("只有任务模式可以创建任务");
         await validateTaskSources({id: "", threadId: thread.id}, args.sources, "decision", "ai", db);
@@ -239,7 +240,7 @@ export const TASK_TOOLS = [
         expectedRevision: number(1, 1000000, true),
         sources: array(source, 12, 1)
     }), async (args, _context, {task, run}) => {
-    const db = _context.store ?? productDb;
+        const db = _context.store ?? productDb;
         const current = requiredTask(task);
         if ((current.revision ?? 1) !== args.expectedRevision) throw new Error("任务已更新，请重新读取后修改");
         await validateTaskSources(current, args.sources, "decision", "ai", db);
@@ -279,7 +280,7 @@ export const TASK_TOOLS = [
         offset: optional(number(0, 120000, true)),
         limit: optional(number(1, 6000, true))
     }), async (args, _context, {task}) => {
-    const db = _context.store ?? productDb;
+        const db = _context.store ?? productDb;
         const current = requiredTask(task), record = await db.agentTaskRecords.get(args.id);
         if (!record || record.taskId !== current.id) throw new Error("记录不属于当前任务");
         const versions = await listTaskRecordVersions(current.id, record.id, db);

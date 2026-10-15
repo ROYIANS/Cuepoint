@@ -1,4 +1,4 @@
-import {useEffect, useState, useSyncExternalStore, type RefObject} from "react";
+import {type RefObject, useEffect, useState, useSyncExternalStore} from "react";
 import {FILM_PLAY_SECONDS, playbackToProgress, progressToPlaybackTime} from "./playback";
 import {progressToScrollY, readTrackMetrics, scrollYToProgress, type TrackMetrics} from "./useFilmProgress";
 
@@ -103,7 +103,10 @@ function defaultEnv(track: () => HTMLElement | null): PlaybackEnv {
  * Automatic screening: advances a playback clock and writes the matching scroll position every
  * frame. Frames run only while playing; state listeners hear state changes only.
  */
-export function createPlayback(options: {env?: Partial<PlaybackEnv>; track?: () => HTMLElement | null} = {}): Playback {
+export function createPlayback(options: {
+    env?: Partial<PlaybackEnv>;
+    track?: () => HTMLElement | null
+} = {}): Playback {
     const env: PlaybackEnv = {...defaultEnv(options.track ?? (() => null)), ...options.env};
     const stateListeners = new Set<() => void>();
     const frameListeners = new Set<(seconds: number) => void>();

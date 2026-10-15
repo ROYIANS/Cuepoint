@@ -23,8 +23,8 @@ import {
  * twice for the same decision.
  */
 export function useThreadDeparture(threadId: string | undefined, runs: readonly AgentRun[] | undefined) {
-    const [localLeave, setLocalLeave] = useState<{run: () => void}>();
-    const localRef = useRef<{run: () => void} | undefined>(undefined);
+    const [localLeave, setLocalLeave] = useState<{ run: () => void }>();
+    const localRef = useRef<{ run: () => void } | undefined>(undefined);
     const activeRef = useRef(false);
     activeRef.current = (runs ?? []).some(runBlocksThread);
     const armed = useRef(false);
@@ -80,9 +80,10 @@ export function useThreadDeparture(threadId: string | undefined, runs: readonly 
         armed.current = false;
         if (blocker.status === "blocked") blocker.reset();
     }, [blocker]);
-    const confirmation = <AlertDialog open={Boolean(localLeave) || blocker.status === "blocked"} onOpenChange={(open) => {
-        if (!open) cancel();
-    }}>
+    const confirmation = <AlertDialog open={Boolean(localLeave) || blocker.status === "blocked"}
+                                      onOpenChange={(open) => {
+                                          if (!open) cancel();
+                                      }}>
         <AlertDialogContent>
             <AlertDialogHeader>
                 <AlertDialogTitle>当前话题仍在执行</AlertDialogTitle>

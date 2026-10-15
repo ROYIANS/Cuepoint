@@ -1,4 +1,4 @@
-import {STAGE_SCENES, type SceneId} from "./scenes";
+import {type SceneId, STAGE_SCENES} from "./scenes";
 import {progressToFrame, sceneProgressWindow} from "./timeline";
 
 // Pacing of the automatic screening. Scroll progress is weighted by scene length and has no

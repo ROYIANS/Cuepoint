@@ -1,5 +1,4 @@
-import type {ProductStore} from "@/lib/storage/types";
-import type {StoreTx} from "@/lib/storage/types";
+import type {ProductStore, StoreTx} from "@/lib/storage/types";
 import {StorageError} from "@/lib/storage/errors";
 import {MUSIC_REVIEW_MAX_BYTES, parseMusicGenerationReview} from "@/lib/agent/musicGenerationReviewSnapshot";
 import {getOfferedToolNames, toolNamesForCall} from "@/domain/agentToolSelection";
@@ -64,7 +63,11 @@ export async function pauseAtModelStepLimit(runId: string, store?: ProductStore)
         if (calls.some((call) => !["completed", "failed", "rejected"].includes(call.status))) throw new Error("请先处理尚未完成的工具步骤");
         const notice = `本段已达到 ${MODEL_STEPS_PER_SEGMENT} 轮模型请求，进度已保存。可继续执行下一段，或结束本次执行。`;
         // A budget pause is a terminal-but-resumable state; it uses the shared writer too.
-        await settleRun(db, runId, "interrupted", {messageError: notice, pauseReason: "model_step_limit", preserveOutput: true});
+        await settleRun(db, runId, "interrupted", {
+            messageError: notice,
+            pauseReason: "model_step_limit",
+            preserveOutput: true
+        });
         return true;
     });
 }
@@ -105,7 +108,9 @@ export async function startModelStep(runId: string, limit: number, store?: Produ
 }
 
 /** A round detail may carry its own already-failed outcome for a model-named unavailable tool. */
-export type AgentToolRoundDetail = Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation"> & {
+export type AgentToolRoundDetail =
+    Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation">
+    & {
     failure?: { error: string; result: string }
 };
 
@@ -144,7 +149,11 @@ export async function saveToolRound(runId: string, content: string, wireCalls: A
                 order: index,
                 name: call.function.name,
                 arguments: call.function.arguments, ...metadata,
-                ...(failure ? {status: "failed" as const, error: failure.error, result: failure.result} : {status: "pending" as const}),
+                ...(failure ? {
+                    status: "failed" as const,
+                    error: failure.error,
+                    result: failure.result
+                } : {status: "pending" as const}),
                 createdAt: at,
                 updatedAt: at,
             };
@@ -335,13 +344,13 @@ export async function cancelAgentRun(runId: string, store?: ProductStore): Promi
     });
 }
 
-export async function markRunningToolsUnknown(runId: string, store?: ProductStore, unresolvedOutcome=false): Promise<void> {
+export async function markRunningToolsUnknown(runId: string, store?: ProductStore, unresolvedOutcome = false): Promise<void> {
     const db = store ?? productDb;
     await db.transaction("rw", tables(db), async (db) => {
         if (!(await db.agentRuns.get(runId))) return;
         const running = await db.agentToolCalls.where("runId").equals(runId).filter((call) => call.status === "running").toArray();
         for (const call of running) await db.agentToolCalls.update(call.id, unresolvedOutcome ? {
-            status:"unknown",error:"操作结果尚不确定，不能自动重跑。",updatedAt:nowIso()
+            status: "unknown", error: "操作结果尚不确定，不能自动重跑。", updatedAt: nowIso()
         } : await interruptedToolState(call, db));
     });
 }
@@ -370,8 +379,8 @@ export async function saveToolPreview(runId: string, callId: string, preview: Ag
  * Callbacks must only perform local database work, never fetch or other external effects.
  */
 export async function executeAtomicTool(
-    context: { runId: string; threadId: string; callId: string; signal: AbortSignal; store?:ProductStore },
-    execute: (db:StoreTx) => Promise<unknown>, store?: ProductStore
+    context: { runId: string; threadId: string; callId: string; signal: AbortSignal; store?: ProductStore },
+    execute: (db: StoreTx) => Promise<unknown>, store?: ProductStore
 ): Promise<unknown> {
     const db = store ?? context.store ?? productDb;
     try {

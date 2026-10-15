@@ -15,7 +15,8 @@ export function AgentWriteOutcomes({run, calls}: { run: AgentRun; calls: AgentTo
         <Button variant="ghost" size="sm"
                 className="h-auto max-w-full hover:bg-transparent dark:hover:bg-transparent hover:text-foreground justify-start gap-2 px-2 py-1.5 text-left text-xs whitespace-normal"
                 aria-expanded={open} aria-controls={panelId} onClick={() => setOpen(!open)}>
-      <span className="min-w-0 break-words">{`本次已保存：${outcome.groups.slice(0, 3).map((group) => `${group.label} ${group.count} 项`).join("、")}${outcome.groups.length > 3 ? "等" : ""}`}</span>
+            <span
+                className="min-w-0 break-words">{`本次已保存：${outcome.groups.slice(0, 3).map((group) => `${group.label} ${group.count} 项`).join("、")}${outcome.groups.length > 3 ? "等" : ""}`}</span>
             <ChevronDown size={12} className={`shrink-0 ${open ? "rotate-180" : ""}`} aria-hidden/>
         </Button>
         <div id={panelId} hidden={!open} className="space-y-2 px-2 py-2">

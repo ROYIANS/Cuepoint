@@ -94,7 +94,10 @@ export function useMaterialDraftGuard(dirty: boolean, pending: boolean) {
         enableBeforeUnload: dirty || pending
     });
     const requestClose = (close: () => void, cancel?: () => void) => {
-        if (pending) {cancel?.(); return;}
+        if (pending) {
+            cancel?.();
+            return;
+        }
         if (dirty) setRequested({close, cancel}); else close();
     };
     const dialog: ReactNode = <AlertDialog open={Boolean(requested) || blocker.status === "blocked"}
@@ -106,11 +109,12 @@ export function useMaterialDraftGuard(dirty: boolean, pending: boolean) {
                                                }
                                            }}>
         <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{pending ? "正在保存素材" : "保留未保存的修改？"}</AlertDialogTitle><AlertDialogDescription>{pending ? "等待操作完成后再离开，避免丢失操作结果。" : "离开会放弃当前表单中尚未保存的内容。"}</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter>
-            <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline" onClick={() => {
-                requested?.cancel?.();
-                setRequested(null);
-                if (blocker.status === "blocked") blocker.reset();
-            }}>继续编辑</Button></AlertDialogCancel>
+            <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="outline"
+                                                                                         onClick={() => {
+                                                                                             requested?.cancel?.();
+                                                                                             setRequested(null);
+                                                                                             if (blocker.status === "blocked") blocker.reset();
+                                                                                         }}>继续编辑</Button></AlertDialogCancel>
             {!pending && <Button variant="destructive" onClick={() => {
                 requested?.close();
                 setRequested(null);

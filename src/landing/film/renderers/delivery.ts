@@ -1,5 +1,5 @@
-import {clamp01, smoothstep, type DeliveryGeom, type DeliverySets, type Plan, type SceneState, type Sets} from "./plan";
-import {artScale, createSet, rectSegments, scatterSet, segmentSamples, type Rect} from "./targets";
+import {clamp01, type DeliveryGeom, type DeliverySets, type Plan, type SceneState, type Sets, smoothstep} from "./plan";
+import {artScale, createSet, type Rect, rectSegments, scatterSet, segmentSamples} from "./targets";
 
 // Scene 5 (delivery): a film strip splits into three, and each third folds into a file: a project
 // ZIP, a storyboard CSV and a printable storyboard page. Only deliverables the product really
@@ -13,7 +13,9 @@ import {artScale, createSet, rectSegments, scatterSet, segmentSamples, type Rect
 //   0.92-1.00  everything fades out
 // Within a third the points leave in a stagger (left to right), so the strip unfolds instead of sliding.
 
-export const DELIVERY_FILES: readonly {readonly label: string}[] = [{label: "项目 ZIP"}, {label: "分镜 CSV"}, {label: "分镜板"}];
+export const DELIVERY_FILES: readonly {
+    readonly label: string
+}[] = [{label: "项目 ZIP"}, {label: "分镜 CSV"}, {label: "分镜板"}];
 
 const ALPHA_IN = 0.1;
 const ENTER_END = 0.14;
@@ -41,7 +43,12 @@ export function deliveryGeometry(art: Rect): DeliveryGeom {
     const iconH = art.h * 0.5;
     const iconW = Math.min(column, iconH * 0.8);
     const iconTop = art.y + art.h * 0.4;
-    const icons = [0, 1, 2].map(index => ({x: art.x + index * (column + gap) + (column - iconW) / 2, y: iconTop, w: iconW, h: iconH}));
+    const icons = [0, 1, 2].map(index => ({
+        x: art.x + index * (column + gap) + (column - iconW) / 2,
+        y: iconTop,
+        w: iconW,
+        h: iconH
+    }));
     return {strip, icons, labelY: iconTop + iconH + (small ? 14 : 18 * k), font: small ? 11 : Math.round(13 * k)};
 }
 
@@ -55,7 +62,12 @@ function stripSegments(strip: Rect): number[] {
     }
     const inner = strip.w / STRIP_FRAMES;
     for (let frame = 0; frame < STRIP_FRAMES; frame += 1) {
-        segments.push(...rectSegments({x: strip.x + frame * inner + inner * 0.1, y: strip.y + strip.h * 0.24, w: inner * 0.8, h: strip.h * 0.52}));
+        segments.push(...rectSegments({
+            x: strip.x + frame * inner + inner * 0.1,
+            y: strip.y + strip.h * 0.24,
+            w: inner * 0.8,
+            h: strip.h * 0.52
+        }));
     }
     return segments;
 }
@@ -91,7 +103,12 @@ function boardSegments(r: Rect): number[] {
     const cellW = r.w * 0.38;
     const cellH = r.h * 0.26;
     for (const row of [0.1, 0.42]) {
-        for (const col of [0.08, 0.54]) segments.push(...rectSegments({x: r.x + r.w * col, y: r.y + r.h * row, w: cellW, h: cellH}));
+        for (const col of [0.08, 0.54]) segments.push(...rectSegments({
+            x: r.x + r.w * col,
+            y: r.y + r.h * row,
+            w: cellW,
+            h: cellH
+        }));
     }
     for (const f of [0.78, 0.88]) segments.push(r.x + r.w * 0.08, r.y + r.h * f, r.x + r.w * (f === 0.78 ? 0.9 : 0.62), r.y + r.h * f);
     return segments;

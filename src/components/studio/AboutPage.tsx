@@ -22,6 +22,7 @@ export function AboutPage() {
     const native = isTauriRuntime();
     const saving = useRef(false);
     const [savingSponsor, setSavingSponsor] = useState(false);
+
     async function saveSponsor() {
         if (saving.current) return;
         saving.current = true;
@@ -43,6 +44,7 @@ export function AboutPage() {
             setSavingSponsor(false);
         }
     }
+
     return (
         <PageContent mode="document">
             <PageHeader title={`关于${PRODUCT_NAME_ZH}`}/>
@@ -96,11 +98,12 @@ export function AboutPage() {
                                     className="h-auto w-full rounded-md"
                                 />
                             </div>
-                            {native ? <Button variant="outline" disabled={savingSponsor} onClick={() => void saveSponsor()}>
-                                {savingSponsor ? "正在保存赞赏码…" : "保存赞赏码"}
-                            </Button> : <Button asChild variant="outline">
-                                <a href={SPONSOR_IMAGE_SRC} download={SPONSOR_IMAGE_NAME}>保存赞赏码</a>
-                            </Button>}
+                            {native ?
+                                <Button variant="outline" disabled={savingSponsor} onClick={() => void saveSponsor()}>
+                                    {savingSponsor ? "正在保存赞赏码…" : "保存赞赏码"}
+                                </Button> : <Button asChild variant="outline">
+                                    <a href={SPONSOR_IMAGE_SRC} download={SPONSOR_IMAGE_NAME}>保存赞赏码</a>
+                                </Button>}
                         </DialogContent>
                     </Dialog>
                 </div>

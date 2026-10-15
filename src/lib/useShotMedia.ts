@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import {useProductQuery} from "@/lib/storage/hooks";
 import {binaryAvailability, binaryCacheIdentity} from "@/lib/storage/binary";
 import type {Shot} from "@/domain/types";
-import {verifiedShotMediaIndex, type ShotBinaryState, type ShotMediaIndex} from "@/lib/shotMedia";
+import {type ShotBinaryState, type ShotMediaIndex, verifiedShotMediaIndex} from "@/lib/shotMedia";
 
 /** Only referenced result metadata is subscribed; file bytes remain native. */
 export function useShotMedia(shots: Shot[] | undefined): ShotMediaIndex | undefined {
@@ -14,8 +14,8 @@ export function useShotMedia(shots: Shot[] | undefined): ShotMediaIndex | undefi
         return {idsKey, media: new Map(rows.flatMap(row => row ? [[row.id, row] as const] : []))};
     }, [idsKey]);
     const [revision, setRevision] = useState(0);
-    const [checked, setChecked] = useState<{source: typeof result; media: ShotMediaIndex}>();
-    const cache = useRef(new Map<string, {state: ShotBinaryState; expires: number}>());
+    const [checked, setChecked] = useState<{ source: typeof result; media: ShotMediaIndex }>();
+    const cache = useRef(new Map<string, { state: ShotBinaryState; expires: number }>());
     useEffect(() => {
         if (!result || result.idsKey !== idsKey) return;
         setChecked(undefined);
@@ -24,7 +24,10 @@ export function useShotMedia(shots: Shot[] | undefined): ShotMediaIndex | undefi
             const states = new Map<string, ShotBinaryState>();
             for (const row of result.media.values()) {
                 controller.signal.throwIfAborted();
-                if (row.blob instanceof Blob) {states.set(row.id, "ready");continue;}
+                if (row.blob instanceof Blob) {
+                    states.set(row.id, "ready");
+                    continue;
+                }
                 let state: ShotBinaryState;
                 try {
                     const key = await binaryCacheIdentity(row.blob);
@@ -40,12 +43,19 @@ export function useShotMedia(shots: Shot[] | undefined): ShotMediaIndex | undefi
                 }
                 states.set(row.id, state);
             }
-            if (!controller.signal.aborted) setChecked({source: result, media: verifiedShotMediaIndex(result.media, states)});
-        })().catch(() => { /* Cleanup cancels an obsolete availability snapshot. */ });
+            if (!controller.signal.aborted) setChecked({
+                source: result,
+                media: verifiedShotMediaIndex(result.media, states)
+            });
+        })().catch(() => { /* Cleanup cancels an obsolete availability snapshot. */
+        });
         return () => controller.abort();
     }, [result, idsKey, revision]);
     useEffect(() => {
-        const refresh = () => {cache.current.clear();setRevision(value => value + 1);};
+        const refresh = () => {
+            cache.current.clear();
+            setRevision(value => value + 1);
+        };
         window.addEventListener("focus", refresh);
         if (typeof document !== "undefined") document.addEventListener("visibilitychange", refresh);
         return () => {

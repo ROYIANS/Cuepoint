@@ -104,7 +104,8 @@ export function AudioPlayer({mediaId, title, compact = false, autoplay = false, 
                 <strong>{title || "试听作品"}</strong><small>{mediaId ? "本地音频" : "选择一个版本或作品开始试听"}</small>
             </div>
         </div>}
-        {media ? <SourcePlayer key={mediaId} src={media.url} onError={media.onError} title={title} autoplay={autoplay} {...playback} /> :
+        {media ? <SourcePlayer key={mediaId} src={media.url} onError={media.onError} title={title}
+                               autoplay={autoplay} {...playback} /> :
             <span className="aw-muted">{mediaId ? "音频加载中或已不可用" : "尚未选择音频"}</span>}
         {mediaId && !compact && <Button variant="ghost" size="icon" aria-label="下载原始音频"
                                         onClick={() => void db.media.get(mediaId).then(async (record) => {

@@ -1,21 +1,36 @@
 import type {AudioClip, AudioRow, AudioSegment, AudioTake} from "./audio";
 
 export const AUDIO_ARRANGEMENT_LIMIT = 20;
+
 export class AudioArrangementConflictError extends Error {
     constructor(readonly reason: "snapshot_changed" | "proposal_changed", message: string) {
         super(message);
         this.name = "AudioArrangementConflictError";
     }
 }
-export type AudioArrangementOwner = {type: "manual"} | {type: "agent"; threadId: string; runId: string; callId: string};
-export interface AudioTakeChoice {segmentId: string; segmentRevision: number; takeId: string; takeRevision: number}
+
+export type AudioArrangementOwner = { type: "manual" } | {
+    type: "agent";
+    threadId: string;
+    runId: string;
+    callId: string
+};
+
+export interface AudioTakeChoice {
+    segmentId: string;
+    segmentRevision: number;
+    takeId: string;
+    takeRevision: number
+}
+
 export interface AudioArrangementRequest {
     segmentIds: string[];
     trackId: string;
     gapSec?: number;
     startSec?: number;
-    trims?: Array<{segmentId: string; startSec: number; endSec: number}>;
+    trims?: Array<{ segmentId: string; startSec: number; endSec: number }>;
 }
+
 export interface AudioArrangementItem {
     segmentId: string;
     takeId: string;
@@ -27,11 +42,13 @@ export interface AudioArrangementItem {
     preservedClipIds: string[];
     clip?: AudioClip;
 }
+
 interface AudioSelectionItem {
     segment: AudioSegment;
     take: AudioTake;
     textMismatch: boolean;
 }
+
 export interface AudioArrangementReceipt {
     proposalId: string;
     projectId: string;
@@ -45,6 +62,7 @@ export interface AudioArrangementReceipt {
     replayed?: boolean;
     currentAddedIds?: string[];
 }
+
 export interface AudioArrangementProposal extends AudioRow {
     chapterId: string;
     kind: "selection" | "arrangement";

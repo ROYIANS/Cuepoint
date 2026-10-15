@@ -34,13 +34,16 @@ export function HomeWelcome({
     onRenameThread: (thread: ChatThread) => void;
     onDeleteThread: (thread: ChatThread) => void;
 }) {
-    const topics = useAgentTopicNavigation({threads, projects: composer.projects, onNewTopicInProject, onSelect: onSelectThread, onNewTopic,
-        onRename: onRenameThread, onDelete: onDeleteThread, onOpenTasks});
+    const topics = useAgentTopicNavigation({
+        threads, projects: composer.projects, onNewTopicInProject, onSelect: onSelectThread, onNewTopic,
+        onRename: onRenameThread, onDelete: onDeleteThread, onOpenTasks
+    });
     const recent = threads.filter((thread) => !composer.projectId || thread.projectId === composer.projectId).slice(0, 8);
     const project = composer.projects.find((item) => item.id === composer.projectId);
     const projectTasks = tasks.filter((task) => (!composer.projectId || task.projectId === composer.projectId) && task.lifecycle !== "archived");
     return (
-        <ModuleLayout className="agent-home-shell" mainClassName="agent-module-main" navigationLabel="话题导航" navigation={topics.navigation}>
+        <ModuleLayout className="agent-home-shell" mainClassName="agent-module-main" navigationLabel="话题导航"
+                      navigation={topics.navigation}>
             <AgentHeader title="创作助手" topicToggle={topics.toggle} onNewTopic={onNewTopic}/>
             <div className="agent-home">
                 <div className="agent-home-inner">

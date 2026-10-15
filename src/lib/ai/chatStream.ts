@@ -321,7 +321,13 @@ function completionResult(
     const metadata = finishReason ? {finishReason} : {};
     if (toolCalls?.length) {
         if (finishReason !== "tool_calls") return {ok: false, message: "工具调用缺少完整结束状态", ...metadata};
-        return {ok: true, content, reasoning, via, toolCalls, ...(unofferedToolNames?.length ? {unofferedToolNames} : {}), ...metadata};
+        return {
+            ok: true,
+            content,
+            reasoning,
+            via,
+            toolCalls, ...(unofferedToolNames?.length ? {unofferedToolNames} : {}), ...metadata
+        };
     }
     if (finishReason && finishReason !== "stop") {
         const message = finishReason === "length" ? "回复达到模型长度上限，内容未完成"

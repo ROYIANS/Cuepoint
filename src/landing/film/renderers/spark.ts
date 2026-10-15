@@ -1,4 +1,4 @@
-import {smoothstep, clamp01, type Plan, type Sets, type SceneState} from "./plan";
+import {clamp01, type Plan, type SceneState, type Sets, smoothstep} from "./plan";
 
 /**
  * Illustrative lines for the screenplay in dots. It is an invented, wordless

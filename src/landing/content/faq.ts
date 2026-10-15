@@ -1,6 +1,6 @@
 import type {Claim} from "./copy";
 
-export type FaqItem = {readonly question: string; readonly answer: Claim};
+export type FaqItem = { readonly question: string; readonly answer: Claim };
 
 export const FAQ: readonly FaqItem[] = [
     {

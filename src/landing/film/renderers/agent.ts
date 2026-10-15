@@ -1,5 +1,5 @@
-import {clamp01, smoothstep, type AgentGeom, type AgentSets, type Plan, type SceneState, type Sets} from "./plan";
-import {artScale, circleOutline, createSet, lineSamples, scatterSet, type Rect, type TargetSet} from "./targets";
+import {type AgentGeom, type AgentSets, clamp01, type Plan, type SceneState, type Sets, smoothstep} from "./plan";
+import {artScale, circleOutline, createSet, lineSamples, type Rect, scatterSet, type TargetSet} from "./targets";
 
 // Scene 3 (agent): a quiet execution log, drawn as an illustration. A thin vertical line, nodes that
 // light one after another, a mono label per node. The words are invented sample content in the
@@ -15,7 +15,7 @@ import {artScale, circleOutline, createSet, lineSamples, scatterSet, type Rect, 
 // Flow dots travel down the line as long as it is lit; their positions come from the scene's
 // progress, so they move while the film moves and rest on the hold.
 
-type AgentRow = {readonly text: string; readonly kind: "user" | "tool" | "approval" | "saved" | "summary"};
+type AgentRow = { readonly text: string; readonly kind: "user" | "tool" | "approval" | "saved" | "summary" };
 
 /** Sample content of the log. Everything the picture says is in this table and the three tags below. */
 export const AGENT_ROWS: readonly AgentRow[] = [
@@ -61,7 +61,16 @@ export function agentGeometry(art: Rect): AgentGeom {
     const width = Math.min(art.w, 460 * k);
     const left = art.x + (art.w - width) / 2;
     const lineX = left + 14;
-    return {lineX, top, bottom: top + gap * (ROWS - 1), rowY, textX: lineX + 22 * k, right: left + width, font: small ? 12 : Math.round(13 * k), nodeR: small ? 4 : Math.round(5 * k)};
+    return {
+        lineX,
+        top,
+        bottom: top + gap * (ROWS - 1),
+        rowY,
+        textX: lineX + 22 * k,
+        right: left + width,
+        font: small ? 12 : Math.round(13 * k),
+        nodeR: small ? 4 : Math.round(5 * k)
+    };
 }
 
 /** Particle budget, by fraction of the pool: node rings, guide line, flow dots, separators. */

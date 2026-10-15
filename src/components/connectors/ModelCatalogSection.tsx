@@ -2,7 +2,14 @@ import {useEffect, useRef, useState, useSyncExternalStore} from "react";
 import {toast} from "sonner";
 import {showError} from "@/components/errors/showError";
 import {
-    AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {Button} from "@/components/ui/button";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
@@ -12,7 +19,7 @@ import {clearSyncedCatalog, getCatalogSelection, syncModelCatalog} from "@/lib/a
 import {ModelCatalogPicker} from "./ModelCatalogPicker";
 import {ModelPriceTable} from "./ModelPriceTable";
 
-type LastResult = {ok: boolean; message: string};
+type LastResult = { ok: boolean; message: string };
 
 function formatTime(iso: string | undefined): string {
     const date = iso ? new Date(iso) : undefined;
@@ -31,18 +38,28 @@ export function ModelCatalogSection() {
 
     useEffect(() => {
         mounted.current = true;
-        return () => { mounted.current = false; controller.current?.abort(); };
+        return () => {
+            mounted.current = false;
+            controller.current?.abort();
+        };
     }, []);
     // Not a product query: the selection is read once in an effect and kept in state.
     useEffect(() => {
         if (picking) return;
         let current = true;
-        void getCatalogSelection().then(selection => { if (current) setPickCount(selection.modelKeys.length); });
-        return () => { current = false; };
+        void getCatalogSelection().then(selection => {
+            if (current) setPickCount(selection.modelKeys.length);
+        });
+        return () => {
+            current = false;
+        };
     }, [picking]);
 
     async function sync() {
-        if (controller.current) { controller.current.abort(); return; }
+        if (controller.current) {
+            controller.current.abort();
+            return;
+        }
         const own = new AbortController();
         controller.current = own;
         setSyncing(true);
@@ -57,7 +74,12 @@ export function ModelCatalogSection() {
                 setLast({ok: false, message: result.message});
             } else {
                 setLast({ok: false, message: result.message});
-                showError({title: "同步模型目录失败", cause: new Error(result.message), actionName: "sync-model-catalog", detail: result.message});
+                showError({
+                    title: "同步模型目录失败",
+                    cause: new Error(result.message),
+                    actionName: "sync-model-catalog",
+                    detail: result.message
+                });
             }
         } catch (error) {
             if (mounted.current) {
@@ -73,7 +95,12 @@ export function ModelCatalogSection() {
     async function restore() {
         setConfirmRestore(false);
         if (await clearSyncedCatalog()) toast.success("已恢复为内置数据");
-        else showError({title: "恢复内置数据失败", cause: new Error("delete failed"), actionName: "restore-model-catalog", detail: "无法清除已同步的数据，当前目录保持不变"});
+        else showError({
+            title: "恢复内置数据失败",
+            cause: new Error("delete failed"),
+            actionName: "restore-model-catalog",
+            detail: "无法清除已同步的数据，当前目录保持不变"
+        });
     }
 
     return (
@@ -94,17 +121,22 @@ export function ModelCatalogSection() {
                         {last && <p role="status" className={`mt-1 text-sm ${last.ok ? "" : "text-destructive"}`}>
                             上次同步：{last.ok ? "成功" : "未完成"}，{last.message}
                         </p>}
-                        <p className="text-muted-foreground mt-3 text-xs">同步将从 models.dev 获取公开模型目录，不会发送任何本机数据。</p>
+                        <p className="text-muted-foreground mt-3 text-xs">同步将从 models.dev
+                            获取公开模型目录，不会发送任何本机数据。</p>
                     </div>
                     <div className="flex shrink-0 flex-wrap items-center gap-2">
-                        <Button variant="outline" size="sm" disabled={syncing || !catalog} onClick={() => setPicking(true)}>选择模型</Button>
-                        <Button variant={syncing ? "outline" : "brand"} size="sm" onClick={() => void sync()}>{syncing ? "取消" : "立即同步"}</Button>
+                        <Button variant="outline" size="sm" disabled={syncing || !catalog}
+                                onClick={() => setPicking(true)}>选择模型</Button>
+                        <Button variant={syncing ? "outline" : "brand"} size="sm"
+                                onClick={() => void sync()}>{syncing ? "取消" : "立即同步"}</Button>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon-sm" aria-label="更多操作"><Ellipsis className="size-4" aria-hidden/></Button>
+                                <Button variant="ghost" size="icon-sm" aria-label="更多操作"><Ellipsis
+                                    className="size-4" aria-hidden/></Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem disabled={syncing || catalog?.source !== "synced"} onSelect={() => setConfirmRestore(true)}>恢复为内置数据</DropdownMenuItem>
+                                <DropdownMenuItem disabled={syncing || catalog?.source !== "synced"}
+                                                  onSelect={() => setConfirmRestore(true)}>恢复为内置数据</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

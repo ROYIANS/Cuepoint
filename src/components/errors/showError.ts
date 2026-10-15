@@ -1,7 +1,7 @@
 import {toast} from "sonner";
 import {sanitizeText} from "@/lib/diagnostics/sanitize";
 import {friendlyMessage} from "@/lib/diagnostics/friendlyMessage";
-import {reportError, type ErrorSource} from "@/lib/diagnostics/reportError";
+import {type ErrorSource, reportError} from "@/lib/diagnostics/reportError";
 import {openErrorDetails} from "./errorDetailsStore";
 
 function notify(cause: unknown, source: ErrorSource, title: string | undefined, actionName: string | undefined, detail?: string): void {
@@ -15,7 +15,12 @@ function notify(cause: unknown, source: ErrorSource, title: string | undefined, 
 }
 
 /** Unified non-crash error exit: friendly toast plus a "查看详情" action. `detail` is an actionable business message shown (sanitized) instead of the generic hint; actionName must be a fixed label. */
-export function showError({title, cause, actionName, detail}: {title?: string; cause: unknown; actionName?: string; detail?: string}): void {
+export function showError({title, cause, actionName, detail}: {
+    title?: string;
+    cause: unknown;
+    actionName?: string;
+    detail?: string
+}): void {
     notify(cause, "action", title, actionName, detail);
 }
 

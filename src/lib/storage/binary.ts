@@ -14,6 +14,7 @@ export function installNativeBinaryAccess(services: NativeBinaryServices): void 
     if (nativeServices && nativeServices !== services) throw new StorageError("scope", "素材存储已绑定其他工作区");
     nativeServices = services;
 }
+
 function native(): NativeBinaryServices {
     if (!nativeServices) throw new StorageError("unavailable", "工作区素材存储尚未打开");
     return nativeServices;
@@ -21,7 +22,9 @@ function native(): NativeBinaryServices {
 
 export interface BinaryReadLease {
     readonly identity: string;
+
     cacheIdentity(): Promise<string>;
+
     readBlob(signal?: AbortSignal): Promise<Blob>;
 }
 
@@ -31,17 +34,25 @@ export async function withBinaryReadLease<T>(binary: BinaryContent, consume: (le
     signal?.throwIfAborted();
     if (binary instanceof Blob) {
         let identity = blobIds.get(binary);
-        if (identity === undefined) {identity = ++nextBlobId;blobIds.set(binary, identity);}
-        const result = await consume({identity: `blob:${identity}`, cacheIdentity: async () => {
-            const hash = new Sha256();
-            for (let offset = 0; offset < binary.size; offset += IPC_CHUNK_BYTES) {
+        if (identity === undefined) {
+            identity = ++nextBlobId;
+            blobIds.set(binary, identity);
+        }
+        const result = await consume({
+            identity: `blob:${identity}`, cacheIdentity: async () => {
+                const hash = new Sha256();
+                for (let offset = 0; offset < binary.size; offset += IPC_CHUNK_BYTES) {
+                    signal?.throwIfAborted();
+                    hash.update(new Uint8Array(await binary.slice(offset, offset + IPC_CHUNK_BYTES).arrayBuffer()));
+                    await new Promise<void>(resolve => setTimeout(resolve, 0));
+                }
                 signal?.throwIfAborted();
-                hash.update(new Uint8Array(await binary.slice(offset, offset + IPC_CHUNK_BYTES).arrayBuffer()));
-                await new Promise<void>(resolve => setTimeout(resolve, 0));
+                return `blob-sha256:${hash.digest()}:${binary.size}:${binary.type}`;
+            }, readBlob: readSignal => {
+                readSignal?.throwIfAborted();
+                return Promise.resolve(binary);
             }
-            signal?.throwIfAborted();
-            return `blob-sha256:${hash.digest()}:${binary.size}:${binary.type}`;
-        }, readBlob: readSignal => {readSignal?.throwIfAborted();return Promise.resolve(binary);}});
+        });
         signal?.throwIfAborted();
         return result;
     }
@@ -68,7 +79,10 @@ export function readBinaryBlob(binary: BinaryContent, signal?: AbortSignal): Pro
 export async function binaryCacheIdentity(binary: BinaryContent): Promise<string> {
     if (binary instanceof Blob) {
         let identity = blobIds.get(binary);
-        if (identity === undefined) {identity = ++nextBlobId;blobIds.set(binary, identity);}
+        if (identity === undefined) {
+            identity = ++nextBlobId;
+            blobIds.set(binary, identity);
+        }
         return `blob:${identity}`;
     }
     if (!isBinaryReference(binary)) throw new StorageError("invalid", "素材字节引用未经存储层验证");
@@ -88,7 +102,10 @@ export async function verifyBinaryAvailable(binary: BinaryContent, signal?: Abor
 }
 
 /** Requested preview bytes only; callers release the owned object URL. */
-export async function createBinaryObjectUrl(binary: BinaryContent, signal?: AbortSignal): Promise<{url: string;release(): void}> {
+export async function createBinaryObjectUrl(binary: BinaryContent, signal?: AbortSignal): Promise<{
+    url: string;
+    release(): void
+}> {
     if (!(binary instanceof Blob) && /^(audio|video)\//.test(binary.mimeType)) {
         if (!isBinaryReference(binary)) throw new StorageError("invalid", "素材字节引用未经存储层验证");
         const services = native();
@@ -99,5 +116,12 @@ export async function createBinaryObjectUrl(binary: BinaryContent, signal?: Abor
     signal?.throwIfAborted();
     const url = URL.createObjectURL(blob);
     let released = false;
-    return {url, release() {if (!released) {released = true;URL.revokeObjectURL(url);}}};
+    return {
+        url, release() {
+            if (!released) {
+                released = true;
+                URL.revokeObjectURL(url);
+            }
+        }
+    };
 }

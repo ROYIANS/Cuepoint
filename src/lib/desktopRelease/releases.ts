@@ -17,7 +17,7 @@ const MAX_RELEASE_RESPONSE_BYTES = 1024 * 1024;
 const RELEASE_CACHE_KEY = "cuepoint.landing.release";
 const STARS_CACHE_KEY = "cuepoint.landing.stars";
 
-export type ReleaseAsset = {name: string; size: number; url: string; sha256?: string};
+export type ReleaseAsset = { name: string; size: number; url: string; sha256?: string };
 export type LatestDesktopRelease = {
     tag: string;
     version: string;
@@ -28,7 +28,10 @@ export type LatestDesktopRelease = {
 };
 export type FallbackReason = "network" | "rate-limit" | "no-release" | "invalid";
 // Stars are fetched independently (see fetchStars) so a slow or failed one never delays downloads.
-export type ReleaseResult = {kind: "ok"; release: LatestDesktopRelease} | {kind: "fallback"; reason: FallbackReason};
+export type ReleaseResult = { kind: "ok"; release: LatestDesktopRelease } | {
+    kind: "fallback";
+    reason: FallbackReason
+};
 
 export type StorageLike = Pick<Storage, "getItem" | "setItem">;
 export type FetchDeps = {
@@ -102,7 +105,13 @@ function parseCachedRelease(raw: Record<string, unknown>): LatestDesktopRelease 
     if (typeof prerelease !== "boolean" || typeof htmlUrl !== "string" || !isUnder(htmlUrl, `${RELEASES_URL}/`)) return undefined;
     if (publishedAt !== undefined && typeof publishedAt !== "string") return undefined;
     if (!Array.isArray(assets) || !assets.every(isValidAsset)) return undefined;
-    return {tag, version, prerelease, htmlUrl, ...(publishedAt !== undefined ? {publishedAt} : {}), assets: assets.map(a => ({...a}))};
+    return {
+        tag,
+        version,
+        prerelease,
+        htmlUrl, ...(publishedAt !== undefined ? {publishedAt} : {}),
+        assets: assets.map(a => ({...a}))
+    };
 }
 
 function semverOf(tag: string): [number, number, number] {
@@ -123,7 +132,11 @@ function normalizeRelease(raw: Record<string, unknown>): LatestDesktopRelease {
     for (const item of rawAssets) {
         if (!isRecord(item)) continue;
         const digest = typeof item.digest === "string" ? /^sha256:([a-f0-9]{64})$/.exec(item.digest)?.[1] : undefined;
-        const asset = {name: item.name, size: item.size, url: item.browser_download_url, ...(digest ? {sha256: digest} : {})};
+        const asset = {
+            name: item.name,
+            size: item.size,
+            url: item.browser_download_url, ...(digest ? {sha256: digest} : {})
+        };
         if (isValidAsset(asset)) assets.push(asset);
     }
     const htmlUrl = typeof raw.html_url === "string" && isUnder(raw.html_url, `${RELEASES_URL}/`) ? raw.html_url : `${RELEASES_URL}/tag/${tag}`;
@@ -138,10 +151,10 @@ function normalizeRelease(raw: Record<string, unknown>): LatestDesktopRelease {
 }
 
 type Reply =
-    | {kind: "error"}
-    | {kind: "http"; status: number; rateLimited: boolean}
-    | {kind: "invalid"}
-    | {kind: "json"; value: unknown};
+    | { kind: "error" }
+    | { kind: "http"; status: number; rateLimited: boolean }
+    | { kind: "invalid" }
+    | { kind: "json"; value: unknown };
 
 /** Standalone landing closure stays dependency-free; bound bytes before decoding JSON. */
 async function readBoundedJson(response: Response, signal: AbortSignal): Promise<unknown> {
@@ -151,7 +164,9 @@ async function readBoundedJson(response: Response, signal: AbortSignal): Promise
     }
     if (!response.body) throw new Error("empty release response");
     const reader = response.body.getReader();
-    const cancel = () => {void reader.cancel().catch(() => undefined);};
+    const cancel = () => {
+        void reader.cancel().catch(() => undefined);
+    };
     signal.addEventListener("abort", cancel, {once: true});
     const chunks: Uint8Array[] = [];
     let size = 0;
@@ -167,7 +182,10 @@ async function readBoundedJson(response: Response, signal: AbortSignal): Promise
         }
         const bytes = new Uint8Array(size);
         let offset = 0;
-        for (const chunk of chunks) {bytes.set(chunk, offset); offset += chunk.byteLength;}
+        for (const chunk of chunks) {
+            bytes.set(chunk, offset);
+            offset += chunk.byteLength;
+        }
         return JSON.parse(new TextDecoder("utf-8", {fatal: true}).decode(bytes)) as unknown;
     } finally {
         signal.removeEventListener("abort", cancel);
@@ -189,11 +207,18 @@ async function request(url: string, deps: FetchDeps): Promise<Reply> {
     const aborted = new Promise<never>((_, reject) => controller.signal.addEventListener("abort", () => reject(new Error("aborted")), {once: true}));
     aborted.catch(() => undefined);
     try {
-        const response = await Promise.race([fetchImpl(url, {headers: {Accept: "application/vnd.github+json"}, signal: controller.signal}), aborted]);
+        const response = await Promise.race([fetchImpl(url, {
+            headers: {Accept: "application/vnd.github+json"},
+            signal: controller.signal
+        }), aborted]);
         if (response.status !== 200) {
             const exhausted = response.headers?.get?.("x-ratelimit-remaining") === "0";
             await response.body?.cancel().catch(() => undefined);
-            return {kind: "http", status: response.status, rateLimited: response.status === 429 || (response.status === 403 && exhausted)};
+            return {
+                kind: "http",
+                status: response.status,
+                rateLimited: response.status === 429 || (response.status === 403 && exhausted)
+            };
         }
         try {
             return {kind: "json", value: await Promise.race([readBoundedJson(response, controller.signal), aborted])};

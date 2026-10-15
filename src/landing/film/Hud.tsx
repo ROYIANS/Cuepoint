@@ -1,10 +1,17 @@
-import {useEffect, useRef, type KeyboardEvent, type PointerEvent} from "react";
+import {type KeyboardEvent, type PointerEvent, useEffect, useRef} from "react";
 import {IconControl} from "../ui/IconControl";
-import {FILM_PLAY_SECONDS, playbackToProgress, progressToPlaybackTime, SCENE_TIMES, sceneIndexAtTime, sceneLabel} from "./playback";
+import {
+    FILM_PLAY_SECONDS,
+    playbackToProgress,
+    progressToPlaybackTime,
+    SCENE_TIMES,
+    sceneIndexAtTime,
+    sceneLabel
+} from "./playback";
 import {SCENES} from "./scenes";
 import {frameToTimecode} from "./timeline";
 import type {FilmDriver} from "./useFilmProgress";
-import {usePlaybackState, type Playback} from "./usePlayback";
+import {type Playback, usePlaybackState} from "./usePlayback";
 
 const CONSISTENT = 0.004;
 
@@ -12,11 +19,11 @@ const CONSISTENT = 0.004;
 // controller subscriptions: one write per change, never React state. While the film plays the
 // controller's clock is the truth (progress is flat during holds); otherwise the time is derived
 // from the scroll progress, unless a paused/finished clock still matches it.
-export function Hud({driver, playback}: {driver: FilmDriver; playback: Playback}) {
+export function Hud({driver, playback}: { driver: FilmDriver; playback: Playback }) {
     const timecode = useRef<HTMLSpanElement>(null);
     const scene = useRef<HTMLSpanElement>(null);
     const bar = useRef<HTMLDivElement>(null);
-    const dragging = useRef<{wasPlaying: boolean} | null>(null);
+    const dragging = useRef<{ wasPlaying: boolean } | null>(null);
     const state = usePlaybackState(playback);
 
     useEffect(() => {
@@ -85,7 +92,9 @@ export function Hud({driver, playback}: {driver: FilmDriver; playback: Playback}
     const label = state === "playing" ? "暂停" : state === "finished" ? "重播" : "播放";
     return (
         <div className="lp-hud" role="group" aria-label="放映控制">
-            <IconControl className="lp-ic-sm" icon={state === "playing" ? "pause" : state === "finished" ? "replay" : "play"} label={label} reveal="tip" umami="film-toggle" onClick={() => playback.toggle()} />
+            <IconControl className="lp-ic-sm"
+                         icon={state === "playing" ? "pause" : state === "finished" ? "replay" : "play"} label={label}
+                         reveal="tip" umami="film-toggle" onClick={() => playback.toggle()}/>
             <span className="lp-hud-time" ref={timecode} aria-hidden="true">00:00:00:00</span>
             <span className="lp-hud-scene" ref={scene} aria-hidden="true">片头</span>
             <div
@@ -104,8 +113,9 @@ export function Hud({driver, playback}: {driver: FilmDriver; playback: Playback}
                 onPointerCancel={endDrag}
                 onKeyDown={onKeyDown}
             >
-                <span className="lp-hud-track" />
-                {SCENE_TIMES.slice(1).map(times => <i key={times.start} className="lp-hud-tick" style={{left: `${(times.start / FILM_PLAY_SECONDS) * 100}%`}} />)}
+                <span className="lp-hud-track"/>
+                {SCENE_TIMES.slice(1).map(times => <i key={times.start} className="lp-hud-tick"
+                                                      style={{left: `${(times.start / FILM_PLAY_SECONDS) * 100}%`}}/>)}
             </div>
         </div>
     );
@@ -115,8 +125,8 @@ export function Hud({driver, playback}: {driver: FilmDriver; playback: Playback}
 export function Perforations() {
     return (
         <>
-            <div className="lp-perf lp-perf-left" aria-hidden="true"><span /></div>
-            <div className="lp-perf lp-perf-right" aria-hidden="true"><span /></div>
+            <div className="lp-perf lp-perf-left" aria-hidden="true"><span/></div>
+            <div className="lp-perf lp-perf-right" aria-hidden="true"><span/></div>
         </>
     );
 }

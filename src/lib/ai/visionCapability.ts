@@ -8,7 +8,11 @@ export function resolveVisionCapability(model: string, providerId?: string, meta
     if (metadata?.vision !== undefined) return Promise.resolve({supported: metadata.vision, source: "provider"});
     // Memory-only lookup (no dynamic import), so this is also safe inside a database transaction.
     const imageInput = lookupModelByDefinition(providerId, model)?.entry.imageInput;
-    return Promise.resolve(imageInput === undefined ? {supported: false, source: "unknown"} : {supported: imageInput, source: "models-dev", sourceUrl: MODELS_DEV_URL});
+    return Promise.resolve(imageInput === undefined ? {supported: false, source: "unknown"} : {
+        supported: imageInput,
+        source: "models-dev",
+        sourceUrl: MODELS_DEV_URL
+    });
 }
 
 export function requireVision(capability: AgentVisionCapability | undefined): void {

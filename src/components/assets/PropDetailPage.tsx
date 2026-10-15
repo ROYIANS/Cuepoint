@@ -111,7 +111,10 @@ function PropDetailContent({
                             multiline
                         />
                         <details className="border-t pt-4">
-                            <summary className="focus-visible:ring-ring/50 cursor-pointer rounded-md text-sm leading-5 font-semibold focus-visible:outline-none focus-visible:ring-[3px]">创作细节 · 选填</summary>
+                            <summary
+                                className="focus-visible:ring-ring/50 cursor-pointer rounded-md text-sm leading-5 font-semibold focus-visible:outline-none focus-visible:ring-[3px]">创作细节
+                                · 选填
+                            </summary>
                             <p className="text-muted-foreground mt-2 text-xs leading-5">记录外观、使用方式和连续性，方便镜头之间保持一致。所有信息均为选填。</p>
                             <div className="mt-4 space-y-4">
                                 <AssetTextField

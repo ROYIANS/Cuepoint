@@ -113,6 +113,9 @@ export function matchModel(
     const candidates = [...(index.byId.get(id) ?? []), ...(index.byCanonical.get(id) ?? [])]
         .filter((entry, position, all) => all.indexOf(entry) === position);
     const canonical = new Set(candidates.map(entry => entry.canonicalId));
-    if (candidates.length && canonical.size === 1 && !canonical.has(undefined)) return {tier: "canonical", entry: merge(candidates, "agree")};
+    if (candidates.length && canonical.size === 1 && !canonical.has(undefined)) return {
+        tier: "canonical",
+        entry: merge(candidates, "agree")
+    };
     return undefined;
 }

@@ -135,7 +135,7 @@ async function runSubmission(args: Submission, context: AgentToolContext, resolv
     const db = store ?? context.store ?? productDb;
     const intentId = `agent-audio:${context.callId}`;
     const validate = async (store?: ProductStore) => {
-    const db = store ?? productDb;
+        const db = store ?? productDb;
         const call = await db.agentToolCalls.get(context.callId), run = await db.agentRuns.get(context.runId);
         if (!call || call.runId !== context.runId || call.threadId !== context.threadId || call.status !== "running" || call.decision !== "approve" || !call.requiresConfirmation || run?.status !== "running") throw new AtomicToolRollbackError("生成请求尚未得到有效确认或执行已停止");
         if (!context.preview?.revision || context.preview.revision !== (await inputState(resolveCurrent ? await resolveCurrent() : args, context, db)).revision) {
@@ -150,7 +150,7 @@ async function runSubmission(args: Submission, context: AgentToolContext, resolv
             if (existing.projectId !== args.projectId || existing.source.kind !== "agent" || existing.source.callId !== context.callId || existing.source.runId !== context.runId) throw new Error("生成任务归属不匹配");
             // A recovery repeats only local lookup / GET, never the paid submission.
             if (existing.status !== "prepared") {
-                await refreshAudioGeneration(args.projectId, existing.id, {signal: context.signal},db);
+                await refreshAudioGeneration(args.projectId, existing.id, {signal: context.signal}, db);
                 return readAudioJobSummary(args.projectId, existing.id, db);
             }
         }
@@ -160,7 +160,7 @@ async function runSubmission(args: Submission, context: AgentToolContext, resolv
             intentId,
             source: {kind: "agent", callId: context.callId, runId: context.runId}
         }, db);
-        await submitAudioGeneration(args.projectId, job.id, {signal: context.signal, beforeSubmit: validate},db);
+        await submitAudioGeneration(args.projectId, job.id, {signal: context.signal, beforeSubmit: validate}, db);
         return readAudioJobSummary(args.projectId, job.id, db);
     } catch (error) {
         if (error instanceof StorageError && error.certainty === "unknown") throw error;
@@ -253,14 +253,14 @@ export const musicGenerateTool = defineTool({schema: music.schema, json: music.j
         return preview(await musicArgs(raw, context, undefined, context.store), context, context.store);
     },
     async execute(raw, context) {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         let args: Submission;
         // Resolving local draft state has no network side effect. A stale draft
         // is a known rejection, not an uncertain paid submission.
         try {
             args = await musicArgs(raw, context, true, db);
         } catch (error) {
-        if (error instanceof StorageError && error.certainty === "unknown") throw error;
+            if (error instanceof StorageError && error.certainty === "unknown") throw error;
             throw new AtomicToolRollbackError(error instanceof Error ? error.message : "音乐草稿准备失败", {cause: error});
         }
         return runSubmission(args, context, undefined, db);
@@ -275,7 +275,7 @@ export const AUDIO_GENERATION_TOOLS = [
         effect: "read",
         highRisk: () => false,
         async execute(_args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const projectId = await requireBoundProjectScope(context, undefined, db);
             await scope(projectId, context, db);
             const connections = await db.connectors.where("definitionId").anyOf("apimart", "mimo").toArray();
@@ -329,7 +329,7 @@ export const AUDIO_GENERATION_TOOLS = [
             try {
                 args = await speechArgs(raw, context, true, context.store);
             } catch (error) {
-        if (error instanceof StorageError && error.certainty === "unknown") throw error;
+                if (error instanceof StorageError && error.certainty === "unknown") throw error;
                 throw new AtomicToolRollbackError(error instanceof Error ? error.message : "配音准备失败", {cause: error});
             }
             // Only local argument preparation is proven not to have submitted.
@@ -346,13 +346,13 @@ export const AUDIO_GENERATION_TOOLS = [
         recovery: "repeatable",
         highRisk: () => false,
         async execute(raw, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const parsed = jobSpec.schema.parse(raw);
             let projectId: string;
             try {
                 projectId = await scope(parsed.projectId, context, db);
             } catch (cause) {
-        if (cause instanceof StorageError && cause.certainty === "unknown") throw cause;
+                if (cause instanceof StorageError && cause.certainty === "unknown") throw cause;
                 throw new AtomicToolRollbackError(cause instanceof Error ? cause.message : "任务查询尚未开始", {cause});
             }
             const args = {...parsed, projectId};

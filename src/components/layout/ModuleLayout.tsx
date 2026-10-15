@@ -8,14 +8,30 @@ export type ModuleNavigationState = {
     narrow: boolean; opener?: React.RefObject<HTMLElement | null>; register: (width: number) => () => void;
 };
 export const ModuleNavigationContext = createContext<ModuleNavigationState | null>(null);
+
 export function useModuleNavigation() {
     const context = useContext(ModuleNavigationContext);
     const [open, setOpen] = useState(true);
-    return context ?? {open, setOpen, toggle: () => setOpen(value => !value), registered: true, narrow: false, register: () => () => {}};
+    return context ?? {
+        open,
+        setOpen,
+        toggle: () => setOpen(value => !value),
+        registered: true,
+        narrow: false,
+        register: () => () => {
+        }
+    };
 }
 
 /** Presentation only: a collapsed navigation and its feature children stay mounted. */
-export function ModuleLayout({navigation, navigationLabel = "模块导航", navigationWidth = 260, children, className, mainClassName}: {
+export function ModuleLayout({
+                                 navigation,
+                                 navigationLabel = "模块导航",
+                                 navigationWidth = 260,
+                                 children,
+                                 className,
+                                 mainClassName
+                             }: {
     navigation?: ReactNode; navigationLabel?: string; navigationWidth?: number; children: ReactNode;
     className?: string; mainClassName?: string;
 }) {
@@ -38,21 +54,36 @@ export function ModuleLayout({navigation, navigationLabel = "模块导航", navi
             if (opener.current?.isConnected) opener.current.focus({preventScroll: true});
         }
         wasOverlay.current = overlay;
-    }, [overlay,opener,state.opener]);
+    }, [overlay, opener, state.opener]);
     return <div className={cn("module-layout", !hasNavigation && "module-layout-passthrough", className)}
-                data-navigation-open={state.open} style={{"--module-navigation-width": `${navigationWidth}px`} as React.CSSProperties}>
+                data-navigation-open={state.open}
+                style={{"--module-navigation-width": `${navigationWidth}px`} as React.CSSProperties}>
         {hasNavigation && <>
             {overlay && <div className="module-navigation-backdrop" onClick={() => state.setOpen(false)} aria-hidden/>}
-            <FocusScope key="navigation" asChild trapped={overlay} loop={overlay} onMountAutoFocus={event => event.preventDefault()}>
+            <FocusScope key="navigation" asChild trapped={overlay} loop={overlay}
+                        onMountAutoFocus={event => event.preventDefault()}>
                 <DismissableLayer asChild disableOutsidePointerEvents={overlay}
-                    onEscapeKeyDown={event => {if (overlay) {event.preventDefault(); state.setOpen(false);}}}
-                    onPointerDownOutside={event => {if (overlay) {event.preventDefault(); state.setOpen(false);}}}>
+                                  onEscapeKeyDown={event => {
+                                      if (overlay) {
+                                          event.preventDefault();
+                                          state.setOpen(false);
+                                      }
+                                  }}
+                                  onPointerDownOutside={event => {
+                                      if (overlay) {
+                                          event.preventDefault();
+                                          state.setOpen(false);
+                                      }
+                                  }}>
                     <aside ref={navigationRef} className="module-navigation app-scroll" aria-label={navigationLabel}
                            role={overlay ? "dialog" : undefined} aria-modal={overlay || undefined}
-                           inert={!state.open} aria-hidden={!state.open || undefined}>{state.narrow && <button type="button" className="module-navigation-row" onClick={() => state.setOpen(false)}>关闭模块导航</button>}{navigation}</aside>
+                           inert={!state.open} aria-hidden={!state.open || undefined}>{state.narrow &&
+                        <button type="button" className="module-navigation-row"
+                                onClick={() => state.setOpen(false)}>关闭模块导航</button>}{navigation}</aside>
                 </DismissableLayer>
             </FocusScope>
         </>}
-        <div className={cn("module-main", mainClassName)} inert={overlay} aria-hidden={overlay || undefined}>{children}</div>
+        <div className={cn("module-main", mainClassName)} inert={overlay}
+             aria-hidden={overlay || undefined}>{children}</div>
     </div>;
 }

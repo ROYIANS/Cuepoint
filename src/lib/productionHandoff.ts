@@ -1,7 +1,7 @@
 import {binaryByteLength} from "@/domain/binary";
 import {readBinaryBlob, verifyBinaryAvailable} from "@/lib/storage/binary";
 import {BinaryUnavailableError} from "@/lib/storage/nativeBinary";
-import {verifiedShotMediaIndex, type ShotBinaryState} from "@/lib/shotMedia";
+import {type ShotBinaryState, verifiedShotMediaIndex} from "@/lib/shotMedia";
 import JSZip from "jszip";
 import {db} from "@/db/database";
 import {SHOT_COLUMNS} from "@/domain/columns";

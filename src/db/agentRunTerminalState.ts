@@ -37,7 +37,10 @@ export async function settleRun(db: StoreTx, runId: string, status: Exclude<Agen
     const content = options.output?.content ?? "";
     const outputPatch = options.preserveOutput ? {} : {content: content || message.content, error: undefined};
     const timingPatch = options.preserveOutput || options.output === undefined
-        ? {} : {reasoning: options.output.reasoning || message.reasoning, reasoningDurationMs: options.output.reasoningDurationMs ?? message.reasoningDurationMs};
+        ? {} : {
+            reasoning: options.output.reasoning || message.reasoning,
+            reasoningDurationMs: options.output.reasoningDurationMs ?? message.reasoningDurationMs
+        };
     await db.chatMessages.update(message.id, {
         ...outputPatch, ...timingPatch,
         status: SETTLED_MESSAGE_STATUS[status],

@@ -173,10 +173,13 @@ export function taskGenerationEvidenceId(jobId: string, resultKey?: string): str
 }
 
 /** Shared source inventory; no remote refresh and no attribution to reading runs. */
-export async function listTaskGenerationSourceInventory(task: AgentTask, options: {offset?: number; limit?: number} = {}, store?: ProductStore) {
+export async function listTaskGenerationSourceInventory(task: AgentTask, options: {
+    offset?: number;
+    limit?: number
+} = {}, store?: ProductStore) {
     const db = store ?? productDb;
     return db.transaction("r", db.tables, async (db) => {
-        const identities: Array<{id: string; resultKey?: string}> = [];
+        const identities: Array<{ id: string; resultKey?: string }> = [];
         const runs = await db.agentRuns.where("taskId").equals(task.id).toArray();
         const runIds = new Set(runs.filter(run => run.threadId === task.threadId).map(run => run.id));
         const jobs = await db.agentGenerationJobs.where("threadId").equals(task.threadId).toArray();
@@ -190,16 +193,21 @@ export async function listTaskGenerationSourceInventory(task: AgentTask, options
             const counts = new Map<string, number>();
             for (const result of job.results) counts.set(result.key, (counts.get(result.key) ?? 0) + 1);
             for (const result of job.results) {
-                if (counts.get(result.key) === 1 && result.key.trim() && result.key.length <= 512) identities.push({id: job.id, resultKey: result.key});
+                if (counts.get(result.key) === 1 && result.key.trim() && result.key.length <= 512) identities.push({
+                    id: job.id,
+                    resultKey: result.key
+                });
             }
         }
         const offset = Math.max(0, options.offset ?? 0), limit = Math.min(100, Math.max(1, options.limit ?? 100));
         const sources: Awaited<ReturnType<typeof taskGenerationSource>>[] = [];
         for (const identity of identities.slice(offset, offset + limit)) sources.push(await Promise.resolve(taskGenerationSource(task, identity.id, identity.resultKey, db)));
-        return {sources, coverage: {
-            total: identities.length, included: sources.length, omitted: identities.length - sources.length,
-            offset, nextOffset: offset + sources.length < identities.length ? offset + sources.length : null
-        }};
+        return {
+            sources, coverage: {
+                total: identities.length, included: sources.length, omitted: identities.length - sources.length,
+                offset, nextOffset: offset + sources.length < identities.length ? offset + sources.length : null
+            }
+        };
     });
 }
 

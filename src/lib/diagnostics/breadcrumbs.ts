@@ -1,6 +1,6 @@
 import {sanitizePath} from "./sanitize";
 
-export type Breadcrumb = {kind: "route" | "action"; label: string; at: string};
+export type Breadcrumb = { kind: "route" | "action"; label: string; at: string };
 
 const BREADCRUMB_LIMIT = 30;
 

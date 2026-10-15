@@ -72,10 +72,15 @@ function tool<T, const Name extends string>(
         description,
         effect: "read",
         highRisk: () => false,
-        execute: (args, context) =>
-            { const db=context.store ?? productDb; return db.transaction("r", db.tables, async (db) =>
-                (async (boundContext:AgentToolContext) => read(spec.schema.parse(args), boundContext, await owner(boundContext, name, db)))({...context,store:db}),
-            ); }
+        execute: (args, context) => {
+            const db = context.store ?? productDb;
+            return db.transaction("r", db.tables, async (db) =>
+                (async (boundContext: AgentToolContext) => read(spec.schema.parse(args), boundContext, await owner(boundContext, name, db)))({
+                    ...context,
+                    store: db
+                }),
+            );
+        }
     });
 }
 
@@ -161,7 +166,7 @@ export const MEMORY_TOOLS = [
         "只读搜索当前项目已启用且未在本对话排除的已审核记忆。query 必填，最多8条；返回版本、摘录、选择理由和来源状态，全文使用 memory_read。",
         search,
         async (args, context, state) => {
-    const db=context.store ?? productDb;
+            const db = context.store ?? productDb;
             const ranked = rankMemoryCandidates(
                 await getEligibleProjectMemories(state.projectId, context.threadId, db),
                 args.query,
@@ -191,7 +196,7 @@ export const MEMORY_TOOLS = [
         "按 ID 和 expectedRevision 读取当前项目已审核、已启用且未排除的记忆。版本变化返回 stale；正文用 contentOffset/contentLimit 分页，每次最多6000字。",
         object({id, expectedRevision: revision, ...paging}),
         async (args, context, state) => {
-    const db=context.store ?? productDb;
+            const db = context.store ?? productDb;
             const memory = (
                 await getEligibleProjectMemories(state.projectId, context.threadId, db)
             ).find((row) => row.id === args.id);
@@ -217,7 +222,7 @@ export const MEMORY_TOOLS = [
         "搜索当前项目其他任务的名称、目标、已确认总结和工作记录标题。query 必填，最多8个任务；不扫描完整聊天。索引提供 project_history_read 的来源标识，历史内容不证明当前完成。",
         search,
         async (args, _context, state) => {
-    const db=_context.store ?? productDb;
+            const db = _context.store ?? productDb;
             const query = normalizeMemoryText(args.query);
             const tokens = query.split(/\s+/u);
             const matches = (value: string) =>
@@ -297,7 +302,7 @@ export const MEMORY_TOOLS = [
             ...paging,
         }),
         async (args, _context, state) => {
-    const db=_context.store ?? productDb;
+            const db = _context.store ?? productDb;
             const task = await pastTask(args.taskId, state, db);
             if (!task) return missing();
             const {type, id: sourceId} = args.source;

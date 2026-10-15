@@ -49,7 +49,11 @@ export function groupThreadsByProject(threads: ChatThread[], projects: Project[]
     const groups: TopicProjectGroup[] = [];
     for (const [key, list] of buckets) {
         list.sort((a, b) => stamp(b) - stamp(a));
-        groups.push({key, label: key === UNLINKED_PROJECT_KEY ? UNLINKED_PROJECT_LABEL : names.get(key) ?? "", threads: list});
+        groups.push({
+            key,
+            label: key === UNLINKED_PROJECT_KEY ? UNLINKED_PROJECT_LABEL : names.get(key) ?? "",
+            threads: list
+        });
     }
     return groups.sort((a, b) => {
         if (a.key === UNLINKED_PROJECT_KEY) return 1;

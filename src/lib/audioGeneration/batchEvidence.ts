@@ -5,19 +5,27 @@ import type {AudioGenerationBatch} from "@/domain/audioGenerationBatch";
 import {targetRevision} from "@/lib/productionRevision";
 
 /** Retries retain their real preparation root; a retry marker alone is no origin proof. */
-function hasPreparationOrigin(batch: AudioGenerationBatch, call: {id: string; result?: string}, store?: ProductStore): boolean | Promise<boolean> {
+function hasPreparationOrigin(batch: AudioGenerationBatch, call: {
+    id: string;
+    result?: string
+}, store?: ProductStore): boolean | Promise<boolean> {
     const db = store ?? productDb;
     const visited = new Set<string>();
+
     // Bound read work. Excessively long/cyclic/missing history remains unverified.
     function inspect(current: AudioGenerationBatch | undefined, depth: number, store?: ProductStore): boolean | Promise<boolean> {
-    const db = store ?? productDb;
+        const db = store ?? productDb;
         if (!current || depth >= 100 || visited.has(current.id) || current.projectId !== batch.projectId || current.chapterId !== batch.chapterId || current.dormant ||
             targetRevision(current.owner) !== targetRevision(batch.owner)) return false;
         visited.add(current.id);
         if (current.sourceCallId !== undefined) {
             if (current.sourceCallId !== call.id) return false;
             let result: unknown;
-            try { result = JSON.parse(call.result ?? "null"); } catch { return false; }
+            try {
+                result = JSON.parse(call.result ?? "null");
+            } catch {
+                return false;
+            }
             return !!result && typeof result === "object" && !Array.isArray(result) &&
                 "batchId" in result && result.batchId === current.id && "projectId" in result && result.projectId === current.projectId &&
                 "chapterId" in result && result.chapterId === current.chapterId;
@@ -27,16 +35,23 @@ function hasPreparationOrigin(batch: AudioGenerationBatch, call: {id: string; re
         // complete an owning read transaction on the no-task/root-only path.
         return db.audioGenerationBatches.get(current.retrySourceBatchId).then(next => inspect(next, depth + 1, db));
     }
+
     return inspect(batch, 0, db);
 }
 
 /** Read-only origin proof shared by task sources and final review. It does not prove an output exists. */
-export async function ownedAgentAudioBatchJob(job: AudioGenerationJob, expected: {runId: string; threadId: string; projectId: string; taskId?: string}, store?: ProductStore): Promise<boolean> {
+export async function ownedAgentAudioBatchJob(job: AudioGenerationJob, expected: {
+    runId: string;
+    threadId: string;
+    projectId: string;
+    taskId?: string
+}, store?: ProductStore): Promise<boolean> {
     const db = store ?? productDb;
     if (job.dormant || job.source.kind !== "batch" || job.source.owner.kind !== "agent" || job.input.kind !== "speech") return false;
     const source = job.source, owner = source.owner;
     if (owner.kind !== "agent" || owner.runId !== expected.runId || owner.threadId !== expected.threadId || owner.taskId !== expected.taskId || job.projectId !== expected.projectId) return false;
-    const batch = await db.audioGenerationBatches.get(source.batchId), item = await db.audioGenerationBatchItems.get(source.itemId);
+    const batch = await db.audioGenerationBatches.get(source.batchId),
+        item = await db.audioGenerationBatchItems.get(source.itemId);
     const run = await db.agentRuns.get(owner.runId), call = await db.agentToolCalls.get(owner.callId);
     const thread = await db.chatThreads.get(owner.threadId);
     if (!run || !thread || run.projectId !== job.projectId || thread.projectId !== job.projectId || run.threadId !== owner.threadId || run.taskId !== owner.taskId ||

@@ -13,7 +13,13 @@ export interface VirtualWindow {
  * Fixed-row-height windowing: the rows intersecting the viewport plus `overscan` rows on each side.
  * Pure so the boundaries can be tested without layout.
  */
-export function computeWindow(input: {count: number; rowHeight: number; viewportHeight: number; scrollTop: number; overscan: number}): VirtualWindow {
+export function computeWindow(input: {
+    count: number;
+    rowHeight: number;
+    viewportHeight: number;
+    scrollTop: number;
+    overscan: number
+}): VirtualWindow {
     const count = Math.max(0, Math.floor(input.count));
     const {rowHeight, viewportHeight, overscan} = input;
     const totalHeight = count * rowHeight;

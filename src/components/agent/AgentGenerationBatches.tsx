@@ -479,7 +479,9 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                 </AlertDialogHeader>
                 {error && <p role="alert" className="text-destructive text-sm">{error}</p>}
                 <AlertDialogFooter>
-                    <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="ghost" disabled={pending} onClick={() => blocker.reset?.()}>继续编辑</Button></AlertDialogCancel>
+                    <AlertDialogCancel asChild onClick={event => event.preventDefault()}><Button variant="ghost"
+                                                                                                 disabled={pending}
+                                                                                                 onClick={() => blocker.reset?.()}>继续编辑</Button></AlertDialogCancel>
                     <Button variant="outline" disabled={pending} onClick={() => {
                         setLocal(null);
                         blocker.proceed?.();

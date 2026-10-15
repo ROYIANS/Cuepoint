@@ -1,8 +1,17 @@
-export type StorageErrorCode = "conflict" | "constraint" | "invalid" | "unavailable" | "canceled" | "closed" | "scope" | "unknownCommit";
+export type StorageErrorCode =
+    "conflict"
+    | "constraint"
+    | "invalid"
+    | "unavailable"
+    | "canceled"
+    | "closed"
+    | "scope"
+    | "unknownCommit";
 
 /** A rejected acknowledgement is not evidence that a native COMMIT rolled back. */
 export class StorageError extends Error {
     readonly name = "StorageError";
+
     constructor(readonly code: StorageErrorCode, message: string, readonly certainty: "rollback" | "unknown" = "rollback", options?: ErrorOptions) {
         super(message, options);
     }

@@ -29,16 +29,27 @@ export async function snapshotAudioPackage(projectId: string, store?: ProductSto
     const batchIds = new Set(batches.map(batch => batch.id));
     raw.audioGenerationJobs = (await db.audioGenerationJobs.where("projectId").equals(projectId).toArray()).map((job) => ({
         ...job,
-        source: job.source.kind === "batch" && batchIds.has(job.source.batchId) ? {...job.source, owner: {kind: "manual"}} : {kind: "manual"},
+        source: job.source.kind === "batch" && batchIds.has(job.source.batchId) ? {
+            ...job.source,
+            owner: {kind: "manual"}
+        } : {kind: "manual"},
         dormant: true,
         claim: undefined
     }));
     raw.audioGenerationBatches = batches.map(batch => ({
-        ...batch, owner: {kind: "manual"}, sourceCallId: undefined, confirmedAt: undefined, confirmedItemIds: [], dormant: true
+        ...batch,
+        owner: {kind: "manual"},
+        sourceCallId: undefined,
+        confirmedAt: undefined,
+        confirmedItemIds: [],
+        dormant: true
     }));
-    raw.audioGenerationBatchItems = (await db.audioGenerationBatchItems.where("projectId").equals(projectId).toArray()).map(item => ({...item,
-        snapshot: {...item.snapshot, fingerprint: "historical", referenceFingerprint: undefined,
-            connector: {id: "imported", provider: item.snapshot.connector.provider, baseUrl: ""}}
+    raw.audioGenerationBatchItems = (await db.audioGenerationBatchItems.where("projectId").equals(projectId).toArray()).map(item => ({
+        ...item,
+        snapshot: {
+            ...item.snapshot, fingerprint: "historical", referenceFingerprint: undefined,
+            connector: {id: "imported", provider: item.snapshot.connector.provider, baseUrl: ""}
+        }
     }));
     raw.audioArrangementProposals = sanitizeAudioArrangementHistory(await db.audioArrangementProposals.where("projectId").equals(projectId).toArray());
     const value = parseAudioPackageData({version: 1, ...raw});

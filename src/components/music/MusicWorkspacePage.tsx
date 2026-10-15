@@ -18,7 +18,13 @@ import {Button} from "@/components/ui/button";
 import {PageHeader, PageState, PageToolbar} from "@/components/layout/PageLayout";
 import {Input} from "@/components/ui/input";
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {ContextPanel, ContextPanelContent, ContextPanelDescription, ContextPanelHeader, ContextPanelTitle} from "@/components/ui/context-panel";
+import {
+    ContextPanel,
+    ContextPanelContent,
+    ContextPanelDescription,
+    ContextPanelHeader,
+    ContextPanelTitle
+} from "@/components/ui/context-panel";
 import {ModuleLayout, useModuleNavigation} from "@/components/layout/ModuleLayout";
 import {ProjectWorkspaceNavigation} from "@/components/workspace/ProjectWorkspaceNavigation";
 import {
@@ -112,40 +118,41 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                                                   setSelectedId("");
                                               })}/>;
     const composer = (
-            <div className="mw-composer" aria-label="音乐创作">
-                <ProjectWorkspaceNavigation projectId={projectId} projectName={data.project.name} kind="music"/>
-                <div className="mw-mobile-nav"><MusicModeSwitch value={mobileMode} onValueChange={setMobileMode}/></div>
-                <div className="mw-draft-bar"><WorkspaceSelect aria-label="创作草稿" disabled={busy}
-                                                               value={draft?.id ?? ""}
-                                                               onValueChange={(value) => void action(async () => {
-                                                                   await flushPendingDrafts(projectId);
-                                                                   setDraftId(value);
-                                                               })}>{data.drafts.map((row, index) => <SelectOption
-                    key={row.id}
-                    value={row.id}>{row.settings.title || `创作 ${index + 1}`} · {row.settings.engine === "flowmusic" ? "Flow" : row.settings.custom ? "自定义" : "简单"}</SelectOption>)}</WorkspaceSelect><Button
-                    size="icon-sm" variant="ghost" aria-label="新建创作" disabled={busy}
-                    onClick={() => void action(async () => {
-                        await flushPendingDrafts(projectId);
-                        const row = await addMusicDraft(projectId, {settings: defaultMusicSettings()});
-                        setDraftId(row.id);
-                    })}><Plus/></Button></div>
-                {draft ? <MusicCreation key={draft.id} record={draft} switching={busy}
-                                        changeVariant={(target) => void action(() => switchVariant(target))}
-                                        connectorId={connectorId} setConnectorId={setConnectorId}
-                                        onSubmitted={() => setMobileMode("works")} onSubmittingChange={(value) => {
-                    submissionPending.current = value;
-                    setSubmitting(value);
-                }}/> : <Button onClick={() => void action(async () => {
+        <div className="mw-composer" aria-label="音乐创作">
+            <ProjectWorkspaceNavigation projectId={projectId} projectName={data.project.name} kind="music"/>
+            <div className="mw-mobile-nav"><MusicModeSwitch value={mobileMode} onValueChange={setMobileMode}/></div>
+            <div className="mw-draft-bar"><WorkspaceSelect aria-label="创作草稿" disabled={busy}
+                                                           value={draft?.id ?? ""}
+                                                           onValueChange={(value) => void action(async () => {
+                                                               await flushPendingDrafts(projectId);
+                                                               setDraftId(value);
+                                                           })}>{data.drafts.map((row, index) => <SelectOption
+                key={row.id}
+                value={row.id}>{row.settings.title || `创作 ${index + 1}`} · {row.settings.engine === "flowmusic" ? "Flow" : row.settings.custom ? "自定义" : "简单"}</SelectOption>)}</WorkspaceSelect><Button
+                size="icon-sm" variant="ghost" aria-label="新建创作" disabled={busy}
+                onClick={() => void action(async () => {
+                    await flushPendingDrafts(projectId);
                     const row = await addMusicDraft(projectId, {settings: defaultMusicSettings()});
                     setDraftId(row.id);
-                })}>开始创作</Button>}
-            </div>
+                })}><Plus/></Button></div>
+            {draft ? <MusicCreation key={draft.id} record={draft} switching={busy}
+                                    changeVariant={(target) => void action(() => switchVariant(target))}
+                                    connectorId={connectorId} setConnectorId={setConnectorId}
+                                    onSubmitted={() => setMobileMode("works")} onSubmittingChange={(value) => {
+                submissionPending.current = value;
+                setSubmitting(value);
+            }}/> : <Button onClick={() => void action(async () => {
+                const row = await addMusicDraft(projectId, {settings: defaultMusicSettings()});
+                setDraftId(row.id);
+            })}>开始创作</Button>}
+        </div>
     );
     return <div className="aw-root mw-root">
-        <ModuleLayout navigation={composer} navigationWidth={340} navigationLabel="音乐创作" className="mw-module-layout" mainClassName="overflow-hidden">
-        <PageHeader dense title="音乐创作" className="mw-page-header"/>
-        <div className="mw-mobile-nav"><MusicModeSwitch value={mobileMode} onValueChange={setMobileMode}/></div>
-        {error && <div role="alert" className="aw-banner aw-error">{error}</div>}
+        <ModuleLayout navigation={composer} navigationWidth={340} navigationLabel="音乐创作"
+                      className="mw-module-layout" mainClassName="overflow-hidden">
+            <PageHeader dense title="音乐创作" className="mw-page-header"/>
+            <div className="mw-mobile-nav"><MusicModeSwitch value={mobileMode} onValueChange={setMobileMode}/></div>
+            {error && <div role="alert" className="aw-banner aw-error">{error}</div>}
             <main className="mw-library" aria-label="音乐作品库">
                 <div className="mw-library-heading"><h2>作品</h2><span>{data.works.length} 首</span></div>
                 <PageToolbar className="mw-library-tools">
@@ -154,7 +161,8 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                                                                          onChange={(e) => setQuery(e.target.value)}/>
                     </div>
                     <Button size="sm" variant={favorites ? "secondary" : "outline"} aria-pressed={favorites}
-                            onClick={() => setFavorites(!favorites)}>{favorites ? <HeartFill size={14}/> : <Heart size={14}/>}收藏</Button><WorkspaceSelect
+                            onClick={() => setFavorites(!favorites)}>{favorites ? <HeartFill size={14}/> :
+                        <Heart size={14}/>}收藏</Button><WorkspaceSelect
                     aria-label="作品排序" value={sort} onValueChange={setSort}><SelectOption
                     value="newest">最新</SelectOption><SelectOption value="oldest">最早</SelectOption></WorkspaceSelect>
                 </PageToolbar>
@@ -179,14 +187,17 @@ function MusicWorkspace({projectId}: { projectId: string }) {
                             <span className="aw-time aw-muted">{timeLabel(work.durationSec)}</span><Button
                             size="icon-sm" variant="ghost" aria-label={work.favorite ? "取消收藏" : "收藏作品"}
                             disabled={busy}
-                            onClick={() => void action(() => patchMusicWork(projectId, work.id, work.revision, {favorite: !work.favorite}))}>{work.favorite ? <HeartFill size={15}/> : <Heart size={15}/>}</Button>
+                            onClick={() => void action(() => patchMusicWork(projectId, work.id, work.revision, {favorite: !work.favorite}))}>{work.favorite ?
+                            <HeartFill size={15}/> : <Heart size={15}/>}</Button>
                         </div>
                     </div>)}
             </main>
         </ModuleLayout>
         <ContextPanel open={Boolean(selected)} width={300} onOpenChange={(open) => {
             if (!open && !actionPending.current && !submissionPending.current) setSelectedId("");
-        }} onRequestDeparture={(proceed, cancel) => {if (!actionPending.current && !submissionPending.current) proceed(); else cancel?.();}}><ContextPanelContent className="mw-detail-panel">
+        }} onRequestDeparture={(proceed, cancel) => {
+            if (!actionPending.current && !submissionPending.current) proceed(); else cancel?.();
+        }}><ContextPanelContent className="mw-detail-panel">
             <ContextPanelHeader><ContextPanelTitle>作品详情</ContextPanelTitle><ContextPanelDescription>歌词、创作笔记与作品操作</ContextPanelDescription></ContextPanelHeader>
             <div className="mw-detail-sheet-body">{details}</div>
         </ContextPanelContent></ContextPanel>
@@ -198,7 +209,7 @@ function MusicWorkspace({projectId}: { projectId: string }) {
 }
 
 /** The form remains the same module-navigation child on desktop and narrow screens. */
-function MusicModeSwitch({value, onValueChange}: {value: string; onValueChange: (value: string) => void}) {
+function MusicModeSwitch({value, onValueChange}: { value: string; onValueChange: (value: string) => void }) {
     const {narrow, setOpen} = useModuleNavigation();
     const previousMode = useRef(value);
     useEffect(() => {
@@ -208,7 +219,8 @@ function MusicModeSwitch({value, onValueChange}: {value: string; onValueChange: 
     return <Tabs value={value} onValueChange={(next) => {
         onValueChange(next);
         setOpen(next === "create");
-    }}><TabsList aria-label="音乐工作台"><TabsTrigger value="create">创作</TabsTrigger><TabsTrigger value="works">作品</TabsTrigger></TabsList></Tabs>;
+    }}><TabsList aria-label="音乐工作台"><TabsTrigger value="create">创作</TabsTrigger><TabsTrigger
+        value="works">作品</TabsTrigger></TabsList></Tabs>;
 }
 
 function MusicDetails({work, busy, action, reuse}: {

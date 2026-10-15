@@ -150,28 +150,30 @@ function ScopedProducePage({
     return (
         <div className="app-scroll h-full overflow-auto">
             <PageContent mode="collection">
-                <PageHeader title="制作与交付" description={`检查${scopeLabel}的分镜完整性，并导出按当前顺序整理的交付物。`}
+                <PageHeader title="制作与交付"
+                            description={`检查${scopeLabel}的分镜完整性，并导出按当前顺序整理的交付物。`}
                             actions={<div className="flex flex-wrap items-center gap-2">
-                        <Button disabled={savingCsv || exportProgress !== undefined || delivery.rows.length === 0}
-                                onClick={() => void exportHandoff()}>
-                            <Download/>{exportProgress !== undefined ? `正在整理 ${Math.round(exportProgress)}%` : "导出素材交付包"}
-                        </Button>
-                        <Button variant="outline" disabled={savingCsv || exportProgress !== undefined}
-                                onClick={() => void exportCsv(delivery)}>
-                            <Download/>
-                            {savingCsv ? "正在保存 CSV…" : "导出 CSV"}
-                        </Button>
-                        <Button variant="outline" asChild>
-                            <Link
-                                to="/p/$projectId/e/$episodeId/storyboard"
-                                params={{projectId, episodeId}}
-                                target={isTauriRuntime() ? undefined : "_blank"}
-                            >
-                                <Printer/>
-                                打印故事板
-                            </Link>
-                        </Button>
-                    </div>}/>
+                                <Button
+                                    disabled={savingCsv || exportProgress !== undefined || delivery.rows.length === 0}
+                                    onClick={() => void exportHandoff()}>
+                                    <Download/>{exportProgress !== undefined ? `正在整理 ${Math.round(exportProgress)}%` : "导出素材交付包"}
+                                </Button>
+                                <Button variant="outline" disabled={savingCsv || exportProgress !== undefined}
+                                        onClick={() => void exportCsv(delivery)}>
+                                    <Download/>
+                                    {savingCsv ? "正在保存 CSV…" : "导出 CSV"}
+                                </Button>
+                                <Button variant="outline" asChild>
+                                    <Link
+                                        to="/p/$projectId/e/$episodeId/storyboard"
+                                        params={{projectId, episodeId}}
+                                        target={isTauriRuntime() ? undefined : "_blank"}
+                                    >
+                                        <Printer/>
+                                        打印故事板
+                                    </Link>
+                                </Button>
+                            </div>}/>
 
                 <p className="text-muted-foreground mt-3 text-xs leading-5">素材交付包包含逐镜头清单与首帧、尾帧、成片原文件，可交给剪辑继续制作。需要恢复整个项目时，请使用顶部「备份项目」。</p>
                 {exportSummary ? <p className="mt-2 text-xs" role="status">{exportSummary}</p> : null}
@@ -245,15 +247,15 @@ function ScopedProducePage({
                     <PageState title={delivery.rows.length === 0 ? "还没有镜头" : "没有发现缺失项"}
                                description={delivery.rows.length === 0 ? "添加镜头后可检查素材与交付内容。" : "可以导出交付物。"}
                                action={delivery.rows.length === 0 ? (
-                            <Link
-                                to="/p/$projectId/e/$episodeId/shots"
-                                params={{projectId, episodeId}}
-                                search={{shot: undefined}}
-                                className="text-brand hover:underline"
-                            >
-                                去分镜创建第一条镜头
-                            </Link>
-                        ) : undefined}/>
+                                   <Link
+                                       to="/p/$projectId/e/$episodeId/shots"
+                                       params={{projectId, episodeId}}
+                                       search={{shot: undefined}}
+                                       className="text-brand hover:underline"
+                                   >
+                                       去分镜创建第一条镜头
+                                   </Link>
+                               ) : undefined}/>
                 )}
                 <ProductionProposalsPanel key={`${projectId}:${episodeId}`} projectId={projectId} episodeId={episodeId}
                                           shots={shots.filter((shot) => shot.projectId === projectId && shot.episodeId === episodeId)}/>

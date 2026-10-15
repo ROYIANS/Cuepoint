@@ -158,8 +158,10 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
             const result = await listConnectorModels(request);
             if (!currentOperation(operation)) return;
             if (!result.ok) {
-                showError({title: "拉取模型失败", cause: new Error(result.message), actionName: "discover-models",
-                    detail: redactCredentials(result.message, request.apiKey).slice(0, 300)});
+                showError({
+                    title: "拉取模型失败", cause: new Error(result.message), actionName: "discover-models",
+                    detail: redactCredentials(result.message, request.apiKey).slice(0, 300)
+                });
                 setProbeModels([]);
                 return;
             }
@@ -172,8 +174,10 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
                         : "探活成功，但接口未返回模型列表",
             );
         } catch (error) {
-            if (currentOperation(operation)) showError({title: "拉取模型失败", cause: error, actionName: "discover-models",
-                detail: redactCredentials(error instanceof Error ? error.message : "拉取失败", request.apiKey).slice(0, 300)});
+            if (currentOperation(operation)) showError({
+                title: "拉取模型失败", cause: error, actionName: "discover-models",
+                detail: redactCredentials(error instanceof Error ? error.message : "拉取失败", request.apiKey).slice(0, 300)
+            });
         } finally {
             finishOperation(operation);
         }
@@ -251,54 +255,73 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
     return (
         <div className="settings-connections">
             <div className="settings-subtabs" role="group" aria-label="连接分组">
-                {(!visibleRowIds || visibleRowIds.includes("models")) && <button type="button" aria-pressed={activeSection === "models"} onClick={() => setSection("models")}><Plug size={16} weight={activeSection === "models" ? "fill" : "regular"} aria-hidden/>模型连接</button>}
-                {(!visibleRowIds || visibleRowIds.includes("search")) && <button type="button" aria-pressed={activeSection === "search"} onClick={() => setSection("search")}><Search size={16} weight={activeSection === "search" ? "fill" : "regular"} aria-hidden/>网络搜索连接</button>}
-                {(!visibleRowIds || visibleRowIds.includes("catalog")) && <button type="button" aria-pressed={activeSection === "catalog"} onClick={() => setSection("catalog")}><Coins size={16} weight={activeSection === "catalog" ? "fill" : "regular"} aria-hidden/>模型目录</button>}
+                {(!visibleRowIds || visibleRowIds.includes("models")) &&
+                    <button type="button" aria-pressed={activeSection === "models"}
+                            onClick={() => setSection("models")}><Plug size={16}
+                                                                       weight={activeSection === "models" ? "fill" : "regular"}
+                                                                       aria-hidden/>模型连接</button>}
+                {(!visibleRowIds || visibleRowIds.includes("search")) &&
+                    <button type="button" aria-pressed={activeSection === "search"}
+                            onClick={() => setSection("search")}><Search size={16}
+                                                                         weight={activeSection === "search" ? "fill" : "regular"}
+                                                                         aria-hidden/>网络搜索连接</button>}
+                {(!visibleRowIds || visibleRowIds.includes("catalog")) &&
+                    <button type="button" aria-pressed={activeSection === "catalog"}
+                            onClick={() => setSection("catalog")}><Coins size={16}
+                                                                         weight={activeSection === "catalog" ? "fill" : "regular"}
+                                                                         aria-hidden/>模型目录</button>}
             </div>
-            <div hidden={activeSection !== "models"}>{!view ? <PageState kind="loading" title="正在读取连接…"/> : view.error ?
-                <PageState kind="error" title="暂时无法读取连接" description={view.error}/> :
-                <SettingsGroup title="服务商">
-                    {CONNECTOR_CATALOG.map((definition) => {
-                        const existing = byDefinition.get(definition.id);
-                        const connected = Boolean(existing);
-                        return (
-                            <section key={definition.id} aria-labelledby={`connector-${definition.id}`}
-                                     className="settings-row settings-connector-row">
-                                <div className="bg-muted text-foreground flex size-10 shrink-0 items-center justify-center rounded-md text-xs font-semibold"
-                                     aria-hidden>
-                                    {definition.mark}
-                                </div>
-                                <div className="settings-row-copy">
-                                    <h3 id={`connector-${definition.id}`} className="settings-row-title">{definition.title}</h3>
-                                    <p className="settings-row-description">{definition.blurb}</p>
-                                </div>
-                                <div className="settings-row-control">
-                                    {connected ? (
-                                        <Badge variant="outline" className="gap-1">
-                                            <Check className="size-3" aria-hidden/>
-                                            已连接
-                                        </Badge>
-                                    ) : (
-                                        <Badge variant="secondary">未连接</Badge>
-                                    )}
-                                    {connected ? (
-                                        <Button variant="outline" size="sm" aria-label={`编辑 ${definition.title} 连接`}
-                                                disabled={saving} onClick={() => openEditor(definition, existing)}>
-                                            编辑
-                                        </Button>
-                                    ) : (
-                                        <Button variant="brand" size="sm" aria-label={`安装 ${definition.title} 连接`}
-                                                disabled={saving} onClick={() => openEditor(definition)}>
-                                            <Plug className="size-3.5" aria-hidden/>
-                                            安装
-                                        </Button>
-                                    )}
-                                </div>
-                            </section>
-                        );
-                    })}
-                </SettingsGroup>}
-            </div><div className="settings-search-connection" hidden={activeSection !== "search"}><SearchConnection onEditorOpenChange={onEditorOpenChange}/></div>
+            <div hidden={activeSection !== "models"}>{!view ?
+                <PageState kind="loading" title="正在读取连接…"/> : view.error ?
+                    <PageState kind="error" title="暂时无法读取连接" description={view.error}/> :
+                    <SettingsGroup title="服务商">
+                        {CONNECTOR_CATALOG.map((definition) => {
+                            const existing = byDefinition.get(definition.id);
+                            const connected = Boolean(existing);
+                            return (
+                                <section key={definition.id} aria-labelledby={`connector-${definition.id}`}
+                                         className="settings-row settings-connector-row">
+                                    <div
+                                        className="bg-muted text-foreground flex size-10 shrink-0 items-center justify-center rounded-md text-xs font-semibold"
+                                        aria-hidden>
+                                        {definition.mark}
+                                    </div>
+                                    <div className="settings-row-copy">
+                                        <h3 id={`connector-${definition.id}`}
+                                            className="settings-row-title">{definition.title}</h3>
+                                        <p className="settings-row-description">{definition.blurb}</p>
+                                    </div>
+                                    <div className="settings-row-control">
+                                        {connected ? (
+                                            <Badge variant="outline" className="gap-1">
+                                                <Check className="size-3" aria-hidden/>
+                                                已连接
+                                            </Badge>
+                                        ) : (
+                                            <Badge variant="secondary">未连接</Badge>
+                                        )}
+                                        {connected ? (
+                                            <Button variant="outline" size="sm"
+                                                    aria-label={`编辑 ${definition.title} 连接`}
+                                                    disabled={saving} onClick={() => openEditor(definition, existing)}>
+                                                编辑
+                                            </Button>
+                                        ) : (
+                                            <Button variant="brand" size="sm"
+                                                    aria-label={`安装 ${definition.title} 连接`}
+                                                    disabled={saving} onClick={() => openEditor(definition)}>
+                                                <Plug className="size-3.5" aria-hidden/>
+                                                安装
+                                            </Button>
+                                        )}
+                                    </div>
+                                </section>
+                            );
+                        })}
+                    </SettingsGroup>}
+            </div>
+            <div className="settings-search-connection" hidden={activeSection !== "search"}><SearchConnection
+                onEditorOpenChange={onEditorOpenChange}/></div>
             {activeSection === "catalog" && <div className="settings-model-catalog"><ModelCatalogSection/></div>}
 
             <Dialog open={Boolean(editor)} onOpenChange={(open) => !open && closeEditor()}>

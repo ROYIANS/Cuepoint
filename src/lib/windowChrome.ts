@@ -13,7 +13,7 @@ export function getWindowChromeKind(): WindowChromeKind {
     if (!isTauriRuntime()) return "browser";
     const chrome = window.__CUEPOINT_WINDOW_CHROME__;
     return chrome && typeof chrome === "object" &&
-        "version" in chrome && chrome.version === 1 &&
-        "kind" in chrome && chrome.kind === "macos-overlay"
+    "version" in chrome && chrome.version === 1 &&
+    "kind" in chrome && chrome.kind === "macos-overlay"
         ? "macos-overlay" : "native";
 }

@@ -77,14 +77,14 @@ function WorldSettingEditor({
                 {FIELDS.map((field) => (
                     <div key={field.key}>
                         <Field label={field.label}>
-                        <Textarea
-                            className="mt-2 min-h-36 resize-y bg-card/60"
-                            value={draft[field.key]}
-                            placeholder={field.placeholder}
-                            onChange={(event) => {
-                                setDraft((current) => ({...current, [field.key]: event.target.value}));
-                            }}
-                        />
+                            <Textarea
+                                className="mt-2 min-h-36 resize-y bg-card/60"
+                                value={draft[field.key]}
+                                placeholder={field.placeholder}
+                                onChange={(event) => {
+                                    setDraft((current) => ({...current, [field.key]: event.target.value}));
+                                }}
+                            />
                         </Field>
                         <p className="text-muted-foreground mt-2 text-xs leading-[18px]">{field.hint}</p>
                     </div>

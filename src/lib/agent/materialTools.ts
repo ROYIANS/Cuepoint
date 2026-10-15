@@ -251,7 +251,7 @@ export const MATERIAL_TOOLS = [
         description: '搜索版本素材元信息，默认不含归档。scope 可选 global/ip/project；绑定对话只能读通用、关联 IP 和当前项目。source=legacy 时搜索已有原始 media/角色/场景/道具/风格，须给 legacyKind，默认当前项目或工作室。仅列标题、类型、版本等，不代表已读图片或文档。',
         spec: searchSpec,
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const bound = await frozenProjectScope(context, db), query = args.query.trim().toLocaleLowerCase(),
                 offset = args.offset ?? 0, limit = args.limit ?? 10;
             if (args.source === 'legacy') {
@@ -301,7 +301,7 @@ export const MATERIAL_TOOLS = [
         description: '读取精确素材 ID、指定历史 revision 的文件元信息/设定摘要；分页列出版本、项目使用记录。不会读取图片像素、音视频或文档正文。返回的是当前名称/标签/备注，旧版本保持独立内容。',
         spec: readSpec,
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const material = await currentMaterial(args.materialId, context, undefined, db);
             const version = await db.materialVersions.where('[materialId+revision]').equals([material.id, args.revision ?? material.revision]).first();
             if (!version) throw new Error('素材版本不存在');
@@ -343,7 +343,10 @@ export const MATERIAL_TOOLS = [
         description: '按 materialId/revision 读取 TXT、Markdown、文字型 PDF、DOCX。start 从 0 开始，每次最多 3 段/12000 字。提取范围、原始行/页/段和 citation 随结果返回；partial 或 hasMore 时不能声称已读全文。仅库内文件，无任意路径/URL读取。',
         effect: 'read',
         highRisk: () => false,
-        execute: (raw, context) => { const db=context.store ?? productDb; return readMaterialText(textSpec.schema.parse(raw), context, db); }
+        execute: (raw, context) => {
+            const db = context.store ?? productDb;
+            return readMaterialText(textSpec.schema.parse(raw), context, db);
+        }
     }),
     defineTool({schema: imageSpec.schema, json: imageSpec.json}, {
         name: 'material_read_image',
@@ -352,7 +355,7 @@ export const MATERIAL_TOOLS = [
         effect: 'read',
         highRisk: () => false,
         execute: (raw, context) => {
-    const db=context.store ?? productDb;
+            const db = context.store ?? productDb;
             const args = imageSpec.schema.parse(raw);
             return queueMaterialImage(args.materialId, args.revision, context, args.mediaId, db);
         }
@@ -371,7 +374,7 @@ export const MATERIAL_TOOLS = [
         }),
         requiresConfirmation: true,
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const material = await activeMaterial(args.materialId, args.revision, context, db),
                 usage = await usages(material.id, context, db);
             return {
@@ -381,7 +384,7 @@ export const MATERIAL_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             await updateMaterialMetadata(args.materialId, args.patch, args.revision, db);
             return {material: materialSummary((await db.libraryMaterials.get(args.materialId))!)};
         },
@@ -393,18 +396,18 @@ export const MATERIAL_TOOLS = [
         spec: promoteSpec,
         requiresConfirmation: true,
         scope: async (args, context) => {
-    const db=context.store ?? productDb;
+            const db = context.store ?? productDb;
             await destinationScope(scoped(args.scope), context, db);
             if (args.source !== 'library') await sourceLegacy(args.source, args.sourceId, context, db); else await activeMaterial(args.sourceId, args.expectedRevision!, context, db);
         },
-        owners: async (args,context) => {
-    const db=context.store ?? productDb;
+        owners: async (args, context) => {
+            const db = context.store ?? productDb;
             if (args.source === 'library') return [];
             const row = args.source === 'media' ? await db.media.get(args.sourceId) : await settingTable(args.source, db).get(args.sourceId);
             return row ? [row.projectId] : [];
         },
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const destination = scoped(args.scope), target = await destinationScope(destination, context, db);
             const legacy = args.source === 'library' ? undefined : await sourceLegacy(args.source, args.sourceId, context, db);
             const library = args.source === 'library' ? await activeMaterial(args.sourceId, args.expectedRevision!, context, db) : undefined;
@@ -416,7 +419,7 @@ export const MATERIAL_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const material = args.source === 'library' ? await promoteMaterial(args.sourceId, scoped(args.scope), db) : await promoteLegacyMaterial(args.source, args.sourceId, scoped(args.scope), db);
             return {material: materialSummary(material)};
         },
@@ -427,12 +430,12 @@ export const MATERIAL_TOOLS = [
         description: '按当前 revision 将素材独立副本加入明确 projectId，绑定对话只能当前项目。IP 素材须同一 IP；项目素材须同一项目。固定采用版本，不自动放入镜头、封面或生成槽位。',
         spec: object({...identity, projectId: id}),
         scope: async (args, context) => {
-    const db=context.store ?? productDb;
+            const db = context.store ?? productDb;
             await targetProject(args.projectId, context, db);
         },
         owners: args => [args.projectId],
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const material = await activeMaterial(args.materialId, args.revision, context, db),
                 project = await targetProject(args.projectId, context, db);
             if (material.scope.kind === 'project' && material.scope.id !== args.projectId || material.scope.kind === 'ip' && material.scope.id !== project.link?.ipId) throw new Error('素材归属与目标项目不兼容；IP 素材需同一 IP，项目素材需同一项目。可先明确确认保存为通用素材');
@@ -447,7 +450,7 @@ export const MATERIAL_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             return materialUseResult(await adoptMaterialInProject(args.materialId, args.projectId, db));
         },
     }),
@@ -457,16 +460,16 @@ export const MATERIAL_TOOLS = [
         description: '给 useId 所属项目加入库中当前 revision 的新副本。旧副本和镜头引用保留；有本地修改的设定不能覆盖。此工具不替换原镜头或封面引用。',
         spec: object({useId: id, revision}),
         scope: async (args, context) => {
-    const db=context.store ?? productDb;
+            const db = context.store ?? productDb;
             await readMaterialUseState(args.useId, context, db);
         },
-        owners: async (args,context) => {
-    const db=context.store ?? productDb;
+        owners: async (args, context) => {
+            const db = context.store ?? productDb;
             const use = await db.materialUses.get(args.useId);
             return use ? [use.projectId] : [];
         },
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const state = await readMaterialUseState(args.useId, context, db);
             await activeMaterial(state.material.id, args.revision, context, db);
             return {
@@ -476,7 +479,7 @@ export const MATERIAL_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             return materialUseResult(await updateMaterialUse(args.useId, db));
         },
     }),
@@ -487,7 +490,7 @@ export const MATERIAL_TOOLS = [
         spec: object({...identity, archived: bool}),
         requiresConfirmation: true,
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const material = await currentMaterial(args.materialId, context, args.revision, db);
             if (!args.archived) await assertActiveMaterialScope(material.scope, db);
             const usage = await usages(material.id, context, db);
@@ -498,7 +501,7 @@ export const MATERIAL_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             await setMaterialArchived(args.materialId, args.archived, db);
             return {material: materialSummary((await db.libraryMaterials.get(args.materialId))!)};
         },
@@ -510,16 +513,16 @@ export const MATERIAL_TOOLS = [
         spec: object({useId: id}),
         highRisk: true,
         scope: async (args, context) => {
-    const db=context.store ?? productDb;
+            const db = context.store ?? productDb;
             await projectUseState(args.useId, context, db);
         },
-        owners: async (args,context) => {
-    const db=context.store ?? productDb;
+        owners: async (args, context) => {
+            const db = context.store ?? productDb;
             const use = await db.materialUses.get(args.useId);
             return use ? [use.projectId] : [];
         },
         async prepare(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const state = await projectUseState(args.useId, context, db);
             const name = state.target ? ('filename' in state.target ? state.target.filename : state.target.name) : '素材副本';
             return {
@@ -529,7 +532,7 @@ export const MATERIAL_TOOLS = [
             };
         },
         async execute(args, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             await releaseMaterialUse(args.useId, db);
             return {released: true, useId: args.useId, note: '已移除闲置项目副本，素材库原版本保留。'};
         },

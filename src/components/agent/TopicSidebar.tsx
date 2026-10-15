@@ -91,8 +91,15 @@ function TopicListBody({
     const byProject = grouping === "project" && projects !== undefined;
     const sections = useMemo<Section[]>(
         () => byProject
-            ? groupThreadsByProject(filtered, projects).map((group) => ({...group, projectId: group.key === UNLINKED_PROJECT_KEY ? undefined : group.key}))
-            : groupThreadsByTime(filtered).map((group) => ({key: `time:${group.label}`, label: group.label, threads: group.threads})),
+            ? groupThreadsByProject(filtered, projects).map((group) => ({
+                ...group,
+                projectId: group.key === UNLINKED_PROJECT_KEY ? undefined : group.key
+            }))
+            : groupThreadsByTime(filtered).map((group) => ({
+                key: `time:${group.label}`,
+                label: group.label,
+                threads: group.threads
+            })),
         [byProject, filtered, projects],
     );
     const projectNames = useMemo(() => new Map((projects ?? []).map((project) => [project.id, project.name])), [projects]);
@@ -168,7 +175,8 @@ function TopicListBody({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="agent-topic-menu">
                         <DropdownMenuLabel className="text-muted-foreground text-xs">分组方式</DropdownMenuLabel>
-                        <DropdownMenuRadioGroup value={grouping} onValueChange={(value) => chooseGrouping(value === "time" ? "time" : "project")}>
+                        <DropdownMenuRadioGroup value={grouping}
+                                                onValueChange={(value) => chooseGrouping(value === "time" ? "time" : "project")}>
                             <DropdownMenuRadioItem value="project">按项目</DropdownMenuRadioItem>
                             <DropdownMenuRadioItem value="time">按时间</DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
@@ -188,7 +196,8 @@ function TopicListBody({
                         // Matching sections open while searching; the user's own folding returns afterwards.
                         const closed = Boolean(folded[section.key]) && !searching;
                         return (
-                            <Flexbox key={section.key} gap={1} className={byProject ? "agent-sidebar-section-body is-project" : "agent-sidebar-section-body"}>
+                            <Flexbox key={section.key} gap={1}
+                                     className={byProject ? "agent-sidebar-section-body is-project" : "agent-sidebar-section-body"}>
                                 <div className="agent-sidebar-group-row">
                                     <button
                                         type="button"
@@ -200,7 +209,10 @@ function TopicListBody({
                                     >
                                         {byProject ? (
                                             section.projectId
-                                                ? (closed ? <Folder size={16} aria-hidden className="agent-sidebar-group-icon"/> : <FolderOpen size={16} aria-hidden className="agent-sidebar-group-icon"/>)
+                                                ? (closed ?
+                                                    <Folder size={16} aria-hidden className="agent-sidebar-group-icon"/> :
+                                                    <FolderOpen size={16} aria-hidden
+                                                                className="agent-sidebar-group-icon"/>)
                                                 : <Tray size={16} aria-hidden className="agent-sidebar-group-icon"/>
                                         ) : null}
                                         <span className="agent-sidebar-group-label">{section.label}</span>
@@ -222,7 +234,8 @@ function TopicListBody({
                                                     <Plus size={14} aria-hidden/>
                                                 </button>
                                             </TooltipTrigger>
-                                            <TooltipContent side="right">{`在 ${section.label} 中新建话题`}</TooltipContent>
+                                            <TooltipContent
+                                                side="right">{`在 ${section.label} 中新建话题`}</TooltipContent>
                                         </Tooltip>
                                     ) : null}
                                 </div>
@@ -298,9 +311,11 @@ function TopicRow({
                         {thread.title}
                     </button>
                 </TooltipTrigger>
-                <TooltipContent side="right">{projectName ? `${thread.title} · ${projectName}` : thread.title}</TooltipContent>
+                <TooltipContent
+                    side="right">{projectName ? `${thread.title} · ${projectName}` : thread.title}</TooltipContent>
             </Tooltip>
-            <time className="agent-topic-row-time" dateTime={thread.updatedAt}>{formatRelativeShort(thread.updatedAt, now)}</time>
+            <time className="agent-topic-row-time"
+                  dateTime={thread.updatedAt}>{formatRelativeShort(thread.updatedAt, now)}</time>
             <span className="agent-topic-row-actions">
                 <button type="button" role="button" className="agent-topic-row-action" title="重命名"
                         aria-label="重命名" onClick={onRename}>

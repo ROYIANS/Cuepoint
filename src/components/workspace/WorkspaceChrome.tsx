@@ -13,7 +13,11 @@ import {
 import {ProjectSettingsPanel} from "./ProjectSettingsPanel";
 import {flushPendingDrafts} from "@/lib/debouncedDraft";
 import {Link, Navigate, Outlet, useNavigate, useRouterState} from "@tanstack/react-router";
-import {useVideoWorkspaceQuery, useVideoWorkspaceRepository, useVideoWorkspaceReadStatus} from "@/lib/videoWorkspaceRepository";
+import {
+    useVideoWorkspaceQuery,
+    useVideoWorkspaceReadStatus,
+    useVideoWorkspaceRepository
+} from "@/lib/videoWorkspaceRepository";
 import {Download, Library, MoreHorizontal, Settings2} from "@/components/ui/icons";
 import {useRef, useState} from "react";
 import {toast} from "sonner";
@@ -104,13 +108,16 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
         project === undefined ||
         (project && normalizeProjectMode(project.mode) === "film" && firstProjectEpisode === undefined)
     ) {
-        return <AppFrame><PageState kind={readStatus.error ? "error" : "loading"} title={readStatus.error ? "读取工作区失败" : "加载项目…"} description={readStatus.error} action={readStatus.error ? <Button variant="outline" onClick={readStatus.retry}>重新读取</Button> : undefined}/></AppFrame>;
+        return <AppFrame><PageState kind={readStatus.error ? "error" : "loading"}
+                                    title={readStatus.error ? "读取工作区失败" : "加载项目…"}
+                                    description={readStatus.error} action={readStatus.error ?
+            <Button variant="outline" onClick={readStatus.retry}>重新读取</Button> : undefined}/></AppFrame>;
     }
 
     if (project === null) {
         return (
             <AppFrame><PageState kind="missing" title="找不到这个项目"
-                action={<Button onClick={() => void navigate({to: "/projects"})}>返回工作室</Button>}/></AppFrame>
+                                 action={<Button onClick={() => void navigate({to: "/projects"})}>返回工作室</Button>}/></AppFrame>
         );
     }
 
@@ -130,14 +137,20 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
     if (episodeId && currentEpisode === null && !previouslyLoadedEpisode && !outputProtected && !projectMissing) {
         return (
             <AppFrame><PageState kind="missing" title="找不到这一集"
-                action={<Button onClick={() => void navigate({to: "/p/$projectId", params: {projectId}})}>返回项目</Button>}/></AppFrame>
+                                 action={<Button onClick={() => void navigate({
+                                     to: "/p/$projectId",
+                                     params: {projectId}
+                                 })}>返回项目</Button>}/></AppFrame>
         );
     }
 
     if (!unavailable && !outputProtected && kind === "video" && mode === "film" && firstProjectEpisode === null && !previouslyLoadedEpisode && !projectHome && pathname !== `/p/${projectId}/memory`) {
         return (
             <AppFrame><PageState kind="missing" title="这个单片项目缺少内部集"
-                action={<Button onClick={() => void navigate({to: "/p/$projectId", params: {projectId}})}>修复项目</Button>}/></AppFrame>
+                                 action={<Button onClick={() => void navigate({
+                                     to: "/p/$projectId",
+                                     params: {projectId}
+                                 })}>修复项目</Button>}/></AppFrame>
         );
     }
 
@@ -154,7 +167,8 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
             className="module-navigation-section">
             <p className="module-navigation-heading">{project.name}</p>
             <Link to="/projects" className="module-navigation-row">全部项目</Link>
-            {kind === "video" && mode !== "film" && episode && <Link to="/p/$projectId" params={{projectId}} className="module-navigation-row">集列表</Link>}
+            {kind === "video" && mode !== "film" && episode &&
+                <Link to="/p/$projectId" params={{projectId}} className="module-navigation-row">集列表</Link>}
             {kind !== "video" ? <Link to="/p/$projectId" params={{projectId}}
                                       className={cn("module-navigation-row", projectHome && "bg-accent text-foreground font-medium")}>{kind === "audio" ? "音频制作" : "音乐创作"}</Link> : filmEpisode ? (
                 <>
@@ -252,11 +266,13 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                     })}
                 </>
             )}
-            {kind === "video" && mode !== "film" && episode && <Link to="/p/$projectId/world" params={{projectId}} className={cn("module-navigation-row", pathname.startsWith(`/p/${projectId}/world`) && "bg-accent text-foreground font-medium")}>世界</Link>}
+            {kind === "video" && mode !== "film" && episode && <Link to="/p/$projectId/world" params={{projectId}}
+                                                                     className={cn("module-navigation-row", pathname.startsWith(`/p/${projectId}/world`) && "bg-accent text-foreground font-medium")}>世界</Link>}
             {kind === "video" && mode !== "film" && firstEpisodeResult?.projectId === projectId && firstEpisodeResult.episodes?.length ? <>
                 <p className="module-navigation-heading mt-4">项目各集</p>
-                {firstEpisodeResult.episodes.map((row) => <Link key={row.id} to="/p/$projectId/e/$episodeId" params={{projectId, episodeId: row.id}}
-                    className={cn("module-navigation-row", row.id === episodeId && "bg-accent text-foreground font-medium")}>{episodeLabel(row)}</Link>)}
+                {firstEpisodeResult.episodes.map((row) => <Link key={row.id} to="/p/$projectId/e/$episodeId"
+                                                                params={{projectId, episodeId: row.id}}
+                                                                className={cn("module-navigation-row", row.id === episodeId && "bg-accent text-foreground font-medium")}>{episodeLabel(row)}</Link>)}
             </> : null}
             <Link to="/p/$projectId/memory" params={{projectId}}
                   className={cn("module-navigation-row", pathname === `/p/${projectId}/memory` && "bg-accent text-foreground font-medium")}>记忆</Link>
@@ -308,113 +324,126 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                     if (imported) await navigate({to: "/p/$projectId", params: {projectId: imported.id}});
                 })();
             }}>
-            <div className="workspace-shell flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-background">
-                <VideoWorkspaceReadNotice {...readStatus}/>
-                {unavailable && <div className="p-4">
-                    <p role="alert">{projectMissing ? "找不到这个项目" : "找不到这一集"}。已打开的修改仍保留，可复制或关闭；当前内容不能保存。</p>
-                    <Button className="mt-3" variant="outline"
-                            onClick={() => void navigate({to: "/projects"})}>返回工作室</Button>
-                </div>}
-                <AppHeaderPortal><div hidden={unavailable} style={unavailable ? {display: "none"} : undefined}
-                        className="workspace-header">
-                    <div className="workspace-header-title flex min-w-0 items-center gap-1">
-                        <span className="truncate text-sm font-medium" title={title}>{title}</span>
-                    </div>
-                    <div className="workspace-header-actions flex items-center justify-end gap-1" data-tauri-drag-region="false">
-                        <div className="hidden items-center gap-1 sm:flex">
-                        <Button variant="ghost" size="sm" className="px-2" asChild><Link to="/assets" search={{project: projectId}}
-                                                                        aria-label="项目素材"><Library/><span
-                            className="hidden sm:inline">素材</span></Link></Button>
-                        <Button variant="ghost" size="sm" className="px-2" onClick={() => changeSettingsOpen(true)}
-                                aria-label="项目设定">
-                            <Settings2/><span className="hidden sm:inline">项目设定</span>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={backingUp}
-                            aria-label={backingUp ? "正在保存并备份…" : "备份项目"}
-                            className="px-2"
-                            onClick={backupProject}
-                        >
-                            <Download/>
-                            <span className="hidden lg:inline">{backingUp ? "正在保存并备份…" : "备份项目"}</span>
-                        </Button>
-                        </div>
-                        <DropdownMenu><DropdownMenuTrigger asChild><Button size="icon-sm" variant="ghost" className="sm:hidden" aria-label="项目操作"><MoreHorizontal/></Button></DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem asChild><Link to="/assets" search={{project: projectId}}><Library/>项目素材</Link></DropdownMenuItem>
-                                <DropdownMenuItem onSelect={() => changeSettingsOpen(true)}><Settings2/>项目设定</DropdownMenuItem>
-                                <DropdownMenuItem disabled={backingUp} onSelect={backupProject}><Download/>{backingUp ? "正在保存并备份…" : "备份项目"}</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                </div></AppHeaderPortal>
-                <ModuleLayout navigation={kind !== "video" && projectHome ? undefined : projectNavigation}
-                              navigationLabel="项目工作区" mainClassName="overflow-hidden">
-                    <div className={cn("app-scroll min-h-0 min-w-0 flex-1", kind === "video" ? "overflow-auto" : "overflow-hidden")} inert={unavailable}>
-                        <Outlet/>
-                    </div>
-                </ModuleLayout>
-
-                <Dialog open={settingsOpen && (!unavailable || outputProtected)} onOpenChange={changeSettingsOpen}>
-                    <DialogContent className="flex flex-col overflow-hidden sm:max-w-2xl">
-                        <DialogHeader>
-                            <DialogTitle>项目设定</DialogTitle>
-                        </DialogHeader>
-                        <div className="app-scroll min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
-                        <ProjectSettingsPanel project={project} unavailable={unavailable}
-                                              onOutputState={setOutputState}/>
-                        <div>
-                            <p className="text-sm font-medium">项目封面</p>
-                            <div className="mt-2 flex items-start gap-4">
-                                <div
-                                    className="aspect-[2/3] w-28 overflow-hidden rounded-xl bg-card ring-foreground/8 ring-1">
-                                    <Still mediaId={project.coverMediaId} title={project.name}/>
-                                </div>
-                                <div className="flex flex-col gap-2">
-                                    <Button variant="outline" size="sm" disabled={unavailable}
-                                    onClick={() => void uploadCover()}>
-                                        {project.coverMediaId ? "更换封面" : "上传封面"}
+                <div className="workspace-shell flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-background">
+                    <VideoWorkspaceReadNotice {...readStatus}/>
+                    {unavailable && <div className="p-4">
+                        <p role="alert">{projectMissing ? "找不到这个项目" : "找不到这一集"}。已打开的修改仍保留，可复制或关闭；当前内容不能保存。</p>
+                        <Button className="mt-3" variant="outline"
+                                onClick={() => void navigate({to: "/projects"})}>返回工作室</Button>
+                    </div>}
+                    <AppHeaderPortal>
+                        <div hidden={unavailable} style={unavailable ? {display: "none"} : undefined}
+                             className="workspace-header">
+                            <div className="workspace-header-title flex min-w-0 items-center gap-1">
+                                <span className="truncate text-sm font-medium" title={title}>{title}</span>
+                            </div>
+                            <div className="workspace-header-actions flex items-center justify-end gap-1"
+                                 data-tauri-drag-region="false">
+                                <div className="hidden items-center gap-1 sm:flex">
+                                    <Button variant="ghost" size="sm" className="px-2" asChild><Link to="/assets"
+                                                                                                     search={{project: projectId}}
+                                                                                                     aria-label="项目素材"><Library/><span
+                                        className="hidden sm:inline">素材</span></Link></Button>
+                                    <Button variant="ghost" size="sm" className="px-2"
+                                            onClick={() => changeSettingsOpen(true)}
+                                            aria-label="项目设定">
+                                        <Settings2/><span className="hidden sm:inline">项目设定</span>
                                     </Button>
-                                    {project.coverMediaId ? (
-                                        <Button variant="ghost" size="sm" disabled={unavailable}
-                                                onClick={() => void clearCover()}>
-                                            清除封面
-                                        </Button>
-                                    ) : (
-                                        <p className="text-muted-foreground text-xs leading-5">
-                                            {kind === "video" ? "未设置时，项目库会用最早镜头的首帧作封面。" : "为项目上传一张封面，方便在项目库中识别。"}
-                                        </p>
-                                    )}
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        disabled={backingUp}
+                                        aria-label={backingUp ? "正在保存并备份…" : "备份项目"}
+                                        className="px-2"
+                                        onClick={backupProject}
+                                    >
+                                        <Download/>
+                                        <span
+                                            className="hidden lg:inline">{backingUp ? "正在保存并备份…" : "备份项目"}</span>
+                                    </Button>
                                 </div>
+                                <DropdownMenu><DropdownMenuTrigger asChild><Button size="icon-sm" variant="ghost"
+                                                                                   className="sm:hidden"
+                                                                                   aria-label="项目操作"><MoreHorizontal/></Button></DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem asChild><Link to="/assets"
+                                                                        search={{project: projectId}}><Library/>项目素材</Link></DropdownMenuItem>
+                                        <DropdownMenuItem onSelect={() => changeSettingsOpen(true)}><Settings2/>项目设定</DropdownMenuItem>
+                                        <DropdownMenuItem disabled={backingUp}
+                                                          onSelect={backupProject}><Download/>{backingUp ? "正在保存并备份…" : "备份项目"}
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         </div>
+                    </AppHeaderPortal>
+                    <ModuleLayout navigation={kind !== "video" && projectHome ? undefined : projectNavigation}
+                                  navigationLabel="项目工作区" mainClassName="overflow-hidden">
+                        <div
+                            className={cn("app-scroll min-h-0 min-w-0 flex-1", kind === "video" ? "overflow-auto" : "overflow-hidden")}
+                            inert={unavailable}>
+                            <Outlet/>
                         </div>
-                        <DialogFooter>
-                            <Button variant="outline" disabled={outputState.saving}
-                                    onClick={() => changeSettingsOpen(false)}>
-                                完成
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-                <AlertDialog open={confirmSettingsClose} onOpenChange={setConfirmSettingsClose}>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>输出配置尚未保存</AlertDialogTitle>
-                            <AlertDialogDescription>返回后可保存当前画幅和生成默认值；放弃只撤销本次输出配置修改，已自动保存的项目信息会保留。</AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>返回继续编辑</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => {
-                                setOutputState({dirty: false, saving: false});
-                                setSettingsOpen(false);
-                            }}>放弃输出修改</AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            </div>
+                    </ModuleLayout>
+
+                    <Dialog open={settingsOpen && (!unavailable || outputProtected)} onOpenChange={changeSettingsOpen}>
+                        <DialogContent className="flex flex-col overflow-hidden sm:max-w-2xl">
+                            <DialogHeader>
+                                <DialogTitle>项目设定</DialogTitle>
+                            </DialogHeader>
+                            <div className="app-scroll min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
+                                <ProjectSettingsPanel project={project} unavailable={unavailable}
+                                                      onOutputState={setOutputState}/>
+                                <div>
+                                    <p className="text-sm font-medium">项目封面</p>
+                                    <div className="mt-2 flex items-start gap-4">
+                                        <div
+                                            className="aspect-[2/3] w-28 overflow-hidden rounded-xl bg-card ring-foreground/8 ring-1">
+                                            <Still mediaId={project.coverMediaId} title={project.name}/>
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <Button variant="outline" size="sm" disabled={unavailable}
+                                                    onClick={() => void uploadCover()}>
+                                                {project.coverMediaId ? "更换封面" : "上传封面"}
+                                            </Button>
+                                            {project.coverMediaId ? (
+                                                <Button variant="ghost" size="sm" disabled={unavailable}
+                                                        onClick={() => void clearCover()}>
+                                                    清除封面
+                                                </Button>
+                                            ) : (
+                                                <p className="text-muted-foreground text-xs leading-5">
+                                                    {kind === "video" ? "未设置时，项目库会用最早镜头的首帧作封面。" : "为项目上传一张封面，方便在项目库中识别。"}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button variant="outline" disabled={outputState.saving}
+                                        onClick={() => changeSettingsOpen(false)}>
+                                    完成
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                    <AlertDialog open={confirmSettingsClose} onOpenChange={setConfirmSettingsClose}>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>输出配置尚未保存</AlertDialogTitle>
+                                <AlertDialogDescription>返回后可保存当前画幅和生成默认值；放弃只撤销本次输出配置修改，已自动保存的项目信息会保留。</AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>返回继续编辑</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => {
+                                    setOutputState({dirty: false, saving: false});
+                                    setSettingsOpen(false);
+                                }}>放弃输出修改</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
             </AppFrame>
         </WorkspaceUnavailableContext>
     );

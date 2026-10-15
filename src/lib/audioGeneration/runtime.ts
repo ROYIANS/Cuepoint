@@ -184,8 +184,8 @@ async function downloadResults(job: AudioGenerationJob, options: AudioGeneration
     }, db);
 }
 
-export async function submitAudioGeneration(projectId: string, jobId: string, options: AudioGenerationOptions = {},store?:ProductStore): Promise<AudioGenerationJob> {
-    const db=store ?? productDb;
+export async function submitAudioGeneration(projectId: string, jobId: string, options: AudioGenerationOptions = {}, store?: ProductStore): Promise<AudioGenerationJob> {
+    const db = store ?? productDb;
     return locked(jobId, async () => {
         let job = await readJob(projectId, jobId, db);
         if (job.status !== "prepared" || job.dormant) return job;
@@ -209,7 +209,11 @@ export async function submitAudioGeneration(projectId: string, jobId: string, op
             if (job.referenceFingerprint && reference?.fingerprint !== job.referenceFingerprint) throw new Error("克隆参考音频已变化，请重新准备生成");
             options.signal?.throwIfAborted();
         } catch (error) {
-            return change(job, {status: "failed", failureStage: "preflight", error: error instanceof Error ? error.message : "提交前检查失败"}, db);
+            return change(job, {
+                status: "failed",
+                failureStage: "preflight",
+                error: error instanceof Error ? error.message : "提交前检查失败"
+            }, db);
         }
         if (job.input.kind === "speech") {
             const response = job.input.mimo
@@ -265,8 +269,8 @@ export async function submitAudioGeneration(projectId: string, jobId: string, op
 }
 
 /** One bounded monitoring pass. Mounting a workspace may call this, never submit. */
-export async function refreshAudioGeneration(projectId: string, jobId: string, options: AudioGenerationOptions = {},store?:ProductStore): Promise<AudioGenerationJob> {
-    const db=store ?? productDb;
+export async function refreshAudioGeneration(projectId: string, jobId: string, options: AudioGenerationOptions = {}, store?: ProductStore): Promise<AudioGenerationJob> {
+    const db = store ?? productDb;
     return locked(jobId, async () => {
         let job = await readJob(projectId, jobId, db);
         if (job.dormant || job.status === "saved" || job.status === "prepared") return job;
@@ -290,7 +294,7 @@ export async function refreshAudioGeneration(projectId: string, jobId: string, o
             return row;
         };
         const persistObservations = async (store?: ProductStore) => {
-    const db = store ?? productDb;
+            const db = store ?? productDb;
             // During a partial pass, only this pass's verified processing can set running.
             const taskObservations = job.taskIds.flatMap(taskId => {
                 const row = observed.find(item => item.taskId === taskId) ?? job.taskObservations?.find(item => item.taskId === taskId);

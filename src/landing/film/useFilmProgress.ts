@@ -1,8 +1,8 @@
-import {useEffect, useRef, useState, type RefObject} from "react";
+import {type RefObject, useEffect, useRef, useState} from "react";
 import {progressToFrame} from "./timeline";
 import {toneCss} from "./tone";
 
-export type FilmState = {progress: number; sceneIndex: number; local: number};
+export type FilmState = { progress: number; sceneIndex: number; local: number };
 
 export type FilmDriverEnv = {
     raf: (callback: (time: number) => void) => number;
@@ -129,7 +129,7 @@ export function createFilmDriver(options: {
 }
 
 /** Where the film's track sits in the document, in px: `top` is where progress is 0, `range` the scroll distance to progress 1, `end` where the credits begin. */
-export type TrackMetrics = {top: number; range: number; end: number};
+export type TrackMetrics = { top: number; range: number; end: number };
 
 export function readTrackMetrics(track: HTMLElement | null): TrackMetrics | undefined {
     if (!track) return undefined;

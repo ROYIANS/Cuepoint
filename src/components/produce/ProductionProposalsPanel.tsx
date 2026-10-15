@@ -208,43 +208,50 @@ function ProposalEditor({initialShot, shots, onClose, onSelect}: {
     }}><DialogContent className="flex flex-col overflow-hidden sm:max-w-2xl" showCloseButton={!busy}>
         <DialogHeader><DialogTitle>准备镜头变更</DialogTitle><DialogDescription>保存后会展示变更前后对比，确认应用时才会修改镜头。</DialogDescription></DialogHeader>
         <div className="min-h-0 space-y-4 overflow-y-auto p-1">
-        <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2"><Label htmlFor={`${editorId}-shot`}>目标镜头</Label><Select value={initialShot.id}
-                                          disabled={busy} onValueChange={(value) => {
-                const shot = shots.find((item) => item.id === value);
-                if (shot) leave(() => onSelect(shot));
-            }}><SelectTrigger id={`${editorId}-shot`} className="w-full"><SelectValue/></SelectTrigger>
-                <SelectContent>{shots.map((shot) => <SelectItem key={shot.id}
-                                            value={shot.id}>镜头 {shot.shotNumber || shot.order + 1}</SelectItem>)}</SelectContent></Select></div>
-            <div className="grid gap-2"><Label htmlFor={`${editorId}-mode`}>变更类型</Label><Select value={mode} disabled={busy}
-                                          onValueChange={(value) => changeMode(value as typeof mode)}>
-                <SelectTrigger id={`${editorId}-mode`} className="w-full"><SelectValue/></SelectTrigger>
-                <SelectContent><SelectItem value="text">镜头文字</SelectItem>
-                {Object.entries(SLOT_LABELS).map(([key, label]) => <SelectItem key={key} value={key}>{label}素材</SelectItem>)}
-                </SelectContent></Select></div>
+            <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-2"><Label htmlFor={`${editorId}-shot`}>目标镜头</Label><Select
+                    value={initialShot.id}
+                    disabled={busy} onValueChange={(value) => {
+                    const shot = shots.find((item) => item.id === value);
+                    if (shot) leave(() => onSelect(shot));
+                }}><SelectTrigger id={`${editorId}-shot`} className="w-full"><SelectValue/></SelectTrigger>
+                    <SelectContent>{shots.map((shot) => <SelectItem key={shot.id}
+                                                                    value={shot.id}>镜头 {shot.shotNumber || shot.order + 1}</SelectItem>)}</SelectContent></Select>
+                </div>
+                <div className="grid gap-2"><Label htmlFor={`${editorId}-mode`}>变更类型</Label><Select value={mode}
+                                                                                                        disabled={busy}
+                                                                                                        onValueChange={(value) => changeMode(value as typeof mode)}>
+                    <SelectTrigger id={`${editorId}-mode`} className="w-full"><SelectValue/></SelectTrigger>
+                    <SelectContent><SelectItem value="text">镜头文字</SelectItem>
+                        {Object.entries(SLOT_LABELS).map(([key, label]) => <SelectItem key={key}
+                                                                                       value={key}>{label}素材</SelectItem>)}
+                    </SelectContent></Select></div>
+            </div>
+            {mode === "text" ? <div className="space-y-4">
+                <Field label="内容"><Textarea value={content} disabled={busy}
+                                              onChange={(event) => setContent(event.target.value)}
+                                              className="min-h-28"/></Field>
+                <Field label="备注"><Textarea value={notes} disabled={busy}
+                                              onChange={(event) => setNotes(event.target.value)}/></Field>
+                <Field label="时长（秒）"><Input type="number" min={0} step="any"
+                                               value={duration} disabled={busy}
+                                               onChange={(event) => setDuration(event.target.value)}/></Field>
+            </div> : <div className="space-y-3">{result ? <ResultPreview label="已选素材" result={result}/> : null}
+                {picker ?
+                    <MediaPicker projectId={initialShot.projectId}
+                                 kinds={mode === "clip" ? ["image", "video"] : ["image"]}
+                                 disabled={busy} selectedIds={result ? [result.mediaId] : []}
+                                 onClose={() => setPicker(false)} onSelect={(record) => {
+                        setResult({mediaId: record.id, kind: record.mimeType.startsWith("video/") ? "video" : "image"});
+                        setPicker(false);
+                    }}/> :
+                    <Button variant="outline" disabled={busy} onClick={() => setPicker(true)}>选择已有素材</Button>}
+                {mode === "clip" ?
+                    <p className="text-muted-foreground text-xs">图片可作为成片占位，完整交付仍需要视频。</p> : null}</div>}
+            {error ? <p role="alert" className="text-destructive text-sm">{error}</p> : null}
         </div>
-        {mode === "text" ? <div className="space-y-4">
-            <Field label="内容"><Textarea value={content} disabled={busy}
-                                                                       onChange={(event) => setContent(event.target.value)}
-                                                                       className="min-h-28"/></Field>
-            <Field label="备注"><Textarea value={notes} disabled={busy}
-                                                                       onChange={(event) => setNotes(event.target.value)}/></Field>
-            <Field label="时长（秒）"><Input type="number" min={0} step="any"
-                                                                        value={duration} disabled={busy}
-                                                                        onChange={(event) => setDuration(event.target.value)}/></Field>
-        </div> : <div className="space-y-3">{result ? <ResultPreview label="已选素材" result={result}/> : null}
-            {picker ?
-                <MediaPicker projectId={initialShot.projectId} kinds={mode === "clip" ? ["image", "video"] : ["image"]}
-                             disabled={busy} selectedIds={result ? [result.mediaId] : []}
-                             onClose={() => setPicker(false)} onSelect={(record) => {
-                    setResult({mediaId: record.id, kind: record.mimeType.startsWith("video/") ? "video" : "image"});
-                    setPicker(false);
-                }}/> : <Button variant="outline" disabled={busy} onClick={() => setPicker(true)}>选择已有素材</Button>}
-            {mode === "clip" ?
-                <p className="text-muted-foreground text-xs">图片可作为成片占位，完整交付仍需要视频。</p> : null}</div>}
-        {error ? <p role="alert" className="text-destructive text-sm">{error}</p> : null}
-        </div>
-        <DialogFooter className="shrink-0"><Button variant="ghost" disabled={busy} onClick={() => leave(onClose)}>返回</Button><Button
+        <DialogFooter className="shrink-0"><Button variant="ghost" disabled={busy}
+                                                   onClick={() => leave(onClose)}>返回</Button><Button
             disabled={busy} onClick={() => void save()}>{busy ? "保存中…" : "保存并预览提案"}</Button></DialogFooter>
     </DialogContent></Dialog>
         <AlertDialog open={!!discardAction} onOpenChange={(open) => {

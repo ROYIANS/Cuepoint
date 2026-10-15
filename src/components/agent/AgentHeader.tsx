@@ -12,7 +12,16 @@ function headerPopupRoot(trigger: HTMLElement): HTMLElement {
 }
 
 /** The portal keeps Agent providers; its explicit popup host stays outside surface clipping. */
-export function AgentHeader({title, thread, topicToggle: _topicToggle, onRename, onDelete, onOpenTask, taskTitle, onNewTopic}: {
+export function AgentHeader({
+                                title,
+                                thread,
+                                topicToggle: _topicToggle,
+                                onRename,
+                                onDelete,
+                                onOpenTask,
+                                taskTitle,
+                                onNewTopic
+                            }: {
     title: string;
     thread?: ChatThread;
     topicToggle: ReactNode;
@@ -31,17 +40,31 @@ export function AgentHeader({title, thread, topicToggle: _topicToggle, onRename,
             <div className="agent-header-title-group">
                 <h1 className="agent-conversation-title" title={title}>{title}</h1>
                 {thread && onRename && onDelete && <Dropdown trigger={["click"]} getPopupContainer={headerPopupRoot}
-                    menu={{items: [
-                        {key: "rename", label: "重命名", icon: <Pencil size={14}/>, onClick: () => onRename(thread)},
-                        {key: "delete", label: "删除", icon: <Trash2 size={14}/>, danger: true, onClick: () => onDelete(thread)},
-                    ]}}>
+                                                             menu={{
+                                                                 items: [
+                                                                     {
+                                                                         key: "rename",
+                                                                         label: "重命名",
+                                                                         icon: <Pencil size={14}/>,
+                                                                         onClick: () => onRename(thread)
+                                                                     },
+                                                                     {
+                                                                         key: "delete",
+                                                                         label: "删除",
+                                                                         icon: <Trash2 size={14}/>,
+                                                                         danger: true,
+                                                                         onClick: () => onDelete(thread)
+                                                                     },
+                                                                 ]
+                                                             }}>
                     <span data-tauri-drag-region="false"><ActionIcon icon={MoreHorizontal} title="更多"
-                        aria-label="话题更多操作" aria-haspopup="menu" size="small"/></span>
+                                                                     aria-label="话题更多操作" aria-haspopup="menu"
+                                                                     size="small"/></span>
                 </Dropdown>}
             </div>
             <div className="agent-header-actions" data-tauri-drag-region="false">
                 {onOpenTask && <ActionIcon icon={ListTodo} title={taskTitle ? "任务详情" : "创建关联任务"}
-                    aria-label={taskTitle ? "任务详情" : "创建关联任务"} onClick={onOpenTask}/>}
+                                           aria-label={taskTitle ? "任务详情" : "创建关联任务"} onClick={onOpenTask}/>}
             </div>
             <div className="agent-header-popup-host" data-agent-header-popup="" data-tauri-drag-region="false"/>
         </div>

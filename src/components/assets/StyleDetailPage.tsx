@@ -103,7 +103,10 @@ function StyleDetailContent({
                             placeholder="画风、光色、镜头气质"
                         />
                         <details className="border-t pt-4">
-                            <summary className="focus-visible:ring-ring/50 cursor-pointer rounded-md text-sm leading-5 font-semibold focus-visible:outline-none focus-visible:ring-[3px]">创作细节 · 选填</summary>
+                            <summary
+                                className="focus-visible:ring-ring/50 cursor-pointer rounded-md text-sm leading-5 font-semibold focus-visible:outline-none focus-visible:ring-[3px]">创作细节
+                                · 选填
+                            </summary>
                             <p className="text-muted-foreground mt-2 text-xs leading-5">把色彩、光影与构图方向写清楚，作为整部作品的视觉依据。所有信息均为选填。</p>
                             <div className="mt-4 space-y-4">
                                 <AssetTextField

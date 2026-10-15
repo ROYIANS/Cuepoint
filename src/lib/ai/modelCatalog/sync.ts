@@ -1,9 +1,16 @@
 import {z} from "zod";
-import {DEVICE_SETTING_MAX_BYTES, deleteDeviceSetting, getDeviceSetting, putDeviceSetting} from "@/db/deviceSettings";
+import {deleteDeviceSetting, DEVICE_SETTING_MAX_BYTES, getDeviceSetting, putDeviceSetting} from "@/db/deviceSettings";
 import {MODEL_CATALOG_URL} from "@/lib/runtimeHttpPolicy";
 import {requestOnce} from "../requestBoundary";
 import {isReadAbort, readResponseBytes, ResponseLimitError, utf8Bytes} from "../boundedResponse";
-import {compareEntries, originOf, projectCommonScope, projectEntry, type ProjectionScope, type RawProvider} from "./projection.mjs";
+import {
+    compareEntries,
+    originOf,
+    projectCommonScope,
+    projectEntry,
+    type ProjectionScope,
+    type RawProvider
+} from "./projection.mjs";
 import scopeJson from "./scope.json";
 import {applySyncedSnapshot, MODEL_CATALOG_KEY, restoreBaselineSnapshot} from "./store";
 import type {CatalogCost, CatalogEntry, CatalogSnapshot} from "./types";
@@ -23,10 +30,17 @@ export interface CatalogSelection {
     modelKeys: string[];
 }
 
-type CatalogSyncFailureCode = "network" | "timeout" | "too-large" | "invalid-format" | "cancelled" | "storage" | "http-status";
+type CatalogSyncFailureCode =
+    "network"
+    | "timeout"
+    | "too-large"
+    | "invalid-format"
+    | "cancelled"
+    | "storage"
+    | "http-status";
 export type CatalogSyncResult =
-    | {ok: true; count: number; syncedAt: string; truncated: boolean}
-    | {ok: false; code: CatalogSyncFailureCode; message: string};
+    | { ok: true; count: number; syncedAt: string; truncated: boolean }
+    | { ok: false; code: CatalogSyncFailureCode; message: string };
 
 const DEFAULT_SELECTION: CatalogSelection = {autoIncludeCommon: true, modelKeys: []};
 
@@ -64,7 +78,12 @@ const modelSchema = z.object({
     reasoning: optional(z.boolean()), tool_call: optional(z.boolean()),
     limit: optional(z.object({context: maybeNumber, output: maybeNumber})),
     modalities: optional(z.object({input: optional(z.array(z.string())), output: optional(z.array(z.string()))})),
-    cost: optional(z.object({input: maybeNumber, output: maybeNumber, cache_read: maybeNumber, cache_write: maybeNumber})),
+    cost: optional(z.object({
+        input: maybeNumber,
+        output: maybeNumber,
+        cache_read: maybeNumber,
+        cache_write: maybeNumber
+    })),
 });
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -72,7 +91,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /** Splits a "provider/id" key; Models.dev provider ids contain no "/". */
-function splitKey(key: string): {provider: string; id: string} | undefined {
+function splitKey(key: string): { provider: string; id: string } | undefined {
     const at = key.indexOf("/");
     return at > 0 && at < key.length - 1 ? {provider: key.slice(0, at), id: key.slice(at + 1)} : undefined;
 }
@@ -117,7 +136,10 @@ export function buildCatalogRows(entries: readonly CatalogEntry[], providerNames
     for (const group of groups.values()) {
         const main = representative(group);
         rows.push({
-            provider: main.provider, providerName: providerNames[main.provider] ?? main.provider, id: main.id, name: main.name,
+            provider: main.provider,
+            providerName: providerNames[main.provider] ?? main.provider,
+            id: main.id,
+            name: main.name,
             ...(main.releaseDate ? {releaseDate: main.releaseDate} : {}),
             ...(main.cost ? {cost: main.cost} : {}),
             ...(main.imageInput !== undefined ? {imageInput: main.imageInput} : {}),
@@ -132,7 +154,10 @@ export function buildCatalogRows(entries: readonly CatalogEntry[], providerNames
  * Sanitizes only the providers the selection can reach. The raw document (about 5.6 MB parsed) is not retained:
  * callers drop it right after this returns.
  */
-function sanitizeProviders(root: Record<string, unknown>, wanted: ReadonlySet<string>): {providers: Record<string, RawProvider>; valid: Set<string>} {
+function sanitizeProviders(root: Record<string, unknown>, wanted: ReadonlySet<string>): {
+    providers: Record<string, RawProvider>;
+    valid: Set<string>
+} {
     const providers: Record<string, RawProvider> = {};
     const valid = new Set<string>();
     for (const [id, raw] of Object.entries(root)) {
@@ -157,7 +182,10 @@ function sanitizeProviders(root: Record<string, unknown>, wanted: ReadonlySet<st
  * prices keep matching at tier 1). Manual picks are merged by normalized id, preferring an original vendor over an
  * aggregator; a manual pick already in the common scope is not repeated.
  */
-function projectSelection(root: Record<string, unknown>, selection: CatalogSelection, now: string): {entries: CatalogEntry[]; providerOrigins: Record<string, string>} | undefined {
+function projectSelection(root: Record<string, unknown>, selection: CatalogSelection, now: string): {
+    entries: CatalogEntry[];
+    providerOrigins: Record<string, string>
+} | undefined {
     const manual = selection.modelKeys.flatMap(key => splitKey(key) ?? []);
     const wanted = new Set<string>(manual.map(item => item.provider));
     if (selection.autoIncludeCommon) for (const id of [...scope.fullProviders, ...scope.originProviders]) wanted.add(id);
@@ -165,7 +193,10 @@ function projectSelection(root: Record<string, unknown>, selection: CatalogSelec
     if (!valid.size) return undefined;
     if (selection.autoIncludeCommon && scope.fullProviders.filter(id => valid.has(id)).length * 2 < scope.fullProviders.length) return undefined;
 
-    const common = selection.autoIncludeCommon ? projectCommonScope(providers, scope, now) : {entries: [], providerOrigins: {}};
+    const common = selection.autoIncludeCommon ? projectCommonScope(providers, scope, now) : {
+        entries: [],
+        providerOrigins: {}
+    };
     const providerOrigins: Record<string, string> = {...common.providerOrigins};
     const have = new Set(common.entries.map(entry => `${entry.provider}\u0000${entry.id}`));
     const groups = new Map<string, CatalogEntry[]>();
@@ -191,11 +222,23 @@ function projectSelection(root: Record<string, unknown>, selection: CatalogSelec
 }
 
 /** Drops the oldest releases (undated first) until the row fits the entry and byte budgets. */
-function fitBudget(entries: CatalogEntry[], providerOrigins: Record<string, string>, syncedAt: string): {entries: CatalogEntry[]; truncated: boolean} | undefined {
-    const bytesOf = (items: CatalogEntry[]) => utf8Bytes(JSON.stringify({v: 1, syncedAt, providerOrigins, entries: items}));
+function fitBudget(entries: CatalogEntry[], providerOrigins: Record<string, string>, syncedAt: string): {
+    entries: CatalogEntry[];
+    truncated: boolean
+} | undefined {
+    const bytesOf = (items: CatalogEntry[]) => utf8Bytes(JSON.stringify({
+        v: 1,
+        syncedAt,
+        providerOrigins,
+        entries: items
+    }));
     let total = bytesOf(entries);
     if (entries.length <= MAX_CATALOG_ENTRIES && total <= DEVICE_SETTING_MAX_BYTES) return {entries, truncated: false};
-    const oldestFirst = entries.map((entry, index) => ({index, size: utf8Bytes(JSON.stringify(entry)) + 1, date: entry.releaseDate ?? ""}))
+    const oldestFirst = entries.map((entry, index) => ({
+        index,
+        size: utf8Bytes(JSON.stringify(entry)) + 1,
+        date: entry.releaseDate ?? ""
+    }))
         .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : a.index - b.index));
     const dropped = new Set<number>();
     for (const item of oldestFirst) {
@@ -208,7 +251,11 @@ function fitBudget(entries: CatalogEntry[], providerOrigins: Record<string, stri
     return {entries: kept, truncated: true};
 }
 
-const fail = (code: CatalogSyncFailureCode, message: string): {ok: false; code: CatalogSyncFailureCode; message: string} => ({ok: false, code, message});
+const fail = (code: CatalogSyncFailureCode, message: string): {
+    ok: false;
+    code: CatalogSyncFailureCode;
+    message: string
+} => ({ok: false, code, message});
 
 /** Reads and parses the document; the byte buffer and text are released when this returns. */
 async function readCatalogJson(response: Response, signal: AbortSignal): Promise<unknown> {
@@ -216,16 +263,26 @@ async function readCatalogJson(response: Response, signal: AbortSignal): Promise
     return JSON.parse(new TextDecoder("utf-8", {fatal: true}).decode(bytes));
 }
 
-type DownloadResult = {ok: true; root: Record<string, unknown>} | {ok: false; code: CatalogSyncFailureCode; message: string};
+type DownloadResult = { ok: true; root: Record<string, unknown> } | {
+    ok: false;
+    code: CatalogSyncFailureCode;
+    message: string
+};
 
 /** The one models.dev download shared by sync and the picker index: bounded read, 60 s deadline, friendly failures. */
-async function downloadCatalog(options: {signal?: AbortSignal; fetchImpl?: typeof fetch}, verb: string): Promise<DownloadResult> {
+async function downloadCatalog(options: {
+    signal?: AbortSignal;
+    fetchImpl?: typeof fetch
+}, verb: string): Promise<DownloadResult> {
     if (options.signal?.aborted) return fail("cancelled", `已取消${verb}`);
     const controller = new AbortController();
     let timedOut = false;
     const abort = () => controller.abort();
     options.signal?.addEventListener("abort", abort, {once: true});
-    const timer = setTimeout(() => { timedOut = true; controller.abort(); }, MODEL_CATALOG_TIMEOUT_MS);
+    const timer = setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+    }, MODEL_CATALOG_TIMEOUT_MS);
     const interrupted = (): DownloadResult | undefined =>
         timedOut ? fail("timeout", `${verb}超时，请稍后重试`)
             : controller.signal.aborted ? fail("cancelled", `已取消${verb}`) : undefined;
@@ -233,7 +290,11 @@ async function downloadCatalog(options: {signal?: AbortSignal; fetchImpl?: typeo
         let response: Response;
         try {
             response = await requestOnce(MODEL_CATALOG_URL, {method: "GET", headers: {Accept: "application/json"}}, {
-                fetchImpl: options.fetchImpl, signal: controller.signal, credentials: "omit", redirect: "follow", runtimePurpose: "model-catalog",
+                fetchImpl: options.fetchImpl,
+                signal: controller.signal,
+                credentials: "omit",
+                redirect: "follow",
+                runtimePurpose: "model-catalog",
             });
         } catch (error) {
             return interrupted() ?? (isReadAbort(error) ? fail("cancelled", `已取消${verb}`) : fail("network", "无法连接 models.dev，请检查网络后重试"));
@@ -267,7 +328,7 @@ async function downloadCatalog(options: {signal?: AbortSignal; fetchImpl?: typeo
  * and any failure leaves both the stored row and the in-memory snapshot unchanged.
  */
 export async function syncModelCatalog(
-    selection: CatalogSelection, options: {signal?: AbortSignal; fetchImpl?: typeof fetch} = {},
+    selection: CatalogSelection, options: { signal?: AbortSignal; fetchImpl?: typeof fetch } = {},
 ): Promise<CatalogSyncResult> {
     const syncedAt = new Date().toISOString();
     const downloaded = await downloadCatalog(options, "同步");
@@ -279,11 +340,21 @@ export async function syncModelCatalog(
     const fitted = fitBudget(parsed.entries, parsed.providerOrigins, syncedAt);
     if (!fitted) return fail("storage", "模型目录数据过大，无法保存到本机");
     try {
-        await putDeviceSetting(MODEL_CATALOG_KEY, {v: 1, syncedAt, providerOrigins: parsed.providerOrigins, entries: fitted.entries});
+        await putDeviceSetting(MODEL_CATALOG_KEY, {
+            v: 1,
+            syncedAt,
+            providerOrigins: parsed.providerOrigins,
+            entries: fitted.entries
+        });
     } catch {
         return fail("storage", "保存模型目录失败，已保留原有数据");
     }
-    const snapshot: CatalogSnapshot = {source: "synced", syncedAt, providerOrigins: parsed.providerOrigins, entries: fitted.entries};
+    const snapshot: CatalogSnapshot = {
+        source: "synced",
+        syncedAt,
+        providerOrigins: parsed.providerOrigins,
+        entries: fitted.entries
+    };
     applySyncedSnapshot(snapshot);
     return {ok: true, count: fitted.entries.length, syncedAt, truncated: fitted.truncated};
 }
@@ -293,8 +364,8 @@ export async function syncModelCatalog(
  * and leaves the in-memory snapshot alone; the caller drops the rows when the dialog closes.
  */
 export async function fetchCatalogIndex(
-    options: {signal?: AbortSignal; fetchImpl?: typeof fetch} = {},
-): Promise<{ok: true; rows: CatalogRow[]} | {ok: false; code: CatalogSyncFailureCode; message: string}> {
+    options: { signal?: AbortSignal; fetchImpl?: typeof fetch } = {},
+): Promise<{ ok: true; rows: CatalogRow[] } | { ok: false; code: CatalogSyncFailureCode; message: string }> {
     const downloaded = await downloadCatalog(options, "加载");
     if (!downloaded.ok) return downloaded;
     const entries: CatalogEntry[] = [];

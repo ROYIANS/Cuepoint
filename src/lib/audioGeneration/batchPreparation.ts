@@ -24,7 +24,12 @@ export async function prepareAudioBatchSnapshot(projectId: string, chapterId: st
     if (!connectorId) candidate = provider === "mimo" ? defaultMimoConnector(connections) : connections.find(row => row.definitionId === "apimart" && row.apiKey.trim());
     const config = candidate ? await resolveConnector(candidate.id, db) : undefined;
     if (!config?.apiKey.trim() || config.definitionId !== provider) throw new Error(`段落所用音色需要已配置的 ${provider === "mimo" ? "MiMo" : "APIMart"} 连接`);
-    const input = validateGenerationInput({kind: "speech", text: segment.text, ...profile, segmentId, segmentRevision: segment.revision});
+    const input = validateGenerationInput({
+        kind: "speech",
+        text: segment.text, ...profile,
+        segmentId,
+        segmentRevision: segment.revision
+    });
     if (input.kind !== "speech") throw new Error("配音输入无效");
     const reference = await validateSpeechReference(projectId, input, db);
     const connector = {id: config.id, provider, baseUrl: normalizeBaseUrl(config.baseUrl)};
@@ -32,7 +37,11 @@ export async function prepareAudioBatchSnapshot(projectId: string, chapterId: st
         input, connector, speakerId: speaker?.id, speakerRevision: speaker?.revision,
         referenceFingerprint: reference?.fingerprint
     };
-    return {...baseline, connector: {...connector, provider}, fingerprint: targetRevision({...baseline, credential: config.apiKey})};
+    return {
+        ...baseline,
+        connector: {...connector, provider},
+        fingerprint: targetRevision({...baseline, credential: config.apiKey})
+    };
 }
 
 export async function assertAudioBatchSnapshot(projectId: string, chapterId: string, snapshot: AudioBatchSnapshot, store?: ProductStore): Promise<void> {

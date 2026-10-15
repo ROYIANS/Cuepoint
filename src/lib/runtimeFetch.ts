@@ -1,5 +1,10 @@
 import {isTauriRuntime} from "@/lib/runtimeIdentity";
-import {authorizeRuntimeHttp, remoteHttpUrl, type RuntimeHttpPurpose, type RuntimeHttpScope} from "@/lib/runtimeHttpPolicy";
+import {
+    authorizeRuntimeHttp,
+    remoteHttpUrl,
+    type RuntimeHttpPurpose,
+    type RuntimeHttpScope
+} from "@/lib/runtimeHttpPolicy";
 import {cancelBody, readResponseBytes, utf8Bytes} from "@/lib/ai/boundedResponse";
 import type {ClientOptions} from "@tauri-apps/plugin-http";
 
@@ -17,15 +22,23 @@ function trackNativeController(controller: AbortController): () => void {
         const abortPending = () => {
             for (const pending of nativeControllers) pending.abort(new DOMException("应用页面已关闭，本地网络等待已停止", "AbortError"));
         };
-        window.addEventListener("pagehide", () => { pageClosing = true; abortPending(); });
+        window.addEventListener("pagehide", () => {
+            pageClosing = true;
+            abortPending();
+        });
         // A dirty-draft guard may cancel beforeunload: stop requests, but allow an explicit later attempt.
         window.addEventListener("beforeunload", abortPending);
-        window.addEventListener("pageshow", () => { pageClosing = false; });
+        window.addEventListener("pageshow", () => {
+            pageClosing = false;
+        });
     }
     nativeControllers.add(controller);
     if (pageClosing) controller.abort(new DOMException("应用页面已关闭，本地网络等待已停止", "AbortError"));
-    return () => { nativeControllers.delete(controller); };
+    return () => {
+        nativeControllers.delete(controller);
+    };
 }
+
 type NativeFetch = (input: string, init: RequestInit & ClientOptions) => Promise<Response>;
 export type RuntimeFetchServices = {
     native: () => boolean;
@@ -43,7 +56,10 @@ function uploadSlots() {
         signal?.throwIfAborted();
         let canceled = false;
         if (active >= 2) await new Promise<void>(resolve => {
-            const ready = () => { signal?.removeEventListener("abort", abort); resolve(); };
+            const ready = () => {
+                signal?.removeEventListener("abort", abort);
+                resolve();
+            };
             const abort = () => {
                 const index = waiting.indexOf(ready);
                 if (index >= 0) waiting.splice(index, 1);
@@ -61,7 +77,10 @@ function uploadSlots() {
             released = true;
             active--;
             const next = waiting.shift();
-            if (next) { active++; next(); }
+            if (next) {
+                active++;
+                next();
+            }
         };
     };
 }
@@ -70,7 +89,10 @@ const uploadGates = new WeakMap<RuntimeFetchServices, ReturnType<typeof uploadSl
 
 function sharedUploadSlots(services: RuntimeFetchServices) {
     let gate = uploadGates.get(services);
-    if (!gate) { gate = uploadSlots(); uploadGates.set(services, gate); }
+    if (!gate) {
+        gate = uploadSlots();
+        uploadGates.set(services, gate);
+    }
     return gate;
 }
 
@@ -129,7 +151,10 @@ async function sendNative(services: RuntimeFetchServices, url: URL, wire: Runtim
     const controller = new AbortController();
     const untrack = trackNativeController(controller);
     const forwardAbort = () => controller.abort(signal?.reason);
-    const dispose = () => { signal?.removeEventListener("abort", forwardAbort); untrack(); };
+    const dispose = () => {
+        signal?.removeEventListener("abort", forwardAbort);
+        untrack();
+    };
     signal?.addEventListener("abort", forwardAbort, {once: true});
     if (signal?.aborted) forwardAbort();
     let response: Response;
@@ -139,8 +164,16 @@ async function sendNative(services: RuntimeFetchServices, url: URL, wire: Runtim
             ...wire, headers: new Headers(wire.headers), signal: controller.signal,
             maxRedirections: 0, connectTimeout: CONNECT_TIMEOUT_MS,
         });
-    } catch (error) { dispose(); controller.signal.throwIfAborted(); throw nativeTransportError(error); }
-    if (controller.signal.aborted) { dispose(); await cancelBody(response.body); controller.signal.throwIfAborted(); }
+    } catch (error) {
+        dispose();
+        controller.signal.throwIfAborted();
+        throw nativeTransportError(error);
+    }
+    if (controller.signal.aborted) {
+        dispose();
+        await cancelBody(response.body);
+        controller.signal.throwIfAborted();
+    }
     return {response, dispose, signal: controller.signal};
 }
 
@@ -166,18 +199,29 @@ async function redirectTarget(response: Response, url: URL, wire: RuntimeWire, h
     if (hop >= MAX_REDIRECTS) throw new Error("网络请求重定向超过 5 次，已停止");
     if (!location) throw new Error("网络请求重定向缺少目标地址");
     let target: URL;
-    try { target = remoteHttpUrl(new URL(location, url).href); } catch { throw new Error("网络请求重定向地址无效"); }
+    try {
+        target = remoteHttpUrl(new URL(location, url).href);
+    } catch {
+        throw new Error("网络请求重定向地址无效");
+    }
     applyRedirect(response.status, url, target, wire);
     return target;
 }
 
 /** Preserve abort identity for headers and for every Response body reader. */
 function abortableResponse(response: Response, signal: AbortSignal | undefined, dispose: () => void, redirected: boolean): Response {
-    if (!response.body) { dispose(); Object.defineProperty(response, "redirected", {value: redirected}); return response; }
+    if (!response.body) {
+        dispose();
+        Object.defineProperty(response, "redirected", {value: redirected});
+        return response;
+    }
     const reader = response.body.getReader();
     let finished = false;
     let controller: ReadableStreamDefaultController<Uint8Array>;
-    const cleanup = () => { signal?.removeEventListener("abort", abort); dispose(); };
+    const cleanup = () => {
+        signal?.removeEventListener("abort", abort);
+        dispose();
+    };
     const abort = () => {
         if (finished) return;
         finished = true;
@@ -196,8 +240,12 @@ function abortableResponse(response: Response, signal: AbortSignal | undefined, 
                 const chunk = await reader.read();
                 if (finished) return;
                 signal?.throwIfAborted();
-                if (chunk.done) { finished = true; cleanup(); reader.releaseLock(); value.close(); }
-                else value.enqueue(chunk.value);
+                if (chunk.done) {
+                    finished = true;
+                    cleanup();
+                    reader.releaseLock();
+                    value.close();
+                } else value.enqueue(chunk.value);
             } catch (error) {
                 if (finished) return;
                 finished = true;
@@ -209,10 +257,17 @@ function abortableResponse(response: Response, signal: AbortSignal | undefined, 
         async cancel(reason) {
             finished = true;
             cleanup();
-            try { await reader.cancel(reason); } catch { /* Cancellation remains cleanup. */ }
+            try {
+                await reader.cancel(reason);
+            } catch { /* Cancellation remains cleanup. */
+            }
         },
     }, {highWaterMark: 0});
-    const result = new Response(body, {status: response.status, statusText: response.statusText, headers: response.headers});
+    const result = new Response(body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers
+    });
     Object.defineProperty(result, "url", {value: response.url});
     Object.defineProperty(result, "redirected", {value: redirected});
     return result;
@@ -231,7 +286,10 @@ export function createRuntimeFetch(services: RuntimeFetchServices, scope: Runtim
             const wire = parts.init;
             for (let hop = 0; ; hop++) {
                 parts.signal?.throwIfAborted();
-                const grant = await services.authorize(url, wire.method, wire.headers, wire.body, {...scope, redirected: hop > 0});
+                const grant = await services.authorize(url, wire.method, wire.headers, wire.body, {
+                    ...scope,
+                    redirected: hop > 0
+                });
                 parts.signal?.throwIfAborted();
                 await services.grant(grant.origin, grant.allowHttp);
                 parts.signal?.throwIfAborted();
@@ -240,7 +298,9 @@ export function createRuntimeFetch(services: RuntimeFetchServices, scope: Runtim
                 if (!target) return abortableResponse(response, signal, dispose, hop > 0);
                 url = target;
             }
-        } finally { releaseUpload?.(); }
+        } finally {
+            releaseUpload?.();
+        }
     };
 }
 
@@ -277,5 +337,8 @@ export function runtimeFetchFor(purpose: RuntimeHttpPurpose = "configured"): typ
 export function connectorProbeFetch(baseUrl: string, fetchImpl?: typeof fetch): typeof fetch {
     if (fetchImpl) return fetchImpl;
     if (!services.native()) return runtimeFetch;
-    return (input, init) => createRuntimeFetch(services, {purpose: "configured", probeOrigin: remoteHttpUrl(baseUrl).origin})(input, init);
+    return (input, init) => createRuntimeFetch(services, {
+        purpose: "configured",
+        probeOrigin: remoteHttpUrl(baseUrl).origin
+    })(input, init);
 }

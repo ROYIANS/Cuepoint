@@ -12,10 +12,13 @@ const parseAutoCheck = (raw: unknown) => typeof raw === "boolean" ? raw : undefi
 const parseLastCheck = (raw: unknown) => typeof raw === "number" && Number.isSafeInteger(raw) && raw > 0 && raw <= 8_640_000_000_000_000 ? raw : undefined;
 
 /** Live settings reads stay inside the query's transaction snapshot. */
-export async function readSettings(tx: StoreTx): Promise<{autoCheck: boolean; lastCheck: number | undefined}> {
+export async function readSettings(tx: StoreTx): Promise<{ autoCheck: boolean; lastCheck: number | undefined }> {
     const enabled = await tx.deviceSettings.get(SETTING_AUTO_CHECK_UPDATES);
     const checked = await tx.deviceSettings.get(SETTING_LAST_UPDATE_CHECK);
-    return {autoCheck: parseAutoCheck(enabled?.value) ?? AUTO_CHECK_UPDATES_DEFAULT, lastCheck: parseLastCheck(checked?.value)};
+    return {
+        autoCheck: parseAutoCheck(enabled?.value) ?? AUTO_CHECK_UPDATES_DEFAULT,
+        lastCheck: parseLastCheck(checked?.value)
+    };
 }
 
 export async function readAutoCheckUpdates(): Promise<boolean> {

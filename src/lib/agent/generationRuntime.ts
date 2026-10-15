@@ -1,7 +1,7 @@
 import {StorageError} from "@/lib/storage/errors";
 import {readBinaryBlob} from "@/lib/storage/binary";
 import {binaryByteLength} from "@/domain/binary";
-import type {ProductStore,StoreTx} from "@/lib/storage/types";
+import type {ProductStore, StoreTx} from "@/lib/storage/types";
 import {readResponseBlob} from "@/lib/ai/boundedResponse";
 import {MAX_MEDIA_DOWNLOAD_BYTES} from "@/lib/resource/limits";
 import {redactCredentials} from "@/lib/ai/safeError";
@@ -10,8 +10,8 @@ import {assertProjectToolScope} from "./projectScope";
 import {db as productDb} from "@/db/database";
 import {
     claimGenerationJob,
-    markUnacknowledgedGeneration,
     generationJobSummary,
+    markUnacknowledgedGeneration,
     storeGenerationMedia,
     updateGenerationJob
 } from "@/db/agentGeneration";
@@ -208,7 +208,7 @@ export async function submitAgentGeneration(raw: GenerationSubmitArgs, context: 
 
 /** Shared paid transport. Caller must own the job and provide a final durable dispatch guard. */
 export async function submitClaimedGeneration(job: AgentGenerationJob, config: ConnectorConfig,
-                                              context: Pick<AgentToolContext, 'threadId' | 'signal' | 'store'>, options: GenerationRuntimeOptions, beforePost: (store:StoreTx) => Promise<void>, store?: ProductStore) {
+                                              context: Pick<AgentToolContext, 'threadId' | 'signal' | 'store'>, options: GenerationRuntimeOptions, beforePost: (store: StoreTx) => Promise<void>, store?: ProductStore) {
     const db = store ?? context.store ?? productDb;
     let postStarted = false;
     try {
@@ -377,7 +377,7 @@ export async function checkAgentGeneration(jobId: string, context: Pick<AgentToo
     if (["downloaded", "applied", "conflict", "failed"].includes(job.status)) return job;
     if (job.status === "unknown") return job;
     if (!job.providerTaskId) {
-        if (job.status === "submitting") job = await markUnacknowledgedGeneration(jobId,db);
+        if (job.status === "submitting") job = await markUnacknowledgedGeneration(jobId, db);
         return job;
     }
     let config: ConnectorConfig | undefined;
@@ -498,7 +498,10 @@ export async function applyAgentGeneration(jobId: string, context: AgentToolCont
     }
     if (original.batchId) throw new AtomicToolRollbackError("批量候选需要由用户在批量结果中选择并写入");
     if (!original.result || !["downloaded", "conflict", "applied"].includes(original.status)) throw new AtomicToolRollbackError("没有可写入的本地生成结果");
-    if (original.status === "applied") return executeAtomicTool(context, async (db) => { const boundContext = {...context, store:db}; return generationJobSummary(await jobForContext(jobId, boundContext, db)); }, db);
+    if (original.status === "applied") return executeAtomicTool(context, async (db) => {
+        const boundContext = {...context, store: db};
+        return generationJobSummary(await jobForContext(jobId, boundContext, db));
+    }, db);
     // Hash Blob inputs outside Dexie; atomic callback rechecks immutable record metadata.
     let records: MediaRecord[];
     try {
@@ -511,7 +514,7 @@ export async function applyAgentGeneration(jobId: string, context: AgentToolCont
         }, db)), db);
     }
     return executeAtomicTool(context, async (db) => {
-        const boundContext = {...context, store:db};
+        const boundContext = {...context, store: db};
         const job = await jobForContext(jobId, boundContext, db);
         if (job.status === "applied") return generationJobSummary(job);
         if (!job.result || !["downloaded", "conflict"].includes(job.status)) throw new Error("没有可写入的本地生成结果");

@@ -127,7 +127,10 @@ function SceneDetailContent({
                             multiline
                         />
                         <details className="border-t pt-4">
-                            <summary className="focus-visible:ring-ring/50 cursor-pointer rounded-md text-sm leading-5 font-semibold focus-visible:outline-none focus-visible:ring-[3px]">创作细节 · 选填</summary>
+                            <summary
+                                className="focus-visible:ring-ring/50 cursor-pointer rounded-md text-sm leading-5 font-semibold focus-visible:outline-none focus-visible:ring-[3px]">创作细节
+                                · 选填
+                            </summary>
                             <p className="text-muted-foreground mt-2 text-xs leading-5">记录空间与光线，方便安排机位和延续场景氛围。所有信息均为选填。</p>
                             <div className="mt-4 space-y-4">
                                 <AssetTextField

@@ -6,7 +6,7 @@ import type {LatestDesktopRelease, ReleaseAsset} from "./releases";
 
 type OsName = "macos" | "windows" | "linux" | "ios" | "android" | "unknown";
 type ArchName = "arm64" | "x64" | "unknown";
-export type DetectedPlatform = {os: OsName; arch: ArchName; mobile: boolean};
+export type DetectedPlatform = { os: OsName; arch: ArchName; mobile: boolean };
 
 export type NavigatorInfo = {
     userAgent: string;
@@ -76,10 +76,28 @@ export type AssetChoice = {
 const ASSET_NAME = /^Cuepoint_(\d+\.\d+\.\d+)_(macos_arm64\.dmg|macos_x64\.dmg|windows_x64_setup\.exe|linux_x64\.AppImage|linux_x64\.deb)$/;
 
 const KINDS: Record<string, Omit<AssetChoice, "asset">> = {
-    "macos_arm64.dmg": {os: "macos", arch: "arm64", format: "dmg", label: "macOS（Apple 芯片）", event: "download-macos-arm64"},
+    "macos_arm64.dmg": {
+        os: "macos",
+        arch: "arm64",
+        format: "dmg",
+        label: "macOS（Apple 芯片）",
+        event: "download-macos-arm64"
+    },
     "macos_x64.dmg": {os: "macos", arch: "x64", format: "dmg", label: "macOS（Intel 芯片）", event: "download-macos-x64"},
-    "windows_x64_setup.exe": {os: "windows", arch: "x64", format: "exe", label: "Windows", event: "download-windows-x64"},
-    "linux_x64.AppImage": {os: "linux", arch: "x64", format: "appimage", label: "Linux（AppImage）", event: "download-linux-x64-appimage"},
+    "windows_x64_setup.exe": {
+        os: "windows",
+        arch: "x64",
+        format: "exe",
+        label: "Windows",
+        event: "download-windows-x64"
+    },
+    "linux_x64.AppImage": {
+        os: "linux",
+        arch: "x64",
+        format: "appimage",
+        label: "Linux（AppImage）",
+        event: "download-linux-x64-appimage"
+    },
     "linux_x64.deb": {os: "linux", arch: "x64", format: "deb", label: "Linux（.deb）", event: "download-linux-x64-deb"},
 };
 const ORDER = Object.keys(KINDS);

@@ -1,4 +1,4 @@
-import {smoothstep, clamp01, type Plan, type Sets, type SceneState} from "./plan";
+import {clamp01, type Plan, type SceneState, type Sets, smoothstep} from "./plan";
 import {artScale} from "./targets";
 
 /** Opacity of an unlit cell's outline particles; lit cells rise from here. */

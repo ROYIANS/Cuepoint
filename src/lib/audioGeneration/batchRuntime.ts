@@ -1,12 +1,16 @@
 import type {ProductStore} from "@/lib/storage/types";
 import {db as productDb} from "@/db/database";
 import {
-    assertAudioBatchDispatch, controlAudioGenerationBatch, linkAudioBatchJob,
-    ownedAudioGenerationBatch, readAudioGenerationBatch, settleAudioGenerationBatch
+    assertAudioBatchDispatch,
+    controlAudioGenerationBatch,
+    linkAudioBatchJob,
+    ownedAudioGenerationBatch,
+    readAudioGenerationBatch,
+    settleAudioGenerationBatch
 } from "@/db/audioGenerationBatches";
 import {AUDIO_BATCH_CONCURRENCY, type AudioGenerationBatch} from "@/domain/audioGenerationBatch";
-import {refreshAudioGeneration, submitAudioGeneration, type AudioGenerationOptions} from "./runtime";
-import {withThreadRunLock, type ThreadLockManager} from "@/lib/agent/runOwnership";
+import {type AudioGenerationOptions, refreshAudioGeneration, submitAudioGeneration} from "./runtime";
+import {type ThreadLockManager, withThreadRunLock} from "@/lib/agent/runOwnership";
 
 interface AudioBatchWorker {
     batch: AudioGenerationBatch;
@@ -17,12 +21,14 @@ interface AudioBatchWorker {
     actions: Set<Promise<unknown>>;
     closing: boolean;
 }
+
 const workers = new Map<string, AudioBatchWorker>();
 
 function browserLocks(): ThreadLockManager {
     if (typeof navigator === "undefined" || !navigator.locks) throw new Error("批量配音需要支持 Web Locks 的浏览器，并通过 HTTPS 或 localhost 打开");
     return navigator.locks;
 }
+
 async function ownership<T>(batch: AudioGenerationBatch, action: () => Promise<T>, locks: ThreadLockManager = browserLocks()): Promise<T> {
     const lockBatch = () => locks.request(`cuepoint.audio-batch.${batch.id}`, {ifAvailable: true}, async lock => {
         if (!lock) throw new Error("此批次正在另一个页面执行");
@@ -38,30 +44,47 @@ export async function audioBatchUserAction<T>(projectId: string, id: string, act
     if (worker?.ownsLock && !worker.closing) {
         const pending = Promise.resolve().then(action);
         worker.actions.add(pending);
-        try { return await pending; } finally { worker.actions.delete(pending); }
+        try {
+            return await pending;
+        } finally {
+            worker.actions.delete(pending);
+        }
     }
     if (worker) await worker.done;
     return ownership(await ownedAudioGenerationBatch(projectId, id, undefined, db), action, locks);
 }
 
 /** Explicit continuation only. Mount/reload never invokes this dispatcher. */
-export async function startAudioGenerationBatch(projectId: string, id: string, options: AudioGenerationOptions & {locks?: ThreadLockManager} = {}, store?: ProductStore): Promise<void> {
+export async function startAudioGenerationBatch(projectId: string, id: string, options: AudioGenerationOptions & {
+    locks?: ThreadLockManager
+} = {}, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
     if (workers.has(id)) throw new Error("此批次已在当前页面执行");
     const batch = await ownedAudioGenerationBatch(projectId, id, true, db);
     if (!batch.confirmedAt || batch.status === "draft" || batch.status === "cancelled") throw new Error("请先核对并确认本批付费请求");
     const controller = new AbortController();
-    const worker: AudioBatchWorker = {batch, controller, paused: false, ownsLock: false, done: Promise.resolve(), actions: new Set(), closing: false};
+    const worker: AudioBatchWorker = {
+        batch,
+        controller,
+        paused: false,
+        ownsLock: false,
+        done: Promise.resolve(),
+        actions: new Set(),
+        closing: false
+    };
     // Reserve before awaiting ownership so simultaneous starts cannot both dispatch.
     if (workers.has(id)) throw new Error("此批次已在当前页面执行");
     workers.set(id, worker);
-    const abort = () => { worker.paused = true; controller.abort(); };
+    const abort = () => {
+        worker.paused = true;
+        controller.abort();
+    };
     options.signal?.addEventListener("abort", abort, {once: true});
     if (options.signal?.aborted) abort();
     worker.done = ownership(batch, async () => {
         worker.ownsLock = true;
         const pause = async (reason: string, store?: ProductStore) => {
-    const db = store ?? productDb;
+            const db = store ?? productDb;
             worker.paused = true;
             await controlAudioGenerationBatch(projectId, id, "pause", reason, db);
         };
@@ -79,8 +102,11 @@ export async function startAudioGenerationBatch(projectId: string, id: string, o
                 while (!controller.signal.aborted && !worker.paused) {
                     const job = recover[recoveryIndex++];
                     if (!job) return;
-                    try { await refreshAudioGeneration(projectId, job.id, {...options, signal: controller.signal},db); }
-                    catch (error) { await pause(error instanceof Error ? error.message : "已有音频恢复已暂停", db); }
+                    try {
+                        await refreshAudioGeneration(projectId, job.id, {...options, signal: controller.signal}, db);
+                    } catch (error) {
+                        await pause(error instanceof Error ? error.message : "已有音频恢复已暂停", db);
+                    }
                 }
             });
             if (controller.signal.aborted || worker.paused) return;
@@ -101,7 +127,7 @@ export async function startAudioGenerationBatch(projectId: string, id: string, o
                                 if (worker.paused || controller.signal.aborted) throw new Error("队列已停止，尚未付费提交");
                                 await assertAudioBatchDispatch(projectId, job.id, db);
                             }
-                        },db);
+                        }, db);
                         if (result.status === "uncertain" || result.failureStage === "preflight" || result.status === "failed" && !result.failureStage) await pause(result.error ?? "本批已暂停，请检查提交状态", db);
                     } catch (error) {
                         // Latch before persistence: a storage failure cannot allow the sibling to send again.
@@ -133,18 +159,20 @@ export async function stopAudioGenerationBatch(projectId: string, id: string, ac
 }
 
 /** One read/download/local-decode pass, never a paid POST. */
-export async function recoverAudioGenerationBatch(projectId: string, id: string, options: AudioGenerationOptions & {locks?: ThreadLockManager} = {}, store?: ProductStore) {
+export async function recoverAudioGenerationBatch(projectId: string, id: string, options: AudioGenerationOptions & {
+    locks?: ThreadLockManager
+} = {}, store?: ProductStore) {
     const db = store ?? productDb;
     return audioBatchUserAction(projectId, id, async () => {
         const view = await readAudioGenerationBatch(projectId, id, db);
         if (view.batch.dormant) throw new Error("导入的历史批次不能恢复网络任务");
-        for (const job of view.jobs) if (!job.dormant && !["prepared", "saved", "failed"].includes(job.status)) await refreshAudioGeneration(projectId, job.id, options,db);
+        for (const job of view.jobs) if (!job.dormant && !["prepared", "saved", "failed"].includes(job.status)) await refreshAudioGeneration(projectId, job.id, options, db);
         await settleAudioGenerationBatch(projectId, id, db);
     }, options.locks, db);
 }
 
 /** Teardown/Agent Stop stops local waits and future dispatch; accepted results stay durable. */
-export function pauseAudioGenerationBatches(owner: {projectId?: string; threadId?: string}) {
+export function pauseAudioGenerationBatches(owner: { projectId?: string; threadId?: string }) {
     for (const worker of workers.values()) if (owner.projectId === worker.batch.projectId || worker.batch.owner.kind === "agent" && owner.threadId === worker.batch.owner.threadId) {
         worker.paused = true;
         worker.controller.abort();

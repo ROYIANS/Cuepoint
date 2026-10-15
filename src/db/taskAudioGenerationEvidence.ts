@@ -16,7 +16,12 @@ export async function ownedTaskAudioGenerationJob(task: TaskOwner, job: AudioGen
     if (job.source.kind === "batch") {
         const source = job.source;
         if (source.owner.kind !== "agent") return false;
-        return ownedAgentAudioBatchJob(job, {runId: source.owner.runId, threadId: task.threadId, projectId: job.projectId, taskId: task.id}, db);
+        return ownedAgentAudioBatchJob(job, {
+            runId: source.owner.runId,
+            threadId: task.threadId,
+            projectId: job.projectId,
+            taskId: task.id
+        }, db);
     }
     const current = await db.agentTasks.get(task.id);
     const run = await db.agentRuns.get(job.source.runId);
@@ -54,11 +59,11 @@ function describeSource(job: AudioGenerationJob, outputs: AudioOutputEvidence, r
         source: job.source, status: job.status, statusLabel: presentation.label,
         checkedAt: presentation.checkedAt, target,
         taskObservations: observations?.map(({
-                                                                       taskId,
-                                                                       checkedAt,
-                                                                       status,
-                                                                       lastVerified
-                                                                   }) => ({
+                                                 taskId,
+                                                 checkedAt,
+                                                 status,
+                                                 lastVerified
+                                             }) => ({
             taskId,
             checkedAt,
             status,

@@ -148,7 +148,10 @@ export async function patchProjectOutput(
         const project = await db.projects.get(id);
         if (!project) throw new Error("项目不存在，无法保存");
         if (patch.coverMediaId !== undefined && patch.coverMediaId !== null) {
-            await assertSlotMedia(id, {...emptySlot(), result: {mediaId: patch.coverMediaId, kind: "image"}}, undefined, db);
+            await assertSlotMedia(id, {
+                ...emptySlot(),
+                result: {mediaId: patch.coverMediaId, kind: "image"}
+            }, undefined, db);
         }
         const previousCover = project.coverMediaId;
         const next: Project = {

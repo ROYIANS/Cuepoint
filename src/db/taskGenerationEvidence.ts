@@ -74,7 +74,9 @@ function hasAvailableGenerationMedia(job: AgentGenerationJob, media: MediaRecord
     return media.mimeType.startsWith(prefix) && media.mimeType.length > prefix.length;
 }
 
-async function readCurrentShotSlot(job: AgentGenerationJob, target: Extract<ProductionTarget, { kind: "shot" }>, store?: ProductStore) {
+async function readCurrentShotSlot(job: AgentGenerationJob, target: Extract<ProductionTarget, {
+    kind: "shot"
+}>, store?: ProductStore) {
     const db = store ?? productDb;
     if (!target.slot || !["firstFrame", "lastFrame", "clip"].includes(target.slot)) return undefined;
     const expectedKind = target.slot === "clip" ? "video" : "image";

@@ -18,9 +18,14 @@
     color-scheme: dark;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after {
+    box-sizing: border-box;
+}
 
-html, body, #root { min-height: 100%; margin: 0; }
+html, body, #root {
+    min-height: 100%;
+    margin: 0;
+}
 
 body {
     background: var(--background);
@@ -43,11 +48,24 @@ body::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
 }
 
-h1, h2, h3, p, ul { margin: 0; }
-ul { padding: 0; list-style: none; }
-img { display: block; max-width: 100%; }
+h1, h2, h3, p, ul {
+    margin: 0;
+}
 
-a { color: inherit; text-underline-offset: 3px; }
+ul {
+    padding: 0;
+    list-style: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+a {
+    color: inherit;
+    text-underline-offset: 3px;
+}
 
 a:focus-visible {
     outline: 3px solid var(--ring);
@@ -55,7 +73,10 @@ a:focus-visible {
     border-radius: calc(var(--radius) - 4px);
 }
 
-.lp-page { position: relative; z-index: 1; }
+.lp-page {
+    position: relative;
+    z-index: 1;
+}
 
 .lp-wrap {
     position: relative;
@@ -73,9 +94,14 @@ a:focus-visible {
     border-radius: var(--radius);
 }
 
-.lp-skip:focus { top: 12px; }
+.lp-skip:focus {
+    top: 12px;
+}
 
-.lp-header { position: relative; z-index: 20; }
+.lp-header {
+    position: relative;
+    z-index: 20;
+}
 
 .lp-header-inner {
     display: flex;
@@ -87,9 +113,19 @@ a:focus-visible {
 }
 
 /* DOM order is toggle, brand, nav (the toggle is the first Tab stop); visually brand | toggle nav. */
-.lp-header-inner .lp-brand { order: 1; margin-right: auto; }
-.lp-header-inner > .lp-ic { order: 2; }
-.lp-header-inner nav { order: 3; display: flex; }
+.lp-header-inner .lp-brand {
+    order: 1;
+    margin-right: auto;
+}
+
+.lp-header-inner > .lp-ic {
+    order: 2;
+}
+
+.lp-header-inner nav {
+    order: 3;
+    display: flex;
+}
 
 .lp-brand {
     display: inline-flex;
@@ -101,7 +137,9 @@ a:focus-visible {
     font-size: 18px;
 }
 
-.lp-brand img { border-radius: calc(var(--radius) - 4px); }
+.lp-brand img {
+    border-radius: calc(var(--radius) - 4px);
+}
 
 .lp-btn {
     display: inline-flex;
@@ -119,10 +157,19 @@ a:focus-visible {
     transition: background-color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.lp-btn:hover { background: oklch(0.255 0 0); }
+.lp-btn:hover {
+    background: oklch(0.255 0 0);
+}
 
-.lp-btn-primary { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
-.lp-btn-primary:hover { background: oklch(0.9 0 0); }
+.lp-btn-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: transparent;
+}
+
+.lp-btn-primary:hover {
+    background: oklch(0.9 0 0);
+}
 
 /* Round glass icon control: every header action (and the star link) is this one component. */
 .lp-ic {
@@ -155,26 +202,66 @@ a:focus-visible {
 }
 
 /* Touch target: 44px around the 40px circle. */
-.lp-ic::before { content: ""; position: absolute; inset: -2px; border-radius: inherit; }
+.lp-ic::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+}
 
-.lp-ic-icon { flex: none; width: 18px; height: 18px; margin: 0 11px; }
+.lp-ic-icon {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin: 0 11px;
+}
 
-.lp-ic:hover { transform: translateY(-1px); background-color: oklch(0.3 0 0 / 0.7); box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.16), 0 0 0 1px oklch(1 0 0 / 0.12), 0 2px 4px oklch(0 0 0 / 0.5), 0 12px 28px oklch(0 0 0 / 0.5); }
-.lp-ic:active { transform: translateY(0); box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.08), 0 0 0 1px oklch(1 0 0 / 0.07), 0 1px 1px oklch(0 0 0 / 0.5); }
-.lp-ic:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; border-radius: 999px; }
+.lp-ic:hover {
+    transform: translateY(-1px);
+    background-color: oklch(0.3 0 0 / 0.7);
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.16), 0 0 0 1px oklch(1 0 0 / 0.12), 0 2px 4px oklch(0 0 0 / 0.5), 0 12px 28px oklch(0 0 0 / 0.5);
+}
 
-.lp-ic-label { white-space: nowrap; }
+.lp-ic:active {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.08), 0 0 0 1px oklch(1 0 0 / 0.07), 0 1px 1px oklch(0 0 0 / 0.5);
+}
+
+.lp-ic:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: 999px;
+}
+
+.lp-ic-label {
+    white-space: nowrap;
+}
 
 /* Enter: the label slides out to the left on hover or keyboard focus (hover devices only). */
-.lp-ic-hover .lp-ic-label { max-width: 0; margin-left: 0; overflow: hidden; opacity: 0; transition: max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1), margin 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s; }
+.lp-ic-hover .lp-ic-label {
+    max-width: 0;
+    margin-left: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1), margin 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s;
+}
 
 @media (hover: hover) {
-    .lp-ic-hover:hover .lp-ic-label, .lp-ic-hover:focus-visible .lp-ic-label { max-width: 8em; margin-left: 16px; opacity: 1; }
+    .lp-ic-hover:hover .lp-ic-label, .lp-ic-hover:focus-visible .lp-ic-label {
+        max-width: 8em;
+        margin-left: 16px;
+        opacity: 1;
+    }
 }
 
 /* Always-labelled variant (the star link): a pill with a visible name. */
-.lp-ic-always { padding-left: 16px; }
-.lp-ic-always .lp-ic-icon { margin: 0 12px 0 8px; }
+.lp-ic-always {
+    padding-left: 16px;
+}
+
+.lp-ic-always .lp-ic-icon {
+    margin: 0 12px 0 8px;
+}
 
 /* Tooltip for icon-only buttons, pure CSS. */
 .lp-ic-tip::after {
@@ -197,16 +284,39 @@ a:focus-visible {
 }
 
 @media (hover: hover) {
-    .lp-ic-tip:hover::after { opacity: 1; transform: none; }
+    .lp-ic-tip:hover::after {
+        opacity: 1;
+        transform: none;
+    }
 }
-.lp-ic-tip:focus-visible::after { opacity: 1; transform: none; }
 
-.lp-scene { padding: 72px 0 48px; max-width: 760px; }
-.lp-hero { padding-top: 56px; }
+.lp-ic-tip:focus-visible::after {
+    opacity: 1;
+    transform: none;
+}
 
-.lp-kicker { color: var(--muted-foreground); font-size: 12px; line-height: 18px; letter-spacing: 0.16em; }
+.lp-scene {
+    padding: 72px 0 48px;
+    max-width: 760px;
+}
 
-.lp-eyebrow { margin-top: 8px; color: var(--muted-foreground); font-size: 14px; letter-spacing: 0.08em; }
+.lp-hero {
+    padding-top: 56px;
+}
+
+.lp-kicker {
+    color: var(--muted-foreground);
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.16em;
+}
+
+.lp-eyebrow {
+    margin-top: 8px;
+    color: var(--muted-foreground);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+}
 
 .lp-scene-title {
     margin-top: 12px;
@@ -217,26 +327,83 @@ a:focus-visible {
     letter-spacing: -0.02em;
 }
 
-.lp-hero .lp-scene-title { font-size: clamp(40px, 8vw, 72px); line-height: 1.1; }
+.lp-hero .lp-scene-title {
+    font-size: clamp(40px, 8vw, 72px);
+    line-height: 1.1;
+}
 
-.lp-subtitle { margin-top: 12px; font-family: var(--font-display); font-size: 20px; line-height: 1.5; letter-spacing: 0.08em; color: oklch(0.93 0.01 85); }
+.lp-subtitle {
+    margin-top: 12px;
+    font-family: var(--font-display);
+    font-size: 20px;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+    color: oklch(0.93 0.01 85);
+}
 
-.lp-narration { margin-top: 20px; font-size: 18px; line-height: 1.7; }
+.lp-narration {
+    margin-top: 20px;
+    font-size: 18px;
+    line-height: 1.7;
+}
 
-.lp-points { display: grid; gap: 8px; margin-top: 20px; color: var(--muted-foreground); font-size: 14px; }
-.lp-points li, .lp-notes li { position: relative; padding-left: 16px; }
+.lp-points {
+    display: grid;
+    gap: 8px;
+    margin-top: 20px;
+    color: var(--muted-foreground);
+    font-size: 14px;
+}
+
+.lp-points li, .lp-notes li {
+    position: relative;
+    padding-left: 16px;
+}
+
 /* One bullet for every list: a 4px dot centred on the first line, so wrapped lines hang under the text. */
-.lp-points li::before, .lp-notes li::before { content: ""; position: absolute; left: 2px; top: 0.82em; width: 4px; height: 4px; margin-top: -2px; border-radius: 50%; background: var(--foreground); opacity: 0.55; }
+.lp-points li::before, .lp-notes li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 0.82em;
+    width: 4px;
+    height: 4px;
+    margin-top: -2px;
+    border-radius: 50%;
+    background: var(--foreground);
+    opacity: 0.55;
+}
 
-.lp-caption { margin-top: 20px; color: var(--muted-foreground); font-size: 12px; line-height: 18px; }
+.lp-caption {
+    margin-top: 20px;
+    color: var(--muted-foreground);
+    font-size: 12px;
+    line-height: 18px;
+}
 
-.lp-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.lp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+}
 
-.lp-note { margin-top: 24px; color: var(--muted-foreground); font-size: 14px; line-height: 1.7; }
+.lp-note {
+    margin-top: 24px;
+    color: var(--muted-foreground);
+    font-size: 14px;
+    line-height: 1.7;
+}
 
-.lp-section { padding: 24px 0 72px; }
+.lp-section {
+    padding: 24px 0 72px;
+}
 
-.lp-section h2 { font-size: 24px; font-weight: 600; line-height: 32px; }
+.lp-section h2 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+}
 
 .lp-footer {
     margin-top: 24px;
@@ -246,8 +413,16 @@ a:focus-visible {
     font-size: 14px;
 }
 
-.lp-links { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 16px; }
-.lp-links a { color: var(--foreground); }
+.lp-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 16px;
+}
+
+.lp-links a {
+    color: var(--foreground);
+}
 
 /* Download area. min-height reserves space so the loaded state does not shift the page. */
 .lp-download {
@@ -259,9 +434,18 @@ a:focus-visible {
     border-radius: var(--radius);
 }
 
-.lp-download > * + * { margin-top: 16px; }
+.lp-download > * + * {
+    margin-top: 16px;
+}
 
-.lp-dl-version { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 14px; color: var(--muted-foreground); }
+.lp-dl-version {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    font-size: 14px;
+    color: var(--muted-foreground);
+}
 
 .lp-badge {
     padding: 0 8px;
@@ -272,30 +456,112 @@ a:focus-visible {
     line-height: 20px;
 }
 
-.lp-dl-status { font-size: 16px; }
-.lp-dl-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
-.lp-dl-meta { color: var(--muted-foreground); font-size: 14px; overflow-wrap: anywhere; }
-.lp-dl-meta a, .lp-dl-all a { color: var(--foreground); }
-.lp-dl-all { font-size: 14px; }
+.lp-dl-status {
+    font-size: 16px;
+}
 
-.lp-dl-details { font-size: 14px; }
-.lp-dl-details summary { cursor: pointer; padding: 8px 0; }
-.lp-dl-details summary:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; border-radius: calc(var(--radius) - 4px); }
-.lp-dl-details ul { display: grid; gap: 8px; margin-top: 8px; }
-.lp-dl-details li { display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--muted-foreground); overflow-wrap: anywhere; }
-.lp-dl-details li a { color: var(--foreground); }
-.lp-dl-details code { font-size: 12px; color: var(--foreground); overflow-wrap: anywhere; }
-.lp-dl-details .lp-dl-meta { margin-top: 12px; }
+.lp-dl-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
 
-.lp-notes { display: grid; gap: 12px; margin-top: 24px; max-width: 760px; color: var(--muted-foreground); font-size: 14px; }
-.lp-section > .lp-actions { margin-top: 24px; }
+.lp-dl-meta {
+    color: var(--muted-foreground);
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.lp-dl-meta a, .lp-dl-all a {
+    color: var(--foreground);
+}
+
+.lp-dl-all {
+    font-size: 14px;
+}
+
+.lp-dl-details {
+    font-size: 14px;
+}
+
+.lp-dl-details summary {
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.lp-dl-details summary:focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: calc(var(--radius) - 4px);
+}
+
+.lp-dl-details ul {
+    display: grid;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.lp-dl-details li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    color: var(--muted-foreground);
+    overflow-wrap: anywhere;
+}
+
+.lp-dl-details li a {
+    color: var(--foreground);
+}
+
+.lp-dl-details code {
+    font-size: 12px;
+    color: var(--foreground);
+    overflow-wrap: anywhere;
+}
+
+.lp-dl-details .lp-dl-meta {
+    margin-top: 12px;
+}
+
+.lp-notes {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+    max-width: 760px;
+    color: var(--muted-foreground);
+    font-size: 14px;
+}
+
+.lp-section > .lp-actions {
+    margin-top: 24px;
+}
 
 /* Open source (information) and the star prompt (one action) are two separate blocks. */
-.lp-open { display: grid; gap: 32px; margin-top: 24px; max-width: 760px; }
-.lp-open .lp-narration { margin-top: 0; }
-.lp-links-quiet { margin-top: 12px; color: var(--muted-foreground); font-size: 14px; }
-.lp-links-quiet a { color: var(--muted-foreground); }
-.lp-links-quiet a:hover { color: var(--foreground); }
+.lp-open {
+    display: grid;
+    gap: 32px;
+    margin-top: 24px;
+    max-width: 760px;
+}
+
+.lp-open .lp-narration {
+    margin-top: 0;
+}
+
+.lp-links-quiet {
+    margin-top: 12px;
+    color: var(--muted-foreground);
+    font-size: 14px;
+}
+
+.lp-links-quiet a {
+    color: var(--muted-foreground);
+}
+
+.lp-links-quiet a:hover {
+    color: var(--foreground);
+}
+
 .lp-star {
     display: flex;
     flex-wrap: wrap;
@@ -307,35 +573,111 @@ a:focus-visible {
     border-radius: var(--radius);
     font-size: 14px;
 }
-.lp-star p { flex: 1 1 260px; }
-.lp-star-count { color: var(--muted-foreground); }
+
+.lp-star p {
+    flex: 1 1 260px;
+}
+
+.lp-star-count {
+    color: var(--muted-foreground);
+}
 
 @media (max-width: 767px) {
-    .lp-wrap, .lp-header-inner { padding-left: 16px; padding-right: 16px; }
-    .lp-scene { padding: 48px 0 32px; }
-    .lp-narration { font-size: 16px; }
-    .lp-grid li { padding: 16px; }
-    .lp-download { padding: 16px; min-height: 260px; }
-    .lp-dl-buttons .lp-btn { flex: 1 1 100%; }
+    .lp-wrap, .lp-header-inner {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .lp-scene {
+        padding: 48px 0 32px;
+    }
+
+    .lp-narration {
+        font-size: 16px;
+    }
+
+    .lp-grid li {
+        padding: 16px;
+    }
+
+    .lp-download {
+        padding: 16px;
+        min-height: 260px;
+    }
+
+    .lp-dl-buttons .lp-btn {
+        flex: 1 1 100%;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .lp-btn { transition: none; }
-    .lp-ic, .lp-ic-tip::after { transition: background-color 0.2s, box-shadow 0.2s, opacity 0.18s; }
-    .lp-ic:hover, .lp-ic:active, .lp-ic-tip::after { transform: none; }
-    .lp-ic-hover .lp-ic-label { transition: opacity 0.2s; }
+    .lp-btn {
+        transition: none;
+    }
+
+    .lp-ic, .lp-ic-tip::after {
+        transition: background-color 0.2s, box-shadow 0.2s, opacity 0.18s;
+    }
+
+    .lp-ic:hover, .lp-ic:active, .lp-ic-tip::after {
+        transform: none;
+    }
+
+    .lp-ic-hover .lp-ic-label {
+        transition: opacity 0.2s;
+    }
 }
 
 /* Closing credits and FAQ. */
-.lp-credits { padding: 72px 0 24px; }
-.lp-credits .lp-scene-title { font-size: clamp(32px, 6vw, 56px); }
-.lp-credits .lp-section { padding-bottom: 48px; }
-.lp-credits .lp-narration { max-width: 760px; }
-.lp-faq { display: grid; gap: 8px; margin-top: 24px; max-width: 760px; }
-.lp-faq details { padding: 0 16px; background: var(--surface-panel); border: 1px solid var(--border); border-radius: var(--radius); }
-.lp-faq summary { cursor: pointer; padding: 12px 0; font-size: 14px; font-weight: 500; }
-.lp-faq summary:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; border-radius: calc(var(--radius) - 4px); }
-.lp-faq p { padding-bottom: 16px; color: var(--muted-foreground); font-size: 14px; line-height: 1.7; }
+.lp-credits {
+    padding: 72px 0 24px;
+}
+
+.lp-credits .lp-scene-title {
+    font-size: clamp(32px, 6vw, 56px);
+}
+
+.lp-credits .lp-section {
+    padding-bottom: 48px;
+}
+
+.lp-credits .lp-narration {
+    max-width: 760px;
+}
+
+.lp-faq {
+    display: grid;
+    gap: 8px;
+    margin-top: 24px;
+    max-width: 760px;
+}
+
+.lp-faq details {
+    padding: 0 16px;
+    background: var(--surface-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.lp-faq summary {
+    cursor: pointer;
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.lp-faq summary:focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: calc(var(--radius) - 4px);
+}
+
+.lp-faq p {
+    padding-bottom: 16px;
+    color: var(--muted-foreground);
+    font-size: 14px;
+    line-height: 1.7;
+}
 
 .lp-sr-only {
     position: absolute;
@@ -354,11 +696,19 @@ a:focus-visible {
    from that single variable and the layer's static window (--s, --e) and the
    fade width (--fade), so a frame is three custom-property writes, not one per
    scene. Only transform and opacity change per frame. */
-.lp-film { --film-progress: 0; --scene-index: 0; --scene-local: 0; }
+.lp-film {
+    --film-progress: 0;
+    --scene-index: 0;
+    --scene-local: 0;
+}
 
 /* The film's header floats over the credits as they scroll: a soft scrim (dark at the top, blurred, fading to nothing)
    sits behind the logo and controls, so scrolled text dissolves under it instead of colliding with them. */
-.lp-film .lp-header { position: fixed; inset: 0 0 auto 0; }
+.lp-film .lp-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+}
+
 .lp-film .lp-header::before {
     content: "";
     position: absolute;
@@ -395,12 +745,27 @@ a:focus-visible {
 }
 
 /* The picture (particles and film look) drifts by a pixel or so per film frame (gate weave); text never does. */
-.lp-picture { position: absolute; inset: 0; will-change: transform; }
+.lp-picture {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+}
 
-.lp-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.lp-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
 
 /* The film look reaches past the stage edges, so the weave never shows a seam. */
-.lp-look { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); pointer-events: none; }
+.lp-look {
+    position: absolute;
+    inset: -4px;
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    pointer-events: none;
+}
 
 /* Static vignette (a CSS gradient, painted once): dark corners, a little brighter centre. */
 .lp-vignette {
@@ -474,7 +839,10 @@ a:focus-visible {
     opacity: clamp(0, min((var(--scene-local) - 0.22) / 0.1, (0.93 - var(--scene-local)) / 0.07), 1);
 }
 
-.lp-stage-art { position: absolute; inset: 0; }
+.lp-stage-art {
+    position: absolute;
+    inset: 0;
+}
 
 /* Big play button at the leader: shown at rest, fades once the film runs or the viewer scrolls away. */
 .lp-start {
@@ -490,12 +858,37 @@ a:focus-visible {
     transition: opacity 0.35s, visibility 0s;
 }
 
-.lp-start[data-on="false"] { opacity: 0; visibility: hidden; transition: opacity 0.35s, visibility 0s 0.35s; }
-.lp-start .lp-ic { pointer-events: auto; }
-.lp-ic-xl { --ic: 72px; }
-.lp-ic-xl .lp-ic-icon { width: 30px; height: 30px; margin: 0 0 0 4px; }
-.lp-ic-xl::before { inset: -6px; }
-.lp-start-text { position: absolute; top: calc(50% + 56px); color: var(--muted-foreground); font-size: 12px; letter-spacing: 0.2em; }
+.lp-start[data-on="false"] {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s, visibility 0s 0.35s;
+}
+
+.lp-start .lp-ic {
+    pointer-events: auto;
+}
+
+.lp-ic-xl {
+    --ic: 72px;
+}
+
+.lp-ic-xl .lp-ic-icon {
+    width: 30px;
+    height: 30px;
+    margin: 0 0 0 4px;
+}
+
+.lp-ic-xl::before {
+    inset: -6px;
+}
+
+.lp-start-text {
+    position: absolute;
+    top: calc(50% + 56px);
+    color: var(--muted-foreground);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+}
 
 .lp-hud {
     position: absolute;
@@ -511,13 +904,34 @@ a:focus-visible {
     line-height: 18px;
 }
 
-.lp-ic-sm { --ic: 32px; }
-.lp-ic-sm .lp-ic-icon { margin: 0 7px; }
-.lp-ic-sm::before { inset: -6px; }
-.lp-hud .lp-ic-tip::after { top: auto; bottom: calc(100% + 10px); left: 0; right: auto; }
+.lp-ic-sm {
+    --ic: 32px;
+}
 
-.lp-hud-time { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
-.lp-hud-scene { letter-spacing: 0.16em; }
+.lp-ic-sm .lp-ic-icon {
+    margin: 0 7px;
+}
+
+.lp-ic-sm::before {
+    inset: -6px;
+}
+
+.lp-hud .lp-ic-tip::after {
+    top: auto;
+    bottom: calc(100% + 10px);
+    left: 0;
+    right: auto;
+}
+
+.lp-hud-time {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+}
+
+.lp-hud-scene {
+    letter-spacing: 0.16em;
+}
 
 /* Seek bar: a 20px-tall hit area around a 2px line (4px on hover/focus) with scene ticks. */
 .lp-hud-bar {
@@ -529,7 +943,11 @@ a:focus-visible {
     touch-action: none;
 }
 
-.lp-hud-bar:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 4px; }
+.lp-hud-bar:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
 
 .lp-hud-track {
     position: absolute;
@@ -551,7 +969,10 @@ a:focus-visible {
     transform-origin: left center;
 }
 
-.lp-hud-bar:hover .lp-hud-track, .lp-hud-bar:focus-visible .lp-hud-track { height: 4px; margin-top: -2px; }
+.lp-hud-bar:hover .lp-hud-track, .lp-hud-bar:focus-visible .lp-hud-track {
+    height: 4px;
+    margin-top: -2px;
+}
 
 .lp-hud-tick {
     position: absolute;
@@ -564,12 +985,26 @@ a:focus-visible {
     transition: opacity 0.15s;
 }
 
-.lp-hud-bar:hover .lp-hud-tick, .lp-hud-bar:focus-visible .lp-hud-tick { opacity: 1; }
+.lp-hud-bar:hover .lp-hud-tick, .lp-hud-bar:focus-visible .lp-hud-tick {
+    opacity: 1;
+}
 
 /* Sprocket holes: a strip taller than the stage by one full travel, moved with transform. */
-.lp-perf { position: absolute; top: 0; bottom: 0; width: 14px; overflow: hidden; }
-.lp-perf-left { left: 16px; }
-.lp-perf-right { right: 16px; }
+.lp-perf {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 14px;
+    overflow: hidden;
+}
+
+.lp-perf-left {
+    left: 16px;
+}
+
+.lp-perf-right {
+    right: 16px;
+}
 
 .lp-perf span {
     position: absolute;
@@ -583,12 +1018,41 @@ a:focus-visible {
 }
 
 @media (max-width: 767px) {
-    .lp-slate { top: 118px; }
-    .lp-marks { top: 92px; left: 24px; right: 24px; font-size: 11px; }
-    .lp-hud { left: 24px; right: 24px; }
-    .lp-hud-scene { display: none; }
-    .lp-perf { width: 8px; }
-    .lp-perf-left { left: 6px; }
-    .lp-perf-right { right: 6px; }
-    .lp-stage-subtitle { bottom: clamp(84px, 15vh, 120px); font-size: 17px; letter-spacing: 0.06em; }
+    .lp-slate {
+        top: 118px;
+    }
+
+    .lp-marks {
+        top: 92px;
+        left: 24px;
+        right: 24px;
+        font-size: 11px;
+    }
+
+    .lp-hud {
+        left: 24px;
+        right: 24px;
+    }
+
+    .lp-hud-scene {
+        display: none;
+    }
+
+    .lp-perf {
+        width: 8px;
+    }
+
+    .lp-perf-left {
+        left: 6px;
+    }
+
+    .lp-perf-right {
+        right: 6px;
+    }
+
+    .lp-stage-subtitle {
+        bottom: clamp(84px, 15vh, 120px);
+        font-size: 17px;
+        letter-spacing: 0.06em;
+    }
 }

@@ -89,7 +89,8 @@ function StoryboardPrintPageContent({
 
     return (
         <main className="storyboard-print min-h-full bg-white px-4 py-6 sm:px-8 text-black">
-            <div className="print-toolbar mx-auto mb-6 flex max-w-6xl flex-wrap items-center justify-between gap-3 rounded-lg bg-background p-3 text-foreground">
+            <div
+                className="print-toolbar mx-auto mb-6 flex max-w-6xl flex-wrap items-center justify-between gap-3 rounded-lg bg-background p-3 text-foreground">
                 <Button variant="outline" size="sm" asChild>
                     <Link
                         to="/p/$projectId/e/$episodeId/produce"

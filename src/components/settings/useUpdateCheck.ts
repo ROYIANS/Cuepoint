@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {appVersion} from "@/lib/appVersion";
 import {downloadAsset} from "@/lib/desktopRelease/download";
-import {detectPlatform, pickAssets, type AssetChoice, type NavigatorInfo} from "@/lib/desktopRelease/platform";
+import {type AssetChoice, detectPlatform, type NavigatorInfo, pickAssets} from "@/lib/desktopRelease/platform";
 import {fetchLatestDesktopRelease, type LatestDesktopRelease} from "@/lib/desktopRelease/releases";
 import {classifyUpdate, type UpdateClass} from "@/lib/desktopRelease/version";
 import {runtimeFetchFor} from "@/lib/runtimeFetch";
@@ -9,19 +9,27 @@ import {downloadBlob, isPublishedSaveError} from "@/lib/runtimeSave";
 import {writeLastUpdateCheckAt} from "./settingsStore";
 
 export type UpdateState =
-    | {kind: "idle"}
-    | {kind: "checking"}
-    | {kind: "ready"; release: LatestDesktopRelease; verdict: UpdateClass; asset?: AssetChoice; alternatives?: AssetChoice[]; ambiguous?: boolean; unsupportedReason?: string}
-    | {kind: "failed"; reason: string};
+    | { kind: "idle" }
+    | { kind: "checking" }
+    | {
+    kind: "ready";
+    release: LatestDesktopRelease;
+    verdict: UpdateClass;
+    asset?: AssetChoice;
+    alternatives?: AssetChoice[];
+    ambiguous?: boolean;
+    unsupportedReason?: string
+}
+    | { kind: "failed"; reason: string };
 
 export type DownloadState =
-    | {kind: "idle"}
-    | {kind: "downloading"; loaded: number; total: number}
-    | {kind: "verifying"}
-    | {kind: "saving"}
-    | {kind: "canceled"}
-    | {kind: "saved"; name: string; format?: AssetChoice["format"]; warning?: string}
-    | {kind: "failed"; message: string};
+    | { kind: "idle" }
+    | { kind: "downloading"; loaded: number; total: number }
+    | { kind: "verifying" }
+    | { kind: "saving" }
+    | { kind: "canceled" }
+    | { kind: "saved"; name: string; format?: AssetChoice["format"]; warning?: string }
+    | { kind: "failed"; message: string };
 
 const FAILURE_COPY: Record<string, string> = {
     network: "网络请求失败，请检查网络或稍后重试。",
@@ -44,7 +52,10 @@ export function useUpdateCheck() {
         checkAbort.current = controller;
         if (!silent) setState({kind: "checking"});
         try {
-            const result = await fetchLatestDesktopRelease({fetchImpl: runtimeFetchFor("release-check"), signal: controller.signal});
+            const result = await fetchLatestDesktopRelease({
+                fetchImpl: runtimeFetchFor("release-check"),
+                signal: controller.signal
+            });
             if (controller.signal.aborted || !mounted.current) return;
             if (result.kind !== "ok") {
                 if (!silent) setState({kind: "failed", reason: FAILURE_COPY[result.reason] ?? FAILURE_COPY.invalid});
@@ -53,17 +64,30 @@ export function useUpdateCheck() {
             const release = result.release;
             const platform = await detectPlatform({
                 userAgent: navigator.userAgent,
-                userAgentData: (navigator as Navigator & {userAgentData?: NavigatorInfo["userAgentData"]}).userAgentData,
+                userAgentData: (navigator as Navigator & {
+                    userAgentData?: NavigatorInfo["userAgentData"]
+                }).userAgentData,
                 platform: navigator.platform,
                 maxTouchPoints: navigator.maxTouchPoints,
             });
             if (controller.signal.aborted || !mounted.current) return;
             const pick = pickAssets(release, platform);
             const alternatives = pick.alternatives.filter(choice => choice.os === platform.os && (platform.arch === "unknown" || choice.arch === platform.arch));
-            if (!silent) setState({kind: "ready", release, verdict: classifyUpdate(appVersion(), release.version), asset: pick.primary, alternatives, ambiguous: pick.ambiguous, unsupportedReason: pick.unsupportedReason});
+            if (!silent) setState({
+                kind: "ready",
+                release,
+                verdict: classifyUpdate(appVersion(), release.version),
+                asset: pick.primary,
+                alternatives,
+                ambiguous: pick.ambiguous,
+                unsupportedReason: pick.unsupportedReason
+            });
             await writeLastUpdateCheckAt(Date.now()).catch(() => undefined);
         } catch {
-            if (!controller.signal.aborted && mounted.current && !silent) setState({kind: "failed", reason: FAILURE_COPY.network});
+            if (!controller.signal.aborted && mounted.current && !silent) setState({
+                kind: "failed",
+                reason: FAILURE_COPY.network
+            });
         } finally {
             if (checkAbort.current === controller) checkAbort.current = null;
         }
@@ -80,18 +104,38 @@ export function useUpdateCheck() {
                 asset: asset.asset,
                 fetchImpl: runtimeFetchFor("release-asset"),
                 signal: controller.signal,
-                onProgress: (received, total) => {if (mounted.current && !controller.signal.aborted) setDownload({kind: "downloading", loaded: received, total});},
-                onVerifying: () => {if (mounted.current && !controller.signal.aborted) setDownload({kind: "verifying"});},
+                onProgress: (received, total) => {
+                    if (mounted.current && !controller.signal.aborted) setDownload({
+                        kind: "downloading",
+                        loaded: received,
+                        total
+                    });
+                },
+                onVerifying: () => {
+                    if (mounted.current && !controller.signal.aborted) setDownload({kind: "verifying"});
+                },
             });
             if (!mounted.current) return;
-            if (result.kind === "canceled" || controller.signal.aborted) {setDownload({kind: "canceled"});return;}
+            if (result.kind === "canceled" || controller.signal.aborted) {
+                setDownload({kind: "canceled"});
+                return;
+            }
             setDownload({kind: "saving"});
             savingStarted = true;
             const outcome = await downloadBlob(new Blob([new Uint8Array(result.bytes)], {type: result.contentType}), asset.asset.name, controller.signal);
-            if (mounted.current) setDownload(outcome === "saved" ? {kind: "saved", name: asset.asset.name, format: asset.format} : {kind: "canceled"});
+            if (mounted.current) setDownload(outcome === "saved" ? {
+                kind: "saved",
+                name: asset.asset.name,
+                format: asset.format
+            } : {kind: "canceled"});
         } catch (error) {
             if (!mounted.current) return;
-            if (isPublishedSaveError(error)) setDownload({kind: "saved", name: asset.asset.name, format: asset.format, warning: error.message});
+            if (isPublishedSaveError(error)) setDownload({
+                kind: "saved",
+                name: asset.asset.name,
+                format: asset.format,
+                warning: error.message
+            });
             else if (controller.signal.aborted && !savingStarted) setDownload({kind: "canceled"});
             else setDownload({kind: "failed", message: error instanceof Error ? error.message : "下载失败，请重试。"});
         } finally {
@@ -103,7 +147,11 @@ export function useUpdateCheck() {
 
     useEffect(() => {
         mounted.current = true;
-        return () => {mounted.current = false;checkAbort.current?.abort();downloadAbort.current?.abort();};
+        return () => {
+            mounted.current = false;
+            checkAbort.current?.abort();
+            downloadAbort.current?.abort();
+        };
     }, []);
 
     return {state, download, runCheck, startDownload, cancelDownload};

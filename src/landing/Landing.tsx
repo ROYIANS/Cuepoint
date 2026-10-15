@@ -5,5 +5,5 @@ import {useDownloadData} from "./download/useReleases";
 // download data the closing credits need. The static markup inside #root of
 // landing.html must stay equivalent to the static mode of Film.
 export function Landing() {
-    return <Film download={useDownloadData()} />;
+    return <Film download={useDownloadData()}/>;
 }

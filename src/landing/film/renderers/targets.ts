@@ -1,9 +1,9 @@
 // Target point sets. A set is particle-indexed: entry i is where particle i wants
 // to be and how visible it should be. Sets are built only when the stage size or
 // the display font changes, then cached by the controller.
-export type Rect = {x: number; y: number; w: number; h: number};
+export type Rect = { x: number; y: number; w: number; h: number };
 
-export type TargetSet = {readonly x: Float32Array; readonly y: Float32Array; readonly a: Float32Array};
+export type TargetSet = { readonly x: Float32Array; readonly y: Float32Array; readonly a: Float32Array };
 
 export function createSet(capacity: number): TargetSet {
     return {x: new Float32Array(capacity), y: new Float32Array(capacity), a: new Float32Array(capacity)};
@@ -27,7 +27,7 @@ export function artScale(art: Rect): number {
     return art.w < 420 ? 1 : Math.min(1.45, Math.max(1, art.w / 600));
 }
 
-export type Bitmap = {readonly data: ArrayLike<number>; readonly width: number; readonly height: number};
+export type Bitmap = { readonly data: ArrayLike<number>; readonly width: number; readonly height: number };
 
 export type SampleOptions = {
     maxPoints: number;
@@ -125,7 +125,12 @@ const DUST_ALPHA = (): number => 0.16;
  * Particle i takes point i (optionally in shuffled order); the remainder become
  * dust. Returns how many particles carry a point.
  */
-export function fillSet(set: TargetSet, points: Float32Array, options: {rng: () => number; shuffle: boolean; width: number; height: number}): number {
+export function fillSet(set: TargetSet, points: Float32Array, options: {
+    rng: () => number;
+    shuffle: boolean;
+    width: number;
+    height: number
+}): number {
     const n = Math.min(set.x.length, points.length / 2);
     const order = options.shuffle ? shuffleOrder(n, options.rng) : undefined;
     for (let i = 0; i < n; i += 1) {
@@ -146,10 +151,20 @@ export function rectOutline(rect: Rect, count: number): Float32Array {
         let d = (i / count) * perimeter;
         let x: number;
         let y: number;
-        if (d < rect.w) { x = rect.x + d; y = rect.y; }
-        else if ((d -= rect.w) < rect.h) { x = rect.x + rect.w; y = rect.y + d; }
-        else if ((d -= rect.h) < rect.w) { x = rect.x + rect.w - d; y = rect.y + rect.h; }
-        else { d -= rect.w; x = rect.x; y = rect.y + rect.h - d; }
+        if (d < rect.w) {
+            x = rect.x + d;
+            y = rect.y;
+        } else if ((d -= rect.w) < rect.h) {
+            x = rect.x + rect.w;
+            y = rect.y + d;
+        } else if ((d -= rect.h) < rect.w) {
+            x = rect.x + rect.w - d;
+            y = rect.y + rect.h;
+        } else {
+            d -= rect.w;
+            x = rect.x;
+            y = rect.y + rect.h - d;
+        }
         out[i * 2] = x;
         out[i * 2 + 1] = y;
     }
@@ -207,7 +222,11 @@ export function circleOutline(cx: number, cy: number, r: number, count: number, 
     return out;
 }
 
-export type CanvasLike = {width: number; height: number; getContext: (kind: "2d", options?: CanvasRenderingContext2DSettings) => CanvasRenderingContext2D | null};
+export type CanvasLike = {
+    width: number;
+    height: number;
+    getContext: (kind: "2d", options?: CanvasRenderingContext2DSettings) => CanvasRenderingContext2D | null
+};
 
 export type TextPointsOptions = {
     font: (sizePx: number) => string;
@@ -230,7 +249,10 @@ export type TextPointsOptions = {
  * (stage coordinates). Lines are sampled separately and each is sorted left to
  * right, so the list reads line by line. Returns the points and the size used.
  */
-export function textPoints(lines: readonly string[], options: TextPointsOptions): {points: Float32Array; size: number} {
+export function textPoints(lines: readonly string[], options: TextPointsOptions): {
+    points: Float32Array;
+    size: number
+} {
     const canvas = options.createCanvas();
     const probe = canvas.getContext("2d", {willReadFrequently: true});
     if (!probe || lines.length === 0) return {points: new Float32Array(0), size: options.size};

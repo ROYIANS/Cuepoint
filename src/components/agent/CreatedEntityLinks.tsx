@@ -73,7 +73,12 @@ function CollapsedLinks({links}: { links: [string, string][] }) {
     </>;
 }
 
-export function CreatedEntityLinks({call, includePreview = false, allowProjectConversation = false, collapseDetails = false}: {
+export function CreatedEntityLinks({
+                                       call,
+                                       includePreview = false,
+                                       allowProjectConversation = false,
+                                       collapseDetails = false
+                                   }: {
     call: AgentToolCall;
     includePreview?: boolean;
     allowProjectConversation?: boolean;

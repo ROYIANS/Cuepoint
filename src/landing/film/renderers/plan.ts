@@ -2,19 +2,28 @@ import type {Behavior, Pool, Quality} from "./particles";
 import type {Rect, TargetSet} from "./targets";
 
 /** What the particles should chase this frame: a blend of two sets, plus overall visibility. */
-export type Plan = {from: TargetSet; to: TargetSet; t: number; behavior: Behavior; alphaScale: number};
+export type Plan = { from: TargetSet; to: TargetSet; t: number; behavior: Behavior; alphaScale: number };
 
-type TitleLayout = {cx: number; cy: number; size: number; text: string; fontFamily: string; fontWeight: string};
+type TitleLayout = { cx: number; cy: number; size: number; text: string; fontFamily: string; fontWeight: string };
 
 /** Geometry of the agent scene's execution log, computed once per stage size. */
-export type AgentGeom = {lineX: number; top: number; bottom: number; rowY: readonly number[]; textX: number; right: number; font: number; nodeR: number};
+export type AgentGeom = {
+    lineX: number;
+    top: number;
+    bottom: number;
+    rowY: readonly number[];
+    textX: number;
+    right: number;
+    font: number;
+    nodeR: number
+};
 export type VaultGeom = {
     cx: number; cy: number; r: number; font: number;
-    lock: {cx: number; top: number; bodyW: number; bodyH: number; shackleR: number};
-    keyLabel: {x: number; y: number};
-    storeLabel: {x: number; y: number};
+    lock: { cx: number; top: number; bodyW: number; bodyH: number; shackleR: number };
+    keyLabel: { x: number; y: number };
+    storeLabel: { x: number; y: number };
 };
-export type DeliveryGeom = {strip: Rect; icons: readonly Rect[]; labelY: number; font: number};
+export type DeliveryGeom = { strip: Rect; icons: readonly Rect[]; labelY: number; font: number };
 
 export type Layout = {
     w: number;

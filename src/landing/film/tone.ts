@@ -25,7 +25,7 @@ export const TONE_LEAVE = 0.8;
 const smooth = (x: number) => x * x * (3 - 2 * x);
 const mix = (a: Rgb, b: Rgb, t: number): Rgb => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
 
-type Stop = {at: number; color: Rgb};
+type Stop = { at: number; color: Rgb };
 
 const STOPS: readonly Stop[] = (() => {
     const stops: Stop[] = [];

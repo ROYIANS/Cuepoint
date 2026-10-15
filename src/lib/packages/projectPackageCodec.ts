@@ -188,7 +188,11 @@ function parseProject(
         tone: optionalText(raw, "tone"),
         defaultStyleId: optionalText(raw, "defaultStyleId"),
         generationDefaults: parseGenerationDefaults(raw.generationDefaults),
-        musicVariantLinks: raw.musicVariantLinks === undefined ? undefined : z.record(z.object({"suno-simple": z.string().min(1).optional(), "suno-custom": z.string().min(1).optional(), flowmusic: z.string().min(1).optional()}).strict()).parse(raw.musicVariantLinks),
+        musicVariantLinks: raw.musicVariantLinks === undefined ? undefined : z.record(z.object({
+            "suno-simple": z.string().min(1).optional(),
+            "suno-custom": z.string().min(1).optional(),
+            flowmusic: z.string().min(1).optional()
+        }).strict()).parse(raw.musicVariantLinks),
         mode: normalizeProjectMode(raw.mode),
         aspectPreset: normalizeAspectPreset(raw.aspectPreset),
         createdAt: String(raw.createdAt ?? at),

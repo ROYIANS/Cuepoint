@@ -213,7 +213,9 @@ function scriptImpact(ownerId: string, episodeId: string, before: EpisodeStory, 
     };
 }
 
-function readTool<T extends { ownerId?: string }, const Name extends string>(name: Name, title: string, description: string, spec: s.Spec<T>, execute: (args: NoInfer<T>, context: AgentToolContext) => Promise<unknown>): TypedToolDefinition<T, Name> {
+function readTool<T extends {
+    ownerId?: string
+}, const Name extends string>(name: Name, title: string, description: string, spec: s.Spec<T>, execute: (args: NoInfer<T>, context: AgentToolContext) => Promise<unknown>): TypedToolDefinition<T, Name> {
     return defineTool(spec, {
         name,
         title,
@@ -221,10 +223,10 @@ function readTool<T extends { ownerId?: string }, const Name extends string>(nam
         effect: "read",
         highRisk: () => false,
         async execute(raw, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             context.signal.throwIfAborted();
             return db.transaction("r", [...readTables(), db.agentRuns, db.chatThreads], async (db) => {
-                const boundContext = {...context, store:db};
+                const boundContext = {...context, store: db};
                 const args = await resolveBusinessOwner(spec.schema.parse(raw), boundContext, db);
                 await assertProjectToolScope(boundContext, name, args, false, db);
                 return execute(args, boundContext);
@@ -233,7 +235,7 @@ function readTool<T extends { ownerId?: string }, const Name extends string>(nam
     });
 }
 
-type ResolvedBusinessArgs<T> = T & ("ownerId" extends keyof T ? {ownerId: string} : object);
+type ResolvedBusinessArgs<T> = T & ("ownerId" extends keyof T ? { ownerId: string } : object);
 
 /** The schema recipe declares whether ownership is part of this tool's parsed arguments. */
 function assertResolvedBusinessArgs<T extends object>(args: T, hasOwner: boolean): asserts args is ResolvedBusinessArgs<T> {
@@ -249,23 +251,28 @@ type WriteHooks<Args> = {
 };
 
 function writeTool<T extends object, const Name extends string>(name: Name, title: string, description: string, spec: s.Spec<T>,
-                                                 scope: (args: NoInfer<ResolvedBusinessArgs<T>>) => string[], prepare: (args: NoInfer<ResolvedBusinessArgs<T>>, context:AgentToolContext) => Promise<PreviewState>, execute: (args: NoInfer<ResolvedBusinessArgs<T>>, context: AgentToolContext) => Promise<unknown>, highRisk = false, hooks: WriteHooks<NoInfer<ResolvedBusinessArgs<T>>> = {}): TypedToolDefinition<T, Name> {
+                                                                scope: (args: NoInfer<ResolvedBusinessArgs<T>>) => string[], prepare: (args: NoInfer<ResolvedBusinessArgs<T>>, context: AgentToolContext) => Promise<PreviewState>, execute: (args: NoInfer<ResolvedBusinessArgs<T>>, context: AgentToolContext) => Promise<unknown>, highRisk = false, hooks: WriteHooks<NoInfer<ResolvedBusinessArgs<T>>> = {}): TypedToolDefinition<T, Name> {
     const properties = spec.json.properties;
     const hasOwner = properties !== null && typeof properties === "object" && Object.hasOwn(properties, "ownerId");
+
     async function resolve(args: T, context: AgentToolContext, store?: ProductStore): Promise<ResolvedBusinessArgs<T>> {
-    const db = store ?? context.store ?? productDb;
+        const db = store ?? context.store ?? productDb;
         if (!hasOwner) {
             assertResolvedBusinessArgs(args, false);
             return args;
         }
         const ownerId = "ownerId" in args ? args.ownerId : undefined;
-        const resolved = await resolveBusinessOwner({...args, ownerId: typeof ownerId === "string" ? ownerId : undefined}, context, db);
+        const resolved = await resolveBusinessOwner({
+            ...args,
+            ownerId: typeof ownerId === "string" ? ownerId : undefined
+        }, context, db);
         const result: T = resolved;
         assertResolvedBusinessArgs(result, true);
         return result;
     }
-    async function preview(args: ResolvedBusinessArgs<T>, context:AgentToolContext): Promise<AgentToolPreview> {
-        const info = await prepare(args,context);
+
+    async function preview(args: ResolvedBusinessArgs<T>, context: AgentToolContext): Promise<AgentToolPreview> {
+        const info = await prepare(args, context);
         return {
             summary: title,
             changes: info.changes,
@@ -288,19 +295,19 @@ function writeTool<T extends object, const Name extends string>(name: Name, titl
         atomic: true,
         highRisk: () => highRisk,
         async prepare(raw, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const args = await resolve(spec.schema.parse(raw), context, db);
             await assertProjectToolScope(context, name, args, true, db);
             await flush(args, context);
             return db.transaction("r", [name === "project_create" ? db.tables : [...readTables(), db.agentRuns, db.chatThreads]].flat(), async (db) => {
-                const boundContext = {...context, store:db};
+                const boundContext = {...context, store: db};
                 await assertProjectToolScope(boundContext, name, args, true, db);
                 await hooks.beforePreview?.(args, boundContext);
-                return preview(args,boundContext);
+                return preview(args, boundContext);
             });
         },
         async execute(raw, context) {
-    const db = context.store ?? productDb;
+            const db = context.store ?? productDb;
             const parsed = spec.schema.parse(raw);
             let args: ResolvedBusinessArgs<T>;
             try {
@@ -310,15 +317,15 @@ function writeTool<T extends object, const Name extends string>(name: Name, titl
                 await assertProjectToolScope(context, name, args, true, db);
                 await flush(args, context);
             } catch (error) {
-        if (error instanceof StorageError && error.certainty === "unknown") throw error;
+                if (error instanceof StorageError && error.certainty === "unknown") throw error;
                 throw new AtomicToolRollbackError(error instanceof Error ? error.message : "草稿保存失败，业务操作尚未开始", {cause: error});
             }
             return executeAtomicTool(context, async (db) => {
-        const boundContext = {...context, store:db};
+                const boundContext = {...context, store: db};
                 boundContext.signal.throwIfAborted();
                 args = await resolve(parsed, boundContext, db);
                 await assertProjectToolScope(boundContext, name, args, true, db);
-                if (!boundContext.preview?.revision || boundContext.preview.revision !== (await preview(args,boundContext)).revision) throw new ToolRecoveryError("STALE_TOOL_PREVIEW", "目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容");
+                if (!boundContext.preview?.revision || boundContext.preview.revision !== (await preview(args, boundContext)).revision) throw new ToolRecoveryError("STALE_TOOL_PREVIEW", "目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容");
                 await hooks.beforeWrite?.(args, boundContext);
                 const deleted = await captureBusinessDeletion(name, args, db);
                 const result = await execute(args, boundContext);
@@ -440,7 +447,7 @@ const readTextSpec = {
 };
 const reads = [
     readTool("business_search", "查询创作资料", "按类型、归属和关键词查询项目、分集、场次、镜头、角色、场景、道具、风格或素材。已绑定对话可省略 ownerId，使用保存的项目；未绑定对话除项目列表外必须提供 ownerId，工作室资产用 studio。结果仅候选，不根据同名结果自动操作；offset/limit 分页，最多50项。", searchSpec, async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const query = args.query?.trim().toLocaleLowerCase();
         const projectId = context ? await frozenProjectScope(context, db) : undefined;
         const rows = (await listRows(args.kind, args.ownerId, args.episodeId, db)).filter((row) => (!projectId || args.kind !== "project" || row.id === projectId) && (!query || JSON.stringify(projection(args.kind, row)).toLocaleLowerCase().includes(query)));
@@ -462,7 +469,7 @@ const reads = [
         };
     }),
     readTool("business_detail", "查看创作详情", "按稳定 ID 查看允许的创作字段、关系和版本。已绑定对话可省略 ownerId；未绑定对话除项目外必须提供 ownerId。场次还需明确 episodeId。不返回扩展袋或文件内容。长内容显式截断，可用 business_read_text 分段读。", detailSpec, async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await getRow(args.kind, args.id, args.ownerId, args.episodeId, db);
         const usage = args.kind === "media" ? await mediaUsage(args.ownerId!, args.id, db) : undefined;
         const retention = args.kind === "media" ? await mediaRetention(args.ownerId!, args.id, db) : undefined;
@@ -483,7 +490,7 @@ const reads = [
         id: s.id,
         field: s.text(100, 1), ...s.page
     }), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await getRow(args.kind, args.id, args.ownerId, args.episodeId, db);
         const ids = relationsAt(args.kind, row, args.field), offset = args.offset ?? 0, limit = args.limit ?? 50;
         return {
@@ -496,7 +503,7 @@ const reads = [
         };
     }),
     readTool("business_read_text", "分段读取创作文本", "读取详情中的文本字段，支持 story.script、story.logline、setting.worldview、slots.front.prompt 等点路径。分集 episode 的剧本字段是 story.script，不是 script。每次最多12000字符，返回 totalLength/nextOffset；禁止内部扩展与文件字段。", readTextSpec, async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await getRow(args.kind, args.id, args.ownerId, args.episodeId, db);
         const text = textAt(args.kind, row, args.field), offset = args.offset ?? 0, limit = args.limit ?? 6000;
         return {
@@ -543,7 +550,7 @@ const projectTools = [
             args.continueInProject === false ? "仅创建项目，当前对话保持未绑定；可从结果入口开启项目对话。" : "创建后将此对话绑定新项目，并在当前执行中继续创作。",
         ]
     }))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const kind = args.kind ?? "video";
         const project = kind === "video" ? await createProject(args.name, args.mode, args.aspectPreset, undefined, db) : await createAudioMusicProject(args.name, kind, undefined, db);
         if (args.continueInProject !== false) await bindCreatedAgentProject(context, project.id, db);
@@ -567,17 +574,17 @@ const projectTools = [
         return {...result, firstEpisodeId: (await firstEpisode(project.id, db))!.id};
     }, false, {
         beforePreview: async (args, context) => {
-    const db=context.store ?? productDb;
+            const db = context.store ?? productDb;
             await assertAgentProjectCreation(context, args.continueInProject !== false, undefined, db);
         },
         beforeWrite: async (args, context) => {
-    const db=context.store ?? productDb;
+            const db = context.store ?? productDb;
             await assertAgentProjectCreation(context, args.continueInProject !== false, true, db);
         },
         completedReplay: async (args, context) => {
-    const db=context.store ?? productDb;
+            const db = context.store ?? productDb;
             return db.transaction("rw", db.tables, async (db) => {
-                const boundContext = {...context, store:db};
+                const boundContext = {...context, store: db};
                 const call = await db.agentToolCalls.get(boundContext.callId);
                 if (call?.status !== "completed") return undefined;
                 if (call.name !== "project_create" || targetRevision(projectCreate.schema.parse(JSON.parse(call.arguments))) !== targetRevision(args)) throw new Error("创建项目的重放参数与原调用不匹配");
@@ -596,7 +603,7 @@ const projectTools = [
         },
     }),
     writeTool("project_update", "修改项目资料", "修改明确项目的创作信息、梗概、世界设定、默认风格和经过验证的生成默认参数；不修改已有镜头。null 清除默认风格/封面/生成配置。", projectUpdate, (args) => [args.id], async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await getRow("project", args.id, undefined, undefined, db);
         if (Object.hasOwn(args.patch, "generationDefaults")) {
             const errors = validateGenerationDefaults(args.patch.generationDefaults ?? undefined);
@@ -609,7 +616,7 @@ const projectTools = [
             changes: detail.changes
         };
     }, async ({id, patch}, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await getRow("project", id, undefined, undefined, db);
         const {logline, setting, coverMediaId, defaultDurationSec, autoIncrementShotNumber, ...details} = patch;
         if (Object.keys(details).length) {
@@ -640,7 +647,7 @@ const projectTools = [
         id: args.id,
         ownerId: args.id
     }, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await deleteProject(args.id, db);
         return {deletedId: args.id};
     }, true),
@@ -651,7 +658,7 @@ const episodeTools = [
         ...s.owner,
         fields: s.optional(s.object(s.episodeFields))
     }), (args) => [args.ownerId], (args, context) => (db => createPreview(args.ownerId, "episode", args.fields ?? {}, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const episode = await addEpisode(args.ownerId, db);
         if (args.fields) await updateEpisodeDraft(episode.id, args.fields, undefined, db);
         return rowResult("episode", await getRow("episode", episode.id, args.ownerId, undefined, db));
@@ -660,22 +667,25 @@ const episodeTools = [
         ...s.target,
         patch: s.nonempty(s.object(s.episodeFields))
     }), (args) => [args.ownerId], async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const info = await targetPreview("episode", args, args.patch, undefined, db);
         if (args.patch.script !== undefined) info.changes.push("修改剧本会清理不再匹配的原文范围；保留现有场次和镜头，不自动同步它们的内容或顺序。");
         return info;
     }, async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const before = args.patch.script === undefined ? undefined : normalizeEpisodeStory((await requireEpisode(args.ownerId, args.id, db)).story);
         await updateEpisodeDraft(args.id, args.patch, undefined, db);
         const episode = await getRow("episode", args.id, args.ownerId, undefined, db);
         const result = rowResult("episode", episode);
         if (!before) return result;
         const shots = await db.shots.where("episodeId").equals(args.id).toArray();
-        return {...result, scriptImpact: scriptImpact(args.ownerId, args.id, before, normalizeEpisodeStory(episode.story), shots)};
+        return {
+            ...result,
+            scriptImpact: scriptImpact(args.ownerId, args.id, before, normalizeEpisodeStory(episode.story), shots)
+        };
     }),
     writeTool("episode_delete", "删除分集", "删除分集、场次及其镜头，保护项目最后一集。", s.object(s.target), (args) => [args.ownerId], (args, context) => (db => deletePreview("episode", args, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await deleteEpisode(args.id, db);
         return {deletedId: args.id};
     }, true),
@@ -709,7 +719,7 @@ const beatTools = [
         ...s.episodeTarget,
         fields: s.optional(s.object(s.beatFields))
     }), (args) => [args.ownerId], (args, context) => (db => createPreview(args.ownerId, "beat", args.fields ?? {}, args.episodeId, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const beat = await addStoryBeat(args.episodeId, undefined, db);
         if (args.fields) await patchStoryBeat(args.episodeId, beat.id, beatPatch(args.fields), undefined, db);
         return rowResult("beat", await getRow("beat", beat.id, args.ownerId, args.episodeId, db));
@@ -718,12 +728,12 @@ const beatTools = [
         ...s.beatTarget,
         patch: s.nonempty(s.object(s.beatFields))
     }), (args) => [args.ownerId], (args, context) => (db => targetPreview("beat", args, args.patch, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await patchStoryBeat(args.episodeId, args.id, beatPatch(args.patch), undefined, db);
         return rowResult("beat", await getRow("beat", args.id, args.ownerId, args.episodeId, db));
     }),
     writeTool("beat_delete", "删除故事场次", "删除场次，保留其镜头并解除场次关联。", s.object(s.beatTarget), (args) => [args.ownerId], (args, context) => (db => deletePreview("beat", args, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await deleteStoryBeat(args.episodeId, args.id, db);
         return {deletedId: args.id, linkedShotsPreserved: true};
     }, true),
@@ -735,7 +745,7 @@ const shotTools = [
         beatId: s.optional(s.id),
         fields: s.optional(s.object(s.shotFields))
     }), (args) => [args.ownerId], async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const base = await createPreview(args.ownerId, "shot", {count: args.count ?? 1, ...args.fields}, args.episodeId, db);
         const project = (await db.projects.get(args.ownerId))!;
         return {
@@ -747,7 +757,7 @@ const shotTools = [
             }
         };
     }, async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const rows = await addShots(args.ownerId, args.episodeId, args.count ?? 1, {beatId: args.beatId}, db);
         for (const row of rows) if (args.fields) await patchShot(row.id, shotPatch(args.fields), undefined, db);
         return {items: await Promise.all(rows.map(async (row) => rowResult("shot", await getRow("shot", row.id, args.ownerId, args.episodeId, db))))};
@@ -757,7 +767,7 @@ const shotTools = [
         episodeId: s.id,
         patch: s.nonempty(s.object(s.shotFields))
     }), (args) => [args.ownerId], (args, context) => (db => targetPreview("shot", args, args.patch, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await patchShot(args.id, shotPatch(args.patch), undefined, db);
         return rowResult("shot", await getRow("shot", args.id, args.ownerId, args.episodeId, db));
     }),
@@ -765,7 +775,7 @@ const shotTools = [
         ...s.target,
         episodeId: s.id
     }), (args) => [args.ownerId], (args, context) => (db => deletePreview("shot", args, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await deleteEpisodeShots(args.episodeId, [args.id], db);
         return {deletedId: args.id};
     }, true),
@@ -788,7 +798,7 @@ const assetTools = [
         ...s.owner,
         fields: s.optional(s.object(s.assetFields.character))
     }), (args) => [args.ownerId], (args, context) => (db => createPreview(args.ownerId, "character", args.fields ?? {}, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await addCharacter(args.ownerId, db);
         if (args.fields) await patchCharacter(row.id, args.fields, undefined, db);
         return rowResult("character", await getRow("character", row.id, args.ownerId, undefined, db));
@@ -797,12 +807,12 @@ const assetTools = [
         ...s.target,
         patch: s.nonempty(s.object(s.assetFields.character))
     }), (args) => [args.ownerId], (args, context) => (db => targetPreview("character", args, args.patch, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await patchCharacter(args.id, args.patch, undefined, db);
         return rowResult("character", await getRow("character", args.id, args.ownerId, undefined, db));
     }),
     writeTool("character_delete", `删除角色`, `删除角色并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args, context) => (db => deletePreview("character", args, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await deleteCharacter(args.id, db);
         return {deletedId: args.id};
     }, true),
@@ -811,7 +821,7 @@ const assetTools = [
         ...s.owner,
         fields: s.optional(s.object(s.assetFields.scene))
     }), (args) => [args.ownerId], (args, context) => (db => createPreview(args.ownerId, "scene", args.fields ?? {}, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await addScene(args.ownerId, db);
         if (args.fields) await patchScene(row.id, args.fields, undefined, db);
         return rowResult("scene", await getRow("scene", row.id, args.ownerId, undefined, db));
@@ -820,12 +830,12 @@ const assetTools = [
         ...s.target,
         patch: s.nonempty(s.object(s.assetFields.scene))
     }), (args) => [args.ownerId], (args, context) => (db => targetPreview("scene", args, args.patch, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await patchScene(args.id, args.patch, undefined, db);
         return rowResult("scene", await getRow("scene", args.id, args.ownerId, undefined, db));
     }),
     writeTool("scene_delete", `删除场景`, `删除场景并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args, context) => (db => deletePreview("scene", args, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await deleteScene(args.id, db);
         return {deletedId: args.id};
     }, true),
@@ -834,7 +844,7 @@ const assetTools = [
         ...s.owner,
         fields: s.optional(s.object(s.assetFields.prop))
     }), (args) => [args.ownerId], (args, context) => (db => createPreview(args.ownerId, "prop", args.fields ?? {}, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await addProp(args.ownerId, db);
         if (args.fields) await patchProp(row.id, args.fields, undefined, db);
         return rowResult("prop", await getRow("prop", row.id, args.ownerId, undefined, db));
@@ -843,12 +853,12 @@ const assetTools = [
         ...s.target,
         patch: s.nonempty(s.object(s.assetFields.prop))
     }), (args) => [args.ownerId], (args, context) => (db => targetPreview("prop", args, args.patch, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await patchProp(args.id, args.patch, undefined, db);
         return rowResult("prop", await getRow("prop", args.id, args.ownerId, undefined, db));
     }),
     writeTool("prop_delete", `删除道具`, `删除道具并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args, context) => (db => deletePreview("prop", args, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await deleteProp(args.id, db);
         return {deletedId: args.id};
     }, true),
@@ -857,7 +867,7 @@ const assetTools = [
         ...s.owner,
         fields: s.optional(s.object(s.assetFields.style))
     }), (args) => [args.ownerId], (args, context) => (db => createPreview(args.ownerId, "style", args.fields ?? {}, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await addStyle(args.ownerId, db);
         if (args.fields) await patchStyle(row.id, args.fields, undefined, db);
         return rowResult("style", await getRow("style", row.id, args.ownerId, undefined, db));
@@ -866,12 +876,12 @@ const assetTools = [
         ...s.target,
         patch: s.nonempty(s.object(s.assetFields.style))
     }), (args) => [args.ownerId], (args, context) => (db => targetPreview("style", args, args.patch, undefined, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await patchStyle(args.id, args.patch, undefined, db);
         return rowResult("style", await getRow("style", args.id, args.ownerId, undefined, db));
     }),
     writeTool("style_delete", `删除风格`, `删除风格并清理同项目引用，保护仍在使用的素材。项目快照和工作室来源相互独立。`, s.object(s.target), (args) => [args.ownerId], (args, context) => (db => deletePreview("style", args, db))(context.store ?? productDb), async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await deleteStyle(args.id, db);
         return {deletedId: args.id};
     }, true),
@@ -883,7 +893,7 @@ const reuseTools = [
         sourceId: s.id,
         ownerId: s.id
     }), (args) => [args.ownerId, STUDIO_LIBRARY_ID], async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await requireOwner(args.ownerId, false, db);
         const source = await getRow(args.kind, args.sourceId, STUDIO_LIBRARY_ID, undefined, db);
         return {
@@ -900,7 +910,7 @@ const reuseTools = [
         kind: s.choice(["beat", "shot"]), ...s.beatTarget,
         includeShots: s.optional(s.bool)
     }), (args) => [args.ownerId], async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await getRow(args.kind, args.id, args.ownerId, args.episodeId, db);
         const episode = await requireEpisode(args.ownerId, args.episodeId, db);
         const shots = (await listBusinessRecords("shot", args.ownerId, args.episodeId, db)).flatMap(record => record.kind === "shot" ? [record.row] : []);
@@ -912,7 +922,7 @@ const reuseTools = [
             changes: [`复制此${BUSINESS_LABELS[args.kind]}${args.kind === "beat" ? `，同时复制 ${count} 个关联镜头` : ""}；后续镜头重新排序。`]
         };
     }, async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         if (args.kind === "shot") {
             const row = await duplicateShot(args.id, db);
             return rowResult("shot", {...row});
@@ -928,7 +938,7 @@ const reuseTools = [
         episodeId: s.optional(s.id),
         orderedIds: s.ids
     }), (args) => [args.ownerId], async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await requireOwner(args.ownerId, false, db);
         if (args.kind !== "episode" && !args.episodeId) throw new ToolRecoveryError("EPISODE_REQUIRED", "场次/镜头排序需要 episodeId");
         const rows = await listRows(args.kind, args.ownerId, args.episodeId, db);
@@ -942,7 +952,7 @@ const reuseTools = [
             })
         };
     }, async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         if (args.kind === "episode") await reorderEpisodes(args.ownerId, args.orderedIds, db);
         else if (args.kind === "beat") await reorderBeats(args.episodeId!, args.orderedIds, db);
         else await reorderShots(args.episodeId!, args.orderedIds, db);
@@ -982,7 +992,7 @@ const slotSpec = s.object({
 });
 const mediaTools = [
     writeTool("slot_update", "修改素材槽位", "修改资产/镜头槽位描述、图片参考、视频参考或已有结果。只允许同归属真实媒体 ID；result:null 清除结果。角色 front/side/back/expression/costume；场景 wide/medium/detail；道具 hero/detail/worn；风格 look/light/lens；镜头 firstFrame/lastFrame/clip。只有 clip 结果允许视频。", slotSpec, (args) => [args.ownerId], async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await getRow(args.kind, args.id, args.ownerId, args.episodeId, db);
         const slots = {
             character: CHARACTER_SLOTS.map((slot) => slot.id),
@@ -1002,7 +1012,7 @@ const mediaTools = [
             changes: [`槽位：${args.slot}`, ...changes(args.patch)]
         };
     }, async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const record = await readBusinessRecord(args.kind, args.id, args.ownerId, args.episodeId, db);
         const {result, ...patch} = args.patch;
         if (result?.mediaId && (await db.agentGenerationJobs.where("projectId").equals(args.ownerId).toArray()).some(job => job.batchId && job.result?.mediaId === result.mediaId)) throw new Error("批量候选必须由用户在批量面板选择并写入");
@@ -1052,7 +1062,7 @@ const mediaTools = [
         };
     }),
     writeTool("media_delete_orphan", "清理未引用素材", "仅删除未被项目封面、资产、镜头、参考资料、生成任务或历史提案引用的真实媒体。使用中的文件不会删除；不支持任意文件或 Blob 写入。", s.object(s.target), (args) => [args.ownerId], async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         const row = await getRow("media", args.id, args.ownerId, undefined, db);
         const usage = await mediaUsage(args.ownerId, args.id, db);
         if (usage.length) throw new Error(`素材仍有 ${usage.length} 处引用，请先明确解除关联`);
@@ -1064,7 +1074,7 @@ const mediaTools = [
             changes: [`删除文件「${businessRowText(row, ["filename"], row.id)}」（${typeof row.size === "number" ? row.size : 0} 字节）；如参考资料、生成任务或历史提案保留该文件则拒绝删除。`]
         };
     }, async (args, context) => {
-    const db = context.store ?? productDb;
+        const db = context.store ?? productDb;
         await deleteMediaIfOrphan(args.id, db);
         if (await db.media.get(args.id)) throw new Error("素材仍被参考资料、生成任务或历史提案保留，未删除");
         return {deletedId: args.id};
