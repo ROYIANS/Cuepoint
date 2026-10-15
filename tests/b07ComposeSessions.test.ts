@@ -52,7 +52,7 @@ vi.mock("@/platform/product/queries", () => {
 });
 
 const io = vi.hoisted(() => ({navigate: vi.fn(), create: vi.fn(), begin: vi.fn(), execute: vi.fn(),
-    update: vi.fn(), resolveConnector: vi.fn(), reconcile: vi.fn(), importFile: vi.fn(), retryImport: vi.fn(), compatible: vi.fn(), lock: vi.fn()}));
+    update: vi.fn(), resolveConnector: vi.fn(), reconcile: vi.fn(), importFile: vi.fn(), retryImport: vi.fn(), compatible: vi.fn(), discover: vi.fn(), lock: vi.fn()}));
 vi.mock("@tanstack/react-router", () => ({useNavigate: () => io.navigate, Link: "a", useBlocker: () => ({status: "idle", proceed: vi.fn(), reset: vi.fn()})}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 vi.mock("@/features/agent/commands/chat", async original => ({...await original<typeof import("@/features/agent/commands/chat")>(),
@@ -67,7 +67,7 @@ vi.mock("@/features/agent/runtime/runOwnership", () => ({recoverAbandonedRuns: v
 vi.mock("@/features/agent/runtime/taskWrapup", () => ({recoverTaskWrapups: vi.fn().mockResolvedValue(undefined)}));
 vi.mock("@/features/video/agent/generationBatchRuntime", () => ({pauseThreadGeneration: vi.fn()}));
 vi.mock("@/features/settings/models/connectors", () => ({runWithCompatibleChatModel: io.compatible,
-    discoverConnectorChatModels: vi.fn().mockResolvedValue({models: ["model"]})}));
+    discoverConnectorChatModels: io.discover}));
 vi.mock("@/features/references/documents/import", () => ({importReferenceFile: io.importFile, retryReferenceImport: io.retryImport}));
 vi.mock("@/features/agent/ui/AgentActivityNavigation", () => ({AgentActivityNavigationProvider: "navigation-provider"}));
 vi.mock("@/features/agent/ui/HomeWelcome", () => ({HomeWelcome: "home"}));
@@ -84,6 +84,7 @@ import {UnknownCommitError} from "@/platform/storage/errors";
 import {resetReportedErrorsForTests} from "@/platform/diagnostics/reportError";
 import {AgentChatPage} from "@/features/agent/ui/AgentChatPage";
 import {useReferenceDraft} from "@/features/agent/ui/useReferenceDraft";
+import {useChatExecutionSession} from "@/features/agent/ui/useChatExecutionSession";
 import type {ComposerProps} from "@/features/agent/ui/composerTypes";
 import type {ChatThread} from "@/features/agent/models/chat";
 import type {ConnectorConfig} from "@/features/settings/models/connector";
@@ -124,12 +125,13 @@ const connector: ConnectorConfig = {id: "connector", definitionId: "openai-compa
 function thread(id: string, projectId = "p"): ChatThread {
     return {id, projectId, title: id, connectorId: connector.id, model: "model", createdAt: "2026-09-30", updatedAt: "2026-09-30"};
 }
-function page(initial?: string) {
+function page(initial?: string, connection = connector) {
     const host = mount(); let active = initial; let pendingOwnership = false;
+    let runResults: unknown[] = [];
     const threads = [thread("A"), thread("B")];
     const render = () => {
-        host.results = [threads, [], [], [connector], [{id: "p"}, {id: "q"}] as Project[],
-            pendingOwnership ? {forId: "old", thread: null} : {forId: active ?? null, thread: threads.find(item => item.id === active) ?? null}, [], [], []];
+        host.results = [threads, [], [], [connection], [{id: "p"}, {id: "q"}] as Project[],
+            pendingOwnership ? {forId: "old", thread: null} : {forId: active ?? null, thread: threads.find(item => item.id === active) ?? null}, [], [], runResults];
         return draw(host, () => {
             const wrapper = AgentChatPage({threadId: active}) as Node;
             const child = (wrapper.props.children as Node).props.children as Node;
@@ -145,7 +147,7 @@ function page(initial?: string) {
     const action = async (action: "retry" | "restore" | "check" | "recover", id = attempts()[0]?.admission.userMessageId) => {
         (surface().props.onSubmissionAction as (id: string, action: string) => void)(id, action); await settle();
     };
-    return {host, threads, render, surface, composer, select, attempts, action, pendingOwnership: () => {pendingOwnership = true; active = "unknown";}, active: () => active, type: (value: string) => composer().onChange(value),
+    return {host, threads, render, surface, composer, select, attempts, action, runs: (value: unknown[]) => {runResults = value; render();}, pendingOwnership: () => {pendingOwnership = true; active = "unknown";}, active: () => active, type: (value: string) => composer().onChange(value),
         attach: (id: string) => composer().onAttachReference!({referenceId: id, revision: 1}),
         // The UI deliberately discards handleSend's promise. Drain callbacks explicitly.
         send: async () => {composer().onSend(); await settle();}};
@@ -161,6 +163,7 @@ beforeEach(async () => {
     vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn()});
     io.update.mockResolvedValue(undefined); io.execute.mockResolvedValue(undefined);
     io.resolveConnector.mockResolvedValue(connector); io.reconcile.mockResolvedValue({status: "absent"});
+    io.discover.mockResolvedValue({models: ["model"]});
     io.begin.mockResolvedValue({id: "run"});
     io.compatible.mockImplementation(async (_connector, _model, operation, options) => {
         if (options.signal.aborted || !options.isCurrent()) return {ok: false, aborted: true};
@@ -397,6 +400,120 @@ describe("B07 first send and ownership boundaries", () => {
     it("preserves composer loading gate when routed ownership is pending", () => {
         const ui = page(); ui.pendingOwnership();
         expect(ui.render().some(node => node.type === "workspace" || node.type === "home")).toBe(false);
+    });
+});
+
+describe("E03 owned execution feedback", () => {
+    const statusText = (composer: ComposerProps) => nodes(composer.status).flatMap(node =>
+        typeof node.props.children === "string" ? [node.props.children] :
+            Array.isArray(node.props.children) ? node.props.children.filter(child => typeof child === "string") : []).join(" ");
+    it("keeps pending model verification quiet while retaining a real failed-compatibility warning", async () => {
+        const gate = deferred<{ok: false; models: string[]}>(); io.discover.mockReturnValue(gate.promise);
+        const ui = page("A", {...connector, definitionId: "apimart"});
+        expect(ui.composer()).toMatchObject({probingModels: true, modelWarning: undefined});
+        expect(ui.composer().modelPolicy.verified).toBe(false);
+        gate.resolve({ok: false, models: []}); await settle();
+        expect(ui.composer().probingModels).toBe(false);
+        expect(ui.composer().modelWarning).toBe("暂时无法确认当前连接的模型兼容性，发送时会重新校验。");
+    });
+    it("acknowledges Stop during held compatibility, excludes repeats and retains the lock until the check returns", async () => {
+        const ui = page("A"); ui.type("submitted");
+        const gate = deferred<{ok: false; aborted: true}>(); io.compatible.mockReturnValue(gate.promise);
+        await ui.send();
+        expect(statusText(ui.composer())).not.toContain("正在准备");
+        expect(ui.composer().modelWarning ?? "").not.toContain("正在确认");
+        const stop = ui.composer().onStop;
+        stop(); stop();
+        expect(ui.composer()).toMatchObject({sending: true, stopping: true});
+        expect(statusText(ui.composer())).toContain("正在停止…");
+        expect(nodes(ui.composer().status).find(node => node.type === "button" && node.props["aria-label"] === "正在停止…")?.props.disabled).toBe(true);
+        expect(statusText(ui.composer()).match(/正在停止…/g)).toHaveLength(1);
+        ui.type("next draft"); await ui.send();
+        expect(io.compatible).toHaveBeenCalledTimes(1); expect(ui.attempts()).toHaveLength(1);
+        expect(io.compatible.mock.calls[0][3].signal.aborted).toBe(true);
+        gate.resolve({ok: false, aborted: true}); await settle();
+        expect(ui.composer()).toMatchObject({sending: false, stopping: false, value: "next draft"});
+        expect(io.begin).not.toHaveBeenCalled(); expect(io.execute).not.toHaveBeenCalled();
+        expect(ui.attempts()[0].phase).toBe("failed");
+    });
+    it("keeps Stop pending through an accepted in-flight begin and the original execution's final flush", async () => {
+        const ui = page("A"); ui.type("submitted");
+        const begin = deferred<{id: string; threadId: string; assistantMessageId: string}>();
+        const flush = deferred<void>(); io.begin.mockReturnValue(begin.promise); io.execute.mockReturnValue(flush.promise);
+        await ui.send(); const controllerBeforeStop = io.compatible.mock.calls[0][3].signal;
+        const stop = ui.composer().onStop; stop(); stop();
+        expect(ui.composer().stopping).toBe(true); expect(io.execute).not.toHaveBeenCalled();
+        begin.resolve({id: "run", threadId: "A", assistantMessageId: "assistant"}); await settle();
+        expect(ui.attempts()[0].phase).toBe("accepted");
+        expect(io.execute).toHaveBeenCalledTimes(1);
+        expect(io.execute.mock.calls[0][2].signal).toBe(controllerBeforeStop);
+        expect(controllerBeforeStop.aborted).toBe(true);
+        ui.type("next draft"); await ui.send();
+        expect(ui.composer()).toMatchObject({sending: true, stopping: true, value: "next draft"});
+        expect(io.begin).toHaveBeenCalledTimes(1);
+        flush.resolve(); await settle();
+        expect(ui.composer()).toMatchObject({sending: false, stopping: false, value: "next draft"});
+    });
+    it("shows model wait only after actual request invocation and stays quiet while output advances", async () => {
+        const ui = page("A"); ui.type("submitted"); const flush = deferred<void>();
+        io.begin.mockResolvedValue({id: "run", threadId: "A", assistantMessageId: "assistant"});
+        io.execute.mockReturnValue(flush.promise); await ui.send();
+        const observe = io.execute.mock.calls[0][7] as import("@/features/agent/runtime/executionFeedback").RuntimeExecutionFeedback;
+        observe({type: "started", runId: "run", threadId: "A", assistantMessageId: "assistant", executionId: "exec"});
+        observe({type: "requestInvoked", runId: "run", executionId: "exec"});
+        expect(statusText(ui.composer())).toContain("正在等待回复…");
+        observe({type: "publicReceived", runId: "run", executionId: "exec", kind: "content"});
+        expect(statusText(ui.composer())).not.toContain("正在等待回复");
+        expect(statusText(ui.composer())).not.toContain("正在接收回复");
+        ui.composer().onStop();
+        observe({type: "preparing", runId: "run", executionId: "exec"});
+        expect(statusText(ui.composer())).toContain("正在停止…");
+        flush.resolve(); await settle();
+    });
+    it("keeps an ordinary reply quiet through final flush and a retained running query after release", async () => {
+        const ui = page("A"); ui.type("submitted"); const flush = deferred<void>();
+        const run = {id: "run", threadId: "A", assistantMessageId: "assistant", status: "running"};
+        io.begin.mockResolvedValue(run); io.execute.mockReturnValue(flush.promise); await ui.send();
+        ui.runs([run]);
+        const observe = io.execute.mock.calls[0][7] as import("@/features/agent/runtime/executionFeedback").RuntimeExecutionFeedback;
+        observe({type: "started", runId: "run", threadId: "A", assistantMessageId: "assistant", executionId: "exec"});
+        expect(statusText(ui.composer())).not.toContain("正在执行");
+        observe({type: "requestInvoked", runId: "run", executionId: "exec"});
+        expect(statusText(ui.composer())).toContain("正在等待回复…");
+        observe({type: "publicReceived", runId: "run", executionId: "exec", kind: "content"});
+        expect(statusText(ui.composer())).not.toContain("正在执行");
+        observe({type: "settled", runId: "run", executionId: "exec", sequence: 1, confirmed: true, status: "completed"});
+        flush.resolve(); await settle();
+        expect(ui.composer().sending).toBe(false);
+        expect(statusText(ui.composer())).not.toContain("正在执行");
+        expect(statusText(ui.composer())).not.toContain("正在等待回复");
+    });
+    it("retains the existing execution surface for actual tool work", async () => {
+        const ui = page("A"); ui.type("submitted"); const flush = deferred<void>();
+        const run = {id: "run", threadId: "A", assistantMessageId: "assistant", status: "running", hasToolCalls: true};
+        io.begin.mockResolvedValue(run); io.execute.mockReturnValue(flush.promise); await ui.send();
+        ui.runs([run]);
+        const observe = io.execute.mock.calls[0][7] as import("@/features/agent/runtime/executionFeedback").RuntimeExecutionFeedback;
+        observe({type: "started", runId: "run", threadId: "A", assistantMessageId: "assistant", executionId: "exec"});
+        observe({type: "tool_round", runId: "run", executionId: "exec", confirmed: true, sequence: 1, step: 1});
+        expect(statusText(ui.composer())).toContain("正在执行");
+        flush.resolve(); await settle();
+    });
+    it("reuses its controller after effect replay and stale release cannot unlock another invocation", () => {
+        const host = mount(); const drawSession = () => {
+            let result!: ReturnType<typeof useChatExecutionSession>;
+            draw(host, () => {result = useChatExecutionSession("A");}); return result;
+        };
+        let session = drawSession(); const first = session.acquire()!;
+        replay(host); session = drawSession();
+        expect(first.controller.signal.aborted).toBe(true);
+        expect(session.acquire()).toBeUndefined();
+        session.release(first); session = drawSession();
+        const second = session.acquire()!; session.release(first);
+        expect(session.sendLockRef.current).toBe(true);
+        expect(second.feedback.requestStop()).toBe(true);
+        expect(second.feedback.requestStop()).toBe(false);
+        session.release(second); expect(session.sendLockRef.current).toBe(false);
     });
 });
 

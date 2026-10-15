@@ -1,0 +1,20 @@
+# E03 delivery evidence
+
+## Result and owner corrections
+
+The existing execution owner now projects actual invocation phases, acknowledges Stop synchronously and idempotently, and retains its original lock/controller through authoritative settlement. Standard private User Timing separates submitted intent, provisional DOM commit, known admission, main application request invocation, first public receipt, confirmed checkpoint, eligible public DOM commit, explicit Stop and actual settlement/release.
+
+Normal preparation, advancing replies and final reply flush remain quiet. The owner explicitly rejected automatic `正在确认 APIMart 模型类型…`; pending probing now has no composer warning while real resolved incompatibility errors and send validation remain. Ordinary bubbles keep E02's no-status rule. Independent review also removed generic execution-strip flashes during final reply flush or retained running-query publication after release; actual tool operations still own their working phase. Stop status appears once while repeated Stop is disabled.
+
+The lightweight DOM context preserves lazy rich rendering, actual current-run identity, open current reasoning/answer eligibility and late query publication after release. Historical activity steps are excluded: old repeated text must not manufacture a new-output display mark. Sparse missing marks remain honest. First successful sampling disconnects local observers so later streaming does not repeat ancestor-style inspection. The controller retains at most eight traces / 136 exact owned timing entries with no content or product IDs in names/detail, isolates optional failures and supports effect cleanup/replay. The original current-credential policy, selected native/browser transport, sole product transaction owner and core/provider protocols are unchanged.
+
+## Evidence and practical limits
+
+- Runtime worker: four scoped suites / 26 passing tests, direct Studio types, runtime ESLint zero errors/one reviewed complexity warning. Real ProductStore cases cover both protocols, single POST, current credentials/key rotation, auxiliary summary separation, empty output, actual resume and completed-before-Stop/held acknowledgement. See implementation-runtime.md.
+- UI worker: four scoped suites / 63 passing tests; final sampling API reran two suites / 48, then final local cleanup three DOM cases. Direct application types pass; eleven UI source files have zero lint errors/34 visible review warnings. Actual page callback and ReactDOM tests cover held compatibility/begin/flush, repeat Stop, draft and stale-token ownership, quiet model probing, actual confirmed output/folded/inert visibility and no computed-style sampling after first commit. See implementation-ui.md.
+- Independent checker records final full changed-scope review, reproducible status-flash fixes, affected final checks and architecture in review.md. Its final evidence supersedes earlier intermediate counts where the source changed.
+- The running local Vite server returned HTTP 200 without an error overlay for executionFeedback.ts, useChatExecutionSession.ts, ExecutionFeedback.tsx and AgentChatPage.tsx; transformed page text no longer contains the rejected automatic model-confirmation string. This verifies module resolution, not full browser interaction.
+- Native business discovery now includes e03RuntimeFeedback.test.ts. This is test registration only; no SQLite/native acceptance was run in this stage.
+- Task context paths and new spec links validate; the oversized existing quality guide was read in chunks rather than relying on truncated injection. Final staged whitespace is checked before commit.
+
+Synthetic HTTP/clocks and controlled DOM geometry do not prove network-wire/server receipt, compositor pixel paint, improved live latency or native packaging. No live-text overlay or checkpoint tuning was selected without measurements. Missing/ambiguous marks stay missing. Full regression, production builds, packaging and native/live acceptance remain deferred to the selected batch's end under owner instruction. No dependency install, paid request or remote push.

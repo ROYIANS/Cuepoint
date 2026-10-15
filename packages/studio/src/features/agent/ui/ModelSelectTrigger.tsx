@@ -331,11 +331,13 @@ export function ModelSelectTrigger({
 
 export function SendCircleButton({
                                      sending,
+                                     stopping,
                                      canSend,
                                      onSend,
                                      onStop,
                                  }: {
     sending: boolean;
+    stopping?: boolean;
     canSend: boolean;
     onSend: () => void;
     onStop: () => void;
@@ -344,8 +346,9 @@ export function SendCircleButton({
         return (
             <ActionIcon
                 icon={Square}
-                title="停止"
-                aria-label="停止"
+                title={stopping ? "正在停止…" : "停止"}
+                aria-label={stopping ? "正在停止…" : "停止"}
+                disabled={stopping}
                 onClick={onStop}
                 className="agent-composer-send"
                 style={{

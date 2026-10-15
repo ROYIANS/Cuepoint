@@ -22,6 +22,7 @@ export type ComposerProps = {
     onRetryReferenceImport?: (job: ReferenceImportDraft) => void;
     value: string;
     sending: boolean;
+    stopping?: boolean;
     blocked?: boolean;
     blockedReason?: string;
     readOnly?: boolean;

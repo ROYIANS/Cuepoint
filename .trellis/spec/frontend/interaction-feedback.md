@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read when adding loading labels, progress, success notices, message metadata, recovery controls or status transitions in any product feature. This records the owner's 2026-10-15 correction: a brief sending/saved/loading label beside the submitted user bubble added visual noise and was explicitly rejected. Apply the lesson across the product, rather than treating it as one forbidden string.
+Read when adding loading labels, progress, success notices, message metadata, recovery controls or status transitions in any product feature. This records the owner's 2026-10-15 corrections: brief sending/saved/loading labels beside the submitted user bubble and the automatic `正在确认 APIMart 模型类型…` warning added visual noise and were explicitly rejected. Apply the lesson across the product, rather than treating it as one forbidden string.
 
 ## 2. Owners and concrete interfaces
 
@@ -13,6 +13,7 @@ Current Agent example: `features/agent/ui/SubmissionMessage.tsx` renders submitt
 ## 3. Interaction and copy contracts
 
 - **Keep normal success paths quiet.** A visible result usually supplies its own confirmation: a sent message appears, a created item is in its collection, or a changed field shows its value. Do not add a transient caption or toast merely because a promise resolved.
+- **Keep automatic model checks and request preparation quiet.** Model-capability probing and internal preparation do not need an unsolicited warning/status line. In the Agent composer, unresolved background probing produces no `modelWarning`; once checks resolve, preserve actual incompatible/invalid-model errors and their existing send guards. A capability panel opened by the user can still describe the requested capability result.
 - **Acknowledge the user's action immediately through the relevant surface.** Show submitted content before preparation, or use the existing button's pending/disabled state to prevent duplicates. Do not make the user wait for a network/storage round trip to see that their gesture took effect.
 - **Expose information that helps the user act or understand real waiting.** A long import may need completed/total and Stop; an unavailable result may need recovery. Each visible status needs a user purpose beyond naming the internal phase.
 - **Use one relevant feedback location.** Preserve existing composer/action/job feedback where it is useful. Do not repeat it in a bubble caption, process header and toast, or add a new row for each internal transition.
@@ -32,6 +33,7 @@ Current Agent example: `features/agent/ui/SubmissionMessage.tsx` renders submitt
 | Known failure needs user action | Relevant error/recovery remains available, preserving entered content |
 | Outcome is uncertain | Plain explanation and a safe check/recovery action; no false success/failure or blind replay |
 | Internal preparation/storage/loading transition | Internal state and diagnostics suffice unless the transition has a concrete user need |
+| Background model-type/capability check pending | No automatic confirmation warning or preparation caption; actual validation and resolved errors remain |
 
 ## 5. Good / Base / Bad cases
 
@@ -39,7 +41,7 @@ Good: Send immediately displays the exact message and clears only the submitted 
 
 Base: an existing import progress area reports actual completed/total without duplicating it in a toast for every file.
 
-Bad: every message briefly gains `正在发送…` followed by `已发送，正在载入对话…`; the line disappears again when the rich transcript mounts. These labels expose implementation sequencing, cause visual flicker and do not help the user decide anything.
+Bad: every message briefly gains `正在发送…` followed by `已发送，正在载入对话…`, or the composer flashes `正在确认 APIMart 模型类型…` while background probing runs. These labels expose implementation sequencing, cause visual flicker and do not help the user decide anything.
 
 ## 6. Necessary verification
 

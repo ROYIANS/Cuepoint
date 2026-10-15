@@ -3,6 +3,7 @@ import {AgentMarkdown as Markdown} from "./AgentMarkdown";
 import {ChevronDown} from "../../../ui/icons";
 import {useEffect, useId, useRef, useState} from "react";
 import {formatThinkingTitle} from "../presentation/thinkingTitle";
+import {usePublicOutputCommit} from "./ExecutionFeedback";
 
 const THINKING_MARKDOWN_PROPS = {variant: "chat" as const};
 
@@ -16,14 +17,17 @@ export function ThinkingPanel({
                                   reasoning,
                                   active,
                                   durationMs,
+                                  output,
                               }: {
     reasoning: string;
     active: boolean;
     durationMs?: number;
+    output?: {runId: string; assistantMessageId: string};
 }) {
     const [open, setOpen] = useState(active);
     const panelId = useId();
     const prevActive = useRef(active);
+    const contentRef = usePublicOutputCommit(output, "reasoning", reasoning, open);
 
     useEffect(() => {
         const wasActive = prevActive.current;
@@ -55,7 +59,7 @@ export function ThinkingPanel({
                 />
             </button>
             {open ? (
-                <div id={panelId} className="agent-thinking-content">
+                <div id={panelId} ref={contentRef} className="agent-thinking-content">
                     <Markdown {...THINKING_MARKDOWN_PROPS} className="agent-thinking-body">
                         {reasoning}
                     </Markdown>

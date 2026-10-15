@@ -19,6 +19,7 @@ import {MemoryRunHistory} from "./MemoryContextDetails";
 import {TurnNavigation} from "./TurnNavigation";
 import {SubmissionMessage, SubmissionStatus, type SubmissionAction} from "./SubmissionMessage";
 import {submissionTranscript, type ChatSubmissionAttempt} from "./chatSubmissionAttempts";
+import {PublicOutputCommit} from "./ExecutionFeedback";
 
 /** One quiet status line, only for outcomes the reader must notice. */
 export function presentMessageStatus(message: Pick<ChatMessage, "status" | "error">, run?: Pick<AgentRun, "pauseReason">): {
@@ -216,7 +217,8 @@ const AgentChatMessageItem = memo(
                 {!run && hasReasoning && <ThinkingPanel reasoning={message.reasoning ?? ""} active={reasoningActive}
                                                         durationMs={message.reasoningDurationMs}/>}
                 {showMatrix && <ThinkingMatrix/>}
-                {text && <Markdown {...MARKDOWN_PROPS}>{text}</Markdown>}
+                {text && (run ? <PublicOutputCommit output={{runId: run.id, assistantMessageId: message.id}} text={text}>
+                    <Markdown {...MARKDOWN_PROPS}>{text}</Markdown></PublicOutputCommit> : <Markdown {...MARKDOWN_PROPS}>{text}</Markdown>)}
                 <div className="agent-message-footer">
                     <ReferenceMessageSources run={run} content={processOwnsContent ? "" : message.content}/>
                     <div className="agent-message-meta">

@@ -3,6 +3,8 @@
 ## 1. Scope / Trigger
 Read when changing Agent messages, execution lifecycle, retry, tool-loop integration or startup recovery. IndexedDB v8 adds studio-global agents and agentRuns; v9 adds the tool-call ledger. These records and credentials are excluded from project ZIPs.
 
+Invocation-scoped presentation and optional Studio observation follow [Agent Execution Feedback](./agent-execution-feedback.md); Stop acknowledgement never releases ownership or claims terminal persistence.
+
 Immediate local attempts and optional create-only admission identities follow [Agent Send Recovery](./agent-send-recovery.md). Unknown acknowledgement never authorizes another begin or dispatch.
 
 Batch queue, selection and genuine generation-source evidence extend these contracts; read [Batch Generation](./agent-batch-generation.md) when touching those paths.

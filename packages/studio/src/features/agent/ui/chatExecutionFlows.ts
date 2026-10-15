@@ -17,6 +17,7 @@ import {executeChatRun, resumeChatRun} from "../runtime/runChat";
 import {withThreadRunLock} from "../runtime/runOwnership";
 import {runWithCompatibleChatModel} from "../../settings/models/connectors";
 import {deriveChatTitle} from "../models/chatTitle";
+import type {ExecutionFeedbackInvocation} from "../runtime/executionFeedback";
 
 type ReferenceDraft = ReturnType<typeof useReferenceDraft>;
 
@@ -46,6 +47,7 @@ interface NewMessageFlow {
     navigateToThread?: boolean;
     destinationReserved?: boolean;
     onDestinationReady?: () => void;
+    feedback?: ExecutionFeedbackInvocation;
 }
 
 export async function executeNewChatMessage({
@@ -66,7 +68,7 @@ export async function executeNewChatMessage({
                                                 bindThread,
                                                 navigate,
                                                 isCurrent, threadId, admission, onThreadReady, onAdmitted,
-                                                navigateToThread, destinationReserved, onDestinationReady
+                                                navigateToThread, destinationReserved, onDestinationReady, feedback
                                             }: NewMessageFlow) {
     return runWithCompatibleChatModel(connector, model, async () => {
         let thread = activeThread;
@@ -80,6 +82,7 @@ export async function executeNewChatMessage({
                 projectId
             });
             onThreadReady(thread);
+            feedback?.bindThread(thread.id);
             if (controller.signal.aborted) return;
             bindThread(thread.id);
 
@@ -124,7 +127,8 @@ export async function executeNewChatMessage({
                 interactionMode: activeThreadId ? interactionMode : "smart"
             });
             onAdmitted(run);
-            await executeChatRun(run, connector.apiKey, controller, undefined, undefined, undefined, ownership);
+            feedback?.admitted(run);
+            await executeChatRun(run, connector.apiKey, controller, undefined, undefined, undefined, ownership, feedback?.runtime);
         });
 
     }, {
@@ -139,9 +143,10 @@ interface ExistingRunFlow {
     activeThreadId?: string;
     controller: AbortController;
     isThreadCurrent: (id: string) => boolean;
+    feedback?: ExecutionFeedbackInvocation;
 }
 
-export async function retryFrozenChatRun({runId, activeThreadId, controller, isThreadCurrent}: ExistingRunFlow) {
+export async function retryFrozenChatRun({runId, activeThreadId, controller, isThreadCurrent, feedback}: ExistingRunFlow) {
     const previous = await db.agentRuns.get(runId);
     if (!previous || previous.threadId !== activeThreadId) throw new Error("执行不存在");
     const connector = await resolveConnector(previous.connector.id);
@@ -156,7 +161,8 @@ export async function retryFrozenChatRun({runId, activeThreadId, controller, isT
                 model: previous.model,
                 retryOfRunId: previous.id
             });
-            await executeChatRun(run, connector.apiKey, controller, undefined, undefined, undefined, ownership);
+            feedback?.admitted(run);
+            await executeChatRun(run, connector.apiKey, controller, undefined, undefined, undefined, ownership, feedback?.runtime);
         }), {
         signal: controller.signal,
         isCurrent: () => isThreadCurrent(previous.threadId),
@@ -170,7 +176,7 @@ export async function resolveChatRunAction({
                                                callId,
                                                activeThreadId,
                                                controller,
-                                               isThreadCurrent
+                                               isThreadCurrent, feedback
                                            }: ExistingRunFlow & { action: RunAction; callId?: string }) {
     const run = await db.agentRuns.get(runId);
     if (!run || run.threadId !== activeThreadId) throw new Error("执行不存在");
@@ -197,7 +203,7 @@ export async function resolveChatRunAction({
     return runWithCompatibleChatModel(connector, run.model, () =>
         withThreadRunLock(run.threadId, async (ownership) => {
             if (controller.signal.aborted) return;
-            await resumeChatRun(run.id, connector.apiKey, controller, undefined, undefined, undefined, ownership);
+            await resumeChatRun(run.id, connector.apiKey, controller, undefined, undefined, undefined, ownership, feedback?.runtime);
         }), {
         signal: controller.signal,
         isCurrent: () => isThreadCurrent(run.threadId),

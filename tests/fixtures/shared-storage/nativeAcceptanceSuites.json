@@ -125,7 +125,8 @@
     "packages/studio/src/features/video/tests/shotFilters.test.ts",
     "tests/agentRuntimeOwnership.test.ts",
     "tests/agentRuntimeCredentials.test.ts",
-    "tests/agentRuntimeClaimRaces.test.ts"
+    "tests/agentRuntimeClaimRaces.test.ts",
+    "tests/e03RuntimeFeedback.test.ts"
   ],
   "browserComparators": [
     "tests/connectorMigration.test.ts: explicit raw browser migration comparator",

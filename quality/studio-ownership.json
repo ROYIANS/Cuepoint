@@ -5824,6 +5824,22 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/runtime/executionFeedback.ts",
+      "file": "packages/studio/src/features/agent/runtime/executionFeedback.ts",
+      "target": "packages/studio/src/features/agent/runtime/executionFeedback.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/ExecutionFeedback.tsx",
+      "file": "packages/studio/src/features/agent/ui/ExecutionFeedback.tsx",
+      "target": "packages/studio/src/features/agent/ui/ExecutionFeedback.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

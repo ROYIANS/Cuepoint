@@ -150,6 +150,7 @@ export function FloatingComposer({
                                      onRetryReferenceImport,
                                      value,
                                      sending,
+                                     stopping,
                                      blocked,
                                      blockedReason,
                                      connectors,
@@ -436,7 +437,7 @@ export function FloatingComposer({
                                           title={listening ? "停止语音输入" : "语音输入"}><Mic size={17} aria-hidden/>
                         </button> : null}
                         <div className="agent-composer-send-group">
-                            <SendCircleButton sending={sending} canSend={canSend && !listening} onSend={trySend}
+                            <SendCircleButton sending={sending} stopping={stopping} canSend={canSend && !listening} onSend={trySend}
                                               onStop={onStop}/>
                             {detail && !sending ? <Dropdown
                                 trigger={["click"]}

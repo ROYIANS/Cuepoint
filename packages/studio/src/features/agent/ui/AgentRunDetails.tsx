@@ -1,4 +1,5 @@
 import {AgentMarkdown as Markdown} from "./AgentMarkdown";
+import {PublicOutputCommit} from "./ExecutionFeedback";
 import {ShotDetailLink} from "../../../app/details/ShotDetails";
 import {CreatedEntityLinks} from "./CreatedEntityLinks";
 import {AgentWriteOutcomes} from "./AgentWriteOutcomes";
@@ -287,9 +288,11 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
                         : <ToolGroup key={item.id} calls={item.calls} run={run} busy={busy} readOnly={readOnly}
                                      unknown={unknown} executing={executing} onAction={onAction}/>)}
                 {currentReasoning && <ThinkingPanel reasoning={currentReasoning} active={reasoningActive}
+                                                    output={{runId: run.id, assistantMessageId: message.id}}
                                                     durationMs={message.reasoningDurationMs}/>}
                 {currentContent &&
-                    <Markdown {...MARKDOWN_PROPS} className="agent-activity-narrative">{currentContent}</Markdown>}
+                    <PublicOutputCommit output={{runId: run.id, assistantMessageId: message.id}} text={currentContent}>
+                        <Markdown {...MARKDOWN_PROPS} className="agent-activity-narrative">{currentContent}</Markdown></PublicOutputCommit>}
                 {run.plan && run.plan.length > 0 && <details className="agent-activity-plan">
                     <summary>执行计划
                         · {run.plan.filter((step) => step.status === "completed").length}/{run.plan.length}<ChevronDown

@@ -5,3 +5,11 @@
 {"file": ".trellis/spec/frontend/chat-performance.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/interaction-audit.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/spec/frontend/agent-send-recovery.md", "reason": "Preserve E02 attempt consumption, recovery and exact admission identities."}
+{"file": ".trellis/spec/agent-core/library/runtime.md", "reason": "Reuse public invocation observer and confirmed/provisional semantics without changing neutral core."}
+{"file": ".trellis/spec/agent-providers/library/protocols.md", "reason": "Keep actual dispatch/materialization and public callbacks distinct from existing throughput metrics."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Typed optional observation ports and feature-private ownership without suppressions."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Necessary affected tests under owner’s batch cadence; real callback/DOM assertions."}
+{"file": ".trellis/tasks/10-15-agent-execution-feedback/research/phase-timing-design.md", "reason": "Source-backed exact phase/Stop/timing seams, privacy bounds and focused verification."}
+{"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Owner correction: quiet normal success, immediate visible results, meaningful feedback and user-action language; no internal phase captions."}
+{"file": ".trellis/spec/frontend/agent-execution-feedback.md", "reason": "Concrete E03 invocation, optional observation, Stop, visibility and timing contract."}

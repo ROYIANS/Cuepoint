@@ -1,6 +1,7 @@
 import type {ChatSubmissionAttempt} from "./chatSubmissionAttempts";
 import {ReferenceAttachments} from "./ReferenceAttachments";
 import {useLayoutEffect, useRef} from "react";
+import {ProvisionalCommitProbe} from "./ExecutionFeedback";
 import "./submissionMessage.css";
 
 export type SubmissionAction = "retry" | "restore" | "check" | "recover";
@@ -12,14 +13,14 @@ export function SubmissionMessage({attempt, busy, onAction}: {
     onAction: (id: string, action: SubmissionAction) => void;
 }) {
     const {phase, admission, submitted} = attempt;
-    return <div className="agent-transcript-item agent-transcript-user" data-turn-anchor={admission.userMessageId}
+    return <ProvisionalCommitProbe messageId={admission.userMessageId}><div className="agent-transcript-item agent-transcript-user" data-turn-anchor={admission.userMessageId}
                 data-submission-phase={phase}>
         <div className="agent-user-bubble">
             <ReferenceAttachments projectId={attempt.projectId} attachments={submitted.attachments}/>
             {submitted.text.trim() && <div className="agent-submission-text">{submitted.text.trim()}</div>}
         </div>
         <SubmissionStatus attempt={attempt} busy={busy} onAction={onAction}/>
-    </div>;
+    </div></ProvisionalCommitProbe>;
 }
 
 export function SubmissionStatus({attempt, busy, onAction}: {

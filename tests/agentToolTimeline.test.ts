@@ -3,6 +3,8 @@ import {act, createElement as h, type ReactNode} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {AgentRun, AgentToolCall} from "@/features/agent/models/agent";
+import {createExecutionFeedbackController, type ExecutionFeedbackSnapshot} from "@/features/agent/runtime/executionFeedback";
+import {ExecutionFeedbackContext} from "@/features/agent/ui/ExecutionFeedback";
 
 let attentionCalls: AgentToolCall[] = [];
 vi.mock("@/platform/product/queries", () => ({
@@ -66,6 +68,35 @@ afterEach(async () => {
 });
 
 describe("tool timeline", () => {
+    it("does not count matching historical prose before the current invocation's output is observed", async () => {
+        const rects = vi.spyOn(HTMLElement.prototype, "getClientRects").mockReturnValue([{width: 10, height: 10}] as unknown as DOMRectList);
+        const visibility = vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
+        const mark = vi.fn();
+        let snapshot: ExecutionFeedbackSnapshot | undefined;
+        const controller = createExecutionFeedbackController({timing: {mark, measure: vi.fn(), clearMarks: vi.fn(), clearMeasures: vi.fn()},
+            onChange: next => {snapshot = next;}});
+        const invocation = controller.begin("resumed", "t1");
+        const identity = {runId: "r1", executionId: "current"};
+        invocation.runtime({...identity, type: "started", threadId: "t1", assistantMessageId: "a1"});
+        invocation.runtime({...identity, type: "baseline", output: {content: "previous partial answer"}});
+        invocation.runtime({...identity, type: "requestInvoked"});
+        invocation.runtime({...identity, type: "publicReceived", kind: "content"});
+        invocation.runtime({...identity, type: "checkpoint", confirmed: true, sequence: 1, checkpoint: 2, output: {content: "repeated answer"}});
+        const current = run({status: "running", activitySteps: [{step: 1, content: "repeated answer"}, {step: 2, content: "another saved round"}]});
+        const render = async (content: string) => act(async () => root.render(h(ExecutionFeedbackContext, {value: {invocation, snapshot}},
+            h(AgentActivityNavigationProvider, {threadId: "t1"}, h(AgentRunDetails,
+                {run: current, message: {...message, status: "streaming", content}, calls: [], busy: true, onAction: vi.fn()})))));
+        const displayed = () => mark.mock.calls.some(([name]) => String(name).endsWith(".firstPublicCommitted"));
+        try {
+            await render("previous partial answer");
+            expect(container.querySelector(".agent-execution-timeline")?.textContent).toContain("repeated answer");
+            expect(container.querySelector(".agent-execution-timeline")?.textContent).toContain("previous partial answer");
+            expect(displayed()).toBe(false);
+            await render("repeated answer");
+            expect(displayed()).toBe(true);
+        } finally {controller.dispose(); rects.mockRestore(); visibility.mockRestore();}
+    });
+
     it("renders one row per call without success wording or effect/badge lines", async () => {
         await renderDetails([call("c1", {title: "读取镜头"}), call("c2", {title: "读取角色", name: "character_read"}), call("c3", {title: "编辑镜头", name: "shot_update", effect: "write"})], {status: "running"});
         expect(container.querySelectorAll("[data-activity-call]")).toHaveLength(3);

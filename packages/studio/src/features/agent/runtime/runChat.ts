@@ -21,6 +21,8 @@ import {streamChatCompletions} from '../providers/chatStream';
 import {withExecutionOwnership,withOwnedExecution,assertThreadOwnership,type ThreadOwnership} from './runOwnership';
 import {createRunCredentials} from './runCredentials';
 import {responseRoundMatches} from '@cuepoint/agent-providers';
+import {runtimeFetchFor} from '../../../platform/runtime/runtimeFetch';
+import type {RuntimeExecutionFeedback} from './executionFeedback';
 
 /** Only user review may supply an execution override; wire arguments remain untouched. */
 function effectiveToolInput(call:AgentToolCall) {
@@ -30,8 +32,15 @@ function effectiveToolInput(call:AgentToolCall) {
 }
 
 /** Product integration owns transactions and predicates, while core owns every execution transition. */
-function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKey:string,fetchImpl:typeof fetch|undefined,registry:readonly AgentToolDefinition[],signal:AbortSignal):RuntimeHost<AgentRun,AgentToolCall,AgentToolContext,AgentToolPreview,AgentResponseItem[]> {
+function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKey:string,fetchImpl:typeof fetch|undefined,registry:readonly AgentToolDefinition[],signal:AbortSignal,run:AgentRun,feedback?:RuntimeExecutionFeedback):RuntimeHost<AgentRun,AgentToolCall,AgentToolContext,AgentToolPreview,AgentResponseItem[]> {
     assertThreadOwnership(ownership,ownership.threadId);
+    const executionId=createId('exec');
+    const observe:RuntimeExecutionFeedback=event=>{
+        try {feedback?.(event);} catch { /* Optional feedback cannot affect execution or committed results. */ }
+    };
+    const feedbackIdentity={executionId,runId:run.id};
+    observe({...feedbackIdentity,type:'started',threadId:run.threadId,assistantMessageId:run.assistantMessageId});
+    // This must use the original explicit transport, not the observation wrapper below.
     const credentials=createRunCredentials(db,apiKey,!!fetchImpl);
     const scope:TableScope=[db.projects,db.agentRuns,db.agentToolCalls,db.chatThreads,db.chatMessages,db.agentTasks,db.agentGenerationJobs,db.agentTaskRecords,db.agentTaskRecordVersions,db.agentGenerationBatches,db.agentGenerationBatchItems];
     const guard=async<T>(run:AgentRun,operation:(tx:StoreTx)=>Promise<T>,tables:TableScope=scope):Promise<T>=>db.transaction('rw',tables,async tx=>{
@@ -46,13 +55,19 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
         return value;
     });
     const host:RuntimeHost<AgentRun,AgentToolCall,AgentToolContext,AgentToolPreview,AgentResponseItem[]>={
-        executionId:createId('exec'),ownership,clock:()=>Date.now(),
+        executionId,ownership,clock:()=>Date.now(),observe:feedback ? observe : undefined,
         readRun:id=>{ownership.assertHeld();return db.agentRuns.get(id);},
-        readOutput:run=>{ownership.assertHeld();return db.chatMessages.get(run.assistantMessageId);},
+        readOutput:async run=>{
+            ownership.assertHeld();
+            const output=await db.chatMessages.get(run.assistantMessageId);
+            if (output) observe({...feedbackIdentity,type:'baseline',output});
+            return output;
+        },
         checkpoint:(run,seq,output)=>guard(run,tx=>checkpointAgentRun(run.id,seq,output,tx),[db.agentRuns,db.chatMessages]),
         pauseAtLimit:run=>guard(run,tx=>pauseAtModelStepLimit(run.id,tx)),
         async prepareContext(run,signal) {
             ownership.assertHeld();
+            observe({...feedbackIdentity,type:'preparing'});
             run=await refreshRunToolLoading(run.id,db);
             run=await refreshRunProjectContext(run.id,db);
             run=await refreshRunMemoryContext(run.id,db);
@@ -67,7 +82,18 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
             const currentKey=await credentials.resolve(run);
             signal.throwIfAborted();
             const transport=run.protocol === 'responses' ? streamResponses : streamChatCompletions;
-            const result:ResponsesResult=await transport({projectId:run.projectId,runId:run.id,visionCapability:run.visionCapability,responseItems:run.responseItems,baseUrl:run.connector.baseUrl,apiKey:currentKey,model:run.model,connectorDefinitionId:run.connector.definitionId,reasoningEffort:run.reasoningEffort,messages:run.continuationMessages ?? run.requestMessages,tools:toolSchemas(getOfferedToolNames(run),registry)},{signal,fetchImpl,onDelta:content=>onDelta({content}),onReasoning:reasoning=>onDelta({reasoning})});
+            const selectedFetch=fetchImpl ?? runtimeFetchFor();
+            const observedFetch:typeof fetch=(input,init)=>{
+                observe({...feedbackIdentity,type:'requestInvoked'});
+                return selectedFetch(input,init);
+            };
+            const result:ResponsesResult=await transport({projectId:run.projectId,runId:run.id,visionCapability:run.visionCapability,responseItems:run.responseItems,baseUrl:run.connector.baseUrl,apiKey:currentKey,model:run.model,connectorDefinitionId:run.connector.definitionId,reasoningEffort:run.reasoningEffort,messages:run.continuationMessages ?? run.requestMessages,tools:toolSchemas(getOfferedToolNames(run),registry)},{signal,fetchImpl:feedback ? observedFetch : fetchImpl,onDelta:content=>{
+                if (content && !signal.aborted) observe({...feedbackIdentity,type:'publicReceived',kind:'content'});
+                onDelta({content});
+            },onReasoning:reasoning=>{
+                if (reasoning && !signal.aborted) observe({...feedbackIdentity,type:'publicReceived',kind:'reasoning'});
+                onDelta({reasoning});
+            }});
             return result.ok ? {...result,continuation:result.responseOutput} : result;
         },
         recordMetrics:(run,metrics)=>guard(run,tx=>recordAgentModelMetrics(run.id,metrics,tx),[db.agentRuns,db.chatMessages]),
@@ -77,7 +103,10 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
         settle:(run,status,output,error,reason)=>guard(run,async tx=>{await finishAgentRun(run.id,status,output,error,reason,tx);return (await tx.agentRuns.get(run.id))!.status;},[db.agentRuns,db.chatMessages]),
         tools:{
             registry,
-            readRound:run=>guard(run,async tx=>{await upgradeLegacyPlanCalls(run.id,tx);return tx.agentToolCalls.where('runId').equals(run.id).toArray();}),
+            readRound:run=>{
+                observe({...feedbackIdentity,type:'working'});
+                return guard(run,async tx=>{await upgradeLegacyPlanCalls(run.id,tx);return tx.agentToolCalls.where('runId').equals(run.id).toArray();});
+            },
             validateEnvelope(run,calls) {
                 if (run.protocol !== 'responses') return;
                 if (!responseRoundMatches(run.responseItems,calls.map(call=>({id:call.providerCallId,type:'function',function:{name:call.name,arguments:call.arguments}})),false)) throw new Error('Responses 调用信封与执行记录不匹配，已阻止继续执行');
@@ -113,17 +142,17 @@ function productRecovery(detail:RoundDetail):AgentToolCall['recovery'] {
 }
 
 /** Direct typed consumers acquire the same execution lock without recovering their own new run. */
-export async function executeChatRun(run:AgentRun,apiKey:string,controller:AbortController,fetchImpl?:typeof fetch,registry:readonly AgentToolDefinition[]=BUILTIN_TOOLS,store:ProductStore=productDb,ownership?:ThreadOwnership):Promise<void> {
-    const execute=(held:ThreadOwnership)=>withOwnedExecution(held,run.threadId,()=>executeRun(run,controller,createStudioRuntimeHost(store,held,apiKey,fetchImpl,registry,controller.signal)));
+export async function executeChatRun(run:AgentRun,apiKey:string,controller:AbortController,fetchImpl?:typeof fetch,registry:readonly AgentToolDefinition[]=BUILTIN_TOOLS,store:ProductStore=productDb,ownership?:ThreadOwnership,feedback?:RuntimeExecutionFeedback):Promise<void> {
+    const execute=(held:ThreadOwnership)=>withOwnedExecution(held,run.threadId,()=>executeRun(run,controller,createStudioRuntimeHost(store,held,apiKey,fetchImpl,registry,controller.signal,run,feedback)));
     if (ownership) await execute(ownership);else await withExecutionOwnership(run.threadId,execute);
 }
-export async function resumeChatRun(runId:string,apiKey:string,controller:AbortController,fetchImpl?:typeof fetch,registry:readonly AgentToolDefinition[]=BUILTIN_TOOLS,store:ProductStore=productDb,ownership?:ThreadOwnership):Promise<void> {
+export async function resumeChatRun(runId:string,apiKey:string,controller:AbortController,fetchImpl?:typeof fetch,registry:readonly AgentToolDefinition[]=BUILTIN_TOOLS,store:ProductStore=productDb,ownership?:ThreadOwnership,feedback?:RuntimeExecutionFeedback):Promise<void> {
     const saved=await store.agentRuns.get(runId);
     if (!saved) throw new Error('执行已删除');
     const execute=(held:ThreadOwnership)=>withOwnedExecution(held,saved.threadId,async()=>{
         controller.signal.throwIfAborted();
         const run=await resumeAgentRun(runId,store);
-        await executeRun(run,controller,createStudioRuntimeHost(store,held,apiKey,fetchImpl,registry,controller.signal));
+        await executeRun(run,controller,createStudioRuntimeHost(store,held,apiKey,fetchImpl,registry,controller.signal,run,feedback));
     });
     if (ownership) await execute(ownership);else await withExecutionOwnership(saved.threadId,execute);
 }

@@ -13,6 +13,7 @@ Read before editing execution chronology, thinking/tool disclosure, composer act
 - `buildChatTurns(messages)`, `turnExcerpt(text, limit?)`, `getActiveTurnIndex(offsets, readingPosition)` are pure helpers for the conversation rail.
 
 ## 3. Contracts
+Follow [Interaction Feedback](./interaction-feedback.md) and [Agent Execution Feedback](./agent-execution-feedback.md) for meaningful existing-composer phase feedback and immediate Stop acknowledgement. Internal phases do not imply extra visible labels; keep normal user bubbles and advancing replies quiet.
 Only public text belongs in the transcript. Never render encrypted Responses reasoning, raw request history or private provider envelopes as model thinking. Legacy rounds are recovered from the current continuation suffix and matched to the current run's tool identities. Missing historical reasoning cannot be reconstructed. A successful final answer stays visible even if it repeats a previous round's wording.
 
 During execution, narrative, reasoning and tool-call rows are chronological. Completion/stop/failure transitions close the outer process once; a run that is `running` or `waiting_approval` opens it, and subsequent manual toggles survive live-query updates. Failure and pending approval must never disable folding, but a pending approval's buttons sit outside its call's collapsible panel so folding the row cannot hide the decision. The original permission and recovery controls remain inside the process.

@@ -3,6 +3,7 @@ import {ShotDetailsProvider} from "../../../app/details/ShotDetails";
 import {TopicSidebar} from "./TopicSidebar";
 import {useChatSelection} from "./useChatSelection";
 import {useChatExecutionSession} from "./useChatExecutionSession";
+import {ExecutionFeedbackContext} from "./ExecutionFeedback";
 import {executeNewChatMessage, resolveChatRunAction, retryFrozenChatRun} from "./chatExecutionFlows";
 import {createChatThread, updateChatThread} from "../commands/chat";
 import {deleteChatThread} from "./../commands/lifecycle";
@@ -120,12 +121,19 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     }, []);
     const {
         sending,
+        stopping,
+        requestStop,
+        feedback,
+        feedbackSnapshot,
+        provisionalMessageId,
         abortRef,
         executionThreadRef,
         sendLockRef,
         acquire: acquireExecution,
         release: releaseExecution
     } = useChatExecutionSession(activeThreadId);
+    const feedbackContext = useMemo(() => ({invocation: feedback, snapshot: feedbackSnapshot, provisionalMessageId}),
+        [feedback, feedbackSnapshot, provisionalMessageId]);
 
     useEffect(() => {
         if (!activeThreadId) return;
@@ -402,12 +410,12 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     }, [abortRef, deleteTarget, executionThreadRef, navigate, leaveTask, requestDeparture, armConfirmedDeparture]);
 
     const handleStop = useCallback(() => {
-        abortRef.current?.abort();
+        if (!requestStop()) return;
         if (activeThreadId) pauseAudioGenerationBatches({threadId: activeThreadId});
-    }, [abortRef, activeThreadId]);
+    }, [requestStop, activeThreadId]);
 
     const runSubmission = useCallback(async (attempt: ChatSubmissionAttempt, connector: NonNullable<typeof selectedConnector>, retry = false) => {
-        const token = acquireExecution();
+        const token = acquireExecution(attempt.admission.userMessageId);
         if (!token) return;
         const id = attempt.admission.userMessageId;
         const selectionRevision = selectionRevisionRef.current;
@@ -423,6 +431,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     content: attempt.submitted.text.trim(), attachments: attempt.submitted.attachments});
                 if (status.status === "accepted") {
                     admitted = true;
+                    token.feedback.admitted(status.run);
                     updateAttempt(id, {phase: "accepted", recoveryRequired: status.run.status === "running", error: undefined});
                     return; // Accepted evidence never authorizes another model request.
                 }
@@ -442,9 +451,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 navigateToThread: !attempt.originThreadId && currentThread.current !== attempt.threadId,
                 destinationReserved: attempt.destinationReserved,
                 onDestinationReady: () => updateAttempt(id, {destinationReserved: true}),
-                bindThread: target => {executionThreadRef.current = target;},
+                bindThread: target => {executionThreadRef.current = target; token.feedback.bindThread(target);},
                 onThreadReady: thread => updateAttempt(id, {createdThread: thread}),
                 onAdmitted: () => {admitted = true; updateAttempt(id, {phase: "accepted", error: undefined});},
+                feedback: token.feedback,
                 isCurrent: () => selectionRevisionRef.current === selectionRevision &&
                     sameChatModelConnector(selectionRef.current.connector, connector) &&
                     selectionRef.current.model === attempt.model && selectionRef.current.threadId === activeThreadId
@@ -460,7 +470,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                         const status = await readAgentAdmission({threadId: attempt.threadId, admission: attempt.admission,
                             connector: attempt.connector, model: attempt.model, projectId: attempt.projectId,
                             content: attempt.submitted.text.trim(), attachments: attempt.submitted.attachments});
-                        if (status.status === "accepted") updateAttempt(id, {phase: "accepted", recoveryRequired: status.run.status === "running", error: undefined});
+                        if (status.status === "accepted") {
+                            token.feedback.admitted(status.run);
+                            updateAttempt(id, {phase: "accepted", recoveryRequired: status.run.status === "running", error: undefined});
+                        }
                     } catch { /* An unavailable read never proves rollback. */ }
                 }
             }
@@ -561,6 +574,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         try {
             const checked = await retryFrozenChatRun({
                 runId, activeThreadId, controller,
+                feedback: token.feedback,
                 isThreadCurrent: id => selectionRef.current.threadId === id
             });
             if (checked && !checked.ok && !checked.aborted) showError({
@@ -592,6 +606,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         try {
             const checked = await resolveChatRunAction({
                 runId, action, callId, activeThreadId, controller,
+                feedback: token.feedback,
                 isThreadCurrent: id => selectionRef.current.threadId === id
             });
             if (checked && !checked.ok && !checked.aborted) showError({
@@ -670,6 +685,15 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
 
     const currentRun = runs?.filter((r) => r.threadId === activeThreadId).at(-1);
     const showRunStatus = currentRun !== undefined && runBlocksThread(currentRun);
+    const feedbackOwned = sending && (feedbackSnapshot?.threadId === activeThreadId ||
+        (!activeThreadId && provisionalHome));
+    const feedbackOwnsRun = currentRun !== undefined && feedbackSnapshot?.threadId === activeThreadId &&
+        feedbackSnapshot?.runId === currentRun.id;
+    const executionLabel = feedbackOwned ? stopping ? "正在停止…" :
+        feedbackSnapshot?.phase === "waiting_model" ? "正在等待回复…" : undefined : undefined;
+    const executionStatus = executionLabel ?? (showRunStatus && currentRun.status === "running" &&
+        (feedbackOwned ? feedbackSnapshot?.phase === "working" : !feedbackOwnsRun) ?
+        compactions?.at(-1)?.status === "running" ? "正在整理较早的对话…" : "正在执行" : undefined);
     const openTask = async () => {
         if (activeTask) {
             setTaskInspectorOpen(true);
@@ -715,7 +739,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         blocked: projectUnavailable || Boolean(activeTask && activeTask.lifecycle !== "open"),
         readOnly: projectUnavailable,
         blockedReason: projectUnavailable ? "项目不可用 · 历史仍可查看，请新开项目对话" : undefined,
-        status: projectUnavailable || activeTask || activeThread?.taskMode || showRunStatus || activeThreadId ? <>
+        status: projectUnavailable || activeTask || activeThread?.taskMode || showRunStatus || activeThreadId || executionStatus ? <>
             {activeThreadId &&
                 <AgentComposerAttention threadId={activeThreadId} runs={runs ?? []} messages={messages ?? []}
                                         task={activeTask} projectUnavailable={projectUnavailable}
@@ -737,10 +761,11 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 {!projectUnavailable && activeTask.lifecycle !== "open" && <button type="button"
                                                                                    onClick={() => void setAgentTaskLifecycle(activeTask.id, "open").catch((error: Error) => toast.error(error.message))}>重新打开</button>}
             </div>}
-            {showRunStatus && currentRun.status === "running" ? (
+            {executionStatus ? (
                 <div className="agent-composer-run-status" role="status">
-                    <span><i/>{compactions?.at(-1)?.status === "running" ? "正在整理较早的对话…" : "正在执行"}</span>
-                    <button type="button" onClick={handleStop} disabled={!sending}>停止</button>
+                    <span><i/>{executionStatus}</span>
+                    <button type="button" onClick={handleStop} disabled={!sending || stopping}
+                            aria-label={stopping ? "正在停止…" : "停止"}>停止</button>
                 </div>
             ) : null}</> : undefined,
         contextUsage: <ContextUsageTrigger attachments={references.attachments} projectId={projectId}
@@ -761,6 +786,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         },
         value: draft,
         sending,
+        stopping,
         connectors: connectorList,
         selectedConnectorId: selectedConnector?.id,
         model: modelValue,
@@ -770,8 +796,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         modelPolicy,
         modelWarning: modelValue
             ? probingModels && !modelPolicy.incompatibleModels.includes(modelValue) && !modelPolicy.verified
-                ? "正在确认 APIMart 模型类型…"
-                : chatModelIssue(modelValue, modelPolicy)
+                ? undefined : chatModelIssue(modelValue, modelPolicy)
             : undefined,
         chatMode,
         interactionMode,
@@ -820,7 +845,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     onDeleteThread={handleDeleteThread}
                 />
             ) : (
-                <ChatWorkspace
+                <ExecutionFeedbackContext value={feedbackContext}><ChatWorkspace
                     key={presentation.current?.key ?? activeThreadId}
                     taskTitle={activeTask?.title}
                     taskGoal={activeTask?.goal}
@@ -843,7 +868,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                     onNewTopicInProject={handleNewTopicInProject}
                     onRenameThread={handleRenameThread}
                     onDeleteThread={handleDeleteThread}
-                />
+                /></ExecutionFeedbackContext>
             )}
 
             {activeTask &&
