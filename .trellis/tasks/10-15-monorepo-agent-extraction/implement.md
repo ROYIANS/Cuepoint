@@ -17,7 +17,7 @@ Follow `research/context-loading.md`: injection can truncate or omit long specs.
 
 | Sequence | Child | Required output before advancing |
 | --- | --- | --- |
-| 1 | `../10-15-monorepo-app-boundaries` | Working workspace/app commands, one shared studio, site isolation, updated source discovery/CI/native paths and authored verification. |
+| 1 | `../archive/2026-10/10-15-monorepo-app-boundaries` | Working workspace/app commands, one shared studio, site isolation, updated source discovery/CI/native paths and authored verification. |
 | 2 | `../10-15-studio-feature-organization` | Complete owner map, feature-based sources/tests, preserved command/query/transaction contracts and no leftover relocation bridges. |
 | 3 | `../10-15-reusable-agent-runtime` | Real core/provider packages consumed by Cuepoint plus isolated built-package durable example and conformance evidence. |
 

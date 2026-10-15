@@ -33,3 +33,7 @@ The parent and later children remain unfinished. Archive/journal bookkeeping is 
 Baseline ownership and final status inspection found no unrecognized dirty files. The pre-existing `10-12-desktop-release-pipeline` task has no changes in this batch and must remain untouched. Reinspect immediately before staging; any newly appearing foreign edit is excluded and reported.
 
 No commit, amend, push, tag, dispatch or release is authorized by this document alone. Execute the proposed local commits only after the user's one-shot batch confirmation under workflow Phase 3.4.
+
+## Execution record
+
+User-authorized work commits completed: `bb3a9580` (source/specs) and `4a149e55` (task plans and verification). This task is archived under `archive/2026-10`; child 2 context manifests now resolve the archived verification. Archive/journal bookkeeping follows as separate local commits.
