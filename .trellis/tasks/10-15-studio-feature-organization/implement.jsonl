@@ -1,0 +1,15 @@
+{"file": ".trellis/tasks/10-15-monorepo-agent-extraction/research/context-loading.md", "reason": "Read full canonical specs through EOF when injection truncates or omits them; follow active child, predecessor and archive-reference rules."}
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Preserve current contracts; exclude unrelated legacy migrations and compatibility additions."}
+{"file": ".trellis/spec/guides/task-artifact-retention.md", "reason": "Retain authored contracts and conclusions rather than raw logs or copied sources."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Retain formal quality, native probe prerequisites, complete assertions and current delivery policy."}
+{"file": ".trellis/tasks/10-15-monorepo-agent-extraction/research/architecture-findings.md", "reason": "Use inspected ownership/path evidence and accepted package/reuse constraints; recheck moved paths after predecessors."}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Replace technical catch-all ownership with explicit feature/app/platform responsibilities."}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Preserve product UI conventions while moving feature components."}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Preserve live query subscriptions and explicit readonly/store propagation."}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Retain concrete business command owners, lifecycle contracts and transaction scope."}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Keep central schema and one fixed store; preserve shared real adapter atomicity."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Keep model ownership and typed feature/API dependencies without unsafe widening."}
+{"file": ".trellis/spec/frontend/audio-music.md", "reason": "Validate audio vertical pilot and preserve precision/workflow semantics."}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Retain product execution behavior before generic extraction."}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Retain cross-feature effects/evidence/results in the same transaction."}
+{"file": ".trellis/tasks/10-15-monorepo-app-boundaries/verification.md", "reason": "Read accepted child 1 source owners, exact gate outcomes and finite historical/manual limits before moving Studio features."}

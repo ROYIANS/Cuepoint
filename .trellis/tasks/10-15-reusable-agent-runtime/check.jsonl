@@ -1,0 +1,15 @@
+{"file": ".trellis/tasks/10-15-monorepo-agent-extraction/research/context-loading.md", "reason": "Read full canonical specs through EOF when injection truncates or omits them; follow active child, predecessor and archive-reference rules."}
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Independently verify: Preserve current contracts; exclude unrelated legacy migrations and compatibility additions."}
+{"file": ".trellis/spec/guides/task-artifact-retention.md", "reason": "Independently verify: Retain authored contracts and conclusions rather than raw logs or copied sources."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Independently verify: Retain formal quality, native probe prerequisites, complete assertions and current delivery policy."}
+{"file": ".trellis/tasks/10-15-monorepo-agent-extraction/research/architecture-findings.md", "reason": "Independently verify: Use inspected ownership/path evidence and accepted package/reuse constraints; recheck moved paths after predecessors."}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Independently verify: Extract actual execution without changing ownership, approval, recovery or terminal semantics."}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Independently verify: Keep typed tool validation, frozen permissions, atomic receipts and explicit effect certainty."}
+{"file": ".trellis/spec/frontend/agent-context.md", "reason": "Independently verify: Separate generic context mechanisms from scoped product selection and preserve continuation."}
+{"file": ".trellis/spec/frontend/agent-project-context.md", "reason": "Independently verify: Retain creative/project inputs as validated product host data."}
+{"file": ".trellis/spec/frontend/agent-memory-retrieval.md", "reason": "Independently verify: Keep memory policy and scope checks product-owned across dispatch boundaries."}
+{"file": ".trellis/spec/frontend/agent-write-evidence.md", "reason": "Independently verify: Preserve confirmation/rollback/unknown evidence and result guarantees."}
+{"file": ".trellis/spec/frontend/ai-connectors.md", "reason": "Independently verify: Preserve current chat protocols, transport/credential policy and opaque model behavior."}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Independently verify: Bind product persistence/tool effects to the same existing real transaction."}
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Independently verify: Validate extracted production wiring on real native product storage."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Independently verify: Use typed host ports and valid emitted types rather than product leaks or extension bags."}

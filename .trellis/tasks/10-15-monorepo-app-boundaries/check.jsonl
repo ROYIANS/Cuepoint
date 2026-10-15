@@ -1,0 +1,11 @@
+{"file": ".trellis/tasks/10-15-monorepo-agent-extraction/research/context-loading.md", "reason": "Read full canonical specs through EOF when injection truncates or omits them; follow active child, predecessor and archive-reference rules."}
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Independently verify: Preserve current contracts; exclude unrelated legacy migrations and compatibility additions."}
+{"file": ".trellis/spec/guides/task-artifact-retention.md", "reason": "Independently verify: Retain authored contracts and conclusions rather than raw logs or copied sources."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Independently verify: Retain formal quality, native probe prerequisites, complete assertions and current delivery policy."}
+{"file": ".trellis/tasks/10-15-monorepo-agent-extraction/research/architecture-findings.md", "reason": "Independently verify: Use inspected ownership/path evidence and accepted package/reuse constraints; recheck moved paths after predecessors."}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Independently verify: Establish explicit application/package owners and update discovery with relocation."}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Independently verify: Retain initialization, schema identity and actual browser/native adapter selection."}
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Independently verify: Move Rust schema/probe/runtime inputs without weakening actual-native acceptance."}
+{"file": ".trellis/spec/frontend/desktop-distribution.md", "reason": "Independently verify: Update packaging/integrity paths and retain existing delivery policy."}
+{"file": ".trellis/spec/frontend/settings-update.md", "reason": "Independently verify: Keep site/product shared release facts narrow; retain host download verification ownership."}
+{"file": ".trellis/spec/frontend/monorepo-boundaries.md", "reason": "Enforce reviewed app/export/dependency/source-coverage/build-assembly contracts and meaningful negative gates."}

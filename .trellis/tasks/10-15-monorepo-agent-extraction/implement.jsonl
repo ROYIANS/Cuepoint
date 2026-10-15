@@ -1,0 +1,12 @@
+{"file": ".trellis/tasks/10-15-monorepo-agent-extraction/research/context-loading.md", "reason": "Read full canonical specs through EOF when injection truncates or omits them; follow active child, predecessor and archive-reference rules."}
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Preserve current contracts; exclude unrelated legacy migrations and compatibility additions."}
+{"file": ".trellis/spec/guides/task-artifact-retention.md", "reason": "Retain authored contracts and conclusions rather than raw logs or copied sources."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Retain formal quality, native probe prerequisites, complete assertions and current delivery policy."}
+{"file": ".trellis/tasks/10-15-monorepo-agent-extraction/research/architecture-findings.md", "reason": "Use inspected ownership/path evidence and accepted package/reuse constraints; recheck moved paths after predecessors."}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Review complete app/package ownership and discoverability."}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Preserve one fixed owner and atomic browser/native store semantics across all children."}
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Preserve actual native product runtime and acceptance boundaries."}
+{"file": ".trellis/spec/frontend/desktop-distribution.md", "reason": "Preserve version/source/receipt integrity and packaging-only delivery policy."}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Preserve execution, approval, recovery and continuation invariants in extracted core."}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Preserve typed permissions, transactions, results and effect certainty."}
+{"file": ".trellis/spec/frontend/agent-context.md", "reason": "Preserve host-owned context, scoped history and compaction semantics."}

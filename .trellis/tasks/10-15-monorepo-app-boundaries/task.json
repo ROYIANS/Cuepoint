@@ -1,0 +1,29 @@
+{
+  "id": "monorepo-app-boundaries",
+  "name": "monorepo-app-boundaries",
+  "title": "工作区与 Web Desktop Site 应用边界",
+  "description": "Establish pnpm workspaces and explicit application ownership while preserving the shared studio, builds, quality coverage and release integrity.",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P1",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-10-15",
+  "completedAt": null,
+  "branch": "codex/monorepo-app-boundaries",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": "bb3a9580c38a01125fb79361d3ad8e0c11f75858",
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-15-monorepo-agent-extraction",
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {
+    "review_checkpoint": "accepted_source_checkpoint_committed",
+    "verification": "verification.md"
+  }
+}

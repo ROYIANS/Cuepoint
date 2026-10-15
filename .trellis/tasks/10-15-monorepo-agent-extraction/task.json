@@ -1,0 +1,30 @@
+{
+  "id": "monorepo-agent-extraction",
+  "name": "monorepo-agent-extraction",
+  "title": "Monorepo 代码组织与可复用 Agent 能力抽离",
+  "description": "Separate web, desktop and site applications; organize the shared studio by feature; extract a reusable Agent core and model providers with an independent consumer and preserved execution contracts.",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P1",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-10-15",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "10-15-monorepo-app-boundaries",
+    "10-15-studio-feature-organization",
+    "10-15-reusable-agent-runtime"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {}
+}
