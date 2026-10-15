@@ -43,3 +43,41 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 70: 归档桌面跨平台打包与发布任务
+<!-- trellis-session: v=2 fp=0b0a68c0e48b378d -->
+
+**Date**: 2026-10-15
+**Task**: 归档桌面跨平台打包与发布任务
+**Package**: desktop
+**Branch**: `main`
+
+### Summary
+
+按用户“可以，归档”确认收尾桌面发布流水线。核对实际 0.1.3 四宿主打包、收集与草稿交付成功及公开测试版七资产；依据最终仅打包范围归档，保留真机测试记录缺口。
+
+### Main Changes
+
+- 补充最终 verification.md 和 PRD/design/implement 收尾说明，原待办按历史计划保留，更新 monorepo 源码归属及任务元数据。
+- 归档至 .trellis/tasks/archive/2026-10/10-12-desktop-release-pipeline，状态 completed、完成日期 2026-10-15；修复 66 条归档路径并新增当前规范/最终证据上下文。任务列表现为 0。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `168a28e2b87547a0b2bb402c6aa0a61ba987f39c` | fix(release): retain tag and source when completing drafts |
+
+### Testing
+
+- [OK] [OK] 只读 GitHub 核对 run38550667540：prepare、四宿主 build、collect、draft 七 job 全部 success；Release412611571 desktop-v0.1.3 已公开 prerelease，五安装包、SHA256SUMS、manifest 七资产均 uploaded 且含完整标记，source cedb6cca482bc35fd2592197b752943e62e98ccc。
+- [OK] [OK] 归档前后 task validate、88 条上下文路径、最终文档链接、10 个相关源码路径、git whitespace 与归档提交范围检查通过；63 个任务文件只保留 JSON/JSONL/作者 Markdown。
+- [OK] [LIMIT] 本轮仅任务/日志收尾，未重复执行源码测试或下载/运行安装包；原 99 项发布回归与独立检查引用既有记录。旧分支已合并删除，规范注入长度提示保留。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 平台真机/系统保存等缺记录场景按后续具体验证需求处理，不补写为已通过；本轮无 push、tag、workflow dispatch 或 Release 写入。
