@@ -15,7 +15,7 @@ Backlog/planning under [Agent experience and desktop evolution](../10-15-agent-e
 
 ## Dependencies and order
 
-- E06: `../10-15-agent-resource-capabilities/` — use its reviewed contracts/results before this task is activated.
+- E06: [E06 delivered contracts](../archive/2026-10/10-15-agent-resource-capabilities/prd.md) — use its reviewed contracts/results before this task is activated.
 - E07: `../10-15-agent-jobs-results/` — use its reviewed contracts/results before this task is activated.
 - E12: `../10-15-agent-delegation/` — use its reviewed contracts/results before this task is activated.
 

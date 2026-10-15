@@ -14,7 +14,7 @@ Backlog/planning under [Agent experience and desktop evolution](../10-15-agent-e
 
 ## Dependencies and order
 
-- E06: `../10-15-agent-resource-capabilities/` — use its reviewed contracts/results before this task is activated.
+- E06: [E06 delivered contracts](../archive/2026-10/10-15-agent-resource-capabilities/prd.md) — use its reviewed contracts/results before this task is activated.
 
 Tree position does not enforce these dependencies. If a dependency is deliberately narrowed or removed, update this PRD and the parent roadmap with the corresponding lifecycle/acceptance consequence before review.
 

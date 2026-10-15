@@ -15,7 +15,7 @@ Backlog/planning under [Agent experience and desktop evolution](../10-15-agent-e
 
 ## Dependencies and order
 
-- E06: `../10-15-agent-resource-capabilities/` — use its reviewed contracts/results before this task is activated.
+- E06: [E06 delivered contracts](../archive/2026-10/10-15-agent-resource-capabilities/prd.md) — use its reviewed contracts/results before this task is activated.
 - E07: `../10-15-agent-jobs-results/` — use its reviewed contracts/results before this task is activated.
 
 Tree position does not enforce these dependencies. If a dependency is deliberately narrowed or removed, update this PRD and the parent roadmap with the corresponding lifecycle/acceptance consequence before review.
@@ -43,3 +43,7 @@ Tree position does not enforce these dependencies. If a dependency is deliberate
 
 - First concrete media operation and executable distribution strategy.
 - First supported platforms, allowed paths and overwrite/cleanup semantics.
+
+## Confirmed first workflow (2026-10-15)
+
+Owner selected “素材目录扫描 → 视频缩略图 → 导入项目” in the current session. Preserve this complete first workflow when converging E08. E06/E07 still precede implementation; executable distribution, first supported platform and precise path/version/overwrite/cleanup policy must be designed against the actual native owners. This preference does not authorize running media jobs against an unspecified user directory.

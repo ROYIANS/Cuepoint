@@ -297,3 +297,40 @@ Shipped exact shot/four-asset project/Studio detail links, reused real asset edi
 ### Next Steps
 
 - Continue E06 reviewed neutral capability/binding/grant foundation through public core and independent Todo; preserve no-build source-only checks and deferred packed/native batch gates.
+
+
+## Session 77: E06 reusable capabilities and exact resource authority
+<!-- trellis-session: v=2 fp=3d923d9c275c267e -->
+
+**Date**: 2026-10-15
+**Task**: E06 reusable capabilities and exact resource authority
+**Package**: agent-core
+**Branch**: `codex/agent-resource-capabilities`
+
+### Summary
+
+Delivered public core registration and immutable binding plus real independent Todo SQLite authority; focused source checks and independent review passed; emitted/packed/native/full acceptance deferred.
+
+### Main Changes
+
+- Versioned registration/disposal and pre-model frozen tool definitions; exact binding through approvals and execution.
+- Explicit durable Todo root/child grants rechecked at preview, approval, claim and atomic business/evidence/completion.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `d4c2c877` | feat: bind reusable capabilities to durable resource authority |
+
+### Testing
+
+- [OK] Core 4 suites/36 tests; actual Todo SQLite 31 tests; neutral/combined/config noEmit passed.
+- [OK] Final 10 production lint 0 errors/15 warnings; architecture 655 files/2561 static/12 dynamic, zero failures/cycles/forbidden/computed.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Converge E07 actual Studio jobs/result readback, then proceed to owner-selected E08 directory scan/video thumbnails/project import.
