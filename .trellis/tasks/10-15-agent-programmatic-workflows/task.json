@@ -1,0 +1,37 @@
+{
+  "id": "agent-programmatic-workflows",
+  "name": "agent-programmatic-workflows",
+  "title": "E13 · 程序化工具编排与批量工作流",
+  "description": "Reduce model round trips for selected batches while routing every nested operation through existing effect and permission controls.",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "agent-core",
+  "priority": "P3",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-10-15",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-15-agent-experience-desktop-evolution",
+  "relatedFiles": [],
+  "notes": "Planning backlog from the 2026-10-15 investigation. Task creation is authorized; delivery scope and implementation remain subject to this task review.",
+  "meta": {
+    "epicCode": "E13",
+    "deliveryState": "planning-backlog",
+    "implementationApproved": false,
+    "dependsOn": [
+      "10-15-agent-resource-capabilities",
+      "10-15-agent-jobs-results",
+      "10-15-agent-delegation"
+    ],
+    "researchSource": "10-15-desktop-agent-capability-research",
+    "readiness": "Needs child-specific requirement convergence, design, implementation/validation plan and review before start."
+  }
+}

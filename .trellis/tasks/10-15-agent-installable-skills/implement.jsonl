@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/spec/agent-core/library/runtime.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/spec/agent-providers/library/protocols.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/capability-comparison.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}

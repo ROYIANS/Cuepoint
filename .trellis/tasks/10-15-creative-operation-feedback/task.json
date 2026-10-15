@@ -1,0 +1,33 @@
+{
+  "id": "creative-operation-feedback",
+  "name": "creative-operation-feedback",
+  "title": "E05 · 创作操作反馈、去重与导入体验",
+  "description": "Apply consistent pending, failure and duplicate-submit behavior to the sampled asset/project/import operations.",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "studio",
+  "priority": "P1",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-10-15",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-15-agent-experience-desktop-evolution",
+  "relatedFiles": [],
+  "notes": "Planning backlog from the 2026-10-15 investigation. Task creation is authorized; delivery scope and implementation remain subject to this task review.",
+  "meta": {
+    "epicCode": "E05",
+    "deliveryState": "planning-backlog",
+    "implementationApproved": false,
+    "dependsOn": [],
+    "researchSource": "10-15-desktop-agent-capability-research",
+    "readiness": "Needs child-specific requirement convergence, design, implementation/validation plan and review before start."
+  }
+}

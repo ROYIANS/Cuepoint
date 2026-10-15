@@ -1,0 +1,36 @@
+{
+  "id": "agent-scheduled-followups",
+  "name": "agent-scheduled-followups",
+  "title": "E14 · 定时跟进与可核实投递",
+  "description": "Schedule explicit follow-ups with honest host-availability, delivery and duplicate-admission semantics.",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "studio",
+  "priority": "P3",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-10-15",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-15-agent-experience-desktop-evolution",
+  "relatedFiles": [],
+  "notes": "Planning backlog from the 2026-10-15 investigation. Task creation is authorized; delivery scope and implementation remain subject to this task review.",
+  "meta": {
+    "epicCode": "E14",
+    "deliveryState": "planning-backlog",
+    "implementationApproved": false,
+    "dependsOn": [
+      "10-15-agent-jobs-results",
+      "10-15-agent-background-host"
+    ],
+    "researchSource": "10-15-desktop-agent-capability-research",
+    "readiness": "Needs child-specific requirement convergence, design, implementation/validation plan and review before start."
+  }
+}

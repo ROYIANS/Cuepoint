@@ -1,0 +1,14 @@
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Parent integration constraints; read selected child scope before implementation."}
+{"file": ".trellis/spec/frontend/desktop-ui.md", "reason": "Parent integration constraints; read selected child scope before implementation."}
+{"file": ".trellis/spec/frontend/feature-organization.md", "reason": "Parent integration constraints; read selected child scope before implementation."}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Parent integration constraints; read selected child scope before implementation."}
+{"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "Parent integration constraints; read selected child scope before implementation."}
+{"file": ".trellis/spec/frontend/chat-performance.md", "reason": "Parent integration constraints; read selected child scope before implementation."}
+{"file": ".trellis/spec/agent-core/library/runtime.md", "reason": "Parent integration constraints; read selected child scope before implementation."}
+{"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Parent integration constraints; read selected child scope before implementation."}
+{"file": ".trellis/spec/guides/task-artifact-retention.md", "reason": "Parent integration constraints; read selected child scope before implementation."}
+{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/capability-comparison.md", "reason": "Pinned source investigation and confirmed gaps/limits; retained as epic evidence."}
+{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/interaction-audit.md", "reason": "Pinned source investigation and confirmed gaps/limits; retained as epic evidence."}
+{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/interaction-spotchecks.md", "reason": "Pinned source investigation and confirmed gaps/limits; retained as epic evidence."}
+{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/host-integration-review.md", "reason": "Pinned source investigation and confirmed gaps/limits; retained as epic evidence."}
+{"file": ".trellis/tasks/10-15-agent-experience-desktop-evolution/research/parallel-detail-navigation.md", "reason": "New owner-requested detail-navigation evidence and accepted wide/narrow/edit behavior."}

@@ -1,0 +1,48 @@
+{
+  "id": "desktop-agent-capability-research",
+  "name": "desktop-agent-capability-research",
+  "title": "桌面 Agent 能力对标调研与演进规划",
+  "description": "Compare local DeepSeek Harness with Cuepoint Agent, desktop runtime and interaction design; record source-backed gaps and staged options before choosing development scope.",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "agent-core",
+  "priority": "P1",
+  "creator": "ROYIANS",
+  "assignee": "ROYIANS",
+  "createdAt": "2026-10-15",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-15-agent-experience-desktop-evolution",
+  "relatedFiles": [
+    "packages/agent-core",
+    "packages/agent-providers",
+    "packages/studio/src/features/agent",
+    "packages/studio/src/platform",
+    "apps/desktop/src-tauri"
+  ],
+  "notes": "Owner approved a research task and will choose development scope after investigation. Additional user requirement: audit optimistic updates and broader interaction responsiveness. Planning documents contain proposals, not an approved implementation.",
+  "meta": {
+    "kind": "research",
+    "authorization": "创建调研任务，调查后再定开发范围",
+    "implementationApproved": false,
+    "researchDate": "2026-10-15",
+    "researchStatus": "Source investigation complete; findings presented for owner scope selection.",
+    "researchArtifacts": [
+      "research/capability-comparison.md",
+      "research/interaction-audit.md",
+      "research/interaction-spotchecks.md",
+      "research/host-integration-review.md"
+    ],
+    "cuepointRevision": "9d1a41739b17be27cf832326de15a9489017825a",
+    "referencePath": "/Users/xiaomengdao/WebstormProjects/deepseek-harness",
+    "referenceRevision": "571902028a75c64c1d767f4ae5fd099485f0ddf0",
+    "evidenceMode": "Local source, configuration, documentation and test definitions; no runtime or latency measurements."
+  }
+}

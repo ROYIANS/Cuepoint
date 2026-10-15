@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/spec/frontend/desktop-ui.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/spec/frontend/chat-performance.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
+{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/interaction-spotchecks.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
