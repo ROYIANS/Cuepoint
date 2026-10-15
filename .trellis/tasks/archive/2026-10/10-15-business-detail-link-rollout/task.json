@@ -3,7 +3,7 @@
   "name": "business-detail-link-rollout",
   "title": "E16 · 业务详情链接覆盖与复核入口衔接",
   "description": "在首个单镜头并排详情交付后推广其他业务实体，并解决批量复核弹窗中查看目标时的详情可达性与草稿返回。",
-  "status": "in_progress",
+  "status": "completed",
   "dev_type": null,
   "scope": null,
   "package": "studio",
@@ -11,11 +11,11 @@
   "creator": "ROYIANS",
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
-  "completedAt": null,
+  "completedAt": "2026-10-15",
   "branch": "codex/business-detail-links",
   "base_branch": "codex/creative-operation-feedback",
   "worktree_path": null,
-  "commit": null,
+  "commit": "8ac73652",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -35,7 +35,7 @@
   "notes": "Source-backed finite shot/four-asset editable details and retained batch-review handoff design reviewed after E01–E05. Intentional non-detail destinations and residual family work remain explicit in coverage inventory.",
   "meta": {
     "epicCode": "E16",
-    "deliveryState": "verified-ready-for-stage-commit",
+    "deliveryState": "committed-completed",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-parallel-details"

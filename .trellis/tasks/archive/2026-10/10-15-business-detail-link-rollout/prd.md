@@ -6,12 +6,12 @@ After E01 establishes the shared no-drawer host and single-shot editor, expand r
 
 ## Evidence
 
-- [Focused navigation research](../10-15-agent-experience-desktop-evolution/research/parallel-detail-navigation.md), especially link coverage and modal-source integration.
-- [Parent roadmap](../10-15-agent-experience-desktop-evolution/roadmap.md).
+- [Focused navigation research](../../../10-15-agent-experience-desktop-evolution/research/parallel-detail-navigation.md), especially link coverage and modal-source integration.
+- [Parent roadmap](../../../10-15-agent-experience-desktop-evolution/roadmap.md).
 
 ## Dependencies and order
 
-Requires [E01](../archive/2026-10/10-15-agent-parallel-details/prd.md)'s reviewed presentation/activation/draft contracts. Recommended after the early E02-E05 UX deliveries, before expanding tool capability. This dependency is explicit and is not inferred from task-tree order.
+Requires [E01](../10-15-agent-parallel-details/prd.md)'s reviewed presentation/activation/draft contracts. Recommended after the early E02-E05 UX deliveries, before expanding tool capability. This dependency is explicit and is not inferred from task-tree order.
 
 ## Requirements
 

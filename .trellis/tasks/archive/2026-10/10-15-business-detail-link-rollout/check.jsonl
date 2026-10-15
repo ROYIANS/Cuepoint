@@ -10,5 +10,5 @@
 {"file": ".trellis/tasks/archive/2026-10/10-15-agent-parallel-details/research/reading-guide.md", "reason": "Required explicit full reads of canonical large component/state/quality specs; do not rely on truncated injection."}
 {"file": ".trellis/spec/frontend/agent-business-details.md", "reason": "Current no-drawer owned query/draft/editor/focus contract."}
 {"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Quiet detail transitions and actionable recovery; no internal narration."}
-{"file": ".trellis/tasks/10-15-business-detail-link-rollout/research/detail-rollout-design.md", "reason": "Full actual entity inventory, finite supported slice, feature bodies and batch focus ownership."}
-{"file": ".trellis/tasks/10-15-business-detail-link-rollout/research/detail-composition-contract.md", "reason": "Concrete host/panel/facade admission and batch-origin callback semantics."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-business-detail-link-rollout/research/detail-rollout-design.md", "reason": "Full actual entity inventory, finite supported slice, feature bodies and batch focus ownership."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-business-detail-link-rollout/research/detail-composition-contract.md", "reason": "Concrete host/panel/facade admission and batch-origin callback semantics."}
