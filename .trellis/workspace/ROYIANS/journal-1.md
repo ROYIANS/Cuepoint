@@ -1891,3 +1891,39 @@ Shipped split-pane module navigation, docked/overlay context panels, single-row 
 
 - 单独规划生产数据checkpoint与双设备离线交接，沿用单人切换、完整原始历史、自动素材下载及密钥设备本地的既有决策。
 - A6/A9c/A10仍无逐项真机记录，保留后续复核；本轮未启动同步代码，未归档其他任务，未push。
+
+
+## Session 67: Monorepo 应用边界检查点
+<!-- trellis-session: v=2 fp=a956bcf50c115a3f -->
+
+**Date**: 2026-10-15
+**Task**: Monorepo 应用边界检查点
+**Package**: studio
+**Branch**: `codex/monorepo-app-boundaries`
+
+### Summary
+
+完成并提交 child1：独立 Web/Desktop/Site、共享 Studio/distribution、完整边界和构建检查；原生/质量冻结验收通过，历史对照与手工范围限制保留。
+
+### Main Changes
+
+- 第一阶段代码与任务文档已提交，任务归档并修正 child2 对验收记录的引用。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `bb3a9580` | refactor: 建立多应用 monorepo 边界 |
+| `4a149e55` | docs(task): 记录 monorepo 拆分计划与第一阶段验收 |
+
+### Testing
+
+- [OK] 根4655测试、native107套件1833测试加6+5、quality1173输入及native1217输入无漂移；独立审查通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 按用户授权启动 child2，以 audio 试点完成 app/features/platform/ui 纵向组织，Agent通用库留到child3。
