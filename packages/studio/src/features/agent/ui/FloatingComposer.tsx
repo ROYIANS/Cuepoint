@@ -228,7 +228,7 @@ export function FloatingComposer({
     const composing = useRef(false);
     const inputRef = useRef<ComponentRef<typeof Input.TextArea>>(null);
     useEffect(() => {
-        inputRef.current?.focus({preventScroll: true});
+        if (!inputRef.current?.resizableTextArea?.textArea.closest("[inert]")) inputRef.current?.focus({preventScroll: true});
     }, [expanded]);
     const [modelOpen, setModelOpen] = useState(false);
 

@@ -173,7 +173,9 @@ export function ModelSelectTrigger({
     const [search, setSearch] = useState("");
     const [preview, setPreview] = useState(model);
     useEffect(() => {
-        if (open) requestAnimationFrame(() => searchRef.current?.focus({preventScroll: true}));
+        if (open) requestAnimationFrame(() => {
+            if (!anchorRef.current?.closest("[inert]")) searchRef.current?.focus({preventScroll: true});
+        });
         if (open) {
             setPreview(model);
             setSearch("");

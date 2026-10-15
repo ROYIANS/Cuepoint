@@ -1,4 +1,5 @@
-import {Link, useNavigate} from "@tanstack/react-router";
+import {ShotDetailLink} from "../../../app/details/ShotDetails";
+import {useNavigate} from "@tanstack/react-router";
 import type {AgentToolCall} from "../models/agent";
 
 import {useId, useRef, useState} from "react";
@@ -68,7 +69,7 @@ function CollapsedLinks({links}: { links: [string, string][] }) {
             <span>{links.length} 项明细</span><ChevronDown size={12} className={open ? "rotate-180" : ""} aria-hidden/>
         </button>
         <div id={panelId} className="agent-change-detail-list" hidden={!open}>
-            {links.map(([href, label]) => <Link key={href} to={href} className="agent-change-link">{label}</Link>)}
+            {links.map(([href, label]) => <ShotDetailLink key={href} href={href} className="agent-change-link">{label}</ShotDetailLink>)}
         </div>
     </>;
 }
@@ -107,9 +108,9 @@ export function CreatedEntityLinks({
         const entries = [...links];
         return <div className="agent-change-results">{entries.length > 1
             ? <CollapsedLinks links={entries}/>
-            : <Link to={entries[0][0]} className="agent-change-link">{entries[0][1]} ↗</Link>}</div>;
+            : <ShotDetailLink href={entries[0][0]} className="agent-change-link">{entries[0][1]} ↗</ShotDetailLink>}</div>;
     }
-    return <div className="agent-change-results">{[...links].map(([href, label]) => <Link key={href} to={href}
-                                                                                          className="agent-change-link">查看{label} ↗</Link>)}{createdProjectId &&
+    return <div className="agent-change-results">{[...links].map(([href, label]) => <ShotDetailLink key={href} href={href}
+                                                                                          className="agent-change-link">查看{label} ↗</ShotDetailLink>)}{createdProjectId &&
         <CreatedProjectContinuation key={createdProjectId} projectId={createdProjectId} call={call}/>}</div>;
 }

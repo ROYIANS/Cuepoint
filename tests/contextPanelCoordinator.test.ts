@@ -10,7 +10,7 @@ vi.mock("react",async original => {
     };
 });
 import {ContextPanelHostProvider} from "@/app/layout/ContextPanelHost";
-type Host = {active: string | null;docked: boolean;width: number;
+type Host = {active: string | null;docked: boolean;fullWidth: boolean;width: number;
     register: (entry:{id:string;width:number;close:()=>void;depart:(proceed:()=>void,cancel:()=>void)=>void})=>()=>void;
     request:(id:string)=>void;release:(id:string)=>void};
 function draw(surfaceWidth = 1440,navigationWidth = 260): Host {
@@ -44,9 +44,17 @@ describe("controlled context-panel coordination", () => {
     });
     it("bases docking on actual surface allocation and keeps the same active identity", () => {
         const host = draw(); host.register({id:"music",width:300,close:vi.fn(),depart:yes=>yes()}); host.request("music");
-        expect(draw(1120,340)).toMatchObject({active:"music",docked:true,width:300});
-        expect(draw(1119,340)).toMatchObject({active:"music",docked:false,width:300});
-        expect(draw(1119,0)).toMatchObject({active:"music",docked:true,width:300});
-        host.release("music"); expect(draw().active).toBe(null);
+        expect(draw(1120,340)).toMatchObject({active:"music",docked:true,fullWidth:false,width:300});
+        expect(draw(1119,340)).toMatchObject({active:"music",docked:false,fullWidth:true,width:300});
+        expect(draw(1119,0)).toMatchObject({active:"music",docked:true,fullWidth:false,width:300});
+        host.release("music"); expect(draw(760)).toMatchObject({active:null,fullWidth:false});
+    });
+    it.each([300,320,400])("uses full-width mode below the measured allocation for a %ipx panel", width => {
+        const host = draw();
+        host.register({id:"detail",width,close:vi.fn(),depart:yes=>yes()}); host.request("detail");
+        const threshold = 260 + width + 480;
+        expect(draw(threshold)).toMatchObject({active:"detail",docked:true,fullWidth:false});
+        expect(draw(threshold - 1)).toMatchObject({active:"detail",docked:false,fullWidth:true});
+        expect(draw(390)).toMatchObject({active:"detail",docked:false,fullWidth:true});
     });
 });

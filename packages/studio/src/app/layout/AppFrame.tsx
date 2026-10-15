@@ -79,7 +79,6 @@ export function AppFrame({children, onImport, contentScroll = "auto"}: {
     const navigationOpener = useRef<HTMLElement | null>(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [registrations, setRegistrations] = useState<Map<symbol, number>>(() => new Map());
-    const [panelOverlay, setPanelOverlay] = useState(false);
     useEffect(() => {
         const query = window.matchMedia("(max-width: 767px)");
         const update = () => {
@@ -122,7 +121,7 @@ export function AppFrame({children, onImport, contentScroll = "auto"}: {
         opener: navigationOpener
     }), [open, setOpen, registrations.size, narrow, register]);
     const navigationWidth = !narrow && open ? Math.max(0, ...registrations.values()) : 0;
-    const isolated = panelOverlay || (narrow && mobileOpen);
+    const isolated = narrow && mobileOpen;
     const chromeKind = getWindowChromeKind();
     const section = NAV.find(item => item.active(pathname));
 
@@ -158,8 +157,7 @@ export function AppFrame({children, onImport, contentScroll = "auto"}: {
         className={mobile ? undefined : "app-nav-label"}>导入项目</span></button> : null;
     return <div className="app-frame studio-floor" data-window-chrome={chromeKind}>
         <ModuleNavigationContext value={navigation}>
-            <ContextPanelHostProvider target={panelHost} surfaceWidth={surfaceWidth} navigationWidth={navigationWidth}
-                                      onOverlayChange={setPanelOverlay}>
+            <ContextPanelHostProvider target={panelHost} surfaceWidth={surfaceWidth} navigationWidth={navigationWidth}>
                 <AppHeaderContext value={headerHost}>
                     <header className="app-topbar" inert={isolated} aria-hidden={isolated || undefined}
                             data-tauri-drag-region={chromeKind === "macos-overlay" ? "deep" : undefined}>
@@ -192,7 +190,7 @@ export function AppFrame({children, onImport, contentScroll = "auto"}: {
                         <aside className="app-navigation" inert={isolated} aria-hidden={isolated || undefined}>
                             {renderNavigation(false)}
                         </aside>
-                        <WorkingSurface setSurface={setSurface} setPanelHost={setPanelHost} isolated={panelOverlay}
+                        <WorkingSurface setSurface={setSurface} setPanelHost={setPanelHost}
                                         contentScroll={contentScroll}>{children}</WorkingSurface>
                     </div>
                     <Sheet open={navOpen} onOpenChange={setNavOpen}>
@@ -211,15 +209,24 @@ export function AppFrame({children, onImport, contentScroll = "auto"}: {
     </div>;
 }
 
-function WorkingSurface({setSurface, setPanelHost, isolated, contentScroll, children}: {
+function WorkingSurface({setSurface, setPanelHost, contentScroll, children}: {
     setSurface: (node: HTMLDivElement | null) => void; setPanelHost: (node: HTMLDivElement | null) => void;
-    isolated: boolean; contentScroll: "auto" | "hidden"; children: ReactNode;
+    contentScroll: "auto" | "hidden"; children: ReactNode;
 }) {
     const host = useContextPanelHost();
-    return <div ref={setSurface} className="studio-content-surface app-working-surface">
-        <div inert={isolated} aria-hidden={isolated || undefined}
+    const fullWidth = !!host?.fullWidth;
+    let detailMode: "docked" | "full-width" | undefined;
+    let detailWidth: number | string = 0;
+    if (host?.active) {
+        detailMode = fullWidth ? "full-width" : "docked";
+        detailWidth = fullWidth ? "100%" : host.width;
+    }
+    return <div ref={setSurface} className="studio-content-surface app-working-surface"
+                data-detail-mode={detailMode}>
+        <div inert={fullWidth} aria-hidden={fullWidth || undefined} data-context-panel-workspace
+             data-context-panel-inactive={fullWidth || undefined}
              className={cn("app-frame-content app-scroll", contentScroll === "auto" ? "overflow-auto" : "flex flex-col overflow-hidden")}>{children}</div>
-        <div ref={setPanelHost} className="app-context-panel-host" data-docked={!!host?.active && host.docked}
-             style={{width: host?.active && host.docked ? host.width : 0}}/>
+        <div ref={setPanelHost} className="app-context-panel-host"
+             data-mode={detailMode} style={{width: detailWidth}}/>
     </div>;
 }

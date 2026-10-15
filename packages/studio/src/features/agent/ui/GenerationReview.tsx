@@ -1,7 +1,8 @@
+import {ShotDetailLink} from "../../../app/details/ShotDetails";
 import {useId, useRef, useState} from "react";
 import {useProductQuery} from "../../../platform/product/queries";
 import {Input, Select} from "antd";
-import {Link} from "@tanstack/react-router";
+
 import {ArrowUpRight, Image, LoaderCircle, Restore, Video} from "../../../ui/icons";
 import {toast} from "sonner";
 import {getGenerationPreferenceState, saveGenerationPreference} from "../../settings/commands/generationPreferences";
@@ -136,9 +137,9 @@ function GenerationReviewForm({call, initial, busy, onAction}: {
                                                                aria-hidden/><strong>确认{title}生成</strong><span>AI 已准备</span>
         </div>
         <p className="agent-generation-review-intro">可以直接确认，也可以调整下面的配置。</p>
-        {call.preview?.target && /^\/(?!\/)/.test(call.preview.target.href) && <Link className="agent-generation-target"
-                                                                                     to={call.preview.target.href}>{call.preview.target.label}<ArrowUpRight
-            size={13} aria-hidden/></Link>}
+        {call.preview?.target && /^\/(?!\/)/.test(call.preview.target.href) && <ShotDetailLink className="agent-generation-target"
+                                                                                     href={call.preview.target.href}>{call.preview.target.label}<ArrowUpRight
+            size={13} aria-hidden/></ShotDetailLink>}
         {recommendation && ["project", "global"].includes(recommendation.source) &&
             <div className="agent-generation-default">
                 <span>{recommendation.status === "ready" ? `${recommendation.source === "project" ? "项目" : "我的"}默认 · ${recommendation.recommendation?.model}` : recommendation.issues.join("；")}</span>

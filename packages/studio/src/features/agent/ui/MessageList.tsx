@@ -1,3 +1,4 @@
+import {AgentMarkdown as Markdown} from "./AgentMarkdown";
 import {ReferenceMessageSources} from "./ReferenceAttachments";
 import {ModelIcon} from "./ModelIcons";
 import {Coins, Gauge} from "../../../ui/icons";
@@ -8,7 +9,7 @@ import {useProductQuery} from "../../../platform/product/queries";
 import {isPersistedToolRound} from "../runtime/runPresentation";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import {Button} from "../../../ui/button";
-import {CopyButton, Markdown, Text} from "@lobehub/ui";
+import {CopyButton, Text} from "@lobehub/ui";
 import {memo, useCallback, useLayoutEffect, useRef} from "react";
 import type {ChatMessage} from "../models/chat";
 import {isChatNearBottom, snapChatToBottom} from "../presentation/chatScroll";

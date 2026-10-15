@@ -13,14 +13,13 @@ import {createPortal} from "react-dom";
 import {FocusScope} from "@radix-ui/react-focus-scope";
 import {DismissableLayer} from "@radix-ui/react-dismissable-layer";
 import {useContextPanelHost} from "./ContextPanelHost";
-import {XIcon} from "../../ui/icons";
+import {ArrowLeft, XIcon} from "../../ui/icons";
 import {createOverlayFocusReturn} from "../../ui/overlayFocusReturn";
 import {cn} from "../../ui/cn";
 
 type PanelContext = {
     shown: boolean;
-    overlay: boolean;
-    width: number;
+    fullWidth: boolean;
     titleId: string;
     descriptionId: string;
     close: () => void;
@@ -58,7 +57,7 @@ export function ContextPanel({open, onOpenChange, width = 400, onRequestDepartur
     }, [open, request, release, id]);
     const shown = open && (!host || host.active === id);
     return <PanelContext value={{
-        shown, overlay: !host?.docked, width, titleId: `${id}-title`, descriptionId: `${id}-description`, focusReturn,
+        shown, fullWidth: !host?.docked, titleId: `${id}-title`, descriptionId: `${id}-description`, focusReturn,
         close: () => {
             const close = () => current.current.onOpenChange(false);
             if (current.current.onRequestDeparture) current.current.onRequestDeparture(close); else close();
@@ -71,70 +70,72 @@ export function ContextPanelContent({
                                         children,
                                         className,
                                         showCloseButton = true,
+                                        returnLabel = "返回工作区",
                                         onOpenAutoFocus,
                                         onCloseAutoFocus,
                                         side: _side,
                                         ...props
                                     }: ComponentProps<"div"> & {
-    side?: "right" | "left"; showCloseButton?: boolean;
+    side?: "right" | "left"; showCloseButton?: boolean; returnLabel?: string;
     onOpenAutoFocus?: (event: Event) => void; onCloseAutoFocus?: (event: Event) => void;
 }) {
     const panel = usePanel();
     const host = useContextPanelHost();
     const focusReturn = panel.focusReturn;
     const ref = useRef<HTMLDivElement>(null);
-    const lastOverlay = useRef(panel.overlay);
-    useEffect(() => {
-        const becameOverlay = panel.overlay && !lastOverlay.current;
-        lastOverlay.current = panel.overlay;
-        if (becameOverlay && panel.shown && panel.overlay && ref.current && !ref.current.contains(document.activeElement)) {
-            const target = ref.current.querySelector<HTMLElement>("[autofocus], button:not(:disabled), input:not(:disabled), textarea:not(:disabled), a, [tabindex='0']");
+    const lastFullWidth = useRef(panel.fullWidth);
+    useLayoutEffect(() => {
+        const becameFullWidth = panel.fullWidth && !lastFullWidth.current;
+        const becameDocked = !panel.fullWidth && lastFullWidth.current;
+        lastFullWidth.current = panel.fullWidth;
+        // A resize hides the retained workspace, never the app's header or navigation.
+        // Move only focus that would otherwise remain inside that hidden workspace.
+        const focused = document.activeElement;
+        if (!panel.shown || !ref.current || !(focused instanceof Element)) return;
+        const workspaceFocus = becameFullWidth && focused.closest("[data-context-panel-workspace]");
+        const hiddenReturnFocus = becameDocked && ref.current.contains(focused) && focused.closest(".context-panel-return-bar");
+        if (workspaceFocus || hiddenReturnFocus) {
+            const target = [...ref.current.querySelectorAll<HTMLElement>("[autofocus], button:not(:disabled), input:not(:disabled), textarea:not(:disabled), a[href], [tabindex='0']")]
+                .find(element => !element.closest("[hidden], [inert], [aria-hidden=true]"));
             (target ?? ref.current).focus({preventScroll: true});
         }
-    }, [panel.shown, panel.overlay]);
+    }, [panel.shown, panel.fullWidth]);
     if (!panel.shown || (host && !host.target)) return null;
     const target = host?.target ?? document.body;
-    return createPortal(<>
-        {panel.overlay && <div className="context-panel-backdrop" aria-hidden onClick={panel.close}/>}
-        <FocusScope key="content" asChild trapped={panel.overlay} loop={panel.overlay}
+    return createPortal(
+        <FocusScope key="content" asChild
                     onMountAutoFocus={event => {
                         onOpenAutoFocus?.(event);
-                        if (!panel.overlay) event.preventDefault();
+                        if (!panel.fullWidth) event.preventDefault();
                     }} onUnmountAutoFocus={event => {
             focusReturn.onCloseAutoFocus(event, onCloseAutoFocus);
             // Use the shared conditional fallback rather than stealing a valid new focus.
             event.preventDefault();
         }}>
-            <DismissableLayer asChild disableOutsidePointerEvents={panel.overlay}
+            <DismissableLayer asChild
                               onEscapeKeyDown={event => {
-                                  if (panel.overlay) {
+                                  if (event.target instanceof Node && ref.current?.contains(event.target)) {
                                       event.preventDefault();
                                       panel.close();
                                   }
-                              }}
-                              onPointerDownOutside={event => {
-                                  if (panel.overlay) {
-                                      event.preventDefault();
-                                      panel.close();
-                                  }
-                              }}
-                              onFocusOutside={event => {
-                                  if (panel.overlay) event.preventDefault();
                               }}>
                 <div {...props} ref={ref} data-slot="context-panel-content"
-                     data-mode={panel.overlay ? "overlay" : "docked"}
+                     data-mode={panel.fullWidth ? "full-width" : "docked"}
                      className={cn("context-panel-content", className)}
-                     style={{...props.style, "--context-panel-width": `${panel.width}px`} as React.CSSProperties}
-                     role={panel.overlay ? "dialog" : "complementary"} aria-modal={panel.overlay || undefined}
+                     role="complementary"
                      aria-labelledby={panel.titleId} aria-describedby={panel.descriptionId} tabIndex={-1}>
+                    <div className="context-panel-return-bar" hidden={!panel.fullWidth}>
+                        <button type="button" className="context-panel-return" onClick={panel.close}>
+                            <ArrowLeft className="size-4" aria-hidden/>{returnLabel}
+                        </button>
+                    </div>
                     {children}
-                    {showCloseButton &&
+                    {showCloseButton && !panel.fullWidth &&
                         <button type="button" aria-label="关闭" className="context-panel-close" onClick={panel.close}>
                             <XIcon className="size-4" aria-hidden/></button>}
                 </div>
             </DismissableLayer>
-        </FocusScope>
-    </>, target);
+        </FocusScope>, target);
 }
 
 export function ContextPanelHeader({className, ...props}: ComponentProps<"div">) {

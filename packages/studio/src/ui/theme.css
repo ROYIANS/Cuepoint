@@ -785,11 +785,23 @@
 
 .app-context-panel-host {
     flex: none;
+    min-width: 0;
     min-height: 0;
+    overflow: hidden;
 }
 
-.app-context-panel-host[data-docked=true] {
+.app-context-panel-host[data-mode=docked] {
     border-left: 1px solid var(--border);
+}
+
+.app-frame-content[data-context-panel-inactive=true] {
+    /* Retain the workspace's dimensions, scroll positions and mounted owners. */
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    /* Vendor measurement mirrors can explicitly restore inherited visibility. */
+    opacity: 0;
+    pointer-events: none;
 }
 
 .module-layout {
@@ -885,23 +897,49 @@
     max-width: none !important;
     height: 100%;
     min-height: 0;
-    max-height: 100dvh;
+    max-height: 100%;
     overflow-y: auto;
     background: var(--surface-panel);
     outline: none;
 }
 
-.context-panel-content[data-mode=overlay] {
-    position: fixed !important;
-    inset: 0 0 0 auto !important;
-    z-index: 50;
-    width: min(var(--context-panel-width, 400px), calc(100vw - 24px)) !important;
-    height: 100dvh;
-    border-left: 1px solid var(--border);
-    box-shadow: -12px 0 40px #0005;
+.context-panel-return-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    flex: none;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-panel);
 }
 
-.context-panel-backdrop, .module-navigation-backdrop {
+.context-panel-return-bar[hidden] {
+    display: none;
+}
+
+.context-panel-return {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--muted-foreground);
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.context-panel-return:hover {
+    color: var(--foreground);
+    background: var(--accent);
+}
+
+.context-panel-return:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.module-navigation-backdrop {
     position: fixed;
     inset: 0;
     z-index: 40;
@@ -949,8 +987,15 @@
 }
 
 @media print {
-    .module-navigation, .context-panel-content, .context-panel-backdrop, .module-navigation-backdrop, .app-context-panel-host {
+    .module-navigation, .context-panel-content, .module-navigation-backdrop, .app-context-panel-host {
         display: none !important;
+    }
+
+    .app-frame-content[data-context-panel-inactive=true] {
+        position: static;
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
     }
 
     .module-layout, .module-main {

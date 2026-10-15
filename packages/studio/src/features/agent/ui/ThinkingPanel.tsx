@@ -1,4 +1,5 @@
-import {Markdown} from "@lobehub/ui";
+import {AgentMarkdown as Markdown} from "./AgentMarkdown";
+
 import {ChevronDown} from "../../../ui/icons";
 import {useEffect, useId, useRef, useState} from "react";
 import {formatThinkingTitle} from "../presentation/thinkingTitle";

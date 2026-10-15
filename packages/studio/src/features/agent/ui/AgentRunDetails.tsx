@@ -1,3 +1,5 @@
+import {AgentMarkdown as Markdown} from "./AgentMarkdown";
+import {ShotDetailLink} from "../../../app/details/ShotDetails";
 import {CreatedEntityLinks} from "./CreatedEntityLinks";
 import {AgentWriteOutcomes} from "./AgentWriteOutcomes";
 import {WebResearchSources} from "./WebResearchSources";
@@ -5,9 +7,9 @@ import {ProjectImageSources} from "./ProjectImageSources";
 import {GenerationReview} from "./GenerationReview";
 import {MusicGenerationReview} from "./MusicGenerationReview";
 import {AgentGenerationResults} from "./AgentGenerationResults";
-import {Link} from "@tanstack/react-router";
+
 import {useEffect, useId, useMemo, useRef, useState} from "react";
-import {Markdown} from "@lobehub/ui";
+
 import {Check, ChevronDown, Circle, CircleAlert, LoaderCircle, ShieldQuestion} from "../../../ui/icons";
 import {canResumeAgentRun} from "../commands/agentTools";
 import type {AgentRun, AgentToolCall} from "../models/agent";
@@ -148,8 +150,8 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
                         <strong>{preview.summary}</strong>
                         {preview.changes.length > 0 &&
                             <ul>{preview.changes.map((change, index) => <li key={index}>{change}</li>)}</ul>}
-                        {preview.target && /^\/(?!\/)/.test(preview.target.href) && <Link to={preview.target.href}
-                                                                                          className="agent-change-link">查看{preview.target.label} ↗</Link>}
+                        {preview.target && /^\/(?!\/)/.test(preview.target.href) && <ShotDetailLink href={preview.target.href}
+                                                                                          className="agent-change-link">查看{preview.target.label} ↗</ShotDetailLink>}
                     </div>}
                 <WebResearchSources call={call}/>
                 <ProjectImageSources call={call}/>
@@ -251,7 +253,7 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
         if (request.callId && !calls.some((call) => call.id === request.callId)) return;
         const frame = requestAnimationFrame(() => {
             const section = sectionRef.current;
-            if (!section) return;
+            if (!section || section.closest("[inert]")) return;
             positionedRequest.current = request.key;
             const target = request.callId
                 ? [...section.querySelectorAll<HTMLElement>("[data-activity-call]")].find((element) => element.dataset.activityCall === request.callId) ?? section

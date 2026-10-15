@@ -47,7 +47,7 @@ export function useManualDraftDeparture(
             scroll.push({element: ancestor, top: ancestor.scrollTop, left: ancestor.scrollLeft});
         }
         // Close buttons may sit outside the editor's scrolling pane.
-        for (const pane of document.querySelectorAll<HTMLElement>("[role=dialog], [role=dialog] *")) {
+        for (const pane of document.querySelectorAll<HTMLElement>("[role=dialog], [role=dialog] *, [data-slot=context-panel-content], [data-slot=context-panel-content] *")) {
             if ((pane.scrollTop || pane.scrollLeft) && !scroll.some(item => item.element === pane))
                 scroll.push({element: pane, top: pane.scrollTop, left: pane.scrollLeft});
         }
@@ -58,7 +58,8 @@ export function useManualDraftDeparture(
                 ? {selection: [element.selectionStart, element.selectionEnd] as [number | null, number | null]} : {}),
         };
     }, []);
-    const waiting = pending || readState().pending || discarding;
+    const snapshot = readState();
+    const localWaiting = pending || snapshot.pending || discarding;
     const blocker = useBlocker({
         // Locate/search changes retain the same owner. Actual thread routes change pathname.
         shouldBlockFn: ({current: from, next}) => {
@@ -69,8 +70,11 @@ export function useManualDraftDeparture(
             return block;
         },
         withResolver: true,
-        enableBeforeUnload: options?.route !== false && (dirty || waiting),
+        enableBeforeUnload: options?.route !== false &&
+            ((snapshot.routeDirty ?? dirty) || (snapshot.routePending ?? localWaiting) || discarding),
     });
+    const routeConfirmation = !localLeave && blocker.status === "blocked";
+    const waiting = discarding || (routeConfirmation ? snapshot.routePending ?? snapshot.pending : localWaiting);
     const requestDeparture = useCallback<ManualDraftDeparture>((leave, onLocalDiscard, onCancel) => {
         const state = readState();
         if (busy.current) {
@@ -100,7 +104,9 @@ export function useManualDraftDeparture(
     }, [readState, capturePosition]);
 
     async function discard() {
-        if (readState().pending || busy.current || (!localLeave && blocker.status !== "blocked")) return;
+        const state = readState();
+        const operationPending = !localLeave && blocker.status === "blocked" ? state.routePending ?? state.pending : state.pending;
+        if (operationPending || busy.current || (!localLeave && blocker.status !== "blocked")) return;
         busy.current = true;
         setDiscarding(true);
         setError(undefined);

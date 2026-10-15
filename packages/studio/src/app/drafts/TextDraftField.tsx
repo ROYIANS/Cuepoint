@@ -3,6 +3,7 @@ import {type DraftSaveStatus, useDebouncedDraft} from "../../platform/product/dr
 import {DraftStatus} from "./draft-status";
 import {Input} from "../../ui/input";
 import {Textarea} from "../../ui/textarea";
+import type {ManualDraftState} from "./useManualDraftGuard";
 
 type Props = {
     projectId: string;
@@ -10,6 +11,7 @@ type Props = {
     value: string;
     persist: (value: string, baseline: string) => Promise<void>;
     onStatusChange?: (status: DraftSaveStatus) => void;
+    onDepartureState?: (state: ManualDraftState, discard: () => void) => void;
     multiline?: boolean;
     rows?: number;
     placeholder?: string;
@@ -25,7 +27,7 @@ export function TextDraftField(props: Props) {
 }
 
 function TextDraftControl({
-                              projectId, draftKey, value, persist, onStatusChange, multiline, rows,
+                              projectId, draftKey, value, persist, onStatusChange, onDepartureState, multiline, rows,
                               placeholder, ariaLabel, className, containerClassName, unavailable
                           }: Props) {
     const save = useRef(persist).current;
@@ -34,7 +36,8 @@ function TextDraftControl({
     });
     useEffect(() => {
         onStatusChange?.(status);
-    }, [onStatusChange, status]);
+        onDepartureState?.({dirty: status !== "saved", pending: status === "saving"}, useLatest);
+    }, [onStatusChange, onDepartureState, status, useLatest]);
     const Control = multiline ? Textarea : Input;
     return <div className={containerClassName} data-text-draft={draftKey}>
         <Control value={draft} rows={multiline ? rows : undefined} readOnly={unavailable}
@@ -42,8 +45,9 @@ function TextDraftControl({
                  onChange={event => {
                      // Parent retention must see the pending marker before any async write/read.
                      onStatusChange?.("saving");
+                     onDepartureState?.({dirty: true, pending: true}, useLatest);
                      setDraft(event.target.value);
                  }}/>
-        <DraftStatus status={status} error={error} onRetry={() => void retry()} onUseLatest={useLatest}/>
+        <DraftStatus status={status} error={error} onRetry={() => {if (!unavailable) void retry();}} onUseLatest={useLatest}/>
     </div>;
 }

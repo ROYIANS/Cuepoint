@@ -1,7 +1,8 @@
 import {generationTargetDestination} from "../../video/services/generationTargetDestination";
 import {AgentGenerationBatches} from "./AgentGenerationBatches";
 import {AgentAudioBatches} from "../../audio/ui/AudioGenerationBatches";
-import {Link} from "@tanstack/react-router";
+import {ShotDetailLink} from "../../../app/details/ShotDetails";
+import {shotDetailHref} from "../../video/models/shotDetailTarget";
 import {useProductQuery} from "../../../platform/product/queries";
 import {Check, CircleAlert, Image, LoaderCircle, Video} from "../../../ui/icons";
 import type {AgentGenerationStatus} from "../models/agentGeneration";
@@ -40,8 +41,9 @@ export function AgentGenerationResults({runId}: { runId: string }) {
                                                  className="agent-generation-media"/>}
                     {job.error && <p className="agent-generation-error">{job.error}</p>}
                     {job.status === "unknown" && <p>请先核实供应商任务记录，避免重复提交。</p>}
-                    <Link {...generationTargetDestination(job.target)}
-                          className="agent-change-link">查看{TARGETS[job.target.kind]} ↗</Link>
+                    <ShotDetailLink href={job.target.kind === "shot" ? shotDetailHref({projectId: job.target.projectId, episodeId: job.target.episodeId, shotId: job.target.entityId}) : generationTargetDestination(job.target).to}
+                          target={job.target.kind === "shot" ? {projectId: job.target.projectId, episodeId: job.target.episodeId, shotId: job.target.entityId} : undefined}
+                          className="agent-change-link">查看{TARGETS[job.target.kind]} ↗</ShotDetailLink>
                 </section>;
             })}
         </div>}</>;

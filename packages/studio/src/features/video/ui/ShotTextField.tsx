@@ -8,7 +8,7 @@ export function ShotTextField({shot, field, onDraftStatus, ...control}: {
     shot: Shot;
     field: TextShotField | "shotNumber";
     onDraftStatus?: TextDraftStatusChange;
-} & Pick<Parameters<typeof TextDraftField>[0], "multiline" | "rows" | "placeholder" | "ariaLabel" | "className" | "containerClassName" | "unavailable">) {
+} & Pick<Parameters<typeof TextDraftField>[0], "multiline" | "rows" | "placeholder" | "ariaLabel" | "className" | "containerClassName" | "unavailable" | "onDepartureState">) {
     const repository = useVideoWorkspaceRepository();
     return <TextDraftField {...control} projectId={shot.projectId} draftKey={`shot:${shot.id}:${field}`}
                            value={shot[field] ?? ""}

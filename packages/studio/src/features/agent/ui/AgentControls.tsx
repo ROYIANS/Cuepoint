@@ -149,6 +149,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
             if (event.target instanceof Node && !panelRef.current?.contains(event.target) && !triggerRef.current?.contains(event.target)) setOpen(false);
         };
         const escape = (event: KeyboardEvent) => {
+            if (triggerRef.current?.closest("[inert]")) return;
             if (event.key === "Escape") {
                 event.preventDefault();
                 event.stopPropagation();
@@ -164,7 +165,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
         };
     }, [open]);
     useEffect(() => {
-        if (open) searchInput.current?.focus();
+        if (open && !triggerRef.current?.closest("[inert]")) searchInput.current?.focus();
     }, [open, view]);
     const skills = AGENT_SKILLS.filter((skill) => `${skill.name} ${skill.description}`.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
     const toggleSkill = (key: string) => void save(async () => {

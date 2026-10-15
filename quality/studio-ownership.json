@@ -5736,6 +5736,54 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/app/details/ShotDetails.tsx",
+      "file": "packages/studio/src/app/details/ShotDetails.tsx",
+      "target": "packages/studio/src/app/details/ShotDetails.tsx",
+      "owner": "app",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/app/details/shotDetailTarget.ts",
+      "file": "packages/studio/src/app/details/shotDetailTarget.ts",
+      "target": "packages/studio/src/app/details/shotDetailTarget.ts",
+      "owner": "app",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/video/models/shotDetailTarget.ts",
+      "file": "packages/studio/src/features/video/models/shotDetailTarget.ts",
+      "target": "packages/studio/src/features/video/models/shotDetailTarget.ts",
+      "owner": "features/video",
+      "public": false,
+      "publicTypes": [
+        "ShotDetailTarget"
+      ],
+      "publicSymbols": [
+        "shotDetailHref"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/video/ui/ShotDetailPanel.tsx",
+      "file": "packages/studio/src/features/video/ui/ShotDetailPanel.tsx",
+      "target": "packages/studio/src/features/video/ui/ShotDetailPanel.tsx",
+      "owner": "features/video",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "ShotDetailPanel"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/AgentMarkdown.tsx",
+      "file": "packages/studio/src/features/agent/ui/AgentMarkdown.tsx",
+      "target": "packages/studio/src/features/agent/ui/AgentMarkdown.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [
@@ -5837,6 +5885,14 @@
       "symbols": [
         "exportProjectZip",
         "importProjectZip"
+      ]
+    },
+    {
+      "file": "app/details/ShotDetails.tsx",
+      "symbols": [
+        "ShotDetailsProvider",
+        "ShotDetailLink",
+        "useShotDetailActivation"
       ]
     }
   ],

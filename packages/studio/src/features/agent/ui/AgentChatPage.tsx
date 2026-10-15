@@ -1,4 +1,5 @@
 import {ModuleLayout} from "../../../app/layout/ModuleLayout";
+import {ShotDetailsProvider} from "../../../app/details/ShotDetails";
 import {TopicSidebar} from "./TopicSidebar";
 import {useChatSelection} from "./useChatSelection";
 import {useChatExecutionSession} from "./useChatExecutionSession";
@@ -57,8 +58,8 @@ import {
 } from "../../settings/models/chatModelPolicy";
 
 export function AgentChatPage({threadId, view}: { threadId?: Id; view?: "tasks" }) {
-    return <AgentActivityNavigationProvider threadId={threadId}><AgentChatInner threadId={threadId}
-                                                                                view={view}/></AgentActivityNavigationProvider>;
+    return <ShotDetailsProvider><AgentActivityNavigationProvider threadId={threadId}><AgentChatInner threadId={threadId}
+                                                                                view={view}/></AgentActivityNavigationProvider></ShotDetailsProvider>;
 }
 
 function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {

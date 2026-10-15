@@ -1,3 +1,5 @@
+import {ShotDetailLink} from "../../../app/details/ShotDetails";
+import {Link} from "@tanstack/react-router";
 import {ReferenceSourceLink} from "./ReferenceAttachments";
 import {MemoryEditor} from "../../memory/ui/MemoryEditor";
 import type {MemoryCandidate, MemorySourceRef, ProjectMemory} from "../../memory/models/projectMemory";
@@ -6,7 +8,7 @@ import {MemoryPromotion} from "../../memory/ui/MemoryPromotion";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "../../../app/drafts/useManualDraftGuard";
 import {useProductQuery} from "../../../platform/product/queries";
-import {Link} from "@tanstack/react-router";
+
 import {
     ArrowUpRight,
     CheckCheck,
@@ -85,7 +87,7 @@ function Sources({ids, evidence, selectable, onChange}: {
                 {source?.available && source.reference &&
                     <ReferenceSourceLink projectId={source.reference.projectId} attachment={source.reference}
                                          label="查看参考资料"/>}{source?.available && source.href && /^\/(?!\/)/.test(source.href) &&
-                <Link to={source.href}>打开成果<ArrowUpRight size={13}/></Link>}{source && <details>
+                <ShotDetailLink href={source.href}>打开成果<ArrowUpRight size={13}/></ShotDetailLink>}{source && <details>
                 <summary>本版保存的记录</summary>
                 <pre>{source.body}</pre>
             </details>}</div>;

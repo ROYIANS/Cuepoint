@@ -19,6 +19,7 @@
 | [Studio Feature Ownership](./feature-organization.md) | Vertical feature APIs, fixed product integration, explicit transactions and executable dependency rules | Filled |
 | [Component Guidelines](./component-guidelines.md) | Thin routes, feature pages, ui primitives, slots | Filled |
 | [Shared Desktop UI](./desktop-ui.md) | Frame/navigation, page typography, scroll owners, overlay focus and print | Filled |
+| [Agent Business Details](./agent-business-details.md) | In-workspace shot links, retained chat, full-width details and guarded single-shot editing | Filled |
 | [Settings and Desktop Updates](./settings-update.md) | Settings search, embedded connections, device preferences, anonymous release checks and verified installer saves | Filled |
 | [Shared Product Storage](./shared-product-storage.md) | All-table adapters, explicit transactions, durable certainty, observation and managed bytes | Filled |
 | [Agent IP / Materials / Tool Loading](./agent-library-tools.md) | Confirmed IP/library operations, real content and per-request capability loading | Filled |

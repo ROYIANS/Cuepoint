@@ -2,7 +2,7 @@ import {beforeEach, describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
 
 const host = vi.hoisted(() => ({cells: [] as unknown[], cursor: 0,
-    options: undefined as undefined | {shouldBlockFn: (locations: {current: {pathname: string}; next: {pathname: string}}) => boolean},
+    options: undefined as undefined | {shouldBlockFn: (locations: {current: {pathname: string}; next: {pathname: string}}) => boolean; enableBeforeUnload: boolean},
     blocker: {status: "idle", proceed: vi.fn(), reset: vi.fn()},
 }));
 vi.mock("react", async original => {
@@ -46,12 +46,30 @@ beforeEach(() => {
 });
 
 describe("E01 production departure callbacks", () => {
+    it("delegates nested media pending locally while allowing an inline route draft to resolve", async () => {
+        const state = {dirty: true, pending: true, routeDirty: true, routePending: false};
+        const discard = vi.fn(async () => {});
+        const render = () => useManualDraftDeparture(true, true, discard, {readState: () => state});
+        expect(draw(render)).toBeDefined();
+        expect(host.options!.shouldBlockFn(locations)).toBe(true);
+        host.blocker.status = "blocked";
+        expect(button(draw(render).confirmation, "放弃并离开")).toBeDefined();
+        click(button(draw(render).confirmation, "放弃并离开"));
+        await vi.waitFor(() => expect(host.blocker.proceed).toHaveBeenCalledOnce());
+        expect(discard).toHaveBeenCalledOnce();
+        host.blocker.status = "idle";
+        const local = vi.fn();
+        draw(render).requestDeparture(local);
+        expect(button(draw(render).confirmation, "放弃并离开")).toBeUndefined();
+        expect(local).not.toHaveBeenCalled();
+    });
     it("delegates route state to a nested editor while retaining local owner dirty/pending protection", () => {
         const state = {dirty: true, pending: false, routeDirty: false, routePending: false};
         const leave = vi.fn();
         const render = () => useManualDraftDeparture(true, false, vi.fn(), {readState: () => state});
         const guard = draw(render);
         expect(host.options!.shouldBlockFn(locations)).toBe(false);
+        expect(host.options!.enableBeforeUnload).toBe(false);
         guard.requestDeparture(leave);
         expect(leave).not.toHaveBeenCalled();
         expect(button(draw(render).confirmation, "放弃并离开")).toBeDefined();
@@ -59,8 +77,11 @@ describe("E01 production departure callbacks", () => {
         expect(host.options!.shouldBlockFn(locations)).toBe(false);
         guard.requestDeparture(leave);
         expect(button(draw(render).confirmation, "放弃并离开")).toBeUndefined();
+        expect(host.options!.enableBeforeUnload).toBe(false);
         state.routePending = true;
+        draw(render);
         expect(host.options!.shouldBlockFn(locations)).toBe(true);
+        expect(host.options!.enableBeforeUnload).toBe(true);
     });
 
     it("reads synchronous dirty/pending owner changes before any rerender and keeps search changes", () => {

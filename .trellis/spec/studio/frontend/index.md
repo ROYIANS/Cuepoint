@@ -10,6 +10,7 @@
 - Read [feature ownership](../../frontend/feature-organization.md) before moving vertical modules, exposing feature entries or changing app/platform/product integration. Keep the actual ownership policy and every source consumer synchronized with a relocation.
 - Read [shared storage](../../frontend/shared-product-storage.md), [native runtime](../../frontend/native-product-runtime.md) and [query hooks](../../frontend/hook-guidelines.md) for persistence/integration work. Keep one fixed storage owner and propagate explicit transactions.
 - Read the relevant business/Agent contracts linked by the canonical frontend index before editing that feature. Full specs may require chunked reads beyond injection limits.
+- Read [Agent business details](../../frontend/agent-business-details.md) for shot-link activation, in-workspace detail presentation and aggregate editor departure; keep Agent execution and Video editing with their existing owners.
 - Before changing an Agent binding, read the actual core/runtime and provider/protocol contracts. Keep current credential, reference, native transport, ownership and transaction policy in Studio while invoking the shared algorithms.
 - Read [quality](../../frontend/quality-guidelines.md) and [shared guides](../../guides/index.md); update discovery when moving sources.
 

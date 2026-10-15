@@ -3,7 +3,7 @@ import {verifyBinaryAvailable} from "../../../platform/storage/binary";
 import {useWorkspaceUnavailable} from "../../../platform/product/workspaceAvailability";
 import {useManualDraftGuard} from "../../../app/drafts/useManualDraftGuard";
 import {Library, Plus, Trash2, Type} from "../../../ui/icons";
-import {useEffect, useId, useRef, useState} from "react";
+import {useCallback, useEffect, useId, useRef, useState} from "react";
 import {toast} from "sonner";
 import {deleteMediaIfOrphan} from "../commands/media";
 import {SlotEditSession} from "../services/slotEditSession";
@@ -524,13 +524,18 @@ export function EditableGenerationSlot({
     const [open, setOpen] = useState(false);
     const reportOpen = useRef(onEditorOpenChange);
     reportOpen.current = onEditorOpenChange;
+    const reportedOpen = useRef(false);
+    const notifyOpen = useCallback((next: boolean) => {
+        if (reportedOpen.current === next) return;
+        reportedOpen.current = next;
+        reportOpen.current?.(next);
+    }, []);
     useEffect(() => {
         if (!open) return;
-        const report = reportOpen.current;
-        report?.(true);
+        notifyOpen(true);
         // Balance notifications when a mounted slot disappears as well as on close.
-        return () => report?.(false);
-    }, [open]);
+        return () => notifyOpen(false);
+    }, [open, notifyOpen]);
     return (
         <>
             <GenerationSlotTile
@@ -539,7 +544,7 @@ export function EditableGenerationSlot({
                 label={label}
                 ariaLabel={title}
                 size={size}
-                onOpen={() => setOpen(true)}
+                onOpen={() => {notifyOpen(true); setOpen(true);}}
             />
             {open ? (
                 <GenerationSlotEditor
@@ -550,7 +555,7 @@ export function EditableGenerationSlot({
                     projectId={projectId}
                     value={value}
                     resultKinds={variant === "clip" ? ["image", "video"] : ["image"]}
-                    onClose={() => setOpen(false)}
+                    onClose={() => {notifyOpen(false); setOpen(false);}}
                     onSave={onSave}
                 />
             ) : null}
