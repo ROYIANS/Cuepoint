@@ -25,6 +25,11 @@ by these private workspace packages.
   bindings, error classification and terminal settlement. `RuntimeRun` carries
   execution identity/status/checkpoint and model-step/permission state, without
   product fields or a concrete database.
+- Its model `request(run, signal, onDelta, offeredDefinitions)` receives the
+  exact copied/frozen definitions selected before the request. Dynamic hosts
+  advertise that offer; metadata and execution remain bound to it. See
+  [capabilities and grants](./capabilities.md) for registration generations and
+  the distinction between tool approval and concrete resource authority.
 - `RuntimeHost.checkpoint(...): Promise<boolean>` returns whether the requested
   checkpoint was actually applied. `settle(...): Promise<AgentRunStatus>` returns
   the durable retained status, which can differ from a late requested transition.

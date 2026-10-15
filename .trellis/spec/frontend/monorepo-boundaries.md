@@ -54,6 +54,13 @@ file or package-public execution API.
   Site's standalone commands and the shared Vite helper stay independent of
   Agent artifacts; prepare or verify them only at entries that actually consume
   Studio/Agent.
+- The explicitly selected `vitest.agent-source.config.ts` and
+  `tests/typecheck/tsconfig.agent-source.json` are bounded source-validation
+  entries. They map only the current public core, providers and providers/http
+  exports, never private paths or production consumers. The Node source suite
+  requires Node >=24.11 and real SQLite. Keep default freshness checks intact;
+  source evidence does not establish emitted/packed acceptance. Register these
+  exact configuration/test/type inputs in discovery and quality identities.
 - Retained native/reference harnesses may consume individually declared `./reference/...` Studio exports for existing behavior tests. They are deliberate current reference APIs, not wildcard access, a duplicate implementation or permanent old-path bridges. Normal product entries use bootstrap.
 - Browser/native startup selects the fixed existing ProductStore before render. Keep schema bytes/identity, routes, protocol contracts, product transactions and managed-file behavior unchanged during relocation. Rust schema inclusion follows the one Studio schema owner.
 - Distribution never imports Studio, application source, storage, Agent or native runtime. Installer verification/download/Save and device settings stay product-owned. Site budgets and dependency-closure checks cover both eager and lazy chunks.

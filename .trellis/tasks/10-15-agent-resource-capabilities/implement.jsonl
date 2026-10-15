@@ -6,3 +6,12 @@
 {"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/capability-comparison.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
 {"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/host-integration-review.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/spec/agent-core/library/index.md", "reason": "Neutral public core ownership, emitted closure and all direct required contracts."}
+{"file": ".trellis/spec/agent-todo/cli/index.md", "reason": "Independent durable consumer ownership and public package imports."}
+{"file": ".trellis/spec/agent-todo/cli/durable-host.md", "reason": "Actual SQLite ownership, exact approval, atomic effects, restart and packed acceptance."}
+{"file": ".trellis/spec/frontend/monorepo-boundaries.md", "reason": "Preserve exact public imports, source mapping limits and production emitted dependency boundaries."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Preserve inferred parser/callback/preview/fact types; no broad context dictionaries."}
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Fresh-development schema policy; no unrequested migrations or fallback readers."}
+{"file": ".trellis/tasks/10-15-agent-resource-capabilities/research/extension-grant-design.md", "reason": "Source-backed concrete registry/grant/independent Todo effect boundary design and explicit unsupported host limits."}
+{"file": ".trellis/tasks/10-15-agent-resource-capabilities/research/source-validation-plan.md", "reason": "Concrete no-build source tests/types with exact public roots; preserve default freshness, production imports and deferred emitted/packed/process acceptance."}
+{"file": ".trellis/spec/agent-core/library/capabilities.md", "reason": "E06 actual public registry, immutable offers and host authority contract; review against current exported APIs."}

@@ -1,10 +1,10 @@
 import {randomUUID} from 'node:crypto';
-import {executeRun, modelStepLimitReached, offeredToolNames, offeredToolNamesForCall, requiresToolApproval, toolMetadataMatches, type RuntimeHost, type RuntimeEvent, type AgentWireToolCall} from '@cuepoint/agent-core';
+import {executeRun, modelStepLimitReached, offeredToolNames, offeredToolNamesForCall, requiresToolApproval, toolMetadataMatches, type RuntimeHost, type RuntimeEvent, type AgentWireToolCall, type ResourceGrantPort} from '@cuepoint/agent-core';
 import {responseRoundMatches, type ResponseItem} from '@cuepoint/agent-providers';
 import {TodoStore, encode} from './store.js';
-import {registry, validate} from './tools.js';
+import {validate} from './tools.js';
 import {prepareContext} from './summary.js';
-import {RolledBackError, UnknownOutcomeError, type Preview, type TodoContext, type TodoRun, type TodoCall} from './types.js';
+import {RolledBackError, UnknownOutcomeError, type Preview, type TodoContext, type TodoRun, type TodoCall, type TodoResourceFact} from './types.js';
 
 type Host = RuntimeHost<TodoRun, TodoCall, TodoContext, Preview, ResponseItem[]>;
 export interface ExecutionOptions {observe?: (event: RuntimeEvent) => void; onRequest?: (step: number) => void; hold?: (kind: 'checkpoint' | 'summary') => Promise<void>}
@@ -13,10 +13,26 @@ const callWire = (name: string, id: string, args: unknown): AgentWireToolCall =>
 function fingerprint(call: TodoCall): string {return encode({...call, result: undefined, error: undefined, appended: undefined});}
 
 export function createHost(store: TodoStore, initial: TodoRun, options: ExecutionOptions = {}): Host {
+    const registry = store.toolsFor(initial);
+    const validateBound = (name: string, raw: string, offered: readonly string[]) => validate(name, raw, offered, registry);
     const update = <T>(operation: (run: TodoRun) => T) => store.transaction(() => operation(store.current(initial.id)));
     const current = () => store.current(initial.id);
+    const resources: ResourceGrantPort<TodoResourceFact> = {
+        prepare: request => Promise.resolve(store.prepareCreateAuthority(request)),
+        assertCurrent: (expected, signal) => {store.transaction(() => {
+            signal.throwIfAborted(); const run = current(), call = store.call(expected.subject.callId);
+            if (!call || expected.subject.runId !== run.id) throw new Error('Foreign Todo resource subject');
+            store.assertCreateAuthority(run, call, expected);
+        }); return Promise.resolve();},
+    };
     const context = (run: TodoRun, call: TodoCall, signal: AbortSignal, preview?: Preview): TodoContext => ({runId: run.id, threadId: run.scope, callId: call.id, signal, preview, services: {
-        list: () => store.list(run.scope), mutate: (id, signal, operation) => store.mutate(run.id, id, signal, operation),
+        list: () => store.list(run.scope),
+        prepareCreate: () => {
+            if (!call.binding) throw new Error('Missing Todo installation');
+            return resources.prepare({subject: {runId: run.id, callId: call.id, scopeId: run.scope}, binding: call.binding,
+                facts: [{kind: 'todo-list', listId: run.scope, action: 'create'}], signal});
+        },
+        mutate: (id, signal, operation, expected) => store.mutate(run.id, id, signal, operation, expected, call),
         load: (id, groups, signal) => store.load(run.id, id, groups, signal), external: (id, signal) => store.external(run.id, id, signal),
     }});
     const host: Host = {
@@ -29,7 +45,9 @@ export function createHost(store: TodoStore, initial: TodoRun, options: Executio
             if (run.status !== 'running' || modelStepLimitReached(run, limit)) throw new Error('Admission denied');
             run.modelStep = (run.modelStep ?? 0) + 1; run.offeredTools.push({step: run.modelStep, names: offeredToolNames(run)}); store.saveRun(run); return clone(run);
         })),
-        request: async (run, signal, delta) => {
+        request: async (run, signal, delta, offeredDefinitions) => {
+            // This deterministic model adapter consumes the exact core-frozen offer.
+            const modelTools = offeredDefinitions.map(tool => ({type: 'function' as const, function: {name: tool.name, description: tool.description, parameters: tool.parameters}}));
             update(value => {value.requestCount++; store.saveRun(value);}); options.onRequest?.(run.modelStep!); signal.throwIfAborted();
             if (run.scenario === 'stream' || run.scenario === 'restart' || run.scenario === 'committed' && store.calls(run.id).some(call => call.status === 'completed')) {
                 delta({content: 'durable partial answer'});
@@ -52,6 +70,7 @@ export function createHost(store: TodoStore, initial: TodoRun, options: Executio
                 const todo = store.list(run.scope)[0]; if (todo) wires = [wire('complete_todo', 'finished', {id: todo.id})];
             }
             if (!wires.length) {delta({content: 'Done'}); return {ok: true, content: 'Done'};}
+            if (wires.some(call => !modelTools.some(tool => tool.function.name === call.function.name))) throw new Error('Scenario requested an unoffered tool');
             const continuation: ResponseItem[] = [{type: 'reasoning', encrypted_content: `opaque exact ${run.modelStep}\n=+`, summary: []}, ...wires.map(call => ({type: 'function_call' as const, call_id: call.id, name: call.function.name, arguments: call.function.arguments}))];
             return {ok: true, content: '', toolCalls: wires, continuation};
         },
@@ -71,15 +90,29 @@ export function createHost(store: TodoStore, initial: TodoRun, options: Executio
             registry, readRound: run => Promise.resolve(store.calls(run.id)),
             validateEnvelope: (run, calls) => {if (!responseRoundMatches(run.responseItems, calls.map(call => ({id: call.id, type: 'function' as const, function: {name: call.name, arguments: call.arguments}})), false)) throw new Error('Envelope mismatch');},
             readCall: (_run, id) => {const call = store.call(id); if (store.faults.unreadableConfirmation && call?.status === 'completed') throw new Error('Confirmation unavailable'); return Promise.resolve(call);},
-            assertScope: (run, call, signal) => {signal.throwIfAborted(); if (run.scope !== initial.scope || call.runId !== run.id) throw new Error('Foreign scope'); return Promise.resolve();},
-            input: call => call, validate, context, approval: requiresToolApproval,
-            preview: (run, call, preview) => {update(value => {const saved = store.call(call.id); if (value.id !== run.id || !saved || saved.status !== 'pending' || fingerprint(saved) !== fingerprint(call)) throw new Error('Stale preview'); encode(preview); saved.preview = preview; store.saveCall(saved);}); return Promise.resolve();},
+            assertScope: async (run, call, signal) => {
+                signal.throwIfAborted(); if (run.scope !== initial.scope || call.runId !== run.id) throw new Error('Foreign scope');
+                if (call.name === 'create_todo') {
+                    if (!call.binding) throw new Error('Missing Todo installation');
+                    store.assertInstallation(call.binding);
+                    const saved = store.call(call.id);
+                    if (saved?.preview?.authority) await resources.assertCurrent(saved.preview.authority, signal);
+                }
+            },
+            input: call => call, validate: validateBound, context, approval: requiresToolApproval,
+            preview: (run, call, preview) => {update(value => {const saved = store.call(call.id); if (value.id !== run.id || !saved || saved.status !== 'pending' || fingerprint(saved) !== fingerprint(call)) throw new Error('Stale preview'); encode(preview);
+                if (saved.name === 'create_todo') {if (!preview.authority) throw new Error('Missing Todo resource preview'); store.assertCreateAuthority(value, {...saved, preview}, preview.authority);}
+                saved.preview = preview; store.saveCall(saved);}); return Promise.resolve();},
             transition: (_run, call, from, to, extra) => Promise.resolve(update(run => {
                 const saved = store.call(call.id); if (run.status !== 'running' || !saved || saved.runId !== run.id || !from.includes(saved.status)) return false;
                 if (to === 'running') {
                     if (fingerprint(saved) !== fingerprint(call)) return false;
-                    const {tool, args} = validate(saved.name, saved.arguments, offeredToolNamesForCall(run, saved.step));
+                    const {tool, args} = validateBound(saved.name, saved.arguments, offeredToolNamesForCall(run, saved.step));
                     if (!toolMetadataMatches(tool, args, saved) || requiresToolApproval(run.permissionMode ?? 'ask', tool, args) && saved.status !== 'approved') return false;
+                    if (saved.name === 'create_todo') {
+                        if (!saved.preview?.authority || requiresToolApproval(run.permissionMode ?? 'ask', tool, args) && saved.decision !== 'approved') return false;
+                        store.assertCreateAuthority(run, saved, saved.preview.authority);
+                    }
                 }
                 Object.assign(saved, extra, {status: to}); store.saveCall(saved); return true;
             })),

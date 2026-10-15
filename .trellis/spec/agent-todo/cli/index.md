@@ -29,7 +29,10 @@ implementation. Its storage does not import or reproduce Studio's ProductStore.
 ## Quality Check
 
 - Call the shared core loop and public provider helpers; never copy a second
-  model/tool loop, import Studio or resolve workspace sources through aliases.
+  model/tool loop or import Studio. Production and packed consumers resolve
+  emitted public exports. Only the explicitly selected source-validation
+  runner/type project may map the three existing exact public entries; that
+  bounded evidence cannot establish packed runtime/declaration closure.
 - Prove business mutation, evidence and completion share one actual transaction.
   Reopening a database must preserve completed results and unknown outcomes.
 - Exercise an actual held owner and actual SIGKILL/reopen/explicit-resume paths.

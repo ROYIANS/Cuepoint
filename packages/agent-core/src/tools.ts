@@ -1,5 +1,11 @@
 import type {AgentToolEffect} from './types.js';
 
+export interface ToolBindingIdentity {
+    readonly capabilityId: string;
+    readonly version: string;
+    readonly registrationId: string;
+}
+
 /** An argument parser is the sole relationship between unknown input and callback arguments. */
 export interface ToolSpec<Args> {
     schema: {parse: (raw: unknown) => Args};
@@ -13,6 +19,7 @@ export interface ToolContext<Preview> {
     preview?: Preview;
 }
 export interface ToolMetadata {
+    binding?: ToolBindingIdentity;
     effect: AgentToolEffect;
     highRisk: boolean;
     atomic?: boolean;
@@ -20,6 +27,7 @@ export interface ToolMetadata {
     recovery?: string;
 }
 export interface ToolDefinition<Args, Context extends ToolContext<Preview>, Preview, Result, Name extends string = string> {
+    binding?: ToolBindingIdentity;
     name: Name;
     title: string;
     description: string;
@@ -40,7 +48,8 @@ export function createToolFactory<Context extends ToolContext<Preview>, Preview>
         spec: ToolSpec<Args>,
         body: Omit<ToolDefinition<NoInfer<Args>, Context, Preview, Result, Name>, 'parameters' | 'parseArguments'>,
     ): ToolDefinition<Args, Context, Preview, Result, Name> {
-        return {...body, parameters: spec.json, parseArguments: raw => spec.schema.parse(raw)};
+        const parse = spec.schema.parse.bind(spec.schema);
+        return {...body, parameters: spec.json, parseArguments: parse};
     };
 }
 
@@ -78,10 +87,13 @@ export function validateToolInput<Tool extends {name: string; parseArguments: (r
 }
 
 /** Types cannot prove durable metadata still agrees with current code after awaited work. */
-export function toolMetadataMatches<Args>(tool: Pick<ToolDefinition<Args, ToolContext<unknown>, unknown, unknown>, 'effect' | 'atomic' | 'recovery' | 'requiresConfirmation' | 'highRisk'>, args: Args, call: ToolMetadata): boolean {
+export function toolMetadataMatches<Args>(tool: Pick<ToolDefinition<Args, ToolContext<unknown>, unknown, unknown>, 'effect' | 'atomic' | 'recovery' | 'requiresConfirmation' | 'highRisk' | 'binding'>, args: Args, call: ToolMetadata): boolean {
     return tool.effect === call.effect && tool.highRisk(args) === call.highRisk &&
         Boolean(tool.atomic) === Boolean(call.atomic) && tool.recovery === call.recovery &&
-        Boolean(tool.requiresConfirmation) === Boolean(call.requiresConfirmation);
+        Boolean(tool.requiresConfirmation) === Boolean(call.requiresConfirmation) &&
+        (tool.binding === undefined && call.binding === undefined || !!tool.binding && !!call.binding &&
+            tool.binding.capabilityId === call.binding.capabilityId && tool.binding.version === call.binding.version &&
+            tool.binding.registrationId === call.binding.registrationId);
 }
 
 /** Hosts supply forced confirmation as metadata; a model cannot grant itself permission. */

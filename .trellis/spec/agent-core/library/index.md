@@ -14,6 +14,7 @@ bind its own typed services without adopting Cuepoint entities or storage.
 | Guide | Description |
 | --- | --- |
 | [Shared Runtime](./runtime.md) | Actual loop, typed host ports, ownership, atomic certainty, compaction and independent durable reuse. |
+| [Capabilities and resource grants](./capabilities.md) | Versioned registration, immutable offers and host-owned concrete resource authority. |
 
 ## Pre-Development Checklist
 
@@ -22,6 +23,8 @@ bind its own typed services without adopting Cuepoint entities or storage.
   [quality](../../frontend/quality-guidelines.md) and
   [shared guides](../../guides/index.md).
 - Read [shared runtime](./runtime.md) before changing public core or host APIs.
+- Read [capabilities and grants](./capabilities.md) before changing registration,
+  offered definitions, tool binding metadata or resource authorization.
 - Preserve the executable semantics in [execution](../../frontend/agent-execution.md),
   [tools and permissions](../../frontend/agent-tools.md) and
   [context](../../frontend/agent-context.md). These documents also describe

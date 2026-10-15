@@ -26,6 +26,22 @@ Use the explicit approved machine pnpm path from AGENTS.md. Vitest defaults to t
 
 The permanent native runner supports `--suite core|business|all`; `all` is the complete gate. It rejects a nonempty evidence directory, forces actual native capabilities, verifies unchanged source identities and records the current probe hash. Tool instrumentation calls the original recipes and records method/test outcomes; table instrumentation records confirmed commits without row values or tool arguments. Counts alone do not replace the assertions in those suites or actual packaged acceptance.
 
+For the Agent epic's owner-selected necessary-only stage checks, explicitly
+select `vitest.agent-source.config.ts` when changed reusable sources make
+emitted packages stale. This independent Node >=24.11 profile exercises only
+the affected core suites and actual Todo SQLite fixture through three exact
+public source entries; it has no Studio database setup. Its strict noEmit type
+project is `tests/typecheck/tsconfig.agent-source.json`; separately check the
+core project's neutral `types: []` boundary and `tsconfig.node.json`. Scoped
+ESLint retains its rules and may use that source type project. Root tests and
+configuration files outside typed lint patterns are not claimed as linted.
+Register the source runner as a precise static Knip plugin entry so ordinary
+Node22 analysis does not execute its Node24 runtime guard; its helper is
+reachable through the real config import, not a dummy entry. Keep the exact
+root configuration in quality input identities. Default test/quality artifact
+freshness and emitted/packed/native gates remain intact and deferred to the
+owner's final batch acceptance; never rebuild implicitly or forge a receipt.
+
 ---
 
 ## Required Patterns

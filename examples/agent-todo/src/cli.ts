@@ -27,7 +27,11 @@ async function main(args = process.argv.slice(2)): Promise<void> {
             send({ready: kind, runId: run.id, state: snapshot(store, run.id)});
             await new Promise<void>((_done, reject) => {controller.signal.addEventListener('abort', () => reject(new Error('Stopped')), {once: true}); process.stdin.resume();});
         } : undefined};
+        // CLI begin is the explicit trusted setup, separate from model preparation
+        // and permissionMode. Reopen/resume never installs or issues authority.
+        if (command === 'begin' && !store.currentInstallation()) store.installCreateCapability();
         const run = command === 'begin' ? store.begin('default', scenario(id), process.env.TODO_PERMISSION === 'full' ? 'full' : 'ask') : store.recover(id ?? '');
+        if (command === 'begin') store.issueCreateAuthority(run.id);
         if (command === 'approve' || command === 'reject') {
             const call = store.calls(run.id).find(call => call.id === detail);
             if (!call) throw new Error('Missing call'); store.decide(run.id, call.id, encode(call), command === 'approve');

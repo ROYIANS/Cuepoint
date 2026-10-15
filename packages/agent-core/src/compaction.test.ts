@@ -49,7 +49,11 @@ describe('shared context and capability mechanisms',()=>{
         const next=selectCapabilityGroups(state,['b'],[{name:'a',status:'approved'}],['base','a','b']);
         expect(next.loadedToolNames).toEqual(['a','b']);expect(next.loadedGroupIds).toEqual(['b','a']);
         expect(selectCapabilityGroups(state,['b'],[{name:'a',status:'completed'}],['base','a','b']).loadedToolNames).toEqual(['b']);
-        const names=Array.from({length:37},(_value,i)=>`tool${i}`);
-        expect(()=>selectCapabilityGroups({...state,groups:[{...groups[0],toolNames:names}]},['a'],[],names)).toThrow('超过 36');
+        expect(selectCapabilityGroups(state,['a','b'],[],['base','a','b']).loadedToolNames).toEqual(['a','b']);
+        const three={...state,groups:[...state.groups,{...groups[1],id:'c',toolNames:['c']}]};
+        expect(()=>selectCapabilityGroups(three,['a','b','c'],[],['base','a','b','c'])).toThrow('能力不存在');
+        const names=Array.from({length:35},(_value,i)=>`tool${i}`),allowed=['base','discover',...names];
+        expect(selectCapabilityGroups({...state,groups:[{...groups[0],toolNames:names.slice(0,34)}]},['a'],[],allowed).loadedToolNames).toHaveLength(34);
+        expect(()=>selectCapabilityGroups({...state,groups:[{...groups[0],toolNames:names}]},['a'],[],allowed)).toThrow('超过 36');
     });
 });

@@ -13,6 +13,7 @@
         "tooling/e06-*.mjs",
         "tests/**/*.test.{ts,tsx}",
         "tests/typecheck/agentToolDefinition.ts",
+        "tests/typecheck/agentResourceContracts.ts",
         "tests/fixtures/*/index.html",
         "tests/fixtures/*/harness.{ts,tsx}",
         "tests/fixtures/sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages.tsx",
@@ -30,6 +31,17 @@
       "project": [
         "tooling/**/*.{mjs,mts,ts}"
       ],
+      "typescript": {
+        "config": [
+          "tsconfig.json",
+          "tests/typecheck/tsconfig.agent-source.json"
+        ]
+      },
+      "vitest": {
+        "entry": [
+          "vitest.agent-source.config.ts"
+        ]
+      },
       "paths": {
         "@/components/studio/CoverCard": [
           "./packages/studio/src/features/library/ui/CoverCard.tsx"

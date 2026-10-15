@@ -1,0 +1,25 @@
+{
+  "extends": "../../examples/agent-todo/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false,
+    "rootDir": "../..",
+    "baseUrl": "../..",
+    "paths": {
+      "@cuepoint/agent-core": ["packages/agent-core/src/index.ts"],
+      "@cuepoint/agent-providers": ["packages/agent-providers/src/index.ts"],
+      "@cuepoint/agent-providers/http": ["packages/agent-providers/src/http/index.ts"]
+    }
+  },
+  "include": [
+    "../../packages/agent-core/src/**/*.ts",
+    "../../packages/agent-providers/src/**/*.ts",
+    "../../examples/agent-todo/src/**/*.ts",
+    "../agentTodoSource.test.ts",
+    "./agentResourceContracts.ts"
+  ],
+  "exclude": [
+    "../../packages/agent-core/src/**/*.test.ts",
+    "../../packages/agent-providers/src/**/*.test.ts"
+  ]
+}

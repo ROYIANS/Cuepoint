@@ -1,3 +1,4 @@
+import {snapshotToolDefinitions} from './capabilityRegistry.js';
 import {createRunWriter} from './checkpoint.js';
 import {accumulateStreamDelta,createReasoningAccum,finalizeReasoningAccum,type StreamDelta,type ReasoningAccum} from './reasoning.js';
 import {toolMetadataMatches,type ToolContext,type ToolDefinition,type ToolMetadata} from './tools.js';
@@ -39,7 +40,7 @@ export interface RuntimeHost<Run extends RuntimeRun,Call extends RuntimeCall<Pre
     pauseAtLimit:(run:Run)=>Promise<boolean>;
     prepareContext:(run:Run,signal:AbortSignal)=>Promise<Run>;
     admitModelStep:(run:Run,limit:number)=>Promise<Run>;
-    request:(run:Run,signal:AbortSignal,onDelta:(delta:StreamDelta)=>void)=>Promise<ModelResult<Continuation>>;
+    request:(run:Run,signal:AbortSignal,onDelta:(delta:StreamDelta)=>void,offeredDefinitions:readonly ToolDefinition<unknown,Context,Preview,unknown>[])=>Promise<ModelResult<Continuation>>;
     recordMetrics:(run:Run,metrics:AgentModelMetrics)=>Promise<void>;
     finishingCheck:(run:Run,output:AgentRunOutput,continuation:Continuation|undefined,signal:AbortSignal)=>Promise<boolean>;
     commitRound:(run:Run,result:Extract<ModelResult<Continuation>,{ok:true}>,details:RoundDetail[],output:AgentRunOutput)=>Promise<void>;
@@ -84,32 +85,47 @@ class UnresolvedToolOutcomeError extends Error {}
 const settled=(status:AgentToolCallStatus)=>['completed','failed','rejected'].includes(status);
 
 /** First establish the complete approval barrier, then freshly read and claim each execution candidate. */
-async function executePendingTools<Run extends RuntimeRun,Call extends RuntimeCall<Preview>,Context extends ToolContext<Preview>,Preview,Continuation>(run:Run,controller:AbortController,host:RuntimeHost<Run,Call,Context,Preview,Continuation>,emit:(event:RuntimeEventData)=>void=()=>undefined):Promise<boolean> {
+async function executePendingTools<Run extends RuntimeRun,Call extends RuntimeCall<Preview>,Context extends ToolContext<Preview>,Preview,Continuation>(run:Run,controller:AbortController,host:RuntimeHost<Run,Call,Context,Preview,Continuation>,emit:(event:RuntimeEventData)=>void=()=>undefined,offeredDefinitions:ReadonlyMap<number,readonly ToolDefinition<unknown,Context,Preview,unknown>[]> = new Map()):Promise<boolean> {
     const {tools,errors}=host;
     host.ownership.assertHeld();
     const calls=(await tools.readRound(run)).sort((a,b)=>a.step-b.step || a.order-b.order);
     tools.validateEnvelope(run,calls);
     let waiting=false;
+    const admitted = new Map<string, ToolDefinition<unknown,Context,Preview,unknown>>();
+    const validate = (call: Call, current: Run) => {
+        const raw = tools.input(call).arguments;
+        const checked = tools.validate(call.name, raw, host.offeredNames(current,call.step));
+        if (!toolMetadataMatches(checked.tool,checked.args,call)) throw new Error('工具定义已变化，请结束本次执行后重新发起任务');
+        const offered = offeredDefinitions.get(call.step);
+        const pinned = admitted.get(call.id) ?? offered?.find(tool=>tool.name === call.name);
+        if (offered && !pinned) throw host.errors.unavailable(call.name,offered.map(tool=>tool.name));
+        const tool = pinned ?? snapshotToolDefinitions([checked.tool])[0];
+        const args = tool.parseArguments(JSON.parse(raw));
+        if (!toolMetadataMatches(tool,args,call)) throw new Error('工具定义已变化，请结束本次执行后重新发起任务');
+        admitted.set(call.id,tool);
+        return {tool,args};
+    };
     for (const call of calls) {
         host.ownership.assertHeld();controller.signal.throwIfAborted();
         if (settled(call.status)) continue;
         if (call.status === 'unknown' || call.status === 'running') throw new Error('有工具结果不确定，不能重跑');
-        if (call.status === 'awaiting_approval') {waiting=true;continue;}
         let validated:ReturnType<typeof tools.validate>;
         try {
             await tools.assertScope(run,call,controller.signal);
-            validated=tools.validate(call.name,tools.input(call).arguments,host.offeredNames(run,call.step));
+            validated=validate(call,run);
         } catch (cause) {
             const error=cause instanceof Error ? cause.message : '工具参数无效';
-            await tools.transition(run,call,['pending','approved'],'failed',{error,result:JSON.stringify(errors.failure(cause,'not_started') ?? {error})});
+            await tools.transition(run,call,['pending','approved','awaiting_approval'],'failed',{error,result:JSON.stringify(errors.failure(cause,'not_started') ?? {error})});
             continue;
         }
         const {tool,args}=validated;
         if (!toolMetadataMatches(tool,args,call)) throw new Error('工具定义已变化，请结束本次执行后重新发起任务');
+        if (call.status === 'awaiting_approval') {waiting=true;continue;}
         if (tool.prepare && call.preview === undefined) {
             try {
                 if (call.status !== 'pending') throw new Error('操作缺少批准前预览，请重新发起');
                 const preview=await tool.prepare(args,tools.context(run,call,controller.signal));
+                await tools.assertScope(run,call,controller.signal);
                 await tools.preview(run,call,preview);
             } catch (cause) {
                 controller.signal.throwIfAborted();
@@ -118,6 +134,7 @@ async function executePendingTools<Run extends RuntimeRun,Call extends RuntimeCa
                 continue;
             }
         }
+        await tools.assertScope(run,call,controller.signal);
         if (call.status !== 'approved' && tools.approval(run.permissionMode ?? 'ask',tool,args)) {
             await tools.transition(run,call,['pending'],'awaiting_approval');waiting=true;
         }
@@ -130,7 +147,8 @@ async function executePendingTools<Run extends RuntimeRun,Call extends RuntimeCa
         if (!call || settled(call.status)) continue;
         const current=await host.readRun(run.id);
         if (!current || current.status !== 'running') throw new Error('执行已停止');
-        const {tool,args}=tools.validate(call.name,tools.input(call).arguments,host.offeredNames(current,call.step));
+        await tools.assertScope(current,call,controller.signal);
+        const {tool,args}=validate(call,current);
         if (!toolMetadataMatches(tool,args,call)) throw new Error('工具定义已变化，请结束本次执行后重新发起任务');
         if (tools.approval(run.permissionMode ?? 'ask',tool,args) && call.status !== 'approved') throw new Error('工具尚未获得批准');
         if (!await tools.transition(current,call,['pending','approved'],'running')) throw new Error('工具已被其他执行领取');
@@ -194,8 +212,9 @@ export async function executeRun<Run extends RuntimeRun,Call extends RuntimeCall
     const output=():AgentRunOutput=>({content:accum.content,reasoning:accum.reasoning,reasoningDurationMs:accum.reasoningDurationMs});
     const makeWriter=()=>createRunWriter(async(seq,next)=>{sequence=seq;host.ownership.assertHeld();if (await host.checkpoint(run,seq,next)) emit({type:'checkpoint',confirmed:true,checkpoint:seq,output:next});},()=>{saveFailed=true;controller.abort();},sequence);
     let writer=makeWriter();
+    const offeredDefinitions = new Map<number,readonly ToolDefinition<unknown,Context,Preview,unknown>[]>();
     try {
-        if (run.hasToolCalls && !await executePendingTools(run,controller,host,emit)) return;
+        if (run.hasToolCalls && !await executePendingTools(run,controller,host,emit,offeredDefinitions)) return;
         while (true) {
             host.ownership.assertHeld();controller.signal.throwIfAborted();
             if (await host.pauseAtLimit(run)) {const paused=await host.readRun(run.id);if (paused) emit({type:'settled',confirmed:true,status:paused.status});return;}
@@ -204,10 +223,13 @@ export async function executeRun<Run extends RuntimeRun,Call extends RuntimeCall
             run=await host.admitModelStep(run,MODEL_STEPS_PER_SEGMENT);
             controller.signal.throwIfAborted();
             accum=createReasoningAccum();writer=makeWriter();
+            const offered=Object.freeze([...host.offeredNames(run)]);
+            const definitions=snapshotToolDefinitions(host.tools.registry.filter(tool=>offered.includes(tool.name)));
+            offeredDefinitions.set(run.modelStep!,definitions);
             const result=await host.request(run,controller.signal,delta=>{
                 if (controller.signal.aborted) return;
                 accum=accumulateStreamDelta(accum,delta,host.clock());writer.push(output());emit({type:'output',confirmed:false,output:output()});
-            });
+            },definitions);
             accum=finalizeReasoningAccum(accum,host.clock());await writer.flush();
             if (result.metrics) await host.recordMetrics(run,{...result.metrics,step:run.modelStep!});
             if (controller.signal.aborted || !result.ok && result.aborted) {await settle(run.hasToolCalls ? 'interrupted' : 'cancelled','已停止，已收到的内容与完成的步骤保留。');return;}
@@ -217,22 +239,21 @@ export async function executeRun<Run extends RuntimeRun,Call extends RuntimeCall
                 controller.signal.throwIfAborted();await settle('completed',undefined,result.finishReason);return;
             }
             if (result.toolCalls.length > 16 || new Set(result.toolCalls.map(call=>call.id)).size !== result.toolCalls.length) throw new Error('工具调用数量超过限制或标识重复');
-            const offered=host.offeredNames(run);
             const details=result.toolCalls.map(call=>{
-                const tool=host.tools.registry.find(item=>item.name === call.function.name);
+                const tool=definitions.find(item=>item.name === call.function.name);
                 if (!tool || !offered.includes(call.function.name)) {
                     const cause=host.errors.unavailable(call.function.name,offered);
                     return {title:`不可用的工具 ${call.function.name.slice(0,60)}`,effect:'read' as const,highRisk:false,failure:{error:cause.message,result:JSON.stringify(host.errors.failure(cause,'not_started'))}};
                 }
                 let highRisk=tool.effect !== 'read';
                 try {highRisk=tool.highRisk(tool.parseArguments(JSON.parse(call.function.arguments)));} catch { /* Invalid arguments are durably rejected before execution. */ }
-                return {title:tool.title,effect:tool.effect,highRisk,...(tool.atomic ? {atomic:true} : {}),...(tool.recovery ? {recovery:tool.recovery} : {}),...(tool.requiresConfirmation ? {requiresConfirmation:true} : {})};
+                return {title:tool.title,effect:tool.effect,highRisk,...(tool.binding ? {binding:tool.binding} : {}),...(tool.atomic ? {atomic:true} : {}),...(tool.recovery ? {recovery:tool.recovery} : {}),...(tool.requiresConfirmation ? {requiresConfirmation:true} : {})};
             });
             await host.commitRound(run,result,details,output());
             emit({type:'tool_round',confirmed:true,step:run.modelStep!});
             run=(await host.readRun(run.id))!;
             controller.signal.throwIfAborted();
-            if (!await executePendingTools(run,controller,host,emit)) return;
+            if (!await executePendingTools(run,controller,host,emit,offeredDefinitions)) return;
         }
     } catch (cause) {
         await writer.flush().catch(()=>undefined);
@@ -243,6 +264,6 @@ export async function executeRun<Run extends RuntimeRun,Call extends RuntimeCall
         await host.tools.markUnknown(run,cause instanceof UnresolvedToolOutcomeError || host.errors.unknown(cause));
         const latest=await host.readRun(run.id);run=latest ?? run;
         await settle(saveFailed ? 'failed' : host.errors.pending(cause) || run.hasToolCalls && aborted ? 'interrupted' : aborted ? 'cancelled' : 'failed',saveFailed ? '执行或本地保存失败，最后一段内容可能尚未保存。' : aborted ? '已停止，已完成的步骤保留。' : host.errors.publicMessage(cause));
-        if (saveFailed) throw new Error('执行或本地保存失败，最后一段内容可能尚未保存');
+        if (saveFailed) throw new Error('执行或本地保存失败，最后一段内容可能尚未保存',{cause});
     }
 }

@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import { executeRun, type RuntimeHost, type RuntimeRun, type RuntimeCall, type ModelResult, type RuntimeEvent } from '@cuepoint/agent-core';
+import { describe, expect, it, vi } from 'vitest';
+import {createCapabilityRegistry, executeRun, type RuntimeHost, type RuntimeRun, type RuntimeCall, type ModelResult, type RuntimeEvent } from '@cuepoint/agent-core';
 import type { ToolContext, ToolDefinition } from '@cuepoint/agent-core';
 import type { AgentRunOutput } from '@cuepoint/agent-core';
 type Run = RuntimeRun & {
@@ -93,6 +93,100 @@ function fixture() {
     return { host, run: () => run, calls, events, transitions, requests, registry, reads, contexts, tool, effects: () => effects, forcedUnknown: () => forcedUnknown, expire: () => { held = false; }, output: () => output };
 }
 describe('actual reusable execution loop', () => {
+    it('freezes actual offered schema and callbacks before a pending model request', async () => {
+        const f = fixture(), old = f.tool('write');
+        old.parameters = {type: 'object', properties: {title: {type: 'string'}}};
+        const oldExecute = vi.fn(old.execute), replacement = vi.fn(() => Promise.resolve('replacement'));
+        old.execute = oldExecute; f.registry.push(old);
+        let release!: (result: ModelResult<string>) => void;
+        let started!: () => void;
+        const ready = new Promise<void>(resolve => {started = resolve;});
+        let modelOffer: unknown;
+        const request = f.host.request;
+        f.host.request = (run, signal, delta, definitions) => {
+            if (run.modelStep !== 1) return request(run, signal, delta, definitions);
+            modelOffer = definitions.map(tool => ({name: tool.name, parameters: tool.parameters}));
+            started(); return new Promise(resolve => {release = resolve;});
+        };
+        const executing = executeRun(f.run(), new AbortController(), f.host);
+        await ready;
+        (old.parameters.properties as Record<string, unknown>).title = {type: 'number'};
+        f.registry.splice(0, 1, {...old, execute: replacement});
+        release({ok: true, content: '', toolCalls: [wire('write')]});
+        await executing;
+        expect(modelOffer).toEqual([{name: 'write', parameters: {type: 'object', properties: {title: {type: 'string'}}}}]);
+        expect(oldExecute).toHaveBeenCalledOnce(); expect(replacement).not.toHaveBeenCalled();
+    });
+    it('does not retarget a bound response when its installation changes while awaiting the model', async () => {
+        const f = fixture(), registry = createCapabilityRegistry<Context, number>();
+        const oldBinding = {capabilityId: 'example/write', version: '1', registrationId: 'old'};
+        const old = registry.register({identity: oldBinding, tools: [f.tool('write')]});
+        f.registry.push(...registry.snapshot());
+        f.host.tools.assertScope = (_run, call) => {if (call.binding) registry.assertCurrent(call.binding); return Promise.resolve();};
+        let release!: (result: ModelResult<string>) => void, started!: () => void;
+        const ready = new Promise<void>(resolve => {started = resolve;});
+        const request = f.host.request;
+        f.host.request = (run, signal, delta, definitions) => {
+            if (run.modelStep !== 1) return request(run, signal, delta, definitions);
+            expect(definitions[0].binding).toEqual(oldBinding);
+            started(); return new Promise(resolve => {release = resolve;});
+        };
+        const executing = executeRun(f.run(), new AbortController(), f.host); await ready;
+        old.dispose(); registry.register({identity: {...oldBinding, registrationId: 'new'}, tools: [f.tool('write')]});
+        f.registry.splice(0, f.registry.length, ...registry.snapshot());
+        release({ok: true, content: '', toolCalls: [wire('write')]}); await executing;
+        expect(f.calls.get('write')).toMatchObject({status: 'failed', binding: oldBinding, arguments: '{}'});
+        expect(f.effects()).toBe(0); expect(f.transitions).not.toContain('write:running');
+    });
+    it('keeps a parked approval pinned and denies a new generation on explicit resume', async () => {
+        const f = fixture(), registry = createCapabilityRegistry<Context, number>();
+        const binding = {capabilityId: 'example/write', version: '1', registrationId: 'first'};
+        const tool = {...f.tool('write'), requiresConfirmation: true, prepare: () => Promise.resolve(7)};
+        const installation = registry.register({identity: binding, tools: [tool]});
+        f.registry.push(...registry.snapshot());
+        f.host.tools.assertScope = (_run, call) => {if (call.binding) registry.assertCurrent(call.binding); return Promise.resolve();};
+        f.requests.unshift({ok: true, content: '', toolCalls: [wire('write')]});
+        await executeRun(f.run(), new AbortController(), f.host);
+        expect(f.run().status).toBe('waiting_approval'); expect(f.calls.get('write')?.preview).toBe(7);
+        const approved = {...f.calls.get('write')!, status: 'approved' as const};
+        installation.dispose(); registry.register({identity: {...binding, registrationId: 'second'}, tools: [tool]});
+        f.registry.splice(0, f.registry.length, ...registry.snapshot());
+        f.calls.set('write', approved); f.run().status = 'running';
+        await executeRun(f.run(), new AbortController(), f.host);
+        expect(f.calls.get('write')).toMatchObject({status: 'failed', binding, preview: 7, arguments: '{}'});
+        expect(f.effects()).toBe(0);
+    });
+    it('rechecks installation after held preparation and before admitting any preview', async () => {
+        const f = fixture(), registry = createCapabilityRegistry<Context, number>();
+        const binding = {capabilityId: 'example/write', version: '1', registrationId: 'first'};
+        let release!: () => void, prepared!: () => void;
+        const started = new Promise<void>(resolve => {prepared = resolve;});
+        const gate = new Promise<void>(resolve => {release = resolve;});
+        const installation = registry.register({identity: binding, tools: [{...f.tool('write'), requiresConfirmation: true,
+            prepare: async () => {prepared(); await gate; return 7;}}]});
+        f.registry.push(...registry.snapshot());
+        f.host.tools.assertScope = (_run, call) => {if (call.binding) registry.assertCurrent(call.binding); return Promise.resolve();};
+        f.requests.unshift({ok: true, content: '', toolCalls: [wire('write')]});
+        const executing = executeRun(f.run(), new AbortController(), f.host); await started;
+        installation.dispose(); release(); await executing;
+        expect(f.calls.get('write')).toMatchObject({status: 'failed', binding});
+        expect(f.calls.get('write')?.preview).toBeUndefined(); expect(f.effects()).toBe(0);
+        expect(f.events.some(event => event.type === 'approval')).toBe(false);
+    });
+    it('checks fresh scope immediately before host execution claim and rechecks awaiting approvals', async () => {
+        for (const status of ['pending', 'awaiting_approval'] as const) {
+            const f = fixture(); let available = true;
+            f.registry.push(f.tool('write')); f.run().hasToolCalls = true;
+            f.calls.set('write', {id: 'write', name: 'write', arguments: '{}', status, step: 0, order: 0, effect: 'write', highRisk: false});
+            f.host.tools.assertScope = () => {if (!available) throw new Error('authority revoked'); return Promise.resolve();};
+            const read = f.host.tools.readCall;
+            f.host.tools.readCall = (run, id) => {available = false; return read(run, id);};
+            if (status === 'awaiting_approval') available = false;
+            await executeRun(f.run(), new AbortController(), f.host);
+            expect(f.effects()).toBe(0); expect(f.transitions).not.toContain('write:running');
+            expect(f.calls.get('write')?.status).toBe(status === 'pending' ? 'pending' : 'failed');
+        }
+    });
     it('parks the entire round before any effect, including an earlier low-risk tool', async () => {
         const f = fixture();
         f.run().permissionMode = 'ask';

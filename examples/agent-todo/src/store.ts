@@ -2,9 +2,10 @@ import {DatabaseSync} from 'node:sqlite';
 import {randomUUID} from 'node:crypto';
 import {mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
-import {canSettleRun, createCapabilityLoading, modelStepLimitReached, offeredToolNames, selectCapabilityGroups, type AgentRunOutput, type AgentRunStatus, type AgentPermissionMode} from '@cuepoint/agent-core';
+import {canSettleRun, createCapabilityLoading, modelStepLimitReached, offeredToolNames, offeredToolNamesForCall, requiresToolApproval, toolMetadataMatches, selectCapabilityGroups, type AgentRunOutput, type AgentRunStatus, type AgentPermissionMode, type ToolBindingIdentity, type ResourceGrantRequest, type ResourceGrantSnapshot, type ResourceGrantRef} from '@cuepoint/agent-core';
 import {appendResponseToolResult} from '@cuepoint/agent-providers';
-import {RolledBackError, UnknownOutcomeError, type Faults, type Scenario, type TodoRun, type TodoCall, type TodoSummary} from './types.js';
+import {RolledBackError, UnknownOutcomeError, type Faults, type Scenario, type TodoRun, type TodoCall, type TodoSummary, type TodoAuthority, type TodoResourceFact} from './types.js';
+import {CREATE_CAPABILITY, CREATE_VERSION, createTodoToolset, registry, validate} from './tools.js';
 
 export function encode(value: unknown): string {
     const json = JSON.stringify(value);
@@ -20,6 +21,10 @@ const groups = [
     {id: 'write', name: 'Change todos', description: 'Create or finish todos', instructions: 'Use approved changes.', toolNames: ['create_todo', 'complete_todo']},
 ];
 const allowed = ['list_todos', 'create_todo', 'complete_todo', 'load_tools', 'external_notice'];
+const sameBinding = (a: ToolBindingIdentity | undefined, b: ToolBindingIdentity | undefined) => !!a && !!b && a.capabilityId === b.capabilityId && a.version === b.version && a.registrationId === b.registrationId;
+const factFor = (run: TodoRun): TodoResourceFact => ({kind: 'todo-list', listId: run.scope, action: 'create'});
+const sameFacts = (facts: readonly TodoResourceFact[], run: TodoRun) => facts.length === 1 && encode(facts[0]) === encode(factFor(run));
+const callIdentity = (call: TodoCall) => encode({...call, status: undefined, result: undefined, error: undefined, appended: undefined});
 
 /** A sidecar lifetime lock excludes actual live processes while business commits stay short. */
 export class TodoStore {
@@ -28,6 +33,7 @@ export class TodoStore {
     private readonly coordinator: DatabaseSync;
     private held = true;
     private executing = false;
+    private readonly toolsets = new Map<string, ReturnType<typeof createTodoToolset>>();
     readonly faults: Faults;
     constructor(readonly file: string, faults: Faults = {}) {
         mkdirSync(dirname(file), {recursive: true});
@@ -43,7 +49,9 @@ export class TodoStore {
             CREATE TABLE IF NOT EXISTS todos(id TEXT PRIMARY KEY, scope TEXT NOT NULL, title TEXT NOT NULL, done INTEGER NOT NULL);
             CREATE TABLE IF NOT EXISTS todo_evidence(call_id TEXT PRIMARY KEY, data TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS todo_intents(call_id TEXT PRIMARY KEY, dispatches INTEGER NOT NULL, status TEXT NOT NULL);
-            CREATE TABLE IF NOT EXISTS todo_summaries(id TEXT PRIMARY KEY, data TEXT NOT NULL);`);
+            CREATE TABLE IF NOT EXISTS todo_summaries(id TEXT PRIMARY KEY, data TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS todo_installations(id TEXT PRIMARY KEY, data TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS todo_authorities(id TEXT PRIMARY KEY, run_id TEXT NOT NULL, data TEXT NOT NULL);`);
         } catch (cause) {this.coordinator.exec('ROLLBACK'); this.coordinator.close(); this.held = false; throw cause;}
     }
     assertHeld(): void {if (!this.held) throw new Error('Ownership expired');}
@@ -75,12 +83,130 @@ export class TodoStore {
     attach(id: string): TodoRun {
         return this.transaction(() => {const run = this.readRun(id); if (!run) throw new Error('Missing run'); const priorOwner = run.ownerId; run.ownerId = this.ownerId; this.saveRun(run, priorOwner); return run;});
     }
+    /** Explicit trusted setup; neither begin, permissions nor prepare calls this. */
+    installCreateCapability(): ToolBindingIdentity {
+        return this.transaction(() => {
+            for (const row of this.db.prepare('SELECT data FROM todo_installations').all()) {
+                const installation = decode<{identity: ToolBindingIdentity; active: boolean}>(row.data);
+                installation.active = false;
+                this.db.prepare('UPDATE todo_installations SET data=? WHERE id=?').run(encode(installation), installation.identity.registrationId);
+                this.toolsets.get(installation.identity.registrationId)?.dispose();
+            }
+            const identity: ToolBindingIdentity = {capabilityId: CREATE_CAPABILITY, version: CREATE_VERSION, registrationId: randomUUID()};
+            this.db.prepare('INSERT INTO todo_installations VALUES(?,?)').run(identity.registrationId, encode({identity, active: true}));
+            return Object.freeze(identity);
+        });
+    }
+    currentInstallation(): ToolBindingIdentity | undefined {
+        this.assertHeld();
+        return this.db.prepare('SELECT data FROM todo_installations').all().map(row => decode<{identity: ToolBindingIdentity; active: boolean}>(row.data)).find(row => row.active)?.identity;
+    }
+    disposeCreateCapability(expected: ToolBindingIdentity): void {
+        this.transaction(() => {
+            const row = this.db.prepare('SELECT data FROM todo_installations WHERE id=?').get(expected.registrationId);
+            if (!row) return;
+            const installation = decode<{identity: ToolBindingIdentity; active: boolean}>(row.data);
+            if (!sameBinding(installation.identity, expected)) throw new Error('Foreign installation');
+            installation.active = false;
+            this.db.prepare('UPDATE todo_installations SET data=? WHERE id=?').run(encode(installation), expected.registrationId);
+            this.toolsets.get(expected.registrationId)?.dispose();
+        });
+    }
+    toolsFor(run: TodoRun) {
+        if (!run.createBinding) return registry;
+        let set = this.toolsets.get(run.createBinding.registrationId);
+        if (!set) {set = createTodoToolset(run.createBinding); this.toolsets.set(run.createBinding.registrationId, set);}
+        return set.definitions;
+    }
+    assertInstallation(expected: ToolBindingIdentity): void {
+        const row = this.db.prepare('SELECT data FROM todo_installations WHERE id=?').get(expected.registrationId);
+        const installation = row ? decode<{identity: ToolBindingIdentity; active: boolean}>(row.data) : undefined;
+        if (!installation?.active || !sameBinding(installation.identity, expected) || expected.capabilityId !== CREATE_CAPABILITY || expected.version !== CREATE_VERSION) throw new Error('Todo installation revoked or replaced');
+        this.toolsets.get(expected.registrationId)?.assertCurrent();
+    }
+    /** Root issuance belongs to a trusted host, for this exact durable run/list/action. */
+    issueCreateAuthority(runId: string): TodoAuthority {
+        return this.transaction(() => {
+            const run = this.current(runId); if (!run.createBinding) throw new Error('Missing Todo installation');
+            this.assertInstallation(run.createBinding);
+            const authority: TodoAuthority = {id: randomUUID(), revision: 1, runId, scopeId: run.scope, binding: {...run.createBinding}, facts: [factFor(run)], revoked: false};
+            this.db.prepare('INSERT INTO todo_authorities VALUES(?,?,?)').run(authority.id, runId, encode(authority)); return authority;
+        });
+    }
+    authority(id: string): TodoAuthority | undefined {
+        const row = this.db.prepare('SELECT data FROM todo_authorities WHERE id=?').get(id);
+        return row ? decode<TodoAuthority>(row.data) : undefined;
+    }
+    private ancestry(leaf: TodoAuthority): TodoAuthority[] {
+        const chain = [leaf], seen = new Set([leaf.id]);
+        let child = leaf;
+        while (true) {
+            if (child.revoked || !Number.isSafeInteger(child.revision) || child.revision < 1) throw new Error('Todo authority revoked');
+            if (!child.parent) return chain;
+            const parent = this.authority(child.parent.id);
+            if (!parent || parent.revision !== child.parent.revision || seen.has(parent.id) || chain.length >= 32 || !sameBinding(child.binding, parent.binding) || child.scopeId !== parent.scopeId || child.facts.some(fact => !parent.facts.some(allowed => encode(allowed) === encode(fact)))) throw new Error('Stale or widened Todo ancestry');
+            seen.add(parent.id); chain.push(parent); child = parent;
+        }
+    }
+    deriveCreateAuthority(parent: ResourceGrantRef, childRunId: string, facts?: readonly TodoResourceFact[]): TodoAuthority {
+        return this.transaction(() => {
+            const run = this.current(childRunId), source = this.authority(parent.id);
+            if (!source || source.revision !== parent.revision || !run.createBinding || !sameBinding(run.createBinding, source.binding)) throw new Error('Foreign Todo parent authority');
+            this.assertInstallation(run.createBinding); this.ancestry(source);
+            const selected = facts ?? [factFor(run)];
+            if (selected.length > 1 || selected.some(fact => encode(fact) !== encode(factFor(run)) || !source.facts.some(allowed => encode(allowed) === encode(fact)))) throw new Error('Child Todo authority cannot widen its parent');
+            const child: TodoAuthority = {id: randomUUID(), revision: 1, runId: childRunId, scopeId: run.scope, binding: {...run.createBinding}, facts: structuredClone(selected), parent: {...parent}, revoked: false};
+            this.db.prepare('INSERT INTO todo_authorities VALUES(?,?,?)').run(child.id, childRunId, encode(child)); return child;
+        });
+    }
+    revokeAuthority(id: string): void {
+        this.transaction(() => {
+            const authority = this.authority(id); if (!authority) throw new Error('Missing Todo authority');
+            authority.revoked = true; authority.revision++;
+            this.db.prepare('UPDATE todo_authorities SET data=? WHERE id=?').run(encode(authority), id);
+        });
+    }
+    private assertCreateIdentity(run: TodoRun, call: TodoCall): void {
+        if (call.runId !== run.id || call.name !== 'create_todo' || !run.createBinding || !sameBinding(call.binding, run.createBinding)) throw new Error('Foreign Todo call binding');
+        this.assertInstallation(run.createBinding);
+        const {tool, args} = validate(call.name, call.arguments, offeredToolNamesForCall(run, call.step), this.toolsFor(run));
+        if (!toolMetadataMatches(tool, args, call)) throw new Error('Todo metadata changed');
+    }
+    prepareCreateAuthority(request: ResourceGrantRequest<TodoResourceFact>): ResourceGrantSnapshot<TodoResourceFact> {
+        return this.transaction(() => {
+            request.signal.throwIfAborted(); const run = this.current(request.subject.runId), call = this.call(request.subject.callId);
+            if (!call || run.status !== 'running' || call.status !== 'pending' || request.subject.scopeId !== run.scope || !sameBinding(request.binding, run.createBinding) || !sameFacts(request.facts, run)) throw new Error('Foreign or unsupported Todo resource');
+            this.assertCreateIdentity(run, call);
+            const candidates = this.db.prepare('SELECT data FROM todo_authorities WHERE run_id=?').all(run.id).map(row => decode<TodoAuthority>(row.data));
+            let chain: TodoAuthority[] | undefined;
+            for (const row of candidates) {
+                if (row.revoked || row.scopeId !== run.scope || !sameBinding(row.binding, request.binding) || !sameFacts(row.facts, run)) continue;
+                // A stale child cannot shadow a later explicit host issuance for
+                // a new call. Existing prepared references never use this lookup.
+                try {chain = this.ancestry(row); break;} catch {continue;}
+            }
+            if (!chain) throw new Error('Missing host-issued Todo create authority');
+            return Object.freeze({version: 1 as const, subject: Object.freeze({...request.subject}), binding: Object.freeze({...request.binding}),
+                facts: Object.freeze([Object.freeze(factFor(run))]), grants: Object.freeze(chain.map(row => Object.freeze({id: row.id, revision: row.revision})))});
+        });
+    }
+    assertCreateAuthority(run: TodoRun, call: TodoCall, expected: ResourceGrantSnapshot<TodoResourceFact>): void {
+        this.assertCreateIdentity(run, call);
+        if (expected.version !== 1 || expected.subject.runId !== run.id || expected.subject.callId !== call.id || expected.subject.scopeId !== run.scope || !sameBinding(expected.binding, run.createBinding) || !sameFacts(expected.facts, run) || expected.grants.length < 1) throw new Error('Foreign Todo prepared resource');
+        const leaf = this.authority(expected.grants[0].id);
+        if (!leaf || leaf.runId !== run.id || leaf.scopeId !== run.scope || !sameBinding(leaf.binding, expected.binding) || !sameFacts(leaf.facts, run)) throw new Error('Foreign Todo grant reference');
+        const chain = this.ancestry(leaf);
+        if (encode(chain.map(row => ({id: row.id, revision: row.revision}))) !== encode(expected.grants)) throw new Error('Stale Todo grant revision');
+        if (call.preview?.authority && encode(call.preview.authority) !== encode(expected)) throw new Error('Todo preview resource changed');
+        const args = validate(call.name, call.arguments, offeredToolNamesForCall(run, call.step), this.toolsFor(run)).args;
+        if (call.preview && (!args || typeof args !== 'object' || !('title' in args) || call.preview.title !== args.title)) throw new Error('Todo preview arguments changed');
+    }
     begin(scope: string, scenario: Scenario, permissionMode: AgentPermissionMode = 'ask', enabled = allowed): TodoRun {
         return this.transaction(() => {
             const active = this.db.prepare('SELECT data FROM todo_runs WHERE scope=?').all(scope).map(row => decode<TodoRun>(row.data)).some(run => ['running', 'waiting_approval', 'interrupted'].includes(run.status));
             if (active) throw new Error('An unfinished run already exists');
             const id = randomUUID();
-            const run: TodoRun = {id, threadId: scope, scope, ownerId: this.ownerId, revision: 0, scenario, checkpoint: 0, status: 'running', permissionMode, modelStep: 0, modelStepSegmentStart: 0, enabledToolNames: [...enabled], offeredTools: [], responseItems: [], history: [], requestCount: 0, summaryRequests: 0};
+            const run: TodoRun = {id, threadId: scope, scope, ownerId: this.ownerId, revision: 0, scenario, checkpoint: 0, status: 'running', permissionMode, modelStep: 0, modelStepSegmentStart: 0, enabledToolNames: [...enabled], offeredTools: [], responseItems: [], history: [], requestCount: 0, summaryRequests: 0, createBinding: this.currentInstallation()};
             if (scenario === 'load') run.toolLoading = createCapabilityLoading(groups, enabled, name => name === 'load_tools', 'load_tools', 'read');
             if (scenario === 'summary') run.history = [{id: 'old-user', role: 'user', content: 'old request '.repeat(100)}, {id: 'old-answer', role: 'assistant', content: 'old answer '.repeat(100)}, {id: 'current', role: 'user', content: 'current request'}];
             this.db.prepare('INSERT INTO todo_runs VALUES(?,?,?)').run(id, scope, JSON.stringify(run));
@@ -122,7 +248,9 @@ export class TodoStore {
     call(id: string): TodoCall | undefined {const row = this.db.prepare('SELECT data FROM todo_calls WHERE id=?').get(id); return row ? decode<TodoCall>(row.data) : undefined;}
     saveCall(call: TodoCall): void {this.db.prepare('UPDATE todo_calls SET data=? WHERE id=?').run(encode(call), call.id);}
     decide(id: string, callId: string, expected: string, approve: boolean): void {
-        this.transaction(() => {const run = this.current(id), call = this.call(callId); if (run.status !== 'waiting_approval' || !call || call.runId !== id || call.status !== 'awaiting_approval' || encode(call) !== expected) throw new Error('Stale approval'); call.decision = approve ? 'approved' : 'rejected'; call.status = call.decision; if (!approve) call.result = encode({rejected: true}); this.saveCall(call);});
+        this.transaction(() => {const run = this.current(id), call = this.call(callId); if (run.status !== 'waiting_approval' || !call || call.runId !== id || call.status !== 'awaiting_approval' || encode(call) !== expected) throw new Error('Stale approval');
+            if (approve && call.name === 'create_todo') {if (!call.preview?.authority) throw new Error('Missing Todo resource preview'); this.assertCreateAuthority(run, call, call.preview.authority);}
+            call.decision = approve ? 'approved' : 'rejected'; call.status = call.decision; if (!approve) call.result = encode({rejected: true}); this.saveCall(call);});
     }
     append(id: string): void {
         this.transaction(() => {const run = this.current(id); for (const call of this.calls(id)) {
@@ -136,14 +264,20 @@ export class TodoStore {
     list(scope: string): Array<{id: string; title: string; done: boolean}> {
         return this.db.prepare('SELECT id,title,done FROM todos WHERE scope=? ORDER BY id').all(scope).map(row => ({id: String(row.id), title: String(row.title), done: row.done === 1}));
     }
-    atomic(id: string, callId: string, signal: AbortSignal, mutate: (run: TodoRun) => unknown): unknown {
+    atomic(id: string, callId: string, signal: AbortSignal, mutate: (run: TodoRun) => unknown, expected?: {call: TodoCall; authority: ResourceGrantSnapshot<TodoResourceFact>}): unknown {
         let result: unknown;
         try {result = this.transaction(() => {
             const run = this.current(id), call = this.call(callId);
             if (run.status !== 'running' || !call || call.runId !== id || call.status !== 'running') throw new Error('Stale local commit');
+            if (expected || call.name === 'create_todo') {
+                if (call.name !== 'create_todo' || !expected || callIdentity(call) !== callIdentity(expected.call) || !call.preview?.authority) throw new Error('Stale Todo atomic identity');
+                this.assertCreateAuthority(run, call, expected.authority);
+                const {tool, args} = validate(call.name, call.arguments, offeredToolNamesForCall(run, call.step), this.toolsFor(run));
+                if (requiresToolApproval(run.permissionMode ?? 'ask', tool, args) && call.decision !== 'approved') throw new Error('Todo approval missing');
+            }
             signal.throwIfAborted(); const value = mutate(run);
             if (this.faults.receipt) throw new Error('Receipt rejected');
-            this.db.prepare('INSERT INTO todo_evidence VALUES(?,?)').run(callId, encode({callId, scope: run.scope, changed: true}));
+            this.db.prepare('INSERT INTO todo_evidence VALUES(?,?)').run(callId, encode({callId, scope: run.scope, changed: true, ...(expected ? {binding: call.binding, authority: expected.authority} : {})}));
             const output = this.faults.result === 'oversize' ? 'x'.repeat(65_537) : this.faults.result === 'nonserializable' ? 1n : value;
             call.result = encode(output); call.status = 'completed'; this.saveCall(call);
             this.faults.abortBeforeCommit?.(); signal.throwIfAborted(); return value;
@@ -151,12 +285,16 @@ export class TodoStore {
         if (this.faults.afterCommit) throw new UnknownOutcomeError('Commit acknowledgement lost');
         return result;
     }
-    mutate(id: string, callId: string, signal: AbortSignal, operation: {kind: 'create'; title: string} | {kind: 'complete'; id: string}): unknown {
+    mutate(id: string, callId: string, signal: AbortSignal, operation: {kind: 'create'; title: string} | {kind: 'complete'; id: string}, authority?: ResourceGrantSnapshot<TodoResourceFact>, expectedCall?: TodoCall): unknown {
         return this.atomic(id, callId, signal, run => {
-            if (operation.kind === 'create') {const todoId = callId; this.db.prepare('INSERT INTO todos VALUES(?,?,?,0)').run(todoId, run.scope, operation.title); return {id: todoId, title: operation.title, done: false};}
+            if (operation.kind === 'create') {
+                const args: unknown = expectedCall ? JSON.parse(expectedCall.arguments) : undefined;
+                if (!expectedCall || expectedCall.name !== 'create_todo' || !args || typeof args !== 'object' || !('title' in args) || args.title !== operation.title) throw new Error('Todo effect arguments changed');
+                const todoId = callId; this.db.prepare('INSERT INTO todos VALUES(?,?,?,0)').run(todoId, run.scope, operation.title); return {id: todoId, title: operation.title, done: false};}
+            if (this.call(callId)?.name !== 'complete_todo') throw new Error('Todo effect operation changed');
             const changed = this.db.prepare('UPDATE todos SET done=1 WHERE id=? AND scope=?').run(operation.id, run.scope).changes;
             if (!changed) throw new Error('Todo outside this scope or missing'); return {id: operation.id, done: true};
-        });
+        }, authority && expectedCall ? {authority, call: expectedCall} : undefined);
     }
     load(id: string, callId: string, names: string[], signal: AbortSignal): unknown {
         return this.atomic(id, callId, signal, run => {if (!run.toolLoading) throw new Error('No loading catalogue'); run.toolLoading = selectCapabilityGroups(run.toolLoading, names, this.calls(id), run.enabledToolNames); this.saveRun(run); return {loaded: offeredToolNames(run)};});

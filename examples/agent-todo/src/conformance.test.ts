@@ -16,7 +16,11 @@ import type {Faults, TodoRun, TodoCall} from './types.js';
 async function fixture(faults: Faults = {}) {
     const directory = await mkdtemp(join(tmpdir(), 'cuepoint-todo-conformance-'));
     const store = new TodoStore(join(directory, 'todo.sqlite'), faults);
+    store.installCreateCapability();
     return {directory, store, cleanup: async () => {store.close(); await rm(directory, {recursive: true, force: true});}};
+}
+function trustedBegin(store: TodoStore, ...args: Parameters<TodoStore['begin']>): TodoRun {
+    const run = store.begin(...args); store.issueCreateAuthority(run.id); return run;
 }
 interface State {run: TodoRun; calls: TodoCall[]; output: {content: string}; todos: unknown[]; summaries: Array<{status: string}>}
 interface Frame {ready: string; runId?: string; state?: State; run?: TodoRun; calls?: TodoCall[]; todos?: unknown[]; output?: {content: string}; summaries?: Array<{status: string}>}
@@ -37,10 +41,10 @@ async function cli(args: string[], env: Record<string, string> = {}): Promise<Fr
 
 await test('independent schema freezes scope/permissions and rejects duplicate begin and stale owners', async () => {
     const f = await fixture(); try {
-        const run = f.store.begin('list-a', 'todo'); assert.throws(() => f.store.begin('list-a', 'todo'), /unfinished/);
+        const run = trustedBegin(f.store, 'list-a', 'todo'); assert.throws(() => trustedBegin(f.store, 'list-a', 'todo'), /unfinished/);
         assert.equal(run.permissionMode, 'ask'); assert.equal(JSON.stringify(run).includes('apiKey'), false);
         const names = f.store.db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row => row.name);
-        assert.deepEqual(names.sort(), ['todo_calls', 'todo_evidence', 'todo_intents', 'todo_outputs', 'todo_runs', 'todo_summaries', 'todos']);
+        assert.deepEqual(names.sort(), ['todo_authorities', 'todo_calls', 'todo_evidence', 'todo_installations', 'todo_intents', 'todo_outputs', 'todo_runs', 'todo_summaries', 'todos']);
         f.store.transaction(() => {const current = f.store.current(run.id); current.ownerId = 'old-owner'; f.store.saveRun(current);});
         assert.throws(() => f.store.checkpoint(run.id, 1, {content: 'stale'}), /Stale owner/);
         assert.throws(() => f.store.settle(run.id, 'completed', {content: 'stale'}), /Stale owner/);
@@ -59,7 +63,7 @@ await test('real live process ownership rejects a second process, then kernel re
 
 await test('monotonic checkpoints and the sole terminal writer retain visible output after reopen', async () => {
     const f = await fixture(); try {
-        const run = f.store.begin('list', 'stream');
+        const run = trustedBegin(f.store, 'list', 'stream');
         const old = structuredClone(run), latest = f.store.current(run.id); latest.error = 'new revision'; f.store.saveRun(latest);
         assert.throws(() => f.store.saveRun(old), /Stale run revision/); assert.equal(f.store.current(run.id).error, 'new revision');
         assert.equal(f.store.checkpoint(run.id, 2, {content: 'saved'}), true);
@@ -73,7 +77,7 @@ await test('monotonic checkpoints and the sole terminal writer retain visible ou
 
 await test('two-pass approval saves all immutable calls and rejects stale decisions before any mutation', async () => {
     const f = await fixture(); try {
-        const run = f.store.begin('list', 'pair'); await execute(f.store, run);
+        const run = trustedBegin(f.store, 'list', 'pair'); await execute(f.store, run);
         const calls = f.store.calls(run.id); assert.equal(calls.length, 2); assert.equal(f.store.list('list').length, 0);
         assert.equal(f.store.current(run.id).status, 'waiting_approval');
         f.store.decide(run.id, calls[0].id, encode(calls[0]), true);
@@ -92,7 +96,7 @@ await test('two-pass approval saves all immutable calls and rejects stale decisi
 await test('actual claim transaction rejects changed args, permission and offered authority after the last core validation', async () => {
     for (const mutation of ['args', 'approval', 'offer']) {
         const f = await fixture(); try {
-            const run = f.store.begin('list', 'todo'); await execute(f.store, run); const call = f.store.calls(run.id)[0]; f.store.decide(run.id, call.id, encode(call), true);
+            const run = trustedBegin(f.store, 'list', 'todo'); await execute(f.store, run); const call = f.store.calls(run.id)[0]; f.store.decide(run.id, call.id, encode(call), true);
             const resumed = f.store.resume(run.id), host = createHost(f.store, resumed), transition = host.tools.transition;
             host.tools.transition = (run, call, from, to, extra) => {
                 if (to === 'running') f.store.transaction(() => {
@@ -111,7 +115,7 @@ await test('actual claim transaction rejects changed args, permission and offere
 
 await test('local mutation, evidence and original atomic result commit once and survive acknowledgement loss', async () => {
     const f = await fixture({afterCommit: true}); try {
-        const run = f.store.begin('list', 'todo', 'full'); await execute(f.store, run);
+        const run = trustedBegin(f.store, 'list', 'todo', 'full'); await execute(f.store, run);
         assert.equal(f.store.current(run.id).status, 'completed'); assert.equal(f.store.list('list').length, 1);
         assert.equal(f.store.db.prepare('SELECT count(*) AS count FROM todo_evidence').get()?.count, 1);
         assert.equal(f.store.calls(run.id)[0].status, 'completed'); assert.equal(f.store.calls(run.id)[0].appended, true);
@@ -122,7 +126,7 @@ await test('local mutation, evidence and original atomic result commit once and 
 await test('result/receipt serialization failures roll back every business and evidence write', async () => {
     for (const faults of [{result: 'oversize'}, {result: 'nonserializable'}, {receipt: true}] as Faults[]) {
         const f = await fixture(faults); try {
-            const run = f.store.begin('list', 'todo', 'full'); await execute(f.store, run);
+            const run = trustedBegin(f.store, 'list', 'todo', 'full'); await execute(f.store, run);
             assert.equal(f.store.list('list').length, 0); assert.equal(f.store.db.prepare('SELECT count(*) AS count FROM todo_evidence').get()?.count, 0);
             assert.equal(f.store.calls(run.id)[0].status, 'failed'); assert.match(f.store.calls(run.id)[0].result ?? '', /rolled_back/);
         } finally {await f.cleanup();}
@@ -131,7 +135,7 @@ await test('result/receipt serialization failures roll back every business and e
 
 await test('unreadable completion cannot authorize a duplicate effect, while later durable success remains intact', async () => {
     const f = await fixture({afterCommit: true, unreadableConfirmation: true}); try {
-        const run = f.store.begin('list', 'todo', 'full'); await execute(f.store, run);
+        const run = trustedBegin(f.store, 'list', 'todo', 'full'); await execute(f.store, run);
         assert.equal(f.store.list('list').length, 1); assert.equal(f.store.calls(run.id)[0].status, 'completed');
         assert.throws(() => f.store.resume(run.id), /not resumable/); assert.equal(f.store.current(run.id).requestCount, 1);
     } finally {await f.cleanup();}
@@ -139,7 +143,7 @@ await test('unreadable completion cannot authorize a duplicate effect, while lat
 
 await test('external intent is durable before one dispatch and unknown outcomes cannot replay on recovery/resume', async () => {
     const f = await fixture(); try {
-        const run = f.store.begin('list', 'external', 'full'); await execute(f.store, run);
+        const run = trustedBegin(f.store, 'list', 'external', 'full'); await execute(f.store, run);
         assert.equal(f.store.calls(run.id)[0].status, 'unknown');
         assert.deepEqual(f.store.db.prepare('SELECT dispatches,status FROM todo_intents').get(), Object.assign(Object.create(null), {dispatches: 1, status: 'unknown'}));
         f.store.recover(run.id); assert.throws(() => f.store.resume(run.id), /Unresolved/);
@@ -149,9 +153,9 @@ await test('external intent is durable before one dispatch and unknown outcomes 
 
 await test('abort immediately before local COMMIT rolls back; partial stream flushes before cancellation', async () => {
     const controller = new AbortController(), f = await fixture({abortBeforeCommit: () => controller.abort()}); try {
-        const run = f.store.begin('list', 'todo', 'full'); await execute(f.store, run, controller);
+        const run = trustedBegin(f.store, 'list', 'todo', 'full'); await execute(f.store, run, controller);
         assert.equal(f.store.list('list').length, 0); assert.equal(f.store.calls(run.id)[0].status, 'failed');
-        const other = f.store.begin('other', 'stream'), stop = new AbortController();
+        const other = trustedBegin(f.store, 'other', 'stream'), stop = new AbortController();
         await execute(f.store, other, stop, {hold: () => {stop.abort(); return Promise.reject(new Error('Stop'));}});
         assert.equal(f.store.output(other.id).content, 'durable partial answer'); assert.equal(f.store.current(other.id).status, 'cancelled');
     } finally {await f.cleanup();}
@@ -173,7 +177,7 @@ await test('actual durable checkpoint handshake then SIGKILL/reopen performs zer
 
 await test('32-request segment persists its cumulative budget and only explicit next segment replenishes', async () => {
     const f = await fixture(); try {
-        const run = f.store.begin('list', 'budget', 'full'); await execute(f.store, run);
+        const run = trustedBegin(f.store, 'list', 'budget', 'full'); await execute(f.store, run);
         assert.equal(f.store.current(run.id).modelStep, 32); assert.equal(f.store.current(run.id).requestCount, 32); assert.equal(f.store.current(run.id).status, 'interrupted');
         assert.throws(() => f.store.resume(run.id), /next segment/); assert.equal(f.store.recover(run.id).modelStep, 32);
         const next = f.store.resume(run.id, true); assert.equal(next.modelStepSegmentStart, 32); assert.equal(next.modelStep, 32);
@@ -182,7 +186,7 @@ await test('32-request segment persists its cumulative budget and only explicit 
 
 await test('shared capability loading persists the ceiling, pins pending calls and excludes newly offered same-round tools', async () => {
     const f = await fixture(); try {
-        const run = f.store.begin('list', 'load', 'full'); await execute(f.store, run);
+        const run = trustedBegin(f.store, 'list', 'load', 'full'); await execute(f.store, run);
         assert.equal(f.store.current(run.id).status, 'completed'); assert.equal(f.store.list('list').length, 1);
         const current = f.store.current(run.id); assert.equal(current.toolLoading?.loadedGroupIds.includes('write'), true);
         assert.equal(current.offeredTools[0].names.includes('create_todo'), false); assert.equal(current.offeredTools[1].names.includes('create_todo'), true);
@@ -204,14 +208,14 @@ await test('summary job is durable before summarization, kill/reopen performs ze
 
 await test('typed scope rejects foreign todo mutation and ownership rejects reentry/expired execution', async () => {
     const f = await fixture(); try {
-        const run = f.store.begin('list', 'stream', 'full');
+        const run = trustedBegin(f.store, 'list', 'stream', 'full');
         let release!: () => void; const blocked = new Promise<void>(resolve => {release = resolve;});
         const execution = execute(f.store, run, new AbortController(), {hold: () => blocked});
         assert.throws(() => f.store.close(), /still active/); assert.throws(() => new TodoStore(f.store.file), /live owner/);
         // A held execution entry rejects concurrent reuse even if its first await has not finished.
         await assert.rejects(execute(f.store, run), /already active/); release(); await execution;
-        const seed = f.store.begin('seed', 'todo', 'full'); await execute(f.store, seed);
-        const other = f.store.begin('other', 'todo', 'full'), foreign = f.store.list('seed')[0], foreignCallId = `${other.id}:foreign`;
+        const seed = trustedBegin(f.store, 'seed', 'todo', 'full'); await execute(f.store, seed);
+        const other = trustedBegin(f.store, 'other', 'todo', 'full'), foreign = f.store.list('seed')[0], foreignCallId = `${other.id}:foreign`;
         const foreignCall: TodoCall = {id: foreignCallId, runId: other.id, name: 'complete_todo', arguments: JSON.stringify({id: foreign.id}), status: 'running', step: 1, order: 0, effect: 'write', atomic: true, highRisk: false};
         f.store.db.prepare('INSERT INTO todo_calls VALUES(?,?,?)').run(foreignCall.id, other.id, encode(foreignCall));
         assert.throws(() => f.store.mutate(other.id, foreignCall.id, new AbortController().signal, {kind: 'complete', id: foreign.id}), /rolled back/);
@@ -229,15 +233,15 @@ await test('packed protocols dispatch deterministic fixtures with exact opaque c
     assert.equal(response.ok, true); if (!response.ok) throw new Error('Fixture failed'); assert.equal(response.responseOutput?.[0].type, 'reasoning'); assert.equal(response.responseOutput?.[0].type === 'reasoning' && response.responseOutput[0].encrypted_content, opaque);
     const chat = await streamChatCompletions({baseUrl: 'https://fixture.invalid/v1', apiKey: secret, model: 'fixture', maxOutputTokens: 128, messages: [{role: 'user', content: 'fixture'}]}, {fetchImpl: () => Promise.reject(new Error(`Authorization Bearer ${secret}`))});
     assert.equal(chat.ok, false); assert.equal(JSON.stringify(chat).includes(secret), false); assert.equal(count, 1);
-    const f = await fixture(); try {const events: RuntimeEvent[] = [], run = f.store.begin('list', 'todo', 'full'); await execute(f.store, run, new AbortController(), {observe: event => events.push(event)}); assert.equal(JSON.stringify(events).includes('opaque exact'), false); assert.deepEqual(events.map(event => event.sequence), events.map((_event, i) => i + 1)); assert.equal(events.at(-1)?.type, 'settled');} finally {await f.cleanup();}
+    const f = await fixture(); try {const events: RuntimeEvent[] = [], run = trustedBegin(f.store, 'list', 'todo', 'full'); await execute(f.store, run, new AbortController(), {observe: event => events.push(event)}); assert.equal(JSON.stringify(events).includes('opaque exact'), false); assert.deepEqual(events.map(event => event.sequence), events.map((_event, i) => i + 1)); assert.equal(events.at(-1)?.type, 'settled');} finally {await f.cleanup();}
     const manifest = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8')) as {dependencies: Record<string, string>}; assert.deepEqual(Object.keys(manifest.dependencies).sort(), ['@cuepoint/agent-core', '@cuepoint/agent-providers']);
 });
 
 
 await test('a later run in the same scope creates and completes its own todo with exact original wire bytes', async () => {
     const f = await fixture(); try {
-        const first = f.store.begin('list', 'todo', 'full'); await execute(f.store, first);
-        const run = f.store.begin('list', 'update', 'full'), host = createHost(f.store, run), request = host.request;
+        const first = trustedBegin(f.store, 'list', 'todo', 'full'); await execute(f.store, first);
+        const run = trustedBegin(f.store, 'list', 'update', 'full'), host = createHost(f.store, run), request = host.request;
         host.request = async (...args) => {const result = await request(...args); if (result.ok && result.toolCalls?.[0].function.name === 'create_todo') {
             result.toolCalls[0].function.arguments = '{ "title" : "spaced wire" }';
             const item = result.continuation?.find(item => item.type === 'function_call'); if (item?.type === 'function_call') item.arguments = result.toolCalls[0].function.arguments;
@@ -251,12 +255,12 @@ await test('a later run in the same scope creates and completes its own todo wit
 
 await test('summary activation refuses a changed durable job and retains an exact opaque suffix on valid activation', async () => {
     const f = await fixture(); try {
-        const invalid = f.store.begin('invalid', 'summary', 'full');
+        const invalid = trustedBegin(f.store, 'invalid', 'summary', 'full');
         f.store.faults.beforeSummaryActivation = () => {const summary = f.store.summaries(invalid.id)[0]; f.store.saveSummary({...summary, status: 'interrupted'}); return Promise.resolve();};
         await assert.rejects(prepareContext(f.store, invalid, new AbortController().signal), /Stale summary job/);
         assert.equal(f.store.current(invalid.id).summaryId, undefined); assert.equal(f.store.current(invalid.id).requestCount, 0);
         f.store.faults.beforeSummaryActivation = undefined;
-        const valid = f.store.begin('valid', 'summary', 'full'), opaque = {type: 'reasoning' as const, encrypted_content: ' opaque exact\n=+ ', summary: []};
+        const valid = trustedBegin(f.store, 'valid', 'summary', 'full'), opaque = {type: 'reasoning' as const, encrypted_content: ' opaque exact\n=+ ', summary: []};
         valid.responseItems = [opaque]; f.store.saveRun(valid);
         const activated = await prepareContext(f.store, valid, new AbortController().signal);
         assert.deepEqual(activated.responseItems.at(-1), opaque); const summary = f.store.summaries(valid.id)[0]; assert.equal(summary.status, 'completed');

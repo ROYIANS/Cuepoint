@@ -24,7 +24,9 @@
   "include": [
     "vite.config.ts",
     "vitest.config.ts",
+    "vitest.agent-source.config.ts",
     "apps/*/vite.config.ts",
-    "tooling/vite.shared.ts"
+    "tooling/vite.shared.ts",
+    "tooling/agent-source-exports.ts"
   ]
 }

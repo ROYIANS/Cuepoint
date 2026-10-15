@@ -1,4 +1,4 @@
-import type {RuntimeRun, RuntimeCall, ToolContext, AgentToolLoading, ContextSource, SummaryRecord} from '@cuepoint/agent-core';
+import type {RuntimeRun, RuntimeCall, ToolContext, AgentToolLoading, ContextSource, SummaryRecord, ToolBindingIdentity, ResourceGrantSnapshot, ResourceGrantRef} from '@cuepoint/agent-core';
 import type {ResponseItem} from '@cuepoint/agent-providers';
 
 export type Scenario = 'todo' | 'update' | 'pair' | 'restart' | 'committed' | 'stream' | 'budget' | 'external' | 'load' | 'summary';
@@ -15,9 +15,21 @@ export interface TodoRun extends RuntimeRun {
     summaryId?: string;
     requestCount: number;
     summaryRequests: number;
+    createBinding?: ToolBindingIdentity;
     error?: string;
 }
-export interface Preview {title: string}
+export interface TodoResourceFact {readonly kind: 'todo-list'; readonly listId: string; readonly action: 'create'}
+export interface TodoAuthority {
+    readonly id: string;
+    revision: number;
+    readonly runId: string;
+    readonly scopeId: string;
+    readonly binding: ToolBindingIdentity;
+    readonly facts: readonly TodoResourceFact[];
+    readonly parent?: ResourceGrantRef;
+    revoked: boolean;
+}
+export interface Preview {title: string; authority?: ResourceGrantSnapshot<TodoResourceFact>}
 export interface TodoCall extends RuntimeCall<Preview> {
     runId: string;
     result?: string;
@@ -28,7 +40,8 @@ export interface TodoCall extends RuntimeCall<Preview> {
 export interface TodoContext extends ToolContext<Preview> {
     services: {
         list: () => Array<{id: string; title: string; done: boolean}>;
-        mutate: (callId: string, signal: AbortSignal, operation: {kind: 'create'; title: string} | {kind: 'complete'; id: string}) => unknown;
+        prepareCreate: () => Promise<ResourceGrantSnapshot<TodoResourceFact>>;
+        mutate: (callId: string, signal: AbortSignal, operation: {kind: 'create'; title: string} | {kind: 'complete'; id: string}, expected?: ResourceGrantSnapshot<TodoResourceFact>) => unknown;
         load: (callId: string, groups: string[], signal: AbortSignal) => unknown;
         external: (callId: string, signal: AbortSignal) => never;
     };
