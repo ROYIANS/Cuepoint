@@ -19,17 +19,12 @@ import {z} from "zod";
 import {toolArgumentError, ToolUnavailableError, ToolValidationError} from "./toolErrors";
 import {db as productDb} from "../../../platform/product/store";
 import {updateRunPlanAndComplete} from "../commands/agentTools";
-import type {AgentPermissionMode, AgentToolCall, AgentToolSchema} from "../models/agent";
+import type {AgentToolCall, AgentToolSchema} from "../models/agent";
+import {validateToolInput} from '@cuepoint/agent-core';
 
 export type {AgentToolContext, AgentToolDefinition} from './toolDefinition';
 
-export function requiresToolApproval(mode: AgentPermissionMode, tool: Pick<AgentToolDefinition, "effect" | "highRisk" | "requiresConfirmation">, args: unknown): boolean {
-    if (!["ask", "assist", "full"].includes(mode)) throw new Error("未知授权模式");
-    if (tool.requiresConfirmation) return true;
-    if (mode === "full") return false;
-    if (tool.highRisk(args)) return true;
-    return mode === "ask" && (tool.effect === "write" || tool.effect === "network");
-}
+export {requiresToolApproval} from '@cuepoint/agent-core';
 
 export const planSchema = z.object({
     reason: z.string().trim().min(1).max(1000).optional(),
@@ -147,23 +142,15 @@ export function toolSchemas(names: readonly string[], registry = BUILTIN_TOOLS):
 }
 
 export function validateToolCall(name: string, raw: string, enabled: readonly string[], registry = BUILTIN_TOOLS) {
-    assertUniqueToolNames(registry);
-    const tool = registry.find((item) => item.name === name);
-    if (!enabled.includes(name) || !tool) throw new ToolUnavailableError(name, enabled);
-    if (raw.length > 32_768) throw new ToolValidationError(tool.title, name, [{
-        path: "参数",
-        constraint: "工具参数超过大小限制，最多 32768 个字符",
-        received: raw.length
-    }]);
-    let args: unknown;
-    let parsed: unknown;
-    try {
-        parsed = JSON.parse(raw);
-        args = tool.parseArguments(parsed);
-    } catch (cause) {
-        throw toolArgumentError(tool.title, name, tool.parameters, parsed, cause);
-    }
-    return {tool, args};
+    return validateToolInput(name, raw, enabled, registry, {
+        unavailable: (name, enabled) => new ToolUnavailableError(name, enabled),
+        tooLarge: (tool, length) => new ToolValidationError(tool.title, name, [{
+            path: "参数",
+            constraint: "工具参数超过大小限制，最多 32768 个字符",
+            received: length
+        }]),
+        invalid: (tool, parsed, cause) => toolArgumentError(tool.title, name, tool.parameters, parsed, cause),
+    });
 }
 
 /** Supplement known legacy validation failures without rewriting their saved history. */

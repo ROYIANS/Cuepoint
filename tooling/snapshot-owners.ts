@@ -7,6 +7,7 @@ const studio = join(root, 'packages/studio/src');
 const policy = JSON.parse(readFileSync(join(root, 'quality/studio-ownership.json'), 'utf8')) as {snapshotSplitModules: Record<string, Record<string, string>>; snapshotSourceModules: Record<string, string>};
 const virtualPrefix = '\0snapshot-owner:';
 const actual = (target: string): string => {
+    if (target.startsWith('@cuepoint/')) return fileURLToPath(import.meta.resolve(target));
     const path = join(studio, target.slice(2));
     return [path, path + '.ts', path + '.tsx', path + '.mjs'].find(existsSync) ?? path;
 };
@@ -34,6 +35,9 @@ export function snapshotModule(id: string): string | undefined {
         const file = actual(target);
         const parsed = ts.createSourceFile(file, readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
         return parsed.statements.some(statement => {
+            // Named split entries may now point at emitted public package barrels.
+            // Preserve the explicit value/type distinction when following those exports.
+            if (ts.isExportDeclaration(statement) && !statement.isTypeOnly && statement.exportClause && ts.isNamedExports(statement.exportClause)) return statement.exportClause.elements.some(element => !element.isTypeOnly && element.name.text === name);
             if (!(ts.canHaveModifiers(statement) && ts.getModifiers(statement)?.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))) return false;
             if (ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement) || ts.isEnumDeclaration(statement)) return statement.name?.text === name;
             return ts.isVariableStatement(statement) && statement.declarationList.declarations.some(declaration => ts.isIdentifier(declaration.name) && declaration.name.text === name);

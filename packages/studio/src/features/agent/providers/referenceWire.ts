@@ -1,3 +1,4 @@
+import type {ChatRequestMessage, ChatContentPart, ResponseRequestItem, ResponseInputPart} from '@cuepoint/agent-providers';
 import {safeHistoricalLookupOutput} from "../../references/agent/referenceEvidence";
 import {resolveMaterialInput} from "../../library/agent/materialImageInput";
 import {db} from "../../../platform/product/store";
@@ -57,10 +58,10 @@ async function pixels(inputs: Array<AgentReferenceInput | undefined>, scope: Ref
     return encoded;
 }
 
-export async function materializeChatMessages(messages: AgentRequestMessage[], scope: ReferenceWireScope, signal?: AbortSignal): Promise<unknown[]> {
+export async function materializeChatMessages(messages: AgentRequestMessage[], scope: ReferenceWireScope, signal?: AbortSignal): Promise<ChatRequestMessage[]> {
     const encoded = await pixels(messages.map((message) => message.referenceInput), scope, signal);
     const toolNames = new Map(messages.flatMap(message => message.role === "assistant" ? (message.tool_calls ?? []).map(call => [call.id, call.function.name] as const) : []));
-    return messages.map(({referenceInput, sourceToolCallId: _source, ...message}) => {
+    return messages.map(({referenceInput, sourceToolCallId: _source, ...message}): ChatRequestMessage => {
         if (message.role === "tool") return {
             ...message,
             content: safeHistoricalLookupOutput(toolNames.get(message.tool_call_id), message.content)
@@ -72,18 +73,18 @@ export async function materializeChatMessages(messages: AgentRequestMessage[], s
             content: [{
                 type: "text",
                 text: message.content
-            }, ...referenceInput.images.map((image) => ({
+            }, ...referenceInput.images.map((image): ChatContentPart => ({
                 type: "image_url",
-                image_url: {url: encoded.get(image.mediaId), detail: "auto"}
+                image_url: {url: encoded.get(image.mediaId)!, detail: "auto"}
             }))]
         };
     });
 }
 
-export async function materializeResponseItems(items: AgentResponseItem[], scope: ReferenceWireScope, signal?: AbortSignal): Promise<unknown[]> {
+export async function materializeResponseItems(items: AgentResponseItem[], scope: ReferenceWireScope, signal?: AbortSignal): Promise<ResponseRequestItem[]> {
     const encoded = await pixels(items.map((item) => item.referenceInput), scope, signal);
     const toolNames = new Map(items.flatMap(item => item.type === "function_call" ? [[item.call_id, item.name] as const] : []));
-    return items.map(({referenceInput, sourceToolCallId: _source, ...item}) => {
+    return items.map(({referenceInput, sourceToolCallId: _source, ...item}): ResponseRequestItem => {
         if (item.type === "function_call_output") return {
             ...item,
             output: safeHistoricalLookupOutput(toolNames.get(item.call_id), item.output)
@@ -95,9 +96,9 @@ export async function materializeResponseItems(items: AgentResponseItem[], scope
             content: [{
                 type: "input_text",
                 text: item.content
-            }, ...referenceInput.images.map((image) => ({
+            }, ...referenceInput.images.map((image): ResponseInputPart => ({
                 type: "input_image",
-                image_url: encoded.get(image.mediaId),
+                image_url: encoded.get(image.mediaId)!,
                 detail: "auto"
             }))]
         };

@@ -1,19 +1,10 @@
+import {budgetEnvelope,selectHistoryByCount,isContextSourcePrefix} from '@cuepoint/agent-core';
 import type {AgentSelectedReferences} from "../../references/models/referenceInput";
 import {referenceInputOf} from "../../references/models/referenceInput";
 import type {AgentRequestMessage, AgentToolSchema} from "../models/agent";
 import type {ContextCompaction, ContextPolicy, ContextSource} from "../models/context";
 import type {ChatMessage} from "../models/chat";
-import {estimateTokens} from "./contextUsage";
 
-/** A user turn and all of its displayed replies form one indivisible history unit. */
-export function groupContextHistory(history: readonly ContextSource[]): ContextSource[][] {
-    const groups: ContextSource[][] = [];
-    for (const message of history) {
-        if (message.role === "user" || !groups.length) groups.push([]);
-        groups[groups.length - 1].push(message);
-    }
-    return groups;
-}
 
 export function selectContextHistory(messages: readonly ChatMessage[], policy: ContextPolicy): ContextSource[] {
     const eligible = messages.filter((m) => !m.status || m.status === "complete").map(({
@@ -27,18 +18,11 @@ export function selectContextHistory(messages: readonly ChatMessage[], policy: C
         content, ...(referenceContext ? {referenceContext} : {})
     }));
     if (!policy.limitHistory) return eligible;
-    const selected: ContextSource[][] = [];
-    let remaining = policy.historyMessageCount;
-    for (const group of groupContextHistory(eligible).reverse()) {
-        if (group.length > remaining) break;
-        selected.unshift(group);
-        remaining -= group.length;
-    }
-    return selected.flat();
+    return selectHistoryByCount(eligible,policy.historyMessageCount);
 }
 
-export function isSourcePrefix(prefix: readonly ContextSource[], history: readonly ContextSource[]): boolean {
-    return prefix.length > 0 && prefix.length <= history.length && prefix.every((source, i) => source.id === history[i].id && source.role === history[i].role && source.content === history[i].content && JSON.stringify(source.referenceContext) === JSON.stringify(history[i].referenceContext));
+function isSourcePrefix(prefix: readonly ContextSource[], history: readonly ContextSource[]): boolean {
+    return isContextSourcePrefix(prefix,history,(left,right)=>JSON.stringify(left.referenceContext) === JSON.stringify(right.referenceContext));
 }
 
 export function findApplicableSummary(history: readonly ContextSource[], records: readonly ContextCompaction[]): ContextCompaction | undefined {
@@ -72,20 +56,7 @@ export function buildContextMessages(instructions: string, skills: string, histo
     ];
 }
 
-/** Character estimates use a 25% drift allowance; capacity also reserves output and 5% margin. */
-export function budgetContext(messages: readonly AgentRequestMessage[], tools: readonly AgentToolSchema[], capacity?: number, hasSummary = false, extraTokens = 0) {
-    const estimatedTokens = estimateTokens(JSON.stringify(messages)) + (tools.length ? estimateTokens(JSON.stringify(tools)) : 0) + extraTokens + messages.reduce((sum, message) => sum + (message.referenceInput?.images?.length ?? 0) * 4096, 0);
-    const adjustedTokens = Math.ceil(estimatedTokens * 1.25);
-    const outputReserve = capacity ? Math.min(8192, Math.max(256, Math.floor(capacity * 0.15))) : 0;
-    const inputBudget = capacity ? Math.max(0, capacity - outputReserve - Math.ceil(capacity * 0.05)) : undefined;
-    const threshold = capacity && inputBudget ? Math.min(inputBudget, Math.floor(capacity * (hasSummary ? 0.65 : 0.5))) : undefined;
-    return {
-        estimatedTokens,
-        adjustedTokens,
-        outputReserve,
-        inputBudget,
-        threshold,
-        needsCompression: threshold !== undefined && adjustedTokens >= threshold,
-        overBudget: inputBudget !== undefined && adjustedTokens > inputBudget
-    };
+/** Image cost is a Studio materialization policy, supplied explicitly to the neutral budget. */
+export function budgetContext(messages:readonly AgentRequestMessage[],tools:readonly AgentToolSchema[],capacity?:number,hasSummary=false,extraTokens=0) {
+    return budgetEnvelope(messages,tools,capacity,hasSummary,extraTokens+messages.reduce((sum,message)=>sum+(message.referenceInput?.images?.length ?? 0)*4096,0));
 }

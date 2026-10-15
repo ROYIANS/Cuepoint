@@ -1,8 +1,9 @@
-import {readHttpJson, requestOnce} from "../../../platform/http/requestBoundary";
-import {isReadAbort} from "../../../platform/http/boundedResponse";
-import {redactCredentials} from "../../../platform/http/safeError";
+import {readHttpJson} from '@cuepoint/agent-providers/http';
+import {requestOnce} from "../../../platform/http/requestBoundary";
+import {isReadAbort} from "@cuepoint/agent-providers/http";
+import {redactCredentials} from "@cuepoint/agent-providers/http";
 import {type ChatModelMetadata, parseModelMetadata} from "../../settings/models/modelMetadata";
-import {normalizeBaseUrl} from "../../../platform/http/baseUrl";
+import {normalizeBaseUrl} from "@cuepoint/agent-providers/http";
 
 export type ApimartCredentials = { baseUrl: string; apiKey: string };
 export type ApimartRequestOptions = { signal?: AbortSignal; fetchImpl?: typeof fetch; idempotencyKey?: string };

@@ -17,9 +17,18 @@ imports, public entries, fixed storage integration and transaction propagation.
 name alone does not establish that its dependencies are valid.
 
 Canonical product contracts remain in `.trellis/spec/frontend`. Package-specific
-indexes under `.trellis/spec/{web,desktop,site,studio,distribution}` select those
+indexes under `.trellis/spec/{web,desktop,site,studio,distribution,agent-core,agent-providers,agent-todo}` select those
 contracts; `get_context.py --mode packages` lists actual owners. Unqualified
 product module names in a contract refer to their Studio owner.
+
+`packages/agent-core` owns the shared execution and context mechanisms;
+`packages/agent-providers` owns the current chat protocols and neutral HTTP
+mechanisms. Studio's Agent feature binds them to creative tools, current
+credentials, product scope, held execution ownership and its existing store.
+`examples/agent-todo` is an independent Node >=24.11 CLI with its own SQLite
+schema and tools. It uses public emitted packages and is checked through the
+outside-workspace `agent:example:check` gate. See the package indexes before
+changing those owners.
 
 ## Studio layout
 
@@ -48,7 +57,7 @@ packages/studio/src/
 │   ├── storage/              # protocol/adapters, typed tables and one schema
 │   ├── product/              # fixed store, React query binding and HTTP policy
 │   ├── runtime/              # system service/history/storage-profile mechanisms
-│   ├── http/                 # transport and bounded reading mechanisms
+│   ├── http/                 # product transport/policy bindings
 │   ├── media/                # managed bytes and reusable media mechanisms
 │   └── data/                 # named neutral data/revision mechanisms
 └── ui/                       # neutral controls, icons and theme

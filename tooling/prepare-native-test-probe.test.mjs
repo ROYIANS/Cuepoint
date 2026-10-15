@@ -80,7 +80,7 @@ test('a fresh executable without a valid close acknowledgement cannot export the
 test('GHCR prepares the real probe before root tests while desktop delivery remains packaging-only',async ()=> {
     const ghcr=await readFile(resolve(import.meta.dirname,'../.github/workflows/ghcr.yml'),'utf8');
     assert.match(ghcr,/\n  quality:\n/);
-    const quality=ghcr.split('\n  quality:\n')[1].split(/\n  docker:\n/)[0];
+    const quality=ghcr.split('\n  quality:\n')[1].split(/\n  [a-z][a-z-]*:\n/)[0];
     const preparation=quality.indexOf('node tooling/prepare-native-test-probe.mjs');
     const installation=quality.indexOf('rustup toolchain install 1.99.0 --profile minimal');
     assert.ok(installation >= 0 && preparation > installation);
@@ -91,6 +91,14 @@ test('GHCR prepares the real probe before root tests while desktop delivery rema
     assert.doesNotMatch(quality,/CUEPOINT_STORAGE_TEST_OWNER|CUEPOINT_NATIVE_STORAGE_ACCEPTANCE|--features product-sqlite/);
     assert.match(quality,/node --test tooling\/prepare-native-test-probe\.test\.mjs/);
     assert.match(ghcr,/node-version: 22/);
+    const example=ghcr.split('\n  agent-example:\n')[1].split(/\n  [a-z][a-z-]*:\n/)[0];
+    assert.match(example,/node-version: 24\.11\.0/);
+    assert.match(example,/pnpm agent:example:check/);
+    assert.match(ghcr,/needs: \[quality, agent-example\]/);
+    const docker=await readFile(resolve(import.meta.dirname,'../Dockerfile'),'utf8');
+    for (const path of ['packages/agent-core','packages/agent-providers','examples/agent-todo']) assert.ok(docker.indexOf(`COPY ${path}/package.json`) < docker.indexOf('RUN pnpm install --frozen-lockfile') && docker.includes(`COPY ${path}/package.json`),path);
+    const vitest=await readFile(resolve(import.meta.dirname,'../vitest.config.ts'),'utf8');
+    assert.doesNotMatch(vitest,/examples\/\*\/src\/\*\*\/\*\.test/);
     const desktop=await readFile(resolve(import.meta.dirname,'../.github/workflows/desktop-release.yml'),'utf8');
     assert.doesNotMatch(desktop,/\n  quality:\n|prepare-native-test-probe|vitest|pnpm(?:\.cjs")? test|release-native-checks|run-release-smokes/);
 });

@@ -1,7 +1,6 @@
+import {authHeaders, chatCompletionsUrl} from "@cuepoint/agent-providers";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  authHeaders,
-  chatCompletionsUrl,
   maskApiKey,
   listModels,
   modelsUrl,

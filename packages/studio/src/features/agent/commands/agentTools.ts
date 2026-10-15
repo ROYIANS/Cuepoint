@@ -1,3 +1,5 @@
+import {modelStepLimitReached} from '@cuepoint/agent-core';
+import {responseRoundMatches, appendResponseToolResult} from '@cuepoint/agent-providers';
 import type {ProductStore, StoreTx} from "../../../platform/storage/types";
 import {StorageError} from "../../../platform/storage/errors";
 import {MUSIC_REVIEW_MAX_BYTES, parseMusicGenerationReview} from "../../music/agent/musicGenerationReviewSnapshot";
@@ -58,7 +60,7 @@ export async function pauseAtModelStepLimit(runId: string, store?: ProductStore)
     return db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
         if (run.status !== "running") throw new Error("执行已停止");
-        if ((run.modelStep ?? 0) - (run.modelStepSegmentStart ?? 0) < MODEL_STEPS_PER_SEGMENT) return false;
+        if (!modelStepLimitReached(run)) return false;
         const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
         if (calls.some((call) => !["completed", "failed", "rejected"].includes(call.status))) throw new Error("请先处理尚未完成的工具步骤");
         const notice = `本段已达到 ${MODEL_STEPS_PER_SEGMENT} 轮模型请求，进度已保存。可继续执行下一段，或结束本次执行。`;
@@ -78,7 +80,7 @@ export async function startModelStep(runId: string, limit: number, store?: Produ
         const run = await requireRun(runId, db);
         await requireProject(run, db);
         if (run.status !== "running") throw new Error("执行已停止");
-        if ((run.modelStep ?? 0) - (run.modelStepSegmentStart ?? 0) >= limit) throw new Error("本段模型请求额度已用完，请继续下一段执行");
+        if (modelStepLimitReached(run,limit)) throw new Error("本段模型请求额度已用完，请继续下一段执行");
         if (run.projectId && !run.memorySelection) throw new Error("项目记忆尚未准备，不能提交请求");
         const next = {
             ...run, ...(run.toolLoading ? {
@@ -131,8 +133,7 @@ export async function saveToolRound(runId: string, content: string, wireCalls: A
         if (run.toolLoading && wireCalls.some((call, index) => !offered(call.function.name) && !unavailable(index))) throw new Error("模型请求了本轮未提供的工具，已阻止执行");
         if (wireCalls.length === 0 || wireCalls.length !== details.length) throw new Error("工具轮次格式无效");
         if (run.protocol === "responses") {
-            const functions = responseOutput?.filter((item) => item.type === "function_call");
-            if (!functions || functions.length !== wireCalls.length || functions.some((item, index) => item.call_id !== wireCalls[index].id || item.name !== wireCalls[index].function.name || item.arguments !== wireCalls[index].function.arguments)) throw new Error("Responses 工具信封不完整或不匹配");
+            if (!responseRoundMatches(responseOutput, wireCalls, true)) throw new Error("Responses 工具信封不完整或不匹配");
         } else if (responseOutput) throw new Error("执行协议与工具信封不匹配");
         const existing = await db.agentToolCalls.where("runId").equals(runId).toArray();
         if (wireCalls.some((call) => existing.some((row) => row.providerCallId === call.id)) || new Set(wireCalls.map((call) => call.id)).size !== wireCalls.length) throw new Error("模型重复使用工具调用标识，已阻止重复执行");
@@ -180,13 +181,14 @@ export async function saveToolRound(runId: string, content: string, wireCalls: A
 export async function transitionToolCall(runId: string, callId: string, from: AgentToolCall["status"][], to: AgentToolCall["status"], extra: {
     result?: string;
     error?: string
-} = {}, store?: ProductStore): Promise<boolean> {
+} = {}, store?: ProductStore, validateClaim?: (run:AgentRun,call:AgentToolCall,tx:StoreTx)=>Promise<void>|void): Promise<boolean> {
     const db = store ?? productDb;
     return db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
         const call = await db.agentToolCalls.get(callId);
         if (run.status !== "running" || !call || call.runId !== runId || call.threadId !== run.threadId) throw new Error("工具调用归属或执行状态不匹配");
         if (!from.includes(call.status)) return false;
+        if (to === 'running') await validateClaim?.(run,call,db);
         await db.agentToolCalls.update(callId, {status: to, ...extra, updatedAt: nowIso()});
         return true;
     });
@@ -257,12 +259,7 @@ export async function appendToolResults(runId: string, store?: ProductStore): Pr
         const calls = (await db.agentToolCalls.where("runId").equals(runId).toArray()).sort((a, b) => a.step - b.step || a.order - b.order);
         for (const call of calls) {
             if (!["completed", "failed", "rejected"].includes(call.status) || call.result === undefined) throw new Error("工具结果尚未完整保存");
-            const savedOutputs = responseItems?.filter((item) => item.type === "function_call_output" && item.call_id === call.providerCallId);
-            if (savedOutputs && (savedOutputs.length > 1 || savedOutputs.some((item) => item.type === "function_call_output" && item.output !== call.result))) throw new Error("Responses 已保存的工具结果与执行记录不匹配");
-            if (responseItems && !responseItems.some((item) => item.type === "function_call_output" && item.call_id === call.providerCallId)) {
-                if (!responseItems.some((item) => item.type === "function_call" && item.call_id === call.providerCallId)) throw new Error("Responses 缺少对应工具调用");
-                responseItems.push({type: "function_call_output", call_id: call.providerCallId, output: call.result});
-            }
+            if (responseItems) appendResponseToolResult(responseItems, call.providerCallId, call.result);
             if (!messages.some((message) => message.role === "tool" && message.tool_call_id === call.providerCallId)) messages.push({
                 role: "tool",
                 tool_call_id: call.providerCallId,

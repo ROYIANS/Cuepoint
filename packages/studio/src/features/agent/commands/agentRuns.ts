@@ -215,16 +215,17 @@ export async function beginAgentRun(input: {
     });
 }
 
-export async function checkpointAgentRun(runId: string, sequence: number, output: AgentRunOutput, store?: ProductStore): Promise<void> {
+export async function checkpointAgentRun(runId: string, sequence: number, output: AgentRunOutput, store?: ProductStore): Promise<boolean> {
     const db = store ?? productDb;
-    await db.transaction("rw", [db.agentRuns, db.chatMessages].flat(), async (db) => {
+    return db.transaction("rw", [db.agentRuns, db.chatMessages].flat(), async (db) => {
         const run = await db.agentRuns.get(runId);
         if (!run) throw new Error("执行已删除");
-        if (run.status !== "running" || sequence <= run.checkpoint) return;
+        if (run.status !== "running" || sequence <= run.checkpoint) return false;
         const message = await db.chatMessages.get(run.assistantMessageId);
         if (!message || message.runId !== run.id) throw new Error("执行消息不存在");
         await db.chatMessages.update(message.id, {...output});
         await db.agentRuns.update(run.id, {checkpoint: sequence, updatedAt: nowIso()});
+        return true;
     });
 }
 

@@ -7,14 +7,15 @@ Trellis task retrospectives or verified cross-task memory. IndexedDB v11 adds
 `contextCompactions` with `id, threadId, runId, status, createdAt` indexes.
 
 ## 2. Signatures
-- `normalizeContextPolicy(value?): ContextPolicy` — shared LobeHub defaults.
+- `@cuepoint/agent-core` owns `ContextPolicy`, `DEFAULT_CONTEXT_POLICY`, `normalizeContextPolicy(value?)`, `estimateTokens(text)` and `budgetEnvelope(messages, tools, capacity?, hasSummary?, extraTokens?)`; Studio keeps its concrete source/materialization projections.
 - `updateContextPolicy(threadId | undefined, policy)` — thread or new-thread defaults.
 - `resetThreadContextPolicy(threadId)` / `saveContextPolicyAsDefault(threadId)`.
 - `selectContextHistory(messages, policy): ContextSource[]`.
 - `findApplicableSummary(history, versions): ContextCompaction | undefined`.
 - `buildContextMessages(instructions, skills, history, draft, summary?)`.
 - `budgetContext(messages, tools, capacity?, hasSummary?, extraTokens?)`.
-- `prepareRunContext(runId, tools, apiKey, signal, fetchImpl?): Promise<AgentRun>`.
+- `prepareRunContext(runId, tools, apiKey, signal, fetchImpl?, store?, resolveCredentials?): Promise<AgentRun>` binds the core `compactContext` / `CompactionHost` to the current ProductStore. Production execution supplies the request-time credential resolver for every summary dispatch.
+- Core also owns `groupContextHistory`, `selectHistoryByCount`, `isContextSourcePrefix(prefix, history, sameMetadata)` and `replaceContinuationBase`; Studio's metadata comparator retains exact reference provenance, and base replacement retains the opaque suffix. See the [shared runtime](../agent-core/library/runtime.md) for neutral execution/compaction contracts.
 - `beginAgentRun` accepts provider `modelMetadata?` and freezes effective context policy,
   capacity/source, exact source history, draft, active summary ID and base envelope.
 
@@ -37,6 +38,10 @@ Budget uses serialized messages/tool definitions plus opaque reasoning continuat
 apply 25% estimation drift. Reserve min(8192, max(256, floor(capacity × 15%))) output
 and ceil(capacity × 5%) safety margin. Trigger at min(input budget, 50% capacity), or
 65% with an active summary. This is a heuristic, not a tokenizer/billing guarantee.
+Studio's `budgetContext` adds its existing 4096-token cost per reference image as
+explicit extra cost to the neutral core budget. Product image/reference types and
+model catalog resolution remain outside core; keep the same budget for preview,
+main dispatch and compaction rather than copying its arithmetic per host.
 
 Preflight before each model step under the existing thread Web Lock. All tool calls
 must be settled. Compact only historical base messages. Preserve the current question,
@@ -103,7 +108,7 @@ Wrong: store new defaults only globally so old conversations change silently.
 Correct: snapshot when creating a thread and use deterministic defaults for legacy records.
 
 ## Task work records
-New task runs and ContextUsagePanel both use getTaskContext from agent/taskContext.ts.
+New task runs and ContextUsagePanel both use getTaskContext from features/agent/runtime/taskContext.ts.
 It assembles current goal/acceptance/Todo and up to eight current record excerpts
 (1,200 body characters each), plus task tool definitions. These count in the shared
 request budget. Current running/continuing requests retain their frozen snapshots;

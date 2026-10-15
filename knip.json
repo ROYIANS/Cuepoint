@@ -23,7 +23,9 @@
         "tooling/quality-check.mjs",
         "tooling/quality/self-test.mjs",
         "tooling/studio.test.mjs",
-        "tooling/workspace.test.mjs"
+        "tooling/workspace.test.mjs",
+        "tooling/agent-packages.test.mjs",
+        "tooling/agent-example-check.mjs"
       ],
       "project": [
         "tooling/**/*.{mjs,mts,ts}"
@@ -31,6 +33,15 @@
       "paths": {
         "@/components/studio/CoverCard": [
           "./packages/studio/src/features/library/ui/CoverCard.tsx"
+        ],
+        "@cuepoint/agent-core": [
+          "./packages/agent-core/src/index.ts"
+        ],
+        "@cuepoint/agent-providers": [
+          "./packages/agent-providers/src/index.ts"
+        ],
+        "@cuepoint/agent-providers/http": [
+          "./packages/agent-providers/src/http/index.ts"
         ]
       }
     },
@@ -93,6 +104,36 @@
         "src/**/*.{ts,tsx}!"
       ],
       "includeEntryExports": false
+    },
+    "packages/agent-core": {
+      "entry": [
+        "src/index.ts",
+        "src/**/*.test.ts"
+      ],
+      "project": [
+        "src/**/*.ts!"
+      ],
+      "includeEntryExports": true
+    },
+    "packages/agent-providers": {
+      "entry": [
+        "src/index.ts",
+        "src/http/index.ts",
+        "src/**/*.test.ts"
+      ],
+      "project": [
+        "src/**/*.ts!"
+      ],
+      "includeEntryExports": true
+    },
+    "examples/agent-todo": {
+      "entry": [
+        "src/cli.ts",
+        "src/conformance.test.ts"
+      ],
+      "project": [
+        "src/**/*.ts!"
+      ]
     }
   },
   "includeEntryExports": true

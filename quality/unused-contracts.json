@@ -139,7 +139,7 @@
         },
         {
           "file": "packages/studio/src/features/settings/modelCatalog/sync.ts",
-          "sha256": "b4797caa7f1dab040942eedaf5cd3d86f3697571e25c327c64e80edc8b0d5559"
+          "sha256": "42c29885f9b84165e745bcbba777b74c1e7082dcc6193ae9ea78d7f7ccfff886"
         },
         {
           "file": "tooling/models-dev-baseline.mjs",
@@ -165,7 +165,7 @@
         },
         {
           "file": "packages/studio/src/features/settings/modelCatalog/sync.ts",
-          "sha256": "b4797caa7f1dab040942eedaf5cd3d86f3697571e25c327c64e80edc8b0d5559"
+          "sha256": "42c29885f9b84165e745bcbba777b74c1e7082dcc6193ae9ea78d7f7ccfff886"
         },
         {
           "file": "tooling/models-dev-baseline.mjs",
@@ -191,7 +191,7 @@
         },
         {
           "file": "packages/studio/src/features/settings/modelCatalog/sync.ts",
-          "sha256": "b4797caa7f1dab040942eedaf5cd3d86f3697571e25c327c64e80edc8b0d5559"
+          "sha256": "42c29885f9b84165e745bcbba777b74c1e7082dcc6193ae9ea78d7f7ccfff886"
         },
         {
           "file": "tooling/models-dev-baseline.mjs",
@@ -217,7 +217,7 @@
         },
         {
           "file": "packages/studio/src/features/settings/modelCatalog/sync.ts",
-          "sha256": "b4797caa7f1dab040942eedaf5cd3d86f3697571e25c327c64e80edc8b0d5559"
+          "sha256": "42c29885f9b84165e745bcbba777b74c1e7082dcc6193ae9ea78d7f7ccfff886"
         },
         {
           "file": "tooling/models-dev-baseline.mjs",
@@ -243,7 +243,7 @@
         },
         {
           "file": "packages/studio/src/features/settings/modelCatalog/sync.ts",
-          "sha256": "b4797caa7f1dab040942eedaf5cd3d86f3697571e25c327c64e80edc8b0d5559"
+          "sha256": "42c29885f9b84165e745bcbba777b74c1e7082dcc6193ae9ea78d7f7ccfff886"
         },
         {
           "file": "tooling/models-dev-baseline.mjs",
@@ -269,7 +269,7 @@
         },
         {
           "file": "packages/studio/src/features/settings/modelCatalog/sync.ts",
-          "sha256": "b4797caa7f1dab040942eedaf5cd3d86f3697571e25c327c64e80edc8b0d5559"
+          "sha256": "42c29885f9b84165e745bcbba777b74c1e7082dcc6193ae9ea78d7f7ccfff886"
         },
         {
           "file": "tooling/models-dev-baseline.mjs",
@@ -295,7 +295,7 @@
         },
         {
           "file": "packages/studio/src/features/settings/modelCatalog/sync.ts",
-          "sha256": "b4797caa7f1dab040942eedaf5cd3d86f3697571e25c327c64e80edc8b0d5559"
+          "sha256": "42c29885f9b84165e745bcbba777b74c1e7082dcc6193ae9ea78d7f7ccfff886"
         },
         {
           "file": "tooling/models-dev-baseline.mjs",
@@ -321,7 +321,7 @@
         },
         {
           "file": "packages/studio/src/features/settings/modelCatalog/sync.ts",
-          "sha256": "b4797caa7f1dab040942eedaf5cd3d86f3697571e25c327c64e80edc8b0d5559"
+          "sha256": "42c29885f9b84165e745bcbba777b74c1e7082dcc6193ae9ea78d7f7ccfff886"
         },
         {
           "file": "tooling/models-dev-baseline.mjs",
@@ -339,7 +339,7 @@
       "evidence": [
         {
           "file": "apps/desktop/package.json",
-          "sha256": "48279d8f14f55b574fba862d53433bc76c3f1dd4a09eb7b04c26412ebd535901"
+          "sha256": "6d6a361398999e396fcdfb1b55c2785862dcc31d6a31be9ee83cf52c84c4317f"
         },
         {
           "file": "apps/desktop/scripts/build-app.mjs",

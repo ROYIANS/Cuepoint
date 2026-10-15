@@ -1,3 +1,4 @@
+import type {ToolSpec} from "@cuepoint/agent-core";
 import {z} from "zod";
 import {ASPECT_PRESET_IDS} from "../../video/models/format";
 import {SHOT_STATUSES} from "../../video/models/shots";
@@ -13,7 +14,7 @@ import {
 } from "../../video/models/output";
 
 /** Build strict runtime and advertised schemas together; never accept passthrough fields. */
-export interface Spec<T> {
+export interface Spec<T> extends ToolSpec<T> {
     schema: z.ZodType<T, z.ZodTypeDef, unknown>;
     json: Record<string, unknown>;
     optional?: boolean

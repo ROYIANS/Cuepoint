@@ -1,13 +1,8 @@
 import type {AgentSelectedReferences} from "../../references/models/referenceInput";
 import type {AgentRequestMessage, AgentRun, AgentTokenUsage} from "./agent";
 
-export interface ContextPolicy {
-    autoCompress: boolean;
-    limitHistory: boolean;
-    historyMessageCount: number;
-    /** Explicit local budget, never presented as provider metadata. */
-    customContextTokens?: number;
-}
+import type {ContextPolicy} from '@cuepoint/agent-core';
+export type {ContextPolicy} from '@cuepoint/agent-core';
 
 export interface ContextSource {
     id: string;

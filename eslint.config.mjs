@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 export default [
     {ignores: ['packages/studio/src/app/routeTree.gen.ts', 'vendor/**', '**/node_modules/**', '**/dist/**', '.trellis/**']},
     {
-        files: ['src/**/*.{ts,tsx}', 'packages/*/src/**/*.{ts,tsx}', 'apps/*/src/**/*.{ts,tsx}'],
+        files: ['src/**/*.{ts,tsx}', 'packages/*/src/**/*.{ts,tsx}', 'apps/*/src/**/*.{ts,tsx}', 'examples/*/src/**/*.ts'],
         languageOptions: {
             parser: tseslint.parser,
             parserOptions: {project: ['./tsconfig.app.json'], tsconfigRootDir: fileURLToPath(new URL('.', import.meta.url)), ecmaFeatures: {jsx: true}},

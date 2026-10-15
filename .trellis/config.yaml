@@ -87,6 +87,12 @@ packages:
     path: packages/studio
   distribution:
     path: packages/distribution
+  agent-core:
+    path: packages/agent-core
+  agent-providers:
+    path: packages/agent-providers
+  agent-todo:
+    path: examples/agent-todo
 
 default_package: studio
 

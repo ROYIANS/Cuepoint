@@ -1,9 +1,91 @@
 {
   "packages": [
-    {"path": "apps/web", "name": "@cuepoint/web", "sources": ["src"], "dependencies": ["@cuepoint/studio"]},
-    {"path": "apps/desktop", "name": "@cuepoint/desktop", "sources": ["src"], "dependencies": ["@cuepoint/studio"]},
-    {"path": "apps/site", "name": "@cuepoint/site", "sources": ["src"], "dependencies": ["@cuepoint/distribution"]},
-    {"path": "packages/studio", "name": "@cuepoint/studio", "sources": ["src"], "dependencies": ["@cuepoint/distribution"]},
-    {"path": "packages/distribution", "name": "@cuepoint/distribution", "sources": ["src"], "dependencies": []}
+    {
+      "path": "apps/web",
+      "name": "@cuepoint/web",
+      "sources": [
+        "src"
+      ],
+      "dependencies": [
+        "@cuepoint/studio"
+      ]
+    },
+    {
+      "path": "apps/desktop",
+      "name": "@cuepoint/desktop",
+      "sources": [
+        "src"
+      ],
+      "dependencies": [
+        "@cuepoint/studio",
+        "@cuepoint/agent-providers"
+      ]
+    },
+    {
+      "path": "apps/site",
+      "name": "@cuepoint/site",
+      "sources": [
+        "src"
+      ],
+      "dependencies": [
+        "@cuepoint/distribution"
+      ]
+    },
+    {
+      "path": "packages/studio",
+      "name": "@cuepoint/studio",
+      "sources": [
+        "src"
+      ],
+      "dependencies": [
+        "@cuepoint/distribution",
+        "@cuepoint/agent-core",
+        "@cuepoint/agent-providers"
+      ]
+    },
+    {
+      "path": "packages/distribution",
+      "name": "@cuepoint/distribution",
+      "sources": [
+        "src"
+      ],
+      "dependencies": []
+    },
+    {
+      "path": "packages/agent-core",
+      "name": "@cuepoint/agent-core",
+      "sources": [
+        "src"
+      ],
+      "dependencies": [],
+      "publicSources": {
+        ".": "src/index.ts"
+      }
+    },
+    {
+      "path": "packages/agent-providers",
+      "name": "@cuepoint/agent-providers",
+      "sources": [
+        "src"
+      ],
+      "dependencies": [
+        "@cuepoint/agent-core"
+      ],
+      "publicSources": {
+        ".": "src/index.ts",
+        "./http": "src/http/index.ts"
+      }
+    },
+    {
+      "path": "examples/agent-todo",
+      "name": "@cuepoint/agent-todo",
+      "sources": [
+        "src"
+      ],
+      "dependencies": [
+        "@cuepoint/agent-core",
+        "@cuepoint/agent-providers"
+      ]
+    }
   ]
 }

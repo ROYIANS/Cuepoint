@@ -10,6 +10,9 @@ COPY apps/site/package.json ./apps/site/package.json
 COPY apps/desktop/package.json ./apps/desktop/package.json
 COPY packages/studio/package.json ./packages/studio/package.json
 COPY packages/distribution/package.json ./packages/distribution/package.json
+COPY packages/agent-core/package.json ./packages/agent-core/package.json
+COPY packages/agent-providers/package.json ./packages/agent-providers/package.json
+COPY examples/agent-todo/package.json ./examples/agent-todo/package.json
 RUN pnpm install --frozen-lockfile
 COPY . .
 ARG VITE_UMAMI_SCRIPT_URL=""

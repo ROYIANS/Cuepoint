@@ -98,7 +98,8 @@ it('normalizes absent versus false legacy flags at both checks without granting 
     });
     let round = 0;
     await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => ++round === 1 ? response([tool.name, later.name]) : answer()), [tool, later]);
-    expect(parses).toBe(3); expect(later.prepare).toHaveBeenCalledTimes(1);
+    // Request metadata, preflight, execution recheck and the same-transaction claim each parse independently.
+    expect(parses).toBe(4); expect(later.prepare).toHaveBeenCalledTimes(1);
     expect(tool.execute).toHaveBeenCalledTimes(1); expect(later.execute).toHaveBeenCalledTimes(1);
     const calls = await db.agentToolCalls.where('runId').equals(run.id).toArray();
     expect(calls).toHaveLength(2); expect(calls.every(call => call.status === 'completed')).toBe(true);

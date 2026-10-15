@@ -1,0 +1,24 @@
+{
+  "name": "@cuepoint/agent-core",
+  "version": "0.1.3",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "types": "tsc -p tsconfig.json --noEmit",
+    "test": "node ../../tooling/build-agent-packages.mjs && node ../../node_modules/vitest/vitest.mjs run --root ../.. packages/agent-core/src"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vitest": "^5.0.1"
+  }
+}

@@ -7,20 +7,23 @@ Batch queue, selection and genuine generation-source evidence extend these contr
 
 ## 2. Signatures
 - `beginAgentRun({threadId, connector, model, content?, retryOfRunId?}): Promise<AgentRun>`
-- `checkpointAgentRun(runId, sequence, output): Promise<void>`
+- `checkpointAgentRun(runId, sequence, output, store?): Promise<boolean>` returns true only when the conditional checkpoint was applied; stale/terminal no-ops return false.
 - `finishAgentRun(runId, status, output?, error?, finishReason?): Promise<void>`
-- `withThreadRunLock(threadId, execute, locks?): Promise<T>`
+- `withThreadRunLock(threadId, execute: (ownership: ThreadOwnership) => Promise<T>, locks?): Promise<T>`
+- `withExecutionOwnership(threadId, execute, locks?)` acquires execution ownership without startup recovery; `withOwnedExecution(ownership, threadId, execute)` validates the held capability and excludes concurrent reuse.
 - `recoverAbandonedRuns(locks?): Promise<void>`
-- `executeChatRun(run, apiKey, controller, fetchImpl?): Promise<void>`
+- `executeChatRun(run, apiKey, controller, fetchImpl?, registry?, store?, ownership?): Promise<void>` and `resumeChatRun(runId, apiKey, controller, fetchImpl?, registry?, store?, ownership?)` bind the real shared core `executeRun`. Production flows supply their already held ownership; direct consumers acquire execution-only ownership.
 - `createRunWriter(persist, onFailure): {push(output), flush(): Promise<void>}`
 - `AgentRunStatus`: running / waiting_approval / completed / failed / cancelled / interrupted.
 
 ## 3. Contracts
-- Caller owns the per-thread Web Lock from recovery through atomic begin, transport and final flush. Missing Web Locks fails closed. Recovery uses `ifAvailable`, never a heartbeat timeout that could invalidate a frozen live tab.
+- Caller owns the per-thread Web Lock from recovery through atomic begin, transport and final flush. Missing Web Locks fails closed. Recovery uses `ifAvailable`, never a heartbeat timeout that could invalidate a frozen live tab. `ThreadOwnership` is a private-identity capability, scoped to that actually held lock and exact thread; forged, released, foreign-thread or concurrent use must reject before resume/context writes. Keep current transactional run/call/step/approval/offer predicates; the product schema has no general durable run-owner/revision field.
+- The actual model/tool loop and serialized writer are implemented once in `@cuepoint/agent-core`; Studio's runtime is a typed ProductStore/context/tool/credential binding. Keep creative finishing/scope policies in Studio and generic execution in core. See [shared runtime](../agent-core/library/runtime.md).
 - Begin transaction creates input/output/run together and idempotently seeds a stable general Agent. Run snapshots agent instructions, request messages, connector identity and actual model. Never copy API keys into runs; reject URL credentials/query/fragment before saving connector identity.
 - Chat history is read from the scoped database in the begin transaction, not stale React messages. Only complete or legacy status-less messages enter later context. Error copy is stored separately from answer content.
 - Checkpoints use monotonically increasing sequence numbers. Writes coalesce and serialize; final transition awaits flush. Terminal executions cannot return to streaming. Local write failure aborts transport and is surfaced.
 - Explicit retry creates a new run/assistant message and references its predecessor, while reusing the original user message and frozen request snapshot. Only the latest unsuccessful text-only attempt without later user turns can retry. Runs with tool calls use durable continuation instead; see [Agent Tools](./agent-tools.md). Connector ID/provider/base URL and model must match; current credentials may rotate. No startup network resubmission.
+- Resolve the current saved connector/key at every actual main and auxiliary summary dispatch while preserving frozen identity. The entry-point key argument cannot freeze credentials for the whole run. Keep secrets out of snapshots/events and redact every credential used during that invocation before storing an error.
 - Route changes (including browser back/forward) abort the execution associated with the old thread. Bind newly created thread identity before navigation so the first send does not cancel itself; keep sending locked until final persistence settles.
 - The first new user message derives default thread titles in the begin transaction. Custom titles and retry titles remain unchanged.
 - Thread deletion cascades executions; late writes cannot resurrect records. Legacy v7 pending/streaming messages become interrupted, retain partial text, and instruct the user to resend (they lack a request snapshot).
@@ -58,7 +61,7 @@ Every path that ends an Agent execution: normal completion, model/transport fail
 `settleRun(db: StoreTx, runId, status: Exclude<AgentRunStatus, "running" | "waiting_approval">, options): Promise<boolean>` in `features/agent/commands/agentRunTerminalState.ts`. `options` = `{output?, error?, finishReason?, pauseReason?, preserveOutput?, messageError?, allowedFrom?}`. `finishAgentRun` is the thin `agentRuns`/`chatMessages` wrapper over it.
 
 ### 3. Contracts
-`settleRun` owns `status`, `error`, `finishReason`, `pauseReason`, `updatedAt`, `endedAt` and the assistant message's `content`/`reasoning`/`status`/`error`; it runs inside the caller's transaction so the ledger mutation, the run row and the message settle together. It is a no-op unless the current status is in `allowedFrom` (default `running`/`waiting_approval`), so a second settlement never rewrites an ended run. `preserveOutput` keeps the visible text (cancel, budget pause); a supplied empty final attempt must not clear text already displayed by an earlier step, and the `SETTLED_MESSAGE_STATUS` map is the only run→message status mapping. `messageError` addresses the reader without inventing a run-level `error`; `pauseReason` is cleared unless explicitly supplied. `cancelAgentRun` and `pauseAtModelStepLimit` route through it, and cancel accepts the resumable states so a user can end interrupted/failed work. `interrupted` vs `cancelled` is decided from one fresh `hasToolCalls` read.
+`settleRun` owns `status`, `error`, `finishReason`, `pauseReason`, `updatedAt`, `endedAt` and the assistant message's `content`/`reasoning`/`status`/`error`; it runs inside the caller's transaction so the ledger mutation, the run row and the message settle together. It applies the core `canSettleRun(status, allowedFrom?)` predicate, with default `running`/`waiting_approval`, so a second settlement never rewrites an ended run. `preserveOutput` keeps the visible text (cancel, budget pause); a supplied empty final attempt must not clear text already displayed by an earlier step, and the `SETTLED_MESSAGE_STATUS` map is the only run→message status mapping. `messageError` addresses the reader without inventing a run-level `error`; `pauseReason` is cleared unless explicitly supplied. `cancelAgentRun` and `pauseAtModelStepLimit` route through it, and cancel accepts the resumable states so a user can end interrupted/failed work. The core `modelStepLimitReached` predicate is shared by atomic pause/admission checks; `interrupted` vs `cancelled` is decided from one fresh `hasToolCalls` read.
 
 ### 4. Validation & Error Matrix
 | Condition | Result |
@@ -101,6 +104,8 @@ Good: switching topics mid-answer asks once, and confirming preserves the partia
 `agentUnavailableTool.test.ts`: an unregistered name and an offered-but-unloaded name each recorded as one failed call with the run continuing and the model receiving the bounded envelope.
 `chatStream.test.ts`: split UTF-8/CRLF/events, protocol errors/completion, abort reader cleanup, exact POST count and redaction.
 Existing connector/model-policy tests retain no-write-before-compatibility behavior. Browser smoke with a local fake provider must demonstrate interruption → explicit retry → reload with old and new answers preserved.
+
+Transaction-aware fault injection must forward the complete typed command argument tuple. For example, a `transitionToolCall` spy may reject the completed transition, but every other transition must call `original(...args)`, preserving the caller's `StoreTx` and conditional claim callback. Forwarding only the former five arguments opens a second default-store transaction inside the actual held transaction on SQLite and can self-deadlock; an IndexedDB-only pass cannot establish that the seam is correct. Keep the original unknown-effect and zero-resubmission assertions and verify the whole affected file against the real native bridge without extending its deadline.
 
 ## 7. Wrong vs Correct
 Wrong: `onDelta: () => void updateChatMessage(...)`, then independently save complete.

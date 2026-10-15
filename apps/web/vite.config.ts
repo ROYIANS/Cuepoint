@@ -5,6 +5,10 @@ import {tanstackRouter} from "@tanstack/router-plugin/vite";
 import {join} from "node:path";
 import {appVersion, chunkModuleReport, sharedPublic, studioSource} from "../../tooling/vite.shared";
 
+import {assertAgentPackageFreshness} from "../../tooling/agent-package-inputs";
+
+await assertAgentPackageFreshness();
+
 export default defineConfig({
     envDir: "../..",
     publicDir: sharedPublic,

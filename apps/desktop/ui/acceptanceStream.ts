@@ -1,4 +1,4 @@
-import {readSseEvents} from '@cuepoint/studio/reference/lib/ai/boundedSse';
+import {readSseEvents} from "@cuepoint/agent-providers/http";
 import {streamChatCompletions, type StreamChatInput, type StreamChatResult} from '@cuepoint/studio/reference/lib/ai/chatStream';
 import {streamResponses} from '@cuepoint/studio/reference/lib/ai/responsesStream';
 import {MAX_JSON_BYTES} from '@cuepoint/studio/reference/lib/resource/limits';

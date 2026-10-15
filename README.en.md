@@ -177,7 +177,7 @@ Import creates independent project and resource IDs. Imported memories require r
 
 ### Prerequisites
 
-Browser/GHCR CI uses **Node.js 22**; desktop release CI pins **Node.js 24.11.0**, as described in the [desktop distribution guide](docs/desktop-distribution.md). Follow the `packageManager` entry in [`package.json`](package.json), currently **pnpm 10.15.0**. In an existing workspace, also follow [`AGENTS.md`](AGENTS.md) and machine-specific package-manager instructions to avoid rebuilding dependencies with an incompatible version.
+Browser and the main GHCR quality job use **Node.js 22**; the independent Agent example and desktop release jobs use **Node.js 24.11.0**, as described in the [desktop distribution guide](docs/desktop-distribution.md). Follow the `packageManager` entry in [`package.json`](package.json), currently **pnpm 10.15.0**. In an existing workspace, also follow [`AGENTS.md`](AGENTS.md) and machine-specific package-manager instructions to avoid rebuilding dependencies with an incompatible version.
 
 ```bash
 git clone https://github.com/ROYIANS/Cuepoint.git
@@ -196,6 +196,8 @@ Open the URL printed by Vite, usually `http://localhost:5173`. Basic startup req
 | `pnpm dev` | Start the web application development server |
 | `pnpm dev:site` | Start the independent landing site |
 | `pnpm --filter @cuepoint/desktop build:frontend` | Build the normal desktop frontend |
+| `pnpm agent:build` | Emit the reusable Agent libraries and their declarations |
+| `pnpm agent:example:check` | Offline packed-consumer and durable SQLite conformance outside the workspace (Node ≥24.11) |
 | `pnpm quality` / `pnpm quality:self-test` | Check all owned sources and verify gate failure cases |
 | `pnpm build` | Build web/site separately and assemble their checked output in `dist/` |
 | `pnpm preview` | Preview the production build locally |
@@ -304,9 +306,18 @@ apps/
 └── site/                   # Independent lightweight landing site
 packages/
 ├── studio/                 # Shared product used by web and desktop
-│   └── src/                # Existing routes, components, db, domain and lib
-└── distribution/           # Brand, analytics, release/version/platform data
-    └── public/brand/       # Shared product identity assets
+│   └── src/
+│       ├── app/            # Bootstrap, routes, frame and cross-feature workflows
+│       ├── features/       # projects, video, audio, music, library,
+│       │                   # references, memory, settings and agent
+│       ├── platform/       # Storage, runtime, HTTP, media and fixed product services
+│       └── ui/             # Shared controls, icons and theme
+├── distribution/           # Brand, analytics, release/version/platform data
+│   └── public/brand/       # Shared product identity assets
+├── agent-core/             # Neutral execution, tools and context mechanisms
+└── agent-providers/        # Chat Completions/Responses and public HTTP mechanisms
+examples/
+└── agent-todo/             # Independent SQLite CLI consuming public Agent packages
 tooling/                    # Workspace, build, quality, model/native helpers
 tests/                      # Cross-package integration and permanent tests
 quality/                    # Source ownership, exact debt/retention contracts
@@ -316,17 +327,26 @@ docs/                       # Product and architecture documentation
 .trellis/                   # Development specs, tasks and session records
 ```
 
+Each feature owns its models, commands, queries, UI, tests and product tool bindings as needed. For example, Audio editing lives in `packages/studio/src/features/audio/`. The app layer composes features, `platform/storage` supplies storage mechanisms, and `platform/product/store.ts` selects the fixed product store. Packages use declared public exports; features cooperate through concrete command, query or service entries.
+
+[`@cuepoint/agent-core`](packages/agent-core/README.md) owns neutral Agent mechanisms. [`@cuepoint/agent-providers`](packages/agent-providers/README.md) supplies the existing protocols and an explicit public `/http` entry, with emitted ESM and declarations. Studio owns creative tools/prompts, project scope, reference pixels, current credentials, runtime HTTP authorization and product transactions.
+
+[`agent-todo`](examples/agent-todo/README.md) uses its own SQLite tables and business tools to demonstrate approval, rejection, cancellation and explicit recovery after process restart. It calls the same Agent execution implementation and demonstrates the host adapter another project supplies. `agent:example:check` installs local packed artifacts offline outside the workspace before checking the consumer. The example requires Node ≥24.11; shared libraries and web quality checks retain Node 22 support.
+
 ## Quality checks and contributing
 
-Read [`AGENTS.md`](AGENTS.md) and the relevant [Trellis development guidelines](.trellis/spec/frontend/index.md) before making changes. Persist project data through repositories and transactions in `packages/studio/src/db/`. Preserve project ownership, revision conflict checks, and import/export compatibility.
+Read [`AGENTS.md`](AGENTS.md) and the relevant [Trellis development guidelines](.trellis/spec/frontend/index.md) before making changes. Persist product data through concrete commands in `packages/studio/src/features/<feature>/commands/`. Nested operations retain the caller's store and transaction context. Preserve project ownership, revision conflict checks, and import/export contracts.
 
 Validate changes according to their scope. The complete release gate is:
 
 ```bash
 pnpm lint
+pnpm quality
+pnpm quality:self-test
 pnpm test
 pnpm models-dev:verify
 pnpm build
+pnpm agent:example:check # This check requires Node ≥24.11
 ```
 
 `lint` currently means type checking, not ESLint. Tests emphasize pure logic, repositories, and runtimes. Recording, browser CORS, actual model quality, and paid generation need separate real-environment verification. Distinguish mocked tests from live-provider validation in change descriptions, and preserve third-party licenses and snapshot provenance.

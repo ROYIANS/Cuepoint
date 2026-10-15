@@ -1,6 +1,7 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {requestOnce, readHttpJson, type HttpJsonReadPolicy} from "@/platform/http/requestBoundary";
-import * as bounded from "@/platform/http/boundedResponse";
+import {readHttpJson, type HttpJsonReadPolicy} from '@cuepoint/agent-providers/http';
+import {requestOnce} from "@/platform/http/requestBoundary";
+import * as bounded from "@cuepoint/agent-providers/http";
 import {MAX_ERROR_BYTES, MAX_JSON_BYTES} from "@/platform/media/limits";
 import {submitApimartImageGeneration, getApimartTask} from "@/features/video/providers/apimart";
 import {submitAIHubMixImageGeneration, downloadAIHubMixResult, type AIHubMixTask} from "@/features/video/providers/aihubmix";
@@ -130,17 +131,19 @@ describe("D07 actual adapter status, reading, paid outcome and cancellation", ()
     });
     it("keeps successful inline image JSON native above finite ordinary/audio budgets without large allocations", async () => {
         // Finite policy seam: any accidental bounded-reader use fails, while native .json runs.
-        const boundedRead = vi.spyOn(bounded, "readResponseJson").mockRejectedValue(new bounded.ResponseLimitError());
         const image = {id: "inline", object: "image", model: "model", status: "completed", output: [{index: 0, type: "file", content_type: "image/png", content_url: null, b64_json: "YQ=="}], error: null};
         const hub = Response.json(image, {headers: {"content-length": String(33 * 1024 * 1024)}});
         const hubJson = vi.spyOn(hub, "json");
+        const hubBody = vi.spyOn(hub, "body", "get").mockImplementation(() => {throw new Error("Bounded reader used for native JSON");});
         expect(await submitAIHubMixImageGeneration(credentials, {model: "model", prompt: "image"}, {fetchImpl: async () => hub})).toMatchObject({ok: true, task: {outputs: [{b64Json: "YQ=="}]}});
         const mart = Response.json({code: 200, data: [{task_id: "image"}]}, {headers: {"content-length": String(MAX_JSON_BYTES + 1)}});
         const martJson = vi.spyOn(mart, "json");
+        const martBody = vi.spyOn(mart, "body", "get").mockImplementation(() => {throw new Error("Bounded reader used for native JSON");});
         expect(await submitApimartImageGeneration(credentials, {model: "model"}, {fetchImpl: async () => mart})).toMatchObject({ok: true});
         expect(hubJson).toHaveBeenCalledOnce();
         expect(martJson).toHaveBeenCalledOnce();
-        expect(boundedRead).not.toHaveBeenCalled();
+        expect(hubBody).not.toHaveBeenCalled();
+        expect(martBody).not.toHaveBeenCalled();
     });
     it("does not replay a paid POST after unknown success-body outcome; explicit GET recovery is separate", async () => {
         const response = failingNative(200, new TypeError("response lost after submit")).response;

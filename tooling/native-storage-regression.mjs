@@ -5,6 +5,9 @@ import {dirname,join,relative,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createServer} from 'vite';
 import {nativeProbePath,nativeProbeBuildArguments} from '../apps/desktop/scripts/tool-resolver.mjs';
+import {assertAgentPackageFreshness} from './agent-package-inputs.ts';
+import {workspacePolicy} from './workspace.mjs';
+import {buildAgentPackages} from './build-agent-packages.mjs';
 import {runLoggedProcess} from '../apps/desktop/scripts/logged-process.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
@@ -25,8 +28,8 @@ async function filesUnder(directory) {
 }
 async function identity() {
     const files=[];
-    for (const directory of ['packages/studio/src','packages/distribution/src','apps/web/src','apps/site/src','apps/desktop/src','apps/desktop/scripts','apps/desktop/ui','tests','tooling','quality','apps/desktop/src-tauri/src','apps/desktop/src-tauri/permissions','apps/desktop/src-tauri/capabilities']) files.push(...await filesUnder(join(root,directory)));
-    for (const file of ['package.json','pnpm-workspace.yaml','pnpm-lock.yaml','vitest.config.ts','tsconfig.app.json',...['apps/web','apps/site','apps/desktop','packages/studio','packages/distribution'].flatMap(directory=>['package.json','tsconfig.json'].map(file=>`${directory}/${file}`)),'apps/web/vite.config.ts','apps/site/vite.config.ts','apps/web/index.html','apps/site/landing.html','apps/desktop/index.html','apps/desktop/src-tauri/tauri.conf.json','apps/desktop/src-tauri/Cargo.toml','apps/desktop/src-tauri/Cargo.lock','apps/desktop/src-tauri/build.rs']) files.push(join(root,file));
+    for (const directory of [...workspacePolicy(root).roots.map(prefix=>prefix.slice(0,-1)),...workspacePolicy(root).packages.filter(row=>row.publicSources).map(row=>`${row.path}/dist`),'apps/desktop/scripts','apps/desktop/ui','tests','tooling','quality','apps/desktop/src-tauri/src','apps/desktop/src-tauri/permissions','apps/desktop/src-tauri/capabilities']) files.push(...await filesUnder(join(root,directory)));
+    for (const file of ['package.json','pnpm-workspace.yaml','pnpm-lock.yaml','vitest.config.ts','tsconfig.app.json','tsconfig.json','tsconfig.node.json','eslint.config.mjs','knip.json',...workspacePolicy(root).packages.flatMap(row=>['package.json','tsconfig.json'].map(file=>`${row.path}/${file}`)),'apps/web/vite.config.ts','apps/site/vite.config.ts','apps/web/index.html','apps/site/landing.html','apps/desktop/index.html','apps/desktop/src-tauri/tauri.conf.json','apps/desktop/src-tauri/Cargo.toml','apps/desktop/src-tauri/Cargo.lock','apps/desktop/src-tauri/build.rs']) files.push(join(root,file));
     return Object.fromEntries(await Promise.all([...new Set(files)].sort().map(async path=>[relative(root,path),hash(await readFile(path))])));
 }
 async function run(command,args,log,env) {
@@ -81,6 +84,8 @@ if (mappedTables.length !== currentTables.length || new Set(mappedTables).size !
 for (const group of ownerAssertions.groups) {
     if (![...manifest.core,...manifest.business].includes(group.file) || !(await readFile(join(root,group.file),'utf8')).includes(group.case)) throw new Error(`Missing current business assertion anchor: ${group.file} ${group.case}`);
 }
+await buildAgentPackages();
+await assertAgentPackageFreshness(root);
 const before=await identity(),registry=await currentRegistry();
 const report={schemaVersion:1,startedAt:new Date().toISOString(),suite,tests,registry,node:process.version,commands:[],sourceBefore:before,browserComparators:manifest.browserComparators,ownerAssertions,limitations:'Rust JSON-line process harness exercises the current shared TypeScript/SQLite implementation. It does not measure WKWebView latency or replace packaged macOS acceptance. Postcommit table statistics alone are not proof of complete domain behavior; current command/assertion anchors and passing suite output are required together.'};
 const environment={...process.env,CARGO_INCREMENTAL:'0',CUEPOINT_STORAGE_TEST_OWNER:'sqlite',CUEPOINT_NATIVE_STORAGE_ACCEPTANCE:'1',CUEPOINT_NATIVE_STORE_PROBE:probe,CUEPOINT_TOOL_COVERAGE_DIR:join(evidenceDir,'coverage')};

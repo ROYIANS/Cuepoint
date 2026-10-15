@@ -1,25 +1,16 @@
-import {readHttpJson, requestOnce} from "../../../platform/http/requestBoundary";
-import {isReadAbort} from "../../../platform/http/boundedResponse";
-import {normalizeBaseUrl} from "../../../platform/http/baseUrl";
-import {redactCredentials} from "../../../platform/http/safeError";
+import {authHeaders, chatCompletionsUrl} from '@cuepoint/agent-providers';
+import {readHttpJson} from '@cuepoint/agent-providers/http';
+import {requestOnce} from "../../../platform/http/requestBoundary";
+import {isReadAbort} from "@cuepoint/agent-providers/http";
+import {normalizeBaseUrl} from "@cuepoint/agent-providers/http";
+import {redactCredentials} from "@cuepoint/agent-providers/http";
 import {type ChatModelMetadata, collectModelMetadata, parseModelMetadata} from "../../settings/models/modelMetadata";
 import {connectorProbeFetch} from "../../../platform/runtime/runtimeFetch";
 
-export {normalizeBaseUrl} from "../../../platform/http/baseUrl";
-
-export function authHeaders(apiKey: string): HeadersInit {
-    return {
-        Authorization: `Bearer ${apiKey.trim()}`,
-        "Content-Type": "application/json",
-    };
-}
+export {normalizeBaseUrl} from "@cuepoint/agent-providers/http";
 
 export function modelsUrl(baseUrl: string): string {
     return `${normalizeBaseUrl(baseUrl)}/models`;
-}
-
-export function chatCompletionsUrl(baseUrl: string): string {
-    return `${normalizeBaseUrl(baseUrl)}/chat/completions`;
 }
 
 export function maskApiKey(apiKey: string): string {

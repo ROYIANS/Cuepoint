@@ -66,7 +66,7 @@ export async function checkUnused(root) {
     exactKeys(row, ['issue', 'file', 'symbol', 'count', 'reason', 'owner', 'evidence'], 'unused contract');
     validateReview(row, 'unused contract');
     if (!owned(row.file) || !issueTypes.has(row.issue) || typeof row.symbol !== 'string' || !Array.isArray(row.evidence) || !row.evidence.length) throw new Error('unused contract: invalid issue/scope/symbol/evidence');
-    if (['src/', 'tooling/', 'apps/', 'packages/'].some(prefix => row.file.startsWith(prefix))) {
+    if (['src/', 'tooling/', 'apps/', 'packages/', 'examples/'].some(prefix => row.file.startsWith(prefix))) {
       if (!row.evidence.some(input => input.file === row.file)) throw new Error('unused contract: evidence must include the finding source file');
     }
     const seen = new Set();

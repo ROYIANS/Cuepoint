@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
-import {mkdtemp,readFile,realpath,rm,writeFile} from 'node:fs/promises';
+import {mkdir,mkdtemp,readFile,realpath,rm,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 
@@ -9,17 +9,24 @@ const launcher=await readFile(new URL('./build-frontend.mjs',import.meta.url),'u
 const workerName='build-frontend-worker.mjs';
 const report=`
 import {getHeapStatistics} from 'node:v8';
+import {readFileSync} from 'node:fs';
 process.stdout.write(JSON.stringify({args:process.argv.slice(2),execArgv:process.execArgv,
     cwd:process.cwd(),endpoint:process.env.CUEPOINT_STREAM_ENDPOINT,token:process.env.CUEPOINT_STREAM_TOKEN,
-    nodeOptions:process.env.NODE_OPTIONS,heapLimit:getHeapStatistics().heap_size_limit}));
+    nodeOptions:process.env.NODE_OPTIONS,heapLimit:getHeapStatistics().heap_size_limit,agentPrepared:readFileSync('agent-build-ready','utf8')}));
 process.stderr.write('worker stderr');
 `;
 
 async function fixture(body=report) {
     const root=await realpath(await mkdtemp(join(tmpdir(),'cuepoint frontend launcher ')));
-    await writeFile(join(root,'build-frontend.mjs'),launcher);
-    await writeFile(join(root,workerName),body);
-    return {root,entry:join(root,'build-frontend.mjs'),cleanup:()=>rm(root,{recursive:true,force:true})};
+    const scripts=join(root,'apps/desktop/scripts');
+    await mkdir(scripts,{recursive:true});
+    await mkdir(join(root,'tooling'));
+    // Preserve the actual launcher's relative dependency topology. This fixture
+    // isolates process forwarding; real frontend builds exercise the actual compiler.
+    await writeFile(join(root,'tooling/build-agent-packages.mjs'),"import {writeFile} from 'node:fs/promises';export async function buildAgentPackages(){await writeFile(new URL('../agent-build-ready',import.meta.url),'prepared');}");
+    await writeFile(join(scripts,'build-frontend.mjs'),launcher);
+    await writeFile(join(scripts,workerName),body);
+    return {root,entry:join(scripts,'build-frontend.mjs'),cleanup:()=>rm(root,{recursive:true,force:true})};
 }
 function run(f,{args=[],env={},nodeArgs=[]}={}) {
     const child=spawn(process.execPath,[...nodeArgs,f.entry,...args],{
@@ -50,11 +57,13 @@ test('normal and acceptance builds inherit args, cwd and environment with one fi
             assert.deepEqual(actual.args,args);
             assert.deepEqual(actual.execArgv,['--max-old-space-size=4096']);
             assert.equal(actual.cwd,f.root);
+            assert.equal(actual.agentPrepared,'prepared');
             assert.equal(actual.endpoint,env.CUEPOINT_STREAM_ENDPOINT);
             assert.equal(actual.token,env.CUEPOINT_STREAM_TOKEN);
             assert.equal(actual.nodeOptions,env.NODE_OPTIONS);
             assert.ok(actual.heapLimit>4*1024**3 && actual.heapLimit<5*1024**3);
             assert.equal(result.stderr,'worker stderr');
+            assert.equal(await readFile(join(f.root,'agent-build-ready'),'utf8'),'prepared');
         }
     } finally {await f.cleanup();}
 });

@@ -1,8 +1,9 @@
-import type {AgentToolCall, AgentToolEffect, AgentToolPreview} from '../models/agent';
+import {createToolFactory, type ToolContext, type ToolDefinition} from "@cuepoint/agent-core";
+import type {AgentToolPreview} from '../models/agent';
 import type {Spec} from './businessSchemas';
 import type {ProductStore} from "../../../platform/storage/types";
 
-export interface AgentToolContext {
+export interface AgentToolContext extends ToolContext<AgentToolPreview> {
     /** Explicit local storage context; copied for each root, never global ambient state. */
     store?: ProductStore;
     projectId?: string;
@@ -13,40 +14,13 @@ export interface AgentToolContext {
     preview?: AgentToolPreview;
 }
 
-/** Callbacks consume this definition's parsed output, never untrusted model input. */
-export interface TypedToolDefinition<Args, Name extends string = string> {
-    name: Name;
-    title: string;
-    description: string;
-    parameters: Record<string, unknown>;
-    effect: AgentToolEffect;
-    atomic?: boolean;
-    requiresConfirmation?: boolean;
-    recovery?: 'generation' | 'repeatable';
-    parseArguments: (raw: unknown) => Args;
-    highRisk: (args: Args) => boolean;
-    prepare?: (args: Args, context: AgentToolContext) => Promise<AgentToolPreview>;
-    execute: (args: Args, context: AgentToolContext) => Promise<unknown>;
-}
-
+/** Product context is supplied only by Studio; the generic parser/callback relationship lives in core. */
+export type TypedToolDefinition<Args, Name extends string = string> = Omit<ToolDefinition<Args, AgentToolContext, AgentToolPreview, unknown, Name>, "recovery"> & {recovery?: "generation" | "repeatable"};
 export type AgentToolDefinition = TypedToolDefinition<unknown>;
 export type ToolBody<Args, Name extends string> = Omit<TypedToolDefinition<Args, Name>, 'parameters' | 'parseArguments'>;
 
+const defineHostTool = createToolFactory<AgentToolContext, AgentToolPreview>();
 export function defineTool<Args, const Name extends string>(spec: Spec<Args>, body: ToolBody<NoInfer<Args>, Name>): TypedToolDefinition<Args, Name> {
-    return {...body, parameters: spec.json, parseArguments: raw => spec.schema.parse(raw)};
+    return {...defineHostTool(spec, body), recovery: body.recovery};
 }
-
-export function assertUniqueToolNames(definitions: readonly { name: string }[]): void {
-    const names = new Set<string>();
-    for (const definition of definitions) {
-        if (names.has(definition.name)) throw new Error('工具名称重复');
-        names.add(definition.name);
-    }
-}
-
-/** Types cannot prove durable metadata still agrees with current code after awaited work. */
-export function toolMetadataMatches<Args>(tool: TypedToolDefinition<Args>, args: Args, call: Pick<AgentToolCall, 'effect' | 'highRisk' | 'atomic' | 'recovery' | 'requiresConfirmation'>): boolean {
-    return tool.effect === call.effect && tool.highRisk(args) === call.highRisk &&
-        Boolean(tool.atomic) === Boolean(call.atomic) && tool.recovery === call.recovery &&
-        Boolean(tool.requiresConfirmation) === Boolean(call.requiresConfirmation);
-}
+export {assertUniqueToolNames, toolMetadataMatches} from "@cuepoint/agent-core";

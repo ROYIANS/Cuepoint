@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
-    "types": "tsc -p tsconfig.json"
+    "dev": "node ../../tooling/build-agent-packages.mjs && vite --host 127.0.0.1",
+    "build": "node ../../tooling/build-agent-packages.mjs && vite build",
+    "types": "node ../../tooling/build-agent-packages.mjs && tsc -p tsconfig.json"
   },
   "dependencies": {
     "@cuepoint/studio": "workspace:*"

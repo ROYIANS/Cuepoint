@@ -3486,30 +3486,6 @@
       ]
     },
     {
-      "original": "packages/studio/src/lib/ai/baseUrl.ts",
-      "file": "packages/studio/src/platform/http/baseUrl.ts",
-      "target": "packages/studio/src/platform/http/baseUrl.ts",
-      "owner": "platform/http",
-      "public": false,
-      "publicTypes": []
-    },
-    {
-      "original": "packages/studio/src/lib/ai/boundedResponse.ts",
-      "file": "packages/studio/src/platform/http/boundedResponse.ts",
-      "target": "packages/studio/src/platform/http/boundedResponse.ts",
-      "owner": "platform/http",
-      "public": false,
-      "publicTypes": []
-    },
-    {
-      "original": "packages/studio/src/lib/ai/boundedSse.ts",
-      "file": "packages/studio/src/platform/http/boundedSse.ts",
-      "target": "packages/studio/src/platform/http/boundedSse.ts",
-      "owner": "platform/http",
-      "public": false,
-      "publicTypes": []
-    },
-    {
       "original": "packages/studio/src/lib/ai/catalog.ts",
       "file": "packages/studio/src/features/settings/models/catalog.ts",
       "target": "packages/studio/src/features/settings/models/catalog.ts",
@@ -3775,14 +3751,6 @@
       "publicSymbols": [
         "toResponseInput"
       ]
-    },
-    {
-      "original": "packages/studio/src/lib/ai/safeError.ts",
-      "file": "packages/studio/src/platform/http/safeError.ts",
-      "target": "packages/studio/src/platform/http/safeError.ts",
-      "owner": "platform/http",
-      "public": false,
-      "publicTypes": []
     },
     {
       "original": "packages/studio/src/lib/ai/tavily.ts",
@@ -5760,6 +5728,14 @@
       "owner": "features/projects",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/runtime/runCredentials.ts",
+      "file": "packages/studio/src/features/agent/runtime/runCredentials.ts",
+      "target": "packages/studio/src/features/agent/runtime/runCredentials.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [
@@ -6218,9 +6194,9 @@
     "@/lib/ai/aihubmix": "@/features/video/providers/aihubmix",
     "@/lib/ai/apimart": "@/features/video/providers/apimart",
     "@/lib/ai/apimartAudio": "@/features/audio/providers/apimartAudio",
-    "@/lib/ai/baseUrl": "@/platform/http/baseUrl",
-    "@/lib/ai/boundedResponse": "@/platform/http/boundedResponse",
-    "@/lib/ai/boundedSse": "@/platform/http/boundedSse",
+    "@/lib/ai/baseUrl": "@cuepoint/agent-providers/http",
+    "@/lib/ai/boundedResponse": "@cuepoint/agent-providers/http",
+    "@/lib/ai/boundedSse": "@cuepoint/agent-providers/http",
     "@/lib/ai/catalog": "@/features/settings/models/catalog",
     "@/lib/ai/chatModelPolicy": "@/features/settings/models/chatModelPolicy",
     "@/lib/ai/chatStream": "@/features/agent/providers/chatStream",
@@ -6240,12 +6216,11 @@
     "@/lib/ai/modelCatalog/validate": "@/features/settings/modelCatalog/validate",
     "@/lib/ai/modelMetadata": "@/features/settings/models/modelMetadata",
     "@/lib/ai/modelVendors": "@/features/settings/models/modelVendors",
-    "@/lib/ai/openaiCompatible": "@/features/agent/providers/openaiCompatible",
     "@/lib/ai/reasoningPolicy": "@/features/settings/models/reasoningPolicy",
     "@/lib/ai/referenceWire": "@/features/agent/providers/referenceWire",
     "@/lib/ai/requestBoundary": "@/platform/http/requestBoundary",
     "@/lib/ai/responsesStream": "@/features/agent/providers/responsesStream",
-    "@/lib/ai/safeError": "@/platform/http/safeError",
+    "@/lib/ai/safeError": "@cuepoint/agent-providers/http",
     "@/lib/ai/tavily": "@/features/references/providers/tavily",
     "@/lib/ai/visionCapability": "@/features/settings/models/visionCapability",
     "@/lib/appVersion": "@/platform/runtime/appVersion",
@@ -6527,6 +6502,15 @@
     "@/lib/productionRevision": {
       "targetRevision": "@/platform/data/revision",
       "validateProductionTarget": "@/features/video/models/productionRevision"
+    },
+    "@/lib/ai/openaiCompatible": {
+      "authHeaders": "@cuepoint/agent-providers",
+      "chatCompletionsUrl": "@cuepoint/agent-providers",
+      "normalizeBaseUrl": "@cuepoint/agent-providers/http",
+      "modelsUrl": "@/features/agent/providers/openaiCompatible",
+      "maskApiKey": "@/features/agent/providers/openaiCompatible",
+      "listModels": "@/features/agent/providers/openaiCompatible",
+      "testConnection": "@/features/agent/providers/openaiCompatible"
     }
   }
 }

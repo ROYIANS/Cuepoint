@@ -1,3 +1,4 @@
+import {canSettleRun} from '@cuepoint/agent-core';
 import type {StoreTx} from "../../../platform/storage/types";
 import type {AgentRun, AgentRunOutput, AgentRunStatus} from "../models/agent";
 import {nowIso} from "../../../platform/identity";
@@ -28,7 +29,7 @@ export async function settleRun(db: StoreTx, runId: string, status: Exclude<Agen
     allowedFrom?: readonly AgentRunStatus[];
 } = {}): Promise<boolean> {
     const run = await db.agentRuns.get(runId);
-    if (!run || !(options.allowedFrom ?? ["running", "waiting_approval"]).includes(run.status)) return false;
+    if (!run || !canSettleRun(run.status,options.allowedFrom)) return false;
     const message = await db.chatMessages.get(run.assistantMessageId);
     if (!message || message.runId !== run.id) throw new Error("执行消息不存在");
     const at = nowIso();

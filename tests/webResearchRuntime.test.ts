@@ -95,7 +95,7 @@ describe('actual durable web tool lifecycle', () => {
   it('keeps a post-service persistence failure unknown and blocks resubmission', async () => {
     const run = await begin(); const original = toolRepo.transitionToolCall;
     const service = vi.fn(async () => serviceResult()); vi.stubGlobal('fetch', service);
-    vi.spyOn(toolRepo, 'transitionToolCall').mockImplementation(async (runId, callId, from, to, extra) => { if (to === 'completed') throw new Error('storage unavailable'); return original(runId, callId, from, to, extra); });
+    vi.spyOn(toolRepo, 'transitionToolCall').mockImplementation(async (...args) => { if (args[3] === 'completed') throw new Error('storage unavailable'); return original(...args); });
     await executeChatRun(run, connector.apiKey, new AbortController(), async () => tool(search.name, search.args));
     expect((await db.agentToolCalls.toArray())[0].status).toBe('unknown');
     await expect(resumeChatRun(run.id, connector.apiKey, new AbortController(), async () => answer())).rejects.toThrow('不确定');

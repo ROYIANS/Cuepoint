@@ -177,7 +177,7 @@ IP 是长期创作身份或世界设定的组织方式，不是另一种项目�
 
 ### 环境准备
 
-浏览器与 GHCR 流程使用 **Node.js 22**；桌面发布流程固定使用 **Node.js 24.11.0**，详见[桌面打包指南](docs/desktop-distribution.md)。包管理器版本以 [`package.json`](package.json) 的 `packageManager` 为准，当前为 **pnpm 10.15.0**。在已有开发环境中遵循仓库 [`AGENTS.md`](AGENTS.md) 及本机包管理器约定，避免混用版本重建依赖。
+浏览器与 GHCR 主质量检查使用 **Node.js 22**；独立 Agent 示例检查与桌面发布流程使用 **Node.js 24.11.0**，详见[桌面打包指南](docs/desktop-distribution.md)。包管理器版本以 [`package.json`](package.json) 的 `packageManager` 为准，当前为 **pnpm 10.15.0**。在已有开发环境中遵循仓库 [`AGENTS.md`](AGENTS.md) 及本机包管理器约定，避免混用版本重建依赖。
 
 ```bash
 git clone https://github.com/ROYIANS/Cuepoint.git
@@ -196,6 +196,8 @@ pnpm dev
 | `pnpm dev` | 启动 Web 应用开发服务 |
 | `pnpm dev:site` | 启动独立官网开发服务 |
 | `pnpm --filter @cuepoint/desktop build:frontend` | 构建正常桌面前端 |
+| `pnpm agent:build` | 按依赖顺序构建 Agent 包的 ESM 与类型声明 |
+| `pnpm agent:example:check` | 在仓库外离线安装打包产物，验证独立 SQLite Agent（Node ≥24.11） |
 | `pnpm quality` / `pnpm quality:self-test` | 检查全部源码及门禁失败用例 |
 | `pnpm build` | 分别构建 Web／官网并校验合并到 `dist/` |
 | `pnpm preview` | 本地预览生产构建 |
@@ -304,9 +306,18 @@ apps/
 └── site/                   # 独立的轻量官网
 packages/
 ├── studio/                 # Web 与桌面端共用的产品实现
-│   └── src/                # 现有 routes、components、db、domain 和 lib
-└── distribution/           # 品牌、统计、发布版本与平台信息
-    └── public/brand/       # 共用产品标识资源
+│   └── src/
+│       ├── app/            # 启动、路由、页面框架与跨业务工作流
+│       ├── features/       # projects、video、audio、music、library、
+│       │                   # references、memory、settings、agent
+│       ├── platform/       # 存储、运行时、HTTP、媒体与固定产品服务
+│       └── ui/             # 通用控件、图标与主题
+├── distribution/           # 品牌、统计、发布版本与平台信息
+│   └── public/brand/       # 共用产品标识资源
+├── agent-core/             # 通用 Agent 执行、工具与上下文机制
+└── agent-providers/        # Chat Completions／Responses；公有 HTTP 机制入口
+examples/
+└── agent-todo/             # 独立 SQLite CLI；只使用 Agent 公有包
 tooling/                    # 工作区、构建、质量、模型与原生验证工具
 tests/                      # 跨包集成与永久测试
 quality/                    # 源码归属、精确债务与保留契约
@@ -316,17 +327,26 @@ docs/                       # 产品与架构文档
 .trellis/                   # 开发规范、任务与会话记录
 ```
 
+每个业务 feature 按需要收纳自己的模型、命令、查询、界面、测试和产品工具适配；例如音频编辑相关代码集中在 `packages/studio/src/features/audio/`。`app` 负责组合，`platform/storage` 提供存储机制，`platform/product/store.ts` 选择固定的产品存储实例。跨包通过声明的公有导出调用，跨 feature 通过具体命令、查询或服务入口协作。
+
+Agent 的通用机制由 [`@cuepoint/agent-core`](packages/agent-core/README.md) 承担；[`@cuepoint/agent-providers`](packages/agent-providers/README.md) 提供现有协议与显式的 `/http` 公有入口，使用构建后的 ESM 和类型声明。Studio 负责创作工具、提示、项目范围、资料像素、连接凭据、运行时 HTTP 权限以及产品事务。
+
+[`agent-todo`](examples/agent-todo/README.md) 使用自己的 SQLite 表和业务工具，演示批准、拒绝、停止以及进程重启后的显式恢复。它调用同一套 Agent 执行实现，展示其他项目需要实现的宿主适配。`agent:example:check` 在仓库外离线安装本地打包产物后验证示例；示例需要 Node ≥24.11，通用包和 Web 质量检查保留 Node 22 支持。
+
 ## 质量检查与贡献
 
-开始修改前阅读 [`AGENTS.md`](AGENTS.md) 和相关 [Trellis 开发规范](.trellis/spec/frontend/index.md)。项目数据写入通过 `packages/studio/src/db/` 中的仓储函数和事务完成；新增功能应保持项目归属、版本冲突检查和导入导出兼容。
+开始修改前阅读 [`AGENTS.md`](AGENTS.md) 和相关 [Trellis 开发规范](.trellis/spec/frontend/index.md)。产品数据写入通过 `packages/studio/src/features/<feature>/commands/` 中的具体命令完成；嵌套操作沿用调用者的存储和事务上下文，保持项目归属、版本冲突检查和导入导出契约。
 
 提交前按改动范围验证，完整发布门禁为：
 
 ```bash
 pnpm lint
+pnpm quality
+pnpm quality:self-test
 pnpm test
 pnpm models-dev:verify
 pnpm build
+pnpm agent:example:check # 此项需要 Node ≥24.11
 ```
 
 `lint` 当前是类型检查，不是 ESLint。测试以纯逻辑、数据层和运行时为主；录音、浏览器跨域、实际模型质量及付费生成还需要独立的真实环境验证。请在变更说明中区分模拟测试和真实供应商验证，并保留第三方许可与快照来源。

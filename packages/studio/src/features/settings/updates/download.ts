@@ -1,4 +1,4 @@
-import {cancelBody, isReadAbort} from "../../../platform/http/boundedResponse";
+import {cancelBody, isReadAbort} from "@cuepoint/agent-providers/http";
 import {sha256Bytes} from "../../../platform/media/sha256";
 import type {ReleaseAsset} from "@cuepoint/distribution/releases";
 

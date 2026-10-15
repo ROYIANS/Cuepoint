@@ -1,8 +1,6 @@
+import {accumulateStreamDelta, createReasoningAccum, finalizeReasoningAccum} from "@cuepoint/agent-core";
 import { describe, expect, it, vi } from "vitest";
 import {
-  accumulateStreamDelta,
-  createReasoningAccum,
-  finalizeReasoningAccum,
   streamChatCompletions,
 } from "@/features/agent/providers/chatStream";
 

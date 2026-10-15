@@ -7,7 +7,7 @@ export const IDENTITY_VERSION = 'ts-ast-tokens-v1';
 export const hash = value => createHash('sha256').update(value).digest('hex');
 export const relative = (root, file) => path.relative(root, file).split(path.sep).join('/');
 export const inside = file => typeof file === 'string' && file.length > 0 && !path.isAbsolute(file) && !file.split(/[\\/]/).includes('..') && !file.includes('\\');
-export const owned = file => ['src/', 'tooling/', 'apps/', 'packages/'].some(prefix => file.startsWith(prefix)) || file === 'package.json';
+export const owned = file => ['src/', 'tooling/', 'apps/', 'packages/', 'examples/'].some(prefix => file.startsWith(prefix)) || file === 'package.json';
 export async function filesUnder(root, directory) {
   const result = [];
   async function visit(dir) {

@@ -4,10 +4,12 @@ import {fileURLToPath} from 'node:url';
 import {join} from 'node:path';
 import {assembleWeb} from './assemble-web.mjs';
 import {verifyStudioStyles} from './verify-studio-styles.mjs';
+import {buildAgentPackages} from './build-agent-packages.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(import.meta.url);
 const vite = join(require.resolve('vite/package.json'), '../bin/vite.js');
+await buildAgentPackages();
 for (const name of ['web', 'site']) {
     const code = await new Promise((accept, reject) => {
         const child = spawn(process.execPath, [vite, 'build'], {cwd: join(root, 'apps', name), env: process.env, stdio: 'inherit', shell: false});

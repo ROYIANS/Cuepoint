@@ -1,6 +1,7 @@
+import {createCapabilityLoading,selectCapabilityGroups} from '@cuepoint/agent-core';
 import type {ProductStore} from "../../../platform/storage/types";
 import {defineTool} from './toolDefinition';
-import {DISCOVERY_TOOL_NAME, MAX_LOADED_TOOLS, toolNamesForCall} from "../models/agentToolSelection";
+import {DISCOVERY_TOOL_NAME, toolNamesForCall} from "../models/agentToolSelection";
 import {z} from "zod";
 import {db as productDb} from "../../../platform/product/store";
 import {executeAtomicTool} from "../commands/agentTools";
@@ -18,24 +19,9 @@ const foundation = (name: string) => name === "workspace_overview" || name === "
 
 /** Freeze descriptions, instructions and permission-filtered names at run creation. */
 export function createToolLoading(skillIds: readonly string[], allowedNames: readonly string[], projectKind?: ProjectKind): AgentToolLoading | undefined {
-    const groups = AGENT_SKILLS.filter((skill) => skillIds.includes(skill.id)).map((skill) => ({
-        ...skill,
-        toolNames: skill.toolNames.filter((name) => allowedNames.includes(name))
-    })).filter((skill) => skill.toolNames.length);
-    const deferred = groups.filter((skill) => skill.toolNames.some((name) => !foundation(name)));
-    if (!deferred.length) return undefined;
-    const foundationToolNames = [...new Set([...allowedNames.filter(foundation), DISCOVERY_TOOL_NAME])];
-    const preferred = projectKind === "audio" ? "audio-production" : projectKind === "music" ? "music-creation" : undefined;
-    const initial = deferred.find((group) => group.id === preferred);
-    const loadedToolNames = initial ? [...new Set(initial.toolNames)] : [];
-    const preload = new Set([...foundationToolNames, ...loadedToolNames]).size <= MAX_LOADED_TOOLS;
-    return {
-        version: 1,
-        groups: deferred,
-        foundationToolNames,
-        foundationInstructions: groups.filter((skill) => skill.toolNames.every(foundation)).map((skill) => skill.instructions).join("\n"),
-        loadedGroupIds: initial && preload ? [initial.id] : [], loadedToolNames: preload ? loadedToolNames : [],
-    };
+    const groups=AGENT_SKILLS.filter(skill=>skillIds.includes(skill.id));
+    const preferred=projectKind === 'audio' ? 'audio-production' : projectKind === 'music' ? 'music-creation' : undefined;
+    return createCapabilityLoading(groups,allowedNames,foundation,DISCOVERY_TOOL_NAME,preferred);
 }
 
 export function toolLoadingInstructions(state: AgentToolLoading): string {
@@ -97,14 +83,8 @@ export const DISCOVERY_TOOLS = [defineTool({
                 };
             }
             const pending = (await db.agentToolCalls.where("runId").equals(run.id).toArray()).filter((row) => !settled(row));
-            const pinned = pending.map((row) => row.name).filter((name) => !state.foundationToolNames.includes(name));
-            const loadedToolNames = [...new Set([...selected.flatMap((group) => group.toolNames), ...pinned])].filter((name) => run.enabledToolNames?.includes(name)).sort();
-            if (new Set([...state.foundationToolNames, ...loadedToolNames]).size > MAX_LOADED_TOOLS) throw new Error(`同时加载的工具超过 ${MAX_LOADED_TOOLS} 个，请一次选择一个分组，待当前调用完成后再切换。`);
-            const next = {
-                ...state,
-                loadedGroupIds: [...new Set([...selected.map((group) => group.id), ...state.loadedGroupIds.filter((id) => state.groups.find((group) => group.id === id)?.toolNames.some((name) => pinned.includes(name)))])],
-                loadedToolNames
-            };
+            const next=selectCapabilityGroups(state,args.groupIds,pending,run.enabledToolNames ?? []);
+            const loadedToolNames=next.loadedToolNames;
             await db.agentRuns.update(run.id, {toolLoading: next});
             return {
                 loadedGroupIds: next.loadedGroupIds,

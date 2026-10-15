@@ -57,8 +57,20 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  agent-example:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.11.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm agent:example:check
+
   docker:
-    needs: quality
+    needs: [quality, agent-example]
     if: github.event_name != 'pull_request'
     permissions:
       contents: read

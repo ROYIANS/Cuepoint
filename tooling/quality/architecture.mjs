@@ -2,7 +2,7 @@ import ts from 'typescript';
 import {checkStudioOwnership} from './studio.mjs';
 import path from 'node:path';
 import { relative } from './shared.mjs';
-import {workspacePolicy, packageBoundary, ownedTypescriptFiles, importContract} from '../workspace.mjs';
+import {workspacePolicy, packageBoundary, ownedTypescriptFiles, importContract, publicSourcePaths} from '../workspace.mjs';
 
 function staticImportIsType(node) {
   if (ts.isImportDeclaration(node)) {
@@ -54,6 +54,8 @@ export async function checkArchitecture(root) {
   const config = ts.readConfigFile(configFile, ts.sys.readFile);
   if (config.error) throw new Error(ts.flattenDiagnosticMessageText(config.error.messageText, '\n'));
   const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, root, undefined, configFile);
+  parsed.options.baseUrl ??= root;
+  parsed.options.paths = {...parsed.options.paths, ...publicSourcePaths(policy)};
   if (parsed.errors.length) throw new Error(ts.formatDiagnosticsWithColorAndContext(parsed.errors, { getCurrentDirectory: () => root, getCanonicalFileName: value => value, getNewLine: () => '\n' }));
   const program = ts.createProgram(parsed.fileNames, parsed.options);
   const checker = program.getTypeChecker();

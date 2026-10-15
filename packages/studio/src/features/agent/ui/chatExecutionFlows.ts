@@ -90,7 +90,7 @@ export async function executeNewChatMessage({
 
         }
         const targetThread = thread;
-        await withThreadRunLock(targetThread.id, async () => {
+        await withThreadRunLock(targetThread.id, async (ownership) => {
             if (controller.signal.aborted) {
                 await discardUnusedThread(targetThread.id, created);
                 return;
@@ -131,7 +131,7 @@ export async function executeNewChatMessage({
                 interactionMode: activeThreadId ? interactionMode : "smart"
             });
             references.acknowledge(owner);
-            await executeChatRun(run, connector.apiKey, controller);
+            await executeChatRun(run, connector.apiKey, controller, undefined, undefined, undefined, ownership);
         });
 
     }, {
@@ -155,7 +155,7 @@ export async function retryFrozenChatRun({runId, activeThreadId, controller, isT
     if (!connector) throw new Error("原连接已删除，请重新配置后发送新消息");
     assertRetryConnector(previous, connector);
     return runWithCompatibleChatModel(connector, previous.model, () =>
-        withThreadRunLock(previous.threadId, async () => {
+        withThreadRunLock(previous.threadId, async (ownership) => {
             if (controller.signal.aborted) return;
             const run = await beginAgentRun({
                 threadId: previous.threadId,
@@ -163,7 +163,7 @@ export async function retryFrozenChatRun({runId, activeThreadId, controller, isT
                 model: previous.model,
                 retryOfRunId: previous.id
             });
-            await executeChatRun(run, connector.apiKey, controller);
+            await executeChatRun(run, connector.apiKey, controller, undefined, undefined, undefined, ownership);
         }), {
         signal: controller.signal,
         isCurrent: () => isThreadCurrent(previous.threadId),
@@ -202,9 +202,9 @@ export async function resolveChatRunAction({
     if (!connector) throw new Error("决定已保存。原连接不存在，请恢复连接后继续或结束执行。");
     assertRetryConnector(run, connector);
     return runWithCompatibleChatModel(connector, run.model, () =>
-        withThreadRunLock(run.threadId, async () => {
+        withThreadRunLock(run.threadId, async (ownership) => {
             if (controller.signal.aborted) return;
-            await resumeChatRun(run.id, connector.apiKey, controller);
+            await resumeChatRun(run.id, connector.apiKey, controller, undefined, undefined, undefined, ownership);
         }), {
         signal: controller.signal,
         isCurrent: () => isThreadCurrent(run.threadId),

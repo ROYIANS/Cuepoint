@@ -4,6 +4,10 @@ import { defineConfig } from "vitest/config";
 import {createRequire} from "node:module";
 import {snapshotOwner, snapshotModule} from "./tooling/snapshot-owners.ts";
 
+import {assertAgentPackageFreshness} from "./tooling/agent-package-inputs";
+
+await assertAgentPackageFreshness();
+
 const studioRequire = createRequire(new URL("./packages/studio/package.json", import.meta.url));
 const integrationDependencies = ["@dnd-kit/core", "@dnd-kit/sortable", "@tauri-apps/api/core", "@tauri-apps/plugin-http"];
 
@@ -37,7 +41,7 @@ export default defineConfig({
     ],
   },
   test: {
-    include: ["tests/**/*.test.ts", "packages/studio/src/features/**/*.test.ts"],
+    include: ["tests/**/*.test.ts", "packages/studio/src/features/**/*.test.ts", "packages/agent-*/src/**/*.test.ts"],
     setupFiles: ["./tests/setup.ts"],
     clearMocks: true,
     ...(process.env.CUEPOINT_STORAGE_TEST_OWNER === "sqlite" ? {maxWorkers:2,testTimeout:20000,hookTimeout:20000} : {}),

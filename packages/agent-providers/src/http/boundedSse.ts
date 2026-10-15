@@ -1,5 +1,5 @@
-import {assertResponseBytes, cancelBody, utf8Bytes} from "./boundedResponse";
-import {MAX_JSON_BYTES} from "../media/limits";
+import {assertResponseBytes, cancelBody, utf8Bytes} from "./boundedResponse.js";
+import {MAX_JSON_BYTES} from "./limits.js";
 
 interface SseEvent {
     data: string;

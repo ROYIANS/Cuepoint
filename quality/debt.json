@@ -8,8 +8,8 @@
   "allowances": [
     {
       "rule": "preserve-caught-error",
-      "file": "packages/studio/src/features/agent/runtime/contextCompaction.ts",
-      "signature": "cd034102c2d6e13ef17b4b787593425937e77106796cd2dea073548ee4381bb7",
+      "file": "packages/agent-core/src/compaction.ts",
+      "signature": "66e7a0aa7ca98159915efb9b170db362fdfed643e425dcb6f3dc6ffbc3741d7a",
       "count": 1,
       "reason": "Throw only the already credential-redacted bounded compaction message. Attaching the original provider/parse exception would preserve unredacted transport/request state.",
       "owner": "Agent context"
@@ -24,7 +24,7 @@
     },
     {
       "rule": "@typescript-eslint/only-throw-error",
-      "file": "packages/studio/src/features/agent/runtime/runChat.ts",
+      "file": "packages/agent-core/src/checkpoint.ts",
       "signature": "98c7a97a7a4b6e983ccc125d4519707f5a70d8165ac6f65346fbacf4e98bb20a",
       "count": 1,
       "reason": "Checkpoint flush rethrows the exact stored persistence rejection. E07 error contract verifies identity, one stop notification and zero later checkpoint writes.",
@@ -32,8 +32,8 @@
     },
     {
       "rule": "preserve-caught-error",
-      "file": "packages/studio/src/features/agent/runtime/runChat.ts",
-      "signature": "b6847d0a2d5f8098978e6f4c12839f7d73b246d5376c564ef1959beec1d47c43",
+      "file": "packages/agent-core/src/runtime.ts",
+      "signature": "b95b812d29bce4a9c41aeffdcb52dfbaf3c875fd77c92ca7536100c5a7ce7bd7",
       "count": 1,
       "reason": "Failure during local checkpoint persistence exposes a fixed safe diagnostic after conservative run/call settlement. Do not leak the captured provider exception through cause.",
       "owner": "Agent execution"

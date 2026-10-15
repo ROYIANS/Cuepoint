@@ -17,13 +17,59 @@ function browserLocks(): ThreadLockManager {
     return navigator.locks;
 }
 
-export async function withThreadRunLock<T>(threadId: string, execute: () => Promise<T>, locks: ThreadLockManager = browserLocks()): Promise<T> {
-    return locks.request(`cuepoint:agent:${threadId}`, {ifAvailable: true}, async (lock) => {
+const ownershipBrand:unique symbol=Symbol('ThreadOwnership');
+export interface ThreadOwnership {
+    readonly [ownershipBrand]:true;
+    readonly threadId:string;
+    assertHeld():void;
+}
+// An explicit capability is the only lookup key. This registry cannot supply an ambient current owner.
+type CapabilityState={held:boolean;executing:boolean;accepting:boolean;threadId:string;execution?:Promise<unknown>};
+const capabilities=new WeakMap<ThreadOwnership,CapabilityState>();
+export function assertThreadOwnership(ownership:ThreadOwnership,threadId:string):void {
+    const state=capabilities.get(ownership);
+    if (!state?.held || state.threadId !== threadId) throw new Error('执行所有权无效、已经释放或对话不匹配');
+}
+export function withOwnedExecution<T>(ownership:ThreadOwnership,threadId:string,execute:()=>Promise<T>):Promise<T> {
+    assertThreadOwnership(ownership,threadId);
+    const state=capabilities.get(ownership)!;
+    if (!state.accepting) throw new Error('执行所有权回调已经结束');
+    if (state.executing) throw new Error('同一执行所有权不能并发或重复进入执行循环');
+    state.executing=true;
+    const completion=Promise.resolve().then(execute).finally(()=>{state.executing=false;});
+    state.execution=completion;
+    void completion.catch(()=>undefined);
+    return completion;
+}
+
+/** An execution-only lease never runs recovery against a newly created run. */
+export async function withExecutionOwnership<T>(threadId:string,execute:(ownership:ThreadOwnership)=>Promise<T>,locks:ThreadLockManager=browserLocks()):Promise<T> {
+    return locks.request(`cuepoint:agent:${threadId}`,{ifAvailable:true},async lock=>{
         if (!lock) throw new Error("此对话正在另一个页面执行，请先在那里停止或等待完成");
+        const state:CapabilityState={held:true,executing:false,accepting:true,threadId};
+        const ownership:ThreadOwnership={
+            [ownershipBrand]:true,threadId,assertHeld(){assertThreadOwnership(ownership,threadId);}
+        };
+        capabilities.set(ownership,state);
+        try {
+            const result=await execute(ownership);
+            state.accepting=false;
+            await state.execution;
+            return result;
+        } catch (cause) {
+            state.accepting=false;
+            await state.execution?.catch(()=>undefined);
+            throw cause;
+        } finally {state.held=false;}
+    });
+}
+
+export async function withThreadRunLock<T>(threadId:string,execute:(ownership:ThreadOwnership)=>Promise<T>,locks:ThreadLockManager=browserLocks()):Promise<T> {
+    return withExecutionOwnership(threadId,async ownership=>{
         await recoverAbandonedGenerationBatches(threadId);
         await interruptThreadRuns(threadId);
-        return execute();
-    });
+        return execute(ownership);
+    },locks);
 }
 
 export async function recoverAbandonedRuns(locks: ThreadLockManager = browserLocks(), store?: ProductStore): Promise<void> {

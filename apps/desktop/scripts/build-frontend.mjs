@@ -1,5 +1,6 @@
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {buildAgentPackages} from '../../../tooling/build-agent-packages.mjs';
 
 // Node's percentage option takes precedence over the numeric old-space budget.
 // Reject that conflict rather than silently changing the caller's NODE_OPTIONS.
@@ -9,6 +10,7 @@ if (/(?:^|[\s"])--max[-_]old[-_]space[-_]size[-_]percentage(?=[=\s"]|$)/.test(pr
 
 // All normal/acceptance callers enter here. Heavy Vite imports run only in this
 // child; the budget does not affect Rust, Vitest or the calling process.
+await buildAgentPackages();
 const child=spawn(process.execPath,[
     '--max-old-space-size=4096',
     fileURLToPath(new URL('./build-frontend-worker.mjs',import.meta.url)),

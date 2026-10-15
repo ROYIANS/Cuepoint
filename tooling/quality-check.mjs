@@ -3,6 +3,7 @@ import { readFile, mkdir, writeFile, stat } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import {assertAgentPackageFreshness} from './agent-package-inputs.ts';
 import {workspacePolicy} from './workspace.mjs';
 import { checkLint } from './quality/lint.mjs';
 import { checkArchitecture } from './quality/architecture.mjs';
@@ -11,7 +12,7 @@ import { filesUnder, hash, IDENTITY_VERSION, inside, packageManifest, readOption
 
 async function inventory(root) {
   const files = [];
-  for (const directory of [...workspacePolicy(root).roots.map(prefix => prefix.slice(0, -1)), 'tooling', 'tests', 'quality', 'vendor']) {
+  for (const directory of [...workspacePolicy(root).roots.map(prefix => prefix.slice(0, -1)), ...workspacePolicy(root).packages.filter(row => row.publicSources).map(row => `${row.path}/dist`), 'tooling', 'tests', 'quality', 'vendor']) {
     try { files.push(...await filesUnder(root, directory)); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
   for (const [directory, extension] of [['apps/desktop/scripts', /\.(?:ts|mjs)$/], ['apps/desktop/ui', /\.(?:ts|tsx)$/]]) {
@@ -35,6 +36,7 @@ async function inventory(root) {
 async function runQuality({ root = process.cwd(), only } = {}) {
   root = path.resolve(root);
   if (only && !['lint', 'architecture', 'unused'].includes(only)) throw new Error('Expected --only lint|architecture|unused');
+  if ((!only || only !== 'architecture') && workspacePolicy(root).packages.some(row => row.publicSources)) await assertAgentPackageFreshness(root);
   const before = await inventory(root);
   const require = createRequire(path.join(root, 'package.json'));
   const versions = {};

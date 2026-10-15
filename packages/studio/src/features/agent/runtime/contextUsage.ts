@@ -1,11 +1,7 @@
 import type {AgentRequestMessage, AgentToolSchema} from "../models/agent";
 
-/** Lightweight character heuristic, NOT a provider tokenizer or billing measurement. */
-export function estimateTokens(text: string): number {
-    let weight = 0;
-    for (const char of text) weight += char.codePointAt(0)! <= 0x7f ? 0.25 : 1.5;
-    return Math.ceil(weight);
-}
+import {estimateTokens} from '@cuepoint/agent-core';
+export {estimateTokens} from '@cuepoint/agent-core';
 
 export type ContextUsage = {
     categories: Array<{ id: string; label: string; tokens: number; color: string }>;

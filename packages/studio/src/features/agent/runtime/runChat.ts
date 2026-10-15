@@ -1,380 +1,129 @@
-import type {ProductStore} from "../../../platform/storage/types";
-import {StorageError} from "../../../platform/storage/errors";
-import {toolMetadataMatches} from './toolDefinition';
-import {getOfferedToolNames, refreshRunToolLoading, toolNamesForCall} from "./toolLoading";
-import {saveAgentFinishingCheck} from "../commands/agentFinishingCheck";
-import {upgradeLegacyPlanCalls} from "../commands/agentToolRecovery";
-import {budgetContext} from "./contextPlanner";
-import {continuationExtraTokens, prepareRunContext} from "./contextCompaction";
-import {refreshRunMemoryContext} from "../../memory/agent/memoryContext";
-import {refreshRunProjectContext} from "./projectContext";
-import {frozenProjectScope} from "./projectScope";
-import {toolFailureResult, ToolPendingError, ToolUnavailableError} from "./toolErrors";
-import {redactCredentials} from "../../../platform/http/safeError";
-import {type ResponsesResult, streamResponses} from "../providers/responsesStream";
-import {db as productDb} from "../../../platform/product/store";
-import {
-    appendToolResults,
-    AtomicToolRollbackError,
-    markRunningToolsUnknown,
-    pauseAtModelStepLimit,
-    pauseForApproval,
-    resumeAgentRun,
-    saveToolPreview,
-    saveToolRound,
-    startModelStep,
-    transitionToolCall
-} from "../commands/agentTools";
-import type {AgentRun, AgentRunOutput, AgentToolCall} from "../models/agent";
-import {MODEL_STEPS_PER_SEGMENT} from "../models/agent";
-import {
-    type AgentToolDefinition,
-    BUILTIN_TOOLS,
-    requiresToolApproval,
-    toolSchemas,
-    validateToolCall
-} from "./tools";
-import {checkpointAgentRun, finishAgentRun, recordAgentModelMetrics} from "../commands/agentRuns";
-import {
-    accumulateStreamDelta,
-    createReasoningAccum,
-    finalizeReasoningAccum,
-    type ReasoningAccum,
-    streamChatCompletions,
-    type StreamDelta
-} from "../providers/chatStream";
-
-/** Coalesce bursts and serialize writes. A failed write stops further streaming. */
-export function createRunWriter(persist: (sequence: number, output: AgentRunOutput) => Promise<void>, onFailure: () => void, initialSequence = 0) {
-    let sequence = initialSequence;
-    let pending: { sequence: number; output: AgentRunOutput } | undefined;
-    let draining: Promise<void> | undefined;
-    let failure: unknown;
-
-    function drain() {
-        if (draining || !pending || failure) return;
-        draining = (async () => {
-            while (pending) {
-                const next = pending;
-                pending = undefined;
-                await persist(next.sequence, next.output);
-            }
-        })().catch((error: unknown) => {
-            failure = error;
-            pending = undefined;
-            onFailure();
-        }).finally(() => {
-            draining = undefined;
-            if (pending) drain();
-        });
-    }
-
-    function push(output: AgentRunOutput) {
-        if (failure) return;
-        pending = {sequence: ++sequence, output: {...output}};
-        drain();
-    }
-
-    return {
-        push, async flush() {
-            while (draining) await draining;
-            if (failure) throw failure;
-        }
-    };
-}
-
-const MAX_MODEL_STEPS = MODEL_STEPS_PER_SEGMENT;
-
-/** A failed completion lookup cannot certify that an atomic operation rolled back. */
-class UnresolvedToolOutcomeError extends Error {
-}
-
-/** A name the registry does not own has no real title; keep the bounded display label neutral. */
-function unavailableToolTitle(name: string): string {
-    return `不可用的工具 ${name.slice(0, 60)}`;
-}
+import {createId} from '../../../platform/identity';
+import {executeRun,toolMetadataMatches,type RuntimeHost,type RoundDetail} from '@cuepoint/agent-core';
+import type {ProductStore,StoreTx,TableScope} from '../../../platform/storage/types';
+import {StorageError} from '../../../platform/storage/errors';
+import {getOfferedToolNames,refreshRunToolLoading,toolNamesForCall} from './toolLoading';
+import {saveAgentFinishingCheck} from '../commands/agentFinishingCheck';
+import {upgradeLegacyPlanCalls} from '../commands/agentToolRecovery';
+import {budgetContext} from './contextPlanner';
+import {continuationExtraTokens,prepareRunContext} from './contextCompaction';
+import {refreshRunMemoryContext} from '../../memory/agent/memoryContext';
+import {refreshRunProjectContext} from './projectContext';
+import {frozenProjectScope} from './projectScope';
+import {toolFailureResult,ToolPendingError,ToolUnavailableError} from './toolErrors';
+import {streamResponses,type ResponsesResult} from '../providers/responsesStream';
+import {db as productDb} from '../../../platform/product/store';
+import {appendToolResults,AtomicToolRollbackError,markRunningToolsUnknown,pauseAtModelStepLimit,pauseForApproval,resumeAgentRun,saveToolPreview,saveToolRound,startModelStep,transitionToolCall} from '../commands/agentTools';
+import type {AgentRun,AgentToolCall,AgentToolPreview,AgentResponseItem} from '../models/agent';
+import {type AgentToolContext,type AgentToolDefinition,BUILTIN_TOOLS,requiresToolApproval,toolSchemas,validateToolCall} from './tools';
+import {checkpointAgentRun,finishAgentRun,recordAgentModelMetrics} from '../commands/agentRuns';
+import {streamChatCompletions} from '../providers/chatStream';
+import {withExecutionOwnership,withOwnedExecution,assertThreadOwnership,type ThreadOwnership} from './runOwnership';
+import {createRunCredentials} from './runCredentials';
+import {responseRoundMatches} from '@cuepoint/agent-providers';
 
 /** Only user review may supply an execution override; wire arguments remain untouched. */
-function effectiveToolInput(call: AgentToolCall) {
-    if (!call.generationOverride) return {arguments: call.arguments, preview: call.preview};
-    if (call.name !== "submit_generation" || !call.requiresConfirmation || call.decision !== "approve") throw new Error("工具覆盖参数没有有效的用户确认");
+function effectiveToolInput(call:AgentToolCall) {
+    if (!call.generationOverride) return {arguments:call.arguments,preview:call.preview};
+    if (call.name !== 'submit_generation' || !call.requiresConfirmation || call.decision !== 'approve') throw new Error('工具覆盖参数没有有效的用户确认');
     return call.generationOverride;
 }
 
-/** Pending calls are immutable. Only code-owned definitions decide their effect and risk. */
-async function executePendingTools(run: AgentRun, controller: AbortController, registry: readonly AgentToolDefinition[], store?: ProductStore): Promise<boolean> {
-    const db = store ?? productDb;
-    await upgradeLegacyPlanCalls(run.id, db);
-    const calls = (await db.agentToolCalls.where("runId").equals(run.id).toArray()).sort((a, b) => a.step - b.step || a.order - b.order);
-    if (run.protocol === "responses") {
-        const savedCalls = run.responseItems?.filter((item) => item.type === "function_call");
-        if (!savedCalls || savedCalls.length !== calls.length || calls.some((call) => !savedCalls.some((item) => item.call_id === call.providerCallId && item.name === call.name && item.arguments === call.arguments))) throw new Error("Responses 调用信封与执行记录不匹配，已阻止继续执行");
-    }
-    let waiting = false;
-    for (const call of calls) {
-        controller.signal.throwIfAborted();
-        if (["completed", "failed", "rejected"].includes(call.status)) continue;
-        if (call.status === "unknown" || call.status === "running") throw new Error("有工具结果不确定，不能重跑");
-        if (call.status === "awaiting_approval") {
-            waiting = true;
-            continue;
-        }
-        let validated: ReturnType<typeof validateToolCall>;
-        try {
-            await frozenProjectScope({
-                runId: run.id,
-                threadId: run.threadId,
-                callId: call.id,
-                signal: controller.signal,
-                projectId: run.projectId
-            }, db);
-            validated = validateToolCall(call.name, effectiveToolInput(call).arguments, toolNamesForCall(run, call.step), registry);
-        } catch (error) {
-            const message = error instanceof Error ? error.message : "工具参数无效";
-            await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", {
-                error: message,
-                result: JSON.stringify(toolFailureResult(error, "not_started") ?? {error: message})
-            }, db);
-            continue;
-        }
-        const {tool, args} = validated;
-        if (!toolMetadataMatches(tool, args, call)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
-        if (tool.prepare && !call.preview) {
-            try {
-                if (call.status !== "pending") throw new Error("操作缺少批准前预览，请重新发起");
-                const preview = await tool.prepare(args, {
-                    projectId: run.projectId,
-                    runId: run.id,
-                    threadId: run.threadId,
-                    callId: call.id,
-                    signal: controller.signal,
-                    store: db
-                });
-                await saveToolPreview(run.id, call.id, preview, db);
-            } catch (error) {
-                controller.signal.throwIfAborted();
-                const message = error instanceof Error ? error.message : "无法准备操作预览";
-                await transitionToolCall(run.id, call.id, ["pending", "approved"], "failed", {
-                    error: message,
-                    result: JSON.stringify(toolFailureResult(error, "not_started") ?? {error: message})
-                }, db);
-                continue;
-            }
-        }
-        if (call.status !== "approved" && requiresToolApproval(run.permissionMode ?? "ask", tool, args)) {
-            await transitionToolCall(run.id, call.id, ["pending"], "awaiting_approval", undefined, db);
-            waiting = true;
-        }
-    }
-    if (waiting) {
-        await pauseForApproval(run.id, db);
-        return false;
-    }
-    for (const saved of calls) {
-        controller.signal.throwIfAborted();
-        // Current tool commands preserve settled history; reread every possible execution candidate.
-        if (["completed", "failed", "rejected"].includes(saved.status)) continue;
-        const call = await db.agentToolCalls.get(saved.id);
-        if (!call || ["completed", "failed", "rejected"].includes(call.status)) continue;
-        const currentRun = await db.agentRuns.get(run.id);
-        if (!currentRun || currentRun.status !== "running") throw new Error("执行已停止");
-        const {
-            tool,
-            args
-        } = validateToolCall(call.name, effectiveToolInput(call).arguments, toolNamesForCall(currentRun, call.step), registry);
-        if (!toolMetadataMatches(tool, args, call)) throw new Error("工具定义已变化，请结束本次执行后重新发起任务");
-        // Recheck permission immediately before the claim. A global setting cannot change this run's mode.
-        if (requiresToolApproval(run.permissionMode ?? "ask", tool, args) && call.status !== "approved") throw new Error("工具尚未获得批准");
-        if (!await transitionToolCall(run.id, call.id, ["pending", "approved"], "running", undefined, db)) throw new Error("工具已被其他执行领取");
-        controller.signal.throwIfAborted();
-        try {
-            const value = await tool.execute(args, {
-                projectId: currentRun.projectId,
-                runId: run.id,
-                threadId: run.threadId,
-                callId: call.id,
-                signal: controller.signal,
-                preview: effectiveToolInput(call).preview,
-                store: db
-            });
-            const result = JSON.stringify(value);
-            if (result === undefined || result.length > 65_536) throw new Error("工具结果无效或超过大小限制");
-            // Save a known completed result even if Stop was clicked while the operation settled.
-            await transitionToolCall(run.id, call.id, ["running"], "completed", {result}, db);
-        } catch (cause) {
-            // An atomic tool may already have committed its result before a later failure.
-            let persisted: AgentToolCall | undefined;
-            try {
-                persisted = await db.agentToolCalls.get(call.id);
-            } catch (lookupError) {
-                if (tool.effect !== "read") throw new UnresolvedToolOutcomeError("无法核实已保存的工具结果，不能自动重跑。", {cause: lookupError});
-                throw lookupError;
-            }
-            if (persisted?.status === "completed") continue;
-            if (cause instanceof ToolPendingError || controller.signal.aborted && call.recovery) {
-                await markRunningToolsUnknown(run.id, db);
-                throw cause instanceof ToolPendingError ? cause : new ToolPendingError("生成任务已保存，请继续查询已有任务。");
-            }
-            // Exceptions from side effects cannot certify that nothing happened.
-            const ambiguous = !(cause instanceof AtomicToolRollbackError) && (tool.effect === "write" || tool.effect === "network" || tool.effect === "bookkeeping");
-            const error = ambiguous ? "操作结果尚不确定，请先核实，不能自动重跑。" : cause instanceof Error ? cause.message : "工具执行失败。";
-            const certainty = cause instanceof AtomicToolRollbackError ? "rolled_back" : tool.effect === "read" ? "not_started" : "unknown";
-            try {
-                await transitionToolCall(run.id, call.id, ["running"], ambiguous ? "unknown" : "failed", {
-                    error,
-                    ...(!ambiguous ? {result: JSON.stringify(toolFailureResult(cause, certainty) ?? {error})} : {})
-                }, db);
-            } catch (saveError) {
-                if (ambiguous) throw new UnresolvedToolOutcomeError(error, {cause: saveError});
-                throw saveError;
-            }
-            if (ambiguous) throw new UnresolvedToolOutcomeError(error, {cause});
-        }
-        controller.signal.throwIfAborted();
-    }
-    await appendToolResults(run.id, db);
-    return true;
-}
-
-/** Caller holds withThreadRunLock across resume, all requests, tools, and final persistence. */
-export async function resumeChatRun(runId: string, apiKey: string, controller: AbortController, fetchImpl?: typeof fetch, registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS, store?: ProductStore): Promise<void> {
-    const db = store ?? productDb;
-    controller.signal.throwIfAborted();
-    const run = await resumeAgentRun(runId, db);
-    await executeChatRun(run, apiKey, controller, fetchImpl, registry, db);
-}
-
-export async function executeChatRun(initialRun: AgentRun, apiKey: string, controller: AbortController, fetchImpl?: typeof fetch, registry: readonly AgentToolDefinition[] = BUILTIN_TOOLS, store?: ProductStore): Promise<void> {
-    const db = store ?? productDb;
-    let run = initialRun;
-    const savedOutput = await db.chatMessages.get(run.assistantMessageId);
-    let accum: ReasoningAccum = {
-        ...createReasoningAccum(),
-        content: savedOutput?.content ?? "",
-        reasoning: savedOutput?.reasoning ?? "",
-        reasoningDurationMs: savedOutput?.reasoningDurationMs
-    };
-    let saveFailed = false;
-    const onWriteFailure = () => {
-        saveFailed = true;
-        controller.abort();
-    };
-    let sequence = run.checkpoint;
-    const output = (): AgentRunOutput => ({
-        content: accum.content,
-        reasoning: accum.reasoning,
-        reasoningDurationMs: accum.reasoningDurationMs
+/** Product integration owns transactions and predicates, while core owns every execution transition. */
+function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKey:string,fetchImpl:typeof fetch|undefined,registry:readonly AgentToolDefinition[],signal:AbortSignal):RuntimeHost<AgentRun,AgentToolCall,AgentToolContext,AgentToolPreview,AgentResponseItem[]> {
+    assertThreadOwnership(ownership,ownership.threadId);
+    const credentials=createRunCredentials(db,apiKey,!!fetchImpl);
+    const scope:TableScope=[db.projects,db.agentRuns,db.agentToolCalls,db.chatThreads,db.chatMessages,db.agentTasks,db.agentGenerationJobs,db.agentTaskRecords,db.agentTaskRecordVersions,db.agentGenerationBatches,db.agentGenerationBatchItems];
+    const guard=async<T>(run:AgentRun,operation:(tx:StoreTx)=>Promise<T>,tables:TableScope=scope):Promise<T>=>db.transaction('rw',tables,async tx=>{
+        assertThreadOwnership(ownership,run.threadId);
+        if (ownership.threadId !== run.threadId) throw new Error('执行锁与对话归属不匹配');
+        const current=await tx.agentRuns.get(run.id);
+        const message=current ? await tx.chatMessages.get(current.assistantMessageId) : undefined;
+        if (!current || current.threadId !== run.threadId || current.assistantMessageId !== run.assistantMessageId || !message || message.runId !== run.id || message.threadId !== run.threadId) throw new Error('执行消息归属不匹配');
+        if (current.status === 'running' && current.modelStep !== run.modelStep) throw new Error('执行步骤已经变化');
+        const value=await operation(tx);
+        ownership.assertHeld();
+        return value;
     });
-    let writer = createRunWriter((seq, next) => {
-        sequence = seq;
-        return checkpointAgentRun(run.id, seq, next, db);
-    }, onWriteFailure, sequence);
-    try {
-        if (run.hasToolCalls && !await executePendingTools(run, controller, registry, db)) return;
-        while (true) {
-            controller.signal.throwIfAborted();
-            if (await pauseAtModelStepLimit(run.id, db)) return;
-            run = await refreshRunToolLoading(run.id, db);
-            run = await refreshRunProjectContext(run.id, db);
-            run = await refreshRunMemoryContext(run.id, db);
-            run = await prepareRunContext(run.id, toolSchemas(getOfferedToolNames(run), registry), apiKey, controller.signal, fetchImpl, db);
-            // Compaction may await network; re-read memory once more at the final dispatch boundary.
-            run = await refreshRunMemoryContext(run.id, db);
-            if (budgetContext(run.continuationMessages ?? run.requestMessages, toolSchemas(getOfferedToolNames(run), registry), run.context?.capacity, !!run.context?.summaryId, continuationExtraTokens(run)).overBudget) throw new Error("记忆更新后上下文超出安全预算，请减少历史或调整输入后继续");
-            run = await startModelStep(run.id, MAX_MODEL_STEPS, db);
-            controller.signal.throwIfAborted();
-            accum = createReasoningAccum();
-            writer = createRunWriter((seq, next) => {
-                sequence = seq;
-                return checkpointAgentRun(run.id, seq, next, db);
-            }, onWriteFailure, sequence);
-            const onDelta = (delta: StreamDelta) => {
-                if (controller.signal.aborted) return;
-                accum = accumulateStreamDelta(accum, delta, Date.now());
-                writer.push(output());
-            };
-            const transport = run.protocol === "responses" ? streamResponses : streamChatCompletions;
-            const result: ResponsesResult = await transport({
-                projectId: run.projectId,
-                runId: run.id,
-                visionCapability: run.visionCapability,
-                responseItems: run.responseItems,
-                baseUrl: run.connector.baseUrl,
-                apiKey,
-                model: run.model,
-                connectorDefinitionId: run.connector.definitionId,
-                reasoningEffort: run.reasoningEffort,
-                messages: run.continuationMessages ?? run.requestMessages,
-                tools: toolSchemas(getOfferedToolNames(run), registry)
-            }, {
-                signal: controller.signal, fetchImpl,
-                onDelta: (content) => onDelta({content}), onReasoning: (reasoning) => onDelta({reasoning}),
-            });
-            accum = finalizeReasoningAccum(accum, Date.now());
-            await writer.flush();
-            if (result.metrics) await recordAgentModelMetrics(run.id, {...result.metrics, step: run.modelStep!}, db);
-            if (controller.signal.aborted || (!result.ok && result.aborted)) {
-                await finishAgentRun(run.id, run.hasToolCalls ? "interrupted" : "cancelled", output(), "已停止，已收到的内容与完成的步骤保留。", undefined, db);
-                return;
-            }
-            if (!result.ok) {
-                await finishAgentRun(run.id, "failed", output(), result.message, result.finishReason, db);
-                return;
-            }
-            if (!result.toolCalls?.length) {
-                if (await saveAgentFinishingCheck(run.id, run.modelStep!, output(), result.responseOutput, controller.signal, db)) continue;
-                controller.signal.throwIfAborted();
-                await finishAgentRun(run.id, "completed", output(), undefined, result.finishReason, db);
-                return;
-            }
-            const offeredNames = getOfferedToolNames(run);
-            const details = result.toolCalls.map((call) => {
-                const tool = registry.find((item) => item.name === call.function.name);
-                // A name this request never offered is stored as an already-failed call and
-                // fed back to the model, exactly like invalid arguments. It never executes,
-                // never carries a preview and never requests approval.
-                if (!tool || !offeredNames.includes(call.function.name)) {
-                    const failure = new ToolUnavailableError(call.function.name, offeredNames);
-                    return {
-                        title: unavailableToolTitle(call.function.name),
-                        effect: "read" as const,
-                        highRisk: false,
-                        failure: {
-                            error: failure.message,
-                            result: JSON.stringify(toolFailureResult(failure, "not_started"))
-                        }
-                    };
-                }
-                let highRisk = tool.effect !== "read";
-                try {
-                    highRisk = tool.highRisk(tool.parseArguments(JSON.parse(call.function.arguments)));
-                } catch { /* Invalid arguments are recorded then rejected before execution. */
-                }
-                return {
-                    title: tool.title,
-                    effect: tool.effect,
-                    highRisk, ...(tool.atomic ? {atomic: true} : {}), ...(tool.recovery ? {recovery: tool.recovery} : {}), ...(tool.requiresConfirmation ? {requiresConfirmation: true} : {})
-                };
-            });
-            await saveToolRound(run.id, result.content, result.toolCalls, details, result.responseOutput, output(), db);
-            run = (await db.agentRuns.get(run.id))!;
-            controller.signal.throwIfAborted();
-            if (!await executePendingTools(run, controller, registry, db)) return;
-        }
-    } catch (error) {
-        await writer.flush().catch(() => undefined);
-        const aborted = controller.signal.aborted;
-        controller.abort();
-        // Close claimed calls conservatively on unexpected interruption. Completed calls remain immutable.
-        await markRunningToolsUnknown(run.id, db, error instanceof UnresolvedToolOutcomeError || error instanceof StorageError && error.certainty === "unknown");
-        // Shared redaction: an empty key must not explode the message into characters.
-        const message = error instanceof Error ? redactCredentials(error.message, apiKey).slice(0, 300) : "执行或本地保存失败";
-        // One fresh read decides whether preserved work needs an explicit resume. The
-        // in-memory run may already be stale after saveToolRound refreshed durable state.
-        const latest = await db.agentRuns.get(run.id);
-        const interrupted = Boolean(latest?.hasToolCalls);
-        run = latest ?? run;
-        await finishAgentRun(run.id, saveFailed ? "failed" : error instanceof ToolPendingError || interrupted && aborted ? "interrupted" : aborted ? "cancelled" : "failed", output(), saveFailed ? "执行或本地保存失败，最后一段内容可能尚未保存。" : aborted ? "已停止，已完成的步骤保留。" : message, undefined, db);
-        if (saveFailed) throw new Error("执行或本地保存失败，最后一段内容可能尚未保存");
-    }
+    const host:RuntimeHost<AgentRun,AgentToolCall,AgentToolContext,AgentToolPreview,AgentResponseItem[]>={
+        executionId:createId('exec'),ownership,clock:()=>Date.now(),
+        readRun:id=>{ownership.assertHeld();return db.agentRuns.get(id);},
+        readOutput:run=>{ownership.assertHeld();return db.chatMessages.get(run.assistantMessageId);},
+        checkpoint:(run,seq,output)=>guard(run,tx=>checkpointAgentRun(run.id,seq,output,tx),[db.agentRuns,db.chatMessages]),
+        pauseAtLimit:run=>guard(run,tx=>pauseAtModelStepLimit(run.id,tx)),
+        async prepareContext(run,signal) {
+            ownership.assertHeld();
+            run=await refreshRunToolLoading(run.id,db);
+            run=await refreshRunProjectContext(run.id,db);
+            run=await refreshRunMemoryContext(run.id,db);
+            run=await prepareRunContext(run.id,toolSchemas(getOfferedToolNames(run),registry),apiKey,signal,fetchImpl,db,run=>credentials.resolve(run),cause=>credentials.message(cause));
+            run=await refreshRunMemoryContext(run.id,db);
+            if (budgetContext(run.continuationMessages ?? run.requestMessages,toolSchemas(getOfferedToolNames(run),registry),run.context?.capacity,!!run.context?.summaryId,continuationExtraTokens(run)).overBudget) throw new Error('记忆更新后上下文超出安全预算，请减少历史或调整输入后继续');
+            return run;
+        },
+        admitModelStep:(run,limit)=>guard(run,tx=>startModelStep(run.id,limit,tx)),
+        async request(run,signal,onDelta) {
+            ownership.assertHeld();
+            const currentKey=await credentials.resolve(run);
+            signal.throwIfAborted();
+            const transport=run.protocol === 'responses' ? streamResponses : streamChatCompletions;
+            const result:ResponsesResult=await transport({projectId:run.projectId,runId:run.id,visionCapability:run.visionCapability,responseItems:run.responseItems,baseUrl:run.connector.baseUrl,apiKey:currentKey,model:run.model,connectorDefinitionId:run.connector.definitionId,reasoningEffort:run.reasoningEffort,messages:run.continuationMessages ?? run.requestMessages,tools:toolSchemas(getOfferedToolNames(run),registry)},{signal,fetchImpl,onDelta:content=>onDelta({content}),onReasoning:reasoning=>onDelta({reasoning})});
+            return result.ok ? {...result,continuation:result.responseOutput} : result;
+        },
+        recordMetrics:(run,metrics)=>guard(run,tx=>recordAgentModelMetrics(run.id,metrics,tx),[db.agentRuns,db.chatMessages]),
+        finishingCheck:(run,output,continuation,signal)=>{ownership.assertHeld();return saveAgentFinishingCheck(run.id,run.modelStep!,output,continuation,signal,db);},
+        commitRound:(run,result,details,output)=>guard(run,tx=>saveToolRound(run.id,result.content,result.toolCalls!,details.map(detail=>({...detail,recovery:productRecovery(detail)})),result.continuation,output,tx)),
+        offeredNames:(run,step)=>step === undefined ? getOfferedToolNames(run) : toolNamesForCall(run,step),
+        settle:(run,status,output,error,reason)=>guard(run,async tx=>{await finishAgentRun(run.id,status,output,error,reason,tx);return (await tx.agentRuns.get(run.id))!.status;},[db.agentRuns,db.chatMessages]),
+        tools:{
+            registry,
+            readRound:run=>guard(run,async tx=>{await upgradeLegacyPlanCalls(run.id,tx);return tx.agentToolCalls.where('runId').equals(run.id).toArray();}),
+            validateEnvelope(run,calls) {
+                if (run.protocol !== 'responses') return;
+                if (!responseRoundMatches(run.responseItems,calls.map(call=>({id:call.providerCallId,type:'function',function:{name:call.name,arguments:call.arguments}})),false)) throw new Error('Responses 调用信封与执行记录不匹配，已阻止继续执行');
+            },
+            readCall:(_run,id)=>{ownership.assertHeld();return db.agentToolCalls.get(id);},
+            assertScope:(run,call,signal)=>frozenProjectScope({runId:run.id,threadId:run.threadId,callId:call.id,signal,projectId:run.projectId},db).then(()=>undefined),
+            input:effectiveToolInput,
+            validate:(name,raw,offered)=>validateToolCall(name,raw,offered,registry),
+            context:(run,call,signal,preview)=>({projectId:run.projectId,runId:run.id,threadId:run.threadId,callId:call.id,signal,preview,store:db}),
+            approval:requiresToolApproval,
+            preview:(run,call,preview)=>guard(run,tx=>saveToolPreview(run.id,call.id,preview,tx)),
+            transition:(run,call,from,to,extra)=>to !== 'running' ? guard(run,tx=>transitionToolCall(run.id,call.id,from,to,extra,tx)) : transitionToolCall(run.id,call.id,from,to,extra,db,async(current,saved,tx)=>{
+                assertThreadOwnership(ownership,current.threadId);
+                if (current.id !== run.id || current.modelStep !== run.modelStep || current.assistantMessageId !== run.assistantMessageId || claimFingerprint(saved) !== claimFingerprint(call)) throw new Error('工具调用或审批在领取前已经变化');
+                const {tool,args}=validateToolCall(saved.name,effectiveToolInput(saved).arguments,toolNamesForCall(current,saved.step),registry);
+                if (!toolMetadataMatches(tool,args,saved) || requiresToolApproval(current.permissionMode ?? 'ask',tool,args) && saved.status !== 'approved') throw new Error('工具定义、权限或审批在领取前已经变化');
+                await frozenProjectScope({runId:current.id,threadId:current.threadId,callId:saved.id,signal,projectId:current.projectId},tx);
+            }),
+            park:run=>guard(run,tx=>pauseForApproval(run.id,tx)),
+            appendResults:run=>guard(run,tx=>appendToolResults(run.id,tx)),
+            markUnknown:(run,force)=>guard(run,tx=>markRunningToolsUnknown(run.id,tx,force))
+        },
+        errors:{failure:toolFailureResult,unavailable:(name,offered)=>new ToolUnavailableError(name,offered),pending:cause=>cause instanceof ToolPendingError,pendingError:()=>new ToolPendingError('生成任务已保存，请继续查询已有任务。'),rolledBack:cause=>cause instanceof AtomicToolRollbackError,unknown:cause=>cause instanceof StorageError && cause.certainty === 'unknown',publicMessage:cause=>credentials.message(cause)}
+    };
+    return host;
+}
+function claimFingerprint(call:AgentToolCall):string {
+    return JSON.stringify({runId:call.runId,threadId:call.threadId,providerCallId:call.providerCallId,name:call.name,arguments:call.arguments,step:call.step,order:call.order,title:call.title,status:call.status,effect:call.effect,highRisk:call.highRisk,atomic:call.atomic,requiresConfirmation:call.requiresConfirmation,recovery:call.recovery,decision:call.decision,preview:call.preview,generationOverride:call.generationOverride});
+}
+function productRecovery(detail:RoundDetail):AgentToolCall['recovery'] {
+    if (detail.recovery === undefined || detail.recovery === 'generation' || detail.recovery === 'repeatable') return detail.recovery;
+    throw new Error('未知工具恢复策略');
+}
+
+/** Direct typed consumers acquire the same execution lock without recovering their own new run. */
+export async function executeChatRun(run:AgentRun,apiKey:string,controller:AbortController,fetchImpl?:typeof fetch,registry:readonly AgentToolDefinition[]=BUILTIN_TOOLS,store:ProductStore=productDb,ownership?:ThreadOwnership):Promise<void> {
+    const execute=(held:ThreadOwnership)=>withOwnedExecution(held,run.threadId,()=>executeRun(run,controller,createStudioRuntimeHost(store,held,apiKey,fetchImpl,registry,controller.signal)));
+    if (ownership) await execute(ownership);else await withExecutionOwnership(run.threadId,execute);
+}
+export async function resumeChatRun(runId:string,apiKey:string,controller:AbortController,fetchImpl?:typeof fetch,registry:readonly AgentToolDefinition[]=BUILTIN_TOOLS,store:ProductStore=productDb,ownership?:ThreadOwnership):Promise<void> {
+    const saved=await store.agentRuns.get(runId);
+    if (!saved) throw new Error('执行已删除');
+    const execute=(held:ThreadOwnership)=>withOwnedExecution(held,saved.threadId,async()=>{
+        controller.signal.throwIfAborted();
+        const run=await resumeAgentRun(runId,store);
+        await executeRun(run,controller,createStudioRuntimeHost(store,held,apiKey,fetchImpl,registry,controller.signal));
+    });
+    if (ownership) await execute(ownership);else await withExecutionOwnership(saved.threadId,execute);
 }
