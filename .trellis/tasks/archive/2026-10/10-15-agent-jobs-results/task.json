@@ -3,7 +3,7 @@
   "name": "agent-jobs-results",
   "title": "E07 · 长任务、工具结果回读与产物索引",
   "description": "Represent local work and large tool outputs as observable owned jobs/results without claiming persistence means continued execution.",
-  "status": "in_progress",
+  "status": "completed",
   "dev_type": null,
   "scope": null,
   "package": "studio",
@@ -11,11 +11,11 @@
   "creator": "ROYIANS",
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
-  "completedAt": null,
+  "completedAt": "2026-10-15",
   "branch": "codex/agent-jobs-results",
   "base_branch": "codex/agent-resource-capabilities",
   "worktree_path": null,
-  "commit": null,
+  "commit": "c9fd6706",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -24,7 +24,7 @@
   "notes": "Delivered finite foreground media availability and retained web extraction with owned result pages/inline reports. Independent 11-suite/208-test source review, strict source/node types, scoped lint and architecture passed. No OS process/background lifetime, historical migration, native/emitted/packed/full/build acceptance claimed. Stage commit and archive follow standing sequential authorization.",
   "meta": {
     "epicCode": "E07",
-    "deliveryState": "checked-awaiting-commit",
+    "deliveryState": "delivered",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities"

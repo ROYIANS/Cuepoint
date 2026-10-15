@@ -12,5 +12,5 @@
 {"file": ".trellis/spec/frontend/agent-thread-reading.md", "reason": "Scoped query/retained view/reading behavior."}
 {"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Fresh current-schema policy; no unrequested legacy migration."}
 {"file": ".trellis/spec/frontend/monorepo-boundaries.md", "reason": "Exact public source validation aliases, default artifact freshness retained."}
-{"file": ".trellis/tasks/10-15-agent-jobs-results/research/jobs-results-design.md", "reason": "Source-backed actual producer/result/retention/lifetime/IPC boundaries and finite design."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-agent-jobs-results/research/jobs-results-design.md", "reason": "Source-backed actual producer/result/retention/lifetime/IPC boundaries and finite design."}
 {"file": ".trellis/spec/frontend/agent-jobs-results.md", "reason": "Execute the concrete foreground job/publication/current-reader/history/Unicode/quota/cleanup/Stop contracts at their actual Studio owners."}

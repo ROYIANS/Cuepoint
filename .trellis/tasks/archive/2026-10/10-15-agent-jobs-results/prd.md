@@ -6,7 +6,7 @@ Show truthful progress and retained, owned reports for actual foreground Agent w
 
 ## Authorization and evidence
 
-Standing owner instruction: “ok，继续，每个阶段完了就提交代码，然后再继续”; necessary affected tests only, full/build/package/native checks at batch end. E06 is committed as d4c2c877 and archived. This task narrows its original broad jobs requirement to actual supported producers and preserves foreground lifetime. [Source investigation](research/jobs-results-design.md), [E06 contracts](../archive/2026-10/10-15-agent-resource-capabilities/prd.md), and the original [comparison](../10-15-desktop-agent-capability-research/research/capability-comparison.md) / [host investigation](../10-15-desktop-agent-capability-research/research/host-integration-review.md) establish current ownership and limits.
+Standing owner instruction: “ok，继续，每个阶段完了就提交代码，然后再继续”; necessary affected tests only, full/build/package/native checks at batch end. E06 is committed as d4c2c877 and archived. This task narrows its original broad jobs requirement to actual supported producers and preserves foreground lifetime. [Source investigation](research/jobs-results-design.md), [E06 contracts](../10-15-agent-resource-capabilities/prd.md), and the original [comparison](../../../10-15-desktop-agent-capability-research/research/capability-comparison.md) / [host investigation](../../../10-15-desktop-agent-capability-research/research/host-integration-review.md) establish current ownership and limits.
 
 ## Requirements
 
