@@ -10,13 +10,15 @@ import {isPersistedToolRound} from "../runtime/runPresentation";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import {Button} from "../../../ui/button";
 import {CopyButton, Text} from "@lobehub/ui";
-import {memo, useCallback, useLayoutEffect, useRef} from "react";
+import {Fragment, memo, useCallback, useLayoutEffect, useRef} from "react";
 import type {ChatMessage} from "../models/chat";
 import {isChatNearBottom, snapChatToBottom} from "../presentation/chatScroll";
 import {ThinkingMatrix} from "./ThinkingMatrix";
 import {ThinkingPanel} from "./ThinkingPanel";
 import {MemoryRunHistory} from "./MemoryContextDetails";
 import {TurnNavigation} from "./TurnNavigation";
+import {SubmissionMessage, SubmissionStatus, type SubmissionAction} from "./SubmissionMessage";
+import {submissionTranscript, type ChatSubmissionAttempt} from "./chatSubmissionAttempts";
 
 /** One quiet status line, only for outcomes the reader must notice. */
 export function presentMessageStatus(message: Pick<ChatMessage, "status" | "error">, run?: Pick<AgentRun, "pauseReason">): {
@@ -40,7 +42,7 @@ const MARKDOWN_PROPS = {variant: "chat"} as const;
  * Stick with `scrollTop` on this element (not `scrollIntoView` smooth).
  * History rows are memoized so Dexie liveQuery ticks only paint the streaming item.
  */
-export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, readOnly, onRunAction}: {
+export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, readOnly, onRunAction, submissions = [], onSubmissionAction, onSubmissionObserved}: {
     messages: ChatMessage[] | undefined;
     runs?: AgentRun[];
     busy: boolean;
@@ -48,6 +50,9 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
     onRunAction: (runId: string, action: RunAction, callId?: string) => void;
     retryableRunId?: string;
     onRetryRun: (id: string) => void;
+    submissions?: ChatSubmissionAttempt[];
+    onSubmissionAction?: (id: string, action: SubmissionAction) => void;
+    onSubmissionObserved?: (id: string) => void;
 }) {
     const {request} = useAgentActivityNavigation();
     const listRef = useRef<HTMLDivElement | null>(null);
@@ -61,7 +66,15 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
     const list = messages ?? [];
     const threadKey = list[0]?.threadId ?? "";
     const userMessages = list.filter((message) => message.role === "user");
-    const lastUserId = userMessages.at(-1)?.id;
+    const entries = submissionTranscript(messages, submissions);
+    const lastUser = entries.filter(entry => entry.kind === "attempt" || entry.message.role === "user").at(-1);
+    const lastUserId = lastUser?.kind === "attempt" ? lastUser.attempt.admission.userMessageId : lastUser?.message.id;
+    useLayoutEffect(() => {
+        for (const attempt of submissions) {
+            if (attempt.phase === "accepted" && !attempt.recoveryRequired && messages?.some(message => message.id === attempt.admission.userMessageId &&
+                message.threadId === attempt.threadId && message.role === "user")) onSubmissionObserved?.(attempt.admission.userMessageId);
+        }
+    }, [submissions, messages, onSubmissionObserved]);
     useLayoutEffect(() => {
         stickToBottom.current = true;
         manuallyNavigated.current = false;
@@ -122,14 +135,20 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
                     {messages === undefined ? (
                         <Text type="secondary">加载中…</Text>
                     ) : (
-                        list.map((message) => {
+                        entries.map(entry => {
+                            if (entry.kind === "attempt") return <SubmissionMessage key={entry.attempt.admission.userMessageId}
+                                attempt={entry.attempt} busy={busy} onAction={onSubmissionAction ?? (() => undefined)}/>;
+                            const message = entry.message;
                             if (message.role === "system") return null;
+                            const unresolved = submissions.find(attempt => (attempt.phase === "uncertain" || attempt.phase === "checking" || attempt.recoveryRequired) &&
+                                message.role === "user" && message.id === attempt.admission.userMessageId && message.threadId === attempt.threadId);
                             return (
-                                <AgentChatMessageItem key={message.id} message={message}
+                                <Fragment key={message.id}><AgentChatMessageItem message={message}
                                                       run={runs?.find((run) => run.id === message.runId)} busy={busy}
                                                       readOnly={readOnly} onRunAction={onRunAction}
                                                       retryable={Boolean(message.runId && message.runId === retryableRunId)}
-                                                      onRetryRun={onRetryRun}/>
+                                                      onRetryRun={onRetryRun}/>{unresolved && <SubmissionStatus attempt={unresolved} busy={busy}
+                                    onAction={onSubmissionAction ?? (() => undefined)}/>}</Fragment>
                             );
                         })
                     )}

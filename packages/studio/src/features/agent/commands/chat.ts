@@ -6,9 +6,11 @@ import {db as productDb} from "../../../platform/product/store";
 import {createId, nowIso} from "../../../platform/identity";
 import {normalizeContextPolicy} from "../runtime/contextPolicy";
 import {getGeneralAgentConfig} from "./agentSettings";
+import {assertChatSubmissionId} from "../models/chatSubmission";
 
 
 export async function createChatThread(options?: {
+    id?: Id;
     projectId?: Id;
     taskMode?: boolean;
     title?: string;
@@ -16,10 +18,12 @@ export async function createChatThread(options?: {
     model?: string;
 }, store?: ProductStore): Promise<ChatThread> {
     const db = store ?? productDb;
+    if (options?.id !== undefined) assertChatSubmissionId(options.id);
+    const threadId = options?.id ?? createId("cth");
     const at = nowIso();
     const thread: ChatThread = {
         contextPolicy: normalizeContextPolicy((await getGeneralAgentConfig(db)).contextPolicy),
-        id: createId("cth"),
+        id: threadId,
         title: options?.title?.trim() || "新对话",
         taskMode: options?.taskMode === true,
         projectId: options?.projectId,

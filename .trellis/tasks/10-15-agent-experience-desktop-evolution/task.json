@@ -46,7 +46,7 @@
     "packages/agent-providers",
     "apps/desktop/src-tauri"
   ],
-  "notes": "Owner requested an epic for all findings and sequential deliveries; in-place detail must preserve chat. Confirmed narrow fallback: full-width detail in the working surface with Return to conversation, Agent retained/running. Confirmed first shot detail supports viewing and editing. Epic planning remains scoped: the owner approved and activated E01 only; other deliveries retain their own scope/design review. Per-task checks are limited to necessary affected tests, with full regression/build/packaging/native integration at batch completion. Owner: “ok，继续，每个阶段完了就提交代码，然后再继续”; continue sequential deliveries and commit each completed stage without repeated approval.",
+  "notes": "Owner requested an epic for all findings and sequential deliveries; in-place detail must preserve chat. Confirmed narrow fallback: full-width detail in the working surface with Return to conversation, Agent retained/running. Confirmed first shot detail supports viewing and editing. Owner authorized continuing sequential scoped deliveries, with a commit after each completed stage; retain each child’s concrete design and acceptance review and resolve material product choices as they arise. Per-task checks are limited to necessary affected tests, with full regression/build/packaging/native integration at batch completion. Owner: “ok，继续，每个阶段完了就提交代码，然后再继续”; continue sequential deliveries and commit each completed stage without repeated approval.",
   "meta": {
     "kind": "epic",
     "implementationApproved": false,
@@ -56,7 +56,7 @@
     "firstCandidate": "10-15-agent-parallel-details",
     "narrowDetailMode": "full-width working-surface detail, retained running conversation, explicit return; no modal drawer",
     "shotDetailScope": "view and edit one shot with existing save/conflict/draft guarantees",
-    "activeDelivery": "10-15-agent-parallel-details",
+    "activeDelivery": "10-15-agent-optimistic-send",
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true

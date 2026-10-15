@@ -1,13 +1,13 @@
 # Delivery roadmap and source coverage
 
-State: planning. The owner authorized this epic and sequential task organization on 2026-10-15. Creating these records does not enable every capability or approve a host/runtime choice. Complete each child's own scope/design review before starting its implementation.
+State: planning. The owner authorized this epic and sequential task organization on 2026-10-15. Creating these records does not enable every capability or approve a host/runtime choice. The owner subsequently authorized sequential implementation and stage commits. Complete each child's concrete scope/design review before activation, using that standing authorization for established requirements and clarifying material new product choices.
 
 ## Delivery order
 
 | Order / task | Observable result | Explicit prerequisites | Readiness |
 | --- | --- | --- | --- |
-| [E01: Parallel business details](../10-15-agent-parallel-details/prd.md) | Open and edit a shot beside the Agent; narrow windows switch the working surface to full-width detail without unmounting or stopping chat. | No delivery prerequisite. Reuse existing right host and business owners. | Implemented; focused checks/review passed, pending commit. Full batch integration deferred. |
-| [E02: Immediate Send and recovery](../10-15-agent-optimistic-send/prd.md) | Submitted content is visible immediately, failed admission remains recoverable, late durable acceptance does not duplicate the message. | No delivery prerequisite; coordinate Agent files after E01. | Next UX delivery to design. |
+| [E01: Parallel business details](../archive/2026-10/10-15-agent-parallel-details/prd.md) | Open and edit a shot beside the Agent; narrow windows switch the working surface to full-width detail without unmounting or stopping chat. | No delivery prerequisite. Reuse existing right host and business owners. | Committed as `5f8b6ab0` and archived; focused checks/review passed. Full batch integration deferred. |
+| [E02: Immediate Send and recovery](../10-15-agent-optimistic-send/prd.md) | Submitted content is visible immediately, failed admission remains recoverable, late durable acceptance does not duplicate the message. | No delivery prerequisite; coordinate Agent files after E01. | Implemented; necessary affected checks and full changed-scope review passed. Stage commit/archival follows; batch integration deferred. |
 | [E03: Execution and stopping feedback](../10-15-agent-execution-feedback/prd.md) | Accurate preparation/wait/stop states and measured receipt/display timing. | E02 submission identity and lifecycle. | Backlog; live-text overlay requires evidence. |
 | [E04: Thread loading and reading](../10-15-agent-thread-reading/prd.md) | Correct loading/departure scope and an accessible return-to-latest action. | No delivery prerequisite; sequential UI coordination. | Backlog. |
 | [E05: Creative operation feedback](../10-15-creative-operation-feedback/prd.md) | Asset create/delete feedback and duplicate protection, coherent archive filtering, batch-import progress. | No delivery prerequisite; preserve same ProductStore outcomes. | Backlog; filter/import choices converge here. |
@@ -54,7 +54,7 @@ This is a proposed sequence, not a dependency scheduler. The same dependencies a
 
 ## Research record
 
-[Original investigation](../10-15-desktop-agent-capability-research/prd.md) remains a linked evidence child. Its source investigation is complete; it stays planning as recorded, and has no product implementation. Archive/commit/branch operations are not part of this task-organization request.
+[Original investigation](../10-15-desktop-agent-capability-research/prd.md) remains a linked evidence child. Its source investigation is complete; it stays planning as recorded, and has no product implementation. Subsequent owner authorization covers sequential delivery commits and completed-child archive/journal bookkeeping; no remote push is included.
 
 ## Validation cadence
 

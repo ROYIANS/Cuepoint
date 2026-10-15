@@ -13,6 +13,8 @@ import {appendStartPrompt} from "./startPrompt";
 import {CHAT_COMPOSER_SAFE, CHAT_CONTENT_MAX, CHAT_SAFE_X,} from "./agentTheme";
 import type {ChatMessage, ChatThread} from "../models/chat";
 import type {Id} from "../../../platform/identity";
+import {SubmissionTranscriptFallback, type SubmissionAction} from "./SubmissionMessage";
+import {visibleSubmissionAttempts, type ChatSubmissionAttempt} from "./chatSubmissionAttempts";
 // Rich transcript rendering (markdown, diagrams, syntax highlighting) is needed only
 // once a thread contains messages. Keep the Agent runtime and composer mounted.
 const MessageList = lazy(() => import("./MessageList").then((module) => ({default: module.MessageList})));
@@ -41,6 +43,7 @@ export function ChatWorkspace({
                                   onOpenTask,
                                   taskTitle,
                                   taskGoal,
+                                  submissions = [], onSubmissionAction, onSubmissionObserved,
                               }: {
     onOpenTasks: () => void;
     onOpenTask: () => void;
@@ -50,6 +53,9 @@ export function ChatWorkspace({
     activeThreadId?: Id;
     activeThread?: ChatThread;
     messages: ChatMessage[] | undefined;
+    submissions?: ChatSubmissionAttempt[];
+    onSubmissionAction?: (id: string, action: SubmissionAction) => void;
+    onSubmissionObserved?: (id: string) => void;
     runs?: AgentRun[];
     retryableRunId?: string;
     onRetryRun: (id: string) => void;
@@ -82,6 +88,9 @@ export function ChatWorkspace({
         threads, activeThreadId, projects: composer.projects, onNewTopicInProject, onSelect: onSelectThread,
         onNewTopic, onRename: onRenameThread, onDelete: onDeleteThread, onOpenTasks
     });
+    const pending = visibleSubmissionAttempts(submissions, messages);
+    const provisional = (loading: boolean) => <SubmissionTranscriptFallback attempts={submissions} busy={composer.sending}
+        loading={loading} onAction={onSubmissionAction ?? (() => undefined)}/>;
 
     return (
         <Flexbox
@@ -108,7 +117,7 @@ export function ChatWorkspace({
                 <Flexbox flex={1} height="100%" className="agent-chat-column min-w-0">
                     <div className="agent-transcript-container" inert={expanded}
                          style={expanded ? {visibility: "hidden"} : undefined}>
-                        {taskTitle && messages?.length === 0 ?
+                        {taskTitle && messages?.length === 0 && !pending.length ?
                             <div className="agent-task-conversation-empty"><ListTodo size={28}/><span>准备开始</span>
                                 <h2>{taskTitle}</h2><p>{taskGoal}</p>
                                 <div>
@@ -117,15 +126,12 @@ export function ChatWorkspace({
                                                                   onClick={() => composer.onChange(appendStartPrompt(composer.value))}>与助手一起开始</button>}
                                 </div>
                                 <small>也可以独立完成清单，随时回来确认成果。</small></div> : messages?.length ? <Suspense
-                                    fallback={<div className="agent-message-list" role="status">
-                                        <div className="agent-content">正在加载对话…</div>
-                                    </div>}><MessageList messages={messages} runs={runs} retryableRunId={retryableRunId}
+                                    fallback={provisional(true)}><MessageList messages={messages} runs={runs} retryableRunId={retryableRunId}
                                                          onRetryRun={onRetryRun} busy={composer.sending}
                                                          readOnly={composer.readOnly}
-                                                         onRunAction={onRunAction}/></Suspense> :
-                                <div className="agent-message-list"
-                                     aria-busy={messages === undefined}>{messages === undefined &&
-                                    <div className="agent-content" role="status">加载中…</div>}</div>}</div>
+                                                         onRunAction={onRunAction} submissions={submissions}
+                                                         onSubmissionObserved={onSubmissionObserved}
+                                                         onSubmissionAction={onSubmissionAction}/></Suspense> : provisional(messages === undefined)}</div>
                     <div ref={dockRef} className={`agent-composer-dock${expanded ? " is-expanded" : ""}`}>
                         <div className="agent-content">
                             <FloatingComposer {...composer} surface="detail" expanded={expanded}

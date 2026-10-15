@@ -5,3 +5,14 @@
 {"file": ".trellis/spec/frontend/chat-performance.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/interaction-audit.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/spec/frontend/agent-references.md", "reason": "Current E02 draft/attempt ownership, typed query and integration contract; preserve active behavior without new reload persistence."}
+{"file": ".trellis/spec/frontend/agent-business-details.md", "reason": "Current E02 draft/attempt ownership, typed query and integration contract; preserve active behavior without new reload persistence."}
+{"file": ".trellis/spec/frontend/feature-organization.md", "reason": "Current E02 draft/attempt ownership, typed query and integration contract; preserve active behavior without new reload persistence."}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Current E02 draft/attempt ownership, typed query and integration contract; preserve active behavior without new reload persistence."}
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Current E02 draft/attempt ownership, typed query and integration contract; preserve active behavior without new reload persistence."}
+{"file": ".trellis/tasks/10-15-agent-optimistic-send/research/ui-design.md", "reason": "Current E02 draft/attempt ownership, typed query and integration contract; preserve active behavior without new reload persistence."}
+{"file": ".trellis/tasks/10-15-agent-optimistic-send/research/admission-design.md", "reason": "Converged E02 identity/recovery and bounded implementation contracts."}
+{"file": ".trellis/tasks/10-15-agent-optimistic-send/design.md", "reason": "Converged E02 identity/recovery and bounded implementation contracts."}
+{"file": ".trellis/tasks/10-15-agent-optimistic-send/implement.md", "reason": "Converged E02 identity/recovery and bounded implementation contracts."}
+{"file": ".trellis/spec/frontend/agent-send-recovery.md", "reason": "E02 executable immediate-consumption, revision-safe recovery and unknown-admission contract."}
+{"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Owner correction: quiet normal success, immediate visible results, meaningful feedback and user-action language; no internal phase captions."}

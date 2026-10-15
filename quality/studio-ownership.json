@@ -5784,6 +5784,46 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/models/chatSubmission.ts",
+      "file": "packages/studio/src/features/agent/models/chatSubmission.ts",
+      "target": "packages/studio/src/features/agent/models/chatSubmission.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/queries/agentAdmission.ts",
+      "file": "packages/studio/src/features/agent/queries/agentAdmission.ts",
+      "target": "packages/studio/src/features/agent/queries/agentAdmission.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/chatSubmissionAttempts.ts",
+      "file": "packages/studio/src/features/agent/ui/chatSubmissionAttempts.ts",
+      "target": "packages/studio/src/features/agent/ui/chatSubmissionAttempts.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/SubmissionMessage.tsx",
+      "file": "packages/studio/src/features/agent/ui/SubmissionMessage.tsx",
+      "target": "packages/studio/src/features/agent/ui/SubmissionMessage.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/submissionMessage.css",
+      "file": "packages/studio/src/features/agent/ui/submissionMessage.css",
+      "target": "packages/studio/src/features/agent/ui/submissionMessage.css",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

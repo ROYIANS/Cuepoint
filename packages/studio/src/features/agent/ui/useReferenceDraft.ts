@@ -14,11 +14,13 @@ export type ReferenceImportDraft = {
 type DraftState = {
     text: string;
     textRevision: number;
+    revision: number;
     attachments: ReferenceAttachment[];
     imports: ReferenceImportDraft[]
 };
-type SubmittedDraft = Pick<DraftState, "text" | "textRevision" | "attachments" | "imports"> & { scope: string };
-const EMPTY: DraftState = {text: "", textRevision: 0, attachments: [], imports: []};
+export type SubmittedDraft = Pick<DraftState, "text" | "textRevision" | "attachments" | "imports"> & { scope: string };
+export type DraftRecovery = {scope: string; revision: number};
+const EMPTY: DraftState = {text: "", textRevision: 0, revision: 0, attachments: [], imports: []};
 
 export function useReferenceDraft(scope: string, projectId?: string) {
     const [drafts, setDrafts] = useState<Record<string, DraftState>>({});
@@ -45,7 +47,7 @@ export function useReferenceDraft(scope: string, projectId?: string) {
     }
 
     function update(fn: (previous: DraftState) => DraftState, key = scope) {
-        if (mounted.current) publish({...currentDrafts.current, [key]: fn(currentDrafts.current[key] ?? EMPTY)});
+        if (mounted.current) publish({...currentDrafts.current, [key]: {...fn(currentDrafts.current[key] ?? EMPTY), revision: ++revision.current}});
     }
 
     function setText(text: string) {
@@ -58,7 +60,7 @@ export function useReferenceDraft(scope: string, projectId?: string) {
             scope,
             text: current.text,
             textRevision: current.textRevision,
-            attachments: [...current.attachments],
+            attachments: current.attachments.map(attachment => ({...attachment})),
             imports: [...current.imports]
         };
     }
@@ -149,6 +151,28 @@ export function useReferenceDraft(scope: string, projectId?: string) {
         }), submitted.scope);
     }
 
+    function consume(submitted: SubmittedDraft): DraftRecovery {
+        acknowledge(submitted);
+        return {scope: submitted.scope, revision: currentDrafts.current[submitted.scope]?.revision ?? 0};
+    }
+
+    function restore(submitted: SubmittedDraft, recovery: DraftRecovery): boolean {
+        if (!mounted.current || recovery.scope !== submitted.scope) return false;
+        const current = currentDrafts.current[recovery.scope] ?? EMPTY;
+        // All mutations count, including attachment/import changes and editing back
+        // to empty. Never replace a later composer version by comparing text alone.
+        if (current.revision !== recovery.revision || current.text || current.attachments.length || current.imports.length) return false;
+        update((previous) => ({...previous, text: submitted.text, textRevision: ++revision.current,
+            attachments: [...submitted.attachments]}), recovery.scope);
+        return true;
+    }
+
+    function reserveDestination(key: string) {
+        if (!mounted.current) throw new Error("对话页面已关闭，发送内容仍保留在原位置");
+        if (key in currentDrafts.current) throw new Error("新话题已有草稿，请先处理该草稿后重试");
+        publish({...currentDrafts.current, [key]: {...EMPTY, revision: ++revision.current}});
+    }
+
     function moveTo(key: string, submitted: SubmittedDraft) {
         if (!mounted.current) throw new Error("对话页面已关闭，草稿保留在原话题");
         // A created thread should have no compose session. Never overwrite a
@@ -201,6 +225,9 @@ export function useReferenceDraft(scope: string, projectId?: string) {
         setText,
         capture,
         acknowledge,
+        consume,
+        restore,
+        reserveDestination,
         moveTo,
         attach,
         importFiles,

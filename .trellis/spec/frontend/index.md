@@ -18,6 +18,7 @@
 | [Monorepo Boundaries](./monorepo-boundaries.md) | Application ownership, exports, source discovery and deployment assembly | Filled |
 | [Studio Feature Ownership](./feature-organization.md) | Vertical feature APIs, fixed product integration, explicit transactions and executable dependency rules | Filled |
 | [Component Guidelines](./component-guidelines.md) | Thin routes, feature pages, ui primitives, slots | Filled |
+| [Interaction Feedback](./interaction-feedback.md) | Quiet success paths, immediate results, purposeful progress and actionable product copy | Filled |
 | [Shared Desktop UI](./desktop-ui.md) | Frame/navigation, page typography, scroll owners, overlay focus and print | Filled |
 | [Agent Business Details](./agent-business-details.md) | In-workspace shot links, retained chat, full-width details and guarded single-shot editing | Filled |
 | [Settings and Desktop Updates](./settings-update.md) | Settings search, embedded connections, device preferences, anonymous release checks and verified installer saves | Filled |
@@ -35,6 +36,7 @@
 | [Image Discovery](./agent-image-discovery.md) | Named-project image lookup, same-run source proof and actual pixels | Filled |
 | [Project References](./agent-references.md) | Local reference parsing, shared source library and native model image input | Filled |
 | [Agent Context](./agent-context.md) | History policy, shared budgets and durable compaction | Filled |
+| [Agent Send Recovery](./agent-send-recovery.md) | Immediate submitted echo, scoped recovery, create-only identities and uncertain admission | Filled |
 | [Agent Execution](./agent-execution.md) | Durable runs, ordered checkpoints, explicit retry and cross-tab recovery | Filled |
 | [Agent Activity UI](./agent-activity-ui.md) | Chronological execution, persistent action reminders and turn navigation | Filled |
 | [Agent Write Evidence](./agent-write-evidence.md) | Atomic direct-write receipts, normalized results and bounded historical outcome display | Filled |
@@ -71,6 +73,7 @@
 
 ## Quality Check
 
+- [ ] Feedback follows interaction-feedback.md: immediate visible results, quiet normal success, no redundant transient labels or exposed internal phases, and actionable failures/recovery
 - [ ] Headers, navigation breakpoints, short-window overlays, native keyboard activation, focus return and print obey desktop-ui.md; no global Agent theme leakage
 - [ ] Studio create does not open a project picker or `/p/$projectId/...`
 - [ ] `/characters/$missing` shows 找不到, not 加载中

@@ -66,6 +66,10 @@ Primitives export named functions (not default exports): `Button`, `Field`, `but
 
 ---
 
+## Interaction feedback
+
+Follow [Interaction Feedback](./interaction-feedback.md) before adding pending/progress/success copy. Normal success stays quiet when the result is already visible. Reuse the relevant control or operation surface, and reserve extra text for meaningful waiting, failure or a necessary action. Never turn every internal async phase into user-facing status text.
+
 ## Forms and Generation Slots
 
 - Label + control: wrap with `Field` from `packages/studio/src/ui/field.tsx` (`label` + `children`).

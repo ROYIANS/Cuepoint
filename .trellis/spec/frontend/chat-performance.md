@@ -131,7 +131,7 @@ if (stickToBottom.current) snapChatToBottom(listEl);
 
 ## Rich transcript loading
 
-`ChatWorkspace` dynamically loads `MessageList` only when the current thread has messages. The empty welcome/composer and task board must not eagerly load Markdown's diagram/math/syntax dependencies. Suspense occupies the same transcript container with a Chinese loading status. This boundary never remounts `AgentChatPage` or owns a run: generation continues while the transcript module loads. Once mounted, the existing scroll, ResizeObserver and memo contracts above remain unchanged.
+`ChatWorkspace` dynamically loads `MessageList` only when the current thread has messages. The empty welcome/composer and task board must not eagerly load Markdown's diagram/math/syntax dependencies. Suspense occupies the same transcript container with a Chinese loading status. An E02 submitted attempt must remain visible through an eager lightweight row in both the workspace and this fallback; see [Agent Send Recovery](./agent-send-recovery.md). The provisional row does not import rich Markdown and joins its durable counterpart by canonical user ID. This boundary never remounts `AgentChatPage` or owns a run: generation continues while the transcript module loads. Once mounted, the existing scroll, ResizeObserver and memo contracts above remain unchanged.
 
 The full vendor icon catalog is a separate lazy module behind `ModelIcons`; keep named re-exports in `ModelIconCatalog` so dynamic import does not retain every unrelated package export. The icon fallback reserves the requested dimensions and is decorative. Provider and model names remain visible while icons load.
 

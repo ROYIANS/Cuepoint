@@ -7,7 +7,8 @@ import type {ChatModelCatalog} from "../../settings/models/chatModelPolicy";
 import type {RunAction} from "./AgentRunDetails";
 import type {useReferenceDraft} from "./useReferenceDraft";
 import {createChatThread, updateChatThread} from "../commands/chat";
-import {deleteChatThread} from "./../commands/lifecycle";
+import type {ChatAdmissionIdentity} from "../models/chatSubmission";
+import type {AgentRun} from "../models/agent";
 import {resolveConnector} from "../../settings/commands/connectors";
 import {db} from "../../../platform/product/store";
 import {assertRetryConnector, beginAgentRun} from "../commands/agentRuns";
@@ -18,16 +19,6 @@ import {runWithCompatibleChatModel} from "../../settings/models/connectors";
 import {deriveChatTitle} from "../models/chatTitle";
 
 type ReferenceDraft = ReturnType<typeof useReferenceDraft>;
-
-/**
- * A topic created for a send that never produced a run is an orphan: nothing links to
- * it, no message exists, and leaving it behind would strand the user's draft in a
- * topic they never opened. Only threads this call created may be removed this way.
- */
-async function discardUnusedThread(threadId: string, created: boolean): Promise<void> {
-    if (!created) return;
-    await deleteChatThread(threadId);
-}
 
 interface NewMessageFlow {
     submitted: ReturnType<ReferenceDraft["capture"]>;
@@ -48,10 +39,16 @@ interface NewMessageFlow {
     bindThread: (id: string) => void;
     navigate: ReturnType<typeof useNavigate>;
     isCurrent: () => boolean;
+    threadId: string;
+    admission: ChatAdmissionIdentity;
+    onThreadReady: (thread: ChatThread) => void;
+    onAdmitted: (run: AgentRun) => void;
+    navigateToThread?: boolean;
+    destinationReserved?: boolean;
+    onDestinationReady?: () => void;
 }
 
 export async function executeNewChatMessage({
-                                                submitted,
                                                 content,
                                                 attachments,
                                                 references,
@@ -68,59 +65,55 @@ export async function executeNewChatMessage({
                                                 controller,
                                                 bindThread,
                                                 navigate,
-                                                isCurrent
+                                                isCurrent, threadId, admission, onThreadReady, onAdmitted,
+                                                navigateToThread, destinationReserved, onDestinationReady
                                             }: NewMessageFlow) {
     return runWithCompatibleChatModel(connector, model, async () => {
         let thread = activeThread;
-        let created = false;
         if (!thread) {
             thread = await createChatThread({
+                id: threadId,
                 connectorId: connector.id,
                 model,
                 title: deriveChatTitle(content),
                 taskMode,
                 projectId
             });
-            created = true;
-            if (controller.signal.aborted) {
-                await discardUnusedThread(thread.id, created);
-                return;
-            }
+            onThreadReady(thread);
+            if (controller.signal.aborted) return;
             bindThread(thread.id);
 
         }
         const targetThread = thread;
         await withThreadRunLock(targetThread.id, async (ownership) => {
-            if (controller.signal.aborted) {
-                await discardUnusedThread(targetThread.id, created);
-                return;
-            }
+            if (controller.signal.aborted) return;
             // Acquire execution ownership before mounting detail recovery effects.
-            let owner = submitted;
-            if (!activeThread) {
-                const transfer = references.moveTo(JSON.stringify([targetThread.id, projectId]), submitted);
-                owner = transfer.submitted;
-                try {
-                    await navigate({to: "/agent/$threadId", params: {threadId: targetThread.id}});
-                } catch (error) {
-                    if (!transfer.restore()) throw new Error(`打开话题失败，发送草稿保留在「${targetThread.title}」中，请打开后重试`, {cause: error});
-                    throw error;
+            if (!activeThread || navigateToThread) {
+                if (!destinationReserved) {
+                    references.reserveDestination(JSON.stringify([targetThread.id, projectId]));
+                    onDestinationReady?.();
                 }
+                bindThread(targetThread.id);
+                await navigate({to: "/agent/$threadId", params: {threadId: targetThread.id}});
             }
-            if (controller.signal.aborted) {
-                await discardUnusedThread(targetThread.id, created);
-                return;
-            }
-            await updateChatThread(targetThread.id, {
-                interactionMode: activeThreadId ? interactionMode : "smart",
-                reasoningSelection: {
-                    connectorId: connector.id,
-                    baseUrl: connector.baseUrl,
-                    model,
-                    value: reasoningEffort
-                }
+            if (controller.signal.aborted) return;
+            await db.transaction("rw", [db.chatThreads], async tx => {
+                const current = await tx.chatThreads.get(targetThread.id);
+                if (!current || current.projectId !== projectId) throw new Error("对话或项目归属已变化，请核对后重新发送");
+                await updateChatThread(targetThread.id, {
+                    interactionMode: activeThreadId ? interactionMode : "smart",
+                    reasoningSelection: {
+                        connectorId: connector.id,
+                        baseUrl: connector.baseUrl,
+                        model,
+                        value: reasoningEffort
+                    }
+                }, tx);
             });
+            if (controller.signal.aborted) return;
             const run = await beginAgentRun({
+                admission,
+                expectedOwner: {projectId},
                 threadId: targetThread.id,
                 connector,
                 model,
@@ -130,7 +123,7 @@ export async function executeNewChatMessage({
                 reasoningEffort,
                 interactionMode: activeThreadId ? interactionMode : "smart"
             });
-            references.acknowledge(owner);
+            onAdmitted(run);
             await executeChatRun(run, connector.apiKey, controller, undefined, undefined, undefined, ownership);
         });
 

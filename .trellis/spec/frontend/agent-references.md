@@ -100,9 +100,10 @@ long runs of immediately resolved native promises in a transaction.
 
 UI is flat, dark and scoped: searchable plus-menu, compact chips only when present,
 source preview and explicit parse errors/retry. Async draft results retain their
-originating thread/project scope. Move home attachments to the created thread before
-navigation and clear them only after run creation succeeds. Sending locks attachment
-mutations so late imports cannot strand a moved draft. Source modals retain keyboard
+originating thread/project scope. A valid send consumes its captured text/reference
+snapshot into a local attempt immediately; first-send navigation moves the submitted
+attempt, while newer home edits remain home-scoped. Sending locks attachment
+mutations so late imports cannot strand a submitted draft. See [Agent Send Recovery](./agent-send-recovery.md). Source modals retain keyboard
 focus, Escape/outside-click dismissal and narrow-screen bounds.
 
 ## 4. Validation & Error Matrix
@@ -150,23 +151,25 @@ Correct: process outside it, then publish after a short owner/operation CAS chec
 
 `task_read` index/detail and `project_history_read` must project reference tool results through `historicalToolSummary`; reference identities, revisions and coverage may remain, raw cached source text/pixels may not. Old nested task/history lookups are summarized rather than recursively trusting opaque JSON. Fresh safe lookup results carry the code-owned `sourceProjectionVersion: 1`. At Chat/Responses materialization, correlate tool outputs with their function-call names and downgrade unmarked historical lookup outputs. Do not modify immutable ledger records or authored user/assistant prose. Regression coverage includes withdrawn/revised/foreign sources, index/detail/nested reads, both transports, and old frozen wire arrays.
 
-## B07: one compose scope for text and references (2026-09-30)
+## B07 / E02: one compose scope and revision-safe submitted attempts
 
 ### 1. Scope / trigger
 
-Within the mounted Agent page, unsent text and attachments belong to the same thread/project session. Changing topics or home project selection must not pair one topic's text with another topic's references. This is in-page retention, not persistence across reload or page unmount.
+Within the mounted Agent page, unsent text and attachments belong to the same thread/project session. Changing topics or home project selection must not pair one topic's text with another topic's references. This is in-page retention, not persistence across reload or page unmount. E02's [send recovery contract](./agent-send-recovery.md) supersedes the original B07 clear-after-begin timing while preserving draft ownership.
 
 ### 2. Signatures
 
-`useReferenceDraft(scope, projectId?)` owns text, textRevision, attachments and imports. `setText(text)` advances revision on every edit; `capture()` freezes the submitted scope/text/revision/attachments and active import list before any await; send checks that captured list, including imports started before rerender. `moveTo(targetScope, submitted)` transfers captured contents before new-thread navigation and returns the moved submission plus guarded restoration. `acknowledge(submitted)` retires only the submitted owner/version after `beginAgentRun` succeeds. Existing attach/import/retry/cancel/clearSent operations retain their origin scope.
+`useReferenceDraft(scope, projectId?)` owns text, textRevision, a whole-draft mutation revision, attachments and imports. `setText(text)` advances text revision on every edit; `capture()` freezes scope/text/revision/attachments and active imports before any await. Send checks that captured list, including imports started before rerender.
+
+`consume(submitted): DraftRecovery` uses exact-version acknowledgement immediately and returns `{scope, revision}` for the consumed whole-draft state. `restore(submitted, recovery): boolean` compares that state and restores only when it is still the same empty draft. `reserveDestination(scope)` establishes an empty independent compose session and refuses an existing session, including one edited back to empty. Existing `moveTo`/`acknowledge` remain guarded helpers; E02's initial-send path must not refill the destination composer or clear it again after begin. Existing attach/import/retry/cancel/clearSent operations retain their origin scope.
 
 ### 3. Contracts
 
-The scope is the existing JSON pair `[threadId ?? 'home', projectId]`. Switching A/B/back restores each session's text and attachments. New topic never clears the old unsent draft merely because creation starts or fails. Preserve the current loaded/routedThreadPending ownership gate.
+The scope is JSON `[threadId ?? 'home', projectId]`. Switching A/B/back restores each session's text and attachments. New topic never clears an old unsent draft merely because creation starts or fails. Preserve the loaded/routed-thread ownership gate, with only the exact creation-receipt handoff documented in send recovery.
 
-Capture a send synchronously. If home creation awaits while the user edits, transfer only captured text/references; newer home text remains there. Never overwrite an existing target session, even one edited back to empty. On navigation failure restore only if origin was still the submitted version at transfer and both origin and target text versions remain unchanged afterward; otherwise retain the payload in the created thread and identify its retry location. After navigation, failed begin leaves the payload visible in that thread. Successful begin clears only the submitted text revision and captured reference revisions; it cannot clear later edits or equal text in another thread. Execution transport failure after successful begin follows existing durable-run behavior, not restoration of a sent draft.
+Capture a send synchronously, acquire the existing duplicate-send lock, and consume only that submitted version into its immutable local attempt before preparation. If home creation waits while the user edits, newer home text remains there; the created thread starts with an independent empty composer. Never overwrite an existing target session, even one edited back to empty. Failure retains exact submitted text/references in its recovery candidate. Restore only through the unchanged consumed whole-draft revision; refusal leaves both the candidate and newer draft intact. Successful begin joins the durable user ID without another delayed composer clear. Execution failure after admission follows durable-run recovery and cannot restore an already-sent draft.
 
-Every import success updater preserves compose text/revision and other state fields. Import progress/failure stays in its initiating scope with original File/error/reference resources. Sending blocks all attachment mutations (including removal/cancel), duplicate send and active imports, while text editing remains supported. Existing Web Lock, compatibility check, one-POST execution and route cancellation remain unchanged; assign new execution thread before navigation so the first send does not cancel itself.
+Every import success updater preserves compose text/revision and other fields. All text/reference/import mutations advance the whole-draft revision. Import progress/failure stays in its initiating scope with original File/error/reference resources. Sending blocks all attachment mutations (including removal/cancel), duplicate send and active imports; text editing remains supported. Web Lock, compatibility, one-POST execution and genuine route cancellation stay authoritative. Assign the execution thread before navigation so first send cannot cancel itself.
 
 ### 4. Validation / error matrix
 
@@ -174,23 +177,26 @@ Every import success updater preserves compose text/revision and other state fie
 | --- | --- |
 | A text/reference → B → A | A restored; B has independent draft |
 | Home project A → B | Separate text/reference sessions |
-| New-topic creation fails | Original unsent draft unchanged |
-| First-send creation fails before transfer | Origin retains payload |
-| First-send navigation fails | Guarded restore or explicit retained-thread location; no overwrite |
-| Begin fails after navigation | Created thread retains exact unsent payload for retry |
-| Begin succeeds after text edit/revert | Edited version retained, even if string equals submitted |
-| A begin succeeds while B has equal text | Only A's captured version may clear |
-| Import completes after scope change | Updates origin references only; preserves compose text/revision |
-| Existing target session | Transfer rejects instead of replacing it |
+| New-topic creation fails outside Send | Original unsent draft unchanged |
+| First-send preparation/creation fails | Exact recoverable attempt; submitted composer already consumed |
+| First-send navigation fails | Retained attempt; no newer origin/destination draft overwritten |
+| Begin fails with proved rollback | Explicit retry or guarded restore; retain exact attachments |
+| Begin outcome unknown | No draft restore/re-admission; read-only status check |
+| Text edit/revert or edit-back-to-empty after consume | Newer revision survives; automatic restore refused |
+| A begin succeeds while B has equal text | B unchanged; no delayed acknowledgement of current draft |
+| Import completes after scope change | Updates origin references only; preserves text/version |
+| Existing destination session | Reservation refuses overwrite |
 
 ### 5. Good / base / bad cases
 
-Good: sending home text A, typing B during thread creation, then beginning A leaves B in the home session. Base: unchanged text is cleared only when begin commits. Bad: one global text state, unconditional new-topic clearing, transferring the entire latest home draft or clearing current text by string equality.
+Good: send A from home, type B while creation waits, see A in the attempt and later durable thread, then return home to B. Base: submitted content clears immediately into the visible attempt; begin acknowledgement cannot clear another revision. Bad: a global text state, unconditional topic clearing, moving the latest home draft or comparing only text when restoring.
 
 ### 6. Required tests
 
-Execute actual page and compose-hook callbacks with deferred creation/begin/navigation: A/B/back, home project change, same-render edits/send, equal-string different owners, edit/revert, successful acknowledgement and each failure boundary. Assert actual persisted message/run contents where feasible. Exercise asynchronous reference import success/failure/cancel/unmount and retained resources; attachment lock and existing loading gates must hold. Simulated route props/callbacks do not establish actual browser history event delivery; browser coverage and mocked transport limits must be explicit.
+Exercise actual page and compose-hook callbacks with held compatibility/creation/begin/navigation: A/B/back, home project change, same-render edits/send, equal-string different owners, edit/revert, edited-empty and each failure boundary. Assert persisted message/run payloads where feasible. Cover asynchronous reference import success/failure/cancel/unmount, retained resources, whole-draft attachment/import mutation, attachment lock and existing loading gates. Pure/callback tests do not establish browser paint or actual history event delivery; keep browser and mocked transport limits explicit.
 
 ### 7. Wrong vs correct
 
-Wrong: `setDraft(current => current === capturedText ? '' : current)` against the currently displayed global draft. Correct: acknowledge the frozen compose scope and text revision after the original begin succeeds, retaining all newer or unrelated sessions.
+Wrong: after begin, clear the currently displayed text by string equality, refill the created-thread composer with the already-submitted payload, or restore a failed payload over a draft edited back to empty.
+
+Correct: consume the captured scoped version immediately, keep the submitted payload in a local attempt, leave later drafts independent, and restore only by the unchanged whole-draft generation. Join durable acceptance by canonical identity without a second clear.

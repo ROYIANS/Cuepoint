@@ -31,6 +31,8 @@ import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
 import {assembleSkills} from "../runtime/skills";
 import {assertReasoningEffort, selectAgentProtocol} from "../../settings/models/reasoningPolicy";
 import {deriveChatTitle} from "../models/chatTitle";
+import {assertChatAdmissionIdentity, normalizeSubmittedChatContent} from "../models/chatSubmission";
+import type {ChatAdmissionIdentity} from "../models/chatSubmission";
 
 export function connectorRunIdentity(connector: ConnectorConfig): AgentRun["connector"] {
     const url = new URL(connector.baseUrl.trim());
@@ -62,6 +64,8 @@ export async function beginAgentRun(input: {
     content?: string;
     attachments?: ReferenceAttachment[];
     retryOfRunId?: string;
+    admission?: ChatAdmissionIdentity;
+    expectedOwner?: Readonly<{projectId?: string}>;
     reasoningEffort?: AgentReasoningEffort;
     interactionMode?: AgentInteractionMode;
     createTask?: boolean;
@@ -70,6 +74,13 @@ export async function beginAgentRun(input: {
     const db = store ?? productDb;
     const identity = connectorRunIdentity(input.connector);
     if (!input.model.trim() || !input.connector.apiKey.trim()) throw new Error("请选择模型并配置 API Key");
+    // Capture before catalog preparation so a caller cannot replace IDs while begin awaits.
+    const admission = input.admission ? {...input.admission} : undefined;
+    const expectedOwner = input.expectedOwner ? {...input.expectedOwner} : undefined;
+    if (admission) {
+        assertChatAdmissionIdentity(admission);
+        if (input.retryOfRunId !== undefined) throw new Error("重新生成不能复用新消息提交标识");
+    }
     // Both catalog reads happen before the transaction: loading may import the baseline chunk,
     // while the lookups inside the transaction below only read memory.
     await initModelCatalog();
@@ -78,6 +89,7 @@ export async function beginAgentRun(input: {
     return db.transaction("rw", db.tables, async (db) => {
         const thread = await db.chatThreads.get(input.threadId);
         if (!thread) throw new Error("对话不存在");
+        if (expectedOwner && thread.projectId !== expectedOwner.projectId) throw new Error("对话项目归属已变化，请核对后重新发送");
         if ((thread.taskMode || input.createTask) && !thread.projectId) throw new Error("任务模式请先选择项目");
         if (thread.projectId && !await db.projects.get(thread.projectId)) throw new Error("关联项目已不存在，无法执行");
         if (await db.agentTaskWrapups.where("threadId").equals(thread.id).filter((record) => record.status === "preparing").count()) throw new Error("总结正在整理，请先等待或停止");
@@ -98,7 +110,7 @@ export async function beginAgentRun(input: {
         }
         const reasoningEffort = previous ? previous.reasoningEffort : input.reasoningEffort;
         assertReasoningEffort(identity, input.model, reasoningEffort);
-        const content = input.content?.trim() || (input.attachments?.length ? "请结合附加的参考资料协助我。" : "");
+        const content = normalizeSubmittedChatContent(input.content, input.attachments);
         if (!previous && !content) throw new Error("消息不能为空");
         let task = await db.agentTasks.where("threadId").equals(thread.id).first();
         if (input.createTask && !task && !previous) task = await createAgentTaskForThread(thread.id, {
@@ -109,9 +121,9 @@ export async function beginAgentRun(input: {
         if (task && task.lifecycle !== "open") throw new Error("请先重新打开任务，再继续对话");
         if (previous?.taskId && previous.taskId !== task?.id) throw new Error("原任务关联已失效");
 
-        const userMessageId = previous?.userMessageId ?? createId("cmsg");
-        const runId = createId("run");
-        const assistantMessageId = createId("cmsg");
+        const userMessageId = previous?.userMessageId ?? admission?.userMessageId ?? createId("cmsg");
+        const runId = admission?.runId ?? createId("run");
+        const assistantMessageId = admission?.assistantMessageId ?? createId("cmsg");
         const interactionMode = previous ? previous.interactionMode ?? "smart" : input.interactionMode ?? thread.interactionMode ?? "smart";
         const taskMode = previous ? previous.taskMode === true : thread.taskMode === true;
         const taskContext = await getTaskContext(thread.id, agent.instructions, taskMode, interactionMode, thread.projectId, db);
