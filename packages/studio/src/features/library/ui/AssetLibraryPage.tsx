@@ -1,4 +1,4 @@
-import {matchesAssetSearch, type WorldTab} from "../queries/assetLibrary";
+import {matchesAssetSearch, type AssetKind, type WorldTab} from "../queries/assetLibrary";
 import {Input} from "../../../ui/input";
 import {copySelection} from "../../../ui/copySelection";
 import {Link, useNavigate} from "@tanstack/react-router";
@@ -6,16 +6,7 @@ import {useProductQuery} from "../../../platform/product/queries";
 import {Library, Plus, Trash2} from "../../../ui/icons";
 import {useState} from "react";
 import {toast} from "sonner";
-import {
-    addCharacter,
-    addProp,
-    addScene,
-    addStyle,
-    deleteCharacter,
-    deleteProp,
-    deleteScene,
-    deleteStyle
-} from "../commands/assets";
+import {useAssetOperations} from "./useAssetOperations";
 import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "../commands/assetReuse";
 import {firstResultId} from "../models/slot";
 import {type Character, type Prop, type Scene, type VisualStyle} from "../models/assets";
@@ -49,6 +40,8 @@ import {PageContent, PageHeader, PageState, PageToolbar} from "../../../app/layo
 
 type AssetTab = Exclude<WorldTab, "setting">;
 type WorldAsset = Character | Scene | Prop | VisualStyle;
+
+const TAB_KIND: Record<AssetTab, AssetKind> = {characters: "character", scenes: "scene", props: "prop", styles: "style"};
 
 const TAB_COPY: Record<AssetTab, { singular: string; create: string }> = {
     characters: {singular: "角色", create: "新建角色"},
@@ -102,28 +95,34 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
             (db) => db.characters.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
         );
-    const characters = charactersResult ?? [];
+    const characters = (charactersResult ?? []).filter(asset => asset.projectId === projectId);
     const scenesResult =
         useProductQuery(
             (db) => db.scenes.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
         );
-    const scenes = scenesResult ?? [];
+    const scenes = (scenesResult ?? []).filter(asset => asset.projectId === projectId);
     const propsResult =
         useProductQuery(
             (db) => db.props.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
         );
-    const props = propsResult ?? [];
+    const props = (propsResult ?? []).filter(asset => asset.projectId === projectId);
     const stylesResult =
         useProductQuery(
             (db) => db.styles.where("projectId").equals(projectId).reverse().sortBy("updatedAt"),
             [projectId],
         );
-    const styles = stylesResult ?? [];
-    const [pendingDelete, setPendingDelete] = useState<
-        { tab: AssetTab; id: string; name: string } | undefined
-    >();
+    const styles = (stylesResult ?? []).filter(asset => asset.projectId === projectId);
+    const operations = useAssetOperations({
+        kind: tab === "setting" ? undefined : TAB_KIND[tab], ownerId: projectId,
+        openAsset: async id => {
+            if (tab === "characters") return navigate({to: "/p/$projectId/assets/characters/$characterId", params: {projectId, characterId: id}});
+            if (tab === "scenes") return navigate({to: "/p/$projectId/assets/scenes/$sceneId", params: {projectId, sceneId: id}});
+            if (tab === "props") return navigate({to: "/p/$projectId/assets/props/$propId", params: {projectId, propId: id}});
+            if (tab === "styles") return navigate({to: "/p/$projectId/assets/styles/$styleId", params: {projectId, styleId: id}});
+        },
+    });
 
     const assets: Record<AssetTab, WorldAsset[]> = {characters, scenes, props, styles};
     const loading = {
@@ -134,49 +133,23 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
     };
     const activeAssets = tab === "setting" ? [] : assets[tab].filter((asset) => matchesAssetSearch(asset, query));
 
-    async function createLocal(activeTab: AssetTab) {
-        if (activeTab === "characters") {
-            const asset = await addCharacter(projectId);
-            await navigate({
-                to: "/p/$projectId/assets/characters/$characterId",
-                params: {projectId, characterId: asset.id},
-            });
-        } else if (activeTab === "scenes") {
-            const asset = await addScene(projectId);
-            await navigate({
-                to: "/p/$projectId/assets/scenes/$sceneId",
-                params: {projectId, sceneId: asset.id},
-            });
-        } else if (activeTab === "props") {
-            const asset = await addProp(projectId);
-            await navigate({
-                to: "/p/$projectId/assets/props/$propId",
-                params: {projectId, propId: asset.id},
-            });
-        } else {
-            const asset = await addStyle(projectId);
-            await navigate({
-                to: "/p/$projectId/assets/styles/$styleId",
-                params: {projectId, styleId: asset.id},
-            });
-        }
-    }
-
     return (
         <div className="app-scroll h-full min-h-0 min-w-0 overflow-auto">
             <PageContent mode="collection">
                 <PageHeader title="世界" description="管理项目共用的世界设定、角色、场景、道具与风格。"
                             actions={tab !== "setting" ? (
                                 <div className="flex flex-wrap gap-2">
-                                    <Button variant="outline" onClick={() => setPickerOpen(true)}>
+                                    <Button variant="outline" disabled={operations.busy} onClick={() => setPickerOpen(true)}>
                                         <Library/> 从工作室添加
                                     </Button>
-                                    <Button variant="brand" onClick={() => void createLocal(tab)}>
-                                        <Plus/> {TAB_COPY[tab].create}
+                                    <Button variant="brand" disabled={operations.busy || operations.createIssue?.kind === "unknown"}
+                                            onClick={() => void operations.create()}>
+                                        <Plus/> {operations.creating ? "创建中…" : operations.createIssue?.kind === "open" ? "打开已创建的设定" : TAB_COPY[tab].create}
                                     </Button>
                                 </div>
                             ) : undefined}/>
 
+                {operations.createIssue && <p role="alert" className="text-destructive text-sm">{operations.createIssue.message}</p>}
                 <PageToolbar>
                     <Tabs
                         value={tab}
@@ -214,7 +187,7 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
                                 projectId={projectId}
                                 tab={tab}
                                 asset={asset}
-                                onDelete={() => setPendingDelete({tab, id: asset.id, name: asset.name})}
+                                onDelete={() => operations.selectDelete({id: asset.id, name: asset.name})}
                             />
                         ))}
                     </ul>
@@ -233,32 +206,37 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
             ) : null}
 
             <AlertDialog
-                open={Boolean(pendingDelete)}
-                onOpenChange={(open) => !open && setPendingDelete(undefined)}
+                open={Boolean(operations.target)}
+                onOpenChange={(open) => {if (!open) operations.closeDelete();}}
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>
-                            删除{pendingDelete ? TAB_COPY[pendingDelete.tab].singular : "资产"}
+                            删除{tab !== "setting" ? TAB_COPY[tab].singular : "资产"}
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                            确定删除「{pendingDelete?.name}」？已有引用会被清除。
+                            确定删除「{operations.target?.name}」？已有引用会被清除。
                         </AlertDialogDescription>
                     </AlertDialogHeader>
+                    {operations.deleteIssue && <p role="alert" className="text-destructive text-sm">{operations.deleteIssue.message}</p>}
                     <AlertDialogFooter>
-                        <AlertDialogCancel>取消</AlertDialogCancel>
-                        <AlertDialogAction
-                            className="bg-destructive hover:bg-destructive/90"
-                            onClick={() => {
-                                if (!pendingDelete) return;
-                                if (pendingDelete.tab === "characters") void deleteCharacter(pendingDelete.id);
-                                else if (pendingDelete.tab === "scenes") void deleteScene(pendingDelete.id);
-                                else if (pendingDelete.tab === "props") void deleteProp(pendingDelete.id);
-                                else void deleteStyle(pendingDelete.id);
-                            }}
-                        >
-                            删除
-                        </AlertDialogAction>
+                        <AlertDialogCancel disabled={operations.busy}>取消</AlertDialogCancel>
+                        {operations.deleteIssue?.unknown ? (
+                            <Button disabled={operations.busy} onClick={() => void operations.inspectDelete()}>
+                                {operations.checking ? "核对中…" : "核对结果"}
+                            </Button>
+                        ) : (
+                            <AlertDialogAction
+                                className="bg-destructive hover:bg-destructive/90"
+                                disabled={operations.busy}
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    void operations.remove();
+                                }}
+                            >
+                                {operations.deleting ? "删除中…" : "删除"}
+                            </AlertDialogAction>
+                        )}
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

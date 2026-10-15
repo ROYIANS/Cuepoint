@@ -5840,6 +5840,14 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/library/ui/useAssetOperations.ts",
+      "file": "packages/studio/src/features/library/ui/useAssetOperations.ts",
+      "target": "packages/studio/src/features/library/ui/useAssetOperations.ts",
+      "owner": "features/library",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

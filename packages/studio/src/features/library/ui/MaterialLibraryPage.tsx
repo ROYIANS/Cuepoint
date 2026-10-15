@@ -128,8 +128,8 @@ function SharedMaterialLibraryPage({routeSearch}: { routeSearch: MaterialLibrary
         <p className="material-storage-note">素材库与 IP 档案保存在当前设备本地。项目 ZIP
             包含已加入项目的素材副本，不包含整个素材库或 IP 档案。</p>
         {selected && <MaterialDetailPanel id={selected} onClose={() => setSelected(null)} onSelect={setSelected}/>}
-        {importing && <MaterialImportDialog initialScope={initialScope} onClose={() => setImporting(false)}
-                                            onImported={setSelected}/>}
+        <MaterialImportDialog open={importing} initialScope={initialScope} onClose={() => setImporting(false)}
+                              onImported={setSelected}/>
     </PageContent></ModuleLayout>;
 }
 

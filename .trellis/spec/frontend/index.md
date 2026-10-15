@@ -19,6 +19,7 @@
 | [Studio Feature Ownership](./feature-organization.md) | Vertical feature APIs, fixed product integration, explicit transactions and executable dependency rules | Filled |
 | [Component Guidelines](./component-guidelines.md) | Thin routes, feature pages, ui primitives, slots | Filled |
 | [Interaction Feedback](./interaction-feedback.md) | Quiet success paths, immediate results, purposeful progress and actionable product copy | Filled |
+| [Creative Operation Feedback](./creative-operation-feedback.md) | Guarded asset intents, receipt-aware recovery, archive filters and serial import progress/stop | Filled |
 | [Shared Desktop UI](./desktop-ui.md) | Frame/navigation, page typography, scroll owners, overlay focus and print | Filled |
 | [Agent Business Details](./agent-business-details.md) | In-workspace shot links, retained chat, full-width details and guarded single-shot editing | Filled |
 | [Settings and Desktop Updates](./settings-update.md) | Settings search, embedded connections, device preferences, anonymous release checks and verified installer saves | Filled |

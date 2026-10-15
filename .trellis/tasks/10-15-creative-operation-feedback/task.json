@@ -3,7 +3,7 @@
   "name": "creative-operation-feedback",
   "title": "E05 · 创作操作反馈、去重与导入体验",
   "description": "Apply consistent pending, failure and duplicate-submit behavior to the sampled asset/project/import operations.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "studio",
@@ -12,8 +12,8 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": null,
-  "base_branch": "main",
+  "branch": "codex/creative-operation-feedback",
+  "base_branch": "codex/agent-thread-reading",
   "worktree_path": null,
   "commit": null,
   "pr_url": null,
@@ -21,13 +21,16 @@
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
   "relatedFiles": [],
-  "notes": "Planning backlog from the 2026-10-15 investigation. Task creation is authorized; delivery scope and implementation remain subject to this task review.",
+  "notes": "Bounded E05 design reviewed under standing sequential authorization: project/Studio asset create/delete locks and certainty-aware recovery, archive-only label truth and serial import confirmed progress/next-file stop. Preserve current transactions; no reserved-ID/outbox framework.",
   "meta": {
     "epicCode": "E05",
-    "deliveryState": "planning-backlog",
-    "implementationApproved": false,
+    "deliveryState": "implemented-and-reviewed-ready-for-stage-commit",
+    "implementationApproved": true,
     "dependsOn": [],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Needs child-specific requirement convergence, design, implementation/validation plan and review before start."
+    "readiness": "Necessary actual UI/store checks and independent full changed-scope review passed; direct types, scoped lint and architecture are green. Broad batch gates deferred.",
+    "approvalDate": "2026-10-15",
+    "approvalText": "ok，继续，每个阶段完了就提交代码，然后再继续",
+    "testingPolicy": "necessary affected checks only; full regression/build/package at batch end"
   }
 }

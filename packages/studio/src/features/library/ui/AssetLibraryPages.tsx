@@ -1,8 +1,7 @@
 import {useNavigate} from "@tanstack/react-router";
 import {useProductQuery} from "../../../platform/product/queries";
-import {useEffect, useRef, useState} from "react";
+import {useState} from "react";
 import type {ProductStore, StoreTable} from "../../../platform/storage/types";
-import {toast} from "sonner";
 import {Plus} from "../../../ui/icons";
 import {CoverCard, LibraryGrid} from "./CoverCard";
 import {LibraryHeader} from "./LibraryHeader";
@@ -18,21 +17,12 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "../../../ui/alert-dialog";
-import {
-    addCharacter,
-    addProp,
-    addScene,
-    addStyle,
-    deleteCharacter,
-    deleteProp,
-    deleteScene,
-    deleteStyle
-} from "../commands/assets";
+import {useAssetOperations} from "./useAssetOperations";
 import {firstResultId} from "../models/slot";
 import {type Character, type Prop, type Scene, type VisualStyle} from "../models/assets";
 import {CHARACTER_SLOTS, PROP_SLOTS, SCENE_SLOTS, STYLE_SLOTS} from "../models/slots";
 import {STUDIO_LIBRARY_ID} from "../models/ownership";
-import {matchesAssetSearch} from "../queries/assetLibrary";
+import {matchesAssetSearch, type AssetKind} from "../queries/assetLibrary";
 import {formatUpdatedAt} from "../../../ui/format";
 import {filterAndSortLibrary, type LibrarySort} from "../services/library";
 
@@ -52,7 +42,7 @@ function styleCover(style: VisualStyle) {
     return firstResultId(STYLE_SLOTS.map((slot) => style.slots?.[slot.id]));
 }
 
-type LibraryKind = "character" | "scene" | "prop" | "style";
+type LibraryKind = AssetKind;
 
 type LibraryAsset = Pick<Character, "id" | "name" | "projectId" | "createdAt" | "updatedAt">;
 type LibraryRow = LibraryAsset & { source: object; mediaId?: string };
@@ -128,18 +118,7 @@ export function StyleLibraryPage() {
 
 function StudioLibrary({kind}: { kind: LibraryKind }) {
     const navigate = useNavigate();
-    const activeRef = useRef(true);
-    useEffect(() => {
-        activeRef.current = true;
-        return () => {
-            activeRef.current = false;
-        };
-    }, []);
-    const creatingRef = useRef(false);
-    const deletingRef = useRef(false);
-    const [creating, setCreating] = useState(false);
-    const [deleting, setDeleting] = useState(false);
-    const [deleteError, setDeleteError] = useState("");
+    const operations = useAssetOperations({kind, ownerId: STUDIO_LIBRARY_ID, openAsset: id => navigateToItem(id)});
     const copy = COPY[kind];
     const view = useProductQuery(async (db) => {
         try {
@@ -150,87 +129,30 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
     }, [kind]);
     const [query, setQuery] = useState("");
     const [sort, setSort] = useState<LibrarySort>("updated");
-    const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string }>();
 
     const raw = view?.kind === kind ? view.rows ?? [] : [];
     const items = filterAndSortLibrary(raw.filter((item) => matchesAssetSearch(item.source, query)), "", sort);
 
-    async function handleCreate() {
-        if (creatingRef.current || deletingRef.current) return;
-        creatingRef.current = true;
-        setCreating(true);
-        try {
-            if (kind === "character") {
-                const character = await addCharacter(STUDIO_LIBRARY_ID);
-                if (!activeRef.current) return;
-                await navigate({to: "/characters/$characterId", params: {characterId: character.id}});
-                return;
-            }
-            if (kind === "scene") {
-                const scene = await addScene(STUDIO_LIBRARY_ID);
-                if (!activeRef.current) return;
-                await navigate({to: "/scenes/$sceneId", params: {sceneId: scene.id}});
-                return;
-            }
-            if (kind === "prop") {
-                const prop = await addProp(STUDIO_LIBRARY_ID);
-                if (!activeRef.current) return;
-                await navigate({to: "/props/$propId", params: {propId: prop.id}});
-                return;
-            }
-            const style = await addStyle(STUDIO_LIBRARY_ID);
-            if (!activeRef.current) return;
-            await navigate({to: "/styles/$styleId", params: {styleId: style.id}});
-        } catch (error) {
-            if (activeRef.current) toast.error(error instanceof Error && error.message ? error.message : "创建失败，请重试");
-        } finally {
-            creatingRef.current = false;
-            if (activeRef.current) setCreating(false);
-        }
-    }
-
-    async function handleDelete() {
-        if (!pendingDelete || deletingRef.current || creatingRef.current) return;
-        const target = pendingDelete;
-        deletingRef.current = true;
-        setDeleting(true);
-        setDeleteError("");
-        try {
-            if (kind === "character") await deleteCharacter(target.id);
-            else if (kind === "scene") await deleteScene(target.id);
-            else if (kind === "prop") await deleteProp(target.id);
-            else await deleteStyle(target.id);
-            if (activeRef.current) setPendingDelete((current) => current === target ? undefined : current);
-        } catch (error) {
-            if (activeRef.current) setDeleteError(error instanceof Error && error.message ? error.message : "删除失败，请重试");
-        } finally {
-            deletingRef.current = false;
-            if (activeRef.current) setDeleting(false);
-        }
-    }
-
-    function openItem(id: string) {
+    function navigateToItem(id: string) {
         if (kind === "character") {
-            void navigate({to: "/characters/$characterId", params: {characterId: id}});
-            return;
+            return navigate({to: "/characters/$characterId", params: {characterId: id}});
         }
         if (kind === "scene") {
-            void navigate({to: "/scenes/$sceneId", params: {sceneId: id}});
-            return;
+            return navigate({to: "/scenes/$sceneId", params: {sceneId: id}});
         }
         if (kind === "prop") {
-            void navigate({to: "/props/$propId", params: {propId: id}});
-            return;
+            return navigate({to: "/props/$propId", params: {propId: id}});
         }
-        void navigate({to: "/styles/$styleId", params: {styleId: id}});
+        return navigate({to: "/styles/$styleId", params: {styleId: id}});
     }
 
     return (
         <PageContent mode="collection">
             <LibraryHeader title={copy.title} description={copy.hint} query={query} onQuery={setQuery} sort={sort}
                            onSort={setSort}
-                           extra={<Button disabled={creating || deleting} onClick={() => void handleCreate()}><Plus
-                               aria-hidden/>{creating ? "创建中…" : copy.create}</Button>}/>
+                           extra={<Button disabled={operations.busy || operations.createIssue?.kind === "unknown"} onClick={() => void operations.create()}><Plus
+                               aria-hidden/>{operations.creating ? "创建中…" : operations.createIssue?.kind === "open" ? "打开已创建的设定" : copy.create}</Button>}/>
+            {operations.createIssue && <p role="alert" className="text-destructive text-sm">{operations.createIssue.message}</p>}
             <div>
                 {(!view || view.kind !== kind) && <PageState kind="loading" title="正在读取设定…"/>}
                 {view?.kind === kind && view.error &&
@@ -245,15 +167,13 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
                             title={item.name}
                             subtitle={`工作室 · ${formatUpdatedAt(item.updatedAt)}`}
                             mediaId={item.mediaId}
-                            onOpen={() => openItem(item.id)}
+                            onOpen={() => void navigateToItem(item.id)}
                             actions={[
                                 {
                                     label: "删除",
                                     tone: "danger",
                                     onSelect: () => {
-                                        if (deletingRef.current || creatingRef.current) return;
-                                        setDeleteError("");
-                                        setPendingDelete({id: item.id, name: item.name});
+                                        operations.selectDelete({id: item.id, name: item.name});
                                     },
                                 },
                             ]}
@@ -263,29 +183,33 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
             </div>
 
             <AlertDialog
-                open={Boolean(pendingDelete)}
-                onOpenChange={(open) => {
-                    if (!open && !deletingRef.current) setPendingDelete(undefined);
-                }}
+                open={Boolean(operations.target)}
+                onOpenChange={(open) => {if (!open) operations.closeDelete();}}
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>{copy.empty}</AlertDialogTitle>
-                        <AlertDialogDescription>确定删除「{pendingDelete?.name}」？</AlertDialogDescription>
+                        <AlertDialogDescription>确定删除「{operations.target?.name}」？</AlertDialogDescription>
                     </AlertDialogHeader>
-                    {deleteError && <p role="alert" className="text-destructive text-sm">{deleteError}</p>}
+                    {operations.deleteIssue && <p role="alert" className="text-destructive text-sm">{operations.deleteIssue.message}</p>}
                     <AlertDialogFooter>
-                        <AlertDialogCancel disabled={deleting}>取消</AlertDialogCancel>
-                        <AlertDialogAction
-                            className="bg-destructive hover:bg-destructive/90"
-                            disabled={deleting}
-                            onClick={(event) => {
-                                event.preventDefault();
-                                void handleDelete();
-                            }}
-                        >
-                            {deleting ? "删除中…" : "删除"}
-                        </AlertDialogAction>
+                        <AlertDialogCancel disabled={operations.busy}>取消</AlertDialogCancel>
+                        {operations.deleteIssue?.unknown ? (
+                            <Button disabled={operations.busy} onClick={() => void operations.inspectDelete()}>
+                                {operations.checking ? "核对中…" : "核对结果"}
+                            </Button>
+                        ) : (
+                            <AlertDialogAction
+                                className="bg-destructive hover:bg-destructive/90"
+                                disabled={operations.busy}
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    void operations.remove();
+                                }}
+                            >
+                                {operations.deleting ? "删除中…" : "删除"}
+                            </AlertDialogAction>
+                        )}
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

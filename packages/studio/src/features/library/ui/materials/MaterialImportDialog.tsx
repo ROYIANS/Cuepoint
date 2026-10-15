@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Upload} from "../../../../ui/icons";
 import {createFileMaterial} from "../../commands/materials";
 import {Button} from "../../../../ui/button";
@@ -11,69 +11,150 @@ import {
     DialogTitle
 } from "../../../../ui/dialog";
 import {MaterialScopeSelect, parseScope, useMaterialDraftGuard} from "./MaterialControls";
+import {StorageError} from "../../../../platform/storage/errors";
+import type {MaterialScope} from "../../models/materials";
 
 export const MATERIAL_ACCEPT = "image/png,image/jpeg,image/webp,image/gif,image/avif,video/mp4,video/webm,video/quicktime,audio/mpeg,audio/wav,audio/ogg,audio/mp4,audio/webm,audio/flac,audio/aac,text/plain,text/markdown,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.txt,.md,.pdf,.docx";
 
-export function MaterialImportDialog({initialScope, onClose, onImported}: {
+type ImportBatch = {scope: MaterialScope; total: number; completed: number; lastId?: string; unknown: boolean};
+type ImportProgress = {total: number; completed: number; currentName?: string; stopRequested: boolean};
+
+export function MaterialImportDialog({initialScope, open = true, onClose, onImported}: {
     initialScope: string;
+    open?: boolean;
     onClose: () => void;
     onImported: (id: string) => void
 }) {
     const [scope, setScope] = useState(initialScope);
     const [files, setFiles] = useState<File[]>([]);
+    const filesRef = useRef<File[]>([]);
+    const batchRef = useRef<ImportBatch | null>(null);
     const [pending, setPending] = useState(false);
     const pendingRef = useRef(false);
     const filePicker = useRef<HTMLInputElement>(null);
     const [error, setError] = useState("");
-    const [progress, setProgress] = useState("");
+    const [progress, setProgress] = useState<ImportProgress | null>(null);
+    const [unknown, setUnknown] = useState(false);
+    const stopRemaining = useRef(false);
+    const activeRef = useRef(true);
     const {requestClose, dialog} = useMaterialDraftGuard(files.length > 0, pending);
+    useEffect(() => {
+        activeRef.current = true;
+        return () => {activeRef.current = false;};
+    }, []);
+    useEffect(() => {
+        if (open && !filesRef.current.length && !batchRef.current && !pendingRef.current) setScope(initialScope);
+    }, [open, initialScope]);
 
-    async function save() {
-        if (pendingRef.current || !files.length) return;
-        pendingRef.current = true;
-        setPending(true);
+    function reset() {
+        filesRef.current = [];
+        batchRef.current = null;
+        setFiles([]);
+        setProgress(null);
+        setUnknown(false);
         setError("");
-        let remaining = [...files];
-        let lastId: string | undefined;
+    }
+
+    function close() {
+        if (pendingRef.current) return;
+        // Hiding uncertain recovery is reversible; the mounted page retains its queue.
+        if (batchRef.current?.unknown) onClose();
+        else requestClose(() => {reset(); onClose();});
+    }
+
+    function requestStop() {
+        if (!pendingRef.current || stopRemaining.current) return;
+        stopRemaining.current = true;
+        setProgress(current => current ? {...current, stopRequested: true} : current);
+    }
+
+    function finishImport(lastId: string) {
+        // Command acknowledgements and opening the confirmed result are separate outcomes.
         try {
-            for (const file of files) {
-                setProgress(`正在保存 ${file.name}`);
-                lastId = (await createFileMaterial(file, parseScope(scope))).id;
-                remaining = remaining.slice(1);
-                setFiles(remaining);
-            }
-            if (lastId) onImported(lastId);
+            onImported(lastId);
+            reset();
             onClose();
-        } catch (cause) {
-            setError(cause instanceof Error ? cause.message : "导入失败，请重试。已保存的文件不会重复导入。");
-        } finally {
-            pendingRef.current = false;
-            setPending(false);
-            setProgress("");
+        } catch {
+            setError("全部文件已导入，但未能打开素材。请从素材库查看，避免重复导入。");
         }
     }
 
-    return <><Dialog open onOpenChange={(open) => {
-        if (!open) requestClose(onClose);
+    async function save() {
+        if (pendingRef.current || !filesRef.current.length || batchRef.current?.unknown) return;
+        pendingRef.current = true;
+        stopRemaining.current = false;
+        const batch = batchRef.current ?? {scope: parseScope(scope), total: filesRef.current.length, completed: 0, unknown: false};
+        batchRef.current = batch;
+        setPending(true);
+        setError("");
+        setProgress({total: batch.total, completed: batch.completed, stopRequested: false});
+        let allImported = false;
+        try {
+            while (filesRef.current.length) {
+                if (stopRemaining.current) break;
+                const file = filesRef.current[0];
+                setProgress({total: batch.total, completed: batch.completed, currentName: file.name, stopRequested: false});
+                const material = await createFileMaterial(file, batch.scope);
+                batch.lastId = material.id;
+                batch.completed++;
+                filesRef.current = filesRef.current.slice(1);
+                if (!activeRef.current) return;
+                setFiles(filesRef.current);
+                setProgress({total: batch.total, completed: batch.completed, stopRequested: stopRemaining.current});
+            }
+            allImported = filesRef.current.length === 0;
+        } catch (cause) {
+            if (!activeRef.current) return;
+            if (cause instanceof StorageError && cause.certainty === "unknown") {
+                batch.unknown = true;
+                setUnknown(true);
+                setError("当前文件的导入结果待确认，请先核对素材库。已确认保存的文件会保留；不要重复导入或跳过此文件继续。");
+            } else setError(cause instanceof Error ? cause.message : "导入失败，请重试。已保存的文件不会重复导入。");
+        } finally {
+            pendingRef.current = false;
+            if (activeRef.current) {
+                setPending(false);
+                setProgress({total: batch.total, completed: batch.completed, stopRequested: stopRemaining.current});
+            }
+        }
+        if (activeRef.current && allImported && batch.lastId) finishImport(batch.lastId);
+    }
+
+    let importLabel = `导入${files.length ? ` ${files.length} 个文件` : ""}`;
+    if (progress) importLabel = "继续导入";
+    if (pending) importLabel = "正在导入…";
+    const selectionLocked = pending || unknown || progress !== null;
+    return <><Dialog open={open} onOpenChange={(nextOpen) => {
+        if (!nextOpen) close();
     }}><DialogContent
         className="material-dialog"><DialogHeader><DialogTitle>导入媒体与资料</DialogTitle><DialogDescription>素材按选择的位置保存。项目内素材需要明确提升后，才会出现在共享素材中。</DialogDescription></DialogHeader>
-        <label className="material-field">保存位置<MaterialScopeSelect value={scope} onChange={setScope}
-                                                                       disabled={pending}/></label>
-        <div className="material-upload"><Upload aria-hidden/><Button variant="outline" disabled={pending}
+        <label className="material-field">保存位置<MaterialScopeSelect value={scope} onChange={value => {
+            if (!pendingRef.current && !batchRef.current) setScope(value);
+        }} disabled={selectionLocked}/></label>
+        <div className="material-upload"><Upload aria-hidden/><Button variant="outline" disabled={selectionLocked}
                                                                       onClick={() => filePicker.current?.click()}>选择文件</Button><span>图片、视频、音频、TXT、Markdown、PDF 或 DOCX</span><input
-            ref={filePicker} hidden type="file" multiple accept={MATERIAL_ACCEPT} disabled={pending}
+            ref={filePicker} hidden type="file" multiple accept={MATERIAL_ACCEPT} disabled={selectionLocked}
             onChange={(event) => {
-                setFiles(Array.from(event.target.files ?? []));
+                if (pendingRef.current || batchRef.current) return;
+                const selected = Array.from(event.target.files ?? []);
+                if (!selected.length) return;
+                filesRef.current = selected;
+                batchRef.current = null;
+                setFiles(filesRef.current);
+                setProgress(null);
                 setError("");
             }}/></div>
         {files.length > 0 &&
             <ul className="material-file-list">{files.map((file, index) => <li key={`${file.name}-${index}`}>
                 <span>{file.name}</span><small>{(file.size / 1024 / 1024).toFixed(1)} MB</small></li>)}</ul>}
-        {error && <p role="alert" className="material-error">{error}</p>}{pending &&
-            <p role="status" className="material-muted">{progress}</p>}
+        {error && <p role="alert" className="material-error">{error}</p>}{progress &&
+            <p role="status" className="material-muted">已导入 {progress.completed} / {progress.total}
+                {pending && progress.currentName && ` · 正在保存 ${progress.currentName}`}
+                {pending && progress.stopRequested && " · 当前文件完成后停止后续导入"}</p>}
         <DialogFooter><Button variant="outline" disabled={pending}
-                              onClick={() => requestClose(onClose)}>取消</Button><Button
-            disabled={pending || !files.length}
-            onClick={() => void save()}>{pending ? "正在导入…" : `导入${files.length ? ` ${files.length} 个文件` : ""}`}</Button></DialogFooter>
+                              onClick={close}>{unknown ? "查看素材库" : "取消"}</Button>
+            {pending && <Button variant="outline" disabled={progress?.stopRequested} onClick={requestStop}>停止后续导入</Button>}
+            <Button disabled={pending || unknown || !files.length}
+            onClick={() => void save()}>{importLabel}</Button></DialogFooter>
     </DialogContent></Dialog>{dialog}</>;
 }

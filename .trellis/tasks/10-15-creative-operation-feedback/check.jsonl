@@ -5,3 +5,10 @@
 {"file": ".trellis/spec/frontend/chat-performance.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/interaction-spotchecks.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Quiet normal results, existing pending controls, one meaningful error/progress surface and no internal phase narration."}
+{"file": ".trellis/spec/frontend/ip-material-library.md", "reason": "Existing material scopes, source versions/import transactions and retained selection semantics."}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Mounted operation identity, stale async suppression and explicit readonly transaction ownership."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Typed certainty/target identity and no suppressions or unsafe assertions."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Necessary scoped callback/DOM and actual store tests under owner batch cadence."}
+{"file": ".trellis/tasks/10-15-creative-operation-feedback/research/operation-feedback-design.md", "reason": "Source-backed selected owners and bounded archive/import/unknown outcome contracts."}
+{"file": ".trellis/spec/frontend/creative-operation-feedback.md", "reason": "Concrete E05 shared asset-intent and serial import/unknown visibility contracts; one durable command owner."}

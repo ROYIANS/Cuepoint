@@ -217,7 +217,7 @@ export function ProjectGalleryPage() {
                         onClick={() => setShowArchived(false)}>使用中
                 </button>
                 <button type="button" className="module-nav-item" aria-pressed={showArchived}
-                        onClick={() => setShowArchived(true)}>含已归档项目
+                        onClick={() => setShowArchived(true)}>已归档
                 </button>
             </div>
             <div className="module-nav-group"><h3

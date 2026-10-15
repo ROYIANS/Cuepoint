@@ -127,7 +127,8 @@
     "tests/agentRuntimeCredentials.test.ts",
     "tests/agentRuntimeClaimRaces.test.ts",
     "tests/e03RuntimeFeedback.test.ts",
-    "tests/e04AgentQueryDeparture.test.ts"
+    "tests/e04AgentQueryDeparture.test.ts",
+    "tests/e05AssetPresence.test.ts"
   ],
   "browserComparators": [
     "tests/connectorMigration.test.ts: explicit raw browser migration comparator",

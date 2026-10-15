@@ -61,3 +61,8 @@ Correct: append an immutable version; explicit adoption creates new project-owne
 
 Wrong: keep adopted media alive only in React state.
 Correct: persist material use and retention metadata; include them in garbage collection and project ZIP tests.
+
+
+## Collection interaction and file admission
+
+Follow [Creative Operation Feedback](./creative-operation-feedback.md) for mounted asset create/delete intent, acknowledgement versus uncertainty, and serial file-import confirmed counts/stop remaining. Existing commands and per-file transactions remain the durable owners; UI progress and dialog dismissal never establish a write result.

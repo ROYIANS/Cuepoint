@@ -172,6 +172,21 @@ describe("shared video product page consumers", () => {
             expect(tree.some(node => node.props.children === "创建项目" && node.props.disabled === false)).toBe(true);
         }
     });
+    it("gallery state labels select the actual exclusive active and archived card collections", () => {
+        const {project} = fixture("indexeddb");
+        const archived = {...project, id: "archived-project", name: "归档项目", archivedAt: "2026-10-15T00:00:00.000Z"};
+        const results = [[project, archived], [], [], undefined];
+        let tree = render(ProjectGalleryPage, results);
+        const cards = () => tree.filter(node => node.type === CoverCard).map(node => node.key);
+        const state = (label: string) => tree.find(node => node.type === "button" && node.props.children === label);
+        expect(cards()).toEqual([project.id]); expect(state("使用中")?.props["aria-pressed"]).toBe(true);
+        expect(state("已归档")?.props["aria-pressed"]).toBe(false);
+        (state("已归档")?.props.onClick as () => void)(); tree = render(ProjectGalleryPage, results);
+        expect(cards()).toEqual([archived.id]); expect(state("已归档")?.props["aria-pressed"]).toBe(true);
+        expect(state("使用中")?.props["aria-pressed"]).toBe(false);
+        (state("使用中")?.props.onClick as () => void)(); tree = render(ProjectGalleryPage, results);
+        expect(cards()).toEqual([project.id]); expect(state("使用中")?.props["aria-pressed"]).toBe(true);
+    });
     it.each(["world", "memory", "e/episode/produce", "e/episode/storyboard", "assets/characters/character"])("desktop IndexedDB mounts the existing %s route under shared workspace chrome", path => {
         const {project, episode} = fixture("indexeddb");
         host.pathname = `/p/${project.id}/${path.replace("episode", episode.id)}`;
