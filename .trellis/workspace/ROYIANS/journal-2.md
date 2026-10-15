@@ -221,3 +221,40 @@ Completed scoped topic loading/departure and local reading intent; applied owner
 ### Next Steps
 
 - Activate designed E05 asset create/delete, archived label and serial material import feedback, then independently check and commit.
+
+
+## Session 75: E05 guarded creative operations and serial import recovery
+<!-- trellis-session: v=2 fp=d14cd5e42ad92e6c -->
+
+**Date**: 2026-10-15
+**Task**: E05 guarded creative operations and serial import recovery
+**Package**: studio
+**Branch**: `codex/creative-operation-feedback`
+
+### Summary
+
+Completed project/Studio asset duplicate protection and certainty-aware recovery, truthful archive-only filtering and serial import confirmed progress/stop remaining.
+
+### Main Changes
+
+- Private mounted asset hook freezes exact owner/kind/target; confirmed-create navigation recovery opens only its receipt. Held Radix delete confirmation distinguishes known rollback and uncertain outcome; exact readonly inspection never authorizes destructive replay.
+- Importer freezes scope/queue, counts acknowledged saves and stops before next file; known failures retain remaining queue, unknown head remains quarantined through hide/reopen. Existing route/unload guard remains owner.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `04d47969` | feat: guard creative operations and track serial imports |
+
+### Testing
+
+- [OK] Necessary asset actual UI/store regressions passed (final presence5/5 after prior22-run); import/gallery2suites37passed. Directapp types and7source lint passed0errors21reviewedwarnings. Independent fullscope review and architecture645sources2565static11dynamic0cycles0failures passed.
+- [OK] No full suite/build/package/native/paid/install. Future E06/E16 research excluded from stage commit.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Converge and activate E16 finite asset/shot details with retained batch-review handoff, then independently verify and commit.
