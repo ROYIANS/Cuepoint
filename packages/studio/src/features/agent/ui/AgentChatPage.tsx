@@ -192,19 +192,30 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         return undefined;
     }, [threadList, activeThreadId, routedThread, submissionAttempts]);
 
-    const messages = useProductQuery(
+    const messageRead = useProductQuery(
         async (db) => {
-            if (!activeThreadId) return [];
-            return db.chatMessages.where("threadId").equals(activeThreadId).sortBy("createdAt");
+            const forThreadId = activeThreadId ?? null;
+            return {forThreadId, messages: forThreadId
+                ? await db.chatMessages.where("threadId").equals(forThreadId).sortBy("createdAt") : []};
         },
         [activeThreadId],
     );
-
-    const compactions = useProductQuery((db) => activeThreadId ? db.contextCompactions.where("threadId").equals(activeThreadId).sortBy("createdAt") : [], [activeThreadId]);
-    const runs = useProductQuery(async (db) => {
-        if (!activeThreadId) return [];
-        return db.agentRuns.where("threadId").equals(activeThreadId).sortBy("createdAt");
+    const messages = messageRead?.forThreadId === (activeThreadId ?? null)
+        ? messageRead.messages.filter(message => message.threadId === activeThreadId) : undefined;
+    const compactionRead = useProductQuery(async (db) => {
+        const forThreadId = activeThreadId ?? null;
+        return {forThreadId, compactions: forThreadId
+            ? await db.contextCompactions.where("threadId").equals(forThreadId).sortBy("createdAt") : []};
     }, [activeThreadId]);
+    const compactions = compactionRead?.forThreadId === (activeThreadId ?? null)
+        ? compactionRead.compactions.filter(compaction => compaction.threadId === activeThreadId) : undefined;
+    const runRead = useProductQuery(async (db) => {
+        const forThreadId = activeThreadId ?? null;
+        return {forThreadId, runs: forThreadId
+            ? await db.agentRuns.where("threadId").equals(forThreadId).sortBy("createdAt") : []};
+    }, [activeThreadId]);
+    const runs = runRead?.forThreadId === (activeThreadId ?? null)
+        ? runRead.runs.filter(run => run.threadId === activeThreadId) : undefined;
 
     const {
         request: requestDeparture,

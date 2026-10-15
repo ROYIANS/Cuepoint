@@ -56,7 +56,7 @@
     "firstCandidate": "10-15-agent-parallel-details",
     "narrowDetailMode": "full-width working-surface detail, retained running conversation, explicit return; no modal drawer",
     "shotDetailScope": "view and edit one shot with existing save/conflict/draft guarantees",
-    "activeDelivery": "10-15-agent-execution-feedback",
+    "activeDelivery": "10-15-agent-thread-reading",
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true

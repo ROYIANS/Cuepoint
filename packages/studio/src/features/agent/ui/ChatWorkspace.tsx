@@ -126,7 +126,8 @@ export function ChatWorkspace({
                                                                   onClick={() => composer.onChange(appendStartPrompt(composer.value))}>与助手一起开始</button>}
                                 </div>
                                 <small>也可以独立完成清单，随时回来确认成果。</small></div> : messages?.length ? <Suspense
-                                    fallback={provisional(true)}><MessageList messages={messages} runs={runs} retryableRunId={retryableRunId}
+                                    fallback={provisional(true)}><MessageList threadId={activeThreadId ?? submissions.at(-1)?.threadId}
+                                                         messages={messages} runs={runs} retryableRunId={retryableRunId}
                                                          onRetryRun={onRetryRun} busy={composer.sending}
                                                          readOnly={composer.readOnly}
                                                          onRunAction={onRunAction} submissions={submissions}

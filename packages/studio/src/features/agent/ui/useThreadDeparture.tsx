@@ -26,18 +26,25 @@ export function useThreadDeparture(threadId: string | undefined, runs: readonly 
     const [localLeave, setLocalLeave] = useState<{ run: () => void }>();
     const localRef = useRef<{ run: () => void } | undefined>(undefined);
     const activeRef = useRef(false);
-    activeRef.current = (runs ?? []).some(runBlocksThread);
+    const ownedRuns = threadId ? (runs ?? []).filter(run => run.threadId === threadId) : [];
+    activeRef.current = ownedRuns.some(runBlocksThread);
     const armed = useRef(false);
     const leaving = useRef(false);
     // A different topic's runs are its own; a previous confirmation never covers them.
     useEffect(() => {
         leaving.current = false;
+        armed.current = false;
+        localRef.current = undefined;
+        setLocalLeave(undefined);
     }, [threadId]);
     // A confirmation covers the run it stopped. If the user stays (a failed create/delete)
     // and the thread starts executing again, that new execution gets its own confirmation.
-    const executing = (runs ?? []).some((run) => run.status === "running" || run.status === "waiting_approval");
+    const executing = ownedRuns.some((run) => run.status === "running" || run.status === "waiting_approval");
     useEffect(() => {
-        if (executing) leaving.current = false;
+        if (executing) {
+            leaving.current = false;
+            armed.current = false;
+        }
     }, [executing]);
     const armOnce = useCallback(() => {
         armed.current = true;

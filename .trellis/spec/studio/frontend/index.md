@@ -14,6 +14,7 @@
 - Read [Agent business details](../../frontend/agent-business-details.md) for shot-link activation, in-workspace detail presentation and aggregate editor departure; keep Agent execution and Video editing with their existing owners.
 - Read [Agent send recovery](../../frontend/agent-send-recovery.md) for immediate submitted content, whole-draft restoration, reserved identities and unknown-outcome reconciliation.
 - Read [Agent execution feedback](../../frontend/agent-execution-feedback.md) for invocation-bound phases, repeat-safe Stop and private timing; preserve existing runtime ownership and quiet successful messages.
+- Read [Agent topic reading](../../frontend/agent-thread-reading.md) for requested-topic query envelopes, owned departure and local return-to-latest; preserve the execution/composer owner.
 - Before changing an Agent binding, read the actual core/runtime and provider/protocol contracts. Keep current credential, reference, native transport, ownership and transaction policy in Studio while invoking the shared algorithms.
 - Read [quality](../../frontend/quality-guidelines.md) and [shared guides](../../guides/index.md); update discovery when moving sources.
 

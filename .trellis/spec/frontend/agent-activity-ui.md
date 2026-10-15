@@ -3,6 +3,8 @@
 ## 1. Scope / Trigger
 Read before editing execution chronology, thinking/tool disclosure, composer action reminders or the turn navigation rail. These are presentation contracts; repository permissions, explicit paid confirmation and ambiguous-result recovery remain governed by agent-execution and agent-batch-generation.
 
+Topic read identities, current-thread departure and the local return-to-latest action follow [Agent topic reading](./agent-thread-reading.md). Rail/activity navigation pauses following without changing runtime ownership.
+
 ## 2. Signatures
 - `AgentRun.activitySteps?: AgentActivityStep[]`, where a step contains `step`, `content`, optional public `reasoning` and `reasoningDurationMs`.
 - `saveToolRound(..., responseOutput?, publicOutput?)` stores the public snapshot in the same transaction as the tool ledger and continuation envelope.

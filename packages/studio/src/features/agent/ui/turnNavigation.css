@@ -10,6 +10,32 @@
     padding-left: 24px;
 }
 
+.agent-chat-root .agent-return-to-latest {
+    position: absolute;
+    z-index: 12;
+    right: var(--agent-chat-safe-x, 16px);
+    bottom: calc(var(--agent-chat-composer-safe, 168px) + 8px);
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface-elevated);
+    color: var(--foreground);
+    box-shadow: 0 2px 8px #0002;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.agent-chat-root .agent-return-to-latest:hover {
+    background: var(--accent);
+}
+
+.agent-chat-root .agent-return-to-latest:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
 .agent-chat-root .agent-turn-navigation {
     position: absolute;
     z-index: 4;
@@ -130,6 +156,10 @@
 }
 
 @media (max-width: 767px) {
+    .agent-chat-root .agent-return-to-latest {
+        right: 8px;
+    }
+
     .agent-chat-root .agent-message-navigation-shell.has-turn-navigation .agent-message-list {
         padding-left: 24px;
     }

@@ -10,7 +10,7 @@ import {isPersistedToolRound} from "../runtime/runPresentation";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import {Button} from "../../../ui/button";
 import {CopyButton, Text} from "@lobehub/ui";
-import {Fragment, memo, useCallback, useLayoutEffect, useRef} from "react";
+import {Fragment, memo, useCallback, useLayoutEffect, useRef, useState} from "react";
 import type {ChatMessage} from "../models/chat";
 import {isChatNearBottom, snapChatToBottom} from "../presentation/chatScroll";
 import {ThinkingMatrix} from "./ThinkingMatrix";
@@ -43,7 +43,8 @@ const MARKDOWN_PROPS = {variant: "chat"} as const;
  * Stick with `scrollTop` on this element (not `scrollIntoView` smooth).
  * History rows are memoized so Dexie liveQuery ticks only paint the streaming item.
  */
-export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, readOnly, onRunAction, submissions = [], onSubmissionAction, onSubmissionObserved}: {
+export function MessageList({threadId, messages, runs, retryableRunId, onRetryRun, busy, readOnly, onRunAction, submissions = [], onSubmissionAction, onSubmissionObserved}: {
+    threadId: string | undefined;
     messages: ChatMessage[] | undefined;
     runs?: AgentRun[];
     busy: boolean;
@@ -60,12 +61,22 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
     const contentRef = useRef<HTMLDivElement | null>(null);
     const stickToBottom = useRef(true);
     const manuallyNavigated = useRef(false);
+    const [followingPaused, setFollowingPaused] = useState(false);
+    const setFollowing = useCallback((following: boolean) => {
+        if (stickToBottom.current === following) return;
+        stickToBottom.current = following;
+        setFollowingPaused(!following);
+    }, []);
     const pauseFollowing = useCallback(() => {
         manuallyNavigated.current = true;
-        stickToBottom.current = false;
-    }, []);
+        setFollowing(false);
+    }, [setFollowing]);
+    const resumeFollowing = useCallback(() => {
+        manuallyNavigated.current = false;
+        setFollowing(true);
+        if (listRef.current) snapChatToBottom(listRef.current);
+    }, [setFollowing]);
     const list = messages ?? [];
-    const threadKey = list[0]?.threadId ?? "";
     const userMessages = list.filter((message) => message.role === "user");
     const entries = submissionTranscript(messages, submissions);
     const lastUser = entries.filter(entry => entry.kind === "attempt" || entry.message.role === "user").at(-1);
@@ -77,21 +88,19 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
         }
     }, [submissions, messages, onSubmissionObserved]);
     useLayoutEffect(() => {
-        stickToBottom.current = true;
-        manuallyNavigated.current = false;
+        resumeFollowing();
         const el = listRef.current;
         if (!el) return;
-        snapChatToBottom(el);
-        const frame = requestAnimationFrame(() => snapChatToBottom(el));
+        const frame = requestAnimationFrame(() => {
+            if (stickToBottom.current) snapChatToBottom(el);
+        });
         return () => cancelAnimationFrame(frame);
-    }, [threadKey]);
+    }, [threadId, resumeFollowing]);
 
     useLayoutEffect(() => {
         // A new user turn resumes following; streaming updates to an existing turn do not.
-        manuallyNavigated.current = false;
-        stickToBottom.current = true;
-        if (listRef.current) snapChatToBottom(listRef.current);
-    }, [lastUserId]);
+        if (lastUserId) resumeFollowing();
+    }, [lastUserId, resumeFollowing]);
 
     useLayoutEffect(() => {
         if (request) pauseFollowing();
@@ -106,13 +115,16 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
         });
         ro.observe(content);
         return () => ro.disconnect();
-    }, [threadKey]);
+    }, [threadId]);
 
     return (
         <div className={`agent-message-navigation-shell${userMessages.length >= 5 ? " has-turn-navigation" : ""}`}>
             <div
                 ref={listRef}
                 className="agent-message-list"
+                tabIndex={-1}
+                role="region"
+                aria-label="对话消息"
                 onPointerDownCapture={(event) => {
                     if (event.target === listRef.current) manuallyNavigated.current = false;
                     if (event.target instanceof Element && event.target.closest(".agent-execution-activity button, .agent-execution-activity summary")) pauseFollowing();
@@ -129,7 +141,7 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
                 }}
                 onScroll={() => {
                     const el = listRef.current;
-                    if (el && !manuallyNavigated.current) stickToBottom.current = isChatNearBottom(el);
+                    if (el && !manuallyNavigated.current) setFollowing(isChatNearBottom(el));
                 }}
             >
                 <div ref={contentRef} className="agent-content">
@@ -156,6 +168,10 @@ export function MessageList({messages, runs, retryableRunId, onRetryRun, busy, r
                 </div>
             </div>
             <TurnNavigation messages={list} listRef={listRef} contentRef={contentRef} onNavigate={pauseFollowing}/>
+            {followingPaused && <button type="button" className="agent-return-to-latest" onClick={() => {
+                resumeFollowing();
+                listRef.current?.focus({preventScroll: true});
+            }}>返回最新</button>}
         </div>
     );
 }

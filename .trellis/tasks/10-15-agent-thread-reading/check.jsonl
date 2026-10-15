@@ -5,3 +5,12 @@
 {"file": ".trellis/spec/frontend/chat-performance.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/interaction-audit.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Requested identity envelopes distinguish retained old empty results from current successful reads; preserve inline transaction queries."}
+{"file": ".trellis/spec/frontend/agent-business-details.md", "reason": "Keep mounted E01 parallel detail/chat and local reading independent from departure."}
+{"file": ".trellis/spec/frontend/agent-send-recovery.md", "reason": "Preserve E02 canonical user identity, eager fallback and provisional workspace/draft owners."}
+{"file": ".trellis/spec/frontend/agent-execution-feedback.md", "reason": "Preserve E03 invocation Stop/phase/timing owners and lightweight output probes."}
+{"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Owner correction: quiet normal success and preparation; only actionable reading control."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Use concrete query envelopes and typed local DOM callbacks without assertions that erase ownership."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Necessary scoped actual query/callback/DOM checks only under owner batch cadence."}
+{"file": ".trellis/tasks/10-15-agent-thread-reading/research/query-reading-design.md", "reason": "Source-backed minimal read-identity, departure and following design and meaningful tests."}
+{"file": ".trellis/spec/frontend/agent-thread-reading.md", "reason": "Concrete E04 owned-read/departure and local following contracts, failure matrix and necessary tests."}

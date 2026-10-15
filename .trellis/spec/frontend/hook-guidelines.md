@@ -54,6 +54,8 @@ This applies to `characters`, `scenes`, `props`, `styles`, `episodes`, `projects
 
 Identity belongs to the query result even when it contains `null` or an empty array. A returned row's `id` alone cannot distinguish an old missing/empty read from a newly requested read. Tag owner/project and entity/episode dependencies in the querier, then gate navigation, repair effects, mutation controls and export until the envelope matches. Validate returned ownership as well; matching requested envelope identity does not authorize a foreign row.
 
+Agent topic messages/runs/compactions use inline `forThreadId` envelopes and gate all parent action/departure consumers, including empty results; see [Agent topic reading](./agent-thread-reading.md). Child transcript filtering alone cannot establish loading or execution ownership.
+
 For stateful project/episode/asset pages, put a stable key before the component that calls queries and initializes local drafts. Use project, project+episode, or owner+entity identity as appropriate. Focus/search and unrelated live updates are not editing-target identity. A project-level key does not replace an episode envelope in a persistent Chrome component. Same-project episode loading must keep its project settings and Outlet mounted while hiding the old episode's links.
 
 A key can destroy manual drafts. Install dirty/pending route and unload protection before relying on remount, and resolve internal parent-driven selection separately (for example material selection does not navigate). Preserve existing frozen target/baseline protocols. See the B01 scenario in state-management for explicit-discard and unavailable-record behavior.

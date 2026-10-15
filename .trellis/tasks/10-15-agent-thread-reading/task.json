@@ -3,7 +3,7 @@
   "name": "agent-thread-reading",
   "title": "E04 · 话题加载身份与阅读导航",
   "description": "Keep loading, empty results and owned navigation decisions accurate across topic switches and let readers return to current output.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "studio",
@@ -12,8 +12,8 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": null,
-  "base_branch": "main",
+  "branch": "codex/agent-thread-reading",
+  "base_branch": "codex/agent-execution-feedback",
   "worktree_path": null,
   "commit": null,
   "pr_url": null,
@@ -21,13 +21,16 @@
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
   "relatedFiles": [],
-  "notes": "Planning backlog from the 2026-10-15 investigation. Task creation is authorized; delivery scope and implementation remain subject to this task review.",
+  "notes": "E04 implemented under standing sequential authorization: requested-topic message/run/compaction envelopes and all-parent ownership; owned departure with topic/new-execution confirmation reset; local return-to-latest without runtime/composer remount. See results/review. Stage commit then archive/journal; E05 design prepared.",
   "meta": {
     "epicCode": "E04",
-    "deliveryState": "planning-backlog",
-    "implementationApproved": false,
+    "deliveryState": "implemented-and-reviewed-ready-for-stage-commit",
+    "implementationApproved": true,
     "dependsOn": [],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Needs child-specific requirement convergence, design, implementation/validation plan and review before start."
+    "readiness": "Necessary affected query/departure/reading regressions, direct types, scoped lint and independent changed-scope review passed; broad batch gates deferred.",
+    "approvalDate": "2026-10-15",
+    "approvalText": "ok，继续，每个阶段完了就提交代码，然后再继续",
+    "testingPolicy": "necessary affected checks only; full regression/build/package at batch end"
   }
 }

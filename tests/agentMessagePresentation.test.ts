@@ -56,7 +56,7 @@ function toolCall(id: string, patch: Partial<AgentToolCall> = {}): AgentToolCall
 let root: Root, container: HTMLDivElement;
 async function render(messages: ChatMessage[], runs: AgentRun[], extra: {retryableRunId?: string} = {}) {
     await act(async () => {
-        root.render(h(MessageList, {messages, runs, busy: false, onRunAction: vi.fn(), onRetryRun: vi.fn(), ...extra}));
+        root.render(h(MessageList, {threadId: "t1", messages, runs, busy: false, onRunAction: vi.fn(), onRetryRun: vi.fn(), ...extra}));
     });
 }
 const text = () => container.textContent ?? "";

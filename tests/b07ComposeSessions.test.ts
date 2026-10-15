@@ -131,7 +131,9 @@ function page(initial?: string, connection = connector) {
     const threads = [thread("A"), thread("B")];
     const render = () => {
         host.results = [threads, [], [], [connection], [{id: "p"}, {id: "q"}] as Project[],
-            pendingOwnership ? {forId: "old", thread: null} : {forId: active ?? null, thread: threads.find(item => item.id === active) ?? null}, [], [], runResults];
+            pendingOwnership ? {forId: "old", thread: null} : {forId: active ?? null, thread: threads.find(item => item.id === active) ?? null},
+            {forThreadId: active ?? null, messages: []}, {forThreadId: active ?? null, compactions: []},
+            {forThreadId: active ?? null, runs: runResults}];
         return draw(host, () => {
             const wrapper = AgentChatPage({threadId: active}) as Node;
             const child = (wrapper.props.children as Node).props.children as Node;

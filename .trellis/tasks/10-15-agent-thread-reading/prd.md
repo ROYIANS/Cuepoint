@@ -6,7 +6,7 @@ Keep loading, empty results and owned navigation decisions accurate across topic
 
 ## Planning state
 
-Backlog/planning under [Agent experience and desktop evolution](../10-15-agent-experience-desktop-evolution/prd.md). The owner authorized task organization and sequential delivery. This record is not an approved implementation or architecture. Complete this task's decision inventory, technical design and validation plan before its own final review and activation.
+Active delivery under [Agent experience and desktop evolution](../10-15-agent-experience-desktop-evolution/prd.md), using the owner's standing authorization to continue sequential stages and commit each one. E03 committed as 9e3b8dcb and archived. Source investigation, minimal design and necessary validation plan are complete; see design.md, implement.md and research/query-reading-design.md. Full regression/build/package/native acceptance remains at batch completion.
 
 ## Evidence
 
@@ -26,9 +26,9 @@ Tree position does not enforce these dependencies. If a dependency is deliberate
 
 ## Acceptance criteria
 
-- [ ] E04-AC1: When B reads are held after A to B navigation, B displays loading rather than a false empty conversation and departure checks do not use A runs.
-- [ ] E04-AC2: Current filtering/keyed-workspace protection against old transcript display remains intact; parent execution/draft ownership is not remounted as a workaround.
-- [ ] E04-AC3: Reading older content remains stable while output grows; keyboard/touch activation returns to latest and resumes following.
+- [x] E04-AC1: When B reads are held after A to B navigation, B displays loading rather than a false empty conversation and departure checks do not use A runs.
+- [x] E04-AC2: Current filtering/keyed-workspace protection against old transcript display remains intact; parent execution/draft ownership is not remounted as a workaround.
+- [x] E04-AC3: Reading older content remains stable while output grows; keyboard/touch activation returns to latest and resumes following.
 
 ## Boundaries
 
@@ -38,4 +38,10 @@ Tree position does not enforce these dependencies. If a dependency is deliberate
 
 ## Decisions to converge before implementation
 
-- Whether per-topic reading-position persistence is included; it is separate from the required return-to-latest control.
+- Resolved: per-topic reading-position persistence is excluded. Preserve existing thread-entry reset, threshold and instant scrolling; add one local actionable return control.
+- Resolved: inline requested-identity envelopes for messages/runs/compactions plus local departure ownership; preserve parent execution/composer and generic query retention.
+- No extra user decision is needed for this bounded scope under standing sequential authorization.
+
+## Delivery evidence
+
+See [implementation results](./research/implementation-results.md) and the independent full changed-scope [review](./research/review.md). Controlled actual observer/hook/DOM checks are distinct from real browser layout, native and batch build acceptance.
