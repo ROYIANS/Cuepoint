@@ -33,4 +33,4 @@ New product behavior, UI redesign, rewriting every large module, repository/serv
 
 ## Readiness
 
-The parent implementation was approved, and the user explicitly authorized committing child 1 and starting this stage on 2026-10-15. Accepted child-1 source checkpoint is `bb3a9580`; its verification is archived under `../archive/2026-10/10-15-monorepo-app-boundaries/verification.md`. This child is active on `codex/studio-feature-organization`. Child 3 waits for accepted feature/transaction boundaries.
+The parent implementation was approved, and the user explicitly authorized committing child 1 and starting this stage on 2026-10-15. Accepted child-1 source checkpoint is `bb3a9580`; its verification is archived under `../10-15-monorepo-app-boundaries/verification.md`. This child completed on `codex/studio-feature-organization`, with source/spec checkpoint `6a2927f0` and task-document checkpoint `7ddeed11`. The user accepted continuing to child 3 after this archive/journal closeout.

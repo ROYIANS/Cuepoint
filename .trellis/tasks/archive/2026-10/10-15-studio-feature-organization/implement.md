@@ -68,8 +68,8 @@ Independent whole-child review accepted the final source/quality/native proof:
 files. Fifteen generated permission TOML files outside the non-ignored freeze
 are covered by native's own before/after/current comparison. The user confirmed the concrete Phase 3.4 batch with “ok 继续”. Source/spec
 checkpoint `6a2927f0` is committed after post-format quality/native identity
-revalidation. Task-document commit and archive/journal closure follow; child 3
-continuation is authorized.
+revalidation. Task-document checkpoint is `7ddeed11`; task archive is complete and journal
+closeout follows. Child 3 continuation is authorized.
 
 Two migration hazards were found and corrected: an overly broad module mover
 rewrote four dot-prefixed data literals, and moving the stylesheet narrowed its

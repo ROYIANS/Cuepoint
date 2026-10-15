@@ -1,6 +1,6 @@
 # Studio source ownership and final contracts
 
-Baseline: child-1 source checkpoint `bb3a9580`, accepted verification archived under `../../archive/2026-10/10-15-monorepo-app-boundaries/verification.md`. The executable ledger assigns every current Studio file once. `domain/types.ts`, production constructors and shared guards require symbol-level ownership splits; bodies remain unchanged. No retained old-source runtime bridge is planned.
+Baseline: child-1 source checkpoint `bb3a9580`, accepted verification archived under `../../10-15-monorepo-app-boundaries/verification.md`. The executable ledger assigns every current Studio file once. `domain/types.ts`, production constructors and shared guards require symbol-level ownership splits; bodies remain unchanged. No retained old-source runtime bridge is planned.
 
 ## Layers and public contracts
 

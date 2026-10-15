@@ -51,5 +51,6 @@ No commit, amend, remote push, tag, hosted dispatch or release is authorized by 
 
 Approved source/spec work commit completed: `6a2927f0`. Final post-format
 quality and complete one-worker native ALL receipts match these source bytes.
-Task-document work commit, archive and journal follow in that order. Child 3
-continuation was authorized by the same user confirmation.
+Task-document work commit is `7ddeed11`. This task is archived under
+`archive/2026-10`; journal closeout follows. Child 3 continuation was authorized
+by the same user confirmation.
