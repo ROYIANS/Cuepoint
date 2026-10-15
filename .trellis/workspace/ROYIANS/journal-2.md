@@ -81,3 +81,31 @@
 ### Next Steps
 
 - 平台真机/系统保存等缺记录场景按后续具体验证需求处理，不补写为已通过；本轮无 push、tag、workflow dispatch 或 Release 写入。
+
+
+## Session 71: E01 Agent 并排镜头详情完成
+<!-- trellis-session: v=2 fp=1fd65d0013668cd7 -->
+
+**Date**: 2026-10-15
+**Task**: E01 Agent 并排镜头详情完成
+**Package**: studio
+**Branch**: `codex/agent-parallel-details`
+
+### Summary
+
+完成单镜头并排/工作区全宽查看编辑，保留运行对话与草稿；聚焦回归、类型检查和24项浏览器交互验收通过。按用户指示，完整回归及最终构建打包留到批次结束，每阶段提交后继续。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `a0c8171d` | docs: record agent evolution research and delivery roadmap |
+| `5f8b6ab0` | feat: inspect and edit shots beside running agent conversations |
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- E02 消息即时回显与失败恢复
