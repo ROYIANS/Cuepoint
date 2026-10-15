@@ -109,3 +109,41 @@
 ### Next Steps
 
 - E02 消息即时回显与失败恢复
+
+
+## Session 72: E02 immediate Agent send and quiet recovery
+<!-- trellis-session: v=2 fp=18ae1ebf0fc38e94 -->
+
+**Date**: 2026-10-15
+**Task**: E02 immediate Agent send and quiet recovery
+**Package**: studio
+**Branch**: `codex/agent-optimistic-send`
+
+### Summary
+
+Immediate submitted content, revision-safe recovery and identity-bound admission completed; owner correction removes normal bubble captions and establishes general quiet-success interaction spec. Necessary checks passed; full batch gates deferred.
+
+### Main Changes
+
+- Immediate local submitted content with independent newer drafts, exact attachments and canonical durable joins.
+- Unknown outcome checks stay read-only; explicit thread-locked recovery never replays a model request.
+- Recorded owner's quiet-success/product-language feedback in interaction-feedback.md and linked canonical discovery.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `447a9fb7` | feat: show submitted agent messages immediately with safe recovery |
+
+### Testing
+
+- [OK] Final B07 40 and presentation6 passed; admission and existing execution/reference50 passed; connector99 passed in scoped runs.
+- [OK] Studio direct types, all11changed-source ESLint0errors19warnings, architecture0cycles0failures, spec links and staged whitespace passed.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Continue E03 using existing composer feedback only; no extra message-side captions or unmeasured live-text overlay.
