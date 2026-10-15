@@ -1,8 +1,30 @@
 # Implementation plan: desktop release pipeline
 
-Status: in progress. The user approved the final reviewed implementation plan on 2026-10-12 with “开始吧”; task activation and local implementation are authorized. Baseline main 92bb6d4120053453036fbdb1b3b8f23fb9c56385; active branch codex/desktop-release-pipeline. Remote push, tag creation, workflow dispatch, Release mutation and public publication remain outside this implementation authorization.
+Status: completed under the final packaging-only scope; archival approved by
+the owner on 2026-10-15 with “可以，归档”. See [final verification](verification.md).
 
-## Current gate status
+## Final closeout checklist
+
+- [x] Preserve the owner's packaging-only scope and separate functional testing from delivery.
+- [x] Observe successful prepare, four corresponding-host package builds, collect and draft jobs in hosted run 38550667540 at source cedb6cca482bc35fd2592197b752943e62e98ccc.
+- [x] Verify public prerelease 412611571 / desktop-v0.1.3 has the five expected installers, SHA256SUMS, release-manifest.json and the upload-complete marker.
+- [x] Retain prior local release-regression and independent-review conclusions without claiming fresh execution.
+- [x] Reconcile original H1a/runtime/UI criteria as superseded delivery prerequisites; preserve unrecorded manual cases as follow-up limits.
+- [x] Refresh current source ownership and provide archive-safe context references.
+- [x] Obtain the owner's explicit task-archival approval.
+
+The original unchecked implementation items below are retained as plain plan
+bullets, not unresolved release blockers. The final evidence matrix distinguishes
+completed delivery from superseded automatic testing and unverified runtime
+claims. Historical statements such as “pending”, “in progress” or “no archive”
+describe their dated checkpoints and are superseded by this closeout.
+
+## Historical gate status — before final packaging delivery
+
+The user approved the original implementation plan on 2026-10-12 with “开始吧”.
+Baseline main was 92bb6d4120053453036fbdb1b3b8f23fb9c56385 and the initial branch
+was codex/desktop-release-pipeline. Remote actions required separate owner
+authorization; this archival session performs only local task/document work.
 
 Actual owner-activated run 38208372156, attempt 1, at 946664ab passed desktop
 quality (3,960 tests); the separate same-source GHCR run 38207181705 also passed.
@@ -96,41 +118,41 @@ At most three implementers run concurrently in addition to root. Explicitly assi
 
 ## W1/W2: native platform readiness
 
-- [ ] Prepare the candidate API/protocol spike and fail-closed corresponding-host tests using pinned stable Rust. Source integration follows the owner-approved Windows process-recovery contract (regular-file flushing and NTFS no-overwrite publication, with no sudden OS/power-loss namespace promise); Unix fsync remains unchanged. It is not an accepted Windows implementation until H1a.
-- [ ] At H1a on actual Windows x64, validate the Win32 seam, local NTFS identity/link/reparse rules and real directory/publication operations without privilege escalation. Record raw API flags/results/errors and distinguish documented guarantees from exercised process-recovery proof. Failure returns to W1/W2 for investigation; the narrower first-test guarantee was explicitly reviewed and approved on 2026-10-12. Further changes still require concrete design review.
-- [ ] Do not introduce unconditional sync success. Implement the reviewed named Windows process-only namespace validation and writable final-file flushing; preserve errors, intent/provenance and published warnings. Do not claim a Unix directory barrier, omit a required target or introduce a fallback.
-- [ ] Centralize exact platform origin and reuse for navigation/trusted main/microphone/media; test spoofed hosts/schemes/paths/ports/userinfo/query and allowed hash routing.
-- [ ] Retain Mac WK identity; add trusted Windows/Linux WebView data-directory isolation for fixed normal/reference/review identities.
-- [ ] Introduce consistent no-follow-path/open-handle identity across paths.rs, workspace.rs Boundary, database.rs, product_binary.rs and retained import.rs callers. Pin direct Windows bindings and update Cargo.lock deliberately.
-- [ ] Test root/database/writer replacement, same-size/mtime distinct files, hard links/sidecars, junction/reparse escapes, active lease ancestor replacement, interrupted stage/publication/claim recovery and post-publication export warning. Keep exact bytes/rows and failure reachability assertions.
-- [ ] Update corresponding native contract specs after verified source behavior; do not change unrelated business/Agent/UI recipes or old-data compatibility.
+- Prepare the candidate API/protocol spike and fail-closed corresponding-host tests using pinned stable Rust. Source integration follows the owner-approved Windows process-recovery contract (regular-file flushing and NTFS no-overwrite publication, with no sudden OS/power-loss namespace promise); Unix fsync remains unchanged. It is not an accepted Windows implementation until H1a.
+- At H1a on actual Windows x64, validate the Win32 seam, local NTFS identity/link/reparse rules and real directory/publication operations without privilege escalation. Record raw API flags/results/errors and distinguish documented guarantees from exercised process-recovery proof. Failure returns to W1/W2 for investigation; the narrower first-test guarantee was explicitly reviewed and approved on 2026-10-12. Further changes still require concrete design review.
+- Do not introduce unconditional sync success. Implement the reviewed named Windows process-only namespace validation and writable final-file flushing; preserve errors, intent/provenance and published warnings. Do not claim a Unix directory barrier, omit a required target or introduce a fallback.
+- Centralize exact platform origin and reuse for navigation/trusted main/microphone/media; test spoofed hosts/schemes/paths/ports/userinfo/query and allowed hash routing.
+- Retain Mac WK identity; add trusted Windows/Linux WebView data-directory isolation for fixed normal/reference/review identities.
+- Introduce consistent no-follow-path/open-handle identity across paths.rs, workspace.rs Boundary, database.rs, product_binary.rs and retained import.rs callers. Pin direct Windows bindings and update Cargo.lock deliberately.
+- Test root/database/writer replacement, same-size/mtime distinct files, hard links/sidecars, junction/reparse escapes, active lease ancestor replacement, interrupted stage/publication/claim recovery and post-publication export warning. Keep exact bytes/rows and failure reachability assertions.
+- Update corresponding native contract specs after verified source behavior; do not change unrelated business/Agent/UI recipes or old-data compatibility.
 
 ## B1: portable normal packaging
 
-- [ ] Use a closed shared four-target policy; validate source/version/host/target/bundle and tool executables before output.
-- [ ] Preserve explicit approved local pnpm/tools. Add deliberate hosted tool mode and platform-aware probe output resolution, including .exe and target directories; adapt existing native runner/self-hosted probe helpers without weakening coverage.
-- [ ] Build real normal root frontend, then Tauri product-sqlite only; keep acceptance/isolated wrappers and receipts independent.
-- [ ] Align normal visible Cuepoint name/title, keep existing binary/identifier/version, reuse dark icons including ICO; synchronize wrapper discovery instead of leaving old Prototype paths.
-- [ ] Generate fresh DMGs, NSIS EXE, AppImage and DEB. Verify WebView2 install policy, Linux WebKit/GStreamer media dependencies and macOS14/ad-hoc signature.
-- [ ] Verify payload/architecture/profile/owner/public-command set; exclude test hooks, acceptance permissions, fixture assets, tool/evidence directories and local user data. Emit exact target receipt/checksums with sourceBefore=sourceAfter.
+- Use a closed shared four-target policy; validate source/version/host/target/bundle and tool executables before output.
+- Preserve explicit approved local pnpm/tools. Add deliberate hosted tool mode and platform-aware probe output resolution, including .exe and target directories; adapt existing native runner/self-hosted probe helpers without weakening coverage.
+- Build real normal root frontend, then Tauri product-sqlite only; keep acceptance/isolated wrappers and receipts independent.
+- Align normal visible Cuepoint name/title, keep existing binary/identifier/version, reuse dark icons including ICO; synchronize wrapper discovery instead of leaving old Prototype paths.
+- Generate fresh DMGs, NSIS EXE, AppImage and DEB. Verify WebView2 install policy, Linux WebKit/GStreamer media dependencies and macOS14/ad-hoc signature.
+- Verify payload/architecture/profile/owner/public-command set; exclude test hooks, acceptance permissions, fixture assets, tool/evidence directories and local user data. Emit exact target receipt/checksums with sourceBefore=sourceAfter.
 
 ## V1: actual payload checks
 
-- [ ] Pin external tauri-driver and resolve compatible Windows Edge/Linux WebKit driver; use Xvfb on Linux. Install/extract generated packages and verify actual launched payload identity.
-- [ ] Drive existing project/material forms, import TXT larger than262144 bytes, preview known marker, close with observed process exit, remove original fixture and reopen. Then verify read-only SQLite rows/reference plus generated-file exact hash/bytes externally. Linux DEB and AppImage payloads each run this complete sequence with separate fresh runner-created state and format-specific reports; extracted AppImage proof does not claim FUSE/desktop-launch success.
-- [ ] Capture finite screenshots/errors/reports and clean only runner-created processes/fixtures. Driver needs no embedded plugin/acceptance IPC or SQL seeding.
-- [ ] Both Mac hosts verify mounted DMG/app architecture/icon/signature and bounded process launch; do not equate launch-only with UI/store success. Rerun available local actual normal Mac UI/save evidence with task-owned disposable fixtures.
-- [ ] Keep Intel UI and hardware/system/provider/media gaps explicit. No microphone, printing or paid calls are required by the packaging gate; prior receipts are history, not current execution.
+- Pin external tauri-driver and resolve compatible Windows Edge/Linux WebKit driver; use Xvfb on Linux. Install/extract generated packages and verify actual launched payload identity.
+- Drive existing project/material forms, import TXT larger than262144 bytes, preview known marker, close with observed process exit, remove original fixture and reopen. Then verify read-only SQLite rows/reference plus generated-file exact hash/bytes externally. Linux DEB and AppImage payloads each run this complete sequence with separate fresh runner-created state and format-specific reports; extracted AppImage proof does not claim FUSE/desktop-launch success.
+- Capture finite screenshots/errors/reports and clean only runner-created processes/fixtures. Driver needs no embedded plugin/acceptance IPC or SQL seeding.
+- Both Mac hosts verify mounted DMG/app architecture/icon/signature and bounded process launch; do not equate launch-only with UI/store success. Rerun available local actual normal Mac UI/save evidence with task-owned disposable fixtures.
+- Keep Intel UI and hardware/system/provider/media gaps explicit. No microphone, printing or paid calls are required by the packaging gate; prior receipts are history, not current execution.
 
 ## C1: Actions, exact collection and draft delivery
 
-- [ ] Add desktop-release.yml with pinned action SHAs/tool versions, dedicated desktop-v* and build-only manual mode; retain GHCR behavior. Bootstrap with a build-only push trigger restricted to the exact codex/desktop-release-pipeline branch. Manual dispatch requires the workflow on the default branch; do not claim a new development-branch-only workflow can be manually dispatched.
-- [ ] Run frozen root/desktop installs and native dependencies. Quality precedes four native jobs; fail-fast:false retains diagnostics. Only final tag publisher receives contents:write.
-- [ ] Target artifacts have explicit run/attempt IDs and receipts. Collect exactly four targets/five installer files; reject path escapes/links/stale or ambiguous payloads, wrong source/version/owner/check status, length/hash/architecture mismatch and unexpected files.
-- [ ] Produce canonical SHA256SUMS/release-manifest; meaningful tests inject actual bad manifests/files, not only snapshots of implementation branches.
-- [ ] Publisher validates existing tag, uses authenticated paginated draft lookup and owns an incomplete draft via source/tag/payload marker. Never publish, overwrite another release, move tags or modify published/immutable objects.
-- [ ] Retry identical original assets safely; changed payload/unknown assets fail; verify complete remote set before completion marker. Test partial uploads, duplicate/published/unowned releases and retry conflicts with a controlled fake API; record real draft behavior only after H1b.
-- [ ] Document non-atomic uploads, publication-after-completion, original artifact retention/expiry and source-fix/new-version behavior.
+- Add desktop-release.yml with pinned action SHAs/tool versions, dedicated desktop-v* and build-only manual mode; retain GHCR behavior. Bootstrap with a build-only push trigger restricted to the exact codex/desktop-release-pipeline branch. Manual dispatch requires the workflow on the default branch; do not claim a new development-branch-only workflow can be manually dispatched.
+- Run frozen root/desktop installs and native dependencies. Quality precedes four native jobs; fail-fast:false retains diagnostics. Only final tag publisher receives contents:write.
+- Target artifacts have explicit run/attempt IDs and receipts. Collect exactly four targets/five installer files; reject path escapes/links/stale or ambiguous payloads, wrong source/version/owner/check status, length/hash/architecture mismatch and unexpected files.
+- Produce canonical SHA256SUMS/release-manifest; meaningful tests inject actual bad manifests/files, not only snapshots of implementation branches.
+- Publisher validates existing tag, uses authenticated paginated draft lookup and owns an incomplete draft via source/tag/payload marker. Never publish, overwrite another release, move tags or modify published/immutable objects.
+- Retry identical original assets safely; changed payload/unknown assets fail; verify complete remote set before completion marker. Test partial uploads, duplicate/published/unowned releases and retry conflicts with a controlled fake API; record real draft behavior only after H1b.
+- Document non-atomic uploads, publication-after-completion, original artifact retention/expiry and source-fix/new-version behavior.
 
 ## Q1: validation commands and review
 
@@ -161,12 +183,12 @@ Actual release/smoke helper command names are finalized in B1/V1 and documented 
 
 ## H1a/H1b/F1: activation, docs and finish
 
-- [ ] Update root README and desktop README for full SQLite/files/shared UI, download/install baselines, security prompts, current tested limits and owner version/tag/manual steps; all new project docs are English.
-- [ ] At C0, present the complete grouped local work-commit plan for user review and commit only after approval; keep the task active and do not archive/journal completion. Coordinate owner push of the exact bootstrap branch for H1a, which is build-only. Manual dispatch can be used only after the workflow exists on main. Never initiate remote push/tag/Release mutation solely because implementation was approved. Keep hosted gate pending until actual jobs return; source-level W1/W2 is not corresponding-host success.
-- [ ] If H1a exposes Windows protocol, driver or other target failures, investigate/repair W1/W2/B1/V1 and repeat Q1 on changed source before another owner-activated run. H1b tag/draft delivery requires a fully passing frozen build-only payload/source, not a pending feasibility assumption.
-- [ ] At H1a, root reviews the actual Linux AppImage's bundled media libraries and retained license notices against recorded package versions/provenance; keep this inventory pending until the actual payload exists. Declared GStreamer dependencies alone are not that inventory.
-- [ ] Record all four target builds and required runtime/package checks, exact published-to-draft asset identities and incomplete/retry outcomes. If failure occurs, investigate with original diagnostics; do not clear it by dropping target/gate.
-- [ ] Sync executable specs with verified source and explicit platform limits, obtain final independent check, inventory every modified path and present the Phase3.4 concrete grouped commit plan. Commit/archive/journal only per user authorization; do not push or publicly publish as part of finish.
+- Update root README and desktop README for full SQLite/files/shared UI, download/install baselines, security prompts, current tested limits and owner version/tag/manual steps; all new project docs are English.
+- At C0, present the complete grouped local work-commit plan for user review and commit only after approval; keep the task active and do not archive/journal completion. Coordinate owner push of the exact bootstrap branch for H1a, which is build-only. Manual dispatch can be used only after the workflow exists on main. Never initiate remote push/tag/Release mutation solely because implementation was approved. Keep hosted gate pending until actual jobs return; source-level W1/W2 is not corresponding-host success.
+- If H1a exposes Windows protocol, driver or other target failures, investigate/repair W1/W2/B1/V1 and repeat Q1 on changed source before another owner-activated run. H1b tag/draft delivery requires a fully passing frozen build-only payload/source, not a pending feasibility assumption.
+- At H1a, root reviews the actual Linux AppImage's bundled media libraries and retained license notices against recorded package versions/provenance; keep this inventory pending until the actual payload exists. Declared GStreamer dependencies alone are not that inventory.
+- Record all four target builds and required runtime/package checks, exact published-to-draft asset identities and incomplete/retry outcomes. If failure occurs, investigate with original diagnostics; do not clear it by dropping target/gate.
+- Sync executable specs with verified source and explicit platform limits, obtain final independent check, inventory every modified path and present the Phase3.4 concrete grouped commit plan. Commit/archive/journal only per user authorization; do not push or publicly publish as part of finish.
 
 ## Risk / rollback points
 

@@ -1,5 +1,16 @@
 # Design: one shared desktop product, four native build targets
 
+## Final design disposition — 2026-10-15
+
+The implemented delivery flow is `prepare -> four package builds -> collect ->
+tag-only draft`, under the owner's packaging-only decision recorded below.
+The original quality/native-test/payload-smoke stage in this design is retained
+as historical planning, not an active packaging prerequisite or a claim of
+runtime acceptance. The independent GHCR quality workflow remains separate.
+Current owners live in `apps/desktop`; 0.1.0 and `desktop/tauri` references below
+describe the original design baseline. See [final verification](verification.md)
+for the successful 0.1.3 hosted delivery and the owner's archival approval.
+
 ## Architecture and scope
 
 Keep this as one task with dependency-ordered workstreams. The externally reviewable deliverable is one complete installer set and draft Release; individual platform/build/collector pieces cannot independently satisfy it. Do not create additional product implementations or implied parent/child dependencies.

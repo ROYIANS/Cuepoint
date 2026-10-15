@@ -1,5 +1,21 @@
 # Desktop cross-platform packaging and GitHub Release
 
+## Final disposition — 2026-10-15
+
+Completed under the owner's final packaging-only scope. The owner approved
+archival with “可以，归档” after reviewing the successful 0.1.3 hosted build and
+public prerelease. [Final verification](verification.md) records the exact
+source, run, seven release assets and remaining manual-validation limits.
+
+The 2026-10-12 packaging-only decision below supersedes the original mandatory
+delivery-test/smoke portions of R1/R3, AC1/AC3/AC6 and H1a. Those original
+requirements remain as planning history; their runtime assertions are not
+being marked passed. The final acceptance scope is four corresponding-host
+package builds, five installers, exact collection and tag-owned draft delivery,
+with functional testing and public publication controlled by the owner.
+Version 0.1.0 and `desktop/tauri` paths below describe the original baseline;
+the verified release is 0.1.3 and current source ownership is `apps/desktop`.
+
 ## Goal
 
 Give the owner five downloadable desktop installer files from one shared Cuepoint product, built repeatably on GitHub Actions and collected into a reviewable draft GitHub Release. Users install the software and use its existing UI, business commands and Agent with native SQLite and internally managed files.
