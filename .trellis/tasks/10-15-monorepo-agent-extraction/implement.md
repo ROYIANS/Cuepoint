@@ -23,7 +23,7 @@ Follow `research/context-loading.md`: injection can truncate or omit long specs.
 
 Each child owns its quality configuration changes and behavioral regression. Parent-only integration does not excuse an unchecked child. Do not run child 2/3 in parallel against the same moved paths.
 
-Child 1 checkpoint (2026-10-15): implementation and independent structural review passed; final quality/native receipts match current inputs. Its archived `verification.md` records WA1-WA5 and finite E03/B01/manual/deployment limits. User confirmed the concrete Phase 3.4 checkpoint batch and continuing to child 2. Source/spec checkpoint is `bb3a9580`, task docs `4a149e55`, archive `bd0a9e89`, journal `03b8625f`. Child 2 completed on `codex/studio-feature-organization`; all Studio sources have feature/app/platform/UI owners, and final root/app/desktop checks passed. Complete native ALL acceptance passed using the installed `VITEST_MAX_WORKERS=1` override; independent whole-child review verified final receipts/current identities and accepted the explicit finite limits. See the child's authored verification for default two-worker timeouts, historical comparator failures and unperformed host/provider checks. The user confirmed the child-2 commit batch and continuing with “ok 继续”. Its accepted source/spec checkpoint is `6a2927f0`; task documents are `7ddeed11`, and its retained verification is archived under `archive/2026-10/10-15-studio-feature-organization`. Journal closeout follows before activating child 3. The overall parent remains incomplete.
+Child 1 checkpoint (2026-10-15): implementation and independent structural review passed; final quality/native receipts match current inputs. Its archived `verification.md` records WA1-WA5 and finite E03/B01/manual/deployment limits. User confirmed the concrete Phase 3.4 checkpoint batch and continuing to child 2. Source/spec checkpoint is `bb3a9580`, task docs `4a149e55`, archive `bd0a9e89`, journal `03b8625f`. Child 2 completed on `codex/studio-feature-organization`; all Studio sources have feature/app/platform/UI owners, and final root/app/desktop checks passed. Complete native ALL acceptance passed using the installed `VITEST_MAX_WORKERS=1` override; independent whole-child review verified final receipts/current identities and accepted the explicit finite limits. See the child's authored verification for default two-worker timeouts, historical comparator failures and unperformed host/provider checks. The user confirmed the child-2 commit batch and continuing with “ok 继续”. Its accepted source/spec checkpoint is `6a2927f0`; task documents are `7ddeed11`, and its retained verification is archived under `archive/2026-10/10-15-studio-feature-organization`. Child-2 archive is `e7563c55`, and journal session 68 is `c3bec9e9`. Child 3 is now authorized and activates on `codex/reusable-agent-runtime` based on this completed checkpoint. The overall parent remains incomplete.
 
 ## Baseline before child 1 edits
 
@@ -52,16 +52,19 @@ New workspace commands required by child 1: `pnpm --filter @cuepoint/web build`,
 
 ## Final parent integration review
 
-- [ ] Reconcile R1-R7 and AC1-AC6 against all three child verification conclusions and current source.
-- [ ] Verify every declared app/library source participates in type/lint/architecture/unused/test discovery; add a deliberate forbidden dependency to the gate self-test and verify failure.
-- [ ] Run the final root gates, complete shared real-store acceptance and relevant Rust/desktop/release-tool checks after the last structural change.
-- [ ] Verify browser video/audio/music/library/settings/Agent workflows and isolated normal desktop startup/reopen, approvals and Stop. Record unavailable platform/manual checks as pending rather than inferring them from compilation.
-- [ ] Verify the site dependency closure and combined Nginx deployment, app route refreshes, worker/assets and desktop exclusion of the site/fixture frontend.
-- [ ] Verify Agent ESM/types in the isolated consumer and durable process restart without studio access. Review the core/provider import graph and opaque continuation/privacy boundaries.
-- [ ] Verify no temporary root-src aliases, second Agent loop, storage fallback, duplicate schemas, regenerated historical snapshots or broad diagnostic baselines remain.
-- [ ] Update architecture/readme/spec/package-discovery documentation with actual file/command locations.
-- [ ] Record checks and material limits in authored Markdown; retain task contracts/manifests and discard raw logs/copies per retention policy.
-- [ ] Complete child closure and parent final review through Trellis; do not publish/tag/push or run hosted delivery as part of this preparation request.
+The cumulative review passes within the explicitly retained host/manual boundaries in `verification.md`; an unavailable execution is recorded as unperformed rather than inferred from compilation.
+
+- [x] Reconcile R1-R7 and AC1-AC6 against all three child verification conclusions and current source.
+- [x] Verify all eight declared source owners participate in type/lint/architecture/unused/test discovery, including actual forbidden-edge gate negatives.
+- [x] Run final root gates, complete shared real-store acceptance and relevant Rust/Desktop/release-tool checks after the last structural change; the last test-only repair also receives a new full root/quality/browser/native binding.
+- [x] Review normal browser Audio/Music/Video/Agent/Settings/Materials and predecessor Library evidence. Actual approvals, Stop, reopen and explicit resume pass. Historical E03/B01/E04 failures and unavailable packaged Desktop/manual startup/OS Save/reopen checks remain explicitly recorded as limits.
+- [x] Verify the lightweight site dependency closure, combined Web/Site assembly, declared Nginx routes/assets and Desktop exclusion of site/fixture output. Docker/Nginx service execution is unperformed on this host; no image/deployment result is inferred.
+- [x] Verify strict emitted Agent ESM/types outside the workspace, actual installed core identity and durable SQLite/process restart without Studio access; review protocol/continuation/privacy boundaries.
+- [x] Verify no temporary current-source aliases, second loop/store/schema, regenerated historical snapshots or broad diagnostic allowances. All 99 protected files (85 snapshots) and the product schema retain their predecessor identities.
+- [x] Update root/package READMEs, canonical specs and actual package/source/discovery/build documentation.
+- [x] Record final results and material limits in authored Markdown; raw scripts/logs/browser profiles/artifacts stay outside the repository. Exact source/config/output/probe/native coverage receipts match current inputs.
+- [x] Complete independent child acceptance and cumulative parent integration review with no unresolved source finding.
+- [ ] Execute the owner's confirmed Phase 3.4 work commits, then Trellis child/parent archive and session journal bookkeeping. Do not publish/tag/push or run hosted delivery.
 
 ## Rollback points
 

@@ -1,0 +1,35 @@
+# Final integration repair boundary
+
+The first full Node 22 test attempt is retained at `/tmp/cuepoint-agent-final-checks/root-tests.log`: 13 failed, 278 passed and one skipped files; 111 failed, 4579 passed and seven skipped tests. Its quality pass did not prove integration. No ordinary-browser or native-ALL result was obtained for that attempt.
+
+The next freeze is `/tmp/cuepoint-agent-final2-scope/frozen-inputs.json` (1665 nonignored files). The precise delta is retained outside the repository in `repair-delta.json`: ten changed files, one new test and three removed generated cache files. Task documents and journals are outside the consumed-input freeze. Ignored native/build outputs have their own receipt identities.
+
+| Path | Repair and preserved contract |
+| --- | --- |
+| `tests/setup.ts` | The Web Locks fixture handles both request signatures. Default exclusive requests queue for the same name; `ifAvailable` rejects a live owner immediately. Production ownership remains fail-closed. |
+| `tests/webLocksFixture.test.ts` | A held deferred callback, queued second caller and simultaneous `ifAvailable` request prove those distinct semantics. |
+| `tests/openaiCompatible.test.ts` | The existing endpoint assertions import their actual public provider owner. No assertion changed. |
+| `quality/studio-ownership.json` | The historical `openaiCompatible` module uses an exact seven-name split between public endpoints/HTTP and actual Studio connection operations. |
+| `tooling/snapshot-owners.ts` | The existing immutable-requester-only resolver recognizes named, non-type public barrel exports. Current product imports receive no historical alias or forwarding module. |
+| `packages/agent-core/src/runtime.ts` | After flushing provisional output, error cleanup reads the durable run before marking tools unknown or settling. A confirmed absence ends the invocation without cleanup writes or confirmed settlement. A failed lookup still rejects; existing rows still use strict host predicates and the sole terminal writer. No API signature changed. |
+| `packages/agent-core/src/runtime.test.ts` | Two direct tests prove absent-run cleanup causes neither writes nor confirmed events and unreadable confirmation remains a rejection. |
+| Three new package/example `tsconfig.json` files | `tsBuildInfoFile` follows the existing package convention under `node_modules/.tmp`. The three accidentally exposed generated caches are removed; no compiler strictness or runtime option changed. |
+| Core canonical `library/runtime.md` | Main session records the same absent/read-failure distinction and actual cleanup order. |
+
+At the first integration-repair freeze, `tests/d07RequestWire.test.ts`, `tests/agentToolsReview.test.ts` and `tests/webResearchRuntime.test.ts` retained their original bytes and assertions. The later native-only fixture repair below changes one parameter-forwarding expression in the last file, preserving every assertion. The repaired Node 22 focused run passes all 18 files / 449 tests, including all thirteen previously failing files, actual ownership/credential/claim regressions and the new core/lock negatives. Raw log: `/tmp/cuepoint-agent-repair-focused.log`. Independent read-only review accepted this repair boundary.
+
+The new frozen Node 22 root lint and complete quality gate pass. Quality uses 1343 current input identities; the same twelve reviewed allowances and fifteen reviewed unused contracts remain, with zero failures. The architecture result covers 633 files with zero static cycles. Final whole-root, package/application, packed consumer and native evidence is recorded in the task verification after each actual lane reaches its terminal state; the failed attempt is not reused as passing evidence.
+
+## Desktop launcher fixture follow-up
+
+The full desktop release suite then exposed a separate fixture topology issue: its copied launcher could not resolve the newly required actual build dependency. That attempt retained 91 passing and eight failing cases in `/tmp/cuepoint-agent-final2-checks/desktop-release.log`; it is not passing release evidence. Only `apps/desktop/scripts/build-frontend.test.mjs` changes afterward. The fixture now retains `apps/desktop/scripts` and `tooling` positions and supplies a named compiler-preparation stub for the subprocess contract tests. The real launcher source is copied unchanged. The report worker reads the preparation marker at startup, proving preparation precedes worker execution. All existing argument/environment/heap/exit-code/signal assertions remain. Actual desktop frontend compilation separately invokes the real builder and passes.
+
+The complete repaired release suite passes all 99 cases, zero skips/failures: `/tmp/cuepoint-agent-release-repair-final.log`. The new quality receipt rebinds this sole changed test. Root/Vitest, library source, actual builds and runtime output bytes remain unchanged; their successful command receipts remain valid with this explicit finite delta. Final native has not begun during either repair window.
+
+## Native transaction spy follow-up
+
+The first complete real-native ALL naturally reaches terminal exit 1 at 06:28:28.998Z. Its 123 permanent files contain 122 passing / one failing file and 1931 passing / one failing test. The only failure is the original 20-second timeout in `webResearchRuntime`'s persistence-failure/unknown/no-resubmission case; this is distinct from the predecessor's large request-budget timing limitation. Both additional suites pass (six self-hosted native cases and five browser capability cases), the six missing-coverage arrays are empty and `changedInputs` is empty. Complete failed acceptance is retained at `/tmp/cuepoint-agent-native-final/acceptance.json` and is never promoted to a passing result.
+
+The actual test spy forwarded only five `transitionToolCall` arguments. The extracted host correctly passes its current `StoreTx` and claim predicate as arguments six and seven. By dropping both, the spy called the original command with the default root owner while its outer transaction still held the SQLite writer, so it waited on itself. The IndexedDB adapter had hidden this fixture defect. The only test change is rest-parameter forwarding: inspect `args[3]` for the same completed-write failure injection and call `original(...args)` otherwise. Production transactions, fault injection, assertions and the original 20-second timeout remain unchanged. Related command-spy inspection found no other truncated caller; existing claim-race tests already forward all arguments.
+
+Actual Node 24 same native owner/probe/coverage and `VITEST_MAX_WORKERS=1` rerun passes the entire eight-case file in 3.62 seconds. Raw `/tmp/cuepoint-agent-native-web-repair/tests.log`. Main records the typed-spy/real-SQLite rule in the canonical execution spec. Final Node 22 full root and quality then rebind these two consumed-input changes; a new empty-directory ALL follows a fresh browser wrapper. The packed consumer's captured inputs do not contain this test or canonical document and must still be checked for exact identity before retaining its accepted result.

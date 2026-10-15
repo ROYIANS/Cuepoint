@@ -13,3 +13,14 @@
 {"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Bind product persistence/tool effects to the same existing real transaction."}
 {"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Validate extracted production wiring on real native product storage."}
 {"file": ".trellis/spec/frontend/type-safety.md", "reason": "Use typed host ports and valid emitted types rather than product leaks or extension bags."}
+{"file": ".trellis/spec/frontend/feature-organization.md", "reason": "Current Studio feature ownership and declared cross-feature exports."}
+{"file": ".trellis/spec/frontend/monorepo-boundaries.md", "reason": "Register new libraries/examples in every gate and reject private cross-package imports."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-studio-feature-organization/verification.md", "reason": "Accepted predecessor evidence, exact final receipt identities and finite limits."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-studio-feature-organization/research/source-owner-map.md", "reason": "Actual current feature paths and ownership after accepted relocation."}
+{"file": ".trellis/tasks/10-15-reusable-agent-runtime/research/extraction-inventory.md", "reason": "Full current 59-file inventory, semantic ports and 16-case real-host/core/todo conformance matrix."}
+{"file": ".trellis/spec/agent-core/library/index.md", "reason": "Current core package ownership, emitted exports and host conformance checklist"}
+{"file": ".trellis/spec/agent-core/library/runtime.md", "reason": "Executable shared-loop and host contracts for ownership, atomic certainty, compaction and durable reuse"}
+{"file": ".trellis/spec/agent-providers/library/index.md", "reason": "Current provider package ownership, public emitted entries and transport/diagnostic checklist"}
+{"file": ".trellis/spec/agent-providers/library/protocols.md", "reason": "Executable shared protocol, opaque continuation, HTTP policy and product-binding contracts"}
+{"file": ".trellis/spec/agent-todo/cli/index.md", "reason": "Independent SQLite consumer ownership, emitted-only consumption and Node 24 conformance checklist"}
+{"file": ".trellis/spec/agent-todo/cli/durable-host.md", "reason": "Executable CLI, actual process ownership, atomic certainty, conditional persistence and packed-consumer contracts"}

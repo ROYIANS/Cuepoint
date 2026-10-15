@@ -33,4 +33,4 @@ Public npm publication/API stability promises, Agent React UI, new providers/fea
 
 ## Readiness
 
-The parent final summary requires subsequent approval and both predecessors require accepted verification. Parent integration review follows AA1-AA5; package compilation alone cannot complete this task.
+The owner approved the parent design with “批准” and approved child-3 continuation with “ok 继续” after accepting both predecessor checkpoints. Child 2 is archived at `../archive/2026-10/10-15-studio-feature-organization`; source/spec checkpoint `6a2927f0`, task documents `7ddeed11`, archive `e7563c55` and journal `c3bec9e9` are recorded. Implementation starts on `codex/reusable-agent-runtime`, based on `codex/studio-feature-organization`. Parent integration review follows AA1-AA5; package compilation alone cannot complete this task.

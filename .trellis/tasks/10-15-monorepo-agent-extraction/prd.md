@@ -8,7 +8,7 @@ Make Cuepoint's application and feature ownership predictable, and allow another
 
 - The owner accepted separating browser, desktop and site entry points into a lightweight monorepo, and organizing the shared studio by business feature.
 - The owner explicitly requested reusable Agent capabilities for other projects and accepted a headless core plus model protocol adapters. Cuepoint tools, creative instructions, product context, storage integration and UI stay in the studio.
-- On 2026-10-15 the owner authorized creating Trellis tasks and preparing development. Implementation awaits review of the completed planning artifacts.
+- On 2026-10-15 the owner authorized creating Trellis tasks, approved the completed design and subsequently approved the ordered implementation/checkpoint continuations.
 
 ## Requirements
 
@@ -53,4 +53,4 @@ Public npm publication, a public API stability promise, an Agent React UI librar
 
 ## Planning Status
 
-All product/scope decisions are resolved by this conversation. `design.md`, `implement.md`, three complete child plans and curated context manifests define execution. Requirements were rewritten into the final structure without temporary brainstorm sections. The owner subsequently approved the final summary with “批准”; child 1 is active on `codex/monorepo-app-boundaries`. The parent coordinates integration, and later children remain gated by predecessor acceptance.
+All product/scope decisions are resolved by this conversation. `design.md`, `implement.md`, three complete child plans and curated context manifests define execution. Requirements were rewritten into the final structure without temporary brainstorm sections. The owner subsequently approved the final summary with “批准”. Children 1 and 2 are completed and archived; their source/spec checkpoints are `bb3a9580` and `6a2927f0`. Child 3 implementation and AA1-AA5 acceptance pass on `codex/reusable-agent-runtime` after the owner approved its continuation with “ok 继续”. Cumulative R1-R7 / AC1-AC6 integration review also passes within the explicit host/manual limits in `verification.md`. The owner confirmed the concrete Phase 3.4 batch and following child/parent Trellis closure with “可以提交了”. The parent remains a coordination task until its approved archive bookkeeping runs after the work commits. Accepted predecessor evidence is recorded in `implement.md`.

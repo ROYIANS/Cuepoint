@@ -22,6 +22,14 @@ Persist external intent/operation identity before dispatch and reconcile existin
 
 Maintain sole terminal writer, monotonic checkpoints and output flush before final settlement. Ordered events distinguish provisional deltas from confirmed state and never replace persistence or expose encrypted continuation in chat activity.
 
+## Current host constraints from source review
+
+Studio's current `AgentRun` has no general durable revision or owner column. Its checkpoint is an output sequence, not an ownership revision. Bind an opaque execution capability to the actually held thread lock, expire it when the lock scope ends, and revalidate relevant current run/call/step/offer predicates inside each existing transaction. The independent SQLite host can own explicit claim/revision fields. This extraction preserves the product schema and cannot silently invent a stronger persisted Studio ownership guarantee.
+
+The existing atomic tool wrapper writes its completed result before its local transaction returns. Core must consume that confirmed completion without a second independent completion commit. Receipt construction, result validation/serialization and size enforcement belong before COMMIT. A later error first reconciles durable completion; a failed confirmation read preserves unknown certainty. All terminal paths still reach one conditional host writer, including Stop, model budget, recovery and explicit end.
+
+Resolve current credentials at each main and auxiliary request boundary while checking the frozen connector identity/base URL. Current entry-point key arguments are not authority to hold a credential snapshot across every request in a run. Studio owns this resolution and runtime HTTP authorization; neither credentials nor provider-encrypted continuation enter public execution events.
+
 ## Providers and independent proof
 
 Move current protocol transport/parsing behind core contracts. Studio resolves connector/reference/media/runtime HTTP/credential access through typed adapters. Resolve keys at request time without persisting snapshots; retain bounded reads/SSE completion/tool IDs/abort/redaction/errors/request counts and exact continuation across checkpoints/compaction.

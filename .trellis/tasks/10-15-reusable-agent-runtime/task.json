@@ -3,7 +3,7 @@
   "name": "reusable-agent-runtime",
   "title": "通用 Agent 核心与模型适配抽离",
   "description": "Extract headless Agent core and chat providers, integrate Cuepoint through typed ports, and prove reuse with an independent durable consumer.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -12,15 +12,19 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": null,
-  "base_branch": "main",
+  "branch": "codex/reusable-agent-runtime",
+  "base_branch": "codex/studio-feature-organization",
   "worktree_path": null,
-  "commit": null,
+  "commit": "928d723149b2f1bd7720edc8ee7becce74ef6f72",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "10-15-monorepo-agent-extraction",
   "relatedFiles": [],
   "notes": "",
-  "meta": {}
+  "meta": {
+    "predecessor_checkpoint": "6a2927f08b8a9c914fb497bc2db98acbd7530e2c",
+    "approval": "Owner approved parent design and child-3 continuation with ok 继续 after accepted child-2 verification and checkpoint commits.",
+    "checkpoint_approval": "Owner confirmed the exact two work-commit batch and following child/parent archive+journal with 可以提交了 on 2026-10-15."
+  }
 }
