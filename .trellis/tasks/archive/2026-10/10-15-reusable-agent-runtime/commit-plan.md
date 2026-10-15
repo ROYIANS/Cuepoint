@@ -1,6 +1,6 @@
 # Checkpoint commit plan
 
-Status: implementation, final native ALL, all current-input bindings and cumulative integration review pass within the verification limits. The owner approved these exact groups and following child/parent archive+journal with “可以提交了” on 2026-10-15. Source/spec work commit is `928d723149b2f1bd7720edc8ee7becce74ef6f72`; task-document work commit follows.
+Status: implementation, final native ALL, all current-input bindings and cumulative integration review pass within the verification limits. The owner approved these exact groups and following child/parent archive+journal with “可以提交了” on 2026-10-15. Source/spec work commit is `928d723149b2f1bd7720edc8ee7becce74ef6f72`; task-document work commit is `236b8c70aa4ad327e34760104b458e447b5b26f4`. Both exact groups have been committed; approved archive/journal bookkeeping follows.
 
 Base: `c3bec9e96916c963840081919135e62663426bca`, branch `codex/reusable-agent-runtime`. All paths below are relative to the repository root. They are recognized changes authored by the current main/serialized implementer/checker session. The unrelated desktop-release task has no changed path in this batch.
 

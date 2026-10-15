@@ -1,6 +1,6 @@
 # Reusable Agent runtime verification
 
-Status: **AA1–AA5 accepted within the explicit host/manual limits below.** Final source review, root/application checks, independent packed consumer, normal built browser, complete real-native ALL and current-input/protected-output binding pass. The independent whole-child review confirms no unresolved source finding. The owner approved the concrete Phase 3.4 batch and following child/parent archive+journal with “可以提交了”. Accepted source/spec checkpoint is `928d723149b2f1bd7720edc8ee7becce74ef6f72`; task-document commit and Trellis bookkeeping follow without changing accepted source inputs.
+Status: **AA1–AA5 accepted within the explicit host/manual limits below.** Final source review, root/application checks, independent packed consumer, normal built browser, complete real-native ALL and current-input/protected-output binding pass. The independent whole-child review confirms no unresolved source finding. The owner approved the concrete Phase 3.4 batch and following child/parent archive+journal with “可以提交了”. Accepted source/spec checkpoint is `928d723149b2f1bd7720edc8ee7becce74ef6f72`; task-document checkpoint is `236b8c70aa4ad327e34760104b458e447b5b26f4`. Both work commits are complete; approved Trellis archive/journal bookkeeping preserves the accepted source inputs.
 
 ## Result and actual ownership
 
