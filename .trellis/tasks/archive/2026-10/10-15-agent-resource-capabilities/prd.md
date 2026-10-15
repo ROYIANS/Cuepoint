@@ -6,12 +6,12 @@ Define reusable typed capability registration and concrete resource grants befor
 
 ## Delivery state
 
-Implemented the reviewed bounded foundation under [Agent experience and desktop evolution](../10-15-agent-experience-desktop-evolution/prd.md). Standing owner authorization covers sequential implementation and commits. Necessary source tests/types/scoped lint/architecture and independent changed-scope review passed. Actual OS/external workflows remain unsupported; emitted/packed/full/native/package acceptance remains deferred to the batch end.
+Implemented the reviewed bounded foundation under [Agent experience and desktop evolution](../../../10-15-agent-experience-desktop-evolution/prd.md). Standing owner authorization covers sequential implementation and commits. Necessary source tests/types/scoped lint/architecture and independent changed-scope review passed. Actual OS/external workflows remain unsupported; emitted/packed/full/native/package acceptance remains deferred to the batch end.
 
 ## Evidence
 
-- [Research: capability-comparison.md](../10-15-desktop-agent-capability-research/research/capability-comparison.md)
-- [Research: host-integration-review.md](../10-15-desktop-agent-capability-research/research/host-integration-review.md)
+- [Research: capability-comparison.md](../../../10-15-desktop-agent-capability-research/research/capability-comparison.md)
+- [Research: host-integration-review.md](../../../10-15-desktop-agent-capability-research/research/host-integration-review.md)
 - [Concrete source-backed foundation design](research/extension-grant-design.md)
 
 ## Dependencies and order

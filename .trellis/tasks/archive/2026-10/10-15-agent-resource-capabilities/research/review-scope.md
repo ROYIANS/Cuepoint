@@ -5,7 +5,7 @@ The immutable per-file ledger below records the 22 final product/test/config/dis
 ```json
 {
   "schemaVersion": 1,
-  "task": ".trellis/tasks/10-15-agent-resource-capabilities",
+  "task": ".trellis/tasks/archive/2026-10/10-15-agent-resource-capabilities",
   "reviewer": "trellis-check /root/e03_check",
   "status": "PASS / FINAL FREEZE",
   "reviewedAt": "2026-10-15T12:44:21.103166+00:00",
@@ -339,7 +339,7 @@ The immutable per-file ledger below records the 22 final product/test/config/dis
   },
   "reusedEvidence": [
     {
-      "report": ".trellis/tasks/10-15-agent-resource-capabilities/research/implementation-core.md",
+      "report": ".trellis/tasks/archive/2026-10/10-15-agent-resource-capabilities/research/implementation-core.md",
       "coreFinalSuites": 4,
       "coreFinalTests": 36,
       "exactRecordedHashesMatched": 9,
@@ -347,7 +347,7 @@ The immutable per-file ledger below records the 22 final product/test/config/dis
       "sourceLint": "worker 5 production files PASS, independently repeated in final combined 10-file source lint"
     },
     {
-      "report": ".trellis/tasks/10-15-agent-resource-capabilities/research/implementation-todo.md",
+      "report": ".trellis/tasks/archive/2026-10/10-15-agent-resource-capabilities/research/implementation-todo.md",
       "finalSuites": 1,
       "finalTests": 31,
       "runtime": "actual Node24 file SQLite/shared executeRun; suite actually executed, not skipped",
@@ -355,7 +355,7 @@ The immutable per-file ledger below records the 22 final product/test/config/dis
       "retainedNodeTestConformance": "typechecked only; actual emitted/process gate deferred"
     },
     {
-      "report": ".trellis/tasks/10-15-agent-resource-capabilities/research/implementation-validation.md",
+      "report": ".trellis/tasks/archive/2026-10/10-15-agent-resource-capabilities/research/implementation-validation.md",
       "baselineTwoSuitesThirteenTests": "handoff checkpoint only; subset of later core evidence, not added",
       "guardAliasAndResolution": "actual earlier bounded configuration/negative checks reused with current source inspection",
       "KnipSemantics": "installed Knip 6.40 source read; no full Knip or actual Node22 gate claim"
