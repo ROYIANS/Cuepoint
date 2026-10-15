@@ -33,4 +33,4 @@ New product behavior, UI redesign, rewriting every large module, repository/serv
 
 ## Readiness
 
-The parent's final summary requires subsequent implementation approval. This child also requires accepted child-1 verification. Child 3 waits for accepted feature/transaction boundaries.
+The parent implementation was approved, and the user explicitly authorized committing child 1 and starting this stage on 2026-10-15. Accepted child-1 source checkpoint is `bb3a9580`; its verification is archived under `../archive/2026-10/10-15-monorepo-app-boundaries/verification.md`. This child is active on `codex/studio-feature-organization`. Child 3 waits for accepted feature/transaction boundaries.

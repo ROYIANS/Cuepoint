@@ -13,3 +13,4 @@
 {"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Independently verify: Retain product execution behavior before generic extraction."}
 {"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Independently verify: Retain cross-feature effects/evidence/results in the same transaction."}
 {"file": ".trellis/tasks/archive/2026-10/10-15-monorepo-app-boundaries/verification.md", "reason": "Preserve the accepted application boundary and source/receipt coverage while reviewing feature organization; do not convert unperformed or historical failed cases into PASS."}
+{"file": ".trellis/spec/frontend/feature-organization.md", "reason": "Verify vertical feature APIs, actual dependency negatives and original/current relocation body equivalence"}

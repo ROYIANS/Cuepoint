@@ -13,3 +13,4 @@
 {"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Retain product execution behavior before generic extraction."}
 {"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Retain cross-feature effects/evidence/results in the same transaction."}
 {"file": ".trellis/tasks/archive/2026-10/10-15-monorepo-app-boundaries/verification.md", "reason": "Read accepted child 1 source owners, exact gate outcomes and finite historical/manual limits before moving Studio features."}
+{"file": ".trellis/spec/frontend/feature-organization.md", "reason": "Executable feature ownership, fixed product integration, transaction propagation and relocation equivalence contracts"}

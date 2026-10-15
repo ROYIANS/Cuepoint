@@ -3,7 +3,7 @@
   "name": "studio-feature-organization",
   "title": "Studio 按业务功能重组与依赖约束",
   "description": "Organize the shared studio by feature, platform and composition responsibilities, preserving transactions and current product behavior.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -12,15 +12,18 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": null,
-  "base_branch": "main",
+  "branch": "codex/studio-feature-organization",
+  "base_branch": "codex/monorepo-app-boundaries",
   "worktree_path": null,
-  "commit": null,
+  "commit": "6a2927f08b8a9c914fb497bc2db98acbd7530e2c",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "10-15-monorepo-agent-extraction",
   "relatedFiles": [],
   "notes": "",
-  "meta": {}
+  "meta": {
+    "predecessor_checkpoint": "bb3a9580c38a01125fb79361d3ad8e0c11f75858",
+    "checkpoint_authorized": "2026-10-15: ok 继续"
+  }
 }
