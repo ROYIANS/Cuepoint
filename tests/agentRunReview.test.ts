@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import {createChatThread, updateChatThread} from "@/db/chat";
-import type { ConnectorConfig } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
+import {createChatThread, updateChatThread} from "@/features/agent/commands/chat";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = {
   id: "review", name: "review", definitionId: "openai-compatible",

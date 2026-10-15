@@ -1,12 +1,12 @@
 import {describe, expect, it, vi} from "vitest";
-import * as mart from "@/lib/ai/apimart";
-import * as audio from "@/lib/ai/apimartAudio";
-import * as hub from "@/lib/ai/aihubmix";
-import * as mimo from "@/lib/ai/mimoSpeech";
-import * as generic from "@/lib/ai/openaiCompatible";
-import * as chat from "@/lib/ai/chatStream";
-import * as responses from "@/lib/ai/responsesStream";
-import * as tavily from "@/lib/ai/tavily";
+import * as mart from "@/features/video/providers/apimart";
+import * as audio from "@/features/audio/providers/apimartAudio";
+import * as hub from "@/features/video/providers/aihubmix";
+import * as mimo from "@/features/audio/providers/mimoSpeech";
+import * as generic from "@/features/agent/providers/openaiCompatible";
+import * as chat from "@/features/agent/providers/chatStream";
+import * as responses from "@/features/agent/providers/responsesStream";
+import * as tavily from "@/features/references/providers/tavily";
 import * as oldMart from "./fixtures/sourceSnapshots/d07/src/lib/ai/apimart";
 import * as oldAudio from "./fixtures/sourceSnapshots/d07/src/lib/ai/apimartAudio";
 import * as oldHub from "./fixtures/sourceSnapshots/d07/src/lib/ai/aihubmix";
@@ -15,12 +15,12 @@ import * as oldGeneric from "./fixtures/sourceSnapshots/d07/src/lib/ai/openaiCom
 import * as oldChat from "./fixtures/sourceSnapshots/d07/src/lib/ai/chatStream";
 import * as oldResponses from "./fixtures/sourceSnapshots/d07/src/lib/ai/responsesStream";
 import * as oldTavily from "./fixtures/sourceSnapshots/d07/src/lib/ai/tavily";
-import {saveSearchConnection, getSearchConnectionState} from "@/db/searchConnections";
+import {saveSearchConnection, getSearchConnectionState} from "@/features/settings/commands/searchConnections";
 
 // Metadata is an untouched accepted dependency, shared by both adapter runs.
-vi.mock("./fixtures/sourceSnapshots/d07/src/lib/ai/modelMetadata", async () => import("@/lib/ai/modelMetadata"));
+vi.mock("./fixtures/sourceSnapshots/d07/src/lib/ai/modelMetadata", async () => import("@/features/settings/models/modelMetadata"));
 
-vi.mock("./fixtures/sourceSnapshots/d07/src/lib/ai/visionCapability", async () => import("@/lib/ai/visionCapability"));
+vi.mock("./fixtures/sourceSnapshots/d07/src/lib/ai/visionCapability", async () => import("@/features/settings/models/visionCapability"));
 
 const credentials = {baseUrl: " https://proxy.example/prefix/v1/// ", apiKey: " sk-secret "};
 const before = {mart: oldMart, audio: oldAudio, hub: oldHub, mimo: oldMimo, generic: oldGeneric, chat: oldChat, responses: oldResponses, tavily: oldTavily};

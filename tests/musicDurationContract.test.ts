@@ -1,21 +1,21 @@
 import {registeredTools} from "./helpers/registeredTools";
 import JSZip from "jszip";
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
-import {addMusicDraft, addMusicWork, patchMusicDraft, patchMusicWork} from "@/db/music";
-import {prepareAudioGenerationJob} from "@/db/audioGeneration";
-import {beginAgentRun} from "@/db/agentRuns";
-import {saveToolPreview, saveToolRound, transitionToolCall} from "@/db/agentTools";
-import {defaultMusicSettings, type MusicSettings} from "@/domain/music";
-import type {AgentRun} from "@/domain/agent";
-import type {AgentToolContext} from "@/lib/agent/tools";
-import {MUSIC_TOOLS as MUSIC_TOOLS_DEFINITIONS} from "@/lib/agent/musicTools";
-import {musicSettingsSchema, musicWireInput, validateGenerationInput} from "@/lib/audioGeneration/input";
-import {prepareAudioGeneration} from "@/lib/audioGeneration/runtime";
-import {submitApimartMusic, type MusicInput} from "@/lib/ai/apimartAudio";
-import {exportProjectZip, importProjectZip} from "@/lib/projectPackage";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {addMusicDraft, addMusicWork, patchMusicDraft, patchMusicWork} from "@/features/music/commands/music";
+import {prepareAudioGenerationJob} from "@/features/audio/commands/generation";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {saveToolPreview, saveToolRound, transitionToolCall} from "@/features/agent/commands/agentTools";
+import {defaultMusicSettings, type MusicSettings} from "@/features/music/models/music";
+import type {AgentRun} from "@/features/agent/models/agent";
+import type {AgentToolContext} from "@/features/agent/runtime/tools";
+import {MUSIC_TOOLS as MUSIC_TOOLS_DEFINITIONS} from "@/features/music/agent/musicTools";
+import {musicSettingsSchema, musicWireInput, validateGenerationInput} from "@/features/audio/generation/input";
+import {prepareAudioGeneration} from "@/features/audio/generation/runtime";
+import {submitApimartMusic, type MusicInput} from "@/features/audio/providers/apimartAudio";
+import {exportProjectZip, importProjectZip} from "@/app/workflows/packages/projectPackage";
 const MUSIC_TOOLS = registeredTools(MUSIC_TOOLS_DEFINITIONS);
 
 

@@ -2,13 +2,13 @@
 import {act, createElement as h, type ReactNode} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import type {AgentToolCall} from "@/domain/agent";
+import type {AgentToolCall} from "@/features/agent/models/agent";
 
 vi.mock("@tanstack/react-router", () => ({
     Link: ({to, children, className}: {to: string; children?: ReactNode; className?: string}) => h("a", {href: to, className}, children),
     useNavigate: () => vi.fn(),
 }));
-const {CreatedEntityLinks} = await import("@/components/agent/CreatedEntityLinks");
+const {CreatedEntityLinks} = await import("@/features/agent/ui/CreatedEntityLinks");
 
 const now = "2026-10-13T00:00:00.000Z";
 function call(items: {href: string; label: string}[]): AgentToolCall {

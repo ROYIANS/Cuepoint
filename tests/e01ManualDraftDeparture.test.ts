@@ -22,8 +22,8 @@ vi.mock("react", async original => {
     };
 });
 vi.mock("@tanstack/react-router", () => ({useBlocker: (options: typeof host.options) => {host.options = options; return host.blocker;}}));
-import {useManualDraftDeparture} from "@/lib/useManualDraftGuard";
-import {Button} from "@/components/ui/button";
+import {useManualDraftDeparture} from "@/app/drafts/useManualDraftGuard";
+import {Button} from "@/ui/button";
 
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(value: unknown): Node[] {

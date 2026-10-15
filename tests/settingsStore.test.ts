@@ -1,9 +1,9 @@
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {putDeviceSetting} from "@/db/deviceSettings";
+import {db} from "@/platform/product/store";
+import {putDeviceSetting} from "@/features/settings/commands/deviceSettings";
 import {
     dueForAutoCheck, readAutoCheckUpdates, readLastUpdateCheckAt, readSettings, writeAutoCheckUpdates, writeLastUpdateCheckAt,
-} from "@/components/settings/settingsStore";
+} from "@/features/settings/ui/settingsStore";
 import {interceptStoreTable} from "./helpers/storeFaults";
 
 describe("device-local settings", () => {

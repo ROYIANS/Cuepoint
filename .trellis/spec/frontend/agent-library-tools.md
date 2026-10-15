@@ -6,7 +6,7 @@ Chat can operate existing IP/material repositories through strict adapters. This
 
 ## 2. Signatures
 
-- `createToolLoading(skillIds, allowedNames, projectKind?)`, `getOfferedToolNames(run)`, `toolNamesForCall(run, step)`, `toolLoadingInstructions(state)` in `lib/agent/toolLoading.ts`.
+- `createToolLoading(skillIds, allowedNames, projectKind?)`, `getOfferedToolNames(run)`, `toolNamesForCall(run, step)`, `toolLoadingInstructions(state)` in `features/agent/runtime/toolLoading.ts`.
 - `load_tool_groups({groupIds: string[], query?: string})`: at most two authorized groups; empty IDs query the catalog without clearing prior groups. Selected groups replace the prior selection on the next request.
 - `ip_search`, `ip_read`, `ip_create`, `ip_update`, `ip_set_archived`, `project_bind_ip` in `ipTools.ts`.
 - `material_search/read/read_text/read_image/update_metadata/promote/use/update_use/archive/release` in `materialTools.ts`.

@@ -62,7 +62,7 @@ async function run() {
     const appName='Cuepoint Tavily Review';
     const frontend=resolve(root,'frontend');
     const configPath=resolve(root,'tavily-config.json');
-    const sourcePaths=['ui/tavilyProbeFetch.ts','ui/tavilyProbe.ts','ui/tavilyProbeMain.tsx','ui/tavily-probe/index.html','ui/acceptanceEvidence.ts','scripts/native-tavily-regression.mjs','../../packages/studio/src/lib/ai/tavily.ts','../../packages/studio/src/lib/runtimeFetch.ts','../../packages/studio/src/lib/runtimeHttpPolicy.ts','../../packages/studio/src/lib/ai/requestBoundary.ts','../../tooling/native-product-fixture.mjs'];
+    const sourcePaths=['ui/tavilyProbeFetch.ts','ui/tavilyProbe.ts','ui/tavilyProbeMain.tsx','ui/tavily-probe/index.html','ui/acceptanceEvidence.ts','scripts/native-tavily-regression.mjs','../../packages/studio/src/features/references/providers/tavily.ts','../../packages/studio/src/platform/runtime/runtimeFetch.ts','../../packages/studio/src/platform/product/httpPolicy.ts','../../packages/studio/src/platform/http/requestBoundary.ts','../../tooling/native-product-fixture.mjs'];
     const sources=async()=>Object.fromEntries(await Promise.all(sourcePaths.map(async path=>[path,createHash('sha256').update(await readFile(resolve(base,path))).digest('hex')])));
     const before=await sources();const env={...process.env,CUEPOINT_ACCEPTANCE_ROOT:root};
     const deadline=Date.now()+15*60*1000;

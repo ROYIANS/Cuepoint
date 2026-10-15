@@ -7,8 +7,8 @@ Read when changing tool protocol, Agent execution steps, approval UI, skills or 
 - `AgentPermissionMode`: ask / assist / full.
 - `AgentToolDefinition`: name/title/description/parameters/effect/parseArguments/highRisk/execute; optional prepare, atomic, recovery and requiresConfirmation.
 - `requiresToolApproval(mode, tool, args): boolean` uses code-owned effect and risk.
-- `getGeneralAgentConfig()` / `updateGeneralAgentConfig({permissionMode?, enabledSkillIds?})` in `db/agentSettings.ts`.
-- `saveToolRound`, `transitionToolCall`, `pauseForApproval`, `resolveAgentToolApproval(runId, callId, decision)`, `resumeAgentRun`, `cancelAgentRun` in `db/agentTools.ts`.
+- `getGeneralAgentConfig()` / `updateGeneralAgentConfig({permissionMode?, enabledSkillIds?})` in `features/agent/commands/agentSettings.ts`.
+- `saveToolRound`, `transitionToolCall`, `pauseForApproval`, `resolveAgentToolApproval(runId, callId, decision)`, `resumeAgentRun`, `cancelAgentRun` in `features/agent/commands/agentTools.ts`.
 - `resumeChatRun(runId, apiKey, controller, fetchImpl?, registry?)` runs under the thread Web Lock.
 - Dexie v9 `agentToolCalls`: indexes include runId/threadId and unique run+providerCallId.
 
@@ -136,7 +136,7 @@ Maintain the schema-to-business-argument relation when defining or changing any 
 
 ### 2. Signatures / Owners
 
-- `lib/agent/toolDefinition.ts` owns `AgentToolContext`, `TypedToolDefinition<Args, Name>`, `AgentToolDefinition = TypedToolDefinition<unknown>`, `ToolBody<Args, Name>`, `defineTool`, `assertUniqueToolNames` and `toolMetadataMatches`. It imports protocol/schema types rather than persistence, runtime or family values. `tools.ts` owns the assembled registry and its single justified argument erasure.
+- `features/agent/runtime/toolDefinition.ts` owns `AgentToolContext`, `TypedToolDefinition<Args, Name>`, `AgentToolDefinition = TypedToolDefinition<unknown>`, `ToolBody<Args, Name>`, `defineTool`, `assertUniqueToolNames` and `toolMetadataMatches`. It imports protocol/schema types rather than persistence, runtime or family values. `tools.ts` owns the assembled registry and its single justified argument erasure.
 - `businessSchemas.ts` owns `Spec<T>` with an explicit Zod parsed-output/unknown-input relation and the actual `text`, `trimmedText`, `defaulted`, choice/object/array/optional/nullable recipes. `defineTool<Args, const Name>(spec: Spec<Args>, body: ToolBody<NoInfer<Args>, Name>)` infers business arguments only from the schema; callbacks cannot independently widen that inference.
 - Prepare, risk and execute callbacks are function properties tied to that parsed argument type. Family arrays keep their heterogeneous typed definitions until the one justified registry erasure.
 - `toolMetadataMatches<Args>` compares effect, computed risk, normalized atomic/recovery/confirmation against the persisted call. Both `runChat.ts` gates consume it. `generationProfiles.ts` owns the shared submit/job runtime specifications and their intentional advertised-schema ordering/projection; audio and existing business/library/task/memory helpers retain their actual domain schemas and commands. Existing `tools.ts` compatibility type exports remain for real consumers.

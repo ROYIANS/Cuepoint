@@ -1,3 +1,4 @@
+import {historicalSource} from "./historical-source.mjs";
 import assert from "node:assert/strict";
 import {createServer} from "vite";
 import react from "@vitejs/plugin-react";
@@ -6,7 +7,7 @@ import {readFile} from "node:fs/promises";
 import {join} from "node:path";
 const {chromium} = await import(process.env.C02_PLAYWRIGHT_PATH ?? "playwright");
 const baseline = {name: "c02-original-music-ui", enforce: "pre", async transform(source, id) {
-    if (process.env.C02_BASELINE_ROOT && id.endsWith("/packages/studio/src/components/music/MusicCreation.tsx")) return readFile(join(process.env.C02_BASELINE_ROOT,"MusicCreation.tsx"),"utf8");
+    if (process.env.C02_BASELINE_ROOT && id.endsWith("/packages/studio/src/features/music/ui/MusicCreation.tsx")) return historicalSource(await readFile(join(process.env.C02_BASELINE_ROOT,"MusicCreation.tsx"),"utf8"), "components/music/MusicCreation.tsx");
     return source;
 }};
 const server = await createServer({configFile: false, plugins: [baseline, react()], resolve: {alias: {"@": fileURLToPath(new URL("../packages/studio/src", import.meta.url))}}, server: {host: "127.0.0.1", port: 0}});

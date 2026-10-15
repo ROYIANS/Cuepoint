@@ -5,9 +5,9 @@ Read before changing web search/extraction, search connection settings, source d
 
 ## 2. Signatures
 - Dexie v19 adds global `searchConnections`. Singleton Tavily row stores local key, enabled state, opaque revision and timestamps; exclude it from project ZIPs and model snapshots.
-- `getSearchConnectionState(): {configured,enabled,revision?}`, `saveSearchConnection({apiKey?,enabled})`, `removeSearchConnection()` in `db/searchConnections.ts`. Blank key preserves a saved key; UI never reads it back.
+- `getSearchConnectionState(): {configured,enabled,revision?}`, `saveSearchConnection({apiKey?,enabled})`, `removeSearchConnection()` in `features/settings/commands/searchConnections.ts`. Blank key preserves a saved key; UI never reads it back.
 - `testSearchConnection(apiKey?,options?)` calls authenticated GET `/usage`; no paid-search fallback.
-- `web_search({query,maxResults?,timeRange?})` and `web_read({url})` in `lib/agent/webTools.ts`, both strict network tools.
+- `web_search({query,maxResults?,timeRange?})` and `web_read({url})` in `features/references/agent/webTools.ts`, both strict network tools.
 - `executeWebRequest(kind,args,revision,options?)` returns discriminated `WebResult`. Expected failures are `{ok:false,code,message,serviceMayHaveRun,retrievedAt}`.
 - `webResultSources(name,result)` normalizes safe persisted source presentation. Task research observations cite existing tool-call IDs.
 

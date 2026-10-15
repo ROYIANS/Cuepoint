@@ -1,17 +1,17 @@
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {beginAgentRun, finishAgentRun} from "@/db/agentRuns";
-import {settleRun} from "@/db/agentRunTerminalState";
-import {cancelAgentRun, pauseAtModelStepLimit, saveToolRound, startModelStep} from "@/db/agentTools";
-import {updateGeneralAgentConfig} from "@/db/agentSettings";
-import {createChatThread} from "@/db/chat";
-import {deleteChatThread} from "@/db/cascadeCommands";
-import {executeChatRun} from "@/lib/agent/runChat";
-import {BUILTIN_TOOLS} from "@/lib/agent/tools";
-import {runBlocksThread} from "@/domain/agentToolSelection";
-import {appendStartPrompt} from "@/components/agent/startPrompt";
-import type {AgentRun} from "@/domain/agent";
-import type {ConnectorConfig} from "@/domain/types";
+import {db} from "@/platform/product/store";
+import {beginAgentRun, finishAgentRun} from "@/features/agent/commands/agentRuns";
+import {settleRun} from "@/features/agent/commands/agentRunTerminalState";
+import {cancelAgentRun, pauseAtModelStepLimit, saveToolRound, startModelStep} from "@/features/agent/commands/agentTools";
+import {updateGeneralAgentConfig} from "@/features/agent/commands/agentSettings";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import {executeChatRun} from "@/features/agent/runtime/runChat";
+import {BUILTIN_TOOLS} from "@/features/agent/runtime/tools";
+import {runBlocksThread} from "@/features/agent/models/agentToolSelection";
+import {appendStartPrompt} from "@/features/agent/ui/startPrompt";
+import type {AgentRun} from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = {id: "defects-cx", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret", updatedAt: "2026-01-01"};
 
@@ -95,13 +95,13 @@ describe("D2 leaving an active topic is confirmed, not silent", () => {
 describe("D3 rename failures surface instead of vanishing", () => {
     it("keeps the read-only guard: a real update still persists the title", async () => {
         const thread = await createChatThread();
-        const {updateChatThread} = await import("@/db/chat");
+        const {updateChatThread} = await import("@/features/agent/commands/chat");
         await updateChatThread(thread.id, {title: "新标题"});
         expect((await db.chatThreads.get(thread.id))?.title).toBe("新标题");
     });
 
     it("a missing thread stays a no-op, while a failing store still rejects for the caller to report", async () => {
-        const {updateChatThread} = await import("@/db/chat");
+        const {updateChatThread} = await import("@/features/agent/commands/chat");
         await expect(updateChatThread("missing-thread", {title: "x"})).resolves.toBeUndefined();
         const {failStoreTableOnce} = await import("./helpers/storeFaults");
         const fault = failStoreTableOnce(db, "chatThreads", "put", new Error("disk failure"));

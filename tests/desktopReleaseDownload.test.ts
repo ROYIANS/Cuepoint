@@ -1,6 +1,6 @@
 import {describe, expect, it, vi} from "vitest";
-import {MAX_RELEASE_ASSET_BYTES, downloadAsset} from "@/lib/desktopRelease/download";
-import {sha256Bytes} from "@/lib/sha256";
+import {MAX_RELEASE_ASSET_BYTES, downloadAsset} from "@/features/settings/updates/download";
+import {sha256Bytes} from "@/platform/media/sha256";
 import type {ReleaseAsset} from "@cuepoint/distribution/releases";
 
 const URL_OK = "https://github.com/ROYIANS/Cuepoint/releases/download/desktop-v0.1.3/Cuepoint_0.1.3_windows_x64_setup.exe";

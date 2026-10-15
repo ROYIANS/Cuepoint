@@ -1,6 +1,6 @@
 import {describe, expect, it} from "vitest";
 import {readFile} from "node:fs/promises";
-import {modelMappings, providerMappings} from "@/components/agent/ModelIconMapping.generated";
+import {modelMappings, providerMappings} from "@/features/agent/ui/ModelIconMapping.generated.ts";
 // Data generation reads publisher AST without executing its browser UI modules.
 // Native parity additionally checks every entry against live publisher exports.
 import {catalogData, generatedSource} from "../tooling/e06-icon-data.mjs";
@@ -10,7 +10,7 @@ describe("E06 complete publisher matching metadata", () => {
         const data = await catalogData();
         expect(modelMappings).toEqual(data.model);
         expect(providerMappings).toEqual(data.provider);
-        expect(await readFile("packages/studio/src/components/agent/ModelIconMapping.generated.ts", "utf8")).toBe(generatedSource(data));
+        expect(await readFile("packages/studio/src/features/agent/ui/ModelIconMapping.generated.ts", "utf8")).toBe(generatedSource(data));
     });
     it("retains regex first-match precedence, mixed case and exact provider matching", () => {
         const model = (name: string) => modelMappings.find(item => item.keywords.some(keyword => new RegExp(keyword, "i").test(name.toLowerCase())));

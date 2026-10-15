@@ -1,14 +1,14 @@
 import JSZip from "jszip";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { patchAudioGenerationJob } from "@/db/audioGeneration";
-import { observeAudioTask } from "@/lib/audioGeneration/observations";
-import { snapshotAudioPackage } from "@/lib/audioProjectPackage";
-import { deleteMusicWork } from "@/db/music";
-import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
-import {createAudioMusicProject} from "@/db/projects";
-import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration } from "@/lib/audioGeneration/runtime";
-import { getApimartMusicTask } from "@/lib/ai/apimartAudio";
+import { db } from "@/platform/product/store";
+import { patchAudioGenerationJob } from "@/features/audio/commands/generation";
+import { observeAudioTask } from "@/features/audio/generation/observations";
+import { snapshotAudioPackage } from "@/features/audio/services/audioProjectPackage";
+import { deleteMusicWork } from "@/features/music/commands/music";
+import { exportProjectZip, importProjectZip } from "@/app/workflows/packages/projectPackage";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration } from "@/features/audio/generation/runtime";
+import { getApimartMusicTask } from "@/features/audio/providers/apimartAudio";
 
 const credentials = { id: "audit-api", definitionId: "apimart" as const, protocol: "openai-compatible" as const, baseUrl: "https://api.apimart.ai/v1", apiKey: "audit-secret", updatedAt: "2026-09-22" };
 const decode = async () => ({ durationSec: 1, sampleRate: 48000, channels: 1 });

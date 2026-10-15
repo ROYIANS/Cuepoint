@@ -1,6 +1,6 @@
 import {mediaWorkspaceRef, resolveWorkspaceRef, workspaceId} from '@cuepoint/studio/reference/lib/workspace';
 import {Sha256} from '@cuepoint/studio/reference/lib/sha256';
-import {STUDIO_LIBRARY_ID} from '@cuepoint/studio/reference/domain/types';
+import {STUDIO_LIBRARY_ID} from "@cuepoint/studio/reference/features/library/models/ownership";
 import type {WorkspaceRef} from '@cuepoint/studio/reference/lib/workspace';
 
 export function contractCorpus() {

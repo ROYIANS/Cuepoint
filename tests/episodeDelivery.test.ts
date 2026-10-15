@@ -1,23 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { emptySlot } from "@/domain/slot";
-import {
-  DEFAULT_SHOT_SETTINGS,
-  emptyEpisodeStory,
-  emptySeriesStory,
-  emptySetting,
-  type Episode,
-  type Project,
-  type Shot,
-  type MediaRecord,
-  type Prop,
-  type VisualStyle,
-} from "@/domain/types";
+import { emptySlot } from "@/features/library/models/slot";
+import {DEFAULT_SHOT_SETTINGS, type Shot} from "@/features/video/models/shots";
+import {emptyEpisodeStory, emptySeriesStory} from "@/features/video/models/story";
+import {emptySetting} from "@/features/video/models/world";
+import {type Episode} from "@/features/video/models/episodes";
+import {type Project} from "@/features/projects/models/project";
+import {type MediaRecord} from "@/features/library/models/media";
+import {type Prop, type VisualStyle} from "@/features/library/models/assets";
 import {
   deriveEpisodeDelivery,
   episodeDeliveryCsv,
   episodeDeliveryFilename,
   escapeCsvCell,
-} from "@/lib/episodeDelivery";
+} from "@/features/video/services/episodeDelivery";
 
 const media = new Map(["first-frame", "last-frame"].map((id) => [id, { id, projectId: "project", mimeType: "image/png", filename: "frame.png", blob: new Blob(["image"]) } satisfies MediaRecord]));
 

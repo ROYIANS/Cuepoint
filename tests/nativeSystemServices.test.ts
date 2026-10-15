@@ -1,7 +1,7 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {sha256Bytes} from "@/lib/sha256";
-import {saveNativeBlob, nativeOpenExternalUrl} from "@/lib/nativeSystemServices";
-import {downloadBlob, isPublishedSaveError} from "@/lib/runtimeSave";
+import {sha256Bytes} from "@/platform/media/sha256";
+import {saveNativeBlob, nativeOpenExternalUrl} from "@/platform/runtime/nativeSystemServices";
+import {downloadBlob, isPublishedSaveError} from "@/platform/runtime/runtimeSave";
 
 const invoke = vi.hoisted(() => vi.fn());
 vi.mock("@tauri-apps/api/core", () => ({invoke}));

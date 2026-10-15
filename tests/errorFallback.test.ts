@@ -2,12 +2,12 @@
 import {act, Component, createElement as h, type ReactNode} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {ErrorFallbackView, NotFoundView, AGENT_RETRY_NOTICE} from "@/components/errors/ErrorFallback";
-import {RootErrorBoundary} from "@/components/errors/RootErrorFallback";
-import {installGlobalErrorHandlers, showError} from "@/components/errors/showError";
-import {subscribeErrorDetails, getErrorDetailsOpen, closeErrorDetails, openErrorDetails} from "@/components/errors/errorDetailsStore";
-import {getLatestError, reportError, resetReportedErrorsForTests, subscribeLatestError} from "@/lib/diagnostics/reportError";
-import {collectDiagnosticContext} from "@/lib/diagnostics/errorReport";
+import {ErrorFallbackView, NotFoundView, AGENT_RETRY_NOTICE} from "@/app/errors/ErrorFallback";
+import {RootErrorBoundary} from "@/app/errors/RootErrorFallback";
+import {installGlobalErrorHandlers, showError} from "@/app/errors/showError";
+import {subscribeErrorDetails, getErrorDetailsOpen, closeErrorDetails, openErrorDetails} from "@/app/errors/errorDetailsStore";
+import {getLatestError, reportError, resetReportedErrorsForTests, subscribeLatestError} from "@/platform/diagnostics/reportError";
+import {collectDiagnosticContext} from "@/platform/diagnostics/errorReport";
 
 vi.mock("sonner", () => ({toast: {error: vi.fn()}}));
 const {toast} = await import("sonner");

@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { db } from '@/db/database';
-import { getSearchConnectionState, removeSearchConnection, saveSearchConnection } from '@/db/searchConnections';
-import { getGeneralAgentConfig, updateGeneralAgentConfig } from '@/db/agentSettings';
-import { executeWebRequest, testSearchConnection } from '@/lib/ai/tavily';
-import { publicWebUrl, webResultSources } from '@/domain/search';
-import { validateToolCall } from '@/lib/agent/tools';
+import { db } from '@/platform/product/store';
+import { getSearchConnectionState, removeSearchConnection, saveSearchConnection } from '@/features/settings/commands/searchConnections';
+import { getGeneralAgentConfig, updateGeneralAgentConfig } from '@/features/agent/commands/agentSettings';
+import { executeWebRequest, testSearchConnection } from '@/features/references/providers/tavily';
+import { publicWebUrl, webResultSources } from '@/features/settings/models/search';
+import { validateToolCall } from '@/features/agent/runtime/tools';
 
 const secret = 'tvly-test-secret';
 async function config() { await saveSearchConnection({ apiKey: secret, enabled: true }); return (await getSearchConnectionState()).revision; }

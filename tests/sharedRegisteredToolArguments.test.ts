@@ -1,5 +1,5 @@
 import {describe,expect,it} from "vitest";
-import {BUILTIN_TOOLS} from "@/lib/agent/tools";
+import {BUILTIN_TOOLS} from "@/features/agent/runtime/tools";
 
 describe("current registered argument boundaries",()=> {
     it.each(BUILTIN_TOOLS.map(tool=>[tool.name,tool] as const))("rejects a non-object envelope for %s before execution",(_name,tool)=> {

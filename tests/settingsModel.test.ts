@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {filterSettings, isSettingsSectionId, type SettingsSection} from "@/components/settings/settingsModel";
+import {filterSettings, isSettingsSectionId, type SettingsSection} from "@/features/settings/ui/settingsModel";
 
 const sections: SettingsSection[] = [
     {id: "general", title: "通用", rows: [

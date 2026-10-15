@@ -1,8 +1,8 @@
 import {describe, expect, it} from "vitest";
-import {GENERATION_PROFILES, generationSubmitSchema, profileRequest} from "@/lib/agent/generationProfiles";
-import {defaultImageGeneration, defaultVideoGeneration, parseGenerationDefaults, validateGenerationDefaults, generationParameters} from "@/domain/output";
-import {getGenerationCapability, projectGenerationParameters, generationResolutionChange} from "@/domain/generationCapabilities";
-import {applyGenerationSelection} from "@/lib/agent/generationReviewDraft";
+import {GENERATION_PROFILES, generationSubmitSchema, profileRequest} from "@/features/video/agent/generationProfiles";
+import {defaultImageGeneration, defaultVideoGeneration, parseGenerationDefaults, validateGenerationDefaults, generationParameters} from "@/features/video/models/output";
+import {getGenerationCapability, projectGenerationParameters, generationResolutionChange} from "@/features/video/models/generationCapabilities";
+import {applyGenerationSelection} from "@/features/video/agent/generationReviewDraft";
 import {GENERATION_PROFILES as originalProfiles, generationSubmitSchema as originalSchema, profileRequest as originalRequest} from "./fixtures/sourceSnapshots/d06/src/lib/agent/generationProfiles";
 import * as originalOutput from "./fixtures/sourceSnapshots/d06/src/domain/output";
 

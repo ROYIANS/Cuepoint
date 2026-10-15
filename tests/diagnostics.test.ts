@@ -1,10 +1,10 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {sanitizeText, sanitizePath} from "@/lib/diagnostics/sanitize";
-import {addBreadcrumb, clearBreadcrumbs, getBreadcrumbs} from "@/lib/diagnostics/breadcrumbs";
-import {buildDiagnosticReport, buildIssueUrl, toErrorInfo, ISSUE_URL_LIMIT, type DiagnosticContext} from "@/lib/diagnostics/errorReport";
-import {friendlyMessage} from "@/lib/diagnostics/friendlyMessage";
-import {getLatestError, reportError, resetReportedErrorsForTests} from "@/lib/diagnostics/reportError";
-import {StorageError} from "@/lib/storage/errors";
+import {sanitizeText, sanitizePath} from "@/platform/diagnostics/sanitize";
+import {addBreadcrumb, clearBreadcrumbs, getBreadcrumbs} from "@/platform/diagnostics/breadcrumbs";
+import {buildDiagnosticReport, buildIssueUrl, toErrorInfo, ISSUE_URL_LIMIT, type DiagnosticContext} from "@/platform/diagnostics/errorReport";
+import {friendlyMessage} from "@/platform/diagnostics/friendlyMessage";
+import {getLatestError, reportError, resetReportedErrorsForTests} from "@/platform/diagnostics/reportError";
+import {StorageError} from "@/platform/storage/errors";
 
 const context: DiagnosticContext = {version: "0.1.1", environment: "browser", platform: "UA", route: "/agent/t1", time: "2026-10-13T00:00:00.000Z"};
 

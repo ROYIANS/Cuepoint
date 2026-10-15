@@ -1,8 +1,8 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {installNativeExternalLinks} from "@/lib/runtimeExternalLinks";
+import {installNativeExternalLinks} from "@/platform/runtime/runtimeExternalLinks";
 
 const services = vi.hoisted(() => ({open: vi.fn(), error: vi.fn()}));
-vi.mock("@/lib/nativeSystemServices", () => ({nativeOpenExternalUrl: services.open}));
+vi.mock("@/platform/runtime/nativeSystemServices", () => ({nativeOpenExternalUrl: services.open}));
 vi.mock("sonner", () => ({toast: {error: services.error}}));
 
 class TestElement {

@@ -1,9 +1,9 @@
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {AUDIO_TRANSACTION_TABLES} from "@/db/audioShared";
-import {createAudioMusicProject} from "@/db/projects";
-import {prepareAudioGenerationJob} from "@/db/audioGeneration";
-import {insertAudioPackage, parseAudioPackage, remapAudioPackage, snapshotAudioPackage} from "@/lib/audioProjectPackage";
+import {db} from "@/platform/product/store";
+import {AUDIO_TRANSACTION_TABLES} from "@/platform/product/scopes";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {prepareAudioGenerationJob} from "@/features/audio/commands/generation";
+import {insertAudioPackage, parseAudioPackage, remapAudioPackage, snapshotAudioPackage} from "@/features/audio/services/audioProjectPackage";
 
 async function prepared() {
     const project = await createAudioMusicProject("music", "music");

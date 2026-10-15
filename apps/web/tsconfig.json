@@ -5,6 +5,7 @@
     "paths": {}
   },
   "include": [
-    "src"
+    "src",
+    "../../packages/studio/src/app/vite-env.d.ts"
   ]
 }

@@ -1,11 +1,11 @@
 import Dexie from "dexie";
 import { expect, it } from "vitest";
-import {browserDatabase} from "@/lib/storage/browserDatabase";
-import {createBrowserProductStore} from "@/lib/storage/browser";
+import {browserDatabase} from "@/platform/storage/browserDatabase";
+import {createBrowserProductStore} from "@/platform/storage/browser";
 if (!browserDatabase) throw new Error("Historical migration comparator requires browser storage");
 const rawDb=browserDatabase;
 const db=createBrowserProductStore(rawDb);
-import {deleteConnector, resolveConnector, upsertConnector} from "@/db/connectors";
+import {deleteConnector, resolveConnector, upsertConnector} from "@/features/settings/commands/connectors";
 
 it("deduplicates legacy connections without changing historical IDs, and rotates/revokes every alias", async () => {
   const schema = Object.fromEntries(rawDb.tables.filter(table => table.name !== "connectorAliases")

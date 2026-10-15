@@ -1,16 +1,16 @@
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import { initModelCatalog } from "@/lib/ai/modelCatalog/store";
-import { db } from "@/db/database";
-import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { resolveAgentToolApproval } from "@/db/agentTools";
-import {createChatThread, updateChatThread} from "@/db/chat";
-import type { AgentReasoningEffort } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
-import { assertReasoningEffort, getReasoningPolicy } from "@/lib/ai/reasoningPolicy";
-import { streamChatCompletions } from "@/lib/ai/chatStream";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import { BUILTIN_TOOLS, type AgentToolDefinition } from "@/lib/agent/tools";
+import { initModelCatalog } from "@/features/settings/modelCatalog/store";
+import { db } from "@/platform/product/store";
+import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
+import { resolveAgentToolApproval } from "@/features/agent/commands/agentTools";
+import {createChatThread, updateChatThread} from "@/features/agent/commands/chat";
+import type { AgentReasoningEffort } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { assertReasoningEffort, getReasoningPolicy } from "@/features/settings/models/reasoningPolicy";
+import { streamChatCompletions } from "@/features/agent/providers/chatStream";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import { BUILTIN_TOOLS, type AgentToolDefinition } from "@/features/agent/runtime/tools";
 
 const connector: ConnectorConfig = { id: "cx", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret", updatedAt: "2026-09-18" };
 const answer = () => Response.json({ choices: [{ message: { content: "完成" }, finish_reason: "stop" }] });

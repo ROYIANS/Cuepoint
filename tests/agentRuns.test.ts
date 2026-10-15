@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 import Dexie from "dexie";
-import {browserDatabase} from "@/lib/storage/browserDatabase";
-import {createBrowserProductStore} from "@/lib/storage/browser";
-import { db } from "@/db/database";
-import { beginAgentRun, checkpointAgentRun, finishAgentRun, canRetryRun, assertRetryConnector } from "@/db/agentRuns";
-import {createChatThread} from "@/db/chat";
-import {deleteChatThread} from "@/db/cascadeCommands";
-import type { ConnectorConfig } from "@/domain/types";
-import { createRunWriter, executeChatRun } from "@/lib/agent/runChat";
-import { recoverAbandonedRuns, withThreadRunLock, type ThreadLockManager } from "@/lib/agent/runOwnership";
+import {browserDatabase} from "@/platform/storage/browserDatabase";
+import {createBrowserProductStore} from "@/platform/storage/browser";
+import { db } from "@/platform/product/store";
+import { beginAgentRun, checkpointAgentRun, finishAgentRun, canRetryRun, assertRetryConnector } from "@/features/agent/commands/agentRuns";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { createRunWriter, executeChatRun } from "@/features/agent/runtime/runChat";
+import { recoverAbandonedRuns, withThreadRunLock, type ThreadLockManager } from "@/features/agent/runtime/runOwnership";
 
 const connector: ConnectorConfig = { id: "cx", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.com/v1", apiKey: "secret-test-key", updatedAt: "2026-09-18T00:00:00Z" };
 async function begin(content = "hello") {

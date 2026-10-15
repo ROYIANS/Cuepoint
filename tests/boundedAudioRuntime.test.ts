@@ -1,9 +1,9 @@
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {prepareAudioGeneration, refreshAudioGeneration, submitAudioGeneration} from "@/lib/audioGeneration/runtime";
-import {MAX_AUDIO_BYTES, MAX_JSON_BYTES} from "@/lib/resource/limits";
-import type {ConnectorConfig} from "@/domain/types";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {prepareAudioGeneration, refreshAudioGeneration, submitAudioGeneration} from "@/features/audio/generation/runtime";
+import {MAX_AUDIO_BYTES, MAX_JSON_BYTES} from "@/platform/media/limits";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 async function setup(kind: "audio" | "music") {
     const project = await createAudioMusicProject("bounded", kind);

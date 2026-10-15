@@ -2,13 +2,13 @@
 import {act, createElement as h, useEffect, useRef} from "react";
 import {createRoot} from "react-dom/client";
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {beginAgentRun} from "@/db/agentRuns";
-import {createChatThread} from "@/db/chat";
-import {recoverAbandonedRuns, type ThreadLockManager} from "@/lib/agent/runOwnership";
-import {useChatExecutionSession} from "@/components/agent/useChatExecutionSession";
-import {ErrorFallbackView} from "@/components/errors/ErrorFallback";
-import type {ConnectorConfig} from "@/domain/types";
+import {db} from "@/platform/product/store";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {recoverAbandonedRuns, type ThreadLockManager} from "@/features/agent/runtime/runOwnership";
+import {useChatExecutionSession} from "@/features/agent/ui/useChatExecutionSession";
+import {ErrorFallbackView} from "@/app/errors/ErrorFallback";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
 

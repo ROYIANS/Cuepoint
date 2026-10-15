@@ -1,23 +1,24 @@
-import {createAudioMusicProject} from "@/db/projects";
-import {addMusicDraft} from "@/db/music";
-import {defaultMusicSettings} from "@/domain/music";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {addMusicDraft} from "@/features/music/commands/music";
+import {defaultMusicSettings} from "@/features/music/models/music";
 import Dexie from "dexie";
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle, patchProp, patchStyle, setCharacterSlot, setPropSlot} from "@/db/assets";
-import {addShot, patchShot, setShotSlot} from "@/db/shots";
-import {appendChatMessage, createChatThread} from "@/db/chat";
-import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/db/assetReuse";
-import {createProject, updateProject} from "@/db/projects";
-import {putMedia} from "@/db/media";
-import {updateEpisodeShotFilters} from "@/db/episodes";
-import {upsertConnector} from "@/db/connectors";
-import { emptySlot } from "@/domain/slot";
-import { PACKAGE_FORMAT, STUDIO_LIBRARY_ID } from "@/domain/types";
-import { exportProjectZip, importProjectZip, PackageError } from "@/lib/projectPackage";
+import { db } from "@/platform/product/store";
+import {addCharacter, addProp, addScene, addStyle, patchProp, patchStyle, setCharacterSlot, setPropSlot} from "@/features/library/commands/assets";
+import {addShot, patchShot, setShotSlot} from "@/features/video/commands/shots";
+import {appendChatMessage, createChatThread} from "@/features/agent/commands/chat";
+import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/features/library/commands/assetReuse";
+import {createProject, updateProject} from "@/features/projects/commands/projects";
+import {putMedia} from "@/features/library/commands/media";
+import {updateEpisodeShotFilters} from "@/features/video/commands/episodes";
+import {upsertConnector} from "@/features/settings/commands/connectors";
+import { emptySlot } from "@/features/library/models/slot";
+import {PACKAGE_FORMAT} from "@/platform/data/packageFormat";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
+import { exportProjectZip, importProjectZip, PackageError } from "@/app/workflows/packages/projectPackage";
 import {installStoreHook} from "./helpers/storeBackendFaults";
-import {readBinaryBlob} from "@/lib/storage/binary";
+import {readBinaryBlob} from "@/platform/storage/binary";
 
 describe("project packages", () => {
   it.each([false, true])("remaps episode filter beats from %s legacy project preferences", async (legacy) => {

@@ -1,14 +1,14 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {mountedHookHost} from "./helpers/mountedHookHost";
-import {db} from "@/db/database";
-import {addShot} from "@/db/shots";
-import {createProject} from "@/db/projects";
-import type {StoreTx} from "@/lib/storage/types";
+import {db} from "@/platform/product/store";
+import {addShot} from "@/features/video/commands/shots";
+import {createProject} from "@/features/projects/commands/projects";
+import type {StoreTx} from "@/platform/storage/types";
 
 const host = vi.hoisted(() => ({hooks: undefined as ReturnType<typeof mountedHookHost> | undefined, query: vi.fn()}));
 vi.mock("react", async original => ({...await original<typeof import("react")>(), useState: (initial: unknown) => host.hooks!.useState(initial), useRef: (initial: unknown) => host.hooks!.useRef(initial), useEffect: (effect: () => unknown, dependencies?: readonly unknown[]) => host.hooks!.useEffect(effect, dependencies)}));
-vi.mock("@/lib/storage/hooks", () => ({useProductQuery: host.query}));
-import {useShotMedia} from "@/lib/useShotMedia";
+vi.mock("@/platform/product/queries", () => ({useProductQuery: host.query}));
+import {useShotMedia} from "@/features/video/queries/useShotMedia";
 
 afterEach(() => {host.hooks?.unmount();vi.unstubAllGlobals();});
 describe("shot media query identity", () => {

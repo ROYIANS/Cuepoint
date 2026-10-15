@@ -2,15 +2,15 @@
 import {act, createElement as h} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {ModelCatalogPicker} from "@/components/connectors/ModelCatalogPicker";
-import {ModelCatalogSection} from "@/components/connectors/ModelCatalogSection";
-import {ModelPriceTable} from "@/components/connectors/ModelPriceTable";
-import {resetReportedErrorsForTests} from "@/lib/diagnostics/reportError";
-import {applySyncedSnapshot, getModelCatalog, initModelCatalog, resetModelCatalogForTests} from "@/lib/ai/modelCatalog/store";
-import {getCatalogSelection, putCatalogSelection} from "@/lib/ai/modelCatalog/sync";
-import {db} from "@/db/database";
-import {MODEL_CATALOG_KEY} from "@/lib/ai/modelCatalog/store";
-import type {CatalogEntry} from "@/lib/ai/modelCatalog/types";
+import {ModelCatalogPicker} from "@/features/settings/ui/ModelCatalogPicker";
+import {ModelCatalogSection} from "@/features/settings/ui/ModelCatalogSection";
+import {ModelPriceTable} from "@/features/settings/ui/ModelPriceTable";
+import {resetReportedErrorsForTests} from "@/platform/diagnostics/reportError";
+import {applySyncedSnapshot, getModelCatalog, initModelCatalog, resetModelCatalogForTests} from "@/features/settings/modelCatalog/store";
+import {getCatalogSelection, putCatalogSelection} from "@/features/settings/modelCatalog/sync";
+import {db} from "@/platform/product/store";
+import {MODEL_CATALOG_KEY} from "@/features/settings/modelCatalog/store";
+import type {CatalogEntry} from "@/features/settings/modelCatalog/types";
 
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 const {toast} = await import("sonner");

@@ -4,7 +4,7 @@ import {
   chatModelIssue,
   getChatModelPolicy,
   type ChatModelCatalog,
-} from "@/lib/ai/chatModelPolicy";
+} from "@/features/settings/models/chatModelPolicy";
 
 const connector = { id: "apimart-1", definitionId: "apimart" as const, baseUrl: "https://api.apimart.ai/v1", apiKey: "test-key" };
 const catalog: ChatModelCatalog = {

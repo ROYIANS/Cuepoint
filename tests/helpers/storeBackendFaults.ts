@@ -1,7 +1,7 @@
 import Dexie from "dexie";
 import {expect,vi} from "vitest";
-import type {ProductStore,StoreDriver,TransactionBackend} from "@/lib/storage/types";
-import type {TableName} from "@/lib/storage/tableTypes";
+import type {ProductStore,StoreDriver,TransactionBackend} from "@/platform/storage/types";
+import type {TableName} from "@/platform/storage/tableTypes";
 import {getFixtureStoreDriver} from "../fixtures/shared-storage/storeFactory";
 
 type Rule={method:"get"|"query"|"count"|"mutate";table:TableName;intercept:(backend:TransactionBackend,args:unknown[],next:()=>Promise<unknown>)=>Promise<unknown>};

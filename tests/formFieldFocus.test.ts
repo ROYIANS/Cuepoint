@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { isFormFieldTarget } from "@/lib/formFieldFocus";
+import { isFormFieldTarget } from "@/ui/formFieldFocus";
 import {
   beatGroupIds,
   retainVisibleSelectedIds,
   stepActiveShotId,
-} from "@/lib/shotKeyboard";
+} from "@/features/video/services/shotKeyboard";
 
 describe("isFormFieldTarget", () => {
   it("treats input, textarea, select, and contenteditable as form fields", () => {

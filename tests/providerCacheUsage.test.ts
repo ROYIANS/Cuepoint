@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { streamChatCompletions } from '@/lib/ai/chatStream';
-import { streamResponses } from '@/lib/ai/responsesStream';
-import { historicalToolSummary } from '@/lib/agent/referenceEvidence';
+import { streamChatCompletions } from '@/features/agent/providers/chatStream';
+import { streamResponses } from '@/features/agent/providers/responsesStream';
+import { historicalToolSummary } from '@/features/references/agent/referenceEvidence';
 const input = { connectorDefinitionId: 'openai-compatible', baseUrl: 'https://fixture.test/v1', apiKey: 'fixture', model: 'fixture', messages: [{ role: 'user' as const, content: 'hi' }] };
 describe('provider reported cache usage', () => {
   it.each(['chat', 'responses'] as const)('keeps actual cache tokens separate from estimates on %s', async protocol => {

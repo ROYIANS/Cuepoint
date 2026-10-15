@@ -1,7 +1,7 @@
 import {describe, expect, it, vi} from "vitest";
 import {createElement} from "react";
 import {renderToStaticMarkup} from "react-dom/server";
-import {Switch} from "@/components/ui/switch";
+import {Switch} from "@/ui/switch";
 
 describe("settings switch", () => {
     it.each([false, true])("uses a named native button with the checked state %s", checked => {

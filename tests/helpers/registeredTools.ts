@@ -1,4 +1,4 @@
-import {BUILTIN_TOOLS} from '@/lib/agent/tools';
+import {BUILTIN_TOOLS} from '@/features/agent/runtime/tools';
 
 /** Injection fixtures select the registry's one erased view, retaining family scope. */
 export function registeredTools(family: readonly {name: string}[]) {

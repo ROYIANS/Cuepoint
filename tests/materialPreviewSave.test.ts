@@ -1,6 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
-import type {MaterialPayload} from "@/domain/materials";
+import type {MaterialPayload} from "@/features/library/models/materials";
 
 const host = vi.hoisted(() => ({
     cells: [] as unknown[], cursor: 0,
@@ -22,12 +22,12 @@ vi.mock("react", async original => {
         useEffect: () => undefined,
     };
 });
-vi.mock("@/lib/runtimeSave", async original => ({...await original<typeof import("@/lib/runtimeSave")>(), downloadBlob: host.save}));
-vi.mock("@/lib/media", async original => ({...await original<typeof import("@/lib/media")>(), useBinaryPreview: (_binary: unknown, enabled: boolean) => enabled ? {status: "ready", url: "blob:original-preview", onError: vi.fn()} : {status: "empty"}}));
+vi.mock("@/platform/runtime/runtimeSave", async original => ({...await original<typeof import("@/platform/runtime/runtimeSave")>(), downloadBlob: host.save}));
+vi.mock("@/features/library/services/media", async original => ({...await original<typeof import("@/features/library/services/media")>(), useBinaryPreview: (_binary: unknown, enabled: boolean) => enabled ? {status: "ready", url: "blob:original-preview", onError: vi.fn()} : {status: "empty"}}));
 vi.mock("sonner", () => ({toast: {success: host.success, info: host.info, error: host.error, warning: host.warning}}));
 
-import {MaterialPreview} from "@/components/studio/materials/MaterialPreview";
-import {Button} from "@/components/ui/button";
+import {MaterialPreview} from "@/features/library/ui/materials/MaterialPreview";
+import {Button} from "@/ui/button";
 
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(value: unknown): Node[] {

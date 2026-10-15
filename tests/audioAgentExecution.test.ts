@@ -1,15 +1,15 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import {createAudioMusicProject, createProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
-import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import { executeChatRun } from "@/lib/agent/runChat";
-import { getOfferedToolNames, MAX_LOADED_TOOLS } from "@/lib/agent/toolLoading";
-import { getTaskContext } from "@/lib/agent/taskContext";
-import { SMART_EXECUTION_INSTRUCTIONS } from "@/lib/agent/skills";
-import type { AgentRun, AgentWireToolCall } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import {createAudioMusicProject, createProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
+import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import { executeChatRun } from "@/features/agent/runtime/runChat";
+import { getOfferedToolNames, MAX_LOADED_TOOLS } from "@/features/agent/runtime/toolLoading";
+import { getTaskContext } from "@/features/agent/runtime/taskContext";
+import { SMART_EXECUTION_INSTRUCTIONS } from "@/features/agent/runtime/skills";
+import type { AgentRun, AgentWireToolCall } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = { id: "execution-chat", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "chat-secret", updatedAt: "2026-09-22" };
 const skills = ["workspace", "planning", "audio-production", "music-creation"];

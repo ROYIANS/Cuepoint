@@ -1,11 +1,11 @@
 import {describe,expect,it,vi} from "vitest";
 import {createNativeProbe} from "./helpers/nativeProductProbe";
-import {createProject} from "@/db/projects";
-import {addShot} from "@/db/shots";
-import {prepareGenerationBatch} from "@/db/agentGenerationBatches";
-import {submitAgentGeneration} from "@/lib/agent/generationRuntime";
-import {AtomicToolRollbackError} from "@/db/agentTools";
-import {UnknownCommitError} from "@/lib/storage/errors";
+import {createProject} from "@/features/projects/commands/projects";
+import {addShot} from "@/features/video/commands/shots";
+import {prepareGenerationBatch} from "@/features/agent/commands/agentGenerationBatches";
+import {submitAgentGeneration} from "@/features/video/agent/generationRuntime";
+import {AtomicToolRollbackError} from "@/features/agent/commands/agentTools";
+import {UnknownCommitError} from "@/platform/storage/errors";
 
 describe("actual native local preparation certainty",()=> {
     it.each(["batch","claim"] as const)("retains %s COMMIT uncertainty and never begins a paid POST",async scenario=> {

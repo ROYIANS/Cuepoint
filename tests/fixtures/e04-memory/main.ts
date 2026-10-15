@@ -1,12 +1,12 @@
 import Dexie from "dexie";
-import { db } from "@/db/database";
-import { createProject } from "@/db/projects";
+import { db } from "@/platform/product/store";
+import { createProject } from "@/features/projects/commands/projects";
 import {
   createProjectMemory, deleteProjectMemory, MemoryConflictError,
   replaceProjectMemory, setProjectMemoryStatus, updateProjectMemory,
-} from "@/db/projectMemories";
-import type { MemoryInput, ProjectMemory, ProjectMemoryVersion } from "@/domain/projectMemory";
-import type { Project } from "@/domain/types";
+} from "@/features/memory/commands/projectMemories";
+import type { MemoryInput, ProjectMemory, ProjectMemoryVersion } from "@/features/memory/models/projectMemory";
+import type {Project} from "@/features/projects/models/project";
 
 const input: MemoryInput = {
   category: "convention", title: "Memory", topicKey: "visual",

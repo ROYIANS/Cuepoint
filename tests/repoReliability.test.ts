@@ -1,17 +1,18 @@
-import {createBrowserProductStore} from "@/lib/storage/browser";
-import {browserDatabase} from "@/lib/storage/browserDatabase";
+import {createBrowserProductStore} from "@/platform/storage/browser";
+import {browserDatabase} from "@/platform/storage/browserDatabase";
 import {installStoreHook} from "./helpers/storeBackendFaults";
 import Dexie from "dexie";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle, patchCharacter, patchProp, patchScene, patchStyle, setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "@/db/assets";
-import {addEpisode, addStoryBeat, deleteEpisode, deleteStoryBeat, updateEpisode, updateEpisodeDraft, updateEpisodeShotFilters} from "@/db/episodes";
-import {addShot, patchShot, setShotSlot} from "@/db/shots";
-import {createProject, patchProjectOutput, renameProject, updateProject, updateShotSettings, updateWorldSetting} from "@/db/projects";
-import {deleteMediaIfOrphan} from "@/db/media";
-import {touchProject} from "@/db/productionShared";
-import { emptySlot } from "@/domain/slot";
-import { getEpisodeShotFilters, type GenerationSlot } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import {addCharacter, addProp, addScene, addStyle, patchCharacter, patchProp, patchScene, patchStyle, setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "@/features/library/commands/assets";
+import {addEpisode, addStoryBeat, deleteEpisode, deleteStoryBeat, updateEpisode, updateEpisodeDraft, updateEpisodeShotFilters} from "@/features/video/commands/episodes";
+import {addShot, patchShot, setShotSlot} from "@/features/video/commands/shots";
+import {createProject, patchProjectOutput, renameProject, updateProject, updateShotSettings, updateWorldSetting} from "@/features/projects/commands/projects";
+import {deleteMediaIfOrphan} from "@/features/library/commands/media";
+import {touchProject} from "@/features/projects/commands/ownership";
+import { emptySlot } from "@/features/library/models/slot";
+import {getEpisodeShotFilters} from "@/features/video/models/episodes";
+import {type GenerationSlot} from "@/features/library/models/slots";
 
 const slot = (prompt: string): GenerationSlot => ({ ...emptySlot(), prompt });
 

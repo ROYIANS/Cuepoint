@@ -1,0 +1,165 @@
+import type {ProductStore} from "../../../platform/storage/types";
+import {resolveConnector} from "../../settings/commands/connectors";
+import {db as productDb} from '../../../platform/product/store';
+import {
+    assertBatchDispatch,
+    claimBatchItem,
+    controlGenerationBatch,
+    ownedGenerationBatch,
+    readGenerationBatch,
+    settleGenerationBatch
+} from '../../agent/commands/agentGenerationBatches';
+import {updateGenerationJob} from '../../agent/commands/agentGeneration';
+import {BATCH_CONCURRENCY} from '../../agent/models/agentGenerationBatch';
+import {type GenerationRuntimeOptions, monitorAgentGeneration, submitClaimedGeneration} from './generationRuntime';
+import {type ThreadLockManager, withThreadRunLock} from '../../agent/runtime/runOwnership';
+
+interface LocalWorker {
+    batchId: string;
+    controller: AbortController;
+    done: Promise<void>;
+    actions: Set<Promise<unknown>>;
+    closing: boolean;
+    ownsLock: boolean
+}
+
+const workers = new Map<string, LocalWorker>();
+
+export async function batchUserAction<T>(threadId: string, action: () => Promise<T>, locks?: ThreadLockManager): Promise<T> {
+    const worker = workers.get(threadId);
+    // The current local worker already owns the Web Lock. Keep it held until UI writes settle.
+    if (worker && worker.ownsLock && !worker.closing) {
+        const pending = Promise.resolve().then(action);
+        worker.actions.add(pending);
+        try {
+            return await pending;
+        } finally {
+            worker.actions.delete(pending);
+        }
+    }
+    if (worker) await worker.done;
+    return withThreadRunLock(threadId, action, locks);
+}
+
+
+export async function startGenerationBatch(id: string, threadId: string, options: GenerationRuntimeOptions & {
+    locks?: ThreadLockManager;
+    signal?: AbortSignal
+} = {}) {
+    if (workers.has(threadId)) throw new Error('此对话已有批次正在执行');
+    const controller = new AbortController();
+    const abort = () => controller.abort();
+    options.signal?.addEventListener('abort', abort, {once: true});
+    if (options.signal?.aborted) controller.abort();
+    const worker: LocalWorker = {
+        batchId: id,
+        controller,
+        done: Promise.resolve(),
+        actions: new Set(),
+        closing: false,
+        ownsLock: false
+    };
+    workers.set(threadId, worker);
+    worker.done = withThreadRunLock(threadId, async () => {
+        worker.ownsLock = true;
+        const context = {threadId, signal: controller.signal};
+        await ownedGenerationBatch(id, threadId);
+        await controlGenerationBatch(id, threadId, 'run');
+        // Storage may be the reason execution stopped. Do not rely solely on a
+        // successful pause write to prevent another paid request in this process.
+        let dispatchPaused = false;
+        const pause = async (reason: string, store?: ProductStore) => {
+            const db = store ?? productDb;
+            dispatchPaused = true;
+            await controlGenerationBatch(id, threadId, 'pause', reason, db);
+        };
+        const settleWorkers = async (execute: () => Promise<void>) => {
+            const outcomes = await Promise.allSettled(Array.from({length: BATCH_CONCURRENCY}, execute));
+            const failed = outcomes.find(outcome => outcome.status === 'rejected');
+            if (failed?.status === 'rejected') throw failed.reason;
+        };
+        try {
+            // Retrieval comes first; a saved accepted job is never submitted a second time.
+            const saved = await readGenerationBatch(id, threadId);
+            const recover = saved.jobs.filter(j => !['downloaded', 'applied', 'conflict', 'failed', 'unknown'].includes(j.status));
+            let recoveryIndex = 0;
+            const retrieve = async (store?: ProductStore) => {
+                const db = store ?? productDb;
+                while (!controller.signal.aborted) {
+                    const job = recover[recoveryIndex++];
+                    if (!job) return;
+                    try {
+                        await monitorAgentGeneration(job.id, context, options, db);
+                    } catch (error) {
+                        await pause(error instanceof Error ? error.message : '查询已暂停', db);
+                    }
+                }
+            };
+            await settleWorkers(retrieve);
+            const items = (await readGenerationBatch(id, threadId)).items;
+            let index = 0;
+            const dispatch = async (store?: ProductStore) => {
+                const db = store ?? productDb;
+                while (!controller.signal.aborted && !dispatchPaused) {
+                    const item = items[index++];
+                    if (!item) return;
+                    if (item.state !== 'queued') continue;
+                    let job;
+                    let transportEntered = false;
+                    try {
+                        job = await claimBatchItem(id, threadId, item.id, db);
+                        if (!job) continue;
+                        const claimedJob = job;
+                        const config = await resolveConnector(job.connectorId, db);
+                        if (!config?.apiKey.trim() || config.definitionId !== job.provider || config.baseUrl !== job.baseUrl) throw new Error('供应商配置已变化，尚未付费提交');
+                        transportEntered = true;
+                        await submitClaimedGeneration(job, config, context, options, async (db) => {
+                            if (dispatchPaused) throw new Error('本地队列已暂停，尚未付费提交');
+                            await assertBatchDispatch(claimedJob, db);
+                        }, db);
+                    } catch (error) {
+                        try {
+                            const latest = job ? await db.agentGenerationJobs.get(job.id) : undefined;
+                            if (!transportEntered && latest?.status === 'submitting' && !latest.providerTaskId) {
+                                // Only this live stack knows preparation failed before entering shared transport.
+                                await updateGenerationJob(latest.id, {
+                                    status: 'failed',
+                                    error: '本地配置校验失败，尚未付费提交'
+                                }, db);
+                            }
+                            const current = job ? await db.agentGenerationJobs.get(job.id) : undefined;
+                            if (!current || current.status !== 'failed') await pause(error instanceof Error ? error.message : '生成等待已暂停', db);
+                        } catch (storageError) {
+                            dispatchPaused = true;
+                            throw storageError;
+                        }
+                    }
+                }
+            };
+            await settleWorkers(dispatch);
+        } finally {
+            worker.closing = true;
+            await Promise.allSettled([...worker.actions]);
+            await settleGenerationBatch(id, threadId);
+        }
+    }, options.locks).finally(() => {
+        workers.delete(threadId);
+        options.signal?.removeEventListener('abort', abort);
+    });
+    return worker.done;
+}
+
+export async function stopGenerationBatch(id: string, threadId: string, action: 'pause' | 'cancel', locks?: ThreadLockManager) {
+    const worker = workers.get(threadId);
+    if (worker) {
+        if (worker.batchId !== id) throw new Error('正在执行另一个批次');
+        worker.controller.abort();
+        await worker.done.catch(() => undefined);
+    }
+    await batchUserAction(threadId, () => controlGenerationBatch(id, threadId, action), locks);
+}
+
+/** Page teardown stops local waits only; persisted jobs remain available for explicit continuation. */
+export function pauseThreadGeneration(threadId: string) {
+    workers.get(threadId)?.controller.abort();
+}

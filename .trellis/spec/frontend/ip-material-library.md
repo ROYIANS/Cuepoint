@@ -6,13 +6,13 @@ Multiple long-lived IP identities organize video/image/copy/podcast/music projec
 
 ## 2. Signatures
 
-- Dexie v22 adds `ipProfiles`, `projectIpLinks`, `libraryMaterials`, `materialVersions`, `materialUses`, `materialEvents`; domain types in `packages/studio/src/domain/materials.ts`.
-- `createIpProfile(input)`, `updateIpProfile(id, patch, expectedRevision)`, `setIpArchived(id, archived)`, `bindProjectIp(projectId, ipId|null)` in `packages/studio/src/db/ipProfiles.ts`.
+- Dexie v22 adds `ipProfiles`, `projectIpLinks`, `libraryMaterials`, `materialVersions`, `materialUses`, `materialEvents`; domain types in `packages/studio/src/features/library/models/materials.ts`.
+- `createIpProfile(input)`, `updateIpProfile(id, patch, expectedRevision)`, `setIpArchived(id, archived)`, `bindProjectIp(projectId, ipId|null)` in `packages/studio/src/features/library/commands/ipProfiles.ts`.
 - `createProject(name, mode, aspectPreset, ipId?)` validates optional binding atomically.
 - `createFileMaterial(file, scope)`, `promoteLegacyMaterial(kind, entityId, scope)`, `promoteMaterial(id, scope)` create independent snapshots.
 - `addFileMaterialVersion(id, file, expectedRevision)`, `refreshSettingMaterial(id, expectedRevision)`, `updateMaterialMetadata(id, patch, expectedRevision)` preserve prior payloads.
-- `adoptMaterialInProject(id, projectId)`, `updateMaterialUse(useId)`, `setMaterialArchived(id, archived)`, `deleteMaterial(id)` in `packages/studio/src/db/materials.ts`.
-- `releaseMaterialUse(useId)` in `packages/studio/src/db/assetReuse.ts` shares production reference locks.
+- `adoptMaterialInProject(id, projectId)`, `updateMaterialUse(useId)`, `setMaterialArchived(id, archived)`, `deleteMaterial(id)` in `packages/studio/src/features/library/commands/materials.ts`.
+- `releaseMaterialUse(useId)` in `packages/studio/src/features/library/commands/assetReuse.ts` shares production reference locks.
 
 ## 3. Contracts
 

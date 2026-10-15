@@ -18,8 +18,8 @@ try {
     parserServer = await createServer({configFile: false, root: fileURLToPath(new URL('../', import.meta.url)),
         resolve: {alias: {'@': fileURLToPath(new URL('../packages/studio/src', import.meta.url))}},
         server: {middlewareMode: true, hmr: false, watch: null}, optimizeDeps: {noDiscovery: true}});
-    const {streamResponses, toResponseInput} = await parserServer.ssrLoadModule('/packages/studio/src/lib/ai/responsesStream.ts');
-    const {uploadApimartImage, submitApimartImageGeneration, getApimartTask} = await parserServer.ssrLoadModule('/packages/studio/src/lib/ai/apimart.ts');
+    const {streamResponses, toResponseInput} = await parserServer.ssrLoadModule('/packages/studio/src/features/agent/providers/responsesStream.ts');
+    const {uploadApimartImage, submitApimartImageGeneration, getApimartTask} = await parserServer.ssrLoadModule('/packages/studio/src/features/video/providers/apimart.ts');
     const responsesInput = (messages, tools = []) => ({baseUrl: `${fixture.origin}/v1`, apiKey: 'synthetic-local-only',
         connectorDefinitionId: 'openai-compatible', model: 'gpt-5.6-luna', messages, tools});
     await check('no CORS/model directory', async () => {

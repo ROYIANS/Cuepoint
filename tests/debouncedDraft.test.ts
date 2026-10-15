@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { DebouncedDraftController, type DraftSaveStatus } from "@/lib/debouncedDraft";
+import { DebouncedDraftController, type DraftSaveStatus } from "@/platform/product/drafts";
 
 describe("DebouncedDraftController", () => {
   it("flushes the latest draft on dispose", async () => {
@@ -106,7 +106,7 @@ describe("scoped backup draft barrier", () => {
   });
 
   it("flushes only the requested scope and waits for all fields even if one fails", async () => {
-    const { registerPendingDraft, flushPendingDrafts } = await import("@/lib/debouncedDraft");
+    const { registerPendingDraft, flushPendingDrafts } = await import("@/platform/product/drafts");
     const failure = vi.fn().mockRejectedValueOnce(new Error("quota")).mockResolvedValue(undefined);
     const other = vi.fn(async () => undefined);
     const good = vi.fn(async () => undefined);
@@ -119,7 +119,7 @@ describe("scoped backup draft barrier", () => {
   });
 
   it("keeps failed detached editors in the barrier used by project-gallery backup", async () => {
-    const { registerPendingDraft, flushPendingDrafts } = await import("@/lib/debouncedDraft");
+    const { registerPendingDraft, flushPendingDrafts } = await import("@/platform/product/drafts");
     const persist = vi.fn().mockRejectedValue(new Error("quota"));
     const controller = new DebouncedDraftController("", persist, () => undefined);
     controller.change("last edit before navigation");

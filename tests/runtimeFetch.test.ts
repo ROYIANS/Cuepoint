@@ -1,7 +1,7 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {createRuntimeFetch, type RuntimeFetchServices} from "@/lib/runtimeFetch";
-import {authorizeRuntimeHttp, remoteHttpUrl} from "@/lib/runtimeHttpPolicy";
+import {db} from "@/platform/product/store";
+import {createRuntimeFetch, type RuntimeFetchServices} from "@/platform/runtime/runtimeFetch";
+import {authorizeRuntimeHttp, remoteHttpUrl} from "@/platform/product/httpPolicy";
 
 afterEach(() => vi.restoreAllMocks());
 

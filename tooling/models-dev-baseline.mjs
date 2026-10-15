@@ -1,11 +1,11 @@
 import {readFileSync, writeFileSync} from "node:fs";
 import {dirname, join, resolve} from "node:path";
 import {fileURLToPath, pathToFileURL} from "node:url";
-import {projectBaseline as projectShared} from "../packages/studio/src/lib/ai/modelCatalog/projection.mjs";
+import {projectBaseline as projectShared} from "../packages/studio/src/features/settings/modelCatalog/projection.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const SCOPE_PATH = join(root, "packages/studio/src/lib/ai/modelCatalog/scope.json");
-export const BASELINE_PATH = join(root, "packages/studio/src/lib/ai/modelCatalog/baseline.generated.json");
+const SCOPE_PATH = join(root, "packages/studio/src/features/settings/modelCatalog/scope.json");
+export const BASELINE_PATH = join(root, "packages/studio/src/features/settings/modelCatalog/baseline.generated.json");
 export const BASELINE_FORMAT = 1;
 
 /** Pure projection of a Models.dev snapshot into the committed baseline (no wall clock). */

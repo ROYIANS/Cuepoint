@@ -1,15 +1,16 @@
 import Dexie from "dexie";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addShot, patchShot, setShotSlot} from "@/db/shots";
-import {addStoryBeat, deleteStoryBeat, firstEpisode, restoreStoryBeat} from "@/db/episodes";
-import {createProject} from "@/db/projects";
-import {emptyProject, emptyShot} from "@/db/productionRecords";
-import {putMedia} from "@/db/media";
-import {upsertConnector} from "@/db/connectors";
-import { emptySlot } from "@/domain/slot";
-import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
-import { validShotMediaId } from "@/lib/shotMedia";
+import { db } from "@/platform/product/store";
+import {addShot, patchShot, setShotSlot} from "@/features/video/commands/shots";
+import {addStoryBeat, deleteStoryBeat, firstEpisode, restoreStoryBeat} from "@/features/video/commands/episodes";
+import {createProject} from "@/features/projects/commands/projects";
+import {emptyProject} from "@/features/projects/models/newProject";
+import {emptyShot} from "@/features/video/models/newRecords";
+import {putMedia} from "@/features/library/commands/media";
+import {upsertConnector} from "@/features/settings/commands/connectors";
+import { emptySlot } from "@/features/library/models/slot";
+import { exportProjectZip, importProjectZip } from "@/app/workflows/packages/projectPackage";
+import { validShotMediaId } from "@/features/video/queries/shotMedia";
 
 // Regression coverage promoted from the full-project audit reproducers.
 describe("full-project audit: data integrity", () => {

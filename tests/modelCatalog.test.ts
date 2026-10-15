@@ -1,16 +1,16 @@
 import {readFileSync} from "node:fs";
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {putDeviceSetting} from "@/db/deviceSettings";
-import {estimateRunCost} from "@/lib/ai/modelCatalog/cost";
-import {connectorProviderId} from "@/lib/ai/modelCatalog/connectorProviders";
-import {matchModel} from "@/lib/ai/modelCatalog/match";
+import {db} from "@/platform/product/store";
+import {putDeviceSetting} from "@/features/settings/commands/deviceSettings";
+import {estimateRunCost} from "@/features/settings/modelCatalog/cost";
+import {connectorProviderId} from "@/features/settings/modelCatalog/connectorProviders";
+import {matchModel} from "@/features/settings/modelCatalog/match";
 import {
     getModelCatalog, initModelCatalog, lookupModel, MODEL_CATALOG_KEY, resetModelCatalogForTests, subscribeModelCatalog,
-} from "@/lib/ai/modelCatalog/store";
-import type {CatalogEntry, CatalogSnapshot} from "@/lib/ai/modelCatalog/types";
-import {parseBaselineSnapshot, parseSyncedSnapshot} from "@/lib/ai/modelCatalog/validate";
-import baseline from "@/lib/ai/modelCatalog/baseline.generated.json";
+} from "@/features/settings/modelCatalog/store";
+import type {CatalogEntry, CatalogSnapshot} from "@/features/settings/modelCatalog/types";
+import {parseBaselineSnapshot, parseSyncedSnapshot} from "@/features/settings/modelCatalog/validate";
+import baseline from "@/features/settings/modelCatalog/baseline.generated.json";
 // @ts-expect-error plain ESM script without declarations
 import {BASELINE_PATH, compareBaseline, projectBaseline} from "../tooling/models-dev-baseline.mjs";
 
@@ -40,7 +40,7 @@ describe("committed baseline", () => {
     it("regenerates identically from the installed package; only real drift fails verify", async () => {
         const snapshot = await import("@opencode-ai/models/snapshot");
         const pkg = JSON.parse(readFileSync("node_modules/@opencode-ai/models/package.json", "utf8"));
-        const scope = JSON.parse(readFileSync("packages/studio/src/lib/ai/modelCatalog/scope.json", "utf8"));
+        const scope = JSON.parse(readFileSync("packages/studio/src/features/settings/modelCatalog/scope.json", "utf8"));
         const fresh = projectBaseline({providers: snapshot.providers, snapshotGeneratedAt: snapshot.generatedAt, packageVersion: pkg.version}, scope);
         const committed = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
         expect(compareBaseline(committed, fresh)).toEqual([]);

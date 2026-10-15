@@ -1,12 +1,12 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
-import {StorageError} from "@/lib/storage/errors";
+import {StorageError} from "@/platform/storage/errors";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import { addAudioClip, addAudioSegment, patchAudioSegment } from "@/db/audio";
-import { deleteMusicWork } from "@/db/music";
-import { prepareAudioGeneration, readAudioJobSummary, refreshAudioGeneration, submitAudioGeneration } from "@/lib/audioGeneration/runtime";
-import type { ConnectorConfig } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import { addAudioClip, addAudioSegment, patchAudioSegment } from "@/features/audio/commands/audio";
+import { deleteMusicWork } from "@/features/music/commands/music";
+import { prepareAudioGeneration, readAudioJobSummary, refreshAudioGeneration, submitAudioGeneration } from "@/features/audio/generation/runtime";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 async function fixture(kind: "audio" | "music" = "music", decodeFails = false) {
   const project = await createAudioMusicProject("声音核验", kind);

@@ -1,14 +1,14 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import Dexie from "dexie";
 import {isValidElement} from "react";
-import {ContextUsageTrigger, ContextUsagePanel} from "@/components/agent/ContextUsagePanel";
-import {MemoryContextDetails} from "@/components/agent/MemoryContextDetails";
+import {ContextUsageTrigger, ContextUsagePanel} from "@/features/agent/ui/ContextUsagePanel";
+import {MemoryContextDetails} from "@/features/agent/ui/MemoryContextDetails";
 
 const host = vi.hoisted(() => ({result: undefined as unknown, queries: [] as Array<() => Promise<unknown>>}));
 vi.mock("react", async () => ({...await vi.importActual<typeof import("react")>("react"),
     useMemo: (compute: () => unknown) => compute(), useState: (initial: unknown) => [initial, vi.fn()],
 }));
-vi.mock("@/lib/storage/hooks", () => ({useProductQuery: (query: (tx: typeof db) => Promise<unknown>) => {
+vi.mock("@/platform/product/queries", () => ({useProductQuery: (query: (tx: typeof db) => Promise<unknown>) => {
     host.queries.push(() => query(db)); return host.result;
 }}));
 function nodes(tree: unknown): unknown[] {
@@ -16,20 +16,20 @@ function nodes(tree: unknown): unknown[] {
     if (!isValidElement<{children?: unknown}>(tree)) return [];
     return [tree, ...nodes(tree.props.children)];
 }
-import {db} from "@/db/database";
-import {browserDatabase} from "@/lib/storage/browserDatabase";
+import {db} from "@/platform/product/store";
+import {browserDatabase} from "@/platform/storage/browserDatabase";
 import {failStoreTableOnce} from "./helpers/storeFaults";
-import {createProject} from "@/db/projects";
-import {createChatThread, appendChatMessage} from "@/db/chat";
-import {beginAgentRun} from "@/db/agentRuns";
-import {createAgentTaskForThread} from "@/db/agentTasks";
-import {getGeneralAgentConfig} from "@/db/agentSettings";
-import {GENERAL_AGENT_ID} from "@/domain/agent";
-import {contextPreviewIdentity, contextPreviewTables, readAgentContextPreview, type ContextPreviewInput} from "@/db/agentContextPreview";
-import {getTaskContext} from "@/lib/agent/taskContext";
-import {getMemorySelection} from "@/db/memoryRetrieval";
-import {selectReferenceContext, referenceSelectionCharacterBudget} from "@/lib/agent/referenceContext";
-import {DEFAULT_CONTEXT_POLICY} from "@/lib/agent/contextPolicy";
+import {createProject} from "@/features/projects/commands/projects";
+import {createChatThread, appendChatMessage} from "@/features/agent/commands/chat";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {createAgentTaskForThread} from "@/features/agent/commands/agentTasks";
+import {getGeneralAgentConfig} from "@/features/agent/commands/agentSettings";
+import {GENERAL_AGENT_ID} from "@/features/agent/models/agent";
+import {contextPreviewIdentity, contextPreviewTables, readAgentContextPreview, type ContextPreviewInput} from "@/features/agent/commands/agentContextPreview";
+import {getTaskContext} from "@/features/agent/runtime/taskContext";
+import {getMemorySelection} from "@/features/memory/queries/memoryRetrieval";
+import {selectReferenceContext, referenceSelectionCharacterBudget} from "@/features/references/agent/referenceContext";
+import {DEFAULT_CONTEXT_POLICY} from "@/features/agent/runtime/contextPolicy";
 
 const connector = {id: "cx", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture", updatedAt: "2026-10-08"};
 const input: ContextPreviewInput = {draft: "test preview", model: "unknown", attachments: [], metadata: {source: "provider", vision: true}};
@@ -81,7 +81,7 @@ describe("coherent production context preview", () => {
             const facts = ready(await readAgentContextPreview(request));
             expect(facts.taskContext?.projectContext?.projectId).toBe(project.id);
             expect(facts.memorySelection?.selectedCount).toBe(0);
-            expect(facts.taskContext?.projectContext).toEqual(await import("@/lib/agent/projectContext").then(module => module.getProjectContext(project.id)));
+            expect(facts.taskContext?.projectContext).toEqual(await import("@/features/agent/runtime/projectContext").then(module => module.getProjectContext(project.id)));
             // Check stores and shared native transaction before unrelated comparison reads.
             const previewTransactions = [...transactions].filter(tx => tx.storeNames.includes("agentRuns"));
             expect(previewTransactions.length).toBeGreaterThan(0);

@@ -1,17 +1,16 @@
-import {readBinaryBlob} from "@/lib/storage/binary";
+import {readBinaryBlob} from "@/platform/storage/binary";
 import {describe, expect, it} from "vitest";
 import JSZip from "jszip";
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {
-    addAudioChapter, addAudioClip, addAudioExport, addAudioSegment, addAudioTake, addAudioTrack,
-    deleteAudioChapter, getAudioProjectSnapshot, patchAudioClip
-} from "@/db/audio";
-import {prepareAudioGenerationJob} from "@/db/audioGeneration";
-import type {AudioExport, AudioProjectSnapshot} from "@/domain/audio";
-import {buildAudioSchedule, type AudioSchedule} from "@/lib/audio/schedule";
-import {createAudioExportFingerprint, getAudioExportFreshness, remapAudioExportFingerprint} from "@/lib/audio/fingerprint";
-import {exportProjectZip, importProjectZip} from "@/lib/projectPackage";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {addAudioChapter, addAudioClip, addAudioExport, addAudioSegment, addAudioTake, addAudioTrack,
+    deleteAudioChapter,  patchAudioClip} from "@/features/audio/commands/audio";
+import {getAudioProjectSnapshot} from "@/features/audio/queries/snapshot";
+import {prepareAudioGenerationJob} from "@/features/audio/commands/generation";
+import type {AudioExport, AudioProjectSnapshot} from "@/features/audio/models/audio";
+import {buildAudioSchedule, type AudioSchedule} from "@/features/audio/engine/schedule";
+import {createAudioExportFingerprint, getAudioExportFreshness, remapAudioExportFingerprint} from "@/features/audio/engine/fingerprint";
+import {exportProjectZip, importProjectZip} from "@/app/workflows/packages/projectPackage";
 
 type Format = "v0" | "v1";
 const fingerprint = (schedule: AudioSchedule, format: Format) => format === "v0"

@@ -1,7 +1,7 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
-import type {AudioProjectSnapshot} from "@/domain/audio";
-import type {MusicWork} from "@/domain/music";
+import type {AudioProjectSnapshot} from "@/features/audio/models/audio";
+import type {MusicWork} from "@/features/music/models/music";
 
 type HookHost = {cells: unknown[]; cursor: number};
 const host = vi.hoisted(() => ({
@@ -28,22 +28,23 @@ vi.mock("react", async original => {
         useEffect: () => undefined,
     };
 });
-vi.mock("@/lib/storage/hooks", () => ({useProductQuery: (query: () => unknown) =>
+vi.mock("@/platform/product/queries", () => ({useProductQuery: (query: () => unknown) =>
     query.toString().includes("musicDrafts") ? host.musicData : []}));
-vi.mock("@/lib/media", async original => ({...await original<typeof import("@/lib/media")>(), useMedia: () => undefined}));
-vi.mock("@/lib/audio/exportMix", () => ({exportAudioMix: host.mix}));
+vi.mock("@/features/library/services/media", async original => ({...await original<typeof import("@/features/library/services/media")>(), useMedia: () => undefined}));
+vi.mock("@/features/audio/engine/exportMix", () => ({exportAudioMix: host.mix}));
 vi.mock("@tauri-apps/api/core", () => ({invoke: host.invoke}));
 vi.mock("sonner", () => ({toast: {warning: host.warning, error: host.error}}));
 
-import {AudioTimeline} from "@/components/audio/AudioTimeline";
-import {AudioExports} from "@/components/audio/AudioExports";
-import {AudioPlayer} from "@/components/audioMusic/shared";
-import {MusicWorkspacePage} from "@/components/music/MusicWorkspacePage";
-import {Button} from "@/components/ui/button";
-import {ContextPanel} from "@/components/ui/context-panel";
-import {db} from "@/db/database";
-import {addAudioClip, addAudioTake, getAudioProjectSnapshot} from "@/db/audio";
-import {createAudioMusicProject} from "@/db/projects";
+import {AudioTimeline} from "@/features/audio/ui/AudioTimeline";
+import {AudioExports} from "@/features/audio/ui/AudioExports";
+import {AudioPlayer} from "@/features/audio/presentation/shared";
+import {MusicWorkspacePage} from "@/features/music/ui/MusicWorkspacePage";
+import {Button} from "@/ui/button";
+import {ContextPanel} from "@/app/layout/context-panel";
+import {db} from "@/platform/product/store";
+import {addAudioClip, addAudioTake} from "@/features/audio/commands/audio";
+import {getAudioProjectSnapshot} from "@/features/audio/queries/snapshot";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
 
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(value: unknown): Node[] {

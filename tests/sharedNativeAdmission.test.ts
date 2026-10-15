@@ -1,6 +1,6 @@
 import {describe,expect,it,vi} from "vitest";
 import {createNativeProbe} from "./helpers/nativeProductProbe";
-import type {StoreTx} from "@/lib/storage/types";
+import type {StoreTx} from "@/platform/storage/types";
 
 describe("native root operation admission",()=> {
     it("bounds repeated grids of seventy simultaneous material-version snapshots below the native context ceiling",async ()=> {

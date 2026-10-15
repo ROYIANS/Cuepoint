@@ -1,20 +1,20 @@
 import {registeredTools} from "./helpers/registeredTools";
 import { describe, expect, it, vi } from "vitest";
-import { refreshAudioGeneration } from "@/lib/audioGeneration/runtime";
-import { db } from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import { createAgentTask, setAgentTaskLifecycle } from "@/db/agentTasks";
-import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { addAudioClip, addAudioSegment, addAudioTake } from "@/db/audio";
-import { addMusicWork } from "@/db/music";
-import { listTaskGenerationSources, listTaskGenerationSourceInventory, taskGenerationEvidenceId, taskGenerationSource, validateTaskSources, writeTaskRecord } from "@/db/agentTaskRecords";
-import { confirmWrapup, createManualWrapup, getTaskWrapupState, publishTaskWrapup, saveWrapup, startTaskWrapup } from "@/db/agentTaskWrapups";
-import { defaultMusicSettings } from "@/domain/music";
-import type { AudioGenerationJob } from "@/domain/audioGeneration";
-import type { AgentToolCall } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
-import { TASK_TOOLS as TASK_TOOLS_DEFINITIONS } from "@/lib/agent/taskTools";
-import {taskAudioToolSource} from "@/db/taskAudioGenerationEvidence";
+import { refreshAudioGeneration } from "@/features/audio/generation/runtime";
+import { db } from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import { createAgentTask, setAgentTaskLifecycle } from "@/features/agent/commands/agentTasks";
+import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
+import { addAudioClip, addAudioSegment, addAudioTake } from "@/features/audio/commands/audio";
+import { addMusicWork } from "@/features/music/commands/music";
+import { listTaskGenerationSources, listTaskGenerationSourceInventory, taskGenerationEvidenceId, taskGenerationSource, validateTaskSources, writeTaskRecord } from "@/features/agent/commands/agentTaskRecords";
+import { confirmWrapup, createManualWrapup, getTaskWrapupState, publishTaskWrapup, saveWrapup, startTaskWrapup } from "@/features/agent/commands/agentTaskWrapups";
+import { defaultMusicSettings } from "@/features/music/models/music";
+import type { AudioGenerationJob } from "@/features/audio/models/audioGeneration";
+import type { AgentToolCall } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { TASK_TOOLS as TASK_TOOLS_DEFINITIONS } from "@/features/agent/runtime/taskTools";
+import {taskAudioToolSource} from "@/features/audio/agent/taskEvidence";
 const TASK_TOOLS = registeredTools(TASK_TOOLS_DEFINITIONS);
 
 

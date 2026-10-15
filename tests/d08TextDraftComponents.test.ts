@@ -39,18 +39,18 @@ vi.mock("react", async original => {
         },
     };
 });
-import {TextDraftField} from "@/components/drafts/TextDraftField";
-import {ShotTextField} from "@/components/shots/ShotTextField";
-import {BeatTextField} from "@/components/story/BeatTextField";
-import {useTextDraftRetention} from "@/lib/useTextDraftRetention";
-import {flushPendingDrafts} from "@/lib/debouncedDraft";
-import {DraftStatus} from "@/components/ui/draft-status";
-import {Input} from "@/components/ui/input";
-import {DraftConflictError} from "@/lib/draftConflict";
-import {createProject} from "@/db/projects";
-import {addStoryBeat, firstEpisode, patchStoryBeat} from "@/db/episodes";
-import {addShot, patchShot} from "@/db/shots";
-import {db} from "@/db/database";
+import {TextDraftField} from "@/app/drafts/TextDraftField";
+import {ShotTextField} from "@/features/video/ui/ShotTextField";
+import {BeatTextField} from "@/features/video/ui/BeatTextField";
+import {useTextDraftRetention} from "@/app/drafts/useTextDraftRetention";
+import {flushPendingDrafts} from "@/platform/product/drafts";
+import {DraftStatus} from "@/app/drafts/draft-status";
+import {Input} from "@/ui/input";
+import {DraftConflictError} from "@/platform/product/draftConflict";
+import {createProject} from "@/features/projects/commands/projects";
+import {addStoryBeat, firstEpisode, patchStoryBeat} from "@/features/video/commands/episodes";
+import {addShot, patchShot} from "@/features/video/commands/shots";
+import {db} from "@/platform/product/store";
 
 type Node = ReactElement<Record<string, unknown>>;
 const hosts: Host[] = [];

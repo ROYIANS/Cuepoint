@@ -1,17 +1,17 @@
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {addCharacter} from "@/db/assets";
-import {addShot} from "@/db/shots";
-import {createProject} from "@/db/projects";
-import {createAgentTask} from "@/db/agentTasks";
-import {beginAgentRun, finishAgentRun} from "@/db/agentRuns";
-import {listTaskGenerationSources, saveTaskRecord, taskGenerationSource, writeTaskRecord} from "@/db/agentTaskRecords";
-import {cancelTaskWrapup, getTaskWrapupState, publishTaskWrapup, startTaskWrapup} from "@/db/agentTaskWrapups";
-import {validateWrapupContent} from "@/lib/agent/wrapupSchema";
-import type {AgentToolCall, AgentToolCallStatus} from "@/domain/agent";
-import type {AgentGenerationJob, AgentGenerationStatus} from "@/domain/agentGeneration";
-import type {GenerationBatch} from "@/domain/agentGenerationBatch";
-import type {MediaKind} from "@/domain/types";
+import {db} from "@/platform/product/store";
+import {addCharacter} from "@/features/library/commands/assets";
+import {addShot} from "@/features/video/commands/shots";
+import {createProject} from "@/features/projects/commands/projects";
+import {createAgentTask} from "@/features/agent/commands/agentTasks";
+import {beginAgentRun, finishAgentRun} from "@/features/agent/commands/agentRuns";
+import {listTaskGenerationSources, saveTaskRecord, taskGenerationSource, writeTaskRecord} from "@/features/agent/commands/agentTaskRecords";
+import {cancelTaskWrapup, getTaskWrapupState, publishTaskWrapup, startTaskWrapup} from "@/features/agent/commands/agentTaskWrapups";
+import {validateWrapupContent} from "@/features/agent/runtime/wrapupSchema";
+import type {AgentToolCall, AgentToolCallStatus} from "@/features/agent/models/agent";
+import type {AgentGenerationJob, AgentGenerationStatus} from "@/features/agent/models/agentGeneration";
+import type {GenerationBatch} from "@/features/agent/models/agentGenerationBatch";
+import type {MediaKind} from "@/features/library/models/slots";
 
 async function fixture(kind: MediaKind = "image", batch = true) {
     const project = await createProject("成果证据测试");

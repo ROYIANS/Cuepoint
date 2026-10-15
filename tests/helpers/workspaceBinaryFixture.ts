@@ -1,9 +1,10 @@
-import {db} from "@/db/database";
-import type {Id, MediaRecord} from "@/domain/types";
-import {isStudioLibrary} from "@/domain/types";
-import {parseShotPictureSlots, slotMediaIds} from "@/domain/slot";
-import {BROWSER_WORKSPACE_ID, mediaWorkspaceRef, type WorkspaceId, type WorkspaceRef} from "@/lib/workspace";
-import {sha256Bytes} from "@/lib/sha256";
+import {db} from "@/platform/product/store";
+import type {Id} from "@/platform/identity";
+import type {MediaRecord} from "@/features/library/models/media";
+import {isStudioLibrary} from "@/features/library/models/ownership";
+import {parseShotPictureSlots, slotMediaIds} from "@/features/library/models/slot";
+import {BROWSER_WORKSPACE_ID, mediaWorkspaceRef, type WorkspaceId, type WorkspaceRef} from "@/features/library/services/workspace";
+import {sha256Bytes} from "@/platform/media/sha256";
 
 interface BinaryOwner {
     table: "media" | "materialVersions";

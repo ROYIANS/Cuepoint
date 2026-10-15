@@ -1,7 +1,7 @@
 import {expect, it} from 'vitest';
-import {BUILTIN_TOOLS} from '@/lib/agent/tools';
+import {BUILTIN_TOOLS} from '@/features/agent/runtime/tools';
 import {BUILTIN_TOOLS as ORIGINAL_TOOLS} from './fixtures/sourceSnapshots/d05/src/lib/agent/tools';
-import {generationSubmitSchema} from '@/lib/agent/generationProfiles';
+import {generationSubmitSchema} from '@/features/video/agent/generationProfiles';
 import {generationSubmitSchema as originalGenerationSchema} from './fixtures/sourceSnapshots/d05/src/lib/agent/generationProfiles';
 import {contextualField} from './helpers/d05BacklogCompatibility';
 

@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import * as productStorage from "@/lib/productStorage";
-import { getVideoWorkspaceRepository, getReferenceVideoWorkspaceRepository } from "@/lib/videoWorkspaceRepository";
-import { DraftConflictError } from "@/lib/draftConflict";
-import { nativeProductReplySchema } from "@/lib/nativeWorkspaceContract";
+import { db } from "@/platform/product/store";
+import * as productStorage from "@/platform/runtime/storageProfile";
+import { getVideoWorkspaceRepository, getReferenceVideoWorkspaceRepository } from "@/features/video/services/workspaceRepository";
+import { DraftConflictError } from "@/platform/product/draftConflict";
+import { nativeProductReplySchema } from "@/platform/runtime/reference/nativeWorkspaceContract";
 
 const project = { id: "native-project", title: "Native film" };
 const video = {

@@ -1,16 +1,16 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun, canRetryRun, interruptThreadRuns } from "@/db/agentRuns";
-import { cancelAgentRun, executeAtomicTool, markRunningToolsUnknown, pauseAtModelStepLimit, resolveAgentToolApproval, resumeAgentRun, transitionToolCall } from "@/db/agentTools";
-import { getGeneralAgentConfig, updateGeneralAgentConfig } from "@/db/agentSettings";
-import {createChatThread} from "@/db/chat";
-import {deleteChatThread} from "@/db/cascadeCommands";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import { BUILTIN_TOOLS, requiresToolApproval, validateToolCall, type AgentToolDefinition } from "@/lib/agent/tools";
-import { MODEL_STEPS_PER_SEGMENT } from "@/domain/agent";
-import type { AgentPermissionMode, AgentToolEffect } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import { beginAgentRun, canRetryRun, interruptThreadRuns } from "@/features/agent/commands/agentRuns";
+import { cancelAgentRun, executeAtomicTool, markRunningToolsUnknown, pauseAtModelStepLimit, resolveAgentToolApproval, resumeAgentRun, transitionToolCall } from "@/features/agent/commands/agentTools";
+import { getGeneralAgentConfig, updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import { BUILTIN_TOOLS, requiresToolApproval, validateToolCall, type AgentToolDefinition } from "@/features/agent/runtime/tools";
+import { MODEL_STEPS_PER_SEGMENT } from "@/features/agent/models/agent";
+import type { AgentPermissionMode, AgentToolEffect } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = { id: "cx", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret", updatedAt: "2026-01-01" };
 async function begin(mode: AgentPermissionMode = "ask") {

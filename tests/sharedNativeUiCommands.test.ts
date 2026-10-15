@@ -1,18 +1,18 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import type {ProductStore} from "@/lib/storage/types";
+import {db} from "@/platform/product/store";
+import type {ProductStore} from "@/platform/storage/types";
 import {createNativeProbe} from "./helpers/nativeProductProbe";
 import {interceptStoreTable} from "./helpers/storeFaults";
-import {createAudioMusicProject, createProject} from "@/db/projects";
-import {patchMusicDraft} from "@/db/music";
-import {switchMusicVariant} from "@/components/music/switchMusicVariant";
-import {addCharacter, setCharacterSlot} from "@/db/assets";
-import {addShot} from "@/db/shots";
-import {applyProductionProposal, createProductionProposal} from "@/db/productionProposals";
-import {deleteProject} from "@/db/cascadeCommands";
-import {putMedia} from "@/db/media";
-import {emptySlot} from "@/domain/slot";
-import type {ProductionTarget} from "@/domain/production";
+import {createAudioMusicProject, createProject} from "@/features/projects/commands/projects";
+import {patchMusicDraft} from "@/features/music/commands/music";
+import {switchMusicVariant} from "@/features/music/ui/switchMusicVariant";
+import {addCharacter, setCharacterSlot} from "@/features/library/commands/assets";
+import {addShot} from "@/features/video/commands/shots";
+import {applyProductionProposal, createProductionProposal} from "@/features/video/commands/proposals";
+import {deleteProject} from "@/features/projects/commands/lifecycle";
+import {putMedia} from "@/features/library/commands/media";
+import {emptySlot} from "@/features/library/models/slot";
+import type {ProductionTarget} from "@/features/video/models/production";
 
 interface Owner {
     readonly store: ProductStore;

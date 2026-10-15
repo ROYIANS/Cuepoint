@@ -2,25 +2,25 @@ import {installStoreHook} from "./helpers/storeBackendFaults";
 import Dexie from "dexie";
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {createProject} from "@/db/projects";
+import { db } from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
 import {
   createProjectMemory,
   MemoryConflictError,
   deleteProjectMemory,
   setProjectMemoryStatus,
   updateProjectMemory,
-} from "@/db/projectMemories";
+} from "@/features/memory/commands/projectMemories";
 import type {
   MemoryInput,
   ProjectMemory,
   ProjectMemoryVersion,
-} from "@/domain/projectMemory";
+} from "@/features/memory/models/projectMemory";
 import {
   exportProjectZip,
   importProjectZip,
   PackageError,
-} from "@/lib/projectPackage";
+} from "@/app/workflows/packages/projectPackage";
 
 const input = (body = "统一使用暖色调"): MemoryInput => ({
   category: "convention",

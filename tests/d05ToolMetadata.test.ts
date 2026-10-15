@@ -1,14 +1,14 @@
 import {describe, expect, it, vi} from 'vitest';
 import {z} from 'zod';
-import {db} from '@/db/database';
-import {beginAgentRun} from '@/db/agentRuns';
-import {createChatThread} from '@/db/chat';
-import {updateGeneralAgentConfig} from '@/db/agentSettings';
-import {resolveAgentToolApproval, saveToolRound, transitionToolCall} from '@/db/agentTools';
-import {executeChatRun, resumeChatRun} from '@/lib/agent/runChat';
-import type {AgentToolDefinition} from '@/lib/agent/toolDefinition';
-import type {AgentPermissionMode} from '@/domain/agent';
-import type {ConnectorConfig} from '@/domain/types';
+import {db} from '@/platform/product/store';
+import {beginAgentRun} from '@/features/agent/commands/agentRuns';
+import {createChatThread} from '@/features/agent/commands/chat';
+import {updateGeneralAgentConfig} from '@/features/agent/commands/agentSettings';
+import {resolveAgentToolApproval, saveToolRound, transitionToolCall} from '@/features/agent/commands/agentTools';
+import {executeChatRun, resumeChatRun} from '@/features/agent/runtime/runChat';
+import type {AgentToolDefinition} from '@/features/agent/runtime/toolDefinition';
+import type {AgentPermissionMode} from '@/features/agent/models/agent';
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = {id: 'metadata', definitionId: 'openai-compatible', baseUrl: 'https://example.test/v1', apiKey: 'fixture', updatedAt: '2026-10-08'};
 const answer = () => Response.json({choices: [{message: {content: 'done'}, finish_reason: 'stop'}]});

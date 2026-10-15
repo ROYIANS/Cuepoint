@@ -1,4 +1,5 @@
 import ts from 'typescript';
+import {checkStudioOwnership} from './studio.mjs';
 import path from 'node:path';
 import { relative } from './shared.mjs';
 import {workspacePolicy, packageBoundary, ownedTypescriptFiles, importContract} from '../workspace.mjs';
@@ -13,6 +14,18 @@ function staticImportIsType(node) {
   }
   if (ts.isExportDeclaration(node)) return node.isTypeOnly || (node.exportClause && ts.isNamedExports(node.exportClause) && node.exportClause.elements.length > 0 && node.exportClause.elements.every(item => item.isTypeOnly));
   return Boolean(node.isTypeOnly);
+}
+function importSymbols(node) {
+  if (ts.isImportDeclaration(node)) {
+    const clause = node.importClause;
+    if (!clause) return [];
+    const symbols = clause.name ? [{name: 'default', typeOnly: clause.isTypeOnly}] : [];
+    if (clause.namedBindings && ts.isNamedImports(clause.namedBindings)) symbols.push(...clause.namedBindings.elements.map(item => ({name: (item.propertyName ?? item.name).text, typeOnly: clause.isTypeOnly || item.isTypeOnly})));
+    else if (clause.namedBindings) symbols.push({name: '*', typeOnly: clause.isTypeOnly});
+    return symbols;
+  }
+  if (ts.isExportDeclaration(node) && node.exportClause && ts.isNamedExports(node.exportClause)) return node.exportClause.elements.map(item => ({name: (item.propertyName ?? item.name).text, typeOnly: node.isTypeOnly || item.isTypeOnly}));
+  return [{name: '*', typeOnly: staticImportIsType(node)}];
 }
 function stronglyConnected(files, edges) {
   const adjacency = new Map(files.map(file => [file, []]));
@@ -62,7 +75,7 @@ export async function checkArchitecture(root) {
       const line = source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1;
       if (!resolution) { unresolved.push({ from, specifier, kind, typeOnly, line }); return; }
       const to = relative(root, resolution.resolvedFileName);
-      edges.push({ from, to, specifier, kind, typeOnly, internal: owned.has(to), line });
+      edges.push({ from, to, specifier, kind, typeOnly, symbols: importSymbols(node), internal: owned.has(to), line });
     }
     function visit(node) {
       if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier && ts.isStringLiteralLike(node.moduleSpecifier)) add(node, node.moduleSpecifier, ts.isImportDeclaration(node) ? 'static-import' : 'static-export', staticImportIsType(node));
@@ -94,11 +107,13 @@ export async function checkArchitecture(root) {
   const missingRoots = policy.roots.filter(prefix => !files.some(file => file.startsWith(prefix))).map(prefix => ({kind: 'source-root-not-scanned', prefix}));
   const missingFiles = ownedTypescriptFiles(root, policy).filter(file => !owned.has(file)).map(file => ({kind: 'owned-source-not-scanned', file}));
   const parseFailures = sources.flatMap(source => source.parseDiagnostics.map(diagnostic => ({ kind: 'source-parse', file: relative(root, source.fileName), message: ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n') })));
+  const studio = checkStudioOwnership(root, edges);
   return {
+    studioOwnership: studio.files,
     files, sourceRoots: policy.roots, compilerInputs: program.getSourceFiles().filter(source => !relative(root, source.fileName).startsWith('node_modules/')).map(source => relative(root, source.fileName)).sort(),
     totalImportSites: edges.length + unresolved.length, totalEdges: edges.length, staticValueEdges: staticValues.length, dynamicValueEdges: dynamicValues.length, typeOnlyEdges: edges.filter(edge => edge.typeOnly).length,
     edges, cycles, forbidden, computed, unresolved, shadowedRequires,
     limits: ['Owned graph consists of registered non-declaration workspace TypeScript/TSX, including generated routes. Vendor/JSON/declarations participate in resolution but are not owned SCC nodes.', 'Literal dynamic imports are reported separately and enforce layer boundaries, but do not form eager static SCCs.', 'Computed imports/requires and shadowed require calls are reported; runtime reachability is not claimed.', 'Unresolved asset/virtual module resolution is reported; Knip full analysis separately enforces unresolved contracts.'],
-    failures: [...contractFailures, ...boundaryFailures, ...missingFiles, ...missingRoots, ...parseFailures, ...cycles.map(members => ({ kind: 'static-value-cycle', members })), ...forbidden.map(edge => ({ ...edge, edgeKind: edge.kind, kind: 'forbidden-value-edge' }))],
+    failures: [...studio.failures, ...contractFailures, ...boundaryFailures, ...missingFiles, ...missingRoots, ...parseFailures, ...cycles.map(members => ({ kind: 'static-value-cycle', members })), ...forbidden.map(edge => ({ ...edge, edgeKind: edge.kind, kind: 'forbidden-value-edge' }))],
   };
 }

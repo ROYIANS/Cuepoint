@@ -25,7 +25,7 @@ async function filesUnder(directory) {
 }
 async function identity() {
     const files=[];
-    for (const directory of ['packages/studio/src','packages/distribution/src','apps/web/src','apps/site/src','apps/desktop/src','apps/desktop/scripts','apps/desktop/ui','tests','tooling','apps/desktop/src-tauri/src','apps/desktop/src-tauri/permissions','apps/desktop/src-tauri/capabilities']) files.push(...await filesUnder(join(root,directory)));
+    for (const directory of ['packages/studio/src','packages/distribution/src','apps/web/src','apps/site/src','apps/desktop/src','apps/desktop/scripts','apps/desktop/ui','tests','tooling','quality','apps/desktop/src-tauri/src','apps/desktop/src-tauri/permissions','apps/desktop/src-tauri/capabilities']) files.push(...await filesUnder(join(root,directory)));
     for (const file of ['package.json','pnpm-workspace.yaml','pnpm-lock.yaml','vitest.config.ts','tsconfig.app.json',...['apps/web','apps/site','apps/desktop','packages/studio','packages/distribution'].flatMap(directory=>['package.json','tsconfig.json'].map(file=>`${directory}/${file}`)),'apps/web/vite.config.ts','apps/site/vite.config.ts','apps/web/index.html','apps/site/landing.html','apps/desktop/index.html','apps/desktop/src-tauri/tauri.conf.json','apps/desktop/src-tauri/Cargo.toml','apps/desktop/src-tauri/Cargo.lock','apps/desktop/src-tauri/build.rs']) files.push(join(root,file));
     return Object.fromEntries(await Promise.all([...new Set(files)].sort().map(async path=>[relative(root,path),hash(await readFile(path))])));
 }
@@ -37,7 +37,7 @@ async function run(command,args,log,env) {
 async function currentRegistry() {
     // Inspect names from the current registered recipes without executing a tool or reading data.
     const server=await createServer({configFile:false,root,server:{middlewareMode:true},appType:'custom',resolve:{alias:{'@':join(root,'packages/studio/src')}}});
-    try {return (await server.ssrLoadModule('/packages/studio/src/lib/agent/tools.ts')).BUILTIN_TOOLS.map(tool=>tool.name).sort();}
+    try {return (await server.ssrLoadModule('/packages/studio/src/features/agent/runtime/tools.ts')).BUILTIN_TOOLS.map(tool=>tool.name).sort();}
     finally {await server.close();}
 }
 async function coverage(directory,names) {
@@ -75,7 +75,7 @@ const manifest=JSON.parse(await readFile(manifestPath,'utf8'));
 const tests=suite === 'all' ? [...new Set([...manifest.core,...manifest.business])] : manifest[suite];
 for (const file of tests) if (!(await stat(join(root,file))).isFile()) throw new Error(`Missing permanent acceptance suite: ${file}`);
 const ownerAssertions=JSON.parse(await readFile(join(root,manifest.ownerAssertions),'utf8'));
-const currentTables=Object.keys(JSON.parse(await readFile(join(root,'packages/studio/src/lib/storage/schema.json'),'utf8')).tables);
+const currentTables=Object.keys(JSON.parse(await readFile(join(root,'packages/studio/src/platform/storage/schema.json'),'utf8')).tables);
 const mappedTables=ownerAssertions.groups.flatMap(group=>group.tables);
 if (mappedTables.length !== currentTables.length || new Set(mappedTables).size !== currentTables.length || currentTables.some(table=>!mappedTables.includes(table))) throw new Error('Current domain assertion anchors must cover each registered table exactly once');
 for (const group of ownerAssertions.groups) {

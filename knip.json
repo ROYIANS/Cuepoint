@@ -21,11 +21,18 @@
         "tooling/assemble-web.mjs",
         "tooling/workspace.mjs",
         "tooling/quality-check.mjs",
-        "tooling/quality/self-test.mjs"
+        "tooling/quality/self-test.mjs",
+        "tooling/studio.test.mjs",
+        "tooling/workspace.test.mjs"
       ],
       "project": [
         "tooling/**/*.{mjs,mts,ts}"
-      ]
+      ],
+      "paths": {
+        "@/components/studio/CoverCard": [
+          "./packages/studio/src/features/library/ui/CoverCard.tsx"
+        ]
+      }
     },
     "apps/web": {
       "entry": [
@@ -45,11 +52,17 @@
     },
     "packages/studio": {
       "entry": [
-        "src/bootstrap.tsx!"
+        "src/app/bootstrap.tsx!",
+        "src/features/**/*.test.ts"
       ],
       "project": [
         "src/**/*.{ts,tsx,mts,mjs}!"
-      ]
+      ],
+      "tanstack-router": {
+        "entry": [
+          "src/app/routeTree.gen.ts!"
+        ]
+      }
     },
     "packages/distribution": {
       "entry": [],

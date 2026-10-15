@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseDurationInput } from "@/lib/durationInput";
+import { parseDurationInput } from "@/features/video/services/durationInput";
 
 describe("duration input", () => {
   it("accepts the numeric value while preserving fractional editing at the UI boundary", () => {

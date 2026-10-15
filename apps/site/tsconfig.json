@@ -5,6 +5,7 @@
     "paths": {}
   },
   "include": [
-    "src"
+    "src",
+    "../../packages/distribution/src/env.d.ts"
   ]
 }

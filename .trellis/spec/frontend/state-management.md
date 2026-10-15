@@ -6,7 +6,7 @@
 
 ## Overview
 
-Durable state uses the shared `ProductStore` facade in `packages/studio/src/db/database.ts` and the D02 command owners below. Browser IndexedDB and complete native SQLite/files share those commands, Agent and React pages; ephemeral UI remains in React `useState`. Current reads use `useProductQuery(tx => ...)`. One trusted fixed startup profile selects the owner before routes mount; actual isolated acceptance precedes normal packaged SQLite activation. Browser identity remains `aifenjing`, separate from native profiles. The retained schema-4 prototype under `nativeWorkspace.ts` is an explicit reference/test lane. Read [Shared Product Storage](./shared-product-storage.md), [Native Product Runtime](./native-product-runtime.md) and [Shared Video Workspace](./video-workspace.md).
+Durable state uses the shared `ProductStore` facade in `packages/studio/src/platform/product/store.ts` and the D02 command owners below. Browser IndexedDB and complete native SQLite/files share those commands, Agent and React pages; ephemeral UI remains in React `useState`. Current reads use `useProductQuery(tx => ...)`. One trusted fixed startup profile selects the owner before routes mount; actual isolated acceptance precedes normal packaged SQLite activation. Browser identity remains `aifenjing`, separate from native profiles. The retained schema-4 prototype under `nativeWorkspace.ts` is an explicit reference/test lane. Read [Shared Product Storage](./shared-product-storage.md), [Native Product Runtime](./native-product-runtime.md) and [Shared Video Workspace](./video-workspace.md).
 
 Fresh development is the default: do not import old browser/native data or add migration, backfill, compatibility-reader or preservation work unless explicitly requested. Historical schema descriptions below document isolated browser history; they do not authorize native legacy-data work. SQLite is one full-product owner, never a second catalog alongside Agent records.
 
@@ -18,7 +18,7 @@ Every command may accept an optional final `ProductStore`; pass the callback's `
 
 | Kind | Where | Examples |
 | --- | --- | --- |
-| Durable | ProductStore tables via business command owners in `packages/studio/src/db/` | Project, Episode, Character, Scene, Prop, VisualStyle, Shot, Media |
+| Durable | ProductStore tables via business command owners in `packages/studio/src/features/<feature>/commands/` | Project, Episode, Character, Scene, Prop, VisualStyle, Shot, Media |
 | URL | TanStack Router | `/characters/$characterId`, `/p/$projectId/world` |
 | Local UI | `useState` | library search, sort, pending delete |
 
@@ -817,22 +817,23 @@ See [the seven-section generic patch and cover media contract](asset-output-foun
 ## D02 production persistence responsibility boundaries
 
 ## 1. Scope / Trigger
-Production persistence has explicit business owners rather than a single `repo.ts`. Use these owners from actual source/test/fixture callers; schema and migrations remain in `database.ts`. Cross-domain transactions remain whole commands, not a collection of table CRUD calls.
+Production persistence has explicit business owners rather than a single `repo.ts`. Use these owners from actual source/test/fixture callers; central schema and browser history remain in `platform/storage/schema.json` and `platform/storage/browserDatabase.ts`. Cross-domain transactions remain whole commands, not a collection of table CRUD calls.
 
 ## 2. Signatures and owners
 | Owner | Actual existing public behavior |
 | --- | --- |
-| `productionRecords` | `emptyProject/Episode/Shot/Character/Scene/Prop/Style` constructors |
-| `productionShared` | `PRODUCTION_TABLES`, timestamp, ownership/reference/order and patch guards |
-| `projects` | Project/video/audio/music creation, metadata/settings/output/cover writers |
-| `episodes` | Episode/story/beat lifecycle, scoped filters/order, deletion and restoration |
-| `shots` | Shot edits, character membership intent, bulk inverse/undo, reorder, slots, committed delete snapshots |
-| `assets` | Four creative asset types and text/slot/delete commands |
-| `media` | `putMedia`, `collectMediaIds`, `deleteMediaIfOrphan`, slot validity/recycling |
-| `assetReuse` | Studio snapshot copies and `releaseMaterialUse` |
-| `connectors` | Saved connection/alias CRUD and `resolveConnector` |
-| `chat` | Ordinary thread/messages, metadata and project binding |
-| `cascadeCommands` | `deleteProject`, `deleteChatThread`, `setProjectArchived` |
+| `features/projects/models/newProject.ts`, `features/library/models/newAssets.ts`, `features/video/models/newRecords.ts` | Actual pure `emptyProject/Episode/Shot/Character/Scene/Prop/Style` constructors; no forwarding record facade |
+| `platform/product/scopes.ts`, `platform/identity.ts`, `platform/data/patch.ts`, `platform/collections/order.ts` | Explicit table scopes, identity/time, pure patch and ordering guards |
+| `features/projects/commands/ownership.ts`, `features/library/commands/relations.ts`, `features/video/commands/ownership.ts` | Concrete project, asset relation and episode/shot ownership guards |
+| `features/projects/commands/projects.ts` | Project/video/audio/music creation, metadata/settings/output/cover writers |
+| `features/video/commands/episodes.ts` | Episode/story/beat writes, scoped filters/order and restoration |
+| `features/video/commands/shots.ts` | Shot edits, character membership intent, bulk inverse/undo, reorder, slots, committed delete snapshots |
+| `features/library/commands/assets.ts` | Four creative asset types and text/slot/delete commands |
+| `features/library/commands/media.ts` | `putMedia`, `collectMediaIds`, `deleteMediaIfOrphan`, slot validity/recycling |
+| `features/library/commands/assetReuse.ts` | Studio snapshot copies and `releaseMaterialUse` |
+| `features/settings/commands/connectors.ts` | Saved connection/alias CRUD and `resolveConnector` |
+| `features/agent/commands/chat.ts` | Ordinary thread/messages, metadata and project binding |
+| `features/projects/commands/lifecycle.ts`, `features/agent/commands/lifecycle.ts` | Actual `deleteProject`/`setProjectArchived` and `deleteChatThread` transaction bodies; no cascade facade |
 
 Moved command signatures and return values remain unchanged. Existing cross-owner support exports are intentional real consumers, not new forwarding APIs. The five legacy unconsumed read/message exports remain separately tracked for later cleanup; their presence does not authorize using an all-purpose facade.
 
@@ -875,11 +876,11 @@ Maintain this contract when changing shot scalar text fields or beat title/conte
 
 ## 2. Signatures / Owners
 
-- `components/drafts/TextDraftField.tsx` reuses `lib/debouncedDraft.ts` and existing `DraftStatus`, including project flush registration, retained entity-field keys, initial field baseline, retry/useLatest and unload/visibility policy. Its keyed control captures one persist callback for the project/draft-key lifetime; input marks parent retention pending before updating local draft. This is shared text presentation/lifecycle, not a replacement timer/store.
-- `components/shots/ShotTextField.tsx` binds `ShotRow`/typed column mapping to `patchShot` text drafts for shot number/content/notes/category/sound/emotion/camera angle/gear/focal length/closeup. Existing duration and relationship editors keep their own contracts.
-- `components/story/BeatTextField.tsx` binds ShotEditor beat titles and StoryPage beat title/content/time-of-day to `patchStoryBeat` using the same protocol. Main episode title/logline/script already use it; preserve their B06/CAS/import behavior.
-- `lib/useTextDraftRetention.ts` owns readable row/beat pending-status retention only; existing debouncedDraft owns persistence/retry. Missing loaded rows can retain pending/error display without claiming the target still exists.
-- Actual `db/shots.patchShot` supports field baselines. `db/episodes.patchStoryBeat(episodeId, beatId, patch, baseline?: Partial<Pick<StoryBeat, "title" | "content" | "timeOfDay">>)` validates the optional text baseline in the existing transaction; it is not a full-object autosave API.
+- `app/drafts/TextDraftField.tsx` reuses `platform/product/drafts.ts` and existing `DraftStatus`, including project flush registration, retained entity-field keys, initial field baseline, retry/useLatest and unload/visibility policy. Its keyed control captures one persist callback for the project/draft-key lifetime; input marks parent retention pending before updating local draft. This is shared text presentation/lifecycle, not a replacement timer/store.
+- `features/video/ui/ShotTextField.tsx` binds `ShotRow`/typed column mapping to `patchShot` text drafts for shot number/content/notes/category/sound/emotion/camera angle/gear/focal length/closeup. Existing duration and relationship editors keep their own contracts.
+- `features/video/ui/BeatTextField.tsx` binds ShotEditor beat titles and StoryPage beat title/content/time-of-day to `patchStoryBeat` using the same protocol. Main episode title/logline/script already use it; preserve their B06/CAS/import behavior.
+- `app/drafts/useTextDraftRetention.ts` owns readable row/beat pending-status retention only; existing debouncedDraft owns persistence/retry. Missing loaded rows can retain pending/error display without claiming the target still exists.
+- Actual `features/video/commands/shots.patchShot` supports field baselines. `features/video/commands/episodes.patchStoryBeat(episodeId, beatId, patch, baseline?: Partial<Pick<StoryBeat, "title" | "content" | "timeOfDay">>)` validates the optional text baseline in the existing transaction; it is not a full-object autosave API.
 
 ## 3. Contracts / Invariants
 

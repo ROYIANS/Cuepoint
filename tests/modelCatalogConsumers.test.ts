@@ -1,14 +1,14 @@
 import {afterEach, beforeAll, describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {createChatThread} from "@/db/chat";
-import {beginAgentRun} from "@/db/agentRuns";
-import type {AgentRun} from "@/domain/agent";
-import type {ConnectorConfig} from "@/domain/types";
-import {resolveContextCapacity} from "@/lib/agent/contextPolicy";
-import {estimateRunCost} from "@/lib/ai/modelCatalog/cost";
-import {getModelCatalog, initModelCatalog, resetModelCatalogForTests} from "@/lib/ai/modelCatalog/store";
-import {resolveModelMetadata} from "@/lib/ai/modelMetadata";
-import {requireVision, resolveVisionCapability} from "@/lib/ai/visionCapability";
+import {db} from "@/platform/product/store";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import type {AgentRun} from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import {resolveContextCapacity} from "@/features/agent/runtime/contextPolicy";
+import {estimateRunCost} from "@/features/settings/modelCatalog/cost";
+import {getModelCatalog, initModelCatalog, resetModelCatalogForTests} from "@/features/settings/modelCatalog/store";
+import {resolveModelMetadata} from "@/features/settings/models/modelMetadata";
+import {requireVision, resolveVisionCapability} from "@/features/settings/models/visionCapability";
 
 const connector = (definitionId: ConnectorConfig["definitionId"], baseUrl: string): ConnectorConfig =>
     ({id: `c-${definitionId}`, definitionId, baseUrl, apiKey: "k", updatedAt: "2026-10-14"});
@@ -59,7 +59,7 @@ describe("synchronous consumers inside a database transaction", () => {
 describe("run price snapshot", () => {
     it("freezes the connector provider's own price and awaits the catalog itself", async () => {
         // No explicit init: beginAgentRun must make the catalog ready before the transaction.
-        const entry = (await import("@/lib/ai/modelCatalog/baseline.generated.json")).default.entries
+        const entry = (await import("@/features/settings/modelCatalog/baseline.generated.json")).default.entries
             .find(e => e.provider === "deepseek" && e.cost?.input !== undefined && e.cost?.output !== undefined)!;
         const run = await begin(connector("deepseek", "https://api.deepseek.com/v1"), entry.id);
         expect(run.modelPricing).toMatchObject({
@@ -71,7 +71,7 @@ describe("run price snapshot", () => {
     });
 
     it("keeps reference: true for an original-vendor price through a gateway connector", async () => {
-        const entry = (await import("@/lib/ai/modelCatalog/baseline.generated.json")).default.entries
+        const entry = (await import("@/features/settings/modelCatalog/baseline.generated.json")).default.entries
             .find(e => e.provider === "anthropic" && e.cost?.input !== undefined)!;
         const run = await begin(connector("apimart", "https://api.apimart.ai/v1"), entry.id);
         expect(run.modelPricing).toMatchObject({provider: "anthropic", reference: true, input: entry.cost!.input});

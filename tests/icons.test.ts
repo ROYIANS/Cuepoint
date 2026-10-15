@@ -4,7 +4,7 @@ import {ActionIcon} from "@lobehub/ui/base-ui";
 import {MotionProvider} from "@lobehub/ui/es/MotionProvider/index";
 import * as motion from "motion/react-m";
 import {describe, expect, it} from "vitest";
-import {Home, Search} from "@/components/ui/icons";
+import {Home, Search} from "@/ui/icons";
 
 describe("Phosphor icon rendering boundary", () => {
     it("stays visible through LobeUI's native ActionIcon and transparent fill default", () => {

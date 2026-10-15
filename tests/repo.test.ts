@@ -1,20 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle, deleteCharacter, patchCharacter, patchProp, patchScene, patchStyle, setCharacterSlot} from "@/db/assets";
-import {addEpisode, addStoryBeat, deleteEpisode, duplicateBeat, patchStoryBeat, reorderBeats, reorderEpisodes, restoreEpisode, updateEpisodeDraft} from "@/db/episodes";
-import {addShot, deleteEpisodeShots, deleteShots, duplicateShot, patchEpisodeShots, reorderShots, restoreShots, patchShot} from "@/db/shots";
-import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/db/assetReuse";
-import {createProject, patchProjectOutput, updateShotSettings} from "@/db/projects";
-import {putMedia} from "@/db/media";
-import {touchProject} from "@/db/productionShared";
-import { emptySlot } from "@/domain/slot";
-import {
-  normalizeAspectPreset,
-  normalizeEpisodeStory,
-  normalizeShotSettings,
-  resolutionForAspect,
-  STUDIO_LIBRARY_ID,
-} from "@/domain/types";
+import { db } from "@/platform/product/store";
+import {addCharacter, addProp, addScene, addStyle, deleteCharacter, patchCharacter, patchProp, patchScene, patchStyle, setCharacterSlot} from "@/features/library/commands/assets";
+import {addEpisode, addStoryBeat, deleteEpisode, duplicateBeat, patchStoryBeat, reorderBeats, reorderEpisodes, restoreEpisode, updateEpisodeDraft} from "@/features/video/commands/episodes";
+import {addShot, deleteEpisodeShots, deleteShots, duplicateShot, patchEpisodeShots, reorderShots, restoreShots, patchShot} from "@/features/video/commands/shots";
+import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/features/library/commands/assetReuse";
+import {createProject, patchProjectOutput, updateShotSettings} from "@/features/projects/commands/projects";
+import {putMedia} from "@/features/library/commands/media";
+import {touchProject} from "@/features/projects/commands/ownership";
+import { emptySlot } from "@/features/library/models/slot";
+import {normalizeAspectPreset, resolutionForAspect} from "@/features/video/models/format";
+import {normalizeEpisodeStory} from "@/features/video/models/story";
+import {normalizeShotSettings} from "@/features/video/models/shots";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
 
 describe("repository invariants", () => {
   it("creates film projects by default and preserves an explicit series mode", async () => {

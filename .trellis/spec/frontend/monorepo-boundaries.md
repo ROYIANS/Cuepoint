@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read when adding an application/library, changing package exports/dependencies, relocating source or editing workspace/build/quality discovery. This contract covers application separation; vertical Studio organization and reusable Agent extraction are later steps with their own accepted task contracts.
+Read when adding an application/library, changing package exports/dependencies, relocating source or editing workspace/build/quality discovery. This contract covers application separation. Studio vertical organization follows [Feature Organization](./feature-organization.md); reusable Agent extraction remains a later task with its own accepted contract.
 
 ## 2. Signatures and Owners
 
@@ -41,7 +41,7 @@ Root `build` builds web/site and assembles `dist`; `dev` selects web, `dev:site`
 | A consumed source/configuration changes during a quality/native run | Reject the stale result; input identity follows actual check ownership. |
 | Site imports Studio, directly or transitively | Fail source/built-closure checks. |
 | Sibling application import, private source traversal or foreign alias | Fail package boundary checks, including type-only package bypasses. |
-| New static value cycle or prohibited Studio domain/DB/UI edge | Fail architecture gate; literal dynamic edges obey boundaries too. |
+| New static value cycle or prohibited Studio feature/platform/UI edge | Fail architecture gate; literal dynamic edges obey boundaries too. |
 | Output file/report conflict or unresolved manifest/resource edge | Fail assembly without replacing validated output with a partial build. |
 | Current snapshot bytes or reviewed evidence identity changes | Fail provenance/quality until the exact change is reviewed. |
 | Native executable/tool/host unavailable | Record the specific unmet prerequisite/check; never infer runtime acceptance from build success. |

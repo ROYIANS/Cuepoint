@@ -2,18 +2,18 @@
 import {act, createElement as h} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {ErrorDetailsDialog, NO_AUTO_SEND_NOTICE, diagnosticFilename} from "@/components/errors/ErrorDetailsDialog";
-import {closeErrorDetails, openErrorDetails} from "@/components/errors/errorDetailsStore";
-import {showError} from "@/components/errors/showError";
-import {reportError, resetReportedErrorsForTests} from "@/lib/diagnostics/reportError";
+import {ErrorDetailsDialog, NO_AUTO_SEND_NOTICE, diagnosticFilename} from "@/app/errors/ErrorDetailsDialog";
+import {closeErrorDetails, openErrorDetails} from "@/app/errors/errorDetailsStore";
+import {showError} from "@/app/errors/showError";
+import {reportError, resetReportedErrorsForTests} from "@/platform/diagnostics/reportError";
 
 vi.mock("sonner", () => ({toast: {error: vi.fn()}}));
 const downloadBlob = vi.fn();
-vi.mock("@/lib/runtimeSave", () => ({downloadBlob: (...args: unknown[]) => downloadBlob(...args)}));
+vi.mock("@/platform/runtime/runtimeSave", () => ({downloadBlob: (...args: unknown[]) => downloadBlob(...args)}));
 const nativeOpen = vi.fn();
-vi.mock("@/lib/nativeSystemServices", () => ({nativeOpenExternalUrl: (...args: unknown[]) => nativeOpen(...args)}));
+vi.mock("@/platform/runtime/nativeSystemServices", () => ({nativeOpenExternalUrl: (...args: unknown[]) => nativeOpen(...args)}));
 let tauri = false;
-vi.mock("@/lib/runtimeIdentity", () => ({isTauriRuntime: () => tauri}));
+vi.mock("@/platform/runtime/runtimeIdentity", () => ({isTauriRuntime: () => tauri}));
 const {toast} = await import("sonner");
 
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;

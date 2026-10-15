@@ -2,13 +2,14 @@
 import {act, createElement as h, type ReactNode} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import type {ChatThread, Project} from "@/domain/types";
+import type {ChatThread} from "@/features/agent/models/chat";
+import type {Project} from "@/features/projects/models/project";
 
 vi.mock("@lobehub/ui", () => ({
     Flexbox: ({children, className}: {children?: ReactNode; className?: string}) => h("div", {className}, children),
     Text: ({children}: {children?: ReactNode}) => h("span", null, children),
 }));
-const {TopicSidebar} = await import("@/components/agent/TopicSidebar");
+const {TopicSidebar} = await import("@/features/agent/ui/TopicSidebar");
 
 const recent = new Date(Date.now() - 3 * 86_400_000).toISOString();
 const older = new Date(Date.now() - 5 * 86_400_000).toISOString();

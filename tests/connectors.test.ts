@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { streamChatCompletions } from "@/lib/ai/chatStream";
-import {appendChatMessage, createChatThread} from "@/db/chat";
-import {deleteConnector, listConnectors, upsertConnector} from "@/db/connectors";
-import { discoverConnectorChatModels, listConnectorModels, runWithCompatibleChatModel, testConnectorConnection } from "@/lib/ai/connectors";
+import { db } from "@/platform/product/store";
+import { streamChatCompletions } from "@/features/agent/providers/chatStream";
+import {appendChatMessage, createChatThread} from "@/features/agent/commands/chat";
+import {deleteConnector, listConnectors, upsertConnector} from "@/features/settings/commands/connectors";
+import { discoverConnectorChatModels, listConnectorModels, runWithCompatibleChatModel, testConnectorConnection } from "@/features/settings/models/connectors";
 
 const apimart = {
   definitionId: "apimart" as const,

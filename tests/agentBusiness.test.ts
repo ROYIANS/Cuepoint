@@ -1,29 +1,30 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import {registeredTools} from "./helpers/registeredTools";
-import { importReferenceFile } from "@/lib/references/import";
-import { ownerSnapshot, targetRevision } from "@/lib/agent/businessStore";
+import { importReferenceFile } from "@/features/references/documents/import";
+import { ownerSnapshot, targetRevision } from "@/features/agent/runtime/businessStore";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import * as repoChat from "@/db/chat";
-import * as repoAssets from "@/db/assets";
-import * as repoProjects from "@/db/projects";
-import * as repoMedia from "@/db/media";
-import * as repoShots from "@/db/shots";
-import * as repoEpisodes from "@/db/episodes";
-import * as repoAssetReuse from "@/db/assetReuse";
-import * as repoCascadeCommands from "@/db/cascadeCommands";
-import { AtomicToolRollbackError } from "@/db/agentTools";
-import { beginAgentRun } from "@/db/agentRuns";
-import { BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS, BUSINESS_TOOL_GROUPS } from "@/lib/agent/businessTools";
-import type { AgentToolContext } from "@/lib/agent/tools";
-import type { AgentRun, AgentToolCall } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
-import { registerPendingDraft } from "@/lib/debouncedDraft";
-import { createId } from "@/lib/ids";
-import { assembleSkills } from "@/lib/agent/skills";
-import { createToolLoading, MAX_LOADED_TOOLS } from "@/lib/agent/toolLoading";
-import { readWriteReceipt } from "@/lib/agent/writeReceipt";
-import * as receipts from "@/lib/agent/writeReceipt";
+import { db } from "@/platform/product/store";
+import * as repoChat from "@/features/agent/commands/chat";
+import * as repoAssets from "@/features/library/commands/assets";
+import * as repoProjects from "@/features/projects/commands/projects";
+import * as repoMedia from "@/features/library/commands/media";
+import * as repoShots from "@/features/video/commands/shots";
+import * as repoEpisodes from "@/features/video/commands/episodes";
+import * as repoAssetReuse from "@/features/library/commands/assetReuse";
+import * as projectLifecycle from "@/features/projects/commands/lifecycle";
+import * as chatLifecycle from "@/features/agent/commands/lifecycle";
+import { AtomicToolRollbackError } from "@/features/agent/commands/agentTools";
+import { beginAgentRun } from "@/features/agent/commands/agentRuns";
+import { BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS, BUSINESS_TOOL_GROUPS } from "@/features/video/agent/businessTools";
+import type { AgentToolContext } from "@/features/agent/runtime/tools";
+import type { AgentRun, AgentToolCall } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { registerPendingDraft } from "@/platform/product/drafts";
+import { createId } from "@/platform/identity";
+import { assembleSkills } from "@/features/agent/runtime/skills";
+import { createToolLoading, MAX_LOADED_TOOLS } from "@/features/agent/runtime/toolLoading";
+import { readWriteReceipt } from "@/features/agent/runtime/writeReceipt";
+import * as receipts from "@/features/agent/runtime/writeReceipt";
 const BUSINESS_TOOLS = registeredTools(BUSINESS_TOOLS_DEFINITIONS);
 
 
@@ -532,7 +533,7 @@ describe("generation retention lifecycle integration", () => {
     for (const [id, threadId, mediaId] of [["j1", first.id, "applied"], ["j2", first.id, "unassigned"], ["j3", first.id, "other-job"], ["j4", second.id, "other-job"]]) {
       await db.agentGenerationJobs.add({ version: 1, id, runId: "r", threadId, callId: id, projectId: ownerId, connectorId: "c", provider: "apimart", baseUrl: "https://fixture.invalid", model: "gpt-image-2", kind: "image", target: { kind: "character", projectId: ownerId, entityId: asset.id, slot: "front" }, baseRevision: "revision", sourceRevisions: [], parameters: {}, inputs: [], fingerprint: id, status: "downloaded", result: { mediaId, kind: "image" }, createdAt: "2026", updatedAt: "2026" });
     }
-    await repoCascadeCommands.deleteChatThread(first.id);
+    await chatLifecycle.deleteChatThread(first.id);
     expect(await db.agentGenerationJobs.where("threadId").equals(first.id).count()).toBe(0);
     expect(await db.agentGenerationJobs.get("j4")).toBeDefined();
     expect(await db.media.get("unassigned")).toBeUndefined();

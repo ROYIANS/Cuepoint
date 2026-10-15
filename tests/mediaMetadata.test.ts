@@ -1,9 +1,9 @@
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {createProject, updateProject} from "@/db/projects";
-import {putMedia} from "@/db/media";
-import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
+import { db } from "@/platform/product/store";
+import {createProject, updateProject} from "@/features/projects/commands/projects";
+import {putMedia} from "@/features/library/commands/media";
+import { exportProjectZip, importProjectZip } from "@/app/workflows/packages/projectPackage";
 
 async function fixture() {
   const project = await createProject("metadata");

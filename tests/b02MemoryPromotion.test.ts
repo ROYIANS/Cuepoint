@@ -1,6 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
-import type {MemoryCandidate, MemoryInput, MemorySourceRef, ProjectMemory} from "@/domain/projectMemory";
+import type {MemoryCandidate, MemoryInput, MemorySourceRef, ProjectMemory} from "@/features/memory/models/projectMemory";
 
 // Actual components and callbacks, with a deterministic hook host rather than
 // ReactDOM. Effects retain cleanup and old-render callbacks remain callable.
@@ -39,7 +39,7 @@ vi.mock("react", async original => {
         },
     };
 });
-vi.mock("@/lib/storage/hooks", () => {
+vi.mock("@/platform/product/queries", () => {
     const read = (querier: (tx: typeof db) => Promise<unknown>) => {
         const host = runtime.active!; host.queriers.push(() => querier(db));
         return host.results[host.queryIndex++];
@@ -49,19 +49,19 @@ vi.mock("@/lib/storage/hooks", () => {
 vi.mock("@tanstack/react-router", () => ({Link: () => null, useBlocker: (options: Host["blocker"]) => {
     runtime.active!.blocker = options; return {status: "idle", reset: vi.fn()};
 }}));
-vi.mock("@/lib/agent/taskWrapup", () => ({recoverTaskWrapups: vi.fn(async () => {}), prepareTaskWrapup: vi.fn(), cancelTaskWrapup: vi.fn()}));
-vi.mock("@/components/agent/ReferenceAttachments", () => ({ReferenceSourceLink: () => null}));
+vi.mock("@/features/agent/runtime/taskWrapup", () => ({recoverTaskWrapups: vi.fn(async () => {}), prepareTaskWrapup: vi.fn(), cancelTaskWrapup: vi.fn()}));
+vi.mock("@/features/agent/ui/ReferenceAttachments", () => ({ReferenceSourceLink: () => null}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
 import {toast} from "sonner";
-import {db} from "@/db/database";
-import {createProject} from "@/db/projects";
-import {createAgentTask} from "@/db/agentTasks";
-import {confirmWrapup, createManualWrapup, getTaskWrapupState, saveWrapup} from "@/db/agentTaskWrapups";
-import * as memories from "@/db/projectMemories";
-import {TaskWrapup} from "@/components/agent/TaskWrapup";
-import {MemoryPromotion} from "@/components/memory/MemoryPromotion";
-import {MemoryEditor} from "@/components/memory/MemoryEditor";
+import {db} from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {createAgentTask} from "@/features/agent/commands/agentTasks";
+import {confirmWrapup, createManualWrapup, getTaskWrapupState, saveWrapup} from "@/features/agent/commands/agentTaskWrapups";
+import * as memories from "@/features/memory/commands/projectMemories";
+import {TaskWrapup} from "@/features/agent/ui/TaskWrapup";
+import {MemoryPromotion} from "@/features/memory/ui/MemoryPromotion";
+import {MemoryEditor} from "@/features/memory/ui/MemoryEditor";
 
 type Node = ReactElement<Record<string, unknown>>;
 type EditorProps = Parameters<typeof MemoryEditor>[0];

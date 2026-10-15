@@ -1,15 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import Dexie from 'dexie';
-import { db } from '@/db/database';
-import {browserDatabase} from '@/lib/storage/browserDatabase';
-import {createBrowserProductStore} from '@/lib/storage/browser';
-import {createProject, patchProjectOutput} from "@/db/projects";
-import {deleteProject, setProjectArchived} from "@/db/cascadeCommands";
-import {collectMediaIds, deleteMediaIfOrphan} from "@/db/media";
-import {releaseMaterialUse} from "@/db/assetReuse";
-import { createIpProfile, bindProjectIp, setIpArchived } from '@/db/ipProfiles';
-import { createFileMaterial, adoptMaterialInProject, promoteMaterial } from '@/db/materials';
-import { exportProjectZip, importProjectZip } from '@/lib/projectPackage';
+import { db } from '@/platform/product/store';
+import {browserDatabase} from '@/platform/storage/browserDatabase';
+import {createBrowserProductStore} from '@/platform/storage/browser';
+import {createProject, patchProjectOutput} from "@/features/projects/commands/projects";
+import {deleteProject, setProjectArchived} from "@/features/projects/commands/lifecycle";
+import {collectMediaIds, deleteMediaIfOrphan} from "@/features/library/commands/media";
+import {releaseMaterialUse} from "@/features/library/commands/assetReuse";
+import { createIpProfile, bindProjectIp, setIpArchived } from '@/features/library/commands/ipProfiles';
+import { createFileMaterial, adoptMaterialInProject, promoteMaterial } from '@/features/library/commands/materials';
+import { exportProjectZip, importProjectZip } from '@/app/workflows/packages/projectPackage';
 
 const file = () => new File(['retained fixture audio'], 'intro.mp3', { type: 'audio/mpeg' });
 

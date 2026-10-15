@@ -13,9 +13,9 @@ const transport = {
     name: "e01-controlled-persistence", enforce: "pre",
     transform(source, id) {
         const functions = {
-            "/packages/studio/src/db/agentTaskRecords.ts": ["saveTaskRecord"],
-            "/packages/studio/src/db/agentTaskWrapups.ts": ["saveWrapup"],
-            "/packages/studio/src/components/audio/AudioSources.tsx": ["keepAudioSource"],
+            "/packages/studio/src/features/agent/commands/agentTaskRecords.ts": ["saveTaskRecord"],
+            "/packages/studio/src/features/agent/commands/agentTaskWrapups.ts": ["saveWrapup"],
+            "/packages/studio/src/features/audio/ui/AudioSources.tsx": ["keepAudioSource"],
         };
         for (const [suffix, names] of Object.entries(functions)) {
             if (!id.endsWith(suffix)) continue;
@@ -29,7 +29,7 @@ const transport = {
                 }\n`;
             }
         }
-        if (id.endsWith("/packages/studio/src/db/audio.ts")) {
+        if (id.endsWith("/packages/studio/src/features/audio/commands/audio.ts")) {
             source = source.replace("export const patchAudioSpeaker =", "const _e01_patchAudioSpeaker =");
             source += `\nexport async function patchAudioSpeaker(...args: Parameters<typeof _e01_patchAudioSpeaker>) {
                 const fixture = (window as any).e01;

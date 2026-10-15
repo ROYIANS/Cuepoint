@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { UndoController } from "@/lib/undo";
+import { UndoController } from "@/app/drafts/undo";
 
 function deferredRestore() {
   let resolve!: () => void;

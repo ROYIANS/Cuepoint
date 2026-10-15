@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { reusableMedia } from "@/lib/mediaPicker";
-import type { MediaRecord } from "@/domain/types";
+import { reusableMedia } from "@/features/library/services/mediaPicker";
+import type {MediaRecord} from "@/features/library/models/media";
 
 function media(id: string, projectId: string, mimeType: string, filename = id, data = "data"): MediaRecord {
   return { id, projectId, mimeType, filename, blob: new Blob([data], { type: mimeType }) };

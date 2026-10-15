@@ -1,6 +1,6 @@
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {deleteConnector, resolveConnector, upsertConnector} from "@/db/connectors";
+import {db} from "@/platform/product/store";
+import {deleteConnector, resolveConnector, upsertConnector} from "@/features/settings/commands/connectors";
 import {interceptStoreBackend} from "./helpers/storeBackendFaults";
 
 async function fixture() {

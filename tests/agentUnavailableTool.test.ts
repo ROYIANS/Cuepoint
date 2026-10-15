@@ -1,11 +1,11 @@
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {beginAgentRun} from "@/db/agentRuns";
-import {updateGeneralAgentConfig} from "@/db/agentSettings";
-import {createChatThread} from "@/db/chat";
+import {db} from "@/platform/product/store";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {updateGeneralAgentConfig} from "@/features/agent/commands/agentSettings";
+import {createChatThread} from "@/features/agent/commands/chat";
 
-import {executeChatRun} from "@/lib/agent/runChat";
-import type {ConnectorConfig} from "@/domain/types";
+import {executeChatRun} from "@/features/agent/runtime/runChat";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = {id: "unavailable-tool", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret", updatedAt: "2026-01-01"};
 
@@ -76,7 +76,7 @@ describe("a model-named tool this request cannot run", () => {
 
     it("keeps the ledger envelope check that still rejects forged or duplicate rounds", async () => {
         const run = await begin();
-        const {saveToolRound, startModelStep} = await import("@/db/agentTools");
+        const {saveToolRound, startModelStep} = await import("@/features/agent/commands/agentTools");
         await startModelStep(run.id, 32);
         await expect(saveToolRound(run.id, "", [wireCall("business_search", "forged")], [{title: "search", effect: "read", highRisk: false}]))
             .rejects.toThrow("本轮未提供");

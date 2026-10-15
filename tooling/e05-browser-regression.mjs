@@ -1,3 +1,4 @@
+import {historicalSource} from "./historical-source.mjs";
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
 import {readFile, writeFile, mkdir, mkdtemp, rm} from "node:fs/promises";
@@ -17,7 +18,7 @@ const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const original = await readFile(join(root, "tests/fixtures/sourceSnapshots/e05/click-spark.tsx"));
 const provenance = JSON.parse(await readFile(join(root, "tests/fixtures/sourceSnapshots/e05/provenance.json"), "utf8"));
 assert.equal(hash(original), provenance.sha256, "Immutable original bytes");
-const paths = ["packages/studio/src/components/ui/click-spark.tsx", "packages/studio/src/lib/utils.ts", "tooling/e05-browser-regression.mjs", "tests/fixtures/e05/index.html", "tests/fixtures/e05/harness.tsx", "tests/fixtures/e05/instrumentation.ts", "tests/fixtures/e05/tsconfig.json", "tests/fixtures/sourceSnapshots/e05/click-spark.tsx", "tests/fixtures/sourceSnapshots/e05/provenance.json", "package.json", "pnpm-lock.yaml", "tsconfig.app.json"];
+const paths = ["packages/studio/src/ui/click-spark.tsx", "packages/studio/src/ui/cn.ts", "tooling/e05-browser-regression.mjs", "tests/fixtures/e05/index.html", "tests/fixtures/e05/harness.tsx", "tests/fixtures/e05/instrumentation.ts", "tests/fixtures/e05/tsconfig.json", "tests/fixtures/sourceSnapshots/e05/click-spark.tsx", "tests/fixtures/sourceSnapshots/e05/provenance.json", "package.json", "pnpm-lock.yaml", "tsconfig.app.json"];
 const producers = Object.fromEntries(await Promise.all(paths.map(async path => {
   const bytes = await readFile(join(root, path));
   await mkdir(join(output, "sources", relative(root, join(root, path)), ".."), {recursive: true});
@@ -29,7 +30,7 @@ const server = await createServer({root, configFile: false, cacheDir,
   plugins: [{name: "e05-exact-original-comparison", enforce: "pre", transform(source, id) {
     const path = id.split("?")[0];
     if (path.startsWith(root) && !path.includes("node_modules") && /\.(tsx?|html)$/.test(path)) sources[relative(root, path)] = hash(source);
-    if (baseline && path === join(root, "packages/studio/src/components/ui/click-spark.tsx")) return original.toString("utf8");
+    if (baseline && path === join(root, "packages/studio/src/ui/click-spark.tsx")) return historicalSource(original.toString("utf8"), "components/ui/click-spark.tsx");
     return source;
   }}],
   optimizeDeps: {entries: [join(root, "tests/fixtures/e05/index.html")], include: ["react", "react-dom", "react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime"]}, resolve: {alias: {"@": join(root, "packages/studio/src")}},
@@ -40,7 +41,7 @@ const require = createRequire(import.meta.url);
 const report = {mode, producers, sources, originalSHA256: provenance.sha256,
   versions: {node: process.version, vite: require("vite/package.json").version, react: require("react/package.json").version},
   cases: [], documents: [], errors: [], loadedResponses: [],
-  limits: ["RAF requests/cancellations forward to native Chromium scheduling; counters select actual ClickSpark request stacks (/src/components/ui/click-spark.tsx), excluding Playwright RAF polling. Executed counters are callback entry counts, with real performance.now and no fake timers.",
+  limits: ["RAF requests/cancellations forward to native Chromium scheduling; counters select actual ClickSpark request stacks (/packages/studio/src/ui/click-spark.tsx), excluding Playwright RAF polling. Executed counters are callback entry counts, with real performance.now and no fake timers.",
     "Visibility is an explicit controlled document.hidden/visibilityState plus visibilitychange seam. This is handler cancellation proof, NOT real OS background-tab throttling. Prior headless/headful capability attempts could not produce document.hidden=true; no new broad probes.",
     "Reduced motion uses page.emulateMedia; resize uses native ResizeObserver. Finite idle observations use 180ms and 140ms windows, not an infinite trace or latency claim.",
     "maxOutstanding is the cumulative whole-fixture maximum for component-owned RAF IDs. Instantaneous same-task pending snapshots verify the current StrictMode/props/unmount lifecycle. Only actual ClickSpark is mounted; fixture supplies minimal geometry/class styling. Pixel evidence is nonzero alpha while drawing and exact zero after clear, with geometric equations checked against actual clock readings; no arbitrary pixel mask/tolerance.",

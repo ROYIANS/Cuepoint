@@ -1,10 +1,10 @@
 import {Buffer} from "node:buffer";
 import {createHash} from "node:crypto";
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {STUDIO_LIBRARY_ID} from "@/domain/types";
-import {uploadMediaFile} from "@/lib/media";
-import {copyIntoManagedWorkspace, workspaceId} from "@/lib/workspace";
+import {db} from "@/platform/product/store";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
+import {uploadMediaFile} from "@/features/library/services/media";
+import {copyIntoManagedWorkspace, workspaceId} from "@/features/library/services/workspace";
 
 const metadata = {workspaceId: workspaceId("chunk-fixture"), projectId: STUDIO_LIBRARY_ID, filename: "source.png", mimeType: "image/png"};
 

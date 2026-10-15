@@ -6,14 +6,14 @@ Direct local write receipts and normalized returns follow [Agent Write Evidence]
 Read before extending creative CRUD, generation profiles, tool previews, recovery or media cleanup. This builds on [Agent tools](./agent-tools.md), [production contracts](./production-contracts.md) and [provider adapters](./ai-connectors.md). Connector/credential/configuration CRUD is outside the business tool surface.
 
 ## 2. Signatures
-- `BUSINESS_TOOLS` in `lib/agent/businessTools.ts`: 33 strict tools; lightweight allowlists live in `businessToolNames.ts` to avoid settings → skills → repository cycles.
+- `BUSINESS_TOOLS` in `features/video/agent/businessTools.ts`: 33 strict tools; lightweight allowlists live in `businessToolNames.ts` to avoid settings → skills → repository cycles.
 - Read: `business_search`, `business_detail`, `business_read_text`, `business_read_relations`.
 - Mutations: project/episode/beat/shot/character/scene/prop/style create/update/delete; `creative_duplicate`, `creative_reorder`, `asset_copy_from_studio`, `slot_update`, `media_delete_orphan`.
 - `AgentToolDefinition.requiresConfirmation?: boolean` is frozen into calls and checked against the registry; paid `submit_generation` requires confirmation under ask/assist/full. Other tools retain their policy.
 - `AgentToolDefinition.prepare?(args, context): Promise<AgentToolPreview>`; context includes optional saved preview. `saveToolPreview(runId, callId, preview)` saves it once while pending.
-- `executeAtomicTool(context, callback): Promise<unknown>` in `db/agentTools.ts`: local business mutation and successful result commit together. `AtomicToolRollbackError` certifies no committed business effect.
+- `executeAtomicTool(context, callback): Promise<unknown>` in `features/agent/commands/agentTools.ts`: local business mutation and successful result commit together. `AtomicToolRollbackError` certifies no committed business effect.
 - `GENERATION_TOOLS`: `generation_capabilities`, `submit_generation`, `check_generation`, `apply_generation`, `list_generation_jobs`, `prepare_generation_batch`, `read_generation_batch`. Batch contracts live in [Batch Generation](./agent-batch-generation.md).
-- `prepareAgentGeneration`, `submitAgentGeneration`, `checkAgentGeneration`, `monitorAgentGeneration`, `prepareGenerationApply`, `applyAgentGeneration` in `lib/agent/generationRuntime.ts`.
+- `prepareAgentGeneration`, `submitAgentGeneration`, `checkAgentGeneration`, `monitorAgentGeneration`, `prepareGenerationApply`, `applyAgentGeneration` in `features/video/agent/generationRuntime.ts`.
 - Dexie v18 `agentGenerationJobs`: sparse unique `callId` for single calls or sparse unique `batchItemId` plus `batchId` for batches; shared owner/status/fingerprint indexes remain. See [Batch Generation](./agent-batch-generation.md) for new batch/item tables.
 
 ## 3. Contracts
@@ -78,9 +78,9 @@ Correct: use `executeAtomicTool` with the domain repository operation so the bus
 Use when changing the generation form, paid confirmation, per-kind defaults or actual execution parameters.
 
 ### Signatures
-- `reviewAndApproveGeneration(runId, callId, rawArgs, expected: {arguments, revision}): Promise<void>` in `lib/agent/generationReview.ts`.
-- `AgentToolCall.generationOverride?: {arguments: string; preview: AgentToolPreview}`; `readGenerationReviewCall` and `commitGenerationReview` in `db/agentTools.ts`.
-- `getGenerationPreferenceState(): Promise<{preferences, issues}>`, `saveGenerationPreference(kind, value|null)` in `db/generationPreferences.ts`; storage is `AgentConfig.generationPreferences` on the existing agents table.
+- `reviewAndApproveGeneration(runId, callId, rawArgs, expected: {arguments, revision}): Promise<void>` in `features/video/agent/generationReview.ts`.
+- `AgentToolCall.generationOverride?: {arguments: string; preview: AgentToolPreview}`; `readGenerationReviewCall` and `commitGenerationReview` in `features/agent/commands/agentTools.ts`.
+- `getGenerationPreferenceState(): Promise<{preferences, issues}>`, `saveGenerationPreference(kind, value|null)` in `features/settings/commands/generationPreferences.ts`; storage is `AgentConfig.generationPreferences` on the existing agents table.
 - `recommendGenerationSelection({kind,connectors,projectDefaults?,preferences?,preferenceIssues?,aiSuggestion?,explicitSelection?})` returns independent source/status/recommendation/issues.
 - `applyGenerationSelection(draft, selection, provider)` handles explicit UI choice changes without changing target/input roles or prompt draft.
 - `generation_capabilities({projectId?})` now exposes per-kind recommendations alongside verified profiles and sanitized connector identities.

@@ -1,8 +1,8 @@
-import { getReasoningPolicy } from "../packages/studio/src/lib/ai/reasoningPolicy";
+import { getReasoningPolicy } from "../packages/studio/src/features/settings/models/reasoningPolicy";
 import { beforeAll, describe, expect, it } from "vitest";
-import { initModelCatalog } from "@/lib/ai/modelCatalog/store";
-import { collectModelMetadata, parseModelMetadata, resolveModelMetadata } from "../packages/studio/src/lib/ai/modelMetadata";
-import { discoverConnectorChatModels } from "../packages/studio/src/lib/ai/connectors";
+import { initModelCatalog } from "@/features/settings/modelCatalog/store";
+import { collectModelMetadata, parseModelMetadata, resolveModelMetadata } from "../packages/studio/src/features/settings/models/modelMetadata";
+import { discoverConnectorChatModels } from "../packages/studio/src/features/settings/models/connectors";
 
 beforeAll(() => initModelCatalog());
 

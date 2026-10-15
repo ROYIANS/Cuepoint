@@ -1,15 +1,15 @@
 import {afterEach, expect, it, vi} from 'vitest';
-import {db} from '@/db/database';
-import {createProject} from '@/db/projects';
-import {addCharacter, addScene, addProp, addStyle} from '@/db/assets';
-import {addShot} from '@/db/shots';
-import {createChatThread} from '@/db/chat';
-import {beginAgentRun} from '@/db/agentRuns';
-import {AtomicToolRollbackError} from '@/db/agentTools';
-import {BUILTIN_TOOLS, validateToolCall} from '@/lib/agent/tools';
-import * as store from '@/lib/agent/businessStore';
-import type {AgentToolContext} from '@/lib/agent/toolDefinition';
-import type {ConnectorConfig} from '@/domain/types';
+import {db} from '@/platform/product/store';
+import {createProject} from '@/features/projects/commands/projects';
+import {addCharacter, addScene, addProp, addStyle} from '@/features/library/commands/assets';
+import {addShot} from '@/features/video/commands/shots';
+import {createChatThread} from '@/features/agent/commands/chat';
+import {beginAgentRun} from '@/features/agent/commands/agentRuns';
+import {AtomicToolRollbackError} from '@/features/agent/commands/agentTools';
+import {BUILTIN_TOOLS, validateToolCall} from '@/features/agent/runtime/tools';
+import * as store from '@/features/agent/runtime/businessStore';
+import type {AgentToolContext} from '@/features/agent/runtime/toolDefinition';
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = {id: 'branches', definitionId: 'openai-compatible', baseUrl: 'https://example.test/v1', apiKey: 'fixture', updatedAt: 'now'};
 afterEach(() => vi.restoreAllMocks());

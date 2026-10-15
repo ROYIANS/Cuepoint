@@ -2,37 +2,37 @@
 import {act, createElement as h, type ReactNode} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import type {AgentRun, AgentToolCall} from "@/domain/agent";
-import type {ChatMessage} from "@/domain/types";
+import type {AgentRun, AgentToolCall} from "@/features/agent/models/agent";
+import type {ChatMessage} from "@/features/agent/models/chat";
 
 let callsFixture: AgentToolCall[] = [];
 let writesFixture: {total: number; groups: Array<{label: string; count: number}>; entries: unknown[]; omitted: number; uncoveredCalls: number} =
     {total: 0, groups: [], entries: [], omitted: 0, uncoveredCalls: 0};
 
-vi.mock("@/lib/storage/hooks", () => ({useProductQuery: () => callsFixture}));
+vi.mock("@/platform/product/queries", () => ({useProductQuery: () => callsFixture}));
 vi.mock("@lobehub/ui", () => ({
     Markdown: ({children}: {children?: ReactNode}) => h("div", {"data-md": ""}, children),
     CopyButton: () => h("button", {type: "button"}, "复制"),
     Text: ({children}: {children?: ReactNode}) => h("span", null, children),
 }));
-vi.mock("@/components/agent/ModelIcons", () => ({ModelIcon: () => null}));
-vi.mock("@/components/agent/ReferenceAttachments", () => ({ReferenceMessageSources: () => null}));
-vi.mock("@/components/agent/MemoryContextDetails", () => ({MemoryRunHistory: () => null}));
-vi.mock("@/components/agent/TurnNavigation", () => ({TurnNavigation: () => null}));
-vi.mock("@/components/agent/ThinkingMatrix", () => ({ThinkingMatrix: () => h("span", null, "matrix")}));
-vi.mock("@/components/agent/AgentGenerationResults", () => ({AgentGenerationResults: () => null}));
-vi.mock("@/components/agent/GenerationReview", () => ({GenerationReview: () => null}));
-vi.mock("@/components/agent/MusicGenerationReview", () => ({MusicGenerationReview: () => null}));
-vi.mock("@/components/agent/WebResearchSources", () => ({WebResearchSources: () => null}));
-vi.mock("@/components/agent/ProjectImageSources", () => ({ProjectImageSources: () => null}));
-vi.mock("@/components/agent/CreatedEntityLinks", () => ({CreatedEntityLinks: () => null}));
+vi.mock("@/features/agent/ui/ModelIcons", () => ({ModelIcon: () => null}));
+vi.mock("@/features/agent/ui/ReferenceAttachments", () => ({ReferenceMessageSources: () => null}));
+vi.mock("@/features/agent/ui/MemoryContextDetails", () => ({MemoryRunHistory: () => null}));
+vi.mock("@/features/agent/ui/TurnNavigation", () => ({TurnNavigation: () => null}));
+vi.mock("@/features/agent/ui/ThinkingMatrix", () => ({ThinkingMatrix: () => h("span", null, "matrix")}));
+vi.mock("@/features/agent/ui/AgentGenerationResults", () => ({AgentGenerationResults: () => null}));
+vi.mock("@/features/agent/ui/GenerationReview", () => ({GenerationReview: () => null}));
+vi.mock("@/features/agent/ui/MusicGenerationReview", () => ({MusicGenerationReview: () => null}));
+vi.mock("@/features/agent/ui/WebResearchSources", () => ({WebResearchSources: () => null}));
+vi.mock("@/features/agent/ui/ProjectImageSources", () => ({ProjectImageSources: () => null}));
+vi.mock("@/features/agent/ui/CreatedEntityLinks", () => ({CreatedEntityLinks: () => null}));
 vi.mock("@tanstack/react-router", () => ({Link: ({children}: {children?: ReactNode}) => h("a", null, children)}));
-vi.mock("@/lib/agent/runWriteOutcomes", async importOriginal => ({
-    ...(await importOriginal<typeof import("@/lib/agent/runWriteOutcomes")>()),
+vi.mock("@/features/agent/runtime/runWriteOutcomes", async importOriginal => ({
+    ...(await importOriginal<typeof import("@/features/agent/runtime/runWriteOutcomes")>()),
     describeRunWrites: () => writesFixture,
 }));
 
-const {MessageList, presentMessageStatus} = await import("@/components/agent/MessageList");
+const {MessageList, presentMessageStatus} = await import("@/features/agent/ui/MessageList");
 
 const now = "2026-10-13T00:00:00.000Z";
 const user: ChatMessage = {id: "u1", threadId: "t1", role: "user", content: "你好", createdAt: now, status: "complete"};

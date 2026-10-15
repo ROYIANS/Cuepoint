@@ -7,7 +7,7 @@ import {
   submitApimartVideoGeneration,
   testApimartConnection,
   uploadApimartImage,
-} from "@/lib/ai/apimart";
+} from "@/features/video/providers/apimart";
 
 const credentials = { baseUrl: " https://api.apimart.ai/v1/ ", apiKey: " sk-secret-key " };
 const fetchResponse = (body: unknown, status = 200) => vi.fn<typeof fetch>(async () => Response.json(body, { status }));

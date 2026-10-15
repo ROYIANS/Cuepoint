@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { initModelCatalog, lookupModelByDefinition } from "@/lib/ai/modelCatalog/store";
-import { resolveModelMetadata } from "@/lib/ai/modelMetadata";
-import { getReasoningPolicy } from "@/lib/ai/reasoningPolicy";
-import { formatTokenCount } from "@/lib/agent/contextUsage";
+import { initModelCatalog, lookupModelByDefinition } from "@/features/settings/modelCatalog/store";
+import { resolveModelMetadata } from "@/features/settings/models/modelMetadata";
+import { getReasoningPolicy } from "@/features/settings/models/reasoningPolicy";
+import { formatTokenCount } from "@/features/agent/runtime/contextUsage";
 
 describe("model catalog limits through resolveModelMetadata", () => {
   beforeAll(() => initModelCatalog());

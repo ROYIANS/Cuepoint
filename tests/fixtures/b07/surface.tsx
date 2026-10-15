@@ -1,5 +1,5 @@
-import type {ComposerProps} from "@/components/agent/composerTypes";
-import type {ChatThread} from "@/domain/types";
+import type {ComposerProps} from "@/features/agent/ui/composerTypes";
+import type {ChatThread} from "@/features/agent/models/chat";
 import type {ReactNode} from "react";
 
 // Only presentation is simplified. The real AgentChatPage owns all callbacks,

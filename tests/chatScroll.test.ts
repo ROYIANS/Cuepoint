@@ -4,7 +4,7 @@ import {
   chatDistanceFromBottom,
   isChatNearBottom,
   snapChatToBottom,
-} from "@/lib/chatScroll";
+} from "@/features/agent/presentation/chatScroll";
 
 function box(partial: { clientHeight: number; scrollHeight: number; scrollTop: number }) {
   return { ...partial };

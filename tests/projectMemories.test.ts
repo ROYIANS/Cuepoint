@@ -1,14 +1,15 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import {createProject} from "@/db/projects";
-import {deleteProject, deleteChatThread} from "@/db/cascadeCommands";
-import { createAgentTask, setAgentTaskLifecycle } from "@/db/agentTasks";
+import { db } from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {deleteProject} from "@/features/projects/commands/lifecycle";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import { createAgentTask, setAgentTaskLifecycle } from "@/features/agent/commands/agentTasks";
 import {
   createManualWrapup,
   saveWrapup,
   confirmWrapup,
-} from "@/db/agentTaskWrapups";
+} from "@/features/agent/commands/agentTaskWrapups";
 import {
   createProjectMemory,
   deleteProjectMemory,
@@ -22,8 +23,8 @@ import {
   replaceProjectMemory,
   setProjectMemoryStatus,
   updateProjectMemory,
-} from "@/db/projectMemories";
-import type { MemoryInput } from "@/domain/projectMemory";
+} from "@/features/memory/commands/projectMemories";
+import type { MemoryInput } from "@/features/memory/models/projectMemory";
 const input: MemoryInput = {
   category: "convention",
   title: "画面约定",

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import { GENERAL_AGENT_ID } from "@/domain/agent";
-import { defaultImageGeneration, defaultVideoGeneration } from "@/domain/output";
-import type { ConnectorConfig } from "@/domain/types";
-import type { GenerationPreference, GenerationSelection } from "@/domain/generationPreferences";
-import { getGenerationPreferences, getGenerationPreferenceState, saveGenerationPreference } from "@/db/generationPreferences";
-import { inspectGenerationPreferences, recommendGenerationSelection, validateGenerationPreference } from "@/lib/agent/generationSelection";
+import { db } from "@/platform/product/store";
+import { GENERAL_AGENT_ID } from "@/features/agent/models/agent";
+import { defaultImageGeneration, defaultVideoGeneration } from "@/features/video/models/output";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import type { GenerationPreference, GenerationSelection } from "@/features/settings/models/generationPreferences";
+import { getGenerationPreferences, getGenerationPreferenceState, saveGenerationPreference } from "@/features/settings/commands/generationPreferences";
+import { inspectGenerationPreferences, recommendGenerationSelection, validateGenerationPreference } from "@/features/video/agent/generationSelection";
 
 const apimart: ConnectorConfig = { id: "apimart-a", definitionId: "apimart", baseUrl: "https://apimart.invalid/v1", apiKey: "fake-key-never-saved", updatedAt: "2026" };
 const aihubmix: ConnectorConfig = { id: "aihubmix-a", definitionId: "aihubmix", baseUrl: "https://aihubmix.invalid/v1", apiKey: "another-fake-key", updatedAt: "2026" };

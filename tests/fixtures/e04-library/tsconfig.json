@@ -1,5 +1,5 @@
 {
   "extends": "../../../tsconfig.app.json",
   "compilerOptions": {"incremental": false, "tsBuildInfoFile": null},
-  "include": ["harness.tsx", "../../e04LibraryQueries.test.ts", "../../../packages/studio/src/vite-env.d.ts"]
+  "include": ["harness.tsx", "../../e04LibraryQueries.test.ts", "../../../packages/studio/src/app/vite-env.d.ts"]
 }

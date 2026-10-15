@@ -1,15 +1,15 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {requestOnce, readHttpJson, type HttpJsonReadPolicy} from "@/lib/ai/requestBoundary";
-import * as bounded from "@/lib/ai/boundedResponse";
-import {MAX_ERROR_BYTES, MAX_JSON_BYTES} from "@/lib/resource/limits";
-import {submitApimartImageGeneration, getApimartTask} from "@/lib/ai/apimart";
-import {submitAIHubMixImageGeneration, downloadAIHubMixResult, type AIHubMixTask} from "@/lib/ai/aihubmix";
-import {submitApimartMusic, getApimartMusicTask} from "@/lib/ai/apimartAudio";
-import {listMimoModels} from "@/lib/ai/mimoSpeech";
-import {listModels, testConnection} from "@/lib/ai/openaiCompatible";
-import {discoverConnectorChatModels} from "@/lib/ai/connectors";
-import {executeWebRequest} from "@/lib/ai/tavily";
-import {saveSearchConnection, getSearchConnectionState} from "@/db/searchConnections";
+import {requestOnce, readHttpJson, type HttpJsonReadPolicy} from "@/platform/http/requestBoundary";
+import * as bounded from "@/platform/http/boundedResponse";
+import {MAX_ERROR_BYTES, MAX_JSON_BYTES} from "@/platform/media/limits";
+import {submitApimartImageGeneration, getApimartTask} from "@/features/video/providers/apimart";
+import {submitAIHubMixImageGeneration, downloadAIHubMixResult, type AIHubMixTask} from "@/features/video/providers/aihubmix";
+import {submitApimartMusic, getApimartMusicTask} from "@/features/audio/providers/apimartAudio";
+import {listMimoModels} from "@/features/audio/providers/mimoSpeech";
+import {listModels, testConnection} from "@/features/agent/providers/openaiCompatible";
+import {discoverConnectorChatModels} from "@/features/settings/models/connectors";
+import {executeWebRequest} from "@/features/references/providers/tavily";
+import {saveSearchConnection, getSearchConnectionState} from "@/features/settings/commands/searchConnections";
 
 const credentials = {baseUrl: "https://proxy.example/v1", apiKey: "sk-secret"};
 const native: HttpJsonReadPolicy = {success: {kind: "native-json"}, failure: {kind: "native-json"}};

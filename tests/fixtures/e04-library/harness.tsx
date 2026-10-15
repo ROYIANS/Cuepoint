@@ -1,18 +1,23 @@
 import {createRoot} from "react-dom/client";
 import {createBrowserHistory, createRootRoute, createRoute, createRouter, Outlet, RouterProvider} from "@tanstack/react-router";
 import {Toaster} from "sonner";
-import {readProjectCoverIds as readSharedCovers} from "@/lib/studioLibraryQueries";
+import {readProjectCoverIds as readSharedCovers} from "@/features/projects/queries/studioLibraryQueries";
 import {readProjectCoverIds as readIndependentCovers} from "../sourceSnapshots/e04-library/independent-transactions/studioLibraryQueries";
-import {db} from "@/db/database";
-import {emptyProject, emptyShot, emptyCharacter, emptyScene, emptyProp, emptyStyle} from "@/db/productionRecords";
-import {emptySlot} from "@/domain/slot";
-import {STUDIO_LIBRARY_ID, CHARACTER_SLOTS, SCENE_SLOTS, PROP_SLOTS, STYLE_SLOTS} from "@/domain/types";
-import type {GenerationSlot, MediaRecord, Shot} from "@/domain/types";
-import {ProjectGalleryPage} from "@/components/studio/ProjectGalleryPage";
-import {CharacterLibraryPage, SceneLibraryPage, PropLibraryPage, StyleLibraryPage} from "@/components/studio/AssetLibraryPages";
+import {db} from "@/platform/product/store";
+import {emptyProject} from "@/features/projects/models/newProject";
+import {emptyShot} from "@/features/video/models/newRecords";
+import {emptyCharacter, emptyScene, emptyProp, emptyStyle} from "@/features/library/models/newAssets";
+import {emptySlot} from "@/features/library/models/slot";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
+import {CHARACTER_SLOTS, SCENE_SLOTS, PROP_SLOTS, STYLE_SLOTS} from "@/features/library/models/slots";
+import type {GenerationSlot} from "@/features/library/models/slots";
+import type {MediaRecord} from "@/features/library/models/media";
+import type {Shot} from "@/features/video/models/shots";
+import {ProjectGalleryPage} from "@/features/projects/ui/ProjectGalleryPage";
+import {CharacterLibraryPage, SceneLibraryPage, PropLibraryPage, StyleLibraryPage} from "@/features/library/ui/AssetLibraryPages";
 import {ProjectGalleryPage as BeforeGallery} from "../sourceSnapshots/e04-library/src/components/studio/ProjectGalleryPage";
 import {CharacterLibraryPage as BeforeCharacters, SceneLibraryPage as BeforeScenes, PropLibraryPage as BeforeProps, StyleLibraryPage as BeforeStyles} from "../sourceSnapshots/e04-library/src/components/studio/AssetLibraryPages";
-import "@/styles.css";
+import "@/ui/theme.css";
 
 // Native IndexedDB returned-row counters, separate from output projection and callback work.
 type Read = {table: string; method: string; index?: string; transactionId?: number; rows: number; returnedJSONBytes: number};

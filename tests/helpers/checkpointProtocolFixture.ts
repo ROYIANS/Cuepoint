@@ -1,8 +1,8 @@
-import type {BinarySource, CheckpointApplicationPort, CheckpointApplicationReceipt, CheckpointBuildInput, CheckpointManifest, CheckpointRecord, VerifiedCheckpoint} from "@/lib/checkpoint";
-import {CheckpointCanceledError, encodeCheckpointManifest} from "@/lib/checkpoint";
-import type {CheckpointTransport} from "@/lib/syncProvider";
-import {mediaWorkspaceRef, resolveWorkspaceRef, workspaceId} from "@/lib/workspace";
-import type {WorkspaceId, WorkspaceRoot} from "@/lib/workspace";
+import type {BinarySource, CheckpointApplicationPort, CheckpointApplicationReceipt, CheckpointBuildInput, CheckpointManifest, CheckpointRecord, VerifiedCheckpoint} from "@/app/workflows/checkpoint";
+import {CheckpointCanceledError, encodeCheckpointManifest} from "@/app/workflows/checkpoint";
+import type {CheckpointTransport} from "@/app/workflows/syncProvider";
+import {mediaWorkspaceRef, resolveWorkspaceRef, workspaceId} from "@/features/library/services/workspace";
+import type {WorkspaceId, WorkspaceRoot} from "@/features/library/services/workspace";
 
 export const fixtureWorkspaceId = workspaceId("protocol-fixture-workspace");
 export const fixtureProjectId = "project-one";

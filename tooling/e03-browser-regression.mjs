@@ -17,7 +17,8 @@ const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const snapshots = new URL("../tests/fixtures/sourceSnapshots/e03/", import.meta.url);
 const provenance = JSON.parse(await readFile(new URL("provenance.json", snapshots), "utf8"));
 for (const file of provenance.files) assert.equal(hash(await readFile(new URL(file.snapshotPath, new URL("../", import.meta.url)))), file.sha256);
-const currentFiles = provenance.files.map(file => ({...file, currentPath: file.sourcePath.replace(/^src\//, "packages/studio/src/")}));
+const currentSources = {"components/audio/story-workspace.css": "features/audio/ui/story-workspace.css", "components/audioMusic/workspace.css": "features/audio/presentation/workspace.css"};
+const currentFiles = provenance.files.map(file => ({...file, currentPath: "packages/studio/src/" + currentSources[file.sourcePath.replace(/^src\//, "")]}));
 const originalCss = {name: "e03-immutable-original-two-css-only", enforce: "pre", async transform(source, id) {
     if (baseline) for (const file of currentFiles) if (id.endsWith(`/${file.currentPath}`)) return await readFile(new URL(file.snapshotPath, new URL("../", import.meta.url)), "utf8");
     return source;

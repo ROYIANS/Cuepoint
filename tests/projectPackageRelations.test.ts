@@ -1,13 +1,13 @@
 import JSZip from "jszip";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import {addCharacter} from "@/db/assets";
-import {createProject} from "@/db/projects";
-import {putMedia} from "@/db/media";
-import { PACKAGE_FORMAT } from "@/domain/types";
-import { exportProjectZip, importProjectZip, PackageError } from "@/lib/projectPackage";
+import { db } from "@/platform/product/store";
+import {addCharacter} from "@/features/library/commands/assets";
+import {createProject} from "@/features/projects/commands/projects";
+import {putMedia} from "@/features/library/commands/media";
+import {PACKAGE_FORMAT} from "@/platform/data/packageFormat";
+import { exportProjectZip, importProjectZip, PackageError } from "@/app/workflows/packages/projectPackage";
 import {interceptStoreTable} from "./helpers/storeFaults";
-import type {StoreTx} from "@/lib/storage/types";
+import type {StoreTx} from "@/platform/storage/types";
 
 type Raw = Record<string, unknown>;
 function modernRecords(): { episodes: Raw[]; shots: Raw[] } {

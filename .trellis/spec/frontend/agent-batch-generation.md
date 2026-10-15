@@ -1,7 +1,7 @@
 # Reviewed batch generation and candidate selection
 
 ## 1. Scope / Trigger
-Read before changing multi-target generation, paid dispatch, candidate comparison, media retention or task result evidence. This extends [creative tools](./agent-creative-skills.md), [execution ownership](./agent-execution.md) and [task wrap-up](./agent-task-wrapup.md). Source: `domain/agentGenerationBatch.ts`, `db/agentGenerationBatches.ts`, `lib/agent/generationBatchRuntime.ts` and `components/agent/AgentGenerationBatches.tsx`.
+Read before changing multi-target generation, paid dispatch, candidate comparison, media retention or task result evidence. This extends [creative tools](./agent-creative-skills.md), [execution ownership](./agent-execution.md) and [task wrap-up](./agent-task-wrapup.md). Source: `features/agent/models/agentGenerationBatch.ts`, `features/agent/commands/agentGenerationBatches.ts`, `features/video/agent/generationBatchRuntime.ts` and `features/agent/ui/AgentGenerationBatches.tsx`.
 
 ## 2. Signatures
 - Tools: `prepare_generation_batch({title,candidates:GenerationSubmitArgs[]})` is atomic local bookkeeping; `read_generation_batch({batchId})` is a bounded read. They join the media-generation skill; conversation mode exposes no tools.

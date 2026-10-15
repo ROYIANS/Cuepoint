@@ -1,3 +1,4 @@
+import {historicalSource} from "./historical-source.mjs";
 import assert from "node:assert/strict";
 import {readFile, writeFile} from "node:fs/promises";
 import {join} from "node:path";
@@ -6,12 +7,13 @@ import {createServer} from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 const {chromium} = await import(process.env.D08_PLAYWRIGHT_PATH ?? "playwright");
-const commands = {"/packages/studio/src/db/shots.ts": "patchShot", "/packages/studio/src/db/episodes.ts": "patchStoryBeat"};
+const commands = {"/packages/studio/src/features/video/commands/shots.ts": "patchShot", "/packages/studio/src/features/video/commands/episodes.ts": "patchStoryBeat"};
+const currentSources = {"components/shots/ShotRow.tsx": "features/video/ui/ShotRow.tsx", "components/shots/ShotEditorPage.tsx": "features/video/ui/ShotEditorPage.tsx", "components/story/StoryPage.tsx": "features/video/ui/StoryPage.tsx", "db/episodes.ts": "features/video/commands/episodes.ts"};
 const originals = ["components/shots/ShotRow.tsx", "components/shots/ShotEditorPage.tsx", "components/story/StoryPage.tsx", "db/episodes.ts"];
 const transport = {name: "d08-controlled-storage", enforce: "pre", async transform(source, id) {
     if (process.env.D08_BASELINE_ROOT) {
-        const path = originals.find(path => id.endsWith(`/packages/studio/src/${path}`));
-        if (path) source = await readFile(join(process.env.D08_BASELINE_ROOT, "src", path), "utf8");
+        const path = originals.find(path => id.endsWith(`/packages/studio/src/${currentSources[path]}`));
+        if (path) source = historicalSource(await readFile(join(process.env.D08_BASELINE_ROOT, "src", path), "utf8"), path);
     }
     for (const [suffix, command] of Object.entries(commands)) {
         if (id.endsWith(suffix)) {

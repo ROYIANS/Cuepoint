@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { generateMimoSpeech, listMimoModels, MIMO_MODELS, MIMO_REFERENCE_ENCODED_LIMIT, validateMimoReference } from "@/lib/ai/mimoSpeech";
-import type { MimoSpeechSettings } from "@/domain/audio";
+import { generateMimoSpeech, listMimoModels, MIMO_MODELS, MIMO_REFERENCE_ENCODED_LIMIT, validateMimoReference } from "@/features/audio/providers/mimoSpeech";
+import type { MimoSpeechSettings } from "@/features/audio/models/audio";
 
 const credentials = { baseUrl: "https://proxy.example/mimo/v1/", apiKey: "secret-test-key" };
 const wav = new Blob(["RIFF", new Uint8Array(4), "WAVEfmt ", new Uint8Array(32)], { type: "audio/wav" });

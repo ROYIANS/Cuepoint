@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { generateApimartSpeech, submitApimartMusic, getApimartMusicTask, downloadApimartAudio, type SpeechInput } from "@/lib/ai/apimartAudio";
+import { generateApimartSpeech, submitApimartMusic, getApimartMusicTask, downloadApimartAudio, type SpeechInput } from "@/features/audio/providers/apimartAudio";
 
 const credentials = { baseUrl: "https://api.apimart.ai/v1/", apiKey: "test-secret" };
 const speech: SpeechInput = { model: "gpt-4o-mini-tts", input: "你好", voice: "alloy", response_format: "wav", speed: 1 };

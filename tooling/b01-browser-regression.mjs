@@ -14,7 +14,7 @@ const {chromium} = await import(playwrightPath);
 const transport = {
     name: "b01-controlled-transport", enforce: "pre",
     transform(source, id) {
-        if (id.endsWith("/packages/studio/src/lib/media.ts")) {
+        if (id.endsWith("/packages/studio/src/features/library/services/media.ts")) {
             source = source.replace("    if (!file.type.startsWith(\"image/\")", `    const fixture = (window as any).b01;
     if (fixture) {
         fixture.media.uploads.push(file);
@@ -27,9 +27,9 @@ const transport = {
     return new Promise((resolve) => {`);
         }
         const commands = {
-            "/packages/studio/src/db/shots.ts": "patchShot",
-            "/packages/studio/src/db/projects.ts": "patchProjectDetails",
-            "/packages/studio/src/db/assets.ts": "setCharacterSlot",
+            "/packages/studio/src/features/video/commands/shots.ts": "patchShot",
+            "/packages/studio/src/features/projects/commands/projects.ts": "patchProjectDetails",
+            "/packages/studio/src/features/library/commands/assets.ts": "setCharacterSlot",
         };
         for (const [suffix, name] of Object.entries(commands)) {
             if (id.endsWith(suffix)) {

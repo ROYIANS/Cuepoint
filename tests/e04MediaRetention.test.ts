@@ -2,12 +2,12 @@ import {describe, expect, it, vi} from "vitest";
 // The immutable scalar control predates the shared StoreTx interface. Keep its
 // source untouched and provide the original raw browser boundary only to it.
 vi.mock("./fixtures/sourceSnapshots/e04-media/src/db/database", async () => {
-    const {browserDatabase} = await import("@/lib/storage/browserDatabase");
+    const {browserDatabase} = await import("@/platform/storage/browserDatabase");
     return {db: browserDatabase};
 });
 vi.mock("./fixtures/sourceSnapshots/e04-media/src/db/productionShared", async () => {
-    const current = await import("@/db/productionShared");
-    const {browserDatabase} = await import("@/lib/storage/browserDatabase");
+    const current = await import("@/platform/product/scopes");
+    const {browserDatabase} = await import("@/platform/storage/browserDatabase");
     return {...current, PRODUCTION_TABLES: current.PRODUCTION_TABLES.map(table => browserDatabase!.table(table.name))};
 });
 import {retentionSources, isolatedSource, mixedOwnerParity, snapshotFreshness, workCount, nativeScheduling} from "./fixtures/e04-media/retention";

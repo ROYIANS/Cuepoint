@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addCharacter, patchCharacter} from "@/db/assets";
-import {addStoryBeat, firstEpisode, updateEpisodeDraft} from "@/db/episodes";
-import {createProject, updateSeriesLogline, updateWorldSetting} from "@/db/projects";
-import { DebouncedDraftController } from "@/lib/debouncedDraft";
-import { changedDraftFields, DraftConflictError } from "@/lib/draftConflict";
+import { db } from "@/platform/product/store";
+import {addCharacter, patchCharacter} from "@/features/library/commands/assets";
+import {addStoryBeat, firstEpisode, updateEpisodeDraft} from "@/features/video/commands/episodes";
+import {createProject, updateSeriesLogline, updateWorldSetting} from "@/features/projects/commands/projects";
+import { DebouncedDraftController } from "@/platform/product/drafts";
+import { changedDraftFields, DraftConflictError } from "@/platform/product/draftConflict";
 
 describe("concurrent text drafts", () => {
   it("rebases clean text fields while preserving dirty values and their original comparison baseline", () => {

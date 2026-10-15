@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { db } from "@/db/database";
-import { beginAgentRun } from "@/db/agentRuns";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import {createChatThread} from "@/db/chat";
-import { BUILTIN_TOOLS, toolSchemas, validateToolCall } from "@/lib/agent/tools";
-import { executeChatRun } from "@/lib/agent/runChat";
-import { ToolValidationError, readToolValidationFailure } from "@/lib/agent/toolErrors";
+import { db } from "@/platform/product/store";
+import { beginAgentRun } from "@/features/agent/commands/agentRuns";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import {createChatThread} from "@/features/agent/commands/chat";
+import { BUILTIN_TOOLS, toolSchemas, validateToolCall } from "@/features/agent/runtime/tools";
+import { executeChatRun } from "@/features/agent/runtime/runChat";
+import { ToolValidationError, readToolValidationFailure } from "@/features/agent/runtime/toolErrors";
 
 describe("tool diagnostics preserve validation and permission boundaries", () => {
   it("explains received and required types in Chinese without echoing model strings", () => {

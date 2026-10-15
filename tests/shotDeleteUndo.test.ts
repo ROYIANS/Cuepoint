@@ -1,15 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {PRODUCTION_TABLES} from "@/db/productionShared";
-import {addEpisode} from "@/db/episodes";
-import {addShot, deleteEpisodeShots, patchShot, restoreShots, setShotSlot} from "@/db/shots";
-import {createProject} from "@/db/projects";
-import {putMedia} from "@/db/media";
-import { emptySlot } from "@/domain/slot";
-import type { MediaRecord, Shot } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import {PRODUCTION_TABLES} from "@/platform/product/scopes";
+import {addEpisode} from "@/features/video/commands/episodes";
+import {addShot, deleteEpisodeShots, patchShot, restoreShots, setShotSlot} from "@/features/video/commands/shots";
+import {createProject} from "@/features/projects/commands/projects";
+import {putMedia} from "@/features/library/commands/media";
+import { emptySlot } from "@/features/library/models/slot";
+import type {MediaRecord} from "@/features/library/models/media";
+import type {Shot} from "@/features/video/models/shots";
 import {actualStoreScope,installStoreHook,interceptStoreBackend} from "./helpers/storeBackendFaults";
-import {readBinaryBlob} from "@/lib/storage/binary";
-import type {ProductStore} from "@/lib/storage/types";
+import {readBinaryBlob} from "@/platform/storage/binary";
+import type {ProductStore} from "@/platform/storage/types";
 
 async function seed(count = 2) {
   const project = await createProject("delete undo");

@@ -1,8 +1,8 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {DebouncedDraftController, flushPendingDrafts, registerPendingDraft} from "@/lib/debouncedDraft";
-import {createRunWriter} from "@/lib/agent/runChat";
-import {parseReferenceFile} from "@/lib/references/import";
-import {streamResponses} from "@/lib/ai/responsesStream";
+import {DebouncedDraftController, flushPendingDrafts, registerPendingDraft} from "@/platform/product/drafts";
+import {createRunWriter} from "@/features/agent/runtime/runChat";
+import {parseReferenceFile} from "@/features/references/documents/import";
+import {streamResponses} from "@/features/agent/providers/responsesStream";
 
 afterEach(() => vi.unstubAllGlobals());
 

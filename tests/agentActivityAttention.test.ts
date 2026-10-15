@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { selectActivityAttention } from "@/lib/agent/activityAttention";
+import { selectActivityAttention } from "@/features/agent/runtime/activityAttention";
 
 type Input = Parameters<typeof selectActivityAttention>[0];
 const run: Input["runs"][number] = { id: "run", threadId: "thread", status: "completed", hasToolCalls: true, createdAt: "2026-09-21T00:00:00Z" };

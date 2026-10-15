@@ -1,9 +1,9 @@
 import {interceptStoreTable} from "./helpers/storeFaults";
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {db as browserDb} from "@/db/database";
-import {emptySlot} from "@/domain/slot";
-import {emptyProject} from "@/db/productionRecords";
-import {resolveProductStorage} from "@/lib/productStorage";
+import {db as browserDb} from "@/platform/product/store";
+import {emptySlot} from "@/features/library/models/slot";
+import {emptyProject} from "@/features/projects/models/newProject";
+import {resolveProductStorage} from "@/platform/runtime/storageProfile";
 
 afterEach(() => {
     vi.unstubAllGlobals();
@@ -53,10 +53,10 @@ describe("fixed shared product storage ownership", () => {
         const browserRead = vi.spyOn(browserDb.projects, "toArray");
         vi.resetModules();
         const invoke = nativeProfile("dev.cuepoint.owner-test");
-        const {db} = await import("@/db/database");
-        const {getProductStorage} = await import("@/lib/productStorage");
-        const {getVideoWorkspaceRepository} = await import("@/lib/videoWorkspaceRepository");
-        const {uploadMediaFile} = await import("@/lib/media");
+        const {db} = await import("@/platform/product/store");
+        const {getProductStorage} = await import("@/platform/runtime/storageProfile");
+        const {getVideoWorkspaceRepository} = await import("@/features/video/services/workspaceRepository");
+        const {uploadMediaFile} = await import("@/features/library/services/media");
         try {
             await db.delete();
             await db.open();
@@ -96,14 +96,14 @@ describe("fixed shared product storage ownership", () => {
     it("does not read or import another desktop profile's records or bytes", async () => {
         vi.resetModules();
         nativeProfile("dev.cuepoint.isolation-a");
-        const first = (await import("@/db/database")).db;
+        const first = (await import("@/platform/product/store")).db;
         await first.delete();
         await first.open();
         await first.media.add({id: "profile-a-only", projectId: "studio", filename: "owned.png", mimeType: "image/png", blob: new Blob(["a-only"])});
         first.close();
         vi.resetModules();
         const invoke = nativeProfile("dev.cuepoint.isolation-b");
-        const second = (await import("@/db/database")).db;
+        const second = (await import("@/platform/product/store")).db;
         try {
             await second.delete();
             await second.open();

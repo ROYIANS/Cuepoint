@@ -1,11 +1,11 @@
 import Dexie from "dexie";
 import {describe,expect,it} from "vitest";
-import {createBrowserProductStore} from "@/lib/storage/browser";
-import {cloneStoredValue,decodeLocalValue,encodeLocalValue,registerBinaryReference} from "@/lib/storage/codec";
-import {encodeProductRow} from "@/lib/storage/rowCodec";
-import {PRODUCT_SCHEMA,TABLE_NAMES} from "@/lib/storage/schema";
-import {targetRevision} from "@/lib/productionRevision";
-import {validateEncodedValue} from "@/lib/storage/validate";
+import {createBrowserProductStore} from "@/platform/storage/browser";
+import {cloneStoredValue,decodeLocalValue,encodeLocalValue,registerBinaryReference} from "@/platform/storage/codec";
+import {encodeProductRow} from "@/platform/storage/rowCodec";
+import {PRODUCT_SCHEMA,TABLE_NAMES} from "@/platform/storage/schema";
+import {targetRevision} from "@/platform/data/revision";
+import {validateEncodedValue} from "@/platform/storage/validate";
 import {registerSharedStorageCases} from "./helpers/sharedStorageCases";
 
 registerSharedStorageCases("indexeddb",async ()=> {

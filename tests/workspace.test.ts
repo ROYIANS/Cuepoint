@@ -1,10 +1,10 @@
 import {installStoreHook} from "./helpers/storeBackendFaults";
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {createProject} from "@/db/projects";
-import {STUDIO_LIBRARY_ID} from "@/domain/types";
-import {uploadMediaFile} from "@/lib/media";
-import {copyIntoManagedWorkspace, mediaWorkspaceRef, resolveWorkspaceRef, workspaceId} from "@/lib/workspace";
+import {db} from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
+import {uploadMediaFile} from "@/features/library/services/media";
+import {copyIntoManagedWorkspace, mediaWorkspaceRef, resolveWorkspaceRef, workspaceId} from "@/features/library/services/workspace";
 
 // Intercept the actual bounded slice/read boundary, not the unused full source read.
 function mockRead(source: Blob, read: () => Promise<ArrayBuffer>) {

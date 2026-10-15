@@ -13,7 +13,7 @@
     "landing:budget": "node tooling/landing-budget.mjs",
     "lint": "tsc -b --pretty false",
     "quality": "node tooling/quality-check.mjs",
-    "quality:self-test": "node tooling/quality/self-test.mjs && node --test tooling/workspace.test.mjs",
+    "quality:self-test": "node tooling/quality/self-test.mjs && node --test tooling/workspace.test.mjs tooling/studio.test.mjs",
     "test:storage:native": "node tooling/native-storage-regression.mjs",
     "models-dev:baseline": "node tooling/models-dev-baseline.mjs generate",
     "models-dev:verify": "node tooling/models-dev-baseline.mjs verify",

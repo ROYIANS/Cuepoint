@@ -27,7 +27,7 @@ struct Registry {
     version: u32,
     tables: BTreeMap<String, Table>,
 }
-pub const REGISTRY_JSON: &str = include_str!("../../../../../packages/studio/src/lib/storage/schema.json");
+pub const REGISTRY_JSON: &str = include_str!("../../../../../packages/studio/src/platform/storage/schema.json");
 pub fn tables() -> &'static BTreeMap<String, Table> {
     static REGISTRY: OnceLock<Registry> = OnceLock::new();
     &REGISTRY

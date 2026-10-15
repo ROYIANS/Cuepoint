@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read before changing `packages/studio/src/db/`, Agent transaction dependencies, reactive reads,
+Read before changing `packages/studio/src/platform/storage/`, `platform/product/`, feature command repositories, Agent transaction dependencies or reactive reads,
 managed bytes, or the full-product native worker. The product has one React page
 tree, one set of TypeScript commands and one Agent/tool registry. Persistence is
 an adapter boundary: browser IndexedDB and the complete native SQLite/files
@@ -17,10 +17,7 @@ authorized without the user's explicit request.
 
 ## 2. Signatures
 
-Owners: `storage/types.ts`, `store.ts`, `schema.ts`/`schema.json`, `codec.ts`,
-`browser.ts`/`browserDatabase.ts`, `native.ts`/`nativeBridge.ts`, `nativeBinary.ts`,
-`binary.ts`, `hooks.ts`, and Rust `full_product_store/`, `product_binary.rs`,
-`product_media.rs`/`worker.rs`.
+Mechanism owners are under `packages/studio/src/platform/storage/`: `types.ts`, `store.ts`, `tableTypes.ts`, `schema.ts`/`schema.json`, `codec.ts`, `browser.ts`/`browserDatabase.ts`, `native.ts`/`nativeBridge.ts`, `nativeBinary.ts` and `binary.ts`. Product integration is separate: `platform/product/store.ts` selects the single import-time fixed owner and owns `initializeProductStorage`, `platform/product/queries.ts` binds React queries to that owner, and `platform/product/scopes.ts` defines explicit table scopes. Storage mechanisms import neither React nor the product integration. Rust owners remain `full_product_store/`, `product_binary.rs`, and `product_media.rs`/`worker.rs`.
 
 ```ts
 type ProductStore = StoreApi & {[N in TableName]: StoreTable<ProductRows[N]>};
@@ -49,7 +46,7 @@ Table operations are `get`, `bulkGet`, `toArray`, `count`, `where`, `orderBy`,
 `filter`, `add`, `put`, `update`, `delete`, `bulkAdd`, `bulkPut`, `bulkDelete`,
 `clear`. Collections retain `first`, `filter`/`and`, `reverse`, `limit`, `sortBy`,
 `each`, `modify`, `delete`; `anyOf` accepts an array or variadic keys.
-`storage/schema.json` is the closed 50-table key/index/scope registry, shared
+`platform/storage/schema.json` is the closed 50-table key/index/scope registry, shared
 with Rust and checked against the browser schema. The 50th table, `deviceSettings`
 (`key` primary key, free-form `value`, `updatedAt`; scope `device`), is a generic
 device-local key/value store: it never enters project packages or the future cloud

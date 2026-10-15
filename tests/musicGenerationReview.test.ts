@@ -1,18 +1,18 @@
 import {registeredTools} from "./helpers/registeredTools";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
-import { beginAgentRun } from "@/db/agentRuns";
-import { resumeAgentRun, saveToolPreview } from "@/db/agentTools";
-import { addMusicDraft, patchMusicDraft } from "@/db/music";
-import type { MusicSettings } from "@/domain/music";
-import type { AgentRun, AgentToolPreview } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
-import { AUDIO_GENERATION_TOOLS as AUDIO_GENERATION_TOOLS_DEFINITIONS, AUDIO_GENERATION_TOOL_NAMES } from "@/lib/agent/audioGenerationTools";
-import { approveMusicGenerationReview, parseMusicGenerationReview, readMusicGenerationReview } from "@/lib/agent/musicGenerationReview";
-import { MUSIC_REVIEW_MAX_BYTES } from "@/lib/agent/musicGenerationReviewSnapshot";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
+import { db } from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
+import { beginAgentRun } from "@/features/agent/commands/agentRuns";
+import { resumeAgentRun, saveToolPreview } from "@/features/agent/commands/agentTools";
+import { addMusicDraft, patchMusicDraft } from "@/features/music/commands/music";
+import type { MusicSettings } from "@/features/music/models/music";
+import type { AgentRun, AgentToolPreview } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { AUDIO_GENERATION_TOOLS as AUDIO_GENERATION_TOOLS_DEFINITIONS, AUDIO_GENERATION_TOOL_NAMES } from "@/features/audio/agent/audioGenerationTools";
+import { approveMusicGenerationReview, parseMusicGenerationReview, readMusicGenerationReview } from "@/features/music/agent/musicGenerationReview";
+import { MUSIC_REVIEW_MAX_BYTES } from "@/features/music/agent/musicGenerationReviewSnapshot";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
 const AUDIO_GENERATION_TOOLS = registeredTools(AUDIO_GENERATION_TOOLS_DEFINITIONS);
 
 

@@ -1,11 +1,12 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {addAudioClip, addAudioTake, getAudioProjectSnapshot} from "@/db/audio";
-import {exportAudioMix} from "@/lib/audio/exportMix";
-import {encodePcm16Wav, MIX_SAMPLE_RATE} from "@/lib/audio/wav";
-import {getAudioExportFreshness} from "@/lib/audio/fingerprint";
-import {readBinaryBlob} from "@/lib/storage/binary";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {addAudioClip, addAudioTake} from "@/features/audio/commands/audio";
+import {getAudioProjectSnapshot} from "@/features/audio/queries/snapshot";
+import {exportAudioMix} from "@/features/audio/engine/exportMix";
+import {encodePcm16Wav, MIX_SAMPLE_RATE} from "@/features/audio/engine/wav";
+import {getAudioExportFreshness} from "@/features/audio/engine/fingerprint";
+import {readBinaryBlob} from "@/platform/storage/binary";
 import {interceptStoreTable} from "./helpers/storeFaults";
 
 const samples = new Float32Array([0.25, -0.25, 0.5, -0.5]);

@@ -1,5 +1,5 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {createProductRouterHistory} from "@/lib/productRouterHistory";
+import {createProductRouterHistory} from "@/app/navigation/productRouterHistory";
 
 function browserWindow(href: string, native: boolean) {
     let location = new URL(href);

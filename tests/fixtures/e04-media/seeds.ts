@@ -1,12 +1,15 @@
-import type {ProductStore, StoreTable} from "@/lib/storage/types";
-import {db} from "@/db/database";
-import {emptyCharacter, emptyScene, emptyProp, emptyStyle, emptyProject, emptyShot} from "@/db/productionRecords";
-import {emptySlot, SHOT_PICTURE_FIELDS} from "@/domain/slot";
-import type {GenerationResult, GenerationSlot, MediaRecord} from "@/domain/types";
-import type {AgentGenerationJob} from "@/domain/agentGeneration";
-import type {GenerationBatch, GenerationBatchItem, GenerationSnapshot} from "@/domain/agentGenerationBatch";
-import type {ProductionProposal} from "@/domain/production";
-import type {GenerationSubmitArgs} from "@/lib/agent/generationProfiles";
+import type {ProductStore, StoreTable} from "@/platform/storage/types";
+import {db} from "@/platform/product/store";
+import {emptyCharacter, emptyScene, emptyProp, emptyStyle} from "@/features/library/models/newAssets";
+import {emptyProject} from "@/features/projects/models/newProject";
+import {emptyShot} from "@/features/video/models/newRecords";
+import {emptySlot, SHOT_PICTURE_FIELDS} from "@/features/library/models/slot";
+import type {GenerationResult, GenerationSlot} from "@/features/library/models/slots";
+import type {MediaRecord} from "@/features/library/models/media";
+import type {AgentGenerationJob} from "@/features/agent/models/agentGeneration";
+import type {GenerationBatch, GenerationBatchItem, GenerationSnapshot} from "@/features/agent/models/agentGenerationBatch";
+import type {ProductionProposal} from "@/features/video/models/production";
+import type {GenerationSubmitArgs} from "@/features/video/agent/generationProfiles";
 
 export const at = "2026-10-09T00:00:00.000Z";
 export function check(value: unknown, message: string): asserts value { if (!value) throw new Error(message); }

@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
-import type {AudioClip, AudioProjectSnapshot} from "@/domain/audio";
+import type {AudioClip, AudioProjectSnapshot} from "@/features/audio/models/audio";
 
 type Host = {cells: unknown[]; cursor: number};
 const runtime = vi.hoisted(() => ({active: undefined as Host | undefined}));
@@ -25,13 +25,14 @@ vi.mock("react", async original => {
     };
 });
 
-import {AudioTimeline} from "@/components/audio/AudioTimeline";
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {db} from "@/db/database";
-import {addAudioClip, addAudioTake, getAudioProjectSnapshot} from "@/db/audio";
-import {createAudioMusicProject} from "@/db/projects";
-import {AudioClipHistory} from "@/lib/audio/commands";
+import {AudioTimeline} from "@/features/audio/ui/AudioTimeline";
+import {Button} from "@/ui/button";
+import {Input} from "@/ui/input";
+import {db} from "@/platform/product/store";
+import {addAudioClip, addAudioTake} from "@/features/audio/commands/audio";
+import {getAudioProjectSnapshot} from "@/features/audio/queries/snapshot";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {AudioClipHistory} from "@/features/audio/engine/commands";
 
 type Node = ReactElement<Record<string, unknown>>;
 const labels = ["时间线位置（秒）", "源裁剪起点（秒）", "源裁剪终点（秒）", "音量倍数", "淡入时长（秒）", "淡出时长（秒）"];

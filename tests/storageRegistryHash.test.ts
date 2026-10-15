@@ -10,7 +10,7 @@ const PINNED_REGISTRY_HASH="3c897189ef6f71517c55c86b5d24b7f9cd0e1cfd88d1b916b463
 
 describe("table registry hash",()=>{
     it("matches the pinned hash so installed workspaces keep opening",()=>{
-        const bytes=readFileSync(new URL("../packages/studio/src/lib/storage/schema.json",import.meta.url));
+        const bytes=readFileSync(new URL("../packages/studio/src/platform/storage/schema.json",import.meta.url));
         expect(createHash("sha256").update(bytes).digest("hex")).toBe(PINNED_REGISTRY_HASH);
     });
 });

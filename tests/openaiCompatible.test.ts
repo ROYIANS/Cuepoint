@@ -7,7 +7,7 @@ import {
   modelsUrl,
   normalizeBaseUrl,
   testConnection,
-} from "@/lib/ai/openaiCompatible";
+} from "@/features/agent/providers/openaiCompatible";
 
 describe("openaiCompatible helpers", () => {
   afterEach(() => {

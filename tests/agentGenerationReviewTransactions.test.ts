@@ -1,16 +1,16 @@
 import {installStoreHook} from "./helpers/storeBackendFaults";
 import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun } from "@/db/agentRuns";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import {addShot} from "@/db/shots";
-import {createChatThread} from "@/db/chat";
-import {createProject} from "@/db/projects";
-import type { ConnectorConfig } from "@/domain/types";
-import { reviewAndApproveGeneration } from "@/lib/agent/generationReview";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import type { GenerationSubmitArgs } from "@/lib/agent/generationProfiles";
+import { db } from "@/platform/product/store";
+import { beginAgentRun } from "@/features/agent/commands/agentRuns";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import {addShot} from "@/features/video/commands/shots";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {createProject} from "@/features/projects/commands/projects";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { reviewAndApproveGeneration } from "@/features/video/agent/generationReview";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import type { GenerationSubmitArgs } from "@/features/video/agent/generationProfiles";
 
 const connector: ConnectorConfig = { id: "chat", definitionId: "openai-compatible", baseUrl: "https://chat.test/v1", apiKey: "fixture-key", updatedAt: "now" };
 const png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jFZkAAAAASUVORK5CYII=";

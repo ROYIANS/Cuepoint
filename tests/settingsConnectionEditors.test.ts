@@ -4,18 +4,18 @@ import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 const boundary = vi.hoisted(() => ({save: vi.fn()}));
-vi.mock("@/db/searchConnections", async original => ({
-    ...await original<typeof import("@/db/searchConnections")>(), saveSearchConnection: boundary.save,
+vi.mock("@/features/settings/commands/searchConnections", async original => ({
+    ...await original<typeof import("@/features/settings/commands/searchConnections")>(), saveSearchConnection: boundary.save,
 }));
 
 // Keep the real page, connection owners, inputs and Radix dialog. This boundary
 // supplies an already-read empty connector list and unconfigured search key.
-vi.mock("@/lib/storage/hooks", () => ({
+vi.mock("@/platform/product/queries", () => ({
     useProductQuery: () => ({connectors: [], state: {configured: false, enabled: true}}),
     useProductQueryState: () => ({value: {autoCheck: false, lastCheck: undefined}, error: null}),
 }));
 
-import {SettingsPage} from "@/components/settings/SettingsPage";
+import {SettingsPage} from "@/features/settings/ui/SettingsPage";
 
 let root: Root;
 let container: HTMLDivElement;

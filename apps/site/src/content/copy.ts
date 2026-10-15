@@ -54,11 +54,11 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
             {text: "单片与剧集两种组织方式，剧集可在多集之间共享项目设定与资产", evidence: "README.md「视频」组织项目"},
             {
                 text: "参考资料（图片、TXT/Markdown、文本 PDF、DOCX）在本机解析；选中的内容会随 AI 请求发给你所选的供应商",
-                evidence: "README.md「参考资料」「助手」；packages/studio/src/lib/references/"
+                evidence: "README.md「参考资料」「助手」；packages/studio/src/features/references/documents/"
             },
             {
                 text: "多个 IP 档案与三级素材库；项目采用素材时创建副本并记录版本",
-                evidence: "README.md「IP 与素材复用」；packages/studio/src/db/assetReuse.ts"
+                evidence: "README.md「IP 与素材复用」；packages/studio/src/features/library/commands/assetReuse.ts"
             },
         ],
         caption: "散落的光点排成剧本的文字行，逐字显现。",
@@ -70,11 +70,11 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
             text: "把场次落到具体镜头：顺序、时长、提示词，以及与角色、场景、道具的关联。",
             evidence: "README.md「视频」编辑镜头"
         },
-        subtitle: {text: "文字落成镜头，一格，一格。", evidence: "README.md「视频」编辑镜头；packages/studio/src/lib/shotFilters.ts"},
+        subtitle: {text: "文字落成镜头，一格，一格。", evidence: "README.md「视频」编辑镜头；packages/studio/src/features/video/services/shotFilters.ts"},
         points: [
             {
                 text: "镜头表可筛选、拖拽排序，并支持快捷操作",
-                evidence: "README.md「视频」编辑镜头；packages/studio/src/lib/shotFilters.ts、packages/studio/src/lib/reorderIds.ts"
+                evidence: "README.md「视频」编辑镜头；packages/studio/src/features/video/services/shotFilters.ts、packages/studio/src/platform/collections/reorderIds.ts"
             },
             {
                 text: "画面通过助手中的生成流程制作：供应商、模型与提示词由你确认，候选结果由你检查后采用",
@@ -90,16 +90,16 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
             text: "围绕你绑定的项目对话、制定任务计划、调用已启用的工具，并留下可回看的执行记录。",
             evidence: "README.md「助手：围绕项目执行并核对成果」"
         },
-        subtitle: {text: "有个安静的帮手，你点头，它才动手。", evidence: "README.md 权限模式表；packages/studio/src/domain/agent.ts"},
+        subtitle: {text: "有个安静的帮手，你点头，它才动手。", evidence: "README.md 权限模式表；packages/studio/src/features/agent/models/agent.ts"},
         points: [
-            {text: "三档权限：请求批准、帮我批准、完全访问", evidence: "README.md 权限模式表；packages/studio/src/domain/agent.ts"},
+            {text: "三档权限：请求批准、帮我批准、完全访问", evidence: "README.md 权限模式表；packages/studio/src/features/agent/models/agent.ts"},
             {
                 text: "执行记录展示工具调用与实际写入的结果；模型说“完成”，不替代工作台里真正保存的内容",
                 evidence: "README.md「助手」执行记录段落"
             },
             {
                 text: "项目记忆可手动维护，让后续创作沿用约定与偏好",
-                evidence: "README.md 模块表「项目记忆」；packages/studio/src/db/projectMemories.ts"
+                evidence: "README.md 模块表「项目记忆」；packages/studio/src/features/memory/commands/projectMemories.ts"
             },
         ],
         caption: "示意：安静的对话与工具时间线，并非真实界面截图。",
@@ -133,11 +133,11 @@ export const SCENE_COPY: Record<SceneId, SceneCopy> = {
             text: "先检查资料与媒体的缺口，再导出可以移交、也可以备份的文件。",
             evidence: "README.md「视频」检查交付"
         },
-        subtitle: {text: "想带走，就整整齐齐地交出去。", evidence: "README.md「视频」检查交付；packages/studio/src/lib/episodeDelivery.ts"},
+        subtitle: {text: "想带走，就整整齐齐地交出去。", evidence: "README.md「视频」检查交付；packages/studio/src/features/video/services/episodeDelivery.ts"},
         points: [
             {
                 text: "当前集的分镜 CSV、可打印分镜板与制作素材交付 ZIP",
-                evidence: "README.md「视频」检查交付；packages/studio/src/lib/episodeDelivery.ts"
+                evidence: "README.md「视频」检查交付；packages/studio/src/features/video/services/episodeDelivery.ts"
             },
             {
                 text: "项目 ZIP 用于备份与迁移，可重新导入；它不含 API Key，也不是整个工作室的镜像",
@@ -173,7 +173,7 @@ export const HERO_NOTE: Claim = {
 export const ONLINE_NOTES: readonly Claim[] = [
     {
         text: "在浏览器中打开的是真实的工作室，不是演示视频或沙盒。",
-        evidence: "README.md「概览」；packages/studio/src/routes/_studio.agent.tsx"
+        evidence: "README.md「概览」；packages/studio/src/app/routes/_studio.agent.tsx"
     },
     {
         text: "项目只保存在当前浏览器与站点来源：换浏览器、无痕窗口或清理站点数据后会看不到原项目，请定期导出项目 ZIP。",

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { ChatMessage } from "@/domain/types";
-import { buildChatTurns, getActiveTurnIndex, turnExcerpt, MAX_VISIBLE_TURNS, MIN_TURNS_FOR_NAVIGATION } from "@/lib/agent/chatTurns";
+import type {ChatMessage} from "@/features/agent/models/chat";
+import { buildChatTurns, getActiveTurnIndex, turnExcerpt, MAX_VISIBLE_TURNS, MIN_TURNS_FOR_NAVIGATION } from "@/features/agent/runtime/chatTurns";
 
 function message(id: string, role: ChatMessage["role"], content: string, status?: ChatMessage["status"]): ChatMessage {
   return { id, threadId: "thread", role, content, status, createdAt: "2026-09-21T00:00:00.000Z" };

@@ -1,4 +1,4 @@
-import {browserDatabase} from "@/lib/storage/browserDatabase";
+import {browserDatabase} from "@/platform/storage/browserDatabase";
 import type {DBCore} from "dexie";
 
 export interface Scan {

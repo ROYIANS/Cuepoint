@@ -1,9 +1,9 @@
 import {installStoreHook} from "./helpers/storeBackendFaults";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import { addAudioSegment } from "@/db/audio";
-import { appendAudioScript, splitAudioScript } from "@/lib/audio/scriptImport";
+import { db } from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import { addAudioSegment } from "@/features/audio/commands/audio";
+import { appendAudioScript, splitAudioScript } from "@/features/audio/engine/scriptImport";
 
 describe("audio script paragraphs", () => {
   it("treats each nonempty pasted line as a script unit", () => {
@@ -36,8 +36,8 @@ describe("audio script paragraphs", () => {
   });
 });
 
-import { editAudioScriptLines } from "@/lib/audio/scriptImport";
-import { addAudioSpeaker } from "@/db/audio";
+import { editAudioScriptLines } from "@/features/audio/engine/scriptImport";
+import { addAudioSpeaker } from "@/features/audio/commands/audio";
 
 describe("inline audio script editing", () => {
   async function fixture() {

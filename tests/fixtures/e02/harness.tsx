@@ -1,12 +1,12 @@
 import {createRoot} from "react-dom/client";
 import {createRootRoute, createRoute, createRouter, createBrowserHistory, Outlet, RouterProvider} from "@tanstack/react-router";
 import {Toaster} from "sonner";
-import {db} from "@/db/database";
-import {AgentChatPage} from "@/components/agent/AgentChatPage";
-import {LobeChatTheme} from "@/components/agent/LobeChatTheme";
-import {AppFrame} from "@/components/layout/AppFrame";
-import type {ChatMessage, ChatThread} from "@/domain/types";
-import "@/styles.css";
+import {db} from "@/platform/product/store";
+import {AgentChatPage} from "@/features/agent/ui/AgentChatPage";
+import {LobeChatTheme} from "@/features/agent/ui/LobeChatTheme";
+import {AppFrame} from "@/app/layout/AppFrame";
+import type {ChatMessage, ChatThread} from "@/features/agent/models/chat";
+import "@/ui/theme.css";
 
 const at = "2026-10-09T00:00:00.000Z";
 const threads: ChatThread[] = [

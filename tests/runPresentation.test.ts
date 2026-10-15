@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { AgentRun, AgentToolCall } from "@/domain/agent";
-import { buildRunActivity, formatRunElapsed, getRunElapsedMs, isPersistedToolRound } from "@/lib/agent/runPresentation";
+import type { AgentRun, AgentToolCall } from "@/features/agent/models/agent";
+import { buildRunActivity, formatRunElapsed, getRunElapsedMs, isPersistedToolRound } from "@/features/agent/runtime/runPresentation";
 
 const run: AgentRun = {
   id: "run", threadId: "thread", agentId: "agent", agentSnapshot: { name: "Agent", instructions: "" },

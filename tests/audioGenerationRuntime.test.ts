@@ -1,12 +1,12 @@
 import {installStoreHook} from "./helpers/storeBackendFaults";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import { addAudioSegment, patchAudioSegment } from "@/db/audio";
-import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration } from "@/lib/audioGeneration/runtime";
-import { patchAudioGenerationJob } from "@/db/audioGeneration";
-import type { AudioTaskObservation } from "@/domain/audioGeneration";
-import type { ConnectorConfig } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import { addAudioSegment, patchAudioSegment } from "@/features/audio/commands/audio";
+import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration } from "@/features/audio/generation/runtime";
+import { patchAudioGenerationJob } from "@/features/audio/commands/generation";
+import type { AudioTaskObservation } from "@/features/audio/models/audioGeneration";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 async function setup(kind: "audio" | "music") {
   const project = await createAudioMusicProject("声音", kind);

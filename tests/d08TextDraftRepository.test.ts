@@ -1,11 +1,11 @@
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {createProject} from "@/db/projects";
-import {addStoryBeat, firstEpisode, patchStoryBeat, reorderBeats} from "@/db/episodes";
-import {addShot, patchShot} from "@/db/shots";
-import {addCharacter} from "@/db/assets";
-import {DraftConflictError} from "@/lib/draftConflict";
-import {normalizeEpisodeStory} from "@/domain/types";
+import {db} from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {addStoryBeat, firstEpisode, patchStoryBeat, reorderBeats} from "@/features/video/commands/episodes";
+import {addShot, patchShot} from "@/features/video/commands/shots";
+import {addCharacter} from "@/features/library/commands/assets";
+import {DraftConflictError} from "@/platform/product/draftConflict";
+import {normalizeEpisodeStory} from "@/features/video/models/story";
 
 async function fixture() {
     const project = await createProject("D08", "series");

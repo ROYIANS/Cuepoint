@@ -1,111 +1,141 @@
 # Directory Structure
 
-> How frontend code is organized in this project.
+## Workspace ownership
 
----
+Application entries live in `apps/web`, `apps/desktop` and `apps/site`. Browser
+and desktop import the same `@cuepoint/studio/bootstrap`; the site consumes only
+lightweight `@cuepoint/distribution` exports. The repository uses pnpm workspaces,
+declared dependencies and explicit export maps. See
+[Monorepo Boundaries](./monorepo-boundaries.md) for exports, discovery, build
+assembly and deployment contracts.
 
-## Overview
+The shared product is organized by feature inside `packages/studio`, rather
+than by separate global component/domain/db/lib folders. The executable
+[Studio Feature Ownership](./feature-organization.md) contract defines allowed
+imports, public entries, fixed storage integration and transaction propagation.
+`quality/studio-ownership.json` must agree with the actual tree; a directory
+name alone does not establish that its dependencies are valid.
 
-Application entries live in `apps/web`, `apps/desktop` and `apps/site`. Browser and desktop import the same `@cuepoint/studio/bootstrap`; the site consumes only lightweight `@cuepoint/distribution` exports. The repository uses pnpm workspaces, declared dependencies and explicit export maps.
+Canonical product contracts remain in `.trellis/spec/frontend`. Package-specific
+indexes under `.trellis/spec/{web,desktop,site,studio,distribution}` select those
+contracts; `get_context.py --mode packages` lists actual owners. Unqualified
+product module names in a contract refer to their Studio owner.
 
-Shared product routes, components, domain types and business commands currently remain under `packages/studio/src/{routes,components,domain,db,lib}`. This is the application-boundary phase; the subsequent feature-organization task owns their vertical restructuring. Browser/native persistence already uses the shared ProductStore, rather than an IndexedDB-only db layer.
+## Studio layout
 
-Canonical product contracts remain in `.trellis/spec/frontend`. Package-specific indexes select them under `.trellis/spec/{web,desktop,site,studio,distribution}`; `get_context.py --mode packages` lists actual owners. Unqualified module names below refer to studio unless another owner is stated.
-
-See [Monorepo Boundaries](./monorepo-boundaries.md) for package exports, source coverage, build assembly and acceptance contracts.
-
----
-
-## Directory Layout
-
-```
+```text
 packages/studio/src/
-├── routes/
-│   ├── _studio.tsx                  # StudioShell
-│   ├── _studio.index.tsx            # redirect → /agent
-│   ├── _studio.agent.tsx            # 对话 layout (owns AgentChatPage + LobeChatTheme)
-│   ├── _studio.agent.index.tsx      # /agent URL match (no remount)
-│   ├── _studio.agent.$threadId.tsx  # /agent/$threadId URL match (no remount)
-│   ├── _studio.projects.tsx         # 项目 library
-│   ├── _studio.characters.tsx       # layout Outlet
-│   ├── _studio.characters.index.tsx
-│   ├── _studio.characters.$characterId.tsx
-│   ├── _studio.scenes.*             # same layout + index + $id
-│   ├── _studio.props.*
-│   ├── _studio.styles.*
-│   └── p.$projectId.*               # 一部戏：系列集列表/世界，集内故事/分镜/制作
-├── components/
-│   ├── studio/AssetLibraryPages.tsx # studio 角色/场景/道具/风格 grids
-│   ├── studio/StudioShell.tsx       # guarded Studio owner + shared AppFrame
-│   ├── layout/                      # AppFrame, ModuleLayout, ContextPanelHost and PageLayout
-│   ├── agent/                       # /agent chat (LobeHub-inspired, chat-only @lobehub/ui)
-│   │                                #   topicGrouping.ts, useThreadDeparture.tsx, startPrompt.ts; db/agentRunTerminalState.ts owns settleRun
-│   ├── errors/                      # ErrorFallback, RootErrorFallback, ErrorDetailsDialog, showError (see quality-guidelines "Error diagnostics")
-│   ├── ui/sheet.tsx                 # shadcn Sheet (global mobile navigation)
-│   ├── assets/*DetailPage.tsx       # shared detail editors
-│   └── workspace/                   # in-project chrome
-├── db/
-├── domain/
-└── lib/
+├── app/
+│   ├── bootstrap.tsx         # initialize the fixed store, then mount
+│   ├── routes/               # TanStack adapters; generated tree beside them
+│   ├── layout/               # frame, page shells, header/context presentation
+│   ├── workspace/            # project shell, kind dispatch and navigation
+│   ├── navigation/           # accepted history and runtime history selection
+│   ├── drafts/               # editor departure/retention and undo integration
+│   ├── errors/               # shared crash/action error presentation
+│   └── workflows/            # project ZIP/checkpoint/sync orchestration
+├── features/
+│   ├── projects/             # project models, gallery and project commands
+│   ├── video/                # episodes, story/beats, shots and production
+│   ├── audio/                # script/takes/timeline, generation, engine/export
+│   ├── music/                # music drafts/works and creation workspace
+│   ├── library/              # creative assets, IP, materials and owned media
+│   ├── references/           # project references and document/source parsing
+│   ├── memory/               # project knowledge, versions and retrieval
+│   ├── settings/             # connectors, device preferences, catalog, updates
+│   └── agent/                # chat, execution, tasks and product composition
+├── platform/
+│   ├── storage/              # protocol/adapters, typed tables and one schema
+│   ├── product/              # fixed store, React query binding and HTTP policy
+│   ├── runtime/              # system service/history/storage-profile mechanisms
+│   ├── http/                 # transport and bounded reading mechanisms
+│   ├── media/                # managed bytes and reusable media mechanisms
+│   └── data/                 # named neutral data/revision mechanisms
+└── ui/                       # neutral controls, icons and theme
 ```
 
----
+A feature groups actual `models`, `commands`, `queries`, `services`, `ui` and
+focused `tests` as its code requires; Audio also has named `engine`, `generation`,
+`providers`, `packages`, `presentation` and `agent` owners. Do not create empty
+layers or require one barrel per feature. Product tools/instructions remain
+associated with the business feature they implement. Generic Agent package
+extraction follows its own accepted task, without a second product loop here.
 
-## Module Organization
+Cross-feature calls use reviewed entries. Models have one defining owner and
+real relationships use type-only imports. The central typed table/schema owner
+references those models; it is not another domain facade. Neutral storage never
+imports React/product initialization. `platform/product/store.ts` retains the
+single import-time fixed owner, and app bootstrap awaits initialization before
+render. All nested business reads/writes keep the caller's explicit transaction.
 
-Studio libraries are layout + index + `$id`. Do not put the library grid and the detail editor in the same route file.
+## Routes and navigation
 
-Creating a studio asset must navigate to the **studio** `$id` route, not `p.$projectId.assets.*`.
+Routes are thin parameter/discriminant adapters under `app/routes`; library grids
+and detail editors remain separate feature components. Studio library route
+families use layout + index + `$id`. Creating a Studio asset navigates to its
+Studio `$id` route, rather than asking for a project or opening a project editor.
 
-Series shell owns `/p/$projectId` (episode list) and `/p/$projectId/world`. Episode shell owns `/p/$projectId/e/$episodeId` (story), `/shots`, `/produce`. Old `/p/$projectId/shots` redirects to the first episode.
+- `/` redirects to `/agent`. `/agent` and `/agent/$threadId` share the stable
+  Agent layout; `/agent/tasks` must not activate chat.
+- `/settings` owns settings. `/connectors` redirects to
+  `/settings?section=connections`; connections are embedded in settings.
+- `/ips` and `/ips/$ipId` own persisted IP profiles. IP is not a project kind.
+- `/assets` owns the materials hub and retains existing Studio
+  character/scene/prop/style list/detail URLs. Shared editors check
+  `STUDIO_LIBRARY_ID` versus the actual project owner before mutations.
+- The series shell owns `/p/$projectId` and `/p/$projectId/world`. Episode shells
+  own `/p/$projectId/e/$episodeId`, `/shots` and `/produce`. Old project-level
+  shot URLs redirect to the first episode.
+- Project-world detail routes remain `/p/$projectId/assets/*/$id`. The shared
+  editor must verify that the loaded asset belongs to that route project.
 
-Project world owns project-scoped character, scene, prop, and style detail routes under `/p/$projectId/assets/*/$id`. Every shared detail editor must verify that the loaded asset belongs to the route project before rendering mutations.
+`app/workspace/ProjectHomePage.tsx` dispatches by project kind. The presentation
+catalog `features/projects/ui/projectKinds.tsx` blocks unavailable choices in
+both UI and submit handling. Existing storage/migration contracts own persisted
+kinds. Shell/gallery share `app/workflows/importStudioProject.ts`.
 
----
+`app/layout/AppFrame.tsx` owns global navigation. `ModuleLayout.tsx` owns internal
+left navigation; `ContextPanelHost.tsx` and `app/layout/context-panel.tsx` coordinate
+feature-owned panels. Header/page/overlay owners present the UI while feature
+owners retain drafts, commands, scrollports and runtime lifetimes. Accepted app
+history tracking lives in `app/navigation/historyNavigation.ts`. See
+[Shared Desktop UI](./desktop-ui.md).
 
-## Naming Conventions
+## Business and integration owners
 
-- Route files follow TanStack Router: `_studio.characters.$characterId.tsx`
-- Shared editors: `CharacterDetailPage`, `SceneDetailPage`, `PropDetailPage`, `StyleDetailPage`
-- Studio grids live in `AssetLibraryPages.tsx`; `PropLibraryPage.tsx` / `StyleLibraryPage.tsx` re-export only
+Concrete feature commands own durable mutations. Project, episode and thread
+lifecycle commands live with their aggregate roots under
+`features/projects/commands/lifecycle.ts`, `features/video/commands/episodes.ts`
+and `features/agent/commands/lifecycle.ts`; their complete cascade transactions
+remain intact. Project ZIP IO and the whole-graph import transaction
+live in `app/workflows/packages`. Shared
+`PackageError` identity lives in `platform/data/packageError.ts`. Workspace
+availability binds to the product in `platform/product/workspaceAvailability.ts`;
+the video repository contract lives in `features/video/services/workspaceRepository.tsx`. Feature codecs
+remain pure validation/remapping owners. No aggregate repository facade, copied
+schema or per-feature database replaces these responsibilities.
 
----
+Audio snapshot reads use `features/audio/queries/snapshot.ts`. Audio selection,
+shared decoding/export buffers, typed clip commands and generation adapters stay
+with Audio. Music variant switching stays with Music. Chat execution sessions,
+selection, flow orchestration and reference draft lifetimes remain separately
+owned inside Agent. See the [component responsibility contract](./component-guidelines.md#d03-feature-responsibility-contract-2026-10-08)
+for their preserved behavior.
 
-## Examples
+Settings owns the Models.dev baseline/store/matching/sync/presentation and its
+connections UI. Device-local state still uses the existing deviceSettings table.
+Distribution owns shared release listing/platform/version facts; verified
+installer download/Save remains a Studio settings/runtime operation. The site
+never acquires storage, Agent or installer runtime dependencies. See
+[Settings and desktop updates](./settings-update.md).
 
-- Studio create: `packages/studio/src/components/studio/AssetLibraryPages.tsx` → `/characters/$characterId`
-- Studio detail: `packages/studio/src/routes/_studio.characters.$characterId.tsx` passes `back={{ kind: "studio" }}`
-- Project detail: `packages/studio/src/routes/p.$projectId.assets.characters.$characterId.tsx` passes `back={{ kind: "project", projectId }}`
+## Standalone site and deployment
 
-## Studio navigation and project kinds (2026-10-10)
-
-- `/` redirects to `/agent`; `/settings` renders the settings page; `/connectors` redirects to `/settings?section=connections`. Shared `layout/AppFrame.tsx` owns navigation for both Studio and project shells. Chat, IP, projects, materials and tasks remain separate destinations, with Settings last; connections are embedded inside settings. `/agent/tasks` must not activate chat.
-- `/ips` and `/ips/$ipId` are implemented persisted profile surfaces. Membership/context rules belong to [IP / Material Library](./ip-material-library.md); IP is not a project kind.
-- `/assets` owns the materials hub while retaining legacy Studio character/scene/prop/style list/detail URLs. Shared editors keep `STUDIO_LIBRARY_ID` versus project ownership checks.
-- `projectKinds.tsx` is the presentation availability catalog. Film/series, audio and music dispatch through `ProjectHomePage`; unavailable options are blocked both in the UI and submit handler. Project kind migrations belong to their database contracts.
-- Frame/page/overlay presentation lives in `components/layout/` and `components/ui/`; feature data/runtime ownership remains in the original feature modules. See [Shared Desktop UI](./desktop-ui.md).
-
-### Production database owners (D02)
-
-`packages/studio/src/db/` keeps a flat business responsibility structure. Use projects, episodes/beats, shots, creative assets, media retention, studio asset reuse, connectors and chat owners directly; complete cross-domain project/thread lifecycle commands live in `cascadeCommands.ts`. Pure constructors are in `productionRecords.ts`; shared persistence guards and `PRODUCTION_TABLES` are in `productionShared.ts`. Neither support owner imports command owners. Schema/migrations remain in `database.ts`; audio tables remain in `audioShared.ts`. The old omnibus `repo.ts` is removed, with no replacement aggregate facade. See the executable D02 contract in state-management for signatures, rollback/retention and test rules.
-
-
-## Feature command, session and codec owners
-
-Shot pages consume named commands, a keyboard adapter, typed text-column mapping and separate row/relationship owners. Audio/music pages consume pure selection, shared buffer loading, export and variant commands. Chat uses separate execution-session, three named flow and selection owners; reference drafts remain separate. The project home route delegates to `components/workspace/ProjectHomePage.tsx`; shell/gallery share `components/studio/importStudioProject.ts`. Pure package parsing/remapping lives in `lib/packages/`; root package modules retain ZIP/media IO and one whole import transaction. See [the D03 contract](./component-guidelines.md#d03-feature-responsibility-contract-2026-10-08) for exact owners, signatures, lifecycle/error rules and migration limits.
-
-## Shared navigation presentation (2026-10-13)
-
-`layout/ModuleLayout.tsx` owns internal left navigation presentation; `layout/ContextPanelHost.tsx` coordinates feature-owned panels rendered by `ui/context-panel.tsx`. `ui/icons.tsx` adapts static Phosphor glyphs. `lib/historyNavigation.ts` tracks accepted app history capabilities beside product history; frame arrows never infer a parent route. These owners do not fetch or mutate business records.
-
-## Models.dev catalog (2026-10-14)
-
-`lib/ai/modelCatalog/` owns the Models.dev catalog (baseline, store, matching, price snapshot, sync, `fetchCatalogIndex`, `format.ts`); it replaced the removed LobeHub `lib/ai/modelBank/`. `components/connectors/` holds the "模型目录" subsection of `/settings?section=connections`: `ModelCatalogSection` (sync card, restore), `ModelCatalogPicker` (selection dialog), `ModelPriceTable`, `PriceCells`, `VirtualRows` plus the pure `virtualWindow.ts` / `catalogRows.ts`. Device-local state lives in the `deviceSettings` table through `db/deviceSettings.ts`.
-
-## Settings and shared desktop releases (2026-10-14)
-
-`components/settings/` owns settings navigation, a common visible-section header, neutral rounded groups with divided rows, local preference reads/writes and update interaction hooks. `components/studio/ConnectorsPage.tsx` exports the embedded `ConnectorsSection`. `packages/distribution/src/{releases,platform,version}.ts` owns shared release listing, platform selection and version comparison. Studio's `lib/desktopRelease/download.ts` retains bounded installer verification and runtime Save integration. The site never acquires runtime/download/storage/settings dependencies. See [settings-update](./settings-update.md).
-
-## Landing page entry (2026-10-14)
-
-`apps/site/landing.html` plus `apps/site/src/` form the standalone Vite site; `apps/web/index.html` owns the browser application. Each app builds independently. Root `build` builds both and assembles their outputs with merged manifest/module reports under `dist/.vite/`; nginx still serves `landing.html` at `/` and the app fallback elsewhere, and denies `/.vite/`. Use root `dev:site` for the site and `dev` for the browser app. Desktop uses its own isolated frontend config and excludes the site. Studio's root-route redirect (`/` -> `/agent`) and native hash history remain unchanged. Site robots/sitemap live under `apps/site/public`; shared public brand assets belong to distribution. See [the landing section](./component-guidelines.md#landing-page-standalone-entry-2026-10-14).
+`apps/site/landing.html` and `apps/site/src` build independently from the browser
+app's `apps/web/index.html`. Root build assembles web/site output and merged
+manifest/module reports in `dist`. Nginx serves the site at `/`, app fallback
+elsewhere, and denies `/.vite/`. Use root `dev:site` for the site and `dev` for
+web. Desktop keeps an isolated frontend configuration and excludes the site.
+Shared public brand assets belong to distribution; site robots/sitemap belong
+to `apps/site/public`. Native hash history and the app root redirect are
+unchanged by this structure.

@@ -1,33 +1,34 @@
 import {registeredTools} from "./helpers/registeredTools";
-import { importReferenceFile } from "@/lib/references/import";
-import { removeProjectReference } from "@/db/references";
-import { REFERENCE_TOOL_NAMES } from "@/lib/agent/referenceToolNames";
+import { importReferenceFile } from "@/features/references/documents/import";
+import { removeProjectReference } from "@/features/references/commands/references";
+import { REFERENCE_TOOL_NAMES } from "@/features/references/agent/referenceToolNames";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun } from "@/db/agentRuns";
-import { createAgentTask } from "@/db/agentTasks";
+import { db } from "@/platform/product/store";
+import { beginAgentRun } from "@/features/agent/commands/agentRuns";
+import { createAgentTask } from "@/features/agent/commands/agentTasks";
 import {
   createManualWrapup,
   saveWrapup,
   confirmWrapup,
-} from "@/db/agentTaskWrapups";
-import { saveTaskRecord } from "@/db/agentTaskRecords";
-import { createProjectMemory, updateProjectMemory } from "@/db/projectMemories";
-import { setThreadMemoryExcluded } from "@/db/memoryRetrieval";
-import {createChatThread} from "@/db/chat";
-import {createProject} from "@/db/projects";
-import {deleteChatThread, deleteProject} from "@/db/cascadeCommands";
-import type { AgentRun, AgentToolCall } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
-import type { AgentToolContext } from "@/lib/agent/tools";
-import { MEMORY_TOOLS as MEMORY_TOOLS_DEFINITIONS, MEMORY_TOOL_NAMES } from "@/lib/agent/memoryTools";
+} from "@/features/agent/commands/agentTaskWrapups";
+import { saveTaskRecord } from "@/features/agent/commands/agentTaskRecords";
+import { createProjectMemory, updateProjectMemory } from "@/features/memory/commands/projectMemories";
+import { setThreadMemoryExcluded } from "@/features/memory/queries/memoryRetrieval";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {createProject} from "@/features/projects/commands/projects";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import {deleteProject} from "@/features/projects/commands/lifecycle";
+import type { AgentRun, AgentToolCall } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import type { AgentToolContext } from "@/features/agent/runtime/tools";
+import { MEMORY_TOOLS as MEMORY_TOOLS_DEFINITIONS, MEMORY_TOOL_NAMES } from "@/features/memory/agent/memoryTools";
 import {
   BUILTIN_TOOLS,
   requiresToolApproval,
   validateToolCall,
-} from "@/lib/agent/tools";
-import { assembleSkills, DEFAULT_SKILL_IDS } from "@/lib/agent/skills";
-import { createId } from "@/lib/ids";
+} from "@/features/agent/runtime/tools";
+import { assembleSkills, DEFAULT_SKILL_IDS } from "@/features/agent/runtime/skills";
+import { createId } from "@/platform/identity";
 const MEMORY_TOOLS = registeredTools(MEMORY_TOOLS_DEFINITIONS);
 
 const connector: ConnectorConfig = {

@@ -1,22 +1,23 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {interceptStoreTable} from "./helpers/storeFaults";
-import type {ProductStore} from "@/lib/storage/types";
-import {readBinaryBlob} from "@/lib/storage/binary";
-import {db,db as productDb} from "@/db/database";
-import {beginAgentRun} from "@/db/agentRuns";
-import {resolveAgentToolApproval} from "@/db/agentTools";
-import {createChatThread} from "@/db/chat";
-import {createAudioMusicProject, createProject} from "@/db/projects";
-import {bindProjectIp, createIpProfile, setIpArchived, updateIpProfile} from "@/db/ipProfiles";
-import {createFileMaterial} from "@/db/materials";
-import {addAudioClip, addAudioSegment, addAudioTake, getAudioProjectSnapshot, patchAudioClip, patchAudioSegment} from "@/db/audio";
-import {applyAudioArrangementProposal, previewAudioArrangement, saveAudioArrangementProposal} from "@/db/audioArrangement";
-import {executeChatRun, resumeChatRun} from "@/lib/agent/runChat";
-import {BUILTIN_TOOLS, requiresToolApproval} from "@/lib/agent/tools";
-import {getProjectContext} from "@/lib/agent/projectContext";
-import {readWriteReceipt} from "@/lib/agent/writeReceipt";
-import type {AgentRun} from "@/domain/agent";
-import type {ConnectorConfig} from "@/domain/types";
+import type {ProductStore} from "@/platform/storage/types";
+import {readBinaryBlob} from "@/platform/storage/binary";
+import {db,db as productDb} from "@/platform/product/store";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {resolveAgentToolApproval} from "@/features/agent/commands/agentTools";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {createAudioMusicProject, createProject} from "@/features/projects/commands/projects";
+import {bindProjectIp, createIpProfile, setIpArchived, updateIpProfile} from "@/features/library/commands/ipProfiles";
+import {createFileMaterial} from "@/features/library/commands/materials";
+import {addAudioClip, addAudioSegment, addAudioTake,  patchAudioClip, patchAudioSegment} from "@/features/audio/commands/audio";
+import {getAudioProjectSnapshot} from "@/features/audio/queries/snapshot";
+import {applyAudioArrangementProposal, previewAudioArrangement, saveAudioArrangementProposal} from "@/features/audio/commands/arrangement";
+import {executeChatRun, resumeChatRun} from "@/features/agent/runtime/runChat";
+import {BUILTIN_TOOLS, requiresToolApproval} from "@/features/agent/runtime/tools";
+import {getProjectContext} from "@/features/agent/runtime/projectContext";
+import {readWriteReceipt} from "@/features/agent/runtime/writeReceipt";
+import type {AgentRun} from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 // These are the shared product's actual registered entries and durable Dexie
 // commands. Native HTTP, WebKit persistence and system UI have separate gates.

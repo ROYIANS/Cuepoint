@@ -1,21 +1,21 @@
 import {registeredTools} from "./helpers/registeredTools";
 import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun } from "@/db/agentRuns";
-import { saveGenerationPreference } from "@/db/generationPreferences";
-import { defaultImageGeneration } from "@/domain/output";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import { resolveAgentToolApproval } from "@/db/agentTools";
-import {addShot, patchShot} from "@/db/shots";
-import {createChatThread} from "@/db/chat";
-import {createProject} from "@/db/projects";
-import type { AgentPermissionMode } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
-import { reviewAndApproveGeneration } from "@/lib/agent/generationReview";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import { GENERATION_TOOLS as GENERATION_TOOLS_DEFINITIONS } from "@/lib/agent/generationTools";
-import type { GenerationSubmitArgs } from "@/lib/agent/generationProfiles";
+import { db } from "@/platform/product/store";
+import { beginAgentRun } from "@/features/agent/commands/agentRuns";
+import { saveGenerationPreference } from "@/features/settings/commands/generationPreferences";
+import { defaultImageGeneration } from "@/features/video/models/output";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import { resolveAgentToolApproval } from "@/features/agent/commands/agentTools";
+import {addShot, patchShot} from "@/features/video/commands/shots";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {createProject} from "@/features/projects/commands/projects";
+import type { AgentPermissionMode } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { reviewAndApproveGeneration } from "@/features/video/agent/generationReview";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import { GENERATION_TOOLS as GENERATION_TOOLS_DEFINITIONS } from "@/features/video/agent/generationTools";
+import type { GenerationSubmitArgs } from "@/features/video/agent/generationProfiles";
 const GENERATION_TOOLS = registeredTools(GENERATION_TOOLS_DEFINITIONS);
 
 

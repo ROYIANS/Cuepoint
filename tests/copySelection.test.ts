@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { copySelection } from "@/lib/copySelection";
+import { copySelection } from "@/ui/copySelection";
 
 it("retries only uncommitted copies after partial failure, including stale selected IDs", async () => {
   const remaining = new Set(["existing", "a", "b", "c"]);

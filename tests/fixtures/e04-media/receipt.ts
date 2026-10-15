@@ -1,13 +1,13 @@
 import Dexie from "dexie";
-import {db} from "@/db/database";
+import {db} from "@/platform/product/store";
 import {interceptStoreTable} from "../../helpers/storeFaults";
-import {addShot} from "@/db/shots";
-import {createProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
-import {beginAgentRun} from "@/db/agentRuns";
-import {BUILTIN_TOOLS, type AgentToolContext} from "@/lib/agent/tools";
-import type {AgentToolCall} from "@/domain/agent";
-import {readWriteReceipt} from "@/lib/agent/writeReceipt";
+import {addShot} from "@/features/video/commands/shots";
+import {createProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {BUILTIN_TOOLS, type AgentToolContext} from "@/features/agent/runtime/tools";
+import type {AgentToolCall} from "@/features/agent/models/agent";
+import {readWriteReceipt} from "@/features/agent/runtime/writeReceipt";
 import {check, media, at, slot} from "./seeds";
 import {snapshot, rejects} from "./commands";
 

@@ -1,20 +1,20 @@
 import {registeredTools} from "./helpers/registeredTools";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
-import { beginAgentRun, interruptThreadRuns } from "@/db/agentRuns";
-import { resolveAgentToolApproval } from "@/db/agentTools";
-import { addAudioSegment, addAudioSpeaker, patchAudioSpeaker } from "@/db/audio";
-import { addMusicDraft, patchMusicDraft } from "@/db/music";
-import { defaultMusicSettings } from "@/domain/music";
-import type { AgentPermissionMode, AgentRun } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
-import { AUDIO_GENERATION_TOOLS as AUDIO_GENERATION_TOOLS_DEFINITIONS, AUDIO_GENERATION_TOOL_NAMES } from "@/lib/agent/audioGenerationTools";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import { getProjectContext, refreshRunProjectContext } from "@/lib/agent/projectContext";
-import { encodePcm16Wav } from "@/lib/audio/wav";
-import * as audioRuntime from "@/lib/audioGeneration/runtime";
+import { db } from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
+import { beginAgentRun, interruptThreadRuns } from "@/features/agent/commands/agentRuns";
+import { resolveAgentToolApproval } from "@/features/agent/commands/agentTools";
+import { addAudioSegment, addAudioSpeaker, patchAudioSpeaker } from "@/features/audio/commands/audio";
+import { addMusicDraft, patchMusicDraft } from "@/features/music/commands/music";
+import { defaultMusicSettings } from "@/features/music/models/music";
+import type { AgentPermissionMode, AgentRun } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { AUDIO_GENERATION_TOOLS as AUDIO_GENERATION_TOOLS_DEFINITIONS, AUDIO_GENERATION_TOOL_NAMES } from "@/features/audio/agent/audioGenerationTools";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import { getProjectContext, refreshRunProjectContext } from "@/features/agent/runtime/projectContext";
+import { encodePcm16Wav } from "@/features/audio/engine/wav";
+import * as audioRuntime from "@/features/audio/generation/runtime";
 const AUDIO_GENERATION_TOOLS = registeredTools(AUDIO_GENERATION_TOOLS_DEFINITIONS);
 
 

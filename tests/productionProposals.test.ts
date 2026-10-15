@@ -1,17 +1,17 @@
 import Dexie from "dexie";
-import {browserDatabase} from "@/lib/storage/browserDatabase";
+import {browserDatabase} from "@/platform/storage/browserDatabase";
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle} from "@/db/assets";
-import {addShot, patchShot, setShotSlot} from "@/db/shots";
-import {createProject} from "@/db/projects";
-import {deleteMediaIfOrphan, putMedia} from "@/db/media";
-import {deleteProject} from "@/db/cascadeCommands";
-import { applyProductionProposal, cancelProductionProposal, createProductionProposal, undoProductionProposal } from "@/db/productionProposals";
-import { emptySlot } from "@/domain/slot";
-import { targetRevision } from "@/lib/productionRevision";
-import type { ProductionTarget, ProposalSource } from "@/domain/production";
+import { db } from "@/platform/product/store";
+import {addCharacter, addProp, addScene, addStyle} from "@/features/library/commands/assets";
+import {addShot, patchShot, setShotSlot} from "@/features/video/commands/shots";
+import {createProject} from "@/features/projects/commands/projects";
+import {deleteMediaIfOrphan, putMedia} from "@/features/library/commands/media";
+import {deleteProject} from "@/features/projects/commands/lifecycle";
+import { applyProductionProposal, cancelProductionProposal, createProductionProposal, undoProductionProposal } from "@/features/video/commands/proposals";
+import { emptySlot } from "@/features/library/models/slot";
+import {targetRevision} from "@/platform/data/revision";
+import type { ProductionTarget, ProposalSource } from "@/features/video/models/production";
 
 async function fixture() {
   const project = await createProject("proposal");

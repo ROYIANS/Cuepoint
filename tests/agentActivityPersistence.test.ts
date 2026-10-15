@@ -1,14 +1,14 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun } from "@/db/agentRuns";
-import {  } from "@/db/agentTools";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import {createChatThread} from "@/db/chat";
-import { executeChatRun } from "@/lib/agent/runChat";
-import { buildRunActivity } from "@/lib/agent/runPresentation";
-import type { ConnectorConfig } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import { beginAgentRun } from "@/features/agent/commands/agentRuns";
+import {  } from "@/features/agent/commands/agentTools";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import {createChatThread} from "@/features/agent/commands/chat";
+import { executeChatRun } from "@/features/agent/runtime/runChat";
+import { buildRunActivity } from "@/features/agent/runtime/runPresentation";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = { id: "activity-test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture-key", updatedAt: "2026-09-21" };
 

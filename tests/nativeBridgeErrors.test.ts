@@ -1,6 +1,6 @@
 import {describe,expect,it} from "vitest";
-import {createNativeStoreBridge} from "@/lib/storage/nativeBridge";
-import {StorageError} from "@/lib/storage/errors";
+import {createNativeStoreBridge} from "@/platform/storage/nativeBridge";
+import {StorageError} from "@/platform/storage/errors";
 
 const rejecting=(raw:unknown)=>createNativeStoreBridge(async ()=>{throw raw;});
 

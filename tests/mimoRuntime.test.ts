@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
 import JSZip from "jszip";
-import { db } from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {collectMediaIds, deleteMediaIfOrphan} from "@/db/media";
-import { addAudioSpeaker, addAudioSegment, patchAudioSpeaker } from "@/db/audio";
-import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration } from "@/lib/audioGeneration/runtime";
-import { validateSpeechReference } from "@/lib/audioGeneration/reference";
-import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
-import type { AudioGenerationInput } from "@/domain/audioGeneration";
+import { db } from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {collectMediaIds, deleteMediaIfOrphan} from "@/features/library/commands/media";
+import { addAudioSpeaker, addAudioSegment, patchAudioSpeaker } from "@/features/audio/commands/audio";
+import { prepareAudioGeneration, submitAudioGeneration, refreshAudioGeneration } from "@/features/audio/generation/runtime";
+import { validateSpeechReference } from "@/features/audio/generation/reference";
+import { exportProjectZip, importProjectZip } from "@/app/workflows/packages/projectPackage";
+import type { AudioGenerationInput } from "@/features/audio/models/audioGeneration";
 
 const bytes = new Uint8Array([82, 73, 70, 70, 4, 0, 0, 0, 87, 65, 86, 69]);
 const wav = () => new Blob([bytes], { type: "audio/wav" });

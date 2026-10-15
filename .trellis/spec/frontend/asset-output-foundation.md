@@ -19,7 +19,7 @@ validateGenerationDefaults(raw: unknown): string[]
 generationParameters(config: ProjectGenerationDefaults, kind: 'image' | 'video'): Record<string, string | number>
 ```
 
-`packages/studio/src/domain/output.ts` owns versioned provider capabilities and validation. `packages/studio/src/lib/shotRelations.ts` owns effective relationship names for UI and delivery. Optional creative strings live on domain entities; missing legacy fields display as empty without a DB version change. Package parsers validate their types.
+`packages/studio/src/features/video/models/output.ts` owns versioned provider capabilities and validation. `packages/studio/src/features/video/models/shotRelations.ts` owns effective relationship names for UI and delivery. Optional creative strings live on domain entities; missing legacy fields display as empty without a DB version change. Package parsers validate their types.
 
 ## 3. Contracts
 - Project creative target aspect and image/video generation defaults are separate. Expanding target aspects does not change existing dimension mappings or authored shot durations.
@@ -113,9 +113,9 @@ Maintain this contract when changing single/batch generation review controls, pr
 
 ### 2. Signatures / Owners
 
-- `domain/generationCapabilities.ts` owns `GENERATION_CAPABILITIES`, existing ordered image/video constants/model predicates, `GenerationCapability`, `CapabilityParameters`, `ParameterContext` and `ParameterIssue`. Actual pure entry points are `getGenerationCapability`, `defaultImageParameters`, `defaultVideoParameters`, `projectGenerationParameters`, `generationResolutionChange` and `validateGenerationParameters`; exact final contracts are subject to independent acceptance.
+- `features/video/models/generationCapabilities.ts` owns `GENERATION_CAPABILITIES`, existing ordered image/video constants/model predicates, `GenerationCapability`, `CapabilityParameters`, `ParameterContext` and `ParameterIssue`. Actual pure entry points are `getGenerationCapability`, `defaultImageParameters`, `defaultVideoParameters`, `projectGenerationParameters`, `generationResolutionChange` and `validateGenerationParameters`; exact final contracts are subject to independent acceptance.
 - Existing `GenerationConfigurationFields` remains the shared single/batch UI. Project output settings remains its APIMart-specific adapter with its own components and draft/CAS lifecycle. Existing profile schema/type owner from D05 remains authoritative for tool arguments.
-- `domain/output.ts` retains actual compatibility exports and project-default parsing/version/native-key responsibilities. `generationProfiles.ts` retains D05 schema ownership and delegates the shared facts/parameter validator, with `GENERATION_PROFILES` referencing the actual capability list. Existing model/mode/owner orchestration remains in its feature consumers; no form registry is introduced.
+- `features/video/models/output.ts` retains actual compatibility exports and project-default parsing/version/native-key responsibilities. `generationProfiles.ts` retains D05 schema ownership and delegates the shared facts/parameter validator, with `GENERATION_PROFILES` referencing the actual capability list. Existing model/mode/owner orchestration remains in its feature consumers; no form registry is introduced.
 
 ### 3. Contracts / Invariants
 

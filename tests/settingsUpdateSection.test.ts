@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {createElement, type ReactNode} from "react";
 import {renderToStaticMarkup} from "react-dom/server";
-import type {UpdateState, DownloadState} from "@/components/settings/useUpdateCheck";
+import type {UpdateState, DownloadState} from "@/features/settings/ui/useUpdateCheck";
 
 const host = vi.hoisted(() => ({
     state: {kind: "idle"} as UpdateState,
@@ -11,12 +11,12 @@ const host = vi.hoisted(() => ({
     startDownload: vi.fn(),
     cancelDownload: vi.fn(),
 }));
-vi.mock("@/components/settings/useUpdateCheck", () => ({useUpdateCheck: () => host}));
-vi.mock("@/lib/runtimeIdentity", () => ({isTauriRuntime: () => host.native}));
-vi.mock("@/lib/appVersion", () => ({appVersion: () => "0.1.3"}));
+vi.mock("@/features/settings/ui/useUpdateCheck", () => ({useUpdateCheck: () => host}));
+vi.mock("@/platform/runtime/runtimeIdentity", () => ({isTauriRuntime: () => host.native}));
+vi.mock("@/platform/runtime/appVersion", () => ({appVersion: () => "0.1.3"}));
 vi.mock("@tanstack/react-router", () => ({Link: ({to, children}: {to: string; children: ReactNode}) => createElement("a", {href: to}, children)}));
 
-import {UpdateSection} from "@/components/settings/sections/UpdateSection";
+import {UpdateSection} from "@/features/settings/ui/sections/UpdateSection";
 import {classifyUpdate} from "@cuepoint/distribution/version";
 import type {LatestDesktopRelease} from "@cuepoint/distribution/releases";
 import type {AssetChoice} from "@cuepoint/distribution/platform";

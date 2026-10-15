@@ -1,8 +1,9 @@
 import {describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
-import type {GenerationSlot, Project} from "@/domain/types";
-import {emptySlot} from "@/domain/slot";
-import {defaultImageGeneration} from "@/domain/output";
+import type {GenerationSlot} from "@/features/library/models/slots";
+import type {Project} from "@/features/projects/models/project";
+import {emptySlot} from "@/features/library/models/slot";
+import {defaultImageGeneration} from "@/features/video/models/output";
 
 // Small hook host: execute the actual components and event callbacks without a DOM.
 // UI primitives remain JSX nodes; no source-string assertions or copied save callbacks.
@@ -44,42 +45,42 @@ vi.mock("react", async importOriginal => {
         useCallback: (callback: unknown) => callback,
     };
 });
-vi.mock("@/lib/storage/hooks", () => {
+vi.mock("@/platform/product/queries", () => {
     const read = () => host.queries ? host.queries[host.queryIndex++] : host.row;
     return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
 });
 vi.mock("@dnd-kit/core", () => ({DndContext: () => null, PointerSensor: {}, KeyboardSensor: {}, closestCenter: {}, useSensor: vi.fn(), useSensors: () => []}));
 vi.mock("@dnd-kit/sortable", () => ({SortableContext: () => null, sortableKeyboardCoordinates: {}, verticalListSortingStrategy: {}, useSortable: () => ({setNodeRef: vi.fn()})}));
-vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
-vi.mock("@/lib/useShotMedia", () => ({useShotMedia: () => new Map()}));
-vi.mock("@/components/shots/ShotRowViewport", () => ({ShotScrollViewport: () => null, useShotRowViewport: () => ({rowRef: vi.fn(), nearViewport: true})}));
+vi.mock("@/app/drafts/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
+vi.mock("@/features/video/queries/useShotMedia", () => ({useShotMedia: () => new Map()}));
+vi.mock("@/features/video/ui/ShotRowViewport", () => ({ShotScrollViewport: () => null, useShotRowViewport: () => ({rowRef: vi.fn(), nearViewport: true})}));
 vi.mock("@tanstack/react-router", () => ({Link: () => null, useNavigate: () => vi.fn(), useBlocker: () => host.blocker}));
-vi.mock("@/lib/debouncedDraft", () => ({useDebouncedDraft: (options: {initialValue: unknown}) => {
+vi.mock("@/platform/product/drafts", () => ({useDebouncedDraft: (options: {initialValue: unknown}) => {
     host.draftOptions = options;
     return {draft: options.initialValue, setDraft: vi.fn(), status: "saved", retry: vi.fn(), useLatest: vi.fn()};
 }}));
-vi.mock("@/lib/media", () => ({IMAGE_ACCEPT: "image/*", VIDEO_ACCEPT: "video/*", MEDIA_ACCEPT: "*/*", pickMediaFile: vi.fn(), uploadMediaFile: vi.fn()}));
+vi.mock("@/features/library/services/media", () => ({IMAGE_ACCEPT: "image/*", VIDEO_ACCEPT: "video/*", MEDIA_ACCEPT: "*/*", pickMediaFile: vi.fn(), uploadMediaFile: vi.fn()}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
-import {db} from "@/db/database";
-import * as repoProjects from "@/db/projects";
-import * as repoMedia from "@/db/media";
-import * as repoAssets from "@/db/assets";
-import * as repoEpisodes from "@/db/episodes";
-import * as repoShots from "@/db/shots";
-import {DraftConflictError} from "@/lib/draftConflict";
-import {CharacterDetailPage} from "@/components/assets/CharacterDetailPage";
-import {SceneDetailPage} from "@/components/assets/SceneDetailPage";
-import {PropDetailPage} from "@/components/assets/PropDetailPage";
-import {StyleDetailPage} from "@/components/assets/StyleDetailPage";
-import {EditableGenerationSlot, GenerationSlotEditor} from "@/components/slots/GenerationSlotCard";
-import {ProjectSettingsPanel} from "@/components/workspace/ProjectSettingsPanel";
-import {ShotEditorPage} from "@/components/shots/ShotEditorPage";
-import {DurationInput} from "@/components/shots/DurationInput";
-import {AssetTextField} from "@/components/assets/AssetTextField";
+import {db} from "@/platform/product/store";
+import * as repoProjects from "@/features/projects/commands/projects";
+import * as repoMedia from "@/features/library/commands/media";
+import * as repoAssets from "@/features/library/commands/assets";
+import * as repoEpisodes from "@/features/video/commands/episodes";
+import * as repoShots from "@/features/video/commands/shots";
+import {DraftConflictError} from "@/platform/product/draftConflict";
+import {CharacterDetailPage} from "@/features/library/ui/CharacterDetailPage";
+import {SceneDetailPage} from "@/features/library/ui/SceneDetailPage";
+import {PropDetailPage} from "@/features/library/ui/PropDetailPage";
+import {StyleDetailPage} from "@/features/library/ui/StyleDetailPage";
+import {EditableGenerationSlot, GenerationSlotEditor} from "@/features/library/ui/GenerationSlotCard";
+import {ProjectSettingsPanel} from "@/features/projects/ui/ProjectSettingsPanel";
+import {ShotEditorPage} from "@/features/video/ui/ShotEditorPage";
+import {DurationInput} from "@/features/video/ui/DurationInput";
+import {AssetTextField} from "@/features/library/ui/AssetTextField";
 
 vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn()});
-import {pickMediaFile, uploadMediaFile} from "@/lib/media";
+import {pickMediaFile, uploadMediaFile} from "@/features/library/services/media";
 
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(tree: unknown): Node[] {

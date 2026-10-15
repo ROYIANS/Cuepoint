@@ -1,18 +1,18 @@
 import {createRoot} from "react-dom/client";
 import {createRootRoute, createRoute, createRouter, createBrowserHistory, Outlet, RouterProvider} from "@tanstack/react-router";
 import {Toaster} from "sonner";
-import {db} from "@/db/database";
-import * as projects from "@/db/projects";
-import * as episodes from "@/db/episodes";
-import * as shots from "@/db/shots";
-import {StoryPage} from "@/components/story/StoryPage";
-import {ShotEditorPage} from "@/components/shots/ShotEditorPage";
-import {Route as ProjectRoute} from "@/routes/p.$projectId";
-import {UndoProvider} from "@/lib/undo";
-import {flushPendingDrafts} from "@/lib/debouncedDraft";
-import {SHOT_COLUMNS} from "@/domain/columns";
-import {normalizeEpisodeStory} from "@/domain/types";
-import "@/styles.css";
+import {db} from "@/platform/product/store";
+import * as projects from "@/features/projects/commands/projects";
+import * as episodes from "@/features/video/commands/episodes";
+import * as shots from "@/features/video/commands/shots";
+import {StoryPage} from "@/features/video/ui/StoryPage";
+import {ShotEditorPage} from "@/features/video/ui/ShotEditorPage";
+import {Route as ProjectRoute} from "@/app/routes/p.$projectId.tsx";
+import {UndoProvider} from "@/app/drafts/undo";
+import {flushPendingDrafts} from "@/platform/product/drafts";
+import {SHOT_COLUMNS} from "@/features/video/models/columns";
+import {normalizeEpisodeStory} from "@/features/video/models/story";
+import "@/ui/theme.css";
 
 const gates = new Map<string, {promise: Promise<void>; release: () => void}>();
 function hold(key: string) {

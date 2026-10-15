@@ -1,3 +1,4 @@
+import {historicalSource} from "./historical-source.mjs";
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
 import {readFile, writeFile, mkdir, mkdtemp, rm} from "node:fs/promises";
@@ -19,7 +20,7 @@ const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const provenance = JSON.parse(await readFile(provenancePath, "utf8"));
 const original = await readFile(snapshotPath);
 assert.equal(hash(original), provenance.sha256, "Exact immutable original bytes");
-const producerPaths = ["packages/studio/src/db/projectMemories.ts", "tooling/e04-memory-browser-regression.mjs", "tests/e04MemoryTransactions.test.ts", "tests/fixtures/e04-memory/tsconfig.json", "tests/fixtures/e04-memory/main.ts", "tests/fixtures/e04-memory/index.html", "tests/fixtures/sourceSnapshots/e04-memory/projectMemories.ts", "tests/fixtures/sourceSnapshots/e04-memory/provenance.json"];
+const producerPaths = ["packages/studio/src/features/memory/commands/projectMemories.ts", "tooling/e04-memory-browser-regression.mjs", "tests/e04MemoryTransactions.test.ts", "tests/fixtures/e04-memory/tsconfig.json", "tests/fixtures/e04-memory/main.ts", "tests/fixtures/e04-memory/index.html", "tests/fixtures/sourceSnapshots/e04-memory/projectMemories.ts", "tests/fixtures/sourceSnapshots/e04-memory/provenance.json"];
 const producerHashes = Object.fromEntries(await Promise.all(producerPaths.map(async path => [path, hash(await readFile(join(root, path)))])));
 const sourceHashes = {};
 const sourceSnapshot = {
@@ -27,7 +28,7 @@ const sourceSnapshot = {
   async transform(source, id) {
     const path = id.split("?")[0];
     if (path.startsWith(join(root, "packages/studio/src/")) && path.endsWith(".ts")) sourceHashes[relative(root, path)] ??= hash(source);
-    if (baseline && path === join(root, "packages/studio/src/db/projectMemories.ts")) return original.toString("utf8");
+    if (baseline && path === join(root, "packages/studio/src/features/memory/commands/projectMemories.ts")) return historicalSource(original.toString("utf8"), "db/projectMemories.ts");
     return source;
   },
 };

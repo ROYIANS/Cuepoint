@@ -1,12 +1,12 @@
 import {createRoot} from "react-dom/client";
 import {useMemo, useState} from "react";
 import {useLiveQuery} from "dexie-react-hooks";
-import {db} from "@/db/database";
-import {createAudioMusicProject, renameProject} from "@/db/projects";
-import {TextDraftField} from "@/components/drafts/TextDraftField";
-import {useDebouncedDraft} from "@/lib/debouncedDraft";
-import {DraftStatus} from "@/components/ui/draft-status";
-import type {Project} from "@/domain/types";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject, renameProject} from "@/features/projects/commands/projects";
+import {TextDraftField} from "@/app/drafts/TextDraftField";
+import {useDebouncedDraft} from "@/platform/product/drafts";
+import {DraftStatus} from "@/app/drafts/draft-status";
+import type {Project} from "@/features/projects/models/project";
 
 const shape = new URLSearchParams(window.location.search).get("shape") === "memo" ? "memo" : "primitive";
 await db.open();

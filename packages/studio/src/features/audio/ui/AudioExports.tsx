@@ -1,0 +1,47 @@
+import {useState} from "react";
+import {toast} from "sonner";
+import {Download, Play} from "../../../ui/icons";
+import {db} from "../../../platform/product/store";
+import type {AudioProjectSnapshot} from "../models/audio";
+import {getAudioExportFreshness} from "../engine/fingerprint";
+import {downloadBlob} from "../../../platform/runtime/runtimeSave";
+import {isPublishedSaveError} from "../../../platform/runtime/runtimeSave";
+import {Button} from "../../../ui/button";
+import {Disclosure, DisclosureTitle, SourcePlayer} from "../presentation/controls";
+import {errorText, timeLabel} from "../presentation/shared";
+import {useMedia} from "../../library/services/media";
+import {readBinaryBlob} from "../../../platform/storage/binary";
+
+export function AudioExports({snapshot}: { snapshot: AudioProjectSnapshot }) {
+    const [playingId, setPlayingId] = useState<string>();
+    const [error, setError] = useState("");
+    const media = useMedia(playingId);
+    if (!snapshot.exports.length) return null;
+    return <Disclosure className="aw-export-history mt-6" defaultOpen><DisclosureTitle>导出成品
+        · {snapshot.exports.length}</DisclosureTitle>
+        <div
+            className="aw-source-list">{[...snapshot.exports].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map((item) => {
+            const chapterExport = item.scope === "chapter" || Boolean(item.chapterId);
+            const current = getAudioExportFreshness(item, snapshot) === "current";
+            const title = chapterExport ? snapshot.chapters.find((chapter) => chapter.id === item.chapterId)?.title ?? item.chapterTitle ?? "原章节成品" : "完整项目";
+            return <div key={item.id} className="aw-source"><strong>{title} ·
+                WAV</strong><small>{new Date(item.createdAt).toLocaleString("zh-CN")} · {timeLabel(item.durationSec)}</small>
+                <p className="aw-muted mt-2">{current ? "与当前编辑一致" : "此成品未包含后续编辑，可重新导出最新版本。"}</p>
+                <div className="aw-actions mt-2"><Button size="sm" variant="ghost"
+                                                         onClick={() => setPlayingId(item.mediaId)}><Play/>试听成品</Button><Button
+                    size="sm" variant="ghost" onClick={() => {
+                    setError("");
+                    void db.media.get(item.mediaId).then(async (record) => {
+                        if (!record) throw new Error("成品音频文件已不存在");
+                        return downloadBlob(await readBinaryBlob(record.blob), record.filename);
+                    }).catch((reason: unknown) => {
+                        if (isPublishedSaveError(reason)) toast.warning(reason.message);
+                        else setError(errorText(reason));
+                    });
+                }}><Download/>下载</Button></div>
+            </div>;
+        })}</div>
+        {media && <SourcePlayer src={media.url} onError={media.onError} title="导出成品" autoplay/>}{error &&
+            <p className="aw-error" role="alert">{error}</p>}
+    </Disclosure>;
+}

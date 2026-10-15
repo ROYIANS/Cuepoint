@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   createNativeWorkspaceAdapter,
   isNativeWorkspaceRuntime,
-} from "@/lib/nativeWorkspace";
+} from "@/platform/runtime/reference/nativeWorkspace";
 
 const state = {
   schema: 4 as const,

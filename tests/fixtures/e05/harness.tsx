@@ -2,7 +2,7 @@ import {StrictMode} from "react";
 import type {ComponentProps} from "react";
 import {createRoot} from "react-dom/client";
 import {flushSync} from "react-dom";
-import {ClickSpark} from "@/components/ui/click-spark";
+import {ClickSpark} from "@/ui/click-spark";
 import {instrument} from "./instrumentation";
 
 const meter = instrument();

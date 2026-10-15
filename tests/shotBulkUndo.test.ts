@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle} from "@/db/assets";
-import {addEpisode, addStoryBeat} from "@/db/episodes";
-import {addShot, patchEpisodeShots, patchShot, setShotSlot, undoEpisodeShotBulkPatch} from "@/db/shots";
-import {createProject} from "@/db/projects";
-import {putMedia} from "@/db/media";
-import type {EpisodeShotBulkPatch, EpisodeShotBulkUndo} from "@/db/shots";
+import { db } from "@/platform/product/store";
+import {addCharacter, addProp, addScene, addStyle} from "@/features/library/commands/assets";
+import {addEpisode, addStoryBeat} from "@/features/video/commands/episodes";
+import {addShot, patchEpisodeShots, patchShot, setShotSlot, undoEpisodeShotBulkPatch} from "@/features/video/commands/shots";
+import {createProject} from "@/features/projects/commands/projects";
+import {putMedia} from "@/features/library/commands/media";
+import type {EpisodeShotBulkPatch, EpisodeShotBulkUndo} from "@/features/video/commands/shots";
 
-import type { Shot } from "@/domain/types";
-import { emptySlot } from "@/domain/slot";
+import type {Shot} from "@/features/video/models/shots";
+import { emptySlot } from "@/features/library/models/slot";
 import {installStoreHook} from "./helpers/storeBackendFaults";
 
 async function seed(count = 2) {

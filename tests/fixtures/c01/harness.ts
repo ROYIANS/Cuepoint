@@ -1,13 +1,13 @@
-import {db} from "@/db/database";
-import {emptySlot} from "@/domain/slot";
-import {createProject} from "@/db/projects";
-import {addCharacter, setCharacterSlot} from "@/db/assets";
-import {putMedia} from "@/db/media";
-import {createAgentTask} from "@/db/agentTasks";
-import {beginAgentRun, finishAgentRun} from "@/db/agentRuns";
-import {getTaskWrapupState, startTaskWrapup, publishTaskWrapup, cancelTaskWrapup} from "@/db/agentTaskWrapups";
-import type {AgentGenerationJob} from "@/domain/agentGeneration";
-import type {AgentToolCall} from "@/domain/agent";
+import {db} from "@/platform/product/store";
+import {emptySlot} from "@/features/library/models/slot";
+import {createProject} from "@/features/projects/commands/projects";
+import {addCharacter, setCharacterSlot} from "@/features/library/commands/assets";
+import {putMedia} from "@/features/library/commands/media";
+import {createAgentTask} from "@/features/agent/commands/agentTasks";
+import {beginAgentRun, finishAgentRun} from "@/features/agent/commands/agentRuns";
+import {getTaskWrapupState, startTaskWrapup, publishTaskWrapup, cancelTaskWrapup} from "@/features/agent/commands/agentTaskWrapups";
+import type {AgentGenerationJob} from "@/features/agent/models/agentGeneration";
+import type {AgentToolCall} from "@/features/agent/models/agent";
 
 function check(value: unknown, message: string): asserts value { if (!value) throw new Error(message); }
 async function run() {

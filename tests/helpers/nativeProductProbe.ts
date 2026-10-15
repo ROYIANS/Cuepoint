@@ -3,11 +3,11 @@ import {mkdtemp,rm} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join,resolve} from "node:path";
 import {createInterface} from "node:readline";
-import {createNativeStoreBridge} from "@/lib/storage/nativeBridge";
-import {createNativeProductStore} from "@/lib/storage/native";
-import {createNativeBinaryServices} from "@/lib/storage/nativeBinary";
-import type {NativeSession} from "@/lib/storage/protocol";
-import type {NativeInvoke} from "@/lib/storage/nativeBridge";
+import {createNativeStoreBridge} from "@/platform/storage/nativeBridge";
+import {createNativeProductStore} from "@/platform/storage/native";
+import {createNativeBinaryServices} from "@/platform/storage/nativeBinary";
+import type {NativeSession} from "@/platform/storage/protocol";
+import type {NativeInvoke} from "@/platform/storage/nativeBridge";
 
 if (process.env.CUEPOINT_TOOL_MODE === "hosted" && !process.env.CUEPOINT_NATIVE_STORE_PROBE) throw new Error("Hosted native suites require the runner-resolved probe path");
 export const nativeProbePath=resolve(process.env.CUEPOINT_NATIVE_STORE_PROBE ?? "apps/desktop/.tools/target/debug/product_store_probe");

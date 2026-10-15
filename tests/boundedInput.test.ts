@@ -1,10 +1,10 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {assertResponseBytes, readResponseBlob, readResponseBytes, readResponseJson, readResponseText, ResponseLimitError} from "@/lib/ai/boundedResponse";
-import {readSseEvents} from "@/lib/ai/boundedSse";
-import {downloadApimartAudio, generateApimartSpeech, getApimartMusicTask, submitApimartMusic} from "@/lib/ai/apimartAudio";
-import {generateMimoSpeech, listMimoModels} from "@/lib/ai/mimoSpeech";
-import {downloadAIHubMixResult, type AIHubMixTask} from "@/lib/ai/aihubmix";
-import {MAX_AUDIO_BYTES, MAX_ERROR_BYTES, MAX_JSON_BYTES, MAX_MEDIA_DOWNLOAD_BYTES} from "@/lib/resource/limits";
+import {assertResponseBytes, readResponseBlob, readResponseBytes, readResponseJson, readResponseText, ResponseLimitError} from "@/platform/http/boundedResponse";
+import {readSseEvents} from "@/platform/http/boundedSse";
+import {downloadApimartAudio, generateApimartSpeech, getApimartMusicTask, submitApimartMusic} from "@/features/audio/providers/apimartAudio";
+import {generateMimoSpeech, listMimoModels} from "@/features/audio/providers/mimoSpeech";
+import {downloadAIHubMixResult, type AIHubMixTask} from "@/features/video/providers/aihubmix";
+import {MAX_AUDIO_BYTES, MAX_ERROR_BYTES, MAX_JSON_BYTES, MAX_MEDIA_DOWNLOAD_BYTES} from "@/platform/media/limits";
 
 const encode = (s: string) => new TextEncoder().encode(s);
 const credentials = {baseUrl: "https://api.apimart.ai/v1", apiKey: "sk-secret"};

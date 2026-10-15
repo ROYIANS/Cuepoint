@@ -3,9 +3,9 @@ import {act, createElement as h, createRef, useEffect, useState} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import * as Popover from "@radix-ui/react-popover";
-import {ContextPanelHostProvider} from "@/components/layout/ContextPanelHost";
-import {ContextPanel, ContextPanelContent, ContextPanelTitle} from "@/components/ui/context-panel";
-import {Home} from "@/components/ui/icons";
+import {ContextPanelHostProvider} from "@/app/layout/ContextPanelHost";
+import {ContextPanel, ContextPanelContent, ContextPanelTitle} from "@/app/layout/context-panel";
+import {Home} from "@/ui/icons";
 
 let root: Root, container: HTMLDivElement, host: HTMLDivElement;
 const mounted = vi.fn(), unmounted = vi.fn();

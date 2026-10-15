@@ -1,9 +1,10 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
-import {printStoryboard} from "@/lib/runtimePrint";
-import {StoryboardPrintPage} from "@/components/produce/StoryboardPrintPage";
-import {Button} from "@/components/ui/button";
-import {emptyEpisode, emptyProject} from "@/db/productionRecords";
+import {printStoryboard} from "@/platform/runtime/runtimePrint";
+import {StoryboardPrintPage} from "@/features/video/ui/StoryboardPrintPage";
+import {Button} from "@/ui/button";
+import {emptyEpisode} from "@/features/video/models/newRecords";
+import {emptyProject} from "@/features/projects/models/newProject";
 
 const native = vi.hoisted(() => ({invoke: vi.fn(), error: vi.fn(), success: vi.fn(), queryIndex: 0, rows: [] as unknown[]}));
 vi.mock("@tauri-apps/api/core", () => ({invoke: native.invoke}));
@@ -11,11 +12,11 @@ vi.mock("react", async original => ({...await original<typeof import("react")>()
     useState: (initial: unknown) => [typeof initial === "function" ? initial() : initial, vi.fn()],
     useRef: (initial: unknown) => ({current: initial}), useEffect: () => undefined,
 }));
-vi.mock("@/lib/storage/hooks", () => {
+vi.mock("@/platform/product/queries", () => {
     const read = () => native.rows[native.queryIndex++];
     return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
 });
-vi.mock("@/lib/useShotMedia", () => ({useShotMedia: () => new Map()}));
+vi.mock("@/features/video/queries/useShotMedia", () => ({useShotMedia: () => new Map()}));
 vi.mock("sonner", () => ({toast: {error: native.error, success: native.success}}));
 
 beforeEach(() => { native.invoke.mockReset(); native.error.mockReset(); native.success.mockReset(); native.queryIndex = 0; native.rows = []; });

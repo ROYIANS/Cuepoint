@@ -1,10 +1,10 @@
 import {describe,expect,it,vi} from "vitest";
 import {createNativeProbe} from "./helpers/nativeProductProbe";
-import {AtomicToolRollbackError,executeAtomicTool} from "@/db/agentTools";
-import {createProject} from "@/db/projects";
-import {UnknownCommitError} from "@/lib/storage/errors";
-import type {ProductStore} from "@/lib/storage/types";
-import {createNativeProductStore} from "@/lib/storage/native";
+import {AtomicToolRollbackError,executeAtomicTool} from "@/features/agent/commands/agentTools";
+import {createProject} from "@/features/projects/commands/projects";
+import {UnknownCommitError} from "@/platform/storage/errors";
+import type {ProductStore} from "@/platform/storage/types";
+import {createNativeProductStore} from "@/platform/storage/native";
 
 async function seedTool(store:ProductStore) {
     await store.transaction("rw",["chatThreads","chatMessages","agentRuns","agentToolCalls"],async tx=> {

@@ -282,7 +282,7 @@ User cancellation/no printer causes no printed-success feedback. Other desktop
 systems retain their existing print delegate; their A4 behavior needs actual
 platform acceptance. Do not fall back to default native print after failure.
 
-Keep shared `styles.css` A4-landscape/10mm, white content, released print overflow
+Keep shared `ui/theme.css` A4-landscape/10mm, white content, released print overflow
 and hidden chrome. The default Tauri/Wry macOS print path does not set native
 paper/orientation; CSS presence alone cannot prove the system preview's geometry.
 
@@ -481,7 +481,7 @@ published status truthful and refuse ambiguous recovery.
 
 ## Workspace registry compatibility (2026-10-14)
 
-`schema.json` (`packages/studio/src/lib/storage/schema.json`) is bundled into the Rust registry and its SHA-256 is
+`schema.json` (`packages/studio/src/platform/storage/schema.json`) is bundled into the Rust registry and its SHA-256 is
 stored in `product_workspace.registry_hash` when a workspace is created. An installed workspace only
 opens while that hash matches the running build, so adding a table to the registry breaks every
 existing local workspace.

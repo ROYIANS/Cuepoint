@@ -1,11 +1,11 @@
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {createProject} from "@/db/projects";
-import {addShot, patchShot, setShotSlot} from "@/db/shots";
-import {putMedia} from "@/db/media";
-import {applyShotBulkCommand, deleteShotSelectionCommand, reorderShotGroupCommand} from "@/components/shots/shotEditorCommands";
-import {TEXT_SHOT_FIELDS, textShotPatch} from "@/components/shots/shotColumnFields";
-import {emptySlot} from "@/domain/slot";
+import {db} from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {addShot, patchShot, setShotSlot} from "@/features/video/commands/shots";
+import {putMedia} from "@/features/library/commands/media";
+import {applyShotBulkCommand, deleteShotSelectionCommand, reorderShotGroupCommand} from "@/features/video/ui/shotEditorCommands";
+import {TEXT_SHOT_FIELDS, textShotPatch} from "@/features/video/ui/shotColumnFields";
+import {emptySlot} from "@/features/library/models/slot";
 
 async function seed() {
     const project = await createProject("D03 commands");

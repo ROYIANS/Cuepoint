@@ -1,15 +1,16 @@
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle, patchCharacter} from "@/db/assets";
-import {addShot, patchShot, setShotSlot} from "@/db/shots";
-import {addStoryBeat, patchStoryBeat} from "@/db/episodes";
-import {createProject, patchProjectDetails} from "@/db/projects";
-import {putMedia} from "@/db/media";
-import { buildProductionContext } from "@/lib/productionContext";
-import { targetRevision, validateProductionTarget } from "@/lib/productionRevision";
-import { defaultImageGeneration, defaultVideoGeneration } from "@/domain/output";
-import { emptySlot } from "@/domain/slot";
+import { db } from "@/platform/product/store";
+import {addCharacter, addProp, addScene, addStyle, patchCharacter} from "@/features/library/commands/assets";
+import {addShot, patchShot, setShotSlot} from "@/features/video/commands/shots";
+import {addStoryBeat, patchStoryBeat} from "@/features/video/commands/episodes";
+import {createProject, patchProjectDetails} from "@/features/projects/commands/projects";
+import {putMedia} from "@/features/library/commands/media";
+import { buildProductionContext } from "@/features/video/services/productionContext";
+import {validateProductionTarget} from "@/features/video/models/productionRevision";
+import {targetRevision} from "@/platform/data/revision";
+import { defaultImageGeneration, defaultVideoGeneration } from "@/features/video/models/output";
+import { emptySlot } from "@/features/library/models/slot";
 
 export async function fixture() {
   const project = await createProject("A");

@@ -1,20 +1,20 @@
 import Dexie from "dexie";
-import {db} from "@/db/database";
-import type {ProductStore} from "@/lib/storage/types";
+import {db} from "@/platform/product/store";
+import type {ProductStore} from "@/platform/storage/types";
 import {interceptStoreTable} from "../../helpers/storeFaults";
-import {createProject, patchProjectOutput} from "@/db/projects";
-import {addShot, deleteShots, deleteEpisodeShots, restoreShots, setShotSlot} from "@/db/shots";
-import {addEpisode, deleteEpisode, restoreEpisode, addStoryBeat} from "@/db/episodes";
-import {addCharacter, addScene, addProp, addStyle, deleteCharacter, deleteScene, deleteProp, deleteStyle, setCharacterSlot, setSceneSlot, setPropSlot, setStyleSlot} from "@/db/assets";
-import {createChatThread} from "@/db/chat";
-import {deleteChatThread} from "@/db/cascadeCommands";
-import {releaseMaterialUse} from "@/db/assetReuse";
-import {promoteLegacyMaterial, adoptMaterialInProject} from "@/db/materials";
-import {removeProjectReference} from "@/db/references";
-import {emptySlot} from "@/domain/slot";
+import {createProject, patchProjectOutput} from "@/features/projects/commands/projects";
+import {addShot, deleteShots, deleteEpisodeShots, restoreShots, setShotSlot} from "@/features/video/commands/shots";
+import {addEpisode, deleteEpisode, restoreEpisode, addStoryBeat} from "@/features/video/commands/episodes";
+import {addCharacter, addScene, addProp, addStyle, deleteCharacter, deleteScene, deleteProp, deleteStyle, setCharacterSlot, setSceneSlot, setPropSlot, setStyleSlot} from "@/features/library/commands/assets";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import {releaseMaterialUse} from "@/features/library/commands/assetReuse";
+import {promoteLegacyMaterial, adoptMaterialInProject} from "@/features/library/commands/materials";
+import {removeProjectReference} from "@/features/references/commands/references";
+import {emptySlot} from "@/features/library/models/slot";
 import {check, media, slot, job, batch, item, at, currentSources, retentionSources, type RetentionSource} from "./seeds";
 import {observe} from "./instrumentation";
-import {PRODUCTION_TABLES} from "@/db/productionShared";
+import {PRODUCTION_TABLES} from "@/platform/product/scopes";
 
 async function normalize(value: unknown): Promise<unknown> {
     if (value instanceof Blob) return {type: value.type, bytes: Array.from(new Uint8Array(await value.arrayBuffer()))};

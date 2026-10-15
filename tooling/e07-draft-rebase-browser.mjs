@@ -1,3 +1,4 @@
+import {historicalSource} from "./historical-source.mjs";
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
 import {mkdir, mkdtemp, readFile, rm, writeFile} from "node:fs/promises";
@@ -15,8 +16,8 @@ const output = process.env.E07_DRAFT_REBASE_OUTPUT_DIR ?? await mkdtemp(path.joi
 await mkdir(output, {recursive: true});
 const digest = data => createHash("sha256").update(data).digest("hex");
 const relativeInputs = [
-    "packages/studio/src/lib/debouncedDraft.ts", "packages/studio/src/components/drafts/TextDraftField.tsx", "packages/studio/src/components/ui/draft-status.tsx",
-    "packages/studio/src/db/projects.ts", "packages/studio/src/db/database.ts", `${fixture}/harness.tsx`, `${fixture}/index.html`,
+    "packages/studio/src/platform/product/drafts.ts", "packages/studio/src/app/drafts/TextDraftField.tsx", "packages/studio/src/app/drafts/draft-status.tsx",
+    "packages/studio/src/features/projects/commands/projects.ts", "packages/studio/src/platform/product/store.ts", `${fixture}/harness.tsx`, `${fixture}/index.html`,
     `${fixture}/debouncedDraft-before.ts`, `${fixture}/provenance.json`, "tooling/e07-draft-rebase-browser.mjs",
 ];
 const inputsBefore = Object.fromEntries(await Promise.all(relativeInputs.map(async file => [file, digest(await readFile(path.join(root, file)))])));
@@ -38,7 +39,7 @@ for (const shape of ["primitive", "memo"]) {
         if (file.startsWith("../") || file.startsWith("node_modules/") || !/\.(tsx?|html)$/.test(file)) return source;
         loaded.set(file, digest(source));
         loadedBodies.set(file, source);
-        const body = variant === "regression" && file === "packages/studio/src/lib/debouncedDraft.ts" ? original : source;
+        const body = variant === "regression" && file === "packages/studio/src/platform/product/drafts.ts" ? historicalSource(original, "lib/debouncedDraft.ts") : source;
         delivered.set(file, digest(body));
         return body;
     }};
@@ -136,8 +137,8 @@ for (const shape of ["primitive", "memo"]) {
         check("no-page-error", () => assert.deepEqual(errors, []));
         check("offline-only", () => assert.deepEqual(external, []));
         check("one-main-document", () => assert.deepEqual(documents, [url]));
-        check("actual-current-source-loaded", () => assert.equal(loaded.get("packages/studio/src/lib/debouncedDraft.ts"), inputsBefore["packages/studio/src/lib/debouncedDraft.ts"]));
-        check("actual-delivered-source", () => assert.equal(delivered.get("packages/studio/src/lib/debouncedDraft.ts"), variant === "regression" ? provenance.sha256 : inputsBefore["packages/studio/src/lib/debouncedDraft.ts"]));
+        check("actual-current-source-loaded", () => assert.equal(loaded.get("packages/studio/src/platform/product/drafts.ts"), inputsBefore["packages/studio/src/platform/product/drafts.ts"]));
+        check("actual-delivered-source", () => assert.equal(delivered.get("packages/studio/src/platform/product/drafts.ts"), variant === "regression" ? provenance.sha256 : inputsBefore["packages/studio/src/platform/product/drafts.ts"]));
         await page.screenshot({path: path.join(directory, "after.png")});
         cases.push({shape, variant, status: contractErrors.length ? "FAIL" : "PASS", observation, contractErrors,
             errors, external, documents, preflight});

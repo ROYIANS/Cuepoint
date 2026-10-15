@@ -1,40 +1,13 @@
 import assert from 'node:assert/strict';
-import {mkdtemp, mkdir, readFile, rm, symlink, writeFile} from 'node:fs/promises';
+import {mkdtemp, mkdir, readFile, rm, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join, dirname} from 'node:path';
-import {fileURLToPath} from 'node:url';
 import {test} from 'node:test';
-import {runCommand} from './quality/unused.mjs';
+import {workspaceFixture} from './quality-fixture.mjs';
 import {assembleWeb} from './assemble-web.mjs';
 
-const root = fileURLToPath(new URL('../', import.meta.url));
-async function fixture() {
-    const directory = await mkdtemp(join(tmpdir(), 'cuepoint-workspace-gate-'));
-    const write = async (file, value) => {await mkdir(dirname(join(directory, file)), {recursive: true}); await writeFile(join(directory, file), typeof value === 'string' ? value : JSON.stringify(value));};
-    await symlink(join(root, 'node_modules'), join(directory, 'node_modules'), 'dir');
-    const policy = JSON.parse(await readFile(join(root, 'quality/workspaces.json'), 'utf8'));
-    await write('pnpm-workspace.yaml', "packages:\n  - 'apps/*'\n  - 'packages/*'\n");
-    await write('quality/workspaces.json', policy);
-    await write('package.json', {private: true, type: 'module'});
-    const paths = {};
-    for (const row of policy.packages) {
-        const dependencies = Object.fromEntries(row.dependencies.map(name => [name, 'workspace:*']));
-        await write(`${row.path}/package.json`, {name: row.name, private: true, exports: {'./entry': './src/main.ts'}, dependencies});
-        await write(`${row.path}/src/main.ts`, `export const value = ${JSON.stringify(row.name)};\n`);
-        paths[`${row.name}/entry`] = [`${row.path}/src/main.ts`];
-    }
-    const config = {compilerOptions: {target: 'ES2022', module: 'ESNext', moduleResolution: 'bundler', baseUrl: '.', paths}, include: ['apps/*/src', 'packages/*/src']};
-    await write('tsconfig.app.json', config);
-    const check = async () => {
-        const result = await runCommand(process.execPath, [join(root, 'tooling/quality-check.mjs'), '--root', directory, '--only', 'architecture', '--report', join(directory, 'report.json')], root);
-        const report = JSON.parse(await readFile(join(directory, 'report.json'), 'utf8'));
-        return {result, report};
-    };
-    return {directory, policy, config, write, check};
-}
-
 test('actual architecture CLI rejects package bypasses and omitted owned sources', async () => {
-    const f = await fixture();
+    const f = await workspaceFixture();
     try {
         assert.equal((await f.check()).result.exitCode, 0);
         for (const source of [

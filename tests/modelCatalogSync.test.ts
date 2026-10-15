@@ -1,11 +1,11 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {DEVICE_SETTING_MAX_BYTES} from "@/db/deviceSettings";
+import {db} from "@/platform/product/store";
+import {DEVICE_SETTING_MAX_BYTES} from "@/features/settings/commands/deviceSettings";
 import {
     CATALOG_SELECTION_KEY, clearSyncedCatalog, fetchCatalogIndex, getCatalogSelection, MODEL_CATALOG_MAX_BYTES, putCatalogSelection, syncModelCatalog,
-} from "@/lib/ai/modelCatalog/sync";
-import {getModelCatalog, initModelCatalog, lookupModel, MODEL_CATALOG_KEY, resetModelCatalogForTests, subscribeModelCatalog} from "@/lib/ai/modelCatalog/store";
-import {parseSyncedSnapshot} from "@/lib/ai/modelCatalog/validate";
+} from "@/features/settings/modelCatalog/sync";
+import {getModelCatalog, initModelCatalog, lookupModel, MODEL_CATALOG_KEY, resetModelCatalogForTests, subscribeModelCatalog} from "@/features/settings/modelCatalog/store";
+import {parseSyncedSnapshot} from "@/features/settings/modelCatalog/validate";
 
 afterEach(() => { resetModelCatalogForTests(); vi.useRealTimers(); });
 

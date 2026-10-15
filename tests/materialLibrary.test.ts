@@ -1,14 +1,14 @@
-import {readBinaryBlob} from "@/lib/storage/binary";
+import {readBinaryBlob} from "@/platform/storage/binary";
 import { describe, expect, it, vi } from 'vitest';
 import {failStoreTableOnce} from "./helpers/storeFaults";
-import { db } from '@/db/database';
-import {createProject} from "@/db/projects";
-import {addCharacter, patchCharacter} from "@/db/assets";
-import {deleteProject} from "@/db/cascadeCommands";
-import { STUDIO_LIBRARY_ID } from '@/domain/types';
-import { emptySlot } from '@/domain/slot';
-import { createIpProfile, bindProjectIp, setIpArchived, updateIpProfile } from '@/db/ipProfiles';
-import { createFileMaterial, promoteMaterial, promoteLegacyMaterial, addFileMaterialVersion, updateMaterialMetadata, adoptMaterialInProject, updateMaterialUse, refreshSettingMaterial, setMaterialArchived, deleteMaterial } from '@/db/materials';
+import { db } from '@/platform/product/store';
+import {createProject} from "@/features/projects/commands/projects";
+import {addCharacter, patchCharacter} from "@/features/library/commands/assets";
+import {deleteProject} from "@/features/projects/commands/lifecycle";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
+import { emptySlot } from '@/features/library/models/slot';
+import { createIpProfile, bindProjectIp, setIpArchived, updateIpProfile } from '@/features/library/commands/ipProfiles';
+import { createFileMaterial, promoteMaterial, promoteLegacyMaterial, addFileMaterialVersion, updateMaterialMetadata, adoptMaterialInProject, updateMaterialUse, refreshSettingMaterial, setMaterialArchived, deleteMaterial } from '@/features/library/commands/materials';
 const png = (body = 'image') => new File([body], 'image.png', { type: 'image/png' });
 const globalScope = { kind: 'global' } as const;
 

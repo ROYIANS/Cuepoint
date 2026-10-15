@@ -22,7 +22,7 @@ for(const [name,build,browser] of [['before',beforeBuild,beforeBrowser],['after'
  assert.deepEqual(tokens(beforeRoute),tokens(builtRoute),'Generated route token equivalence');
  const opening=await json(path.join(build,'inputs-before.json')),effective=await json(path.join(build,'inputs-after.json')),restored=await json(path.join(build,'inputs-restored.json'));
  assert.deepEqual(opening,restored,'Exact source restored after generated-route build');
- assert(Object.keys(opening).filter(p=>opening[p].sha256!==effective[p].sha256).every(p=>p==='packages/studio/src/routeTree.gen.ts'));
+ assert(Object.keys(opening).filter(p=>opening[p].sha256!==effective[p].sha256).every(p=>p==='packages/studio/src/app/routeTree.gen.ts'));
  pairs[name]={build,browser,buildResult:await json(path.join(build,'result.json')),networkResult:await json(path.join(browser,'result.json')),scenarios:scenarioResults,route:{before:hash(beforeRoute),effective:hash(builtRoute),tokensEquivalent:true,restored:true},producer:{build:opening['tooling/e06-build.mjs'],browser:await json(path.join(browser,'producer.json'))},moduleInputCount:Object.keys(await json(path.join(build,'module-inputs.json'))).length};
 }
 assert.equal(pairs.before.producer.build.sha256,pairs.after.producer.build.sha256);

@@ -1,22 +1,22 @@
 import {createElement, type ReactNode} from "react";
 import {renderToStaticMarkup} from "react-dom/server";
 import {describe, expect, it, vi} from "vitest";
-import {CreatedEntityLinks} from "@/components/agent/CreatedEntityLinks";
-import {toolReferenceAttachments} from "@/lib/agent/referenceEvidence";
-import {db} from "@/db/database";
-import {createProject} from "@/db/projects";
-import {addCharacter} from "@/db/assets";
-import {firstEpisode} from "@/db/episodes";
-import {addShot} from "@/db/shots";
-import {executeAtomicTool} from "@/db/agentTools";
-import {withBusinessWriteReceipt} from "@/lib/agent/businessWriteReceipt";
-import {createChatThread} from "@/db/chat";
-import {beginAgentRun} from "@/db/agentRuns";
-import {getRow, navigation, summarize, targetRevision} from "@/lib/agent/businessStore";
-import {BUSINESS_TOOLS} from "@/lib/agent/businessTools";
-import {readWriteReceipt} from "@/lib/agent/writeReceipt";
-import type {AgentToolCall} from "@/domain/agent";
-import type {AgentToolContext} from "@/lib/agent/tools";
+import {CreatedEntityLinks} from "@/features/agent/ui/CreatedEntityLinks";
+import {toolReferenceAttachments} from "@/features/references/agent/referenceEvidence";
+import {db} from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {addCharacter} from "@/features/library/commands/assets";
+import {firstEpisode} from "@/features/video/commands/episodes";
+import {addShot} from "@/features/video/commands/shots";
+import {executeAtomicTool} from "@/features/agent/commands/agentTools";
+import {withBusinessWriteReceipt} from "@/features/video/agent/businessWriteReceipt";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {getRow, navigation, summarize, targetRevision} from "@/features/agent/runtime/businessStore";
+import {BUSINESS_TOOLS} from "@/features/video/agent/businessTools";
+import {readWriteReceipt} from "@/features/agent/runtime/writeReceipt";
+import type {AgentToolCall} from "@/features/agent/models/agent";
+import type {AgentToolContext} from "@/features/agent/runtime/tools";
 import {registeredTools} from "./helpers/registeredTools";
 
 vi.mock("@tanstack/react-router", () => ({

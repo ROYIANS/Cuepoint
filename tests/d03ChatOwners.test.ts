@@ -1,5 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import type {ConnectorConfig, ChatThread} from "@/domain/types";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import type {ChatThread} from "@/features/agent/models/chat";
 
 const host = vi.hoisted(() => ({cells: [] as unknown[], cursor: 0, effects: [] as (() => void)[], cleanups: new Map<number, () => void>()}));
 vi.mock("react", async original => ({...await original<typeof import("react")>(),
@@ -15,10 +16,10 @@ vi.mock("react", async original => ({...await original<typeof import("react")>()
     useMemo: (compute: () => unknown) => compute(), useCallback: (fn: unknown) => fn,
 }));
 
-import {useChatExecutionSession} from "@/components/agent/useChatExecutionSession";
-import {useChatSelection} from "@/components/agent/useChatSelection";
-import {createChatThread, updateChatThread} from "@/db/chat";
-import {db} from "@/db/database";
+import {useChatExecutionSession} from "@/features/agent/ui/useChatExecutionSession";
+import {useChatSelection} from "@/features/agent/ui/useChatSelection";
+import {createChatThread, updateChatThread} from "@/features/agent/commands/chat";
+import {db} from "@/platform/product/store";
 
 function render<T>(run: () => T): T {host.cursor = 0; const value = run(); host.effects.splice(0).forEach(fn => fn()); return value;}
 beforeEach(() => {host.cells = []; host.cursor = 0; host.effects = []; host.cleanups.clear();});

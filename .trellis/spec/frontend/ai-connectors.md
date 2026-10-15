@@ -2,7 +2,7 @@
 
 ## Models.dev catalog (replaced the LobeHub Model Bank; 2026-10-14)
 
-The Models.dev catalog in `packages/studio/src/lib/ai/modelCatalog/` is the only source for limits, vision and prices. The LobeHub Model Bank (`vendor/lobehub`, `lib/ai/modelBank/`, `model-bank:*` scripts) was removed on 2026-10-14. Historical `AgentRun.visionCapability.source: "model-bank"` markers and old "Model Bank" display strings in stored runs/messages are read as-is: `referenceInput.ts` keeps `"model-bank"` in its source union so old records stay valid; there is no migration and no code branches on it. Model data does not authorize new gateway wire parameters; transport policy remains in `reasoningPolicy`.
+The Models.dev catalog in `packages/studio/src/features/settings/modelCatalog/` is the only source for limits, vision and prices. The LobeHub Model Bank (`vendor/lobehub`, `lib/ai/modelBank/`, `model-bank:*` scripts) was removed on 2026-10-14. Historical `AgentRun.visionCapability.source: "model-bank"` markers and old "Model Bank" display strings in stored runs/messages are read as-is: `referenceInput.ts` keeps `"model-bank"` in its source union so old records stay valid; there is no migration and no code branches on it. Model data does not authorize new gateway wire parameters; transport policy remains in `reasoningPolicy`.
 - Sources: a committed baseline projection of the pinned `@opencode-ai/models` (`models-dev:verify`), lazily imported; or the user-synced snapshot stored in the device-local `deviceSettings` table under key `modelCatalog` (selection under `modelCatalogSelection`, never in project ZIPs). Sync and the full-list index are manual only.
 - Matching (exact, case-sensitive, no aliases): tier 1 the connector's own provider, tier 2 original-vendor providers, tier 3 same canonical id when candidates agree per field. Prices come only from tier 1 or tier 2; tier-2 prices are "官方参考价". Conflicts: smallest context/output, conflicting vision is unknown.
 - Lookups stay synchronous and memory-only (safe inside transactions); runs freeze a `modelPricing` snapshot.
@@ -14,7 +14,7 @@ Read before changing provider discovery/probes or adding consumers of the APIMar
 
 ## 2. Signatures
 
-Provider dispatch in `packages/studio/src/lib/ai/connectors.ts`:
+Provider dispatch in `packages/studio/src/features/settings/models/connectors.ts`:
 
 ```ts
 listConnectorModels(connector, usage: "all" | "chat", fetchImpl?)
@@ -23,9 +23,9 @@ discoverConnectorChatModels(connector, options?)
 runWithCompatibleChatModel(connector, model, action, options?)
 ```
 
-`packages/studio/src/lib/ai/chatModelPolicy.ts` owns connector-scoped compatibility, warning copy and the shared `buildChatModelOptions` filter. `runWithCompatibleChatModel` invokes the mutation/transport action only after compatibility succeeds; abort or a changed selection prevents action execution.
+`packages/studio/src/features/settings/models/chatModelPolicy.ts` owns connector-scoped compatibility, warning copy and the shared `buildChatModelOptions` filter. `runWithCompatibleChatModel` invokes the mutation/transport action only after compatibility succeeds; abort or a changed selection prevents action execution.
 
-Provider client in `packages/studio/src/lib/ai/apimart.ts`:
+Provider client in `packages/studio/src/features/video/providers/apimart.ts`:
 
 ```ts
 listApimartModels(credentials, query?, options?)
@@ -107,10 +107,10 @@ await listConnectorModels(apimartConnector, "chat");
 ## AIHubMix contracts
 
 ### 1. Scope / Trigger
-Use for AIHubMix discovery, credential tests, native media requests and protected content reads. This module is the provider client. Durable Agent generation now wraps it in lib/agent/generationRuntime.ts; see agent-creative-skills.md for verified profiles and recovery contracts.
+Use for AIHubMix discovery, credential tests, native media requests and protected content reads. This module is the provider client. Durable Agent generation now wraps it in features/video/agent/generationRuntime.ts; see agent-creative-skills.md for verified profiles and recovery contracts.
 
 ### 2. Signatures
-`packages/studio/src/lib/ai/aihubmix.ts`: `listAIHubMixModels`, `testAIHubMixConnection`, `getAIHubMixModelSchema`, `submitAIHubMixImageGeneration`, `submitAIHubMixVideoGeneration`, `getAIHubMixImageTask`, `getAIHubMixVideoTask`, `downloadAIHubMixResult`. Requests accept passed credentials plus optional `signal`/`fetchImpl`; explicit downloads return Blob without repository mutation. Provider dispatch returns `via: "authenticated-read"` for a successful AIHubMix connection probe.
+`packages/studio/src/features/video/providers/aihubmix.ts`: `listAIHubMixModels`, `testAIHubMixConnection`, `getAIHubMixModelSchema`, `submitAIHubMixImageGeneration`, `submitAIHubMixVideoGeneration`, `getAIHubMixImageTask`, `getAIHubMixVideoTask`, `downloadAIHubMixResult`. Requests accept passed credentials plus optional `signal`/`fetchImpl`; explicit downloads return Blob without repository mutation. Provider dispatch returns `via: "authenticated-read"` for a successful AIHubMix connection probe.
 
 ### 3. Contracts
 - Chat Base URL ends in `/v1`. Media/catalog/schema routes derive from the same configured root, preserving proxy prefixes. Reject credentials/query/fragment in base URLs and unsupported path shapes. No hardcoded-host fallback.
@@ -233,7 +233,7 @@ Tests assert result and exact requests/methods: malformed GET1/POST0, allowed fa
 Inbound provider JSON/error bodies, speech audio/base64 envelopes, CDN downloads, and Chat/Responses streaming accumulation.
 
 ### 2. Signatures
-`readResponseBytes/Text/Json/Blob` share actual Uint8Array byte enforcement while consuming a Response body, before parsing or Blob construction. `readSseEvents` handles bounded UTF-8 events and cancellation. Policies in `packages/studio/src/lib/resource/limits.ts`: error 64 KiB, ordinary JSON and retained chat output 4 MiB, raw audio 32 MiB, MiMo speech envelope ceil(audioLimit/3)*4 + 4 MiB, protected/public image/video binary download 256 MiB. These are local application limits, not supplier specifications. Tavily remains at 2 MiB. Audio byte limits agree with the existing decoder guard.
+`readResponseBytes/Text/Json/Blob` share actual Uint8Array byte enforcement while consuming a Response body, before parsing or Blob construction. `readSseEvents` handles bounded UTF-8 events and cancellation. Policies in `packages/studio/src/platform/media/limits.ts`: error 64 KiB, ordinary JSON and retained chat output 4 MiB, raw audio 32 MiB, MiMo speech envelope ceil(audioLimit/3)*4 + 4 MiB, protected/public image/video binary download 256 MiB. These are local application limits, not supplier specifications. Tavily remains at 2 MiB. Audio byte limits agree with the existing decoder guard.
 
 ### 3. Contracts
 Content-Length is a hint, never the only enforcement. Reject an oversized body during reading, cancel and release the reader, and preserve AbortError semantics. Check exact decoded base64 size including padding before allocating and validate the resulting Blob. An SSE response bounds each pending line/event and the aggregate retained content/reasoning/tool output before delivering an over-limit delta; repeated legal usage-only events do not consume a lifetime response allowance. Retained output accounting handles UTF-16 surrogate pairs split across JSON deltas: charge actual appended UTF-8 bytes, rather than summing independent encodings that overcount a completed pair. Responses' existing event/output protections remain.
@@ -264,7 +264,7 @@ Wrong: call response.json/text/blob with no bound or trust only the header. Corr
 
 ## Shared generation capability boundary
 
-Current image/video capability facts and scalar parameter validation are shared in domain/generationCapabilities.ts, without changing provider requests, endpoint/model support or entitlement. APIMart frame request follow-input ratio and explicit persisted project adaptive ratio remain distinct representations; AIHubMix Veo resolution/reference/duration rules retain exact current constraints. See [D06](./asset-output-foundation.md#d06-shared-generation-capability-contract-2026-10-08).
+Current image/video capability facts and scalar parameter validation are shared in features/video/models/generationCapabilities.ts, without changing provider requests, endpoint/model support or entitlement. APIMart frame request follow-input ratio and explicit persisted project adaptive ratio remain distinct representations; AIHubMix Veo resolution/reference/duration rules retain exact current constraints. See [D06](./asset-output-foundation.md#d06-shared-generation-capability-contract-2026-10-08).
 
 ## D07 shared once-only request and explicit JSON policies (2026-10-08)
 
@@ -274,8 +274,8 @@ Maintain this contract when changing APIMart/image/audio, AIHubMix, MiMo, OpenAI
 
 ## 2. Signatures / Owners
 
-- `lib/ai/baseUrl.ts` owns `normalizeBaseUrl(baseUrl: string)` with the existing trim/trailing-slash behavior unchanged. Original OpenAI-compatible compatibility exports remain for actual old consumers; transport modules consume the small leaf directly.
-- `lib/ai/requestBoundary.ts` owns `RequestBoundaryOptions`, `requestOnce(url, init, options)`, `JsonReadPolicy`, `HttpJsonReadPolicy` and `readHttpJson(response, policy, signal): Promise<unknown>`. Credentials/redirect and native/bounded success/failure policies are explicit caller inputs; bounded policy includes maxBytes and fatalUtf8. requestOnce checks an already-aborted signal and invokes the injected/native fetch once.
+- `platform/http/baseUrl.ts` owns `normalizeBaseUrl(baseUrl: string)` with the existing trim/trailing-slash behavior unchanged. Original OpenAI-compatible compatibility exports remain for actual old consumers; transport modules consume the small leaf directly.
+- `platform/http/requestBoundary.ts` owns `RequestBoundaryOptions`, `requestOnce(url, init, options)`, `JsonReadPolicy`, `HttpJsonReadPolicy` and `readHttpJson(response, policy, signal): Promise<unknown>`. Credentials/redirect and native/bounded success/failure policies are explicit caller inputs; bounded policy includes maxBytes and fatalUtf8. requestOnce checks an already-aborted signal and invokes the injected/native fetch once.
 - Existing `boundedResponse`, `boundedSse`, `safeError` and neutral resource limits remain the actual byte-read, abort/cleanup, SSE framing, redaction and budget owners.
 - Existing provider adapters retain URL/key/route validation, headers/body, timeout controllers, HTTP/provider error formatting, envelope/schema/status/result decoding and durable runtime APIs. Shared JSON returns unknown, preserving the real adapter parse/validation boundary; it discards only unreadable optional non-2xx diagnostics and propagates success/abort failures.
 

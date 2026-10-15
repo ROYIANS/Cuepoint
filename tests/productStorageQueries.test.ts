@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import type {MediaRecord} from "@/domain/types";
+import type {MediaRecord} from "@/features/library/models/media";
 
 const host = vi.hoisted(() => ({
     cells: [] as unknown[], cursor: 0,
@@ -21,16 +21,16 @@ vi.mock("react", async original => {
         useEffect: (effect: () => unknown) => {host.effects.push(effect);},
     };
 });
-vi.mock("@/lib/storage/hooks", () => ({useProductQuery: host.liveQuery, useProductQueryState: (...args: unknown[]) => ({value: host.liveQuery(...args), error: null})}));
+vi.mock("@/platform/product/queries", () => ({useProductQuery: host.liveQuery, useProductQueryState: (...args: unknown[]) => ({value: host.liveQuery(...args), error: null})}));
 
-import {isNativeWorkspaceRuntime} from "@/lib/nativeWorkspace";
-import {db} from "@/db/database";
-import {createProject} from "@/db/projects";
-import {addShot} from "@/db/shots";
-import {useVideoWorkspaceQuery, useVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
-import {useMedia} from "@/lib/media";
-import {useShotMedia} from "@/lib/useShotMedia";
-import {readBinaryBlob} from "@/lib/storage/binary";
+import {isNativeWorkspaceRuntime} from "@/platform/runtime/reference/nativeWorkspace";
+import {db} from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {addShot} from "@/features/video/commands/shots";
+import {useVideoWorkspaceQuery, useVideoWorkspaceRepository} from "@/features/video/services/workspaceRepository";
+import {useMedia} from "@/features/library/services/media";
+import {useShotMedia} from "@/features/video/queries/useShotMedia";
+import {readBinaryBlob} from "@/platform/storage/binary";
 
 beforeEach(() => {
     host.cells = []; host.cursor = 0; host.effects = []; host.liveQuery.mockReset();

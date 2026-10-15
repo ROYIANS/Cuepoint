@@ -1,7 +1,7 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {streamChatCompletions} from "@/lib/ai/chatStream";
-import {streamResponses} from "@/lib/ai/responsesStream";
-import {MAX_ERROR_BYTES, MAX_JSON_BYTES} from "@/lib/resource/limits";
+import {streamChatCompletions} from "@/features/agent/providers/chatStream";
+import {streamResponses} from "@/features/agent/providers/responsesStream";
+import {MAX_ERROR_BYTES, MAX_JSON_BYTES} from "@/platform/media/limits";
 
 const input = {baseUrl: "https://example.test/v1", apiKey: "sk-secret", connectorDefinitionId: "openai-compatible", model: "gpt-5.6-luna", messages: [{role: "user" as const, content: "hello"}]};
 const frame = (delta: Record<string, unknown>, finish: string | null = null) => ({choices: [{delta, finish_reason: finish}]});

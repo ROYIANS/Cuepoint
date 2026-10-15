@@ -1,9 +1,9 @@
 import {afterEach,beforeEach,describe,expect,it} from "vitest";
-import {PRODUCT_SCHEMA,TABLE_NAMES} from "@/lib/storage/schema";
-import schema from "@/lib/storage/schema.json";
-import type {ProductStore,StoreTx} from "@/lib/storage/types";
-import {executeAtomicTool} from "@/db/agentTools";
-import {createProject} from "@/db/projects";
+import {PRODUCT_SCHEMA,TABLE_NAMES} from "@/platform/storage/schema";
+import schema from "@/platform/storage/schema.json";
+import type {ProductStore,StoreTx} from "@/platform/storage/types";
+import {executeAtomicTool} from "@/features/agent/commands/agentTools";
+import {createProject} from "@/features/projects/commands/projects";
 
 export function registerSharedStorageCases(owner:string, create:()=>Promise<{store:ProductStore;close:()=>Promise<void>}>) {
     describe(`shared storage conformance/${owner}`,()=> {

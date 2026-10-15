@@ -6,7 +6,7 @@
 
 ## Overview
 
-Strict TypeScript (`tsconfig.app.json`: `strict`, `verbatimModuleSyntax`, `noUnusedLocals`, `noUnusedParameters`). Domain types and normalizers live under `packages/studio/src/domain/`. Product source uses relative imports within its package and declared exports across packages. The repository integration/type alias `@/*` points to Studio source for existing fixture/test contracts; application packages cannot use it to bypass exports. Zod is used for project-package imports and model tool argument boundaries, not forms.
+Strict TypeScript (`tsconfig.app.json`: `strict`, `verbatimModuleSyntax`, `noUnusedLocals`, `noUnusedParameters`). Domain types and normalizers live with their authoritative feature under `packages/studio/src/features/<feature>/models/`; genuinely neutral primitives have named platform owners. The ownership/public-type policy follows [Studio Feature Ownership](./feature-organization.md). Product source uses relative imports within its package and declared exports across packages. The repository integration/type alias `@/*` points to Studio source for existing fixture/test contracts; application packages cannot use it to bypass exports. Zod is used for project-package imports and model tool argument boundaries, not forms.
 
 ---
 
@@ -14,13 +14,22 @@ Strict TypeScript (`tsconfig.app.json`: `strict`, `verbatimModuleSyntax`, `noUnu
 
 | Location | What belongs there |
 | --- | --- |
-| `packages/studio/src/domain/types.ts` | `Id`, entity interfaces, const unions (`SHOT_STATUSES`), labels, normalizers (`normalizeShotStatus`, `normalizeShotFilters`) |
-| `packages/studio/src/domain/slot.ts` | Slot parsers/helpers (`parseGenerationSlot`, `parseShotPictureSlots`, `emptySlot`, remap/collect) |
-| `packages/studio/src/domain/columns.ts` | Shot column defs (`SHOT_COLUMNS`, `normalizeVisibleColumns`) |
-| Feature / lib files | Local UI-only types next to the consumer (e.g. draft status in `debouncedDraft`) |
-| `packages/studio/src/db/database.ts` | Imports entity types; table schemas use those types |
+| `platform/identity.ts` | Shared plain-string `Id`, `createId` and `nowIso`; no product entities. |
+| `features/projects/models/project.ts` | `Project`, `ProjectKind`, `getProjectKind`; explicit type-only video configuration relationships. |
+| `features/video/models/{shots,story,episodes,world,format,columns}.ts` | Video entity types, shot/status/filter normalizers, aspect/mode and column catalogs. |
+| `features/library/models/{ownership,slots,assets,media}.ts` | Studio ownership sentinel, generation slot types/catalogs, shared creative assets and media records. |
+| `features/library/models/slot.ts` | Actual slot parsers/remapping/collection; no second slot entity definition. |
+| `features/settings/models/connector.ts`, `features/agent/models/chat.ts` | Connection configuration and chat entities with their actual owners. |
+| Other feature `models/` | Audio/music/generation/memory/reference/Agent contracts owned by their named feature. |
+| `platform/storage/tableTypes.ts` | The singular typed table registration; references authoritative models with type-only imports. |
+| Local consumer module | UI-only types and narrow local parsing records next to their actual consumer. |
 
-Shared branded-ish id type is plain `export type Id = string`. Studio vs project ownership uses `STUDIO_LIBRARY_ID` / `isStudioLibrary`, not a separate branded type.
+Paths in this table are relative to `packages/studio/src`. The old all-entity
+`domain/types.ts` has no forwarding replacement. Constructors and ownership/
+relationship guards also belong to their actual feature; neutral patch/order
+mechanisms do not define business entities.
+
+Shared branded-ish id type is plain `export type Id = string`. Studio vs project ownership uses `STUDIO_LIBRARY_ID` / `isStudioLibrary` from `features/library/models/ownership.ts`, not a separate branded type.
 
 Const array → union pattern:
 
@@ -43,8 +52,9 @@ export type ShotStatus = (typeof SHOT_STATUSES)[number];
 - `verbatimModuleSyntax` requires `import type` for type-only imports:
 
 ```ts
-import type { GenerationSlot, Id } from "../../domain/types";
-import { patchCharacter, setCharacterSlot } from "../../db/assets";
+import type { Id } from "../../../platform/identity";
+import type { GenerationSlot } from "../models/slots";
+import { patchCharacter, setCharacterSlot } from "../commands/assets";
 ```
 
 - Use package-local relative imports for production source; cross-package callers use declared exports. Existing test/fixture aliases remain integration infrastructure, not production dependency permission.
@@ -58,15 +68,15 @@ import { patchCharacter, setCharacterSlot } from "../../db/assets";
 
 Runtime shape repair uses hand-written normalizers and parsers, not Zod:
 
-- `normalizeShotStatus` / `normalizeShotFilters` / `normalizeShotWorkspaceView` in `packages/studio/src/domain/types.ts`
-- `parseGenerationSlot` / `parseShotPictureSlots` in `packages/studio/src/domain/slot.ts` (legacy `frame` / `reference` / media-id fields coalesced into slots)
-- `normalizeVisibleColumns` in `packages/studio/src/domain/columns.ts`
+- `normalizeShotStatus` / `normalizeShotFilters` / `normalizeShotWorkspaceView` in `packages/studio/src/features/video/models/shots.ts`
+- `parseGenerationSlot` / `parseShotPictureSlots` in `packages/studio/src/features/library/models/slot.ts` (legacy `frame` / `reference` / media-id fields coalesced into slots)
+- `normalizeVisibleColumns` in `packages/studio/src/features/video/models/columns.ts`
 
 Unknown or missing shot status becomes `"draft"`. Empty filter arrays mean “all”.
 
 ### External input boundaries
 
-Zod schemas live in `packages/studio/src/lib/projectPackage.ts` (`manifestSchema`, passthrough record schemas) to validate zip/manifest boundaries (`PACKAGE_FORMAT`). `packages/studio/src/lib/agent/tools.ts` also uses strict Zod schemas for model-supplied tool arguments before any execution or approval; unknown properties are rejected. Do not add Zod for `Field` / `Input` form validation.
+Zod schemas live in `packages/studio/src/app/workflows/packages/projectPackage.ts` (`manifestSchema`) and its `projectPackageCodec.ts` (passthrough record schemas) to validate zip/manifest boundaries (`PACKAGE_FORMAT`). `packages/studio/src/features/agent/runtime/tools.ts` also uses strict Zod schemas for model-supplied tool arguments before any execution or approval; unknown properties are rejected. Do not add Zod for `Field` / `Input` form validation.
 
 ---
 
@@ -89,18 +99,18 @@ Zod schemas live in `packages/studio/src/lib/projectPackage.ts` (`manifestSchema
 
 ## Examples
 
-- Entity + normalizers: `packages/studio/src/domain/types.ts` (`Character`, `Shot`, `ShotFilters`, `normalizeShotFilters`)
-- Slot legacy parse: `packages/studio/src/domain/slot.ts` (`parseGenerationSlot`, `parseShotPictureSlots`)
-- Column catalog: `packages/studio/src/domain/columns.ts`
-- Zod package boundary: `packages/studio/src/lib/projectPackage.ts`
-- `import type` usage: `packages/studio/src/components/slots/GenerationSlotCard.tsx`, `packages/studio/src/db/database.ts`
+- Entity + normalizers: `features/library/models/assets.ts` (`Character`) and `features/video/models/shots.ts` (`Shot`, `ShotFilters`, `normalizeShotFilters`)
+- Slot legacy parse: `packages/studio/src/features/library/models/slot.ts` (`parseGenerationSlot`, `parseShotPictureSlots`)
+- Column catalog: `packages/studio/src/features/video/models/columns.ts`
+- Zod package boundary: `packages/studio/src/app/workflows/packages/projectPackage.ts`
+- `import type` usage: `packages/studio/src/features/library/ui/GenerationSlotCard.tsx`, `packages/studio/src/platform/storage/tableTypes.ts`
 
 ---
 
 ## Forbidden Patterns
 
 - Introducing Zod (or another schema lib) for every form field — patch repo with string/number values directly.
-- Defining duplicate `Shot` / `GenerationSlot` interfaces inside components instead of importing from `packages/studio/src/domain/`.
+- Defining duplicate `Shot` / `GenerationSlot` interfaces inside components instead of importing from their authoritative feature models.
 - Treating raw Dexie JSON as trusted without going through slot/status normalizers when reading legacy fields.
 - Value imports of types under `verbatimModuleSyntax` (breaks `pnpm lint` / `tsc -b`).
 - Using `any` for entity blobs; prefer `unknown` + narrow, or `Record<string, unknown>` inside parsers.
@@ -110,9 +120,9 @@ Zod schemas live in `packages/studio/src/lib/projectPackage.ts` (`manifestSchema
 ## References
 
 - `tsconfig.app.json`
-- `packages/studio/src/domain/types.ts`, `slot.ts`, `columns.ts`
-- `packages/studio/src/lib/projectPackage.ts`
-- `packages/studio/src/components/assets/CharacterDetailPage.tsx` (discriminated `back` prop)
+- `features/video/models/{shots,columns}.ts`, `features/library/models/slot.ts`
+- `packages/studio/src/app/workflows/packages/projectPackage.ts`
+- `packages/studio/src/features/library/ui/CharacterDetailPage.tsx` (discriminated `back` prop)
 
 ## Typed tool and memory wire compatibility
 
@@ -128,7 +138,7 @@ External package/JSON/provider results and legacy IndexedDB normalization are un
 
 ### 2. Signatures / Owners
 
-`domain/legacyScalar.ts` owns only explicit historical primitive coercion. Package codec/slot/domain/database migration owners define required/optional/text/ID/foreign-key policies. Local object records, OGL uniform maps and union predicates stay next to their consumers; no global factory or duplicated schema framework.
+`platform/data/legacyScalar.ts` owns only explicit historical primitive coercion. Package codec/slot/domain/database migration owners define required/optional/text/ID/foreign-key policies. Local object records, OGL uniform maps and union predicates stay next to their consumers; no global factory or duplicated schema framework.
 
 ### 3. Contracts / Invariants
 

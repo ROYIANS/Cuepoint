@@ -18,10 +18,10 @@ vi.mock("react", async original => {
     };
 });
 vi.mock("sonner", () => ({toast: {success: host.success, info: host.info, error: host.error, warning: host.warning}}));
-vi.mock("@/lib/nativeSystemServices", () => ({saveNativeBlob: host.save}));
+vi.mock("@/platform/runtime/nativeSystemServices", () => ({saveNativeBlob: host.save}));
 
-import {AboutPage} from "@/components/studio/AboutPage";
-import {Button} from "@/components/ui/button";
+import {AboutPage} from "@/features/settings/ui/AboutPage";
+import {Button} from "@/ui/button";
 import {GITHUB_URL} from "@cuepoint/distribution/brand";
 
 type Node = ReactElement<Record<string, unknown>>;

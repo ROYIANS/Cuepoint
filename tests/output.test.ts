@@ -3,7 +3,7 @@ import {
   APIMART_IMAGE_MODELS, defaultImageGeneration, defaultVideoGeneration, generationParameters,
   IMAGE_EXT_RATIOS, IMAGE_QUALITIES, IMAGE_RATIOS, OUTPUT_PROFILE_VERSION, parseGenerationDefaults,
   validateGenerationDefaults, VIDEO_RATIOS,
-} from "@/domain/output";
+} from "@/features/video/models/output";
 
 describe("verified APIMart project defaults", () => {
   it.each(IMAGE_RATIOS)("maps image ratio %s with native size and resolution", (size) => {

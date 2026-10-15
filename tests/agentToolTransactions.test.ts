@@ -1,17 +1,17 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { db } from "@/db/database";
-import { beginAgentRun, interruptThreadRuns } from "@/db/agentRuns";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import { AtomicToolRollbackError, executeAtomicTool, markRunningToolsUnknown, resolveAgentToolApproval, resumeAgentRun, saveToolPreview, saveToolRound, transitionToolCall } from "@/db/agentTools";
-import {createChatThread} from "@/db/chat";
-import {createProject} from "@/db/projects";
-import type { AgentPermissionMode, AgentRun, AgentToolPreview } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import type { AgentToolDefinition } from "@/lib/agent/tools";
-import type {StoreTx} from "@/lib/storage/types";
+import { db } from "@/platform/product/store";
+import { beginAgentRun, interruptThreadRuns } from "@/features/agent/commands/agentRuns";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import { AtomicToolRollbackError, executeAtomicTool, markRunningToolsUnknown, resolveAgentToolApproval, resumeAgentRun, saveToolPreview, saveToolRound, transitionToolCall } from "@/features/agent/commands/agentTools";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {createProject} from "@/features/projects/commands/projects";
+import type { AgentPermissionMode, AgentRun, AgentToolPreview } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import type { AgentToolDefinition } from "@/features/agent/runtime/tools";
+import type {StoreTx} from "@/platform/storage/types";
 
 const connector: ConnectorConfig = { id: "transaction-fixture", name: "fixture", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture-key", updatedAt: "2026-09-19" };
 const toolName = "fixture_create_project";

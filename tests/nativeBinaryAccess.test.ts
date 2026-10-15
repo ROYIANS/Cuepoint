@@ -1,15 +1,15 @@
 import {beforeEach, describe, expect, it, vi} from "vitest";
-import {Sha256} from "@/lib/sha256";
-import {registerBinaryReference} from "@/lib/storage/codec";
-import {StorageError} from "@/lib/storage/errors";
-import {binaryAvailability, installNativeBinaryAccess, readBinaryBlob, withBinaryReadLease} from "@/lib/storage/binary";
-import {createNativeBinaryServices, type BinaryAction, type NativeBinaryTransport, type NativeBinaryLease} from "@/lib/storage/nativeBinary";
-import {IPC_CHUNK_BYTES, type NativeSession} from "@/lib/storage/protocol";
-import {loadAudioBuffer} from "@/lib/audio/buffers";
-import {db} from "@/db/database";
+import {Sha256} from "@/platform/media/sha256";
+import {registerBinaryReference} from "@/platform/storage/codec";
+import {StorageError} from "@/platform/storage/errors";
+import {binaryAvailability, installNativeBinaryAccess, readBinaryBlob, withBinaryReadLease} from "@/platform/storage/binary";
+import {createNativeBinaryServices, type BinaryAction, type NativeBinaryTransport, type NativeBinaryLease} from "@/platform/storage/nativeBinary";
+import {IPC_CHUNK_BYTES, type NativeSession} from "@/platform/storage/protocol";
+import {loadAudioBuffer} from "@/features/audio/engine/buffers";
+import {db} from "@/platform/product/store";
 
 const {decodeAudioBlob} = vi.hoisted(() => ({decodeAudioBlob: vi.fn(async () => ({length: 10, numberOfChannels: 1}) as AudioBuffer)}));
-vi.mock("@/lib/audio/engine", async importOriginal => ({...await importOriginal<typeof import("@/lib/audio/engine")>(), decodeAudioBlob}));
+vi.mock("@/features/audio/engine/engine", async importOriginal => ({...await importOriginal<typeof import("@/features/audio/engine/engine")>(), decodeAudioBlob}));
 
 const session: NativeSession = {version: 1, session: "33333333-3333-4333-8333-333333333333", workspaceId: "11111111-1111-4111-8111-111111111111", generation: 1};
 const binaryId = "22222222-2222-4222-8222-222222222222";

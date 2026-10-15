@@ -1,14 +1,14 @@
 import {actualStoreScope,interceptStoreBackend} from "./helpers/storeBackendFaults";
 import {interceptStoreTable} from "./helpers/storeFaults";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import { createProject } from "@/db/projects";
+import { db } from "@/platform/product/store";
+import { createProject } from "@/features/projects/commands/projects";
 import {
   createProjectMemory, deleteProjectMemory, MemoryConflictError,
   replaceProjectMemory, setProjectMemoryStatus, updateProjectMemory,
-} from "@/db/projectMemories";
-import type {ProjectMemory,ProjectMemoryVersion} from "@/domain/projectMemory";
-import type { MemoryInput } from "@/domain/projectMemory";
+} from "@/features/memory/commands/projectMemories";
+import type {ProjectMemory,ProjectMemoryVersion} from "@/features/memory/models/projectMemory";
+import type { MemoryInput } from "@/features/memory/models/projectMemory";
 
 const input: MemoryInput = {
   category: "convention", title: "Memory", topicKey: "visual",

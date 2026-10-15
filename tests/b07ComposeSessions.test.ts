@@ -46,7 +46,7 @@ vi.mock("react", async original => {
         },
     };
 });
-vi.mock("@/lib/storage/hooks", () => {
+vi.mock("@/platform/product/queries", () => {
     const read = () => {const host = runtime.active!; return host.results[host.queryIndex++];};
     return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
 });
@@ -55,32 +55,34 @@ const io = vi.hoisted(() => ({navigate: vi.fn(), create: vi.fn(), begin: vi.fn()
     update: vi.fn(), importFile: vi.fn(), retryImport: vi.fn(), compatible: vi.fn(), lock: vi.fn()}));
 vi.mock("@tanstack/react-router", () => ({useNavigate: () => io.navigate, Link: "a", useBlocker: () => ({status: "idle", proceed: vi.fn(), reset: vi.fn()})}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
-vi.mock("@/db/chat", async original => ({...await original<typeof import("@/db/chat")>(),
+vi.mock("@/features/agent/commands/chat", async original => ({...await original<typeof import("@/features/agent/commands/chat")>(),
     createChatThread: io.create, updateChatThread: io.update}));
-vi.mock("@/db/agentRuns", async original => ({...await original<typeof import("@/db/agentRuns")>(), beginAgentRun: io.begin}));
-vi.mock("@/lib/agent/runChat", () => ({executeChatRun: io.execute, resumeChatRun: vi.fn()}));
-vi.mock("@/lib/agent/runOwnership", () => ({recoverAbandonedRuns: vi.fn().mockResolvedValue(undefined), withThreadRunLock: io.lock}));
-vi.mock("@/lib/agent/taskWrapup", () => ({recoverTaskWrapups: vi.fn().mockResolvedValue(undefined)}));
-vi.mock("@/lib/agent/generationBatchRuntime", () => ({pauseThreadGeneration: vi.fn()}));
-vi.mock("@/lib/ai/connectors", () => ({runWithCompatibleChatModel: io.compatible,
+vi.mock("@/features/agent/commands/agentRuns", async original => ({...await original<typeof import("@/features/agent/commands/agentRuns")>(), beginAgentRun: io.begin}));
+vi.mock("@/features/agent/runtime/runChat", () => ({executeChatRun: io.execute, resumeChatRun: vi.fn()}));
+vi.mock("@/features/agent/runtime/runOwnership", () => ({recoverAbandonedRuns: vi.fn().mockResolvedValue(undefined), withThreadRunLock: io.lock}));
+vi.mock("@/features/agent/runtime/taskWrapup", () => ({recoverTaskWrapups: vi.fn().mockResolvedValue(undefined)}));
+vi.mock("@/features/video/agent/generationBatchRuntime", () => ({pauseThreadGeneration: vi.fn()}));
+vi.mock("@/features/settings/models/connectors", () => ({runWithCompatibleChatModel: io.compatible,
     discoverConnectorChatModels: vi.fn().mockResolvedValue({models: ["model"]})}));
-vi.mock("@/lib/references/import", () => ({importReferenceFile: io.importFile, retryReferenceImport: io.retryImport}));
-vi.mock("@/components/agent/AgentActivityNavigation", () => ({AgentActivityNavigationProvider: "navigation-provider"}));
-vi.mock("@/components/agent/HomeWelcome", () => ({HomeWelcome: "home"}));
-vi.mock("@/components/agent/ChatWorkspace", () => ({ChatWorkspace: "workspace"}));
-vi.mock("@/components/agent/TaskBoard", () => ({TaskBoard: "board"}));
-vi.mock("@/components/agent/TaskInspector", () => ({TaskInspector: "inspector"}));
-vi.mock("@/components/agent/AgentComposerAttention", () => ({AgentComposerAttention: "attention"}));
-vi.mock("@/components/agent/ContextUsagePanel", () => ({ContextUsageTrigger: "context"}));
+vi.mock("@/features/references/documents/import", () => ({importReferenceFile: io.importFile, retryReferenceImport: io.retryImport}));
+vi.mock("@/features/agent/ui/AgentActivityNavigation", () => ({AgentActivityNavigationProvider: "navigation-provider"}));
+vi.mock("@/features/agent/ui/HomeWelcome", () => ({HomeWelcome: "home"}));
+vi.mock("@/features/agent/ui/ChatWorkspace", () => ({ChatWorkspace: "workspace"}));
+vi.mock("@/features/agent/ui/TaskBoard", () => ({TaskBoard: "board"}));
+vi.mock("@/features/agent/ui/TaskInspector", () => ({TaskInspector: "inspector"}));
+vi.mock("@/features/agent/ui/AgentComposerAttention", () => ({AgentComposerAttention: "attention"}));
+vi.mock("@/features/agent/ui/ContextUsagePanel", () => ({ContextUsageTrigger: "context"}));
 vi.mock("@lobehub/ui", () => ({Button: "button", Empty: "empty", Flexbox: "div"}));
 
 import {toast} from "sonner";
-import {resetReportedErrorsForTests} from "@/lib/diagnostics/reportError";
-import {AgentChatPage} from "@/components/agent/AgentChatPage";
-import {useReferenceDraft} from "@/components/agent/useReferenceDraft";
-import type {ComposerProps} from "@/components/agent/composerTypes";
-import type {ChatThread, ConnectorConfig, Project} from "@/domain/types";
-import type {ProjectReference} from "@/domain/references";
+import {resetReportedErrorsForTests} from "@/platform/diagnostics/reportError";
+import {AgentChatPage} from "@/features/agent/ui/AgentChatPage";
+import {useReferenceDraft} from "@/features/agent/ui/useReferenceDraft";
+import type {ComposerProps} from "@/features/agent/ui/composerTypes";
+import type {ChatThread} from "@/features/agent/models/chat";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import type {Project} from "@/features/projects/models/project";
+import type {ProjectReference} from "@/features/references/models/references";
 
 type Node = ReactElement<Record<string, unknown>>;
 const hosts: Host[] = [];

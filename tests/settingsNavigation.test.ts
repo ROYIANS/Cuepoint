@@ -38,26 +38,26 @@ vi.mock("@tanstack/react-router", async original => {
         useRouterState: ({select}: {select: (state: unknown) => unknown}) => select({location: {pathname: host.pathname}}),
     };
 });
-vi.mock("@/components/settings/useAutoUpdateCheck", () => ({useAutoUpdateCheck: () => undefined}));
-vi.mock("@/components/settings/sections/GeneralSection", () => ({GeneralSection: () => null}));
-vi.mock("@/components/settings/sections/StorageSection", () => ({StorageSection: () => null}));
-vi.mock("@/components/settings/sections/UpdateSection", () => ({UpdateSection: () => null}));
-vi.mock("@/lib/storage/hooks", () => ({useProductQuery: () => ({connectors: []})}));
+vi.mock("@/features/settings/ui/useAutoUpdateCheck", () => ({useAutoUpdateCheck: () => undefined}));
+vi.mock("@/features/settings/ui/sections/GeneralSection", () => ({GeneralSection: () => null}));
+vi.mock("@/features/settings/ui/sections/StorageSection", () => ({StorageSection: () => null}));
+vi.mock("@/features/settings/ui/sections/UpdateSection", () => ({UpdateSection: () => null}));
+vi.mock("@/platform/product/queries", () => ({useProductQuery: () => ({connectors: []})}));
 
 import {createMemoryHistory, Link, isRedirect} from "@tanstack/react-router";
-import {AppFrame} from "@/components/layout/AppFrame";
-import {ModuleLayout} from "@/components/layout/ModuleLayout";
-import {PageContent, PageHeader} from "@/components/layout/PageLayout";
-import {SettingsPage} from "@/components/settings/SettingsPage";
-import {AppearanceSection} from "@/components/settings/sections/AppearanceSection";
-import {ConnectorsSection} from "@/components/studio/ConnectorsPage";
-import {GeneralSection} from "@/components/settings/sections/GeneralSection";
-import {UpdateSection} from "@/components/settings/sections/UpdateSection";
-import {AboutPage} from "@/components/studio/AboutPage";
-import {Route as SettingsRoute} from "@/routes/_studio.settings";
-import {Route as ConnectorsRoute} from "@/routes/_studio.connectors";
-import {Route as AboutRoute} from "@/routes/_studio.about";
-import {getHistoryNavigation} from "@/lib/historyNavigation";
+import {AppFrame} from "@/app/layout/AppFrame";
+import {ModuleLayout} from "@/app/layout/ModuleLayout";
+import {PageContent, PageHeader} from "@/app/layout/PageLayout";
+import {SettingsPage} from "@/features/settings/ui/SettingsPage";
+import {AppearanceSection} from "@/features/settings/ui/sections/AppearanceSection";
+import {ConnectorsSection} from "@/features/settings/ui/ConnectorsPage";
+import {GeneralSection} from "@/features/settings/ui/sections/GeneralSection";
+import {UpdateSection} from "@/features/settings/ui/sections/UpdateSection";
+import {AboutPage} from "@/features/settings/ui/AboutPage";
+import {Route as SettingsRoute} from "@/app/routes/_studio.settings.tsx";
+import {Route as ConnectorsRoute} from "@/app/routes/_studio.connectors.tsx";
+import {Route as AboutRoute} from "@/app/routes/_studio.about.tsx";
+import {getHistoryNavigation} from "@/app/navigation/historyNavigation";
 
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(value: unknown): Node[] {

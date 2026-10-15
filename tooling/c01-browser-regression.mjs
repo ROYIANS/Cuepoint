@@ -1,3 +1,4 @@
+import {historicalSource} from "./historical-source.mjs";
 import assert from "node:assert/strict";
 import {createServer} from "vite";
 import {readFile} from "node:fs/promises";
@@ -6,7 +7,7 @@ import {fileURLToPath} from "node:url";
 const {chromium} = await import(process.env.C01_PLAYWRIGHT_PATH ?? "playwright");
 const baseline = {name: "c01-original-source", enforce: "pre", async transform(source, id) {
     if (!process.env.C01_BASELINE_ROOT) return source;
-    for (const file of ["db/agentTaskRecords.ts", "lib/agent/wrapupEvidence.ts"]) if (id.endsWith("/packages/studio/src/" + file)) return readFile(join(process.env.C01_BASELINE_ROOT, "src", file), "utf8");
+    for (const [file, current] of [["db/agentTaskRecords.ts", "features/agent/commands/agentTaskRecords.ts"], ["lib/agent/wrapupEvidence.ts", "features/agent/runtime/wrapupEvidence.ts"]]) if (id.endsWith("/packages/studio/src/" + current)) return historicalSource(await readFile(join(process.env.C01_BASELINE_ROOT, "src", file), "utf8"), file);
     return source;
 }};
 const server = await createServer({configFile: false, plugins: [baseline], resolve: {alias: {"@": fileURLToPath(new URL("../packages/studio/src", import.meta.url))}}, server: {host: "127.0.0.1", port: 0}});

@@ -10,7 +10,7 @@ export function instrument() {
   let maxOutstanding = 0;
   window.requestAnimationFrame = callback => {
     // Playwright waitForFunction has its own RAF polling in this page.
-    if (!new Error().stack?.includes("/packages/studio/src/components/ui/click-spark.tsx")) return nativeRAF(callback);
+    if (!new Error().stack?.includes("/packages/studio/src/ui/click-spark.tsx")) return nativeRAF(callback);
     const id = nativeRAF(timestamp => {
       outstanding.delete(id);
       executed.push({id, timestamp});
@@ -78,7 +78,7 @@ export function instrument() {
   const nativeClearTimeout = window.clearTimeout.bind(window);
   let timeoutCallbacks = 0;
   window.setTimeout = (handler: TimerHandler, timeout?: number, ...args: unknown[]) => {
-    if (typeof handler !== "function" || !new Error().stack?.includes("/packages/studio/src/components/ui/click-spark.tsx")) return nativeTimeout(handler, timeout, ...args);
+    if (typeof handler !== "function" || !new Error().stack?.includes("/packages/studio/src/ui/click-spark.tsx")) return nativeTimeout(handler, timeout, ...args);
     const id = nativeTimeout(() => {
       timers.delete(id); timeoutCallbacks++; handler(...args);
     }, timeout);

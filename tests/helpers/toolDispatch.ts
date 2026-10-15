@@ -1,6 +1,6 @@
-import { db } from "@/db/database";
-import { saveToolRound } from "@/db/agentTools";
-import type { AgentRun } from "@/domain/agent";
+import { db } from "@/platform/product/store";
+import { saveToolRound } from "@/features/agent/commands/agentTools";
+import type { AgentRun } from "@/features/agent/models/agent";
 
 /** Lower-layer ledger fixtures simulate a prior model dispatch, without bypassing production validation. */
 export async function saveFixtureToolRound(...args: Parameters<typeof saveToolRound>) {

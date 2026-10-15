@@ -1,11 +1,11 @@
 import {createRoot} from "react-dom/client";
 import {createBrowserHistory, createRootRoute, createRoute, createRouter, RouterProvider, useRouterState} from "@tanstack/react-router";
 import {Toaster} from "sonner";
-import {AgentChatPage} from "@/components/agent/AgentChatPage";
-import {db} from "@/db/database";
-import {createProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
-import {importReferenceFile} from "@/lib/references/import";
+import {AgentChatPage} from "@/features/agent/ui/AgentChatPage";
+import {db} from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {importReferenceFile} from "@/features/references/documents/import";
 
 const gates = new Map<string, {promise: Promise<void>; release: () => void}>();
 const failures = new Set<string>();

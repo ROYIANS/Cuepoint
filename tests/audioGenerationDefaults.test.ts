@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { defaultMimoConnector, speakerSpeechProfile } from "@/lib/audioGeneration/defaults";
-import type { AudioSpeaker } from "@/domain/audio";
-import type { ConnectorConfig } from "@/domain/types";
+import { defaultMimoConnector, speakerSpeechProfile } from "@/features/audio/generation/defaults";
+import type { AudioSpeaker } from "@/features/audio/models/audio";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connection = (id: string, definitionId: ConnectorConfig["definitionId"], apiKey: string): ConnectorConfig => ({ id, definitionId, protocol: "openai-compatible", baseUrl: "https://example.test/v1", apiKey, updatedAt: "2026-09-22" });
 const speaker = (input: Partial<AudioSpeaker>): AudioSpeaker => ({ id: "s", projectId: "p", revision: 1, createdAt: "", updatedAt: "", name: "旁白", ...input });

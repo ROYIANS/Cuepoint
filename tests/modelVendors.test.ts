@@ -2,7 +2,7 @@ import {
   groupModelsByVendor,
   inferModelHints,
   modelDisplayName,
-} from "@/lib/ai/modelVendors";
+} from "@/features/settings/models/modelVendors";
 import { describe, expect, it } from "vitest";
 
 describe("groupModelsByVendor", () => {

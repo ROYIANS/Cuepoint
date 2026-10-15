@@ -1,15 +1,15 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {addCharacter, addScene, addProp, addStyle, patchCharacter, setCharacterSlot, setSceneSlot, setPropSlot, setStyleSlot} from "@/db/assets";
-import {addShot, patchShot, setShotSlot} from "@/db/shots";
-import {createProject, patchProjectDetails} from "@/db/projects";
-import {firstEpisode} from "@/db/episodes";
-import {putMedia} from "@/db/media";
-import {defaultImageGeneration} from "@/domain/output";
-import type {GenerationSlot} from "@/domain/types";
-import {emptySlot} from "@/domain/slot";
-import {DraftConflictError} from "@/lib/draftConflict";
+import {db} from "@/platform/product/store";
+import {addCharacter, addScene, addProp, addStyle, patchCharacter, setCharacterSlot, setSceneSlot, setPropSlot, setStyleSlot} from "@/features/library/commands/assets";
+import {addShot, patchShot, setShotSlot} from "@/features/video/commands/shots";
+import {createProject, patchProjectDetails} from "@/features/projects/commands/projects";
+import {firstEpisode} from "@/features/video/commands/episodes";
+import {putMedia} from "@/features/library/commands/media";
+import {defaultImageGeneration} from "@/features/video/models/output";
+import type {GenerationSlot} from "@/features/library/models/slots";
+import {emptySlot} from "@/features/library/models/slot";
+import {DraftConflictError} from "@/platform/product/draftConflict";
 
 describe("manual draft baselines", () => {
     it("rejects stale slot content before replacing the current slot", async () => {

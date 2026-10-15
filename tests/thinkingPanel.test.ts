@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatThinkingTitle } from "@/lib/thinkingTitle";
+import { formatThinkingTitle } from "@/features/agent/presentation/thinkingTitle";
 
 describe("formatThinkingTitle", () => {
   it("shows 思考中 while active", () => {

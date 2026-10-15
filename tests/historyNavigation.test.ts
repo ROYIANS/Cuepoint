@@ -1,6 +1,6 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {createProductRouterHistory} from "@/lib/productRouterHistory";
-import {createHistoryNavigation} from "@/lib/historyNavigation";
+import {createProductRouterHistory} from "@/app/navigation/productRouterHistory";
+import {createHistoryNavigation} from "@/app/navigation/historyNavigation";
 
 /** Executable same-document stack: installed browser/hash history owns POP/blockers. */
 function browser(href: string) {

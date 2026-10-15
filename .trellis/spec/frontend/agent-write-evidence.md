@@ -4,7 +4,7 @@
 Read when changing local creative tool results, receipt production or the compact saved-changes display. Receipts describe direct effects at execution time; they are not current-state snapshots, full cascade reports, semantic goal verification or asynchronous generation evidence.
 
 ## 2. Signatures
-- `createWriteReceipt(entries): WriteReceipt` and `readWriteReceipt(value)` in `lib/agent/writeReceipt.ts` define version 1, `coverage: direct_targets`, 1–40 strict entries with kind, operation, id, ownerId, optional revision and a label up to 160 characters.
+- `createWriteReceipt(entries): WriteReceipt` and `readWriteReceipt(value)` in `features/agent/runtime/writeReceipt.ts` define version 1, `coverage: direct_targets`, 1–40 strict entries with kind, operation, id, ownerId, optional revision and a label up to 160 characters.
 - `captureBusinessDeletion` / `withBusinessWriteReceipt` wrap exactly project/episode/beat/shot/character/scene/prop/style create/update/delete inside `executeAtomicTool`.
 - `libraryWriteTool` has an optional code-owned `receipt(args, result)` callback. Sound editing opts in through `soundWriteReceipt`; other library tools are unchanged.
 - `describeRunWrites(run, calls)` projects owned saved calls for `AgentWriteOutcomes`. No database migration, additional model request or network call is introduced.

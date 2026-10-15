@@ -1,10 +1,10 @@
 import {createRoot} from "react-dom/client";
 import {ModelIcon as OriginalModelIcon, ProviderIcon as OriginalProviderIcon} from "@lobehub/icons";
-import {ModelIcon, ProviderIcon} from "@/components/agent/ModelIcons";
+import {ModelIcon, ProviderIcon} from "@/features/agent/ui/ModelIcons";
 import {modelMappings as publishedModels} from "@lobehub/icons/es/features/modelConfig";
 import {providerMappings as publishedProviders} from "@lobehub/icons/es/features/providerConfig";
-import {brandLoaders, modelMappings, providerMappings} from "@/components/agent/ModelIconMapping.generated";
-import {LobeChatTheme} from "@/components/agent/LobeChatTheme";
+import {brandLoaders, modelMappings, providerMappings} from "@/features/agent/ui/ModelIconMapping.generated.ts";
+import {LobeChatTheme} from "@/features/agent/ui/LobeChatTheme";
 import type {ComponentProps} from "react";
 import {useState} from "react";
 

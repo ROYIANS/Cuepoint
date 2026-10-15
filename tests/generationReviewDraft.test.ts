@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { applyGenerationSelection } from "@/lib/agent/generationReviewDraft";
-import { profileRequest, type GenerationSubmitArgs } from "@/lib/agent/generationProfiles";
+import { applyGenerationSelection } from "@/features/video/agent/generationReviewDraft";
+import { profileRequest, type GenerationSubmitArgs } from "@/features/video/agent/generationProfiles";
 
 function video(inputs: GenerationSubmitArgs["inputs"]): GenerationSubmitArgs {
   return { connectorId: "old", model: "MiniMax-H3", target: { kind: "shot", projectId: "project", episodeId: "episode", entityId: "shot", slot: "clip" },

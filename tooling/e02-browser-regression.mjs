@@ -1,3 +1,4 @@
+import {historicalSource} from "./historical-source.mjs";
 import assert from "node:assert/strict";
 import {readFile, writeFile, mkdtemp, mkdir, rm} from "node:fs/promises";
 import {createHash} from "node:crypto";
@@ -26,9 +27,9 @@ const comparison = {
     name: "e02-original-source-and-labelled-safe-area-surrogate", enforce: "pre",
     async transform(source, id) {
         for (const name of ["TopicSidebar.tsx", "agentChat.css"]) {
-            if (baseline && id.endsWith(`/packages/studio/src/components/agent/${name}`)) source = await readFile(new URL(name, snapshotRoot), "utf8");
+            if (baseline && id.endsWith(`/packages/studio/src/features/agent/ui/${name}`)) source = historicalSource(await readFile(new URL(name, snapshotRoot), "utf8"), "components/agent/" + name);
         }
-        if (surrogate && id.endsWith("/packages/studio/src/components/agent/agentChat.css")) {
+        if (surrogate && id.endsWith("/packages/studio/src/features/agent/ui/agentChat.css")) {
             assert.ok(source.includes("env(safe-area-inset-bottom, 0px)"));
             source = source.replaceAll("env(safe-area-inset-bottom, 0px)", "var(--e02-test-safe-area-bottom, 0px)");
         }

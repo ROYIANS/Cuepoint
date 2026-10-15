@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { AgentRun, AgentToolCall } from "@/domain/agent";
-import { buildFinishingCheckPrompt } from "@/lib/agent/finishingCheck";
-import { createWriteReceipt } from "@/lib/agent/writeReceipt";
+import type { AgentRun, AgentToolCall } from "@/features/agent/models/agent";
+import { buildFinishingCheckPrompt } from "@/features/agent/runtime/finishingCheck";
+import { createWriteReceipt } from "@/features/agent/runtime/writeReceipt";
 
 const run: AgentRun = {
   id: "run", threadId: "thread", projectId: "project", agentId: "agent",

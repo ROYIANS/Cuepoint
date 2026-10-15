@@ -19,7 +19,7 @@ native.save(blob, projectId, format, mode?, recordedMime?): Promise<Result>
 acceptanceRequest({type: "setup" | "ready" | "report" | "openDeniedProbe", json?})
 ```
 
-`nativeWorkspace` sends the closed `workspace_request` envelope through the Tauri runtime. It serializes requests, shares first-load initialization, and validates the entire reply with `nativeProductReplySchema` before accepting a monotonic `generation`. Explicit SQLite product-adapter tests and historical acceptance bridges import the same closed DTO schemas from `packages/studio/src/lib/nativeWorkspaceContract.ts`. Common normal-product export uses the independent `product_save_*` service documented in native-product-runtime.md; it does not invent a SQLite project for `saveGenerated`.
+`nativeWorkspace` sends the closed `workspace_request` envelope through the Tauri runtime. It serializes requests, shares first-load initialization, and validates the entire reply with `nativeProductReplySchema` before accepting a monotonic `generation`. Explicit SQLite product-adapter tests and historical acceptance bridges import the same closed DTO schemas from `packages/studio/src/platform/runtime/reference/nativeWorkspaceContract.ts`. Common normal-product export uses the independent `product_save_*` service documented in native-product-runtime.md; it does not invent a SQLite project for `saveGenerated`.
 
 Product video actions include `createVideoProject {project, video}`,
 `patchVideoProject {projectId, patch, baseline?}`, `videoState {projectId}`,

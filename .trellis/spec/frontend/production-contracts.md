@@ -4,12 +4,12 @@
 Use for production ZIP delivery, scoped AI context, generation preparation, or reviewed writes to shot/asset data. These helpers do not submit remote requests or poll providers; the separate [creative skills executor](./agent-creative-skills.md) now does. A provider response is never authorization to overwrite business data.
 
 ## 2. Signatures
-- `exportProductionHandoff(projectId, episodeId, onProgress?) -> Promise<{blob, filename, shotCount, missingCount}>` in `lib/productionHandoff.ts`.
-- `buildProductionContext(projectId, episodeId, shotId)` in `lib/productionContext.ts`.
-- `targetRevision(value): string`, `validateProductionTarget(raw): ProductionTarget` in `lib/productionRevision.ts`.
-- `prepareGenerationIntent({context,target,prompt,config?,inputs?})`, `validateGenerationIntent(raw)`, `transitionGenerationIntent(intent,status,detail?)`, `generationIntentToProposalInput(intent)` in `lib/generationIntent.ts`.
-- `createProductionProposal({target,change,source,expectedRevision?})`, `applyProductionProposal(id,projectId)`, `cancelProductionProposal(id,projectId)`, `undoProductionProposal(id,projectId)` in `db/productionProposals.ts`.
-- Dexie v7 additive `productionProposals: "id, projectId, episodeId, status, createdAt"`. Shared types live in `domain/production.ts`.
+- `exportProductionHandoff(projectId, episodeId, onProgress?) -> Promise<{blob, filename, shotCount, missingCount}>` in `features/video/services/productionHandoff.ts`.
+- `buildProductionContext(projectId, episodeId, shotId)` in `features/video/services/productionContext.ts`.
+- `targetRevision(value): string` in `platform/data/revision.ts`; `validateProductionTarget(raw): ProductionTarget` in `features/video/models/productionRevision.ts`.
+- `prepareGenerationIntent({context,target,prompt,config?,inputs?})`, `validateGenerationIntent(raw)`, `transitionGenerationIntent(intent,status,detail?)`, `generationIntentToProposalInput(intent)` in `features/video/services/generationIntent.ts`.
+- `createProductionProposal({target,change,source,expectedRevision?})`, `applyProductionProposal(id,projectId)`, `cancelProductionProposal(id,projectId)`, `undoProductionProposal(id,projectId)` in `features/video/commands/proposals.ts`.
+- Dexie v7 additive `productionProposals: "id, projectId, episodeId, status, createdAt"`. Shared types live in `features/video/models/production.ts`.
 
 ## 3. Contracts
 ### Delivery
@@ -76,7 +76,7 @@ See [the C03 parent ownership and modern package identity contract](state-manage
 
 ## Package codec and transaction ownership
 
-Pure project/audio parsing and ID remapping live under `lib/packages/`; root package modules retain ZIP/media IO, snapshot/compression and the whole import transaction. Shared `PackageError` is re-exported by the original root with one constructor identity. Modern raw IDs/FKs are validated before tolerant normalization/remapping; complete audio freshness is checked before allowlisting. A late audio relationship error rolls back previously inserted production/media/audio rows and Blobs. Historical local production-context/generation-intent modules remain test-only contracts pending E07 reference cleanup, not active paid-execution owners. See [the D03 contract](./component-guidelines.md#d03-feature-responsibility-contract-2026-10-08).
+Pure project parsing and ID remapping live under `app/workflows/packages/`; audio package parsing lives in `features/audio/services/`. Application package workflows retain ZIP/media IO, snapshot/compression and the whole import transaction. Shared `PackageError` in `platform/data/packageError.ts` retains one constructor identity across these actual package consumers. Modern raw IDs/FKs are validated before tolerant normalization/remapping; complete audio freshness is checked before allowlisting. A late audio relationship error rolls back previously inserted production/media/audio rows and Blobs. Historical local production-context/generation-intent modules remain test-only contracts pending E07 reference cleanup, not active paid-execution owners. See [the D03 contract](./component-guidelines.md#d03-feature-responsibility-contract-2026-10-08).
 
 ## Shared generation capability boundary
 

@@ -2,7 +2,7 @@ import {
   connectorDisplayName,
   connectorProviderKey,
   getConnectorDefinition,
-} from "@/lib/ai/catalog";
+} from "@/features/settings/models/catalog";
 import { describe, expect, it } from "vitest";
 
 describe("connectorDisplayName", () => {

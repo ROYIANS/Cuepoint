@@ -1,5 +1,5 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {getWindowChromeKind} from "@/lib/windowChrome";
+import {getWindowChromeKind} from "@/platform/runtime/windowChrome";
 
 afterEach(() => vi.unstubAllGlobals());
 

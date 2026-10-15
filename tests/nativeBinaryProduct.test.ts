@@ -3,20 +3,20 @@ import {readFile, unlink, writeFile, rename, symlink} from "node:fs/promises";
 import {join} from "node:path";
 import {beforeAll, describe, expect, it, vi} from "vitest";
 import {createNativeProbe, nativeProbePath} from "./helpers/nativeProductProbe";
-import {createProject} from "@/db/projects";
-import {putMedia} from "@/db/media";
-import {addCharacter, setCharacterSlot} from "@/db/assets";
-import {createFileMaterial, promoteLegacyMaterial} from "@/db/materials";
-import {emptySlot} from "@/domain/slot";
-import type {BinaryContent, ManagedBinaryRef} from "@/domain/binary";
-import {binaryAvailability, installNativeBinaryAccess, readBinaryBlob} from "@/lib/storage/binary";
-import type {NativeBinaryServices} from "@/lib/storage/nativeBinary";
-import {isBinaryReference} from "@/lib/storage/codec";
-import {loadAudioBuffer} from "@/lib/audio/buffers";
-import {Sha256} from "@/lib/sha256";
+import {createProject} from "@/features/projects/commands/projects";
+import {putMedia} from "@/features/library/commands/media";
+import {addCharacter, setCharacterSlot} from "@/features/library/commands/assets";
+import {createFileMaterial, promoteLegacyMaterial} from "@/features/library/commands/materials";
+import {emptySlot} from "@/features/library/models/slot";
+import type {BinaryContent, ManagedBinaryRef} from "@/platform/media/binaryTypes";
+import {binaryAvailability, installNativeBinaryAccess, readBinaryBlob} from "@/platform/storage/binary";
+import type {NativeBinaryServices} from "@/platform/storage/nativeBinary";
+import {isBinaryReference} from "@/platform/storage/codec";
+import {loadAudioBuffer} from "@/features/audio/engine/buffers";
+import {Sha256} from "@/platform/media/sha256";
 
 const {decodeAudioBlob} = vi.hoisted(() => ({decodeAudioBlob: vi.fn(async () => ({length: 10, numberOfChannels: 1}) as AudioBuffer)}));
-vi.mock("@/lib/audio/engine", async original => ({...await original<typeof import("@/lib/audio/engine")>(), decodeAudioBlob}));
+vi.mock("@/features/audio/engine/engine", async original => ({...await original<typeof import("@/features/audio/engine/engine")>(), decodeAudioBlob}));
 
 let current: Awaited<ReturnType<typeof createNativeProbe>> | undefined;
 const access: NativeBinaryServices = {

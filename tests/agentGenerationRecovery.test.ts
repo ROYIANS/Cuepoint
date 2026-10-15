@@ -1,16 +1,16 @@
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { db } from "@/db/database";
-import { beginAgentRun, interruptThreadRuns } from "@/db/agentRuns";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import { markRunningToolsUnknown, resumeAgentRun, saveToolRound, transitionToolCall } from "@/db/agentTools";
-import {createChatThread} from "@/db/chat";
-import type { AgentRun, AgentToolCall } from "@/domain/agent";
-import type { AgentGenerationJob } from "@/domain/agentGeneration";
-import type { ConnectorConfig } from "@/domain/types";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import type { AgentToolDefinition } from "@/lib/agent/tools";
-import { ToolPendingError } from "@/lib/agent/toolErrors";
+import { db } from "@/platform/product/store";
+import { beginAgentRun, interruptThreadRuns } from "@/features/agent/commands/agentRuns";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import { markRunningToolsUnknown, resumeAgentRun, saveToolRound, transitionToolCall } from "@/features/agent/commands/agentTools";
+import {createChatThread} from "@/features/agent/commands/chat";
+import type { AgentRun, AgentToolCall } from "@/features/agent/models/agent";
+import type { AgentGenerationJob } from "@/features/agent/models/agentGeneration";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import type { AgentToolDefinition } from "@/features/agent/runtime/tools";
+import { ToolPendingError } from "@/features/agent/runtime/toolErrors";
 
 const connector: ConnectorConfig = { id: "fixture", name: "fixture", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fake-key", updatedAt: "2026-09-19" };
 const name = "fixture_generation";

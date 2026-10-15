@@ -1,4 +1,4 @@
-/* Standalone landing styles. Token values mirror packages/studio/src/styles.css :root
+/* Standalone landing styles. Token values mirror packages/studio/src/ui/theme.css :root
    (tests/landingTokens.test.ts keeps them in sync). Do not import Tailwind. */
 :root {
     --radius: 0.75rem;

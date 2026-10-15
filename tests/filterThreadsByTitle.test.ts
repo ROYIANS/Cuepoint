@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { filterThreadsByTitle } from "@/components/agent/filterThreadsByTitle";
-import type { ChatThread } from "@/domain/types";
+import { filterThreadsByTitle } from "@/features/agent/ui/filterThreadsByTitle";
+import type {ChatThread} from "@/features/agent/models/chat";
 
 function thread(id: string, title: string): ChatThread {
   return {

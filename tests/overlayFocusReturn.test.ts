@@ -1,5 +1,5 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {createOverlayFocusReturn} from "@/lib/overlayFocusReturn";
+import {createOverlayFocusReturn} from "@/ui/overlayFocusReturn";
 
 // Minimal focus environment: the initializer and both production handlers run;
 // browser acceptance separately verifies actual Radix/Portal event ordering.

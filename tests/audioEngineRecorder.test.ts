@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { MicrophoneRecorder } from "@/lib/audio/recorder";
-import type { RecorderDependencies } from "@/lib/audio/recorder";
+import { MicrophoneRecorder } from "@/features/audio/engine/recorder";
+import type { RecorderDependencies } from "@/features/audio/engine/recorder";
 
 function harness() {
   const track = new EventTarget() as EventTarget & { stop: ReturnType<typeof vi.fn> };

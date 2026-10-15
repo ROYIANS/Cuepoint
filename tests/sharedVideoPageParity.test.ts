@@ -1,6 +1,8 @@
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
-import type {Episode, Project, Shot} from "@/domain/types";
+import type {Episode} from "@/features/video/models/episodes";
+import type {Project} from "@/features/projects/models/project";
+import type {Shot} from "@/features/video/models/shots";
 
 const host = vi.hoisted(() => ({
     cells: [] as unknown[], cursor: 0, results: [] as unknown[], queryIndex: 0,
@@ -18,8 +20,8 @@ vi.mock("react", async original => {
         useContext: () => false,
     };
 });
-vi.mock("@/lib/productStorage", () => ({usesSqliteProductStorage: () => host.storage === "sqlite"}));
-vi.mock("@/lib/videoWorkspaceRepository", () => ({
+vi.mock("@/platform/runtime/storageProfile", () => ({usesSqliteProductStorage: () => host.storage === "sqlite"}));
+vi.mock("@/features/video/services/workspaceRepository", () => ({
     getVideoWorkspaceRepository: () => host.repository,
     useVideoWorkspaceRepository: () => host.repository,
     useVideoWorkspaceReadStatus: () => ({error: host.readError, retry: host.retry}),
@@ -33,44 +35,45 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 vi.mock("@dnd-kit/core", () => ({DndContext: () => null, PointerSensor: {}, KeyboardSensor: {}, closestCenter: {}, useSensor: vi.fn(), useSensors: () => []}));
 vi.mock("@dnd-kit/sortable", () => ({SortableContext: () => null, sortableKeyboardCoordinates: {}, verticalListSortingStrategy: {}, useSortable: () => ({setNodeRef: vi.fn()})}));
-vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: host.registerUndo})}));
-vi.mock("@/lib/storage/hooks", () => ({useProductQuery: (query: (tx: typeof db) => Promise<unknown>) => {
+vi.mock("@/app/drafts/undo", () => ({useUndo: () => ({registerUndo: host.registerUndo})}));
+vi.mock("@/platform/product/queries", () => ({useProductQuery: (query: (tx: typeof db) => Promise<unknown>) => {
     host.liveQueries.push(() => query(db)); return undefined;
 }}));
-vi.mock("@/lib/useShotMedia", () => ({useShotMedia: () => new Map()}));
-vi.mock("@/components/shots/ShotRowViewport", () => ({ShotScrollViewport: () => null, useShotRowViewport: () => ({rowRef: vi.fn(), nearViewport: true})}));
+vi.mock("@/features/video/queries/useShotMedia", () => ({useShotMedia: () => new Map()}));
+vi.mock("@/features/video/ui/ShotRowViewport", () => ({ShotScrollViewport: () => null, useShotRowViewport: () => ({rowRef: vi.fn(), nearViewport: true})}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
 import {Outlet} from "@tanstack/react-router";
-import {db} from "@/db/database";
-import {emptyEpisode, emptyProject, emptyShot} from "@/db/productionRecords";
-import {AppFrame} from "@/components/layout/AppFrame";
-import {PageHeader, PageState} from "@/components/layout/PageLayout";
-import {WorkspaceChrome} from "@/components/workspace/WorkspaceChrome";
-import {AppHeaderPortal} from "@/components/layout/AppHeaderPortal";
-import {ProjectHomePage} from "@/components/workspace/ProjectHomePage";
-import {WorkspaceCapabilityState} from "@/components/workspace/WorkspaceCapabilityState";
-import {StoryPage} from "@/components/story/StoryPage";
-import {ShotEditorPage} from "@/components/shots/ShotEditorPage";
-import {BeatTextField} from "@/components/story/BeatTextField";
-import {ShotTextField} from "@/components/shots/ShotTextField";
-import {TextDraftField} from "@/components/drafts/TextDraftField";
-import {ShotRow} from "@/components/shots/ShotRow";
-import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
-import {VideoWorkspaceReadNotice} from "@/components/workspace/VideoWorkspaceReadNotice";
-import {AudioWorkspacePage} from "@/components/audio/AudioWorkspacePage";
-import {MusicWorkspacePage} from "@/components/music/MusicWorkspacePage";
-import {Route as StudioRoute} from "@/routes/_studio";
-import {Route as StudioIndexRoute} from "@/routes/_studio.index";
-import {StudioShell} from "@/components/studio/StudioShell";
-import {ProjectGalleryPage} from "@/components/studio/ProjectGalleryPage";
-import {CoverCard} from "@/components/studio/CoverCard";
-import {ProjectIpPicker} from "@/components/studio/ProjectIpPicker";
-import {MaterialLibraryPage} from "@/components/studio/MaterialLibraryPage";
+import {db} from "@/platform/product/store";
+import {emptyEpisode, emptyShot} from "@/features/video/models/newRecords";
+import {emptyProject} from "@/features/projects/models/newProject";
+import {AppFrame} from "@/app/layout/AppFrame";
+import {PageHeader, PageState} from "@/app/layout/PageLayout";
+import {WorkspaceChrome} from "@/app/workspace/WorkspaceChrome";
+import {AppHeaderPortal} from "@/app/layout/AppHeaderPortal";
+import {ProjectHomePage} from "@/app/workspace/ProjectHomePage";
+import {WorkspaceCapabilityState} from "@/app/workspace/WorkspaceCapabilityState";
+import {StoryPage} from "@/features/video/ui/StoryPage";
+import {ShotEditorPage} from "@/features/video/ui/ShotEditorPage";
+import {BeatTextField} from "@/features/video/ui/BeatTextField";
+import {ShotTextField} from "@/features/video/ui/ShotTextField";
+import {TextDraftField} from "@/app/drafts/TextDraftField";
+import {ShotRow} from "@/features/video/ui/ShotRow";
+import {EditableGenerationSlot} from "@/features/library/ui/GenerationSlotCard";
+import {VideoWorkspaceReadNotice} from "@/app/workspace/VideoWorkspaceReadNotice";
+import {AudioWorkspacePage} from "@/features/audio/ui/AudioWorkspacePage";
+import {MusicWorkspacePage} from "@/features/music/ui/MusicWorkspacePage";
+import {Route as StudioRoute} from "@/app/routes/_studio";
+import {Route as StudioIndexRoute} from "@/app/routes/_studio.index.tsx";
+import {StudioShell} from "@/app/layout/StudioShell";
+import {ProjectGalleryPage} from "@/features/projects/ui/ProjectGalleryPage";
+import {CoverCard} from "@/features/library/ui/CoverCard";
+import {ProjectIpPicker} from "@/features/projects/ui/ProjectIpPicker";
+import {MaterialLibraryPage} from "@/features/library/ui/MaterialLibraryPage";
 
 // Execute the real page/row components with a deterministic hook host. Only the
 // storage boundary is substituted; native assertions execute captured queriers.
-import {ModuleLayout} from "@/components/layout/ModuleLayout";
+import {ModuleLayout} from "@/app/layout/ModuleLayout";
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(value: unknown): Node[] {
     if (Array.isArray(value)) return value.flatMap(nodes);

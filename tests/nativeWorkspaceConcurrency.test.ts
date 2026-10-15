@@ -1,5 +1,5 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {createNativeWorkspaceAdapter} from "@/lib/nativeWorkspace";
+import {createNativeWorkspaceAdapter} from "@/platform/runtime/reference/nativeWorkspace";
 
 const state = {
     schema: 4 as const, workspaceId: "concurrent-workspace", projects: [], assets: [], references: [],

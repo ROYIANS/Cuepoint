@@ -1,3 +1,4 @@
+import {historicalSource} from "./historical-source.mjs";
 import assert from "node:assert/strict";
 import {readFile, writeFile, mkdtemp} from "node:fs/promises";
 import {tmpdir} from "node:os";
@@ -13,22 +14,22 @@ const surfacePath = "/tests/fixtures/b07/surface.tsx";
 const transport = {
     name: "b07-isolated-provider", enforce: "pre",
     async transform(source, id) {
-        if (process.env.B07_BASELINE_ROOT && /\/components\/agent\/(AgentChatPage.tsx|useReferenceDraft.ts)$/.test(id)) {
-            source = await readFile(join(process.env.B07_BASELINE_ROOT, id.split("/").at(-1)), "utf8");
+        if (process.env.B07_BASELINE_ROOT && /\/features\/agent\/ui\/(AgentChatPage.tsx|useReferenceDraft.ts)$/.test(id)) {
+            source = historicalSource(await readFile(join(process.env.B07_BASELINE_ROOT, id.split("/").at(-1)), "utf8"), "components/agent/" + id.split("/").at(-1));
         }
         const leaves = {
-            "/components/agent/ChatWorkspace.tsx": "Surface as ChatWorkspace",
-            "/components/agent/HomeWelcome.tsx": "Surface as HomeWelcome",
-            "/components/agent/TaskBoard.tsx": "Leaf as TaskBoard",
-            "/components/agent/TaskInspector.tsx": "Leaf as TaskInspector",
-            "/components/agent/AgentComposerAttention.tsx": "Leaf as AgentComposerAttention",
-            "/components/agent/ContextUsagePanel.tsx": "Leaf as ContextUsageTrigger",
+            "/features/agent/ui/ChatWorkspace.tsx": "Surface as ChatWorkspace",
+            "/features/agent/ui/HomeWelcome.tsx": "Surface as HomeWelcome",
+            "/features/agent/ui/TaskBoard.tsx": "Leaf as TaskBoard",
+            "/features/agent/ui/TaskInspector.tsx": "Leaf as TaskInspector",
+            "/features/agent/ui/AgentComposerAttention.tsx": "Leaf as AgentComposerAttention",
+            "/features/agent/ui/ContextUsagePanel.tsx": "Leaf as ContextUsageTrigger",
         };
         for (const [suffix, names] of Object.entries(leaves)) if (id.endsWith(suffix)) return `export {${names}} from "${surfacePath}";`;
-        if (id.endsWith("/components/agent/AgentChatPage.tsx")) {
+        if (id.endsWith("/features/agent/ui/AgentChatPage.tsx")) {
             source = source.replace('from "@lobehub/ui"', `from "${surfacePath}"`);
         }
-        if (id.endsWith("/db/chat.ts")) {
+        if (id.endsWith("/features/agent/commands/chat.ts")) {
             source = source.replace("export async function createChatThread(", "async function _b07_createChatThread(");
             source += `\nexport async function createChatThread(...args: Parameters<typeof _b07_createChatThread>) {
                 const fixture = typeof window === "undefined" ? undefined : window.b07;
@@ -36,22 +37,22 @@ const transport = {
                 return _b07_createChatThread(...args);
             }`;
         }
-        if (id.endsWith("/db/agentRuns.ts")) {
+        if (id.endsWith("/features/agent/commands/agentRuns.ts")) {
             source = source.replace("export async function beginAgentRun(", "async function _b07_beginAgentRun(");
             source += `\nexport async function beginAgentRun(...args: Parameters<typeof _b07_beginAgentRun>) {
                 window.b07.calls.push({kind: "begin", payload: args[0]}); await window.b07.wait("begin");
                 return _b07_beginAgentRun(...args);
             }`;
         }
-        if (id.endsWith("/lib/agent/runChat.ts")) return `
-            import {db} from "@/db/database";
+        if (id.endsWith("/features/agent/runtime/runChat.ts")) return `
+            import {db} from "@/platform/product/store";
             export async function executeChatRun(run, _key, controller) {
                 const fixture = window.b07; await fixture.wait("execute");
                 fixture.calls.push({kind: "execute", aborted: controller.signal.aborted});
                 await db.agentRuns.update(run.id, {status: controller.signal.aborted ? "interrupted" : "completed", finishedAt: new Date().toISOString()});
             }
             export async function resumeChatRun() {throw new Error("fixture does not resume provider calls");}`;
-        if (id.endsWith("/lib/ai/connectors.ts")) {
+        if (id.endsWith("/features/settings/models/connectors.ts")) {
             source = source.replace("export async function discoverConnectorChatModels(", "async function _b07_discoverConnectorChatModels(");
             source += '\nexport async function discoverConnectorChatModels() {return {ok: true, models: ["model"], incompatibleModels: []};}';
         }

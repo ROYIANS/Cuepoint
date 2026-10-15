@@ -1,9 +1,9 @@
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {createChatThread} from "@/db/chat";
-import {beginAgentRun} from "@/db/agentRuns";
-import {saveAgentFinishingCheck} from "@/db/agentFinishingCheck";
-import type {AgentPlanItem, AgentToolCall} from "@/domain/agent";
+import {db} from "@/platform/product/store";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {saveAgentFinishingCheck} from "@/features/agent/commands/agentFinishingCheck";
+import type {AgentPlanItem, AgentToolCall} from "@/features/agent/models/agent";
 
 const plan: AgentPlanItem[] = [{id: "remaining", title: "继续创作", status: "pending"}];
 const connector = {id: "typed-finishing", definitionId: "openai-compatible" as const, protocol: "openai-compatible" as const, baseUrl: "https://fixture.invalid/v1", apiKey: "local", updatedAt: "2026-10-09"};

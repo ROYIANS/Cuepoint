@@ -1,14 +1,14 @@
 import {createRoot} from "react-dom/client";
 import {useState} from "react";
 import {createRootRoute, createRoute, createRouter, RouterProvider} from "@tanstack/react-router";
-import {promoteLegacyMaterial} from "@/db/materials";
+import {promoteLegacyMaterial} from "@/features/library/commands/materials";
 import {Toaster} from "sonner";
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {AudioWorkspacePage} from "@/components/audio/AudioWorkspacePage";
-import {MusicWorkspacePage} from "@/components/music/MusicWorkspacePage";
-import {defaultMusicSettings} from "@/domain/music";
-import "@/styles.css";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {AudioWorkspacePage} from "@/features/audio/ui/AudioWorkspacePage";
+import {MusicWorkspacePage} from "@/features/music/ui/MusicWorkspacePage";
+import {defaultMusicSettings} from "@/features/music/models/music";
+import "@/ui/theme.css";
 
 let seedPhase = "db.open";
 const {audio, music} = await (async () => {

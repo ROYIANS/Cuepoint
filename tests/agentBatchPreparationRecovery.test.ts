@@ -1,16 +1,16 @@
 import {interceptStoreTable} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import { AtomicToolRollbackError, resumeAgentRun, transitionToolCall } from "@/db/agentTools";
-import { prepareGenerationBatch } from "@/db/agentGenerationBatches";
-import {addShot} from "@/db/shots";
-import {createChatThread} from "@/db/chat";
-import {createProject} from "@/db/projects";
-import { generationSubmitSchema } from "@/lib/agent/generationProfiles";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import { recoverAbandonedRuns, type ThreadLockManager } from "@/lib/agent/runOwnership";
+import { db } from "@/platform/product/store";
+import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import { AtomicToolRollbackError, resumeAgentRun, transitionToolCall } from "@/features/agent/commands/agentTools";
+import { prepareGenerationBatch } from "@/features/agent/commands/agentGenerationBatches";
+import {addShot} from "@/features/video/commands/shots";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {createProject} from "@/features/projects/commands/projects";
+import { generationSubmitSchema } from "@/features/video/agent/generationProfiles";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import { recoverAbandonedRuns, type ThreadLockManager } from "@/features/agent/runtime/runOwnership";
 import { preloadFixtureGroups, saveFixtureToolRound } from "./helpers/toolDispatch";
 
 const chat = { id: "chat", name: "Chat", definitionId: "openai-compatible", baseUrl: "https://chat.test/v1", apiKey: "fixture", updatedAt: "now" };

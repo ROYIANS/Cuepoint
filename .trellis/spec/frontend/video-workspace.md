@@ -4,8 +4,7 @@
 
 Apply to the shared project gallery, video project home, episode list, story
 editor and shot workbench. The same React pages and route outlet serve browser
-and native runtimes. Both complete-product adapters use existing `packages/studio/src/db/`
-commands through ProductStore and explicit StoreTx. The fixed startup profile
+and native runtimes. Both complete-product adapters use the concrete `features/projects/commands/` and `features/video/commands/` owners through ProductStore and explicit StoreTx. The fixed startup profile
 selects persistence; it does not select reduced video-only features. The retained
 schema-4 prototype is separately constructed for reference tests. Read
 [Native Product Runtime](./native-product-runtime.md). Fresh development is the
@@ -13,7 +12,7 @@ default; no migration, compatibility reader or data mirror is implicit.
 
 ## 2. Signatures
 
-`packages/studio/src/lib/videoWorkspaceRepository.tsx` supplies
+`packages/studio/src/features/video/services/workspaceRepository.tsx` supplies
 `getVideoWorkspaceRepository()`, `useVideoWorkspaceRepository()` and
 `useVideoWorkspaceQuery(query, dependencies)`. `VideoWorkspaceSnapshot` contains
 `project`, ordered `episodes`, episode-owned `beats`, project-owned `shots` and
@@ -67,7 +66,7 @@ operation's receipt rather than rebuilding an inverse from a render snapshot.
 | Same field changed since draft baseline | Keep draft; show conflict and recovery |
 | Different field changed since baseline | Apply intended patch; preserve other field |
 | Invalid owner, order, duration or UTF-16 range | Atomic rejection, no partial mutation |
-| Unsupported domain/slot in explicit prototype | Explicit capability state; no Dexie fallback |
+| Unsupported features/library/models/slot in explicit prototype | Explicit capability state; no Dexie fallback |
 | Either complete-product owner | Full shared implemented features; no schema-4 fallback |
 | Full SQLite read fails | Visible retry; retain draft; no fabricated empty successful state |
 | Undo receipt is stale/consumed or its target changed | Reject safely; do not overwrite newer edits |

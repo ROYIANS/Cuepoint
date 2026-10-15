@@ -16,6 +16,7 @@
 | --- | --- | --- |
 | [Directory Structure](./directory-structure.md) | Studio layout+index+$id vs project workspace | Filled |
 | [Monorepo Boundaries](./monorepo-boundaries.md) | Application ownership, exports, source discovery and deployment assembly | Filled |
+| [Studio Feature Ownership](./feature-organization.md) | Vertical feature APIs, fixed product integration, explicit transactions and executable dependency rules | Filled |
 | [Component Guidelines](./component-guidelines.md) | Thin routes, feature pages, ui primitives, slots | Filled |
 | [Shared Desktop UI](./desktop-ui.md) | Frame/navigation, page typography, scroll owners, overlay focus and print | Filled |
 | [Settings and Desktop Updates](./settings-update.md) | Settings search, embedded connections, device preferences, anonymous release checks and verified installer saves | Filled |
@@ -65,7 +66,7 @@
 - [ ] Detail `useProductQuery` uses its explicit readonly context and `get(id) ?? null`, preserving missing/error/loading states and current query identity
 - [ ] `touchProject` no-ops for `isStudioLibrary`
 - [ ] Project landing dispatches by kind: video film/series uses episodes, audio/music use their workspaces; video story/shots/produce take `episodeId`
-- [ ] Agent list scroll uses `snapChatToBottom` / `isChatNearBottom` (`packages/studio/src/lib/chatScroll.ts`), not `scrollIntoView` smooth
+- [ ] Agent list scroll uses `snapChatToBottom` / `isChatNearBottom` (`packages/studio/src/features/agent/presentation/chatScroll.ts`), not `scrollIntoView` smooth
 
 ## Quality Check
 

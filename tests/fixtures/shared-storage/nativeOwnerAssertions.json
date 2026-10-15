@@ -377,7 +377,7 @@
       "tables": [
         "audioClips"
       ],
-      "file": "tests/audioEngineCommands.test.ts",
+      "file": "packages/studio/src/features/audio/tests/audioEngineCommands.test.ts",
       "case": "splits source offsets atomically, then undoes/redoes without touching original media",
       "commands": [
         "AudioClipHistory.split",

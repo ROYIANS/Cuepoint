@@ -1,20 +1,20 @@
 import {interceptStoreTable} from "./helpers/storeFaults";
 import {registeredTools} from "./helpers/registeredTools";
 import { describe, expect, it, vi } from 'vitest';
-import { db } from '@/db/database';
-import { beginAgentRun } from '@/db/agentRuns';
-import { resolveAgentToolApproval } from '@/db/agentTools';
-import {createChatThread} from "@/db/chat";
-import {createProject} from "@/db/projects";
-import { bindProjectIp, createIpProfile, setIpArchived, updateIpProfile } from '@/db/ipProfiles';
-import { IP_TOOLS as IP_TOOLS_DEFINITIONS } from '@/lib/agent/ipTools';
-import { IP_TOOL_NAMES } from '@/lib/agent/ipToolNames';
-import { getProjectContext, refreshRunProjectContext } from '@/lib/agent/projectContext';
-import { executeChatRun, resumeChatRun } from '@/lib/agent/runChat';
-import { requiresToolApproval, type AgentToolContext } from '@/lib/agent/tools';
-import type { AgentRun } from '@/domain/agent';
-import type { ConnectorConfig } from '@/domain/types';
-import { createId } from '@/lib/ids';
+import { db } from '@/platform/product/store';
+import { beginAgentRun } from '@/features/agent/commands/agentRuns';
+import { resolveAgentToolApproval } from '@/features/agent/commands/agentTools';
+import {createChatThread} from "@/features/agent/commands/chat";
+import {createProject} from "@/features/projects/commands/projects";
+import { bindProjectIp, createIpProfile, setIpArchived, updateIpProfile } from '@/features/library/commands/ipProfiles';
+import { IP_TOOLS as IP_TOOLS_DEFINITIONS } from '@/features/library/agent/ipTools';
+import { IP_TOOL_NAMES } from '@/features/library/agent/ipToolNames';
+import { getProjectContext, refreshRunProjectContext } from '@/features/agent/runtime/projectContext';
+import { executeChatRun, resumeChatRun } from '@/features/agent/runtime/runChat';
+import { requiresToolApproval, type AgentToolContext } from '@/features/agent/runtime/tools';
+import type { AgentRun } from '@/features/agent/models/agent';
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { createId } from '@/platform/identity';
 const IP_TOOLS = registeredTools(IP_TOOLS_DEFINITIONS);
 
 

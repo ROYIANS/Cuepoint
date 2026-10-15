@@ -1,18 +1,18 @@
-import {createProject as createBoundTestProject} from "@/db/projects";
-import {deleteChatThread} from "@/db/cascadeCommands";
-import {addCharacter} from "@/db/assets";
+import {createProject as createBoundTestProject} from "@/features/projects/commands/projects";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import {addCharacter} from "@/features/library/commands/assets";
 import { describe,it,expect,vi } from 'vitest';
-import {db} from '@/db/database';
-import {createAgentTask,updateAgentTask,setAgentTaskLifecycle} from '@/db/agentTasks';
-import {createManualWrapup,saveWrapup,confirmWrapup,getTaskWrapupState,startTaskWrapup,cancelTaskWrapup,publishTaskWrapup} from '@/db/agentTaskWrapups';
-import {beginAgentRun,finishAgentRun} from '@/db/agentRuns';
-import {saveTaskRecord} from '@/db/agentTaskRecords';
+import {db} from '@/platform/product/store';
+import {createAgentTask,updateAgentTask,setAgentTaskLifecycle} from '@/features/agent/commands/agentTasks';
+import {createManualWrapup,saveWrapup,confirmWrapup,getTaskWrapupState,startTaskWrapup,cancelTaskWrapup,publishTaskWrapup} from '@/features/agent/commands/agentTaskWrapups';
+import {beginAgentRun,finishAgentRun} from '@/features/agent/commands/agentRuns';
+import {saveTaskRecord} from '@/features/agent/commands/agentTaskRecords';
 
-import {prepareTaskWrapup,recoverTaskWrapups} from '@/lib/agent/taskWrapup';
-import type {ThreadLockManager} from '@/lib/agent/runOwnership';
-import type {ConnectorConfig} from '@/domain/types';
-import type {AgentGenerationJob} from '@/domain/agentGeneration';
-import type {AgentToolCall} from '@/domain/agent';
+import {prepareTaskWrapup,recoverTaskWrapups} from '@/features/agent/runtime/taskWrapup';
+import type {ThreadLockManager} from '@/features/agent/runtime/runOwnership';
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import type {AgentGenerationJob} from '@/features/agent/models/agentGeneration';
+import type {AgentToolCall} from '@/features/agent/models/agent';
 const connector:ConnectorConfig={id:'cx',name:'test',definitionId:'openai-compatible',baseUrl:'https://example.test/v1',apiKey:'secret-fixture',updatedAt:'2026-09-19'};
 const locks:ThreadLockManager={async request(_name,_options,callback){return callback({});}};
 async function task(criteria=['角色名称准确']){return createAgentTask({projectId:(await createBoundTestProject("测试项目")).id,title:'创作任务',goal:'完成角色创作',acceptanceCriteria:criteria,plan:[]});}

@@ -1,18 +1,18 @@
 /** Compiled by the project's actual strict compiler; never registered or executed. */
-import {emptySlot} from '@/domain/slot';
+import {emptySlot} from '@/features/library/models/slot';
 import {z} from 'zod';
-import {defineTool, type TypedToolDefinition} from '@/lib/agent/toolDefinition';
-import * as s from '@/lib/agent/businessSchemas';
-import {generationSubmitSpec, generationJobSpec, generationJobSchema} from '@/lib/agent/generationProfiles';
-import {prepareAgentGeneration} from '@/lib/agent/generationRuntime';
-import {libraryReadTool, libraryWriteTool} from '@/lib/agent/libraryToolHelpers';
-import {AUDIO_TOOLS, audioMusicUnion} from '@/lib/agent/audioTools';
-import {planSchema} from '@/lib/agent/tools';
-import {patchStoryBeat} from '@/db/episodes';
-import {setCharacterSlot, patchCharacter} from '@/db/assets';
-import {patchShot} from '@/db/shots';
-import {isCharacterSlot} from '@/lib/agent/businessTools';
-import type {MemorySource} from '@/domain/projectMemory';
+import {defineTool, type TypedToolDefinition} from '@/features/agent/runtime/toolDefinition';
+import * as s from '@/features/agent/runtime/businessSchemas';
+import {generationSubmitSpec, generationJobSpec, generationJobSchema} from '@/features/video/agent/generationProfiles';
+import {prepareAgentGeneration} from '@/features/video/agent/generationRuntime';
+import {libraryReadTool, libraryWriteTool} from '@/features/library/agent/libraryToolHelpers';
+import {AUDIO_TOOLS, audioMusicUnion} from '@/features/audio/agent/audioTools';
+import {planSchema} from '@/features/agent/runtime/tools';
+import {patchStoryBeat} from '@/features/video/commands/episodes';
+import {setCharacterSlot, patchCharacter} from '@/features/library/commands/assets';
+import {patchShot} from '@/features/video/commands/shots';
+import {isCharacterSlot} from '@/features/video/agent/businessTools';
+import type {MemorySource} from '@/features/memory/models/projectMemory';
 
 type IsAny<T> = 0 extends (1 & T) ? true : false;
 export const wrongExecute = defineTool(generationSubmitSpec, {

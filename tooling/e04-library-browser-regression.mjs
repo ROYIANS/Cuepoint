@@ -7,12 +7,13 @@ import {fileURLToPath} from "node:url";
 import {createServer} from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import {snapshotOwner, snapshotModule} from "./snapshot-owners.ts";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const outputDir = process.env.E04_LIBRARY_OUTPUT_DIR ?? await mkdtemp(join(tmpdir(), "e04-library-evidence-"));
 await mkdir(outputDir, {recursive: true});
 const digest = text => createHash("sha256").update(text).digest("hex");
-const ownFiles = ["packages/studio/src/components/studio/ProjectGalleryPage.tsx", "packages/studio/src/components/studio/AssetLibraryPages.tsx", "packages/studio/src/lib/studioLibraryQueries.ts", "tests/e04LibraryQueries.test.ts", "tests/fixtures/e04-library/harness.tsx", "tests/fixtures/e04-library/index.html", "tests/fixtures/e04-library/tsconfig.json", "tooling/e04-library-browser-regression.mjs"];
+const ownFiles = ["packages/studio/src/features/projects/ui/ProjectGalleryPage.tsx", "packages/studio/src/features/library/ui/AssetLibraryPages.tsx", "packages/studio/src/features/projects/queries/studioLibraryQueries.ts", "tests/e04LibraryQueries.test.ts", "tests/fixtures/e04-library/harness.tsx", "tests/fixtures/e04-library/index.html", "tests/fixtures/e04-library/tsconfig.json", "tooling/e04-library-browser-regression.mjs"];
 const hashes = async paths => Object.fromEntries(await Promise.all(paths.map(async path => [path, digest(await readFile(resolve(root, path)))])));
 const provenancePath = "tests/fixtures/sourceSnapshots/e04-library/provenance.json";
 const provenance = JSON.parse(await readFile(resolve(root, provenancePath), "utf8"));
@@ -35,14 +36,15 @@ const loadedInputs = new Map();
 const loadedSources = new Map();
 const diagnostics = {
     name: "e04-library-observation-only", enforce: "pre",
+    load: snapshotModule,
     resolveId(source, importer) {
-        if (source === "@/db/database" && importer?.includes("/sourceSnapshots/")) return resolve(root,"tests/fixtures/shared-storage/rawBrowserDatabase.ts");
+        return snapshotOwner(source, importer);
     },
     transform(input, id) {
         const path = relative(root, id.split("?")[0]);
         if (!path.startsWith("../") && !path.startsWith("node_modules/") && /\.(tsx?|css)$/.test(path)) {loadedInputs.set(path, digest(input)); loadedSources.set(path, input);}
         let source = input;
-        if (id.endsWith("/packages/studio/src/components/studio/CoverCard.tsx")) {
+        if (id.endsWith("/packages/studio/src/features/library/ui/CoverCard.tsx")) {
             const coverAttribute = /aria-label=\{title\}(\s+)className=/g;
             assert.equal([...source.matchAll(coverAttribute)].length, 1, "Current cover instrumentation must match exactly one title button");
             source = source.replace(coverAttribute, 'aria-label={title} data-e04-cover={mediaId ?? ""}$1className=');
@@ -60,7 +62,7 @@ const diagnostics = {
             source = source.replace('(shot) => shot.projectId === projectId', '(shot) => {window.e04Library.metrics.filterChecks++; return shot.projectId === projectId;}');
             source = source.replace('(left, right) => left.order - right.order', '(left, right) => {window.e04Library.metrics.sortComparisons++; return left.order - right.order;}');
         }
-        if (id.endsWith("/packages/studio/src/lib/studioLibraryQueries.ts")) {
+        if (id.endsWith("/packages/studio/src/features/projects/queries/studioLibraryQueries.ts")) {
             source = source.replace('each(shot => {', 'each(shot => {window.e04Library.metrics.fallbackVisits++;');
             const result = 'return new Map([...candidates].map(([projectId, candidate]) => [projectId, candidate.mediaId]));';
             assert.ok(source.includes(result));

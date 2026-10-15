@@ -10,6 +10,6 @@
   "include": [
     "../../e07ErrorContracts.test.ts",
     "./original-materials-adapter.ts",
-    "../../../packages/studio/src/lib/references/mammoth.d.ts"
+    "../../../packages/studio/src/features/references/documents/mammoth.d.ts"
   ]
 }

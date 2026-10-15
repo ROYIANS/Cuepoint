@@ -1,7 +1,7 @@
 import Dexie from "dexie";
-import {db} from "@/db/database";
-import {deleteMediaIfOrphan, deleteMediaIfOrphans, collectMediaIds} from "@/db/media";
-import {PRODUCTION_TABLES} from "@/db/productionShared";
+import {db} from "@/platform/product/store";
+import {deleteMediaIfOrphan, deleteMediaIfOrphans, collectMediaIds} from "@/features/library/commands/media";
+import {PRODUCTION_TABLES} from "@/platform/product/scopes";
 import {deleteMediaIfOrphan as originalDelete} from "../sourceSnapshots/e04-media/src/db/media";
 import {check, media, retentionSources, historySources, currentSources, type RetentionSource} from "./seeds";
 import {observe} from "./instrumentation";

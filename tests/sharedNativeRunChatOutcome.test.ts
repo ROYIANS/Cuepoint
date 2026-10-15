@@ -1,16 +1,16 @@
 import {describe,expect,it,vi} from "vitest";
 import {z} from "zod";
-import {beginAgentRun} from "@/db/agentRuns";
-import {createChatThread} from "@/db/chat";
-import {createProject} from "@/db/projects";
-import {executeAtomicTool,resumeAgentRun,saveToolRound} from "@/db/agentTools";
-import {updateGeneralAgentConfig} from "@/db/agentSettings";
-import {executeChatRun,resumeChatRun} from "@/lib/agent/runChat";
-import type {AgentToolDefinition} from "@/lib/agent/tools";
-import {BUILTIN_TOOLS} from "@/lib/agent/tools";
-import type {ConnectorConfig} from "@/domain/types";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {createProject} from "@/features/projects/commands/projects";
+import {executeAtomicTool,resumeAgentRun,saveToolRound} from "@/features/agent/commands/agentTools";
+import {updateGeneralAgentConfig} from "@/features/agent/commands/agentSettings";
+import {executeChatRun,resumeChatRun} from "@/features/agent/runtime/runChat";
+import type {AgentToolDefinition} from "@/features/agent/runtime/tools";
+import {BUILTIN_TOOLS} from "@/features/agent/runtime/tools";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 import {createNativeProbe} from "./helpers/nativeProductProbe";
-import type {ProductStore} from "@/lib/storage/types";
+import type {ProductStore} from "@/platform/storage/types";
 
 const name="fixture_native_atomic_project";
 const connector:ConnectorConfig={id:"fixture",name:"fixture",definitionId:"openai-compatible",baseUrl:"https://fixture.test/v1",apiKey:"fixture",updatedAt:"2026-10-12"};

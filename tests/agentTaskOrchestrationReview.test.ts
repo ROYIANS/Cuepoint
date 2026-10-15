@@ -1,16 +1,16 @@
 import {registeredTools} from "./helpers/registeredTools";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
-import {addCharacter} from "@/db/assets";
-import {createProject as createBoundTestProject} from "@/db/projects";
+import {addCharacter} from "@/features/library/commands/assets";
+import {createProject as createBoundTestProject} from "@/features/projects/commands/projects";
 import { describe, expect, it } from "vitest";
-import { TASK_TOOLS as TASK_TOOLS_DEFINITIONS } from "@/lib/agent/taskTools";
-import { db } from "@/db/database";
-import { createAgentTask, updateAgentTask } from "@/db/agentTasks";
-import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import {  transitionToolCall, updateRunPlanAndComplete } from "@/db/agentTools";
-import { validateTaskSources } from "@/db/agentTaskRecords";
-import type { AgentGenerationJob } from "@/domain/agentGeneration";
-import type { ConnectorConfig } from "@/domain/types";
+import { TASK_TOOLS as TASK_TOOLS_DEFINITIONS } from "@/features/agent/runtime/taskTools";
+import { db } from "@/platform/product/store";
+import { createAgentTask, updateAgentTask } from "@/features/agent/commands/agentTasks";
+import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
+import {  transitionToolCall, updateRunPlanAndComplete } from "@/features/agent/commands/agentTools";
+import { validateTaskSources } from "@/features/agent/commands/agentTaskRecords";
+import type { AgentGenerationJob } from "@/features/agent/models/agentGeneration";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 const TASK_TOOLS = registeredTools(TASK_TOOLS_DEFINITIONS);
 
 const connector:ConnectorConfig={id:"fixture",name:"Fixture",definitionId:"openai-compatible",baseUrl:"https://example.test/v1",apiKey:"fake",updatedAt:"now"};

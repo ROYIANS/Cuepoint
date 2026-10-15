@@ -2,35 +2,35 @@ import {interceptStoreTable} from "./helpers/storeFaults";
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import {serializeMemoryEntries as originalSerializeMemoryEntries, planMemorySelection as originalPlanMemorySelection} from "./fixtures/sourceSnapshots/d05/src/lib/memory/retrieval";
 import { describe, it, expect, vi } from "vitest";
-import { db } from "@/db/database";
-import {createProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
+import { db } from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
 import {
   createProjectMemory,
   setProjectMemoryStatus,
   updateProjectMemory,
   deleteProjectMemory,
-} from "@/db/projectMemories";
+} from "@/features/memory/commands/projectMemories";
 import {
   getMemorySelection,
   setThreadMemoryExcluded,
   getThreadMemoryExclusions,
-} from "@/db/memoryRetrieval";
+} from "@/features/memory/queries/memoryRetrieval";
 import {
   planMemorySelection,
   serializeMemoryEntries,
   memoryEnvelopeTokens,
-} from "@/lib/memory/retrieval";
-import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { startModelStep } from "@/db/agentTools";
-import { refreshRunMemoryContext } from "@/lib/agent/memoryContext";
-import { executeChatRun } from "@/lib/agent/runChat";
-import { toResponseInput } from "@/lib/ai/responsesStream";
-import { prepareRunContext } from "@/lib/agent/contextCompaction";
-import { updateContextPolicy } from "@/db/contextSettings";
-import { estimateContextUsage } from "@/lib/agent/contextUsage";
-import type { ProjectMemory } from "@/domain/projectMemory";
-import type { ConnectorConfig } from "@/domain/types";
+} from "@/features/memory/services/retrieval";
+import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
+import { startModelStep } from "@/features/agent/commands/agentTools";
+import { refreshRunMemoryContext } from "@/features/memory/agent/memoryContext";
+import { executeChatRun } from "@/features/agent/runtime/runChat";
+import { toResponseInput } from "@/features/agent/providers/responsesStream";
+import { prepareRunContext } from "@/features/agent/runtime/contextCompaction";
+import { updateContextPolicy } from "@/features/agent/commands/contextSettings";
+import { estimateContextUsage } from "@/features/agent/runtime/contextUsage";
+import type { ProjectMemory } from "@/features/memory/models/projectMemory";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 const connector: ConnectorConfig = {
   id: "cx",
   definitionId: "openai-compatible",

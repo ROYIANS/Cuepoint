@@ -1,7 +1,7 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {getVideoWorkspaceRepository} from "@/lib/videoWorkspaceRepository";
-import {nativeWorkspace} from "@/lib/nativeWorkspace";
-import {DraftConflictError} from "@/lib/draftConflict";
+import {getVideoWorkspaceRepository} from "@/features/video/services/workspaceRepository";
+import {nativeWorkspace} from "@/platform/runtime/reference/nativeWorkspace";
+import {DraftConflictError} from "@/platform/product/draftConflict";
 
 afterEach(() => vi.restoreAllMocks());
 

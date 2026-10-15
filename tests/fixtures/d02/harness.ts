@@ -1,17 +1,18 @@
 import {interceptStoreTable} from "../../helpers/storeFaults";
-import {readBinaryBlob} from "@/lib/storage/binary";
-import {db} from "@/db/database";
-import {createProject, createAudioMusicProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
-import {deleteProject, deleteChatThread} from "@/db/cascadeCommands";
-import {releaseMaterialUse} from "@/db/assetReuse";
-import {addShot, setShotSlot} from "@/db/shots";
-import {putMedia} from "@/db/media";
-import {createIpProfile} from "@/db/ipProfiles";
-import {createFileMaterial, promoteMaterial, adoptMaterialInProject} from "@/db/materials";
-import {beginAgentRun} from "@/db/agentRuns";
-import {upsertConnector} from "@/db/connectors";
-import type {AgentGenerationJob} from "@/domain/agentGeneration";
+import {readBinaryBlob} from "@/platform/storage/binary";
+import {db} from "@/platform/product/store";
+import {createProject, createAudioMusicProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {deleteProject} from "@/features/projects/commands/lifecycle";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import {releaseMaterialUse} from "@/features/library/commands/assetReuse";
+import {addShot, setShotSlot} from "@/features/video/commands/shots";
+import {putMedia} from "@/features/library/commands/media";
+import {createIpProfile} from "@/features/library/commands/ipProfiles";
+import {createFileMaterial, promoteMaterial, adoptMaterialInProject} from "@/features/library/commands/materials";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {upsertConnector} from "@/features/settings/commands/connectors";
+import type {AgentGenerationJob} from "@/features/agent/models/agentGeneration";
 
 function check(value: unknown, message: string): asserts value {
     if (!value) throw new Error(message);

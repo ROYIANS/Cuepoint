@@ -25,7 +25,7 @@
     "ui/**/*.ts",
     "ui/**/*.tsx",
     "ui/**/*.d.ts",
-    "../../packages/studio/src/lib/references/mammoth.d.ts",
-    "../../packages/studio/src/vite-env.d.ts"
+    "../../packages/studio/src/features/references/documents/mammoth.d.ts",
+    "../../packages/studio/src/app/vite-env.d.ts"
   ]
 }

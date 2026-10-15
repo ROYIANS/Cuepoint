@@ -1,6 +1,6 @@
 # Agent Chat Performance
 
-> Cuepoint-sized contracts distilled from LobeHub Conversation (`packages/studio/src/features/Conversation/ChatList`), not a virtua port.
+> Cuepoint-sized contracts distilled from LobeHub Conversation (external reference `src/features/Conversation/ChatList`), not a virtua port.
 
 ---
 
@@ -15,7 +15,7 @@ Source of truth in LobeHub (do not vendor):
 | `VirtualizedList` + `virtua` | Plain `.agent-message-list` overflow |
 | `overflowAnchor: 'none'` | Same CSS on `.agent-message-list` |
 | `scrollToBottom(false)` while generating | `snapChatToBottom` (`scrollTop = scrollHeight`) |
-| `AT_BOTTOM_THRESHOLD = 300` | `CHAT_AT_BOTTOM_PX` in `packages/studio/src/lib/chatScroll.ts` |
+| `AT_BOTTOM_THRESHOLD = 300` | `CHAT_AT_BOTTOM_PX` in `packages/studio/src/features/agent/presentation/chatScroll.ts` |
 | AutoScroll only if `atBottom && isGenerating && !isScrolling` | `stickToBottom` ref; skip snap when user scrolled up |
 | `paddingBottom` from composer overlay height | `--agent-chat-composer-safe` padding on the list |
 | `MessageItem` keyed by id, `memo` + store selector | `AgentChatMessageItem` `memo` with field compare |
@@ -27,7 +27,7 @@ Source of truth in LobeHub (do not vendor):
 ## Signatures
 
 ```ts
-// packages/studio/src/lib/chatScroll.ts
+// packages/studio/src/features/agent/presentation/chatScroll.ts
 export const CHAT_AT_BOTTOM_PX = 300;
 
 export function chatDistanceFromBottom(el: {

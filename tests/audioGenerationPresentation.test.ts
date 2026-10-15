@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { AudioGenerationJob, AudioTaskObservation } from "@/domain/audioGeneration";
-import { describeAudioGeneration } from "@/lib/audioGeneration/presentation";
-import { audioJobSummary } from "@/lib/audioGeneration/runtime";
+import type { AudioGenerationJob, AudioTaskObservation } from "@/features/audio/models/audioGeneration";
+import { describeAudioGeneration } from "@/features/audio/generation/presentation";
+import { audioJobSummary } from "@/features/audio/generation/runtime";
 
 function job(patch: Partial<AudioGenerationJob> = {}): AudioGenerationJob {
   return { id: "job", projectId: "project", revision: 3, intentId: "intent", createdAt: "2026-09-22T00:00:00.000Z", updatedAt: "2026-09-22T00:01:00.000Z",

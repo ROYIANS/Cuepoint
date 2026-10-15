@@ -6,7 +6,7 @@
 
 ## Overview
 
-Current product data reads use `useProductQuery(tx => ...)` or `useProductQueryState` from `packages/studio/src/lib/storage/hooks.ts`. The explicit readonly transaction must also reach nested readers. Dexie live-query observation stays inside the browser adapter. Mutations use the concrete business command owner under `packages/studio/src/db/`; the D02 map remains in [State Management](./state-management.md). Read the complete [shared storage contract](./shared-product-storage.md). Do not fetch live records with one-shot `useEffect` + `db.*.get`.
+Current product data reads use `useProductQuery(tx => ...)` or `useProductQueryState` from `packages/studio/src/platform/product/queries.ts`. The explicit readonly transaction must also reach nested readers. Dexie live-query observation stays inside the browser adapter. Mutations use the concrete business command owner under `packages/studio/src/features/<feature>/commands/`; the D02 map remains in [State Management](./state-management.md). Read the complete [shared storage contract](./shared-product-storage.md). Do not fetch live records with one-shot `useEffect` + `db.*.get`.
 
 ---
 
@@ -84,7 +84,7 @@ Connector probe/test and script File.text reads may finish after close/reopen, c
 
 ### 2. Signatures
 
-Keep existing `ConnectorsSection` handlers (in `components/studio/ConnectorsPage.tsx`) and provider signatures: `listConnectorModels(connector, usage?, fetchImpl?)` and `testConnectorConnection(connector, fetchImpl?)` have no AbortSignal API. Guard publication locally without redesigning their transport. `StoryEditor.applyScriptFile(file: File)` captures episode ownership, request sequence and script edit revision; `DraftStatus.onUseLatest` participates in that lifetime. Alias an ordinary returned `useLatest` action as `adoptLatestDraft` when calling it behind guards, so Hook naming tools do not mistake it for a conditional React Hook.
+Keep existing `ConnectorsSection` handlers (in `features/settings/ui/ConnectorsPage.tsx`) and provider signatures: `listConnectorModels(connector, usage?, fetchImpl?)` and `testConnectorConnection(connector, fetchImpl?)` have no AbortSignal API. Guard publication locally without redesigning their transport. `StoryEditor.applyScriptFile(file: File)` captures episode ownership, request sequence and script edit revision; `DraftStatus.onUseLatest` participates in that lifetime. Alias an ordinary returned `useLatest` action as `adoptLatestDraft` when calling it behind guards, so Hook naming tools do not mistake it for a conditional React Hook.
 
 ### 3. Contracts
 
@@ -231,7 +231,7 @@ Wrong: automatic Hook autofix or fake hook rendering as proof of all React sched
 Read before writing or editing any `useProductQuery` / `useProductQueryState` callback. Found through the new error details dialog: opening a chat topic crashed with `PrematureCommitError` ("Transaction committed too early").
 
 ### 2. Signatures
-`useProductQuery(query, deps)` runs `liveQuery(() => transaction("r", ALL_TABLES, query))` (`packages/studio/src/lib/storage/browser.ts`). The hook rethrows a query failure during rendering, so a failed query surfaces as a page crash.
+`useProductQuery(query, deps)` runs `liveQuery(() => transaction("r", ALL_TABLES, query))` (`packages/studio/src/platform/storage/browser.ts`). The hook rethrows a query failure during rendering, so a failed query surfaces as a page crash.
 
 ### 3. Contracts
 The callback runs inside one read transaction over every table. Await only Dexie operations (`db.*`, or helpers that take the `db`/`tx` you were given). Any other await (a dynamic `import()`, a timer, `fetch`, `crypto.subtle`, a lock request, a file or blob read) lets the transaction commit early and the query fails with `PrematureCommitError`. Work that needs such an await runs before the query (and its result is passed in or kept in component state), or the value is read with `useEffect` + `useState`, discarding a stale result on cleanup.

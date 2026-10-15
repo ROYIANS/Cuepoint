@@ -1,6 +1,6 @@
 import {vi} from "vitest";
-import type {ProductStore,StoreTx,TableScope} from "@/lib/storage/types";
-import type {TableName} from "@/lib/storage/tableTypes";
+import type {ProductStore,StoreTx,TableScope} from "@/platform/storage/types";
+import type {TableName} from "@/platform/storage/tableTypes";
 
 type Interceptor={table:TableName;method:string;intercept:(tx:StoreTx,args:unknown[],next:()=>Promise<unknown>)=>Promise<unknown>};
 const installations=new WeakMap<ProductStore,{rules:Interceptor[];spy:ReturnType<typeof vi.spyOn>;wrapped:ProductStore["transaction"]}>();

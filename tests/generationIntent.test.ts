@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addShot, patchShot} from "@/db/shots";
-import {createProject, patchProjectDetails} from "@/db/projects";
-import {putMedia} from "@/db/media";
-import { defaultImageGeneration, defaultVideoGeneration } from "@/domain/output";
-import { buildProductionContext } from "@/lib/productionContext";
-import { generationIntentToProposalInput, prepareGenerationIntent, transitionGenerationIntent, validateGenerationIntent } from "@/lib/generationIntent";
+import { db } from "@/platform/product/store";
+import {addShot, patchShot} from "@/features/video/commands/shots";
+import {createProject, patchProjectDetails} from "@/features/projects/commands/projects";
+import {putMedia} from "@/features/library/commands/media";
+import { defaultImageGeneration, defaultVideoGeneration } from "@/features/video/models/output";
+import { buildProductionContext } from "@/features/video/services/productionContext";
+import { generationIntentToProposalInput, prepareGenerationIntent, transitionGenerationIntent, validateGenerationIntent } from "@/features/video/services/generationIntent";
 
 async function setup(slot: "firstFrame" | "clip" = "firstFrame") {
   const project = await createProject("intent");

@@ -51,7 +51,7 @@ async function run() {
     const token=randomBytes(32).toString('hex');
     const server=await reserveStreamServer(root,token);
     const env={...process.env,CUEPOINT_STREAM_ENDPOINT:server.endpoint,CUEPOINT_STREAM_TOKEN:token,CUEPOINT_ACCEPTANCE_ROOT:root};
-    const sourcePaths=['ui/acceptanceLocks.ts','ui/acceptance.tsx','ui/acceptanceEvidence.ts','scripts/native-locks-regression.mjs','../../packages/studio/src/lib/agent/runOwnership.ts','../../packages/studio/src/lib/audioGeneration/batchRuntime.ts','../../packages/studio/src/lib/agent/taskWrapup.ts'];
+    const sourcePaths=['ui/acceptanceLocks.ts','ui/acceptance.tsx','ui/acceptanceEvidence.ts','scripts/native-locks-regression.mjs','../../packages/studio/src/features/agent/runtime/runOwnership.ts','../../packages/studio/src/features/audio/generation/batchRuntime.ts','../../packages/studio/src/features/agent/runtime/taskWrapup.ts'];
     const sources=async()=>Object.fromEntries(await Promise.all(sourcePaths.map(async path=>[path,createHash('sha256').update(await readFile(resolve(base,path))).digest('hex')])));
     const before=await sources();
     const deadline=Date.now()+15*60*1000;

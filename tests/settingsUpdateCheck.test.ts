@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import type {DownloadAssetResult} from "@/lib/desktopRelease/download";
+import type {DownloadAssetResult} from "@/features/settings/updates/download";
 import type {LatestDesktopRelease, ReleaseResult} from "@cuepoint/distribution/releases";
 import type {AssetChoice} from "@cuepoint/distribution/platform";
 
@@ -52,18 +52,18 @@ vi.mock("react", async original => {
     };
 });
 vi.mock("@cuepoint/distribution/releases", async original => ({...await original<typeof import("@cuepoint/distribution/releases")>(), fetchLatestDesktopRelease: boundary.fetchRelease}));
-vi.mock("@/lib/desktopRelease/download", () => ({downloadAsset: boundary.downloadAsset, MAX_RELEASE_ASSET_BYTES: 64 * 1024 * 1024}));
-vi.mock("@/lib/runtimeFetch", () => ({runtimeFetchFor: (purpose: string) => {boundary.transport(purpose); return fetch;}}));
-vi.mock("@/lib/runtimeSave", async original => ({...await original<typeof import("@/lib/runtimeSave")>(), downloadBlob: boundary.save}));
-vi.mock("@/lib/appVersion", () => ({appVersion: () => "0.1.3"}));
-vi.mock("@/components/settings/settingsStore", async original => ({
-    ...await original<typeof import("@/components/settings/settingsStore")>(),
+vi.mock("@/features/settings/updates/download", () => ({downloadAsset: boundary.downloadAsset, MAX_RELEASE_ASSET_BYTES: 64 * 1024 * 1024}));
+vi.mock("@/platform/runtime/runtimeFetch", () => ({runtimeFetchFor: (purpose: string) => {boundary.transport(purpose); return fetch;}}));
+vi.mock("@/platform/runtime/runtimeSave", async original => ({...await original<typeof import("@/platform/runtime/runtimeSave")>(), downloadBlob: boundary.save}));
+vi.mock("@/platform/runtime/appVersion", () => ({appVersion: () => "0.1.3"}));
+vi.mock("@/features/settings/ui/settingsStore", async original => ({
+    ...await original<typeof import("@/features/settings/ui/settingsStore")>(),
     readAutoCheckUpdates: boundary.readEnabled, readLastUpdateCheckAt: boundary.readLastCheck, writeLastUpdateCheckAt: boundary.writeLastCheck,
 }));
 
-import {useUpdateCheck} from "@/components/settings/useUpdateCheck";
-import {useAutoUpdateCheck} from "@/components/settings/useAutoUpdateCheck";
-import {UpdateSection} from "@/components/settings/sections/UpdateSection";
+import {useUpdateCheck} from "@/features/settings/ui/useUpdateCheck";
+import {useAutoUpdateCheck} from "@/features/settings/ui/useAutoUpdateCheck";
+import {UpdateSection} from "@/features/settings/ui/sections/UpdateSection";
 
 const release: LatestDesktopRelease = {
     version: "0.1.4", tag: "desktop-v0.1.4", prerelease: false,

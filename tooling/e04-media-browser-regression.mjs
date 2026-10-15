@@ -5,18 +5,19 @@ import {tmpdir} from "node:os";
 import {join, relative, resolve} from "node:path";
 import {fileURLToPath} from "node:url";
 import {createServer} from "vite";
+import {snapshotOwner, snapshotModule} from "./snapshot-owners.ts";
 
 const root = fileURLToPath(new URL("../", import.meta.url)), hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const output = process.env.E04_MEDIA_OUTPUT ?? await mkdtemp(join(tmpdir(), "e04-media-native-"));
 await mkdir(output, {recursive: true});
 try {await access(join(output, "report.json")); throw new Error("Refusing to overwrite an earlier E04 attempt");} catch (error) {if (error.code !== "ENOENT") throw error;}
-const ownSources = ["packages/studio/src/db/media.ts", "packages/studio/src/db/assets.ts", "packages/studio/src/db/shots.ts", "packages/studio/src/db/episodes.ts", "packages/studio/src/db/assetReuse.ts", "packages/studio/src/db/cascadeCommands.ts"];
+const ownSources = ["packages/studio/src/features/library/commands/media.ts", "packages/studio/src/features/library/commands/assets.ts", "packages/studio/src/features/video/commands/shots.ts", "packages/studio/src/features/video/commands/episodes.ts", "packages/studio/src/features/library/commands/assetReuse.ts", "packages/studio/src/features/projects/commands/lifecycle.ts"];
 const fixtures = ["tests/e04MediaRetention.test.ts", "tooling/e04-media-browser-regression.mjs", ...["seeds.ts", "instrumentation.ts", "retention.ts", "commands.ts", "receipt.ts", "main.ts", "index.html", "tsconfig.json"].map(name => `tests/fixtures/e04-media/${name}`), ...["src/db/media.ts", "src/db/database.ts", "src/db/productionShared.ts", "provenance.json"].map(name => `tests/fixtures/sourceSnapshots/e04-media/${name}`)];
 const owned = [...ownSources, ...fixtures], entry = Object.fromEntries(await Promise.all(owned.map(async path => [path, hash(await readFile(join(root, path)))])));
 const provenance = JSON.parse(await readFile(join(root, "tests/fixtures/sourceSnapshots/e04-media/provenance.json"), "utf8"));
 for (const file of provenance.files) assert.equal(hash(await readFile(join(root, file.snapshotPath))), file.sha256);
 const loaded = new Map();
-const capture = {name: "e04-media-actual-source-closure", enforce: "pre", async transform(_code, id) {
+const capture = {name: "e04-media-actual-source-closure", enforce: "pre", load: snapshotModule, resolveId: snapshotOwner, async transform(_code, id) {
     const path = id.split("?")[0];
     if (!path.startsWith(root) || !/\.(ts|tsx|js|json)$/.test(path) || path.includes("/node_modules/")) return;
     const rel = relative(root, path), bytes = await readFile(path), digest = hash(bytes);

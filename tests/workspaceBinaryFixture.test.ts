@@ -1,12 +1,13 @@
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {createAudioMusicProject, createProject} from "@/db/projects";
-import {addCharacter} from "@/db/assets";
-import {addAudioExport, addAudioTake, getAudioProjectSnapshot} from "@/db/audio";
-import {addMusicWork} from "@/db/music";
-import {addFileMaterialVersion, createFileMaterial, promoteLegacyMaterial} from "@/db/materials";
-import {emptySlot} from "@/domain/slot";
-import {STUDIO_LIBRARY_ID} from "@/domain/types";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject, createProject} from "@/features/projects/commands/projects";
+import {addCharacter} from "@/features/library/commands/assets";
+import {addAudioExport, addAudioTake} from "@/features/audio/commands/audio";
+import {getAudioProjectSnapshot} from "@/features/audio/queries/snapshot";
+import {addMusicWork} from "@/features/music/commands/music";
+import {addFileMaterialVersion, createFileMaterial, promoteLegacyMaterial} from "@/features/library/commands/materials";
+import {emptySlot} from "@/features/library/models/slot";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
 import {enumerateWorkspaceBinaryFixture} from "./helpers/workspaceBinaryFixture";
 
 const file = (bytes: string, name = "same.png", type = "image/png") => new File([bytes], name, {type});

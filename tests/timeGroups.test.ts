@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { groupThreadsByTime } from "@/components/agent/timeGroups";
-import type { ChatThread } from "@/domain/types";
+import { groupThreadsByTime } from "@/features/agent/ui/timeGroups";
+import type {ChatThread} from "@/features/agent/models/chat";
 
 function thread(id: string, updatedAt: Date): ChatThread {
   const iso = updatedAt.toISOString();

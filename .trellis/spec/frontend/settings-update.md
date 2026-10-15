@@ -7,7 +7,7 @@ Read before changing `/settings`, the embedded connections section, `settings.*`
 ## 2. Signatures and owners
 
 - `SettingsPage({section?, onSectionChange})`, `SETTINGS_SECTIONS`, `isSettingsSectionId(value)`, `filterSettings(sections, query)` own presentation, recognized section identities and search. Ids are `general | appearance | connections | storage | update`.
-- `readSettings(tx)` owns the reactive preference snapshot; `readAutoCheckUpdates()`, `readLastUpdateCheckAt()`, `writeAutoCheckUpdates(enabled)`, `writeLastUpdateCheckAt(at)`, `dueForAutoCheck(lastCheckAt, now)` use `db/deviceSettings.ts`. Keys are `settings.autoCheckUpdates` (boolean, default false) and `settings.lastUpdateCheckAt` (positive safe integer milliseconds within the Date range, otherwise absent).
+- `readSettings(tx)` owns the reactive preference snapshot; `readAutoCheckUpdates()`, `readLastUpdateCheckAt()`, `writeAutoCheckUpdates(enabled)`, `writeLastUpdateCheckAt(at)`, `dueForAutoCheck(lastCheckAt, now)` use `features/settings/commands/deviceSettings.ts`. Keys are `settings.autoCheckUpdates` (boolean, default false) and `settings.lastUpdateCheckAt` (positive safe integer milliseconds within the Date range, otherwise absent).
 - Distribution exports `@cuepoint/distribution/releases`, `/platform` and `/version` own `fetchLatestDesktopRelease(deps)`, `fetchStars(deps)`, validated release metadata, `RELEASES_URL`/`INSTALL_GUIDE_URL`, `detectPlatform(nav)` and `pickAssets(release, platform)`. Preserve ambiguous Mac alternatives instead of guessing a CPU.
 - The version export owns `parseVersion(value)` and `classifyUpdate(current, latest)`. Strict three-part safe integer versions compare numerically; outcomes are `update-available | up-to-date | ahead | unknown`.
 - `downloadAsset({asset, fetchImpl, signal?, onProgress?, onVerifying?, maxBytes?, digest?})` returns verified bytes or cancellation; saving uses `downloadBlob(blob, filename, signal)` and the existing native transfer owner.
@@ -31,7 +31,7 @@ Storage counts use the supplied `useProductQuery` transaction for every table, i
 
 Installer reads never exceed the minimum of declared size, the configured smaller limit and the hard 64 MiB ceiling. Exact size and lowercase SHA-256 must match before any Save. Missing digest or oversized installer uses an explicit system-browser download option; it never bypasses in-app verification. macOS offers architecture choices when the navigator cannot identify the CPU. Cancellation, unpublished failure and a published file with a finalization warning have different UI outcomes. Release, download and installation-guide anchors are routed by the existing `installNativeExternalLinks` handler to `nativeOpenExternalUrl` in Tauri; ordinary browser links retain their usual behavior. Installation guide links use `INSTALL_GUIDE_URL`, distinct from the actual release's `htmlUrl` or `RELEASES_URL` fallback.
 
-Site imports only declared lightweight distribution exports. Studio keeps `lib/desktopRelease/download.ts`, runtime HTTP, storage and settings outside that closure. Retain the first-screen budget guard on the built site, including the assembled deployment output.
+Site imports only declared lightweight distribution exports. Studio keeps `features/settings/updates/download.ts`, runtime HTTP, storage and settings outside that closure. Retain the first-screen budget guard on the built site, including the assembled deployment output.
 
 ## 4. Validation / error matrix
 

@@ -15,13 +15,13 @@ a workbench action, not an Agent export tool.
 
 ## 2. Signatures (API / DB)
 
-Domain records live in `packages/studio/src/domain/audio.ts`, `music.ts`, `audioGeneration.ts` and `types.ts`.
+Audio records live in `packages/studio/src/features/audio/models/audio.ts` and `audioGeneration.ts`; music drafts/works/settings live in `features/music/models/music.ts`. Project kinds and the `Project` record are owned by `features/projects/models/project.ts`, while shared `Id` identity comes from `platform/identity.ts`.
 
 ```ts
 type ProjectKind = "video" | "audio" | "music";
 getProjectKind(project: Pick<Project, "kind">): ProjectKind;
 createAudioMusicProject(name: string, kind: "audio" | "music", ipId?: Id | null): Promise<Project>;
-getAudioProjectSnapshot(projectId: string): Promise<AudioProjectSnapshot>;
+getAudioProjectSnapshot(projectId: string, store?: ProductStore): Promise<AudioProjectSnapshot>;
 
 // X = Chapter, Speaker, Segment, Track, Clip; takes are immutable sources.
 addAudioX(projectId, input);
@@ -53,7 +53,7 @@ deleteMusicWork(projectId, id, expectedRevision);
 | `musicDrafts` / `musicWorks` | `projectId`; works also index `mediaId` |
 | `audioGenerationJobs` | `projectId`, unique `intentId`, `status`, `updatedAt` |
 
-Generation entry points in `packages/studio/src/lib/audioGeneration/runtime.ts`:
+Generation entry points in `packages/studio/src/features/audio/generation/runtime.ts`:
 
 ```ts
 prepareAudioGeneration({ projectId, connectorId, input, intentId?, source? });
@@ -61,15 +61,21 @@ submitAudioGeneration(projectId, jobId, options?);
 refreshAudioGeneration(projectId, jobId, options?); // bounded GET/download pass; never paid POST
 ```
 
-The repository (`packages/studio/src/db/audioGeneration.ts`) provides
+The repository (`packages/studio/src/features/audio/commands/generation.ts`) provides
 `prepareAudioGenerationJob(projectId, input)`,
 `claimAudioGenerationJob(projectId, id, expectedRevision, owner)` and
 `patchAudioGenerationJob(projectId, id, expectedRevision, patch)`.
 
-Transport in `packages/studio/src/lib/ai/apimartAudio.ts` uses the configured `/v1` base URL:
+Transport in `packages/studio/src/features/audio/providers/apimartAudio.ts` uses the configured `/v1` base URL:
 `POST /audio/speech`, `POST /music/generations`, and
 `GET /music/tasks/{encodedTaskId}?language=zh`. CDN downloads use
 `downloadApimartAudio`; they never receive connector authorization headers.
+
+## Current feature ownership
+
+`features/audio/commands/audio.ts` owns audio mutations; the read-only snapshot is the actual `features/audio/queries/snapshot.ts` implementation. The supplied `ProductStore` or nested `StoreTx` reaches every durable read/write. `features/audio/commands/rowPatch.ts` is the single revision-CAS function also used by music commands, with explicitly named cross-feature access; ownership guards and audio row construction remain internal. `features/music/commands/music.ts` owns music drafts/works. `features/projects/commands/projects.ts` owns `createAudioMusicProject` and its original atomic seed creation.
+
+Audio generation currently serves speech and music jobs, so its real job model, provider adapters, repository and runtime remain in `features/audio/{models,providers,commands,generation}/`; this is a concrete feature owner, not a reusable Agent core. Audio UI is under `features/audio/ui/`, music UI under `features/music/ui/`, and shared audio presentation under `features/audio/presentation/`. Engine commands live in `features/audio/engine/`; the relocated engine/route tests live in `features/audio/tests/`, and store transaction tests are co-located in `features/audio/commands/`. Agent-facing audio tools live in `features/audio/agent/`; they retain existing approved tool/ledger transactions. The fixed store and React binding are separate `platform/product/{store,queries}.ts` integrations; low-level `platform/storage/` mechanisms do not import React or feature orchestration.
 
 ## 3. Contracts
 
@@ -96,7 +102,7 @@ Tracks own `role: voice|music|effects`, order, gain, muted and solo. Segment ord
 reorder the timeline. Only unbound sources can be freely placed in another chapter;
 segment-bound sources must match the destination chapter.
 
-Writes run inside `AUDIO_TRANSACTION_TABLES`, verifying project ownership, references and
+Audio writes in `features/audio/commands/` run inside `AUDIO_TRANSACTION_TABLES` from `platform/product/scopes.ts`, verifying project ownership, references and
 expected revisions. `replaceAudioClips` compares the entire chapter's current clip IDs and
 revisions before replacing that document. `AudioClipHistory` stores inverse document edits,
 not media Blobs; stale undo rejects rather than overwriting concurrent manual/Agent work.
@@ -104,7 +110,7 @@ Script deletion detaches and retains takes. Removing an in-use take rejects. Del
 chapter preserves completed exports with `scope: "chapter"` and `chapterTitle` while
 clearing the deleted local chapter reference.
 
-**Media and editing engine.** `packages/studio/src/lib/audio/` owns decode/cache, waveform reduction,
+**Media and editing engine.** `packages/studio/src/features/audio/engine/` owns decode/cache, waveform reduction,
 scheduling, synchronized Web Audio preview, OfflineAudioContext rendering, PCM WAV encoding,
 recording lifecycle and edit commands. Recording waits for final `dataavailable`/`stop` and
 cleans tracks/nodes; actual recorder MIME is retained. `detectAudioMime(blob)` recognizes
@@ -254,7 +260,7 @@ synthesize legacy video episodes. There are no new environment keys or server cr
 | `tests/audioGenerationAgent.test.ts` | Approval in ask/assist/full, rejection, changed draft, submitted-call GET recovery and bounded context |
 | `tests/audioMusicAgentTools.test.ts` | Strict schemas, bound scope, atomic ledger/domain writes, replay deduplication, stale previews and text pagination |
 | `tests/apimartAudio.test.ts` | Endpoint envelopes, Unicode limits, mode parameters, errors, identity/index preservation, CDN credential isolation |
-| `tests/audioEngine.test.ts`, `audioEngineCommands.test.ts`, `audioEngineRecorder.test.ts` | Schedule/seek/fades/mute/solo, encoding/resource limits, split/CAS undo and recording cleanup |
+| `tests/audioEngine.test.ts`, `features/audio/tests/audioEngineCommands.test.ts`, `audioEngineRecorder.test.ts` | Schedule/seek/fades/mute/solo, encoding/resource limits, split/CAS undo and recording cleanup |
 | Existing `projectPackage`, `repo`, `materialLibrary`, `materialIntegration`, `productionProposals` tests | Old video/ZIP compatibility, independent material snapshots and additive DB upgrade |
 
 Use `/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm` for checks, following AGENTS.md.
@@ -352,7 +358,7 @@ APIMart music submit/query, durable job writes, package snapshot/import and reco
 
 ### 2. Signatures
 
-`isAudioTaskId(value: unknown): value is string`, `canonicalizeAudioTaskIds(value: unknown): string[]` and `validateAudioTaskIds(value: unknown): asserts value is string[]` live in `lib/audioGeneration/taskIds.ts`. `validateAudioTaskObservations(observations, taskIds)` validates the collection even when observations are undefined; existing DB prepare/claim/patch and both package validation loops use this boundary.
+`isAudioTaskId(value: unknown): value is string`, `canonicalizeAudioTaskIds(value: unknown): string[]` and `validateAudioTaskIds(value: unknown): asserts value is string[]` live in `features/audio/generation/taskIds.ts`. `validateAudioTaskObservations(observations, taskIds)` validates the collection even when observations are undefined; existing DB prepare/claim/patch and both package validation loops use this boundary.
 
 ### 3. Contracts
 
@@ -392,7 +398,7 @@ Wrong: validate observations before repairing a legacy duplicate, or drop bad ID
 Music draft saves, Agent save/reuse tools, generation inputs/provider wire, historical work metadata and ZIP restore.
 
 ## 2. Signatures
-`MUSIC_DURATION_LIMITS` in domain/music is the shared FlowMusic 1..240 and Suno 10..360 bounds. `validateMusicSettings`, `validateMusicDraft`, `validateMusicWork` validate new values. Explicit `validateLegacyMusicDraft/Work` preserve bounded historical fractions only for package history and immutable existing work metadata.
+`MUSIC_DURATION_LIMITS` in features/music/models/music is the shared FlowMusic 1..240 and Suno 10..360 bounds. `validateMusicSettings`, `validateMusicDraft`, `validateMusicWork` validate new values. Explicit `validateLegacyMusicDraft/Work` preserve bounded historical fractions only for package history and immutable existing work metadata.
 
 ## 3. Contracts
 Optional generation duration is an integer number of seconds when provided. Tool advertised JSON and runtime schema, repository and generation/wire use the same engine bounds. Absence remains valid for incomplete drafts; generation readiness is separately validated. Decoded audio source duration remains fractional and is not the optional generation setting.
@@ -425,7 +431,7 @@ Wrong: every validator evolves independently, or apply new generation restrictio
 Audio project ZIP ID remapping and historical export freshness in AudioTimeline/AudioExports.
 
 ### 2. Signatures
-`createAudioExportFingerprint`, `getAudioExportFreshness`, `preserveAudioExportFreshness`, and `remapAudioExportFingerprint` share the scheduling contract in `packages/studio/src/lib/audio/fingerprint.ts`. All three consumers must use the accepted contract, including recognizable legacy JSON schedule fingerprints.
+`createAudioExportFingerprint`, `getAudioExportFreshness`, `preserveAudioExportFreshness`, and `remapAudioExportFingerprint` share the scheduling contract in `packages/studio/src/features/audio/engine/fingerprint.ts`. All three consumers must use the accepted contract, including recognizable legacy JSON schedule fingerprints.
 
 ### 3. Contracts
 An export fingerprint describes the schedule when the export was produced. An import cannot replace it with the current schedule unconditionally. Fresh exports stay fresh after entity/media/project ID remapping; stale exports remain stale. Version 1 uses a schedule envelope with an optional sticky stale marker when lossy optional reference repair could otherwise upgrade history. Legacy buildAudioSchedule spreads full AudioTake rows, so project/segment/provenance IDs, metadata/revision and object key ordering need explicit compatibility handling. Canonical object keys may fix serialization order drift without discarding meaningful metadata or array order. Capture recognized stale status against full original rows before either ZIP snapshot allowlisting or import parsing strips unknown source metadata; comparing only the already-filtered package can erase the reason the export became stale. Unknown or malformed historical strings are retained and never reported current. Missing historical entities must not abort an otherwise valid package or disappear from a comparison to fabricate freshness. Deleted chapter exports retain chapter scope/title as historical outputs.
@@ -495,7 +501,7 @@ Wrong: close clears editing whenever !busy. Correct: query synchronous dirty/pen
 Read before changing shared audioMusic/workspace.css, audio/story-workspace.css, current timeline/music layout classes or retiring old workbench CSS.
 
 ### 2. Signatures / Owners
-AudioWorkspacePage owns current `as-*` script/inspector/sheet chrome, AudioTimeline owns `at-*` styles in timeline.css, MusicWorkspacePage owns `mw-*` layout and keeps `aw-root`. Shared `audioMusic/shared.tsx` imports workspace.css and shared controls/players/source/voice interfaces still produce live `aw-*`. Generic UI components forward className and portal content outside the page root; stylesheet import position is not a DOM ownership boundary.
+AudioWorkspacePage owns current `as-*` script/inspector/sheet chrome, AudioTimeline owns `at-*` styles in timeline.css, MusicWorkspacePage owns `mw-*` layout and keeps `aw-root`. Shared `features/audio/presentation/shared.tsx` imports workspace.css and shared controls/players/source/voice interfaces still produce live `aw-*`. Generic UI components forward className and portal content outside the page root; stylesheet import position is not a DOM ownership boundary.
 
 ### 3. Contracts
 Retire only selectors whose current source/import/caller/string/dynamic/forwarding closure proves them obsolete. CSS class text absence is evidence, not execution of arbitrary JavaScript. Responsive/state/descendant rules and portaled controls are conservatively retained when any live interpretation remains. For mixed selector lists remove only a proven unused branch and preserve live branch declarations/order/ancestor media context. Surviving declarations retain exact semantics; avoid reformatting/restructuring live CSS as part of dead-rule cleanup. Current `.aw-muted` and `.as-script-input` mixed branches remain; `.as-paragraph-gutter > span` and `.as-role-popover .aw-select` are retained structural caveats until separately proven unused. Empty media containers/whitespace may be removed only as an attributable result of deleted rules.
@@ -529,8 +535,8 @@ browser invents an integer step or the UI imposes a 0.01-second grid.
 
 `AudioTimeline.tsx` owns ClipInspector string fields and converts with `Number`
 on submit. `AudioClipHistory.executePatch(clip, patch: AudioPatch<AudioClip>)`
-in `lib/audio/commands.ts` uses chapter-document replacement with revision guards;
-`db/audio.ts` owns finite values, trim/gain/fade bounds and ownership validation.
+in `features/audio/engine/commands.ts` uses chapter-document replacement with revision guards;
+`features/audio/commands/audio.ts` owns finite values, trim/gain/fade bounds and ownership validation.
 
 ### 3. Contracts
 
@@ -562,7 +568,7 @@ validation, omit step (implicit integer), or apply step 0.01 without a domain ru
 `audioClipInspectorPrecision.test.ts` executes actual component callbacks and
 repositories: assert all six input attributes, original 8.945 duration, precise
 submitted fields, real undo/redo controls, unchanged source bytes, and invalid
-input with no row/history mutation. Keep `audioEngineCommands.test.ts` revision
+input with no row/history mutation. Keep `features/audio/tests/audioEngineCommands.test.ts` revision
 and stale-history guards. Separately verify actual native HTML validation and
 save/undo/redo/cold-reopen; a callback host does not simulate WebKit validation.
 For external audio/music saves also follow the shared

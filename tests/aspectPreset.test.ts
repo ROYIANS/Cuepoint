@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  ASPECT_PRESET_IDS,
-  normalizeAspectPreset,
-  resolutionForAspect,
-} from "@/domain/types";
+import {ASPECT_PRESET_IDS, normalizeAspectPreset, resolutionForAspect} from "@/features/video/models/format";
 
 describe("aspect presets", () => {
   it("normalizes unknown values to 16:9 and maps each preset to pixels", () => {

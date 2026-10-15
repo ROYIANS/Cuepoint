@@ -1,8 +1,8 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {downloadBlob, nativeSaveFilename} from "@/lib/runtimeSave";
+import {downloadBlob, nativeSaveFilename} from "@/platform/runtime/runtimeSave";
 
 const native = vi.hoisted(() => ({save: vi.fn()}));
-vi.mock("@/lib/nativeSystemServices", () => ({saveNativeBlob: native.save}));
+vi.mock("@/platform/runtime/nativeSystemServices", () => ({saveNativeBlob: native.save}));
 
 const bytes = (value: string) => new TextEncoder().encode(value).byteLength;
 function expectUsable(name: string) {

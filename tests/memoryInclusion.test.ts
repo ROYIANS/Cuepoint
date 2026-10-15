@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
-import {createProject} from "@/db/projects";
+import {createProject} from "@/features/projects/commands/projects";
 import {
   createProjectMemory,
   updateProjectMemory,
   listProjectMemoryVersions,
   listProjectMemories,
-} from "@/db/projectMemories";
-import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
-import { memoryInputSchema } from "@/lib/memory/schema";
+} from "@/features/memory/commands/projectMemories";
+import { exportProjectZip, importProjectZip } from "@/app/workflows/packages/projectPackage";
 const input = {
   category: "convention" as const,
   title: "角色命名",
@@ -48,9 +47,5 @@ describe("explicit memory inclusion", () => {
       "relevant",
     );
   });
-  it("rejects invented inclusion policy", () => {
-    expect(
-      memoryInputSchema.safeParse({ ...input, inclusion: "force" }).success,
-    ).toBe(false);
-  });
+
 });

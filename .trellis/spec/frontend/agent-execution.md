@@ -55,7 +55,7 @@ Bad: mark every running row interrupted on mount, including a live tab's run; re
 Every path that ends an Agent execution: normal completion, model/transport failure, Stop, budget pause, explicit cancel and startup interruption. Read before adding a new terminal state or writing run/message status by hand.
 
 ### 2. Signatures
-`settleRun(db: StoreTx, runId, status: Exclude<AgentRunStatus, "running" | "waiting_approval">, options): Promise<boolean>` in `db/agentRunTerminalState.ts`. `options` = `{output?, error?, finishReason?, pauseReason?, preserveOutput?, messageError?, allowedFrom?}`. `finishAgentRun` is the thin `agentRuns`/`chatMessages` wrapper over it.
+`settleRun(db: StoreTx, runId, status: Exclude<AgentRunStatus, "running" | "waiting_approval">, options): Promise<boolean>` in `features/agent/commands/agentRunTerminalState.ts`. `options` = `{output?, error?, finishReason?, pauseReason?, preserveOutput?, messageError?, allowedFrom?}`. `finishAgentRun` is the thin `agentRuns`/`chatMessages` wrapper over it.
 
 ### 3. Contracts
 `settleRun` owns `status`, `error`, `finishReason`, `pauseReason`, `updatedAt`, `endedAt` and the assistant message's `content`/`reasoning`/`status`/`error`; it runs inside the caller's transaction so the ledger mutation, the run row and the message settle together. It is a no-op unless the current status is in `allowedFrom` (default `running`/`waiting_approval`), so a second settlement never rewrites an ended run. `preserveOutput` keeps the visible text (cancel, budget pause); a supplied empty final attempt must not clear text already displayed by an earlier step, and the `SETTLED_MESSAGE_STATUS` map is the only run→message status mapping. `messageError` addresses the reader without inventing a run-level `error`; `pauseReason` is cleared unless explicitly supplied. `cancelAgentRun` and `pauseAtModelStepLimit` route through it, and cancel accepts the resumable states so a user can end interrupted/failed work. `interrupted` vs `cancelled` is decided from one fresh `hasToolCalls` read.
@@ -78,7 +78,7 @@ Good: Stop, budget pause and explicit cancel all leave the same fields consisten
 Clicking another topic, creating a new one, deleting the current one, or browser Back while the current topic's execution is active.
 
 ### 2. Signatures
-`useThreadDeparture(threadId, runs)` returns `{request(leave), confirmation, armOnce()}`; `runBlocksThread(run)` in `domain/agentToolSelection` is the shared predicate.
+`useThreadDeparture(threadId, runs)` returns `{request(leave), confirmation, armOnce()}`; `runBlocksThread(run)` in `features/agent/models/agentToolSelection` is the shared predicate.
 
 ### 3. Contracts
 Confirm before aborting: the dialog states that leaving stops the execution and that completed steps and received content are preserved. The same predicate `runBlocksThread` decides both the composer's status strip and `beginAgentRun`'s admission check, so the UI and the DB cannot disagree. A confirmed decision arms exactly one navigation so the route blocker does not ask a second time for the same choice; a declined ask leaves the run and the route untouched. A blocked topic does not permanently block sending: the composer keeps offering resume/end, and the earlier `已有执行` refusal only applies while the run actually holds the thread.
@@ -178,10 +178,10 @@ Wrong: `catch (...) { throw new AtomicToolRollbackError(...) }` wraps the entire
 Read when changing generation batch preparation/application, task edit commands or per-request tool offers. Command orchestration must not become the import owner of a read-only guard or pure selector. The three remaining value SCCs were removed on 2026-10-08; preserve this direction when adding callers. This was structural remediation, not a demonstrated initialization-crash fix.
 
 ### 2. Signatures
-- `domain/agentToolSelection`: `getOfferedToolNames(run: Pick<AgentRun, "enabledToolNames" | "toolLoading" | "interactionMode">): string[]`, `toolNamesForCall(run: AgentRun, step: number): string[]`; discovery name `load_tool_groups`, loaded-tool ceiling `36`.
-- `db/agentGenerationTarget`: `readGenerationTarget(target: ProductionTarget)` returns the owned entity, current slot, revision and label. It joins an existing caller transaction and opens none.
-- `db/agentTaskGuards`: `editableAgentTask(id: string): Promise<AgentTask>` is a read-only guard; command owners supply their write transaction.
-- `lib/agent/generationPreparation`: `prepareGenerationSnapshot(raw: GenerationSubmitArgs, signal: AbortSignal)`, `loadGenerationInputs(job: AgentGenerationJob): Promise<MediaRecord[]>`, `resolveGenerationConnector(id: string, frozen?: Pick<AgentGenerationJob, "provider" | "baseUrl">)`. Batch uses `Awaited<ReturnType<typeof prepareGenerationSnapshot>>`; do not duplicate its structural return type.
+- `features/agent/models/agentToolSelection`: `getOfferedToolNames(run: Pick<AgentRun, "enabledToolNames" | "toolLoading" | "interactionMode">): string[]`, `toolNamesForCall(run: AgentRun, step: number): string[]`; discovery name `load_tool_groups`, loaded-tool ceiling `36`.
+- `features/agent/commands/agentGenerationTarget`: `readGenerationTarget(target: ProductionTarget)` returns the owned entity, current slot, revision and label. It joins an existing caller transaction and opens none.
+- `features/agent/commands/agentTaskGuards`: `editableAgentTask(id: string): Promise<AgentTask>` is a read-only guard; command owners supply their write transaction.
+- `features/video/agent/generationPreparation`: `prepareGenerationSnapshot(raw: GenerationSubmitArgs, signal: AbortSignal)`, `loadGenerationInputs(job: AgentGenerationJob): Promise<MediaRecord[]>`, `resolveGenerationConnector(id: string, frozen?: Pick<AgentGenerationJob, "provider" | "baseUrl">)`. Batch uses `Awaited<ReturnType<typeof prepareGenerationSnapshot>>`; do not duplicate its structural return type.
 
 ### 3. Contracts
 DB tool ledger, project creation and finishing check import the pure selector leaf directly. Discovery execution stays in `toolLoading`; its compatibility exports serve actual runtime/UI/test consumers, not DB reads. Conversation offers, legacy runs, dedup order, enabled ceilings and historical per-step offers remain unchanged.
@@ -217,6 +217,6 @@ Both preparation/approval and execution-claim boundaries use `toolMetadataMatche
 
 ## Shared generation capability boundary
 
-Generation review, shared single/batch fields and project output settings use the actual dependency-free domain/generationCapabilities.ts facts/projections. Request validation preserves provider lowering/error order and D05 typed schema output. Rendering cannot infer frame mode or silently repair an invalid proposal into authorization; target/input/revision/approval/paid-recovery owners remain. See [D06](./asset-output-foundation.md#d06-shared-generation-capability-contract-2026-10-08).
+Generation review, shared single/batch fields and project output settings use the actual dependency-free features/video/models/generationCapabilities.ts facts/projections. Request validation preserves provider lowering/error order and D05 typed schema output. Rendering cannot infer frame mode or silently repair an invalid proposal into authorization; target/input/revision/approval/paid-recovery owners remain. See [D06](./asset-output-foundation.md#d06-shared-generation-capability-contract-2026-10-08).
 
 Provider transport sharing follows `ai-connectors.md` D07: explicit per-adapter browser/JSON policy, retained generic inline-image native parsing, HTTP authority and cancellation/redaction. Paid POST submission remains once-only; existing generic read/probe fallback and separately initiated GET recovery keep their own explicit policies. No shared request helper may replay an uncertain paid submission.

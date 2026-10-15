@@ -4,7 +4,7 @@ import {
   createReasoningAccum,
   finalizeReasoningAccum,
   streamChatCompletions,
-} from "@/lib/ai/chatStream";
+} from "@/features/agent/providers/chatStream";
 
 describe("reasoning lifecycle", () => {
   it("opens on first reasoning and closes on first content", () => {

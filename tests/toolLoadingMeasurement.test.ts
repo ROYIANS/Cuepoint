@@ -1,17 +1,17 @@
 import { writeFileSync } from "node:fs";
 import { expect, it } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun } from "@/db/agentRuns";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import {createChatThread} from "@/db/chat";
-import { createIpProfile } from "@/db/ipProfiles";
-import { assembleSkills, DEFAULT_SKILL_IDS } from "@/lib/agent/skills";
-import { filterProjectMemoryTools } from "@/lib/agent/memoryToolNames";
-import { createToolLoading, DISCOVERY_TOOL_NAME, getOfferedToolNames, toolLoadingInstructions } from "@/lib/agent/toolLoading";
-import { toolSchemas } from "@/lib/agent/tools";
-import { estimateTokens } from "@/lib/agent/contextUsage";
-import { executeChatRun } from "@/lib/agent/runChat";
-import type { AgentRequestMessage } from "@/domain/agent";
+import { db } from "@/platform/product/store";
+import { beginAgentRun } from "@/features/agent/commands/agentRuns";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import {createChatThread} from "@/features/agent/commands/chat";
+import { createIpProfile } from "@/features/library/commands/ipProfiles";
+import { assembleSkills, DEFAULT_SKILL_IDS } from "@/features/agent/runtime/skills";
+import { filterProjectMemoryTools } from "@/features/memory/agent/memoryToolNames";
+import { createToolLoading, DISCOVERY_TOOL_NAME, getOfferedToolNames, toolLoadingInstructions } from "@/features/agent/runtime/toolLoading";
+import { toolSchemas } from "@/features/agent/runtime/tools";
+import { estimateTokens } from "@/features/agent/runtime/contextUsage";
+import { executeChatRun } from "@/features/agent/runtime/runChat";
+import type { AgentRequestMessage } from "@/features/agent/models/agent";
 
 it("measures startup, loaded groups and complete deterministic IP-search request chain", async () => {
   const full = assembleSkills(DEFAULT_SKILL_IDS);

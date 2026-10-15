@@ -2,26 +2,26 @@
 import {act, createElement as h, type ReactNode} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import type {AgentRun, AgentToolCall} from "@/domain/agent";
+import type {AgentRun, AgentToolCall} from "@/features/agent/models/agent";
 
 let attentionCalls: AgentToolCall[] = [];
-vi.mock("@/lib/storage/hooks", () => ({
+vi.mock("@/platform/product/queries", () => ({
     useProductQuery: () => ({threadId: "t1", calls: attentionCalls, batches: [], items: [], jobs: [], tasks: []}),
 }));
 vi.mock("@lobehub/ui", () => ({Markdown: ({children}: {children?: ReactNode}) => h("div", null, children)}));
-vi.mock("@/components/agent/ThinkingPanel", () => ({ThinkingPanel: () => null}));
-vi.mock("@/components/agent/AgentGenerationResults", () => ({AgentGenerationResults: () => h("div", {"data-testid": "results"})}));
-vi.mock("@/components/agent/GenerationReview", () => ({GenerationReview: () => h("div", {"data-testid": "generation-review"})}));
-vi.mock("@/components/agent/MusicGenerationReview", () => ({MusicGenerationReview: () => null}));
-vi.mock("@/components/agent/WebResearchSources", () => ({WebResearchSources: () => null}));
-vi.mock("@/components/agent/ProjectImageSources", () => ({ProjectImageSources: () => null}));
-vi.mock("@/components/agent/CreatedEntityLinks", () => ({CreatedEntityLinks: () => null}));
-vi.mock("@/components/agent/AgentWriteOutcomes", () => ({AgentWriteOutcomes: () => null}));
+vi.mock("@/features/agent/ui/ThinkingPanel", () => ({ThinkingPanel: () => null}));
+vi.mock("@/features/agent/ui/AgentGenerationResults", () => ({AgentGenerationResults: () => h("div", {"data-testid": "results"})}));
+vi.mock("@/features/agent/ui/GenerationReview", () => ({GenerationReview: () => h("div", {"data-testid": "generation-review"})}));
+vi.mock("@/features/agent/ui/MusicGenerationReview", () => ({MusicGenerationReview: () => null}));
+vi.mock("@/features/agent/ui/WebResearchSources", () => ({WebResearchSources: () => null}));
+vi.mock("@/features/agent/ui/ProjectImageSources", () => ({ProjectImageSources: () => null}));
+vi.mock("@/features/agent/ui/CreatedEntityLinks", () => ({CreatedEntityLinks: () => null}));
+vi.mock("@/features/agent/ui/AgentWriteOutcomes", () => ({AgentWriteOutcomes: () => null}));
 vi.mock("@tanstack/react-router", () => ({Link: ({children}: {children?: ReactNode}) => h("a", null, children)}));
 
-const {AgentRunDetails} = await import("@/components/agent/AgentRunDetails");
-const {AgentComposerAttention} = await import("@/components/agent/AgentComposerAttention");
-const {AgentActivityNavigationProvider, useAgentActivityNavigation} = await import("@/components/agent/AgentActivityNavigation");
+const {AgentRunDetails} = await import("@/features/agent/ui/AgentRunDetails");
+const {AgentComposerAttention} = await import("@/features/agent/ui/AgentComposerAttention");
+const {AgentActivityNavigationProvider, useAgentActivityNavigation} = await import("@/features/agent/ui/AgentActivityNavigation");
 
 const now = "2026-10-13T00:00:00.000Z";
 function run(patch: Partial<AgentRun> = {}): AgentRun {

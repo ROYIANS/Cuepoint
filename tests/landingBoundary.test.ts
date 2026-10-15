@@ -37,7 +37,7 @@ describe("landing source boundary", () => {
     });
 
     it("rejects application, storage, router, Tauri and UI-library imports", () => {
-        const rejected = ["@/db/database", "@/lib/storage/hooks", "@/components/ui/button", "@/styles.css", "dexie", "zod",
+        const rejected = ["@/platform/product/store", "@/platform/product/queries", "@/components/ui/button", "@/styles.css", "dexie", "zod",
             "@tanstack/react-router", "@tauri-apps/api/core", "antd", "@lobehub/ui", "../main", "@/main"];
         expect(rejected.filter(isAllowed)).toEqual(["../main"]); // relative paths are checked by the real-file scan above
         expect(specifiers(`import {a} from "dexie"; import("zod"); import "@/db/x"; export * from "antd";`)).toEqual(["dexie", "zod", "@/db/x", "antd"]);
@@ -58,7 +58,7 @@ describe("landing source boundary", () => {
             return specifiers(readFileSync(file, "utf8")).filter(item => !allowed(item)).map(item => `lib/desktopRelease/${name}: ${item}`);
         });
         expect(bad).toEqual([]);
-        expect(specifiers(readFileSync(join(sourceRoot, "lib/sha256.ts"), "utf8"))).toEqual([]);
+        expect(specifiers(readFileSync(join(sourceRoot, "platform/media/sha256.ts"), "utf8"))).toEqual([]);
     });
 
     it("never lets the landing entry reach the settings-only download helper", () => {

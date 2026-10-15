@@ -1,13 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle} from "@/db/assets";
-import {createProject} from "@/db/projects";
-import {deleteProject} from "@/db/cascadeCommands";
-import {PRODUCTION_TABLES} from "@/db/productionShared";
-import {putMedia} from "@/db/media";
-import { STUDIO_LIBRARY_ID, type Id, type MediaRecord } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import {addCharacter, addProp, addScene, addStyle} from "@/features/library/commands/assets";
+import {createProject} from "@/features/projects/commands/projects";
+import {deleteProject} from "@/features/projects/commands/lifecycle";
+import {PRODUCTION_TABLES} from "@/platform/product/scopes";
+import {putMedia} from "@/features/library/commands/media";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
+import {type Id} from "@/platform/identity";
+import {type MediaRecord} from "@/features/library/models/media";
 import {actualStoreScope,installStoreHook,interceptStoreBackend} from "./helpers/storeBackendFaults";
-import type {ProductStore} from "@/lib/storage/types";
+import type {ProductStore} from "@/platform/storage/types";
 
 function media(projectId: Id): MediaRecord {
   return {

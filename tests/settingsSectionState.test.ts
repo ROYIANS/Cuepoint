@@ -1,6 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
-import type {StoreTx} from "@/lib/storage/types";
+import type {StoreTx} from "@/platform/storage/types";
 
 const host = vi.hoisted(() => ({
     cells: [] as unknown[], cursor: 0, mounted: true, lateWrites: 0,
@@ -31,22 +31,22 @@ vi.mock("react", async original => ({...await original<typeof import("react")>()
         }
     },
 }));
-vi.mock("@/lib/storage/hooks", () => ({useProductQueryState: (query: (tx: StoreTx) => unknown) => {
+vi.mock("@/platform/product/queries", () => ({useProductQueryState: (query: (tx: StoreTx) => unknown) => {
     host.query = query;
     return host.result;
 }}));
-vi.mock("@/components/settings/settingsStore", async original => ({
-    ...await original<typeof import("@/components/settings/settingsStore")>(), writeAutoCheckUpdates: host.writePreference,
+vi.mock("@/features/settings/ui/settingsStore", async original => ({
+    ...await original<typeof import("@/features/settings/ui/settingsStore")>(), writeAutoCheckUpdates: host.writePreference,
 }));
 
-import {GeneralSection} from "@/components/settings/sections/GeneralSection";
-import {StorageSection} from "@/components/settings/sections/StorageSection";
-import {SettingsRow} from "@/components/settings/SettingsCard";
-import {Switch} from "@/components/ui/switch";
-import {db} from "@/db/database";
-import {putDeviceSetting} from "@/db/deviceSettings";
-import {createProject} from "@/db/projects";
-import {addCharacter, addProp, addScene, addStyle} from "@/db/assets";
+import {GeneralSection} from "@/features/settings/ui/sections/GeneralSection";
+import {StorageSection} from "@/features/settings/ui/sections/StorageSection";
+import {SettingsRow} from "@/features/settings/ui/SettingsCard";
+import {Switch} from "@/ui/switch";
+import {db} from "@/platform/product/store";
+import {putDeviceSetting} from "@/features/settings/commands/deviceSettings";
+import {createProject} from "@/features/projects/commands/projects";
+import {addCharacter, addProp, addScene, addStyle} from "@/features/library/commands/assets";
 
 // Keep production row controls/callbacks; only the query subscription and writer
 // are substituted. Captured queries below execute real StoreTx snapshots.

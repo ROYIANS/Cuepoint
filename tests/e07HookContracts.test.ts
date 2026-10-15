@@ -1,7 +1,8 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
-import type {AudioProjectSnapshot} from "@/domain/audio";
-import type {ChatThread, ConnectorConfig} from "@/domain/types";
+import type {AudioProjectSnapshot} from "@/features/audio/models/audio";
+import type {ChatThread} from "@/features/agent/models/chat";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 // Deterministic effect host for actual hook owners. Native scheduling is covered
 // separately; this host keeps stable setters/memos and executes dependency cleanup.
@@ -50,8 +51,8 @@ vi.mock("react", async original => {
 const audio = vi.hoisted(() => ({players: [] as Array<{
     playing: boolean; currentTime: number; play: ReturnType<typeof vi.fn>; pause: ReturnType<typeof vi.fn>; dispose: ReturnType<typeof vi.fn>;
 }>, load: vi.fn()}));
-vi.mock("@/lib/audio/engine", async original => {
-    const actual = await original<typeof import("@/lib/audio/engine")>();
+vi.mock("@/features/audio/engine/engine", async original => {
+    const actual = await original<typeof import("@/features/audio/engine/engine")>();
     return {...actual, AudioPreviewPlayer: class {
         playing = false; currentTime = 0;
         play = vi.fn(async (_schedule, _buffers, at: number) => {this.currentTime = at; this.playing = true;});
@@ -60,16 +61,16 @@ vi.mock("@/lib/audio/engine", async original => {
         constructor() {audio.players.push(this);}
     }};
 });
-vi.mock("@/lib/audio/buffers", () => ({loadBuffers: audio.load, loadAudioBuffer: vi.fn()}));
+vi.mock("@/features/audio/engine/buffers", () => ({loadBuffers: audio.load, loadAudioBuffer: vi.fn()}));
 const chat = vi.hoisted(() => ({update: vi.fn()}));
-vi.mock("@/db/chat", () => ({updateChatThread: chat.update, bindChatThreadProject: vi.fn()}));
+vi.mock("@/features/agent/commands/chat", () => ({updateChatThread: chat.update, bindChatThreadProject: vi.fn()}));
 const imports = vi.hoisted(() => ({importFile: vi.fn()}));
-vi.mock("@/lib/references/import", () => ({importReferenceFile: imports.importFile, retryReferenceImport: vi.fn()}));
+vi.mock("@/features/references/documents/import", () => ({importReferenceFile: imports.importFile, retryReferenceImport: vi.fn()}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
-import {AudioTimeline, type AudioTimelineProps} from "@/components/audio/AudioTimeline";
-import {useReferenceDraft} from "@/components/agent/useReferenceDraft";
-import {useChatSelection} from "@/components/agent/useChatSelection";
+import {AudioTimeline, type AudioTimelineProps} from "@/features/audio/ui/AudioTimeline";
+import {useReferenceDraft} from "@/features/agent/ui/useReferenceDraft";
+import {useChatSelection} from "@/features/agent/ui/useChatSelection";
 
 type Node = ReactElement<Record<string, unknown>>;
 const hosts: Host[] = [];

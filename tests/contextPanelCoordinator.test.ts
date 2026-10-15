@@ -9,7 +9,7 @@ vi.mock("react",async original => {
         useCallback: (callback: unknown) => callback,useMemo: (compute: () => unknown) => compute(),
     };
 });
-import {ContextPanelHostProvider} from "@/components/layout/ContextPanelHost";
+import {ContextPanelHostProvider} from "@/app/layout/ContextPanelHost";
 type Host = {active: string | null;docked: boolean;width: number;
     register: (entry:{id:string;width:number;close:()=>void;depart:(proceed:()=>void,cancel:()=>void)=>void})=>()=>void;
     request:(id:string)=>void;release:(id:string)=>void};

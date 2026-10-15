@@ -10,11 +10,11 @@ import tailwindcss from "@tailwindcss/vite";
 
 const {chromium} = await import(process.env.E01_PLAYWRIGHT_PATH ?? "playwright");
 const commands = {
-    "/packages/studio/src/db/projects.ts": ["renameProject", "createProject", "createAudioMusicProject"],
-    "/packages/studio/src/db/cascadeCommands.ts": ["deleteProject", "setProjectArchived"],
-    "/packages/studio/src/db/ipProfiles.ts": ["bindProjectIp"],
-    "/packages/studio/src/db/assets.ts": ["addCharacter", "addScene", "addProp", "addStyle", "deleteCharacter", "deleteScene", "deleteProp", "deleteStyle"],
-    "/packages/studio/src/db/episodes.ts": ["addEpisode", "reorderEpisodes", "deleteEpisode"],
+    "/packages/studio/src/features/projects/commands/projects.ts": ["renameProject", "createProject", "createAudioMusicProject"],
+    "/packages/studio/src/features/projects/commands/lifecycle.ts": ["deleteProject", "setProjectArchived"],
+    "/packages/studio/src/features/library/commands/ipProfiles.ts": ["bindProjectIp"],
+    "/packages/studio/src/features/library/commands/assets.ts": ["addCharacter", "addScene", "addProp", "addStyle", "deleteCharacter", "deleteScene", "deleteProp", "deleteStyle"],
+    "/packages/studio/src/features/video/commands/episodes.ts": ["addEpisode", "reorderEpisodes", "deleteEpisode"],
 };
 const transport = {
     name: "e01-controlled-repository", enforce: "pre",

@@ -1,16 +1,16 @@
 import { preloadFixtureGroups } from "./helpers/toolDispatch";
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { db } from "@/db/database";
-import { beginAgentRun } from "@/db/agentRuns";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import {createChatThread} from "@/db/chat";
-import {createProject} from "@/db/projects";
-import {firstEpisode, updateEpisodeDraft} from "@/db/episodes";
-import { executeChatRun } from "@/lib/agent/runChat";
-import { BUILTIN_TOOLS, getLegacyToolValidationFailure, validateToolCall } from "@/lib/agent/tools";
-import { readToolValidationFailure, ToolValidationError } from "@/lib/agent/toolErrors";
-import type { ConnectorConfig } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import { beginAgentRun } from "@/features/agent/commands/agentRuns";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {createProject} from "@/features/projects/commands/projects";
+import {firstEpisode, updateEpisodeDraft} from "@/features/video/commands/episodes";
+import { executeChatRun } from "@/features/agent/runtime/runChat";
+import { BUILTIN_TOOLS, getLegacyToolValidationFailure, validateToolCall } from "@/features/agent/runtime/tools";
+import { readToolValidationFailure, ToolValidationError } from "@/features/agent/runtime/toolErrors";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const name = "business_read_text";
 const tool = BUILTIN_TOOLS.find((item) => item.name === name)!;

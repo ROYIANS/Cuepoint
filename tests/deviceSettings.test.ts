@@ -1,12 +1,12 @@
 import JSZip from "jszip";
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {createProject} from "@/db/projects";
+import {db} from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
 import {
     DEVICE_SETTING_MAX_BYTES, deleteDeviceSetting, getDeviceSetting, putDeviceSetting,
-} from "@/db/deviceSettings";
-import {exportProjectZip} from "@/lib/projectPackage";
-import {PRODUCT_SCHEMA} from "@/lib/storage/schema";
+} from "@/features/settings/commands/deviceSettings";
+import {exportProjectZip} from "@/app/workflows/packages/projectPackage";
+import {PRODUCT_SCHEMA} from "@/platform/storage/schema";
 
 const asNumber = (raw: unknown) => (typeof raw === "number" ? raw : undefined);
 

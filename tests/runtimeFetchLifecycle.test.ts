@@ -1,5 +1,5 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {createRuntimeFetch, type RuntimeFetchServices} from "@/lib/runtimeFetch";
+import {createRuntimeFetch, type RuntimeFetchServices} from "@/platform/runtime/runtimeFetch";
 
 afterEach(() => vi.unstubAllGlobals());
 

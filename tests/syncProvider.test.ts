@@ -1,9 +1,9 @@
 import {describe, expect, it, vi} from "vitest";
-import {prepareCheckpoint} from "@/lib/checkpoint";
-import type {CheckpointApplicationPort, PreparedCheckpoint} from "@/lib/checkpoint";
-import type {PublishOptions} from "@/lib/syncProvider";
-import {checkpointObjectKey, deliverCheckpoint, listCheckpointRevisions, opaqueCredentialHandle, ProviderRegistry, publishCheckpoint} from "@/lib/syncProvider";
-import {workspaceId} from "@/lib/workspace";
+import {prepareCheckpoint} from "@/app/workflows/checkpoint";
+import type {CheckpointApplicationPort, PreparedCheckpoint} from "@/app/workflows/checkpoint";
+import type {PublishOptions} from "@/app/workflows/syncProvider";
+import {checkpointObjectKey, deliverCheckpoint, listCheckpointRevisions, opaqueCredentialHandle, ProviderRegistry, publishCheckpoint} from "@/app/workflows/syncProvider";
+import {workspaceId} from "@/features/library/services/workspace";
 import {checkpointFixtureInput, CheckpointDeviceFixture, CheckpointTransportFixture, fixtureBinaryId, fixtureCapabilities, fixtureProjectId, fixtureWorkspaceId} from "./helpers/checkpointProtocolFixture";
 
 const initial = () => prepareCheckpoint(checkpointFixtureInput());

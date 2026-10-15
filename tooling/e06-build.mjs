@@ -12,7 +12,7 @@ async function files(dir){const result=[];for(const e of await readdir(dir,{with
 const packageRoots=['apps/web','apps/site','apps/desktop','packages/studio','packages/distribution'];
 const inputs=[...(await files('packages/studio/src')),...(await files('packages/distribution/src')),...(await files('packages/distribution/public')),...(await files('apps/web/src')),...(await files('tooling')),...(await files('tests')), ...packageRoots.flatMap(directory=>['package.json','tsconfig.json'].map(file=>path.join(directory,file))), 'apps/web/index.html','apps/web/vite.config.ts','package.json','pnpm-workspace.yaml','pnpm-lock.yaml','vite.config.ts','tsconfig.json','tsconfig.app.json','tsconfig.node.json'];
 async function fingerprints(paths){return Object.fromEntries(await Promise.all(paths.sort().map(async p=>{const b=await readFile(p);return [p,{sha256:sha(b),bytes:b.length}];})));}
-const originalRoute=await readFile('packages/studio/src/routeTree.gen.ts');
+const originalRoute=await readFile('packages/studio/src/app/routeTree.gen.ts');
 const before=await fingerprints(inputs);
 await writeFile(path.join(output,'routeTree-before.ts'),originalRoute);
 await writeFile(path.join(output,'inputs-before.json'),JSON.stringify(before,null,2));
@@ -35,11 +35,11 @@ try {
  await writeFile(path.join(output,'assets.json'),JSON.stringify(assets,null,2));
  const after=await fingerprints(inputs);
  await writeFile(path.join(output,'inputs-after.json'),JSON.stringify(after,null,2));
- await writeFile(path.join(output,'routeTree-built.ts'),await readFile('packages/studio/src/routeTree.gen.ts'));
+ await writeFile(path.join(output,'routeTree-built.ts'),await readFile('packages/studio/src/app/routeTree.gen.ts'));
  const changed=inputs.filter(p=>JSON.stringify(before[p])!==JSON.stringify(after[p]));
- if(changed.some(p=>p!=='packages/studio/src/routeTree.gen.ts'))throw new Error('Non-generated build input changed: '+changed.join(','));
- await writeFile('packages/studio/src/routeTree.gen.ts',originalRoute);
+ if(changed.some(p=>p!=='packages/studio/src/app/routeTree.gen.ts'))throw new Error('Non-generated build input changed: '+changed.join(','));
+ await writeFile('packages/studio/src/app/routeTree.gen.ts',originalRoute);
  await writeFile(path.join(output,'inputs-restored.json'),JSON.stringify(await fingerprints(inputs),null,2));
  await writeFile(path.join(output,'result.json'),JSON.stringify({status:'PASS',node:process.version,assets:Object.keys(assets).length,modules:graph.modules.length,sourceInputs:inputs.length},null,2));
  console.log({status:'PASS',output,modules:graph.modules.length});
-} catch(e){await writeFile('packages/studio/src/routeTree.gen.ts',originalRoute);await writeFile(path.join(output,'failure.txt'),e.stack);throw e;}
+} catch(e){await writeFile('packages/studio/src/app/routeTree.gen.ts',originalRoute);await writeFile(path.join(output,'failure.txt'),e.stack);throw e;}

@@ -1,10 +1,10 @@
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
+import {db} from "@/platform/product/store";
 import {actualStoreScope, installStoreHook, interceptStoreBackend} from "./helpers/storeBackendFaults";
-import type {NativeQuery} from "@/lib/storage/protocol";
-import {emptyShot} from "@/db/productionRecords";
-import {readProjectCoverIds} from "@/lib/studioLibraryQueries";
-import type {Shot} from "@/domain/types";
+import type {NativeQuery} from "@/platform/storage/protocol";
+import {emptyShot} from "@/features/video/models/newRecords";
+import {readProjectCoverIds} from "@/features/projects/queries/studioLibraryQueries";
+import type {Shot} from "@/features/video/models/shots";
 
 function shot(id: string, projectId: string, order: number, mediaId?: string, episodeId = "episode-a"): Shot {
     const row = {...emptyShot(projectId, episodeId, order, String(order), 3), id};

@@ -2,13 +2,13 @@
 import {act, createElement as h} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {ModelSelectTrigger} from "@/components/agent/ModelSelectTrigger";
-import type {ChatModelPolicy} from "@/lib/ai/chatModelPolicy";
-import type {ConnectorConfig} from "@/domain/types";
-import {applySyncedSnapshot, resetModelCatalogForTests} from "@/lib/ai/modelCatalog/store";
+import {ModelSelectTrigger} from "@/features/agent/ui/ModelSelectTrigger";
+import type {ChatModelPolicy} from "@/features/settings/models/chatModelPolicy";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import {applySyncedSnapshot, resetModelCatalogForTests} from "@/features/settings/modelCatalog/store";
 
 // The lazy brand-icon bundle needs a JSON import attribute jsdom cannot provide; icons are irrelevant here.
-vi.mock("@/components/agent/ModelIcons", () => ({ModelIcon: () => null, ProviderIcon: () => null}));
+vi.mock("@/features/agent/ui/ModelIcons", () => ({ModelIcon: () => null, ProviderIcon: () => null}));
 
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
 

@@ -1,19 +1,19 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import { saveFixtureToolRound } from "./helpers/toolDispatch";
-import {createProject as createBoundTestProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
-import {deleteChatThread} from "@/db/cascadeCommands";
-import { createManualWrapup, saveWrapup, confirmWrapup } from "@/db/agentTaskWrapups";
+import {createProject as createBoundTestProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import { createManualWrapup, saveWrapup, confirmWrapup } from "@/features/agent/commands/agentTaskWrapups";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { createAgentTask, createAgentTaskForThread, updateAgentTask, setAgentTaskLifecycle, pinAgentTaskResult, unpinAgentTaskResult } from "@/db/agentTasks";
-import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import {  transitionToolCall, updateRunPlanAndComplete } from "@/db/agentTools";
+import { db } from "@/platform/product/store";
+import { createAgentTask, createAgentTaskForThread, updateAgentTask, setAgentTaskLifecycle, pinAgentTaskResult, unpinAgentTaskResult } from "@/features/agent/commands/agentTasks";
+import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
+import {  transitionToolCall, updateRunPlanAndComplete } from "@/features/agent/commands/agentTools";
 
-import { getTaskDisplayState, isTaskBusy } from "@/lib/agent/taskState";
-import { executeChatRun } from "@/lib/agent/runChat";
-import type { AgentPlanItem } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
+import { getTaskDisplayState, isTaskBusy } from "@/features/agent/runtime/taskState";
+import { executeChatRun } from "@/features/agent/runtime/runChat";
+import type { AgentPlanItem } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = { id: "cx", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture", updatedAt: "2026-09-19" };
 const plan: AgentPlanItem[] = [{ id: "outline", title: "整理故事主题", status: "pending" }];

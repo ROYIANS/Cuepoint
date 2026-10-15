@@ -7,7 +7,7 @@
     "license": "LGPL-3.0",
     "source": "https://github.com/zhuker/lamejs"
   },
-  "wavOwner": "packages/studio/src/lib/audio/wav.ts",
+  "wavOwner": "packages/studio/src/features/audio/engine/wav.ts",
   "pdfGenerator": "scripts/generate-fixtures.py",
   "videoGenerator": "scripts/generate-video.swift",
   "files": {

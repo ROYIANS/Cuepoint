@@ -1,10 +1,11 @@
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {addAudioClip, addAudioSegment, addAudioTake, getAudioProjectSnapshot} from "@/db/audio";
-import {applyAudioArrangementProposal, previewAudioArrangement, previewAudioSelection, saveAudioArrangementProposal} from "@/db/audioArrangement";
-import type {AudioSegment, AudioTake} from "@/domain/audio";
-import type {AudioArrangementProposal} from "@/domain/audioArrangement";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {addAudioClip, addAudioSegment, addAudioTake} from "@/features/audio/commands/audio";
+import {getAudioProjectSnapshot} from "@/features/audio/queries/snapshot";
+import {applyAudioArrangementProposal, previewAudioArrangement, previewAudioSelection, saveAudioArrangementProposal} from "@/features/audio/commands/arrangement";
+import type {AudioSegment, AudioTake} from "@/features/audio/models/audio";
+import type {AudioArrangementProposal} from "@/features/audio/models/audioArrangement";
 import {enumerateWorkspaceBinaryFixture} from "./helpers/workspaceBinaryFixture";
 
 async function arrangeFixture() {

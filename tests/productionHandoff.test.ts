@@ -1,17 +1,17 @@
 // Raw browser hooks are test-only fault/scheduling injection; product commands use the shared adapter.
-import {browserDatabase} from "@/lib/storage/browserDatabase";
+import {browserDatabase} from "@/platform/storage/browserDatabase";
 import Dexie from "dexie";
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addEpisode} from "@/db/episodes";
-import {addScene} from "@/db/assets";
-import {addShot, patchShot} from "@/db/shots";
-import {createProject} from "@/db/projects";
-import { emptySlot } from "@/domain/slot";
-import type { MediaKind } from "@/domain/types";
-import { registerPendingDraft } from "@/lib/debouncedDraft";
-import { exportProductionHandoff, HANDOFF_FORMAT } from "@/lib/productionHandoff";
+import { db } from "@/platform/product/store";
+import {addEpisode} from "@/features/video/commands/episodes";
+import {addScene} from "@/features/library/commands/assets";
+import {addShot, patchShot} from "@/features/video/commands/shots";
+import {createProject} from "@/features/projects/commands/projects";
+import { emptySlot } from "@/features/library/models/slot";
+import type {MediaKind} from "@/features/library/models/slots";
+import { registerPendingDraft } from "@/platform/product/drafts";
+import { exportProductionHandoff, HANDOFF_FORMAT } from "@/features/video/services/productionHandoff";
 
 async function fixture() {
   const project = await createProject("雨夜送信", "film");

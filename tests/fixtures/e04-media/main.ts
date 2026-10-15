@@ -1,4 +1,4 @@
-import {db} from "@/db/database";
+import {db} from "@/platform/product/store";
 import {isolatedSource, mixedOwnerParity, snapshotFreshness, workCount, nativeScheduling, retentionSources} from "./retention";
 import {commandNames, commandRollback, commandWork, releaseEventRollback, retainedReleaseRollback, outerTransactionRollback, releaseDuplicateMissing} from "./commands";
 import {orphanReceiptRollback, shotReceiptRollback} from "./receipt";

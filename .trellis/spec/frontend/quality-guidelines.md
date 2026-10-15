@@ -30,10 +30,10 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 
 ## Required Patterns
 
-- Durable mutations only through business command owners in `packages/studio/src/db/` (see the D02 map in state-management), `packages/studio/src/db/productionProposals.ts` and the `packages/studio/src/db/agent*.ts` repositories (`add*` / `patch*` / `delete*` / `set*Slot` / reorder helpers).
+- Durable mutations only through concrete `packages/studio/src/features/<feature>/commands/` owners (see the D02 map in state-management), including `features/video/commands/proposals.ts` and the Agent command repositories (`add*` / `patch*` / `delete*` / `set*Slot` / reorder helpers).
 - Live reads with `useProductQuery(tx => ...)`; detail `get` queries use `?? null`. Propagate readonly context to nested readers (see hook-guidelines).
 - Shot picture / generation data through `parseShotPictureSlots` / `parseGenerationSlot` so legacy fields stay readable.
-- Filter, reorder, undo, draft, delivery, and shortcut-gating logic live in `packages/studio/src/lib/` and are shared — UI calls helpers, does not reimplement:
+- Filter, reorder, undo, draft, delivery, and shortcut-gating logic live with their owning feature or the explicit `app/drafts` and neutral `platform` owners and are shared — UI calls helpers, does not reimplement:
   - `shotFilters`, `reorderIds`, `undo`, `debouncedDraft`, `episodeDelivery`, `formFieldFocus`, `shotKeyboard`
 - Studio asset create stays on studio routes with `STUDIO_LIBRARY_ID`; `touchProject` no-ops for the studio owner.
 - Episode-scoped shot queries and delivery exports filter by both `projectId` and `episodeId`.
@@ -52,7 +52,7 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 | Enabling export before live queries finish | Disable CSV/print until loaded (delivery-export) |
 | Component RTL / Playwright as the default new test | Prefer `tests/*.test.ts` on lib + repo |
 | Adding ESLint-only “fixes” without satisfying `tsc` | Both formal quality and TypeScript must pass |
-| `window.prompt` / `alert` / `confirm` | In-app `Dialog` (input) / `AlertDialog` (destructive) from `packages/studio/src/components/ui/` |
+| `window.prompt` / `alert` / `confirm` | In-app `Dialog` (input) / `AlertDialog` (destructive) from `packages/studio/src/ui/` |
 | `scrollIntoView({ behavior: "smooth" })` on Agent messages | `snapChatToBottom` on `.agent-message-list` (see chat-performance) |
 
 ---
@@ -69,10 +69,10 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 
 ## Accessibility and UX quality
 
-- Keep focus-visible rings on interactive primitives (`packages/studio/src/components/ui/*`).
+- Keep focus-visible rings on interactive primitives (`packages/studio/src/ui/*`).
 - Mark decorative motion/graphics `aria-hidden` (`ClickSpark`).
 - Prefer Chinese user-facing strings consistent with existing pages (加载中…, 找不到…).
-- Honor `prefers-reduced-motion` for decorative animation (`ClickSpark`, `packages/studio/src/styles.css`).
+- Honor `prefers-reduced-motion` for decorative animation (`ClickSpark`, `packages/studio/src/ui/theme.css`).
 
 ---
 
@@ -92,8 +92,8 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 ## Examples
 
 - Repo invariants: `tests/repo.test.ts`
-- Shortcut gating helper: `packages/studio/src/lib/formFieldFocus.ts` + `tests/formFieldFocus.test.ts`
-- Delivery pure logic: `packages/studio/src/lib/episodeDelivery.ts` + `tests/episodeDelivery.test.ts`
+- Shortcut gating helper: `packages/studio/src/ui/formFieldFocus.ts` + `tests/formFieldFocus.test.ts`
+- Delivery pure logic: `packages/studio/src/features/video/services/episodeDelivery.ts` + `tests/episodeDelivery.test.ts`
 - Typecheck gate: `package.json` script `lint`
 
 ---
@@ -102,7 +102,7 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 
 - Treating the TypeScript-only `lint` script as complete formal quality proof.
 - Adding a second state library “just for this page.”
-- Copy-pasting reorder or filter code into `ShotEditorPage` instead of extending `packages/studio/src/lib/`.
+- Copy-pasting reorder or filter code into `ShotEditorPage` instead of extending its concrete feature command or pure helper owner.
 - Shipping package-import changes without updating `tests/projectPackage.test.ts`.
 
 ---
@@ -111,8 +111,8 @@ The permanent native runner supports `--suite core|business|all`; `all` is the c
 
 - `package.json` scripts
 - `vitest.config.ts`, `tests/setup.ts`
-- `packages/studio/src/db/projects.ts`, `episodes.ts`, `shots.ts`, `assets.ts`, `media.ts`, `assetReuse.ts`, `connectors.ts`, `chat.ts`, `cascadeCommands.ts`
-- `packages/studio/src/lib/formFieldFocus.ts`, `reorderIds.ts`, `shotFilters.ts`, `episodeDelivery.ts`
+- `features/projects/commands/projects.ts`, `features/video/commands/{episodes,shots}.ts`, `features/library/commands/{assets,media,assetReuse}.ts`, `features/settings/commands/connectors.ts`, `features/agent/commands/chat.ts`, and concrete `features/{projects,agent}/commands/lifecycle.ts`
+- `ui/formFieldFocus.ts`, `platform/collections/reorderIds.ts`, `features/video/services/shotFilters.ts`, `features/video/services/episodeDelivery.ts`
 - `.trellis/spec/frontend/hook-guidelines.md`, `state-management.md`, `delivery-export.md`
 
 ## Release gate
@@ -274,7 +274,7 @@ scope and verify a newly unused export is still rejected.
 
 `VITE_UMAMI_SCRIPT_URL` and `VITE_UMAMI_WEBSITE_ID` are public build-time settings supplied by GitHub Actions repository variables. Keep the workflow's Vite build environment and Docker build arguments aligned. The Docker arguments belong only to the build stage; Compose and the Nginx runtime need no analytics environment variables. Local `.env` files are excluded from Git and Docker contexts, with `.env.example` as the documented template.
 
-Initialize Umami once from `packages/studio/src/bootstrap.tsx` outside React lifecycles, only for production builds with both settings. Use the tracker’s own SPA pageviews; adding router listeners or manual pageview calls would duplicate visits. Analytics loading must not block React rendering. Do not attach project contents, prompts, or provider credentials to analytics events. Clearing configuration takes effect only after rebuilding and redeploying the image.
+Initialize Umami once from `packages/studio/src/app/bootstrap.tsx` outside React lifecycles, only for production builds with both settings. Use the tracker’s own SPA pageviews; adding router listeners or manual pageview calls would duplicate visits. Analytics loading must not block React rendering. Do not attach project contents, prompts, or provider credentials to analytics events. Clearing configuration takes effect only after rebuilding and redeploying the image.
 
 
 ## Audit evidence contract (2026-09-30)
@@ -287,7 +287,7 @@ Tool success, passing tests and long-file inspection alone do not establish full
 - Review ordinary code in full. For generated data/code, state the generator/source and exact verification performed; do not claim manual line review of generated JSON.
 - Confirmed findings need location, triggering input/call sequence, mechanism, impact, recommendation and behavior validation. Label untested runtime/browser concerns as risk; structural debt alone does not prove a current failure.
 - Separate type-only edges from value imports when reporting cycles. A cycle reporter may filter its first edge yet include type edges later in the path; validate the complete value cycle.
-- Knip export/file candidates require entry-point, ambient declaration, CSS import and test-only usage checks. In this project `packages/studio/src/lib/references/mammoth.d.ts` contributes the declaration for the browser import and must not be removed solely because no runtime import points at it.
+- Knip export/file candidates require entry-point, ambient declaration, CSS import and test-only usage checks. In this project `packages/studio/src/features/references/documents/mammoth.d.ts` contributes the declaration for the browser import and must not be removed solely because no runtime import points at it.
 - React rule matches for ordinary business functions named `useX` require inspecting whether they actually call React Hooks; naming matches alone are not runtime Hook evidence.
 - Clone/complexity counts are locating signals. Compare business contracts before consolidating retries, validators or CRUD; do not reduce complexity by removing safety checks or adding forwarding abstractions.
 - Preserve raw commands, versions, exit status and diagnostics. JSON reporters can exit zero while their summary contains violations; inspect both.
@@ -390,7 +390,7 @@ Wrong: zero warnings claim, counted unresolved historical metadata imports as re
 ## Error diagnostics and redaction (2026-10-14)
 
 ### 1. Scope / Trigger
-Read before adding any UI error output, changing `packages/studio/src/lib/diagnostics/` or `packages/studio/src/components/errors/`, or putting new data into a diagnostic report. Diagnostics are user-initiated only: nothing is persisted or sent automatically.
+Read before adding any UI error output, changing `packages/studio/src/platform/diagnostics/` or `packages/studio/src/app/errors/`, or putting new data into a diagnostic report. Diagnostics are user-initiated only: nothing is persisted or sent automatically.
 
 ### 2. Signatures
 `sanitizeText(input, limit?)`, `sanitizePath(pathname)` (`sanitize.ts`); `addBreadcrumb(kind: "route" | "action", label)`, `getBreadcrumbs()` (ring of 30, memory only); `toErrorInfo(cause)`, `buildDiagnosticReport(info, context)`, `buildIssueUrl(info, context)` (`errorReport.ts`); `friendlyMessage(cause)`; `reportError(cause, {source: "boundary" | "global" | "action", actionName?})`, `getLatestError()`, `subscribeLatestError` (`reportError.ts`); `showError({title?, cause, actionName?, detail?})`, `installGlobalErrorHandlers()` (`showError.ts`); `openErrorDetails()` / `ErrorDetailsDialog`. Browser Vite config and `apps/desktop/scripts/build-frontend-worker.mjs` define `__APP_VERSION__` from the root app release version; `appVersion()` falls back to `"dev"`.

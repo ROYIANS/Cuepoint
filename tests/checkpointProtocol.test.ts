@@ -1,8 +1,8 @@
 import {describe, expect, it, vi} from "vitest";
-import {CHECKPOINT_CHUNK_SIZE, CHECKPOINT_FORMAT, createCheckpointManifest, decodeCheckpointManifest, encodeCheckpointManifest, prepareCheckpoint, validateCheckpointManifest, verifyCheckpointDelivery} from "@/lib/checkpoint";
-import type {CheckpointBuildInput, CheckpointManifest, CheckpointRecord} from "@/lib/checkpoint";
-import {Sha256} from "@/lib/sha256";
-import {mediaWorkspaceRef, workspaceId} from "@/lib/workspace";
+import {CHECKPOINT_CHUNK_SIZE, CHECKPOINT_FORMAT, createCheckpointManifest, decodeCheckpointManifest, encodeCheckpointManifest, prepareCheckpoint, validateCheckpointManifest, verifyCheckpointDelivery} from "@/app/workflows/checkpoint";
+import type {CheckpointBuildInput, CheckpointManifest, CheckpointRecord} from "@/app/workflows/checkpoint";
+import {Sha256} from "@/platform/media/sha256";
+import {mediaWorkspaceRef, workspaceId} from "@/features/library/services/workspace";
 import {checkpointFixtureInput, fixtureBinaryId, fixtureMediaId, fixtureProjectId, fixtureWorkspaceId} from "./helpers/checkpointProtocolFixture";
 
 function plain(manifest: CheckpointManifest): Record<string, unknown> {

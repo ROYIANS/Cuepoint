@@ -16,10 +16,13 @@ const oracle = await import(pathToFileURL(resolve(generated, 'oracle.mjs')).href
 const target = resolve(base, 'fixtures/portable-contract-v1.json');
 const original = JSON.parse(await readFile(target, 'utf8'));
 const mapping = JSON.parse(await readFile(resolve(base, 'fixtures/portable-contract-source-map.json'), 'utf8'));
-if (mapping.schema !== 1 || mapping.sources.length !== Object.keys(original.sources).length) throw new Error('Incomplete portable source relocation provenance');
+if (mapping.schema !== 2 || mapping.sources.length !== Object.keys(original.sources).length || new Set(mapping.sources.map(row => row.original)).size !== mapping.sources.length) throw new Error('Incomplete portable source relocation provenance');
 for (const row of mapping.sources) {
-    const actual = createHash('sha256').update(await readFile(resolve(repo, row.current))).digest('hex');
-    if (original.sources[row.original] !== row.originalSha256 || actual !== row.currentSha256) throw new Error('Portable source relocation identity changed: '+row.current);
+    if (original.sources[row.original] !== row.originalSha256 || !Array.isArray(row.currentSources) || row.currentSources.length === 0 || new Set(row.currentSources.map(source => source.path)).size !== row.currentSources.length) throw new Error('Incomplete portable source relocation owners: '+row.original);
+    for (const source of row.currentSources) {
+        const actual = createHash('sha256').update(await readFile(resolve(repo, source.path))).digest('hex');
+        if (actual !== source.sha256) throw new Error('Portable source relocation identity changed: '+source.path);
+    }
 }
 const output = `${JSON.stringify({...oracle.contractCorpus(), sources: original.sources}, null, 2)}\n`;
 if (process.argv[2] === '--write') {

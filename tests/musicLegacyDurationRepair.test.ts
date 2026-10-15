@@ -38,15 +38,15 @@ vi.mock("react", async original => {
     };
 });
 
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import * as musicRepo from "@/db/music";
-import {defaultMusicSettings, type MusicDraft, type MusicSettings} from "@/domain/music";
-import {MusicCreation} from "@/components/music/MusicCreation";
-import {DraftStatus} from "@/components/ui/draft-status";
-import {flushPendingDrafts} from "@/lib/debouncedDraft";
-import {DraftConflictError} from "@/lib/draftConflict";
-import {musicWireInput} from "@/lib/audioGeneration/input";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import * as musicRepo from "@/features/music/commands/music";
+import {defaultMusicSettings, type MusicDraft, type MusicSettings} from "@/features/music/models/music";
+import {MusicCreation} from "@/features/music/ui/MusicCreation";
+import {DraftStatus} from "@/app/drafts/draft-status";
+import {flushPendingDrafts} from "@/platform/product/drafts";
+import {DraftConflictError} from "@/platform/product/draftConflict";
+import {musicWireInput} from "@/features/audio/generation/input";
 
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(tree: unknown): Node[] {

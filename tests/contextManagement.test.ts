@@ -1,21 +1,22 @@
 import {interceptStoreTable} from "./helpers/storeFaults";
-import {createProject as createBoundTestProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
-import {deleteChatThread} from "@/db/cascadeCommands";
+import {createProject as createBoundTestProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun, finishAgentRun, interruptThreadRuns } from "@/db/agentRuns";
+import { db } from "@/platform/product/store";
+import { beginAgentRun, finishAgentRun, interruptThreadRuns } from "@/features/agent/commands/agentRuns";
 
-import { updateContextPolicy, resetThreadContextPolicy, saveContextPolicyAsDefault } from "@/db/contextSettings";
-import { createAgentTask } from "@/db/agentTasks";
-import { DEFAULT_CONTEXT_POLICY, normalizeContextPolicy, resolveContextCapacity } from "@/lib/agent/contextPolicy";
-import { selectContextHistory, budgetContext, findApplicableSummary, buildContextMessages } from "@/lib/agent/contextPlanner";
-import { prepareRunContext } from "@/lib/agent/contextCompaction";
-import { BUILTIN_TOOLS } from "@/lib/agent/tools";
-import { executeChatRun } from "@/lib/agent/runChat";
-import { toResponseInput } from "@/lib/ai/responsesStream";
-import type { ChatMessage, ConnectorConfig } from "@/domain/types";
-import type { AgentRequestMessage, AgentRun } from "@/domain/agent";
+import { updateContextPolicy, resetThreadContextPolicy, saveContextPolicyAsDefault } from "@/features/agent/commands/contextSettings";
+import { createAgentTask } from "@/features/agent/commands/agentTasks";
+import { DEFAULT_CONTEXT_POLICY, normalizeContextPolicy, resolveContextCapacity } from "@/features/agent/runtime/contextPolicy";
+import { selectContextHistory, budgetContext, findApplicableSummary, buildContextMessages } from "@/features/agent/runtime/contextPlanner";
+import { prepareRunContext } from "@/features/agent/runtime/contextCompaction";
+import { BUILTIN_TOOLS } from "@/features/agent/runtime/tools";
+import { executeChatRun } from "@/features/agent/runtime/runChat";
+import { toResponseInput } from "@/features/agent/providers/responsesStream";
+import type {ChatMessage} from "@/features/agent/models/chat";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import type { AgentRequestMessage, AgentRun } from "@/features/agent/models/agent";
 
 const connector: ConnectorConfig = { id: "cx", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret-key", updatedAt: "2026-01-01" };
 const policy = { ...DEFAULT_CONTEXT_POLICY, customContextTokens: 4096 };

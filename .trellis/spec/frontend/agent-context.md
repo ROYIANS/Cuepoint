@@ -128,7 +128,7 @@ Maintain this contract when changing the chat context preview, usage ring/toolti
 
 ### 2. Signatures / Owners
 
-- `db/agentContextPreview.ts` owns `ContextPreviewInput`, `contextPreviewIdentity(input)`, `contextPreviewTables()` and `readAgentContextPreview(input): Promise<ContextPreviewRead>`.
+- `features/agent/commands/agentContextPreview.ts` owns `ContextPreviewInput`, `contextPreviewIdentity(input)`, `contextPreviewTables()` and `readAgentContextPreview(input): Promise<ContextPreviewRead>`.
 - The input contains thread/project/interaction mode, normalized draft, attachments, model/provider and model metadata. Its identity includes those exact request-relevant values; credentials and retained parent-query results are excluded.
 - `ContextUsageTrigger` owns one `useContextUsage`/live subscription and one display assembly. Ring, tooltip, `ContextUsagePanel` and preview memory details consume that same result. The panel receives a snapshot rather than querying/planning independently.
 - `ContextParameters` retains its own lightweight policy-source query and existing field-intent write/reset/default-copy APIs. `MemoryContextDetails` separately reads current management availability/exclusions, without recomputing preview selection/budget. `MemoryRunHistory` supplies the frozen saved selection and existing readOnly contract.

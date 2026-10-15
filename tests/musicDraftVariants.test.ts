@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { linkMusicVariants, musicVariant, newVariantSettings, parseVariantLinks } from "../packages/studio/src/components/music/draftVariants";
-import { db } from "../packages/studio/src/db/database";
-import {createAudioMusicProject} from "../packages/studio/src/db/projects";
-import { addMusicDraft, patchMusicDraft } from "../packages/studio/src/db/music";
-import type { MusicSettings } from "../packages/studio/src/domain/music";
+import { linkMusicVariants, musicVariant, newVariantSettings, parseVariantLinks } from "../packages/studio/src/features/music/ui/draftVariants";
+import { db } from "../packages/studio/src/platform/product/store";
+import {createAudioMusicProject} from "../packages/studio/src/features/projects/commands/projects";
+import { addMusicDraft, patchMusicDraft } from "../packages/studio/src/features/music/commands/music";
+import type { MusicSettings } from "../packages/studio/src/features/music/models/music";
 
 const simple: MusicSettings = { engine: "suno", version: "v6-mini", custom: false, instrumental: false, title: "清晨", prompt: "阳光下的轻快流行", style: "", negativeTags: "" };
 describe("music creation variants", () => {

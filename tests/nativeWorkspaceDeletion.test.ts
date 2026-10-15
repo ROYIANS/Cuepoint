@@ -1,5 +1,5 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {createNativeWorkspaceAdapter} from "@/lib/nativeWorkspace";
+import {createNativeWorkspaceAdapter} from "@/platform/runtime/reference/nativeWorkspace";
 
 afterEach(() => vi.unstubAllGlobals());
 

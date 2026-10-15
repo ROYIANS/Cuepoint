@@ -1,21 +1,21 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import {registeredTools} from "./helpers/registeredTools";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { resolveAgentToolApproval } from "@/db/agentTools";
-import {createChatThread} from "@/db/chat";
-import {createProject} from "@/db/projects";
-import { BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS } from "@/lib/agent/businessTools";
-import { BUILTIN_TOOLS } from "@/lib/agent/tools";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import { assembleSkills } from "@/lib/agent/skills";
-import { createToolLoading, getOfferedToolNames } from "@/lib/agent/toolLoading";
-import { describeRunWrites } from "@/lib/agent/runWriteOutcomes";
-import { targetRevision } from "@/lib/productionRevision";
-import type { AgentRun, AgentToolCall, AgentWireToolCall } from "@/domain/agent";
-import type { AgentToolContext } from "@/lib/agent/tools";
-import type { ConnectorConfig } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
+import { resolveAgentToolApproval } from "@/features/agent/commands/agentTools";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {createProject} from "@/features/projects/commands/projects";
+import { BUSINESS_TOOLS as BUSINESS_TOOLS_DEFINITIONS } from "@/features/video/agent/businessTools";
+import { BUILTIN_TOOLS } from "@/features/agent/runtime/tools";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import { assembleSkills } from "@/features/agent/runtime/skills";
+import { createToolLoading, getOfferedToolNames } from "@/features/agent/runtime/toolLoading";
+import { describeRunWrites } from "@/features/agent/runtime/runWriteOutcomes";
+import {targetRevision} from "@/platform/data/revision";
+import type { AgentRun, AgentToolCall, AgentWireToolCall } from "@/features/agent/models/agent";
+import type { AgentToolContext } from "@/features/agent/runtime/tools";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 const BUSINESS_TOOLS = registeredTools(BUSINESS_TOOLS_DEFINITIONS);
 
 

@@ -1,13 +1,14 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import {describe,expect,it,vi} from "vitest";
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {addAudioChapter,addAudioClip,addAudioSegment,addAudioTake,deleteAudioChapter,deleteAudioClip,getAudioProjectSnapshot,patchAudioClip,patchAudioSegment,patchAudioTrack} from "@/db/audio";
-import {applyAudioArrangementProposal,previewAudioArrangement,previewAudioSelection,revertAudioArrangementProposal,saveAudioArrangementProposal} from "@/db/audioArrangement";
-import {deleteProject} from "@/db/cascadeCommands";
-import {AudioClipHistory} from "@/lib/audio/commands";
-import {planAudioArrangement} from "@/lib/audio/arrangement";
-import {AudioArrangementConflictError} from "@/domain/audioArrangement";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {addAudioChapter,addAudioClip,addAudioSegment,addAudioTake,deleteAudioChapter,deleteAudioClip,patchAudioClip,patchAudioSegment,patchAudioTrack} from "@/features/audio/commands/audio";
+import {getAudioProjectSnapshot} from "@/features/audio/queries/snapshot";
+import {applyAudioArrangementProposal,previewAudioArrangement,previewAudioSelection,revertAudioArrangementProposal,saveAudioArrangementProposal} from "@/features/audio/commands/arrangement";
+import {deleteProject} from "@/features/projects/commands/lifecycle";
+import {AudioClipHistory} from "@/features/audio/engine/commands";
+import {planAudioArrangement} from "@/features/audio/engine/arrangement";
+import {AudioArrangementConflictError} from "@/features/audio/models/audioArrangement";
 
 async function fixture(count=3) {
     const project=await createAudioMusicProject("排列测试","audio");

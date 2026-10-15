@@ -1,12 +1,12 @@
 import {useState} from "react";
 import {createRoot} from "react-dom/client";
 import {useLiveQuery} from "dexie-react-hooks";
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {patchMusicDraft} from "@/db/music";
-import type {MusicDraft} from "@/domain/music";
-import {MusicCreation} from "@/components/music/MusicCreation";
-import {flushPendingDrafts} from "@/lib/debouncedDraft";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {patchMusicDraft} from "@/features/music/commands/music";
+import type {MusicDraft} from "@/features/music/models/music";
+import {MusicCreation} from "@/features/music/ui/MusicCreation";
+import {flushPendingDrafts} from "@/platform/product/drafts";
 
 const project = await createAudioMusicProject("C02 legacy repair", "music");
 const row = (await db.musicDrafts.where("projectId").equals(project.id).toArray())[0];

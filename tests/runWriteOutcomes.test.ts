@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import type { AgentToolCall } from "@/domain/agent";
-import { describeRunWrites } from "@/lib/agent/runWriteOutcomes";
-import { createWriteReceipt, readWriteReceipt, type WriteReceiptEntry } from "@/lib/agent/writeReceipt";
-import { soundWriteReceipt } from "@/lib/agent/soundWriteReceipt";
+import type { AgentToolCall } from "@/features/agent/models/agent";
+import { describeRunWrites } from "@/features/agent/runtime/runWriteOutcomes";
+import { createWriteReceipt, readWriteReceipt, type WriteReceiptEntry } from "@/features/agent/runtime/writeReceipt";
+import { soundWriteReceipt } from "@/features/audio/agent/soundWriteReceipt";
 
 const run = { id: "run", threadId: "thread", projectId: "project" };
 const entry = (patch: Partial<WriteReceiptEntry> = {}): WriteReceiptEntry => ({ kind: "shot", operation: "created", id: "shot", ownerId: "project", revision: "v1", label: "镜头", ...patch });

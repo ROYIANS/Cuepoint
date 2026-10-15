@@ -1,9 +1,9 @@
 import {afterAll} from "vitest";
 import {createNativeProbe} from "../../helpers/nativeProductProbe";
-import {installNativeBinaryAccess} from "@/lib/storage/binary";
-import type {NativeBinaryServices} from "@/lib/storage/nativeBinary";
-import type {ProductStore} from "@/lib/storage/types";
-import type {BrowserStoreLifecycle} from "@/lib/storage/browser";
+import {installNativeBinaryAccess} from "@/platform/storage/binary";
+import type {NativeBinaryServices} from "@/platform/storage/nativeBinary";
+import type {ProductStore} from "@/platform/storage/types";
+import type {BrowserStoreLifecycle} from "@/platform/storage/browser";
 
 // This explicit lane requires the real Rust binary; a missing probe is a failure.
 let native=await createNativeProbe();

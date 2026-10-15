@@ -1,10 +1,10 @@
-import {createProductStore as originalCreateProductStore} from "../../../packages/studio/src/lib/storage/store?fixture-original";
-import type {ProductStore,StoreDriver} from "@/lib/storage/types";
+import {createProductStore as originalCreateProductStore} from "../../../packages/studio/src/platform/storage/store?fixture-original";
+import type {ProductStore,StoreDriver} from "@/platform/storage/types";
 import {appendFileSync,mkdirSync} from "node:fs";
 import {join} from "node:path";
 import {expect} from "vitest";
 
-export * from "../../../packages/studio/src/lib/storage/store?fixture-original";
+export * from "../../../packages/studio/src/platform/storage/store?fixture-original";
 
 const drivers=new WeakMap<ProductStore,StoreDriver>();
 /** Tests retain the exact production factory and adapters, exposing only their owner. */

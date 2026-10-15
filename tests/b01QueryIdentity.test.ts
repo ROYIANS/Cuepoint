@@ -34,7 +34,7 @@ vi.mock("react", async original => {
         useCallback: (callback: unknown) => callback,
     };
 });
-vi.mock("@/lib/storage/hooks", () => {
+vi.mock("@/platform/product/queries", () => {
     const read = (querier: (tx: typeof db) => Promise<unknown>) => {
         host.queriers.push(() => querier(db));
         return host.results[host.queryIndex++];
@@ -49,30 +49,30 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 vi.mock("@dnd-kit/core", () => ({DndContext: () => null, PointerSensor: {}, KeyboardSensor: {}, closestCenter: {}, useSensor: vi.fn(), useSensors: () => []}));
 vi.mock("@dnd-kit/sortable", () => ({SortableContext: () => null, sortableKeyboardCoordinates: {}, verticalListSortingStrategy: {}, useSortable: () => ({setNodeRef: vi.fn()})}));
-vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
-vi.mock("@/lib/useShotMedia", () => ({useShotMedia: () => new Map()}));
-vi.mock("@/components/shots/ShotRowViewport", () => ({ShotScrollViewport: () => null, useShotRowViewport: () => ({rowRef: vi.fn(), nearViewport: true})}));
+vi.mock("@/app/drafts/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
+vi.mock("@/features/video/queries/useShotMedia", () => ({useShotMedia: () => new Map()}));
+vi.mock("@/features/video/ui/ShotRowViewport", () => ({ShotScrollViewport: () => null, useShotRowViewport: () => ({rowRef: vi.fn(), nearViewport: true})}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
-import {db} from "@/db/database";
-import * as repoAssets from "@/db/assets";
-import * as repoProjects from "@/db/projects";
-import * as repoEpisodes from "@/db/episodes";
-import {CharacterDetailPage} from "@/components/assets/CharacterDetailPage";
-import {SceneDetailPage} from "@/components/assets/SceneDetailPage";
-import {PropDetailPage} from "@/components/assets/PropDetailPage";
-import {StyleDetailPage} from "@/components/assets/StyleDetailPage";
-import {EditableGenerationSlot} from "@/components/slots/GenerationSlotCard";
-import {ShotEditorPage} from "@/components/shots/ShotEditorPage";
-import {StoryboardPrintPage} from "@/components/produce/StoryboardPrintPage";
-import {WorkspaceChrome} from "@/components/workspace/WorkspaceChrome";
-import {ProjectSettingsPanel} from "@/components/workspace/ProjectSettingsPanel";
-import {MaterialDetailPanel} from "@/components/studio/materials/MaterialDetailPanel";
-import {PageHeader, PageState} from "@/components/layout/PageLayout";
-import {Route as HomeRoute} from "@/routes/p.$projectId.index";
-import {Route as ProjectRoute} from "@/routes/p.$projectId";
+import {db} from "@/platform/product/store";
+import * as repoAssets from "@/features/library/commands/assets";
+import * as repoProjects from "@/features/projects/commands/projects";
+import * as repoEpisodes from "@/features/video/commands/episodes";
+import {CharacterDetailPage} from "@/features/library/ui/CharacterDetailPage";
+import {SceneDetailPage} from "@/features/library/ui/SceneDetailPage";
+import {PropDetailPage} from "@/features/library/ui/PropDetailPage";
+import {StyleDetailPage} from "@/features/library/ui/StyleDetailPage";
+import {EditableGenerationSlot} from "@/features/library/ui/GenerationSlotCard";
+import {ShotEditorPage} from "@/features/video/ui/ShotEditorPage";
+import {StoryboardPrintPage} from "@/features/video/ui/StoryboardPrintPage";
+import {WorkspaceChrome} from "@/app/workspace/WorkspaceChrome";
+import {ProjectSettingsPanel} from "@/features/projects/ui/ProjectSettingsPanel";
+import {MaterialDetailPanel} from "@/features/library/ui/materials/MaterialDetailPanel";
+import {PageHeader, PageState} from "@/app/layout/PageLayout";
+import {Route as HomeRoute} from "@/app/routes/p.$projectId.index.tsx";
+import {Route as ProjectRoute} from "@/app/routes/p.$projectId.tsx";
 
-import {ModuleLayout} from "@/components/layout/ModuleLayout";
+import {ModuleLayout} from "@/app/layout/ModuleLayout";
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(tree: unknown): Node[] {
     if (Array.isArray(tree)) return tree.flatMap(nodes);

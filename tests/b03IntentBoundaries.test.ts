@@ -25,7 +25,7 @@ vi.mock("react", async original => {
         useMemo: (compute: () => unknown) => compute(), useCallback: (callback: unknown) => callback,
     };
 });
-vi.mock("@/lib/storage/hooks", () => {
+vi.mock("@/platform/product/queries", () => {
     const read = () => {const host = runtime.active!; return host.results[host.queryIndex++];};
     return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
 });
@@ -33,24 +33,24 @@ vi.mock("antd", () => ({Switch: () => null, InputNumber: () => null}));
 vi.mock("@tanstack/react-router", () => ({Link: () => null, useBlocker: () => ({status: "idle"})}));
 vi.mock("@dnd-kit/core", () => ({DndContext: () => null, PointerSensor: {}, KeyboardSensor: {}, closestCenter: {}, useSensor: vi.fn(), useSensors: () => []}));
 vi.mock("@dnd-kit/sortable", () => ({SortableContext: () => null, sortableKeyboardCoordinates: {}, verticalListSortingStrategy: {}, useSortable: () => ({setNodeRef: vi.fn()})}));
-vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
-vi.mock("@/lib/useShotMedia", () => ({useShotMedia: () => new Map()}));
-vi.mock("@/components/shots/ShotRowViewport", () => ({ShotScrollViewport: () => null, useShotRowViewport: () => ({rowRef: vi.fn(), nearViewport: true})}));
+vi.mock("@/app/drafts/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
+vi.mock("@/features/video/queries/useShotMedia", () => ({useShotMedia: () => new Map()}));
+vi.mock("@/features/video/ui/ShotRowViewport", () => ({ShotScrollViewport: () => null, useShotRowViewport: () => ({rowRef: vi.fn(), nearViewport: true})}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
 import {toast} from "sonner";
-import {db} from "@/db/database";
-import * as repoProjects from "@/db/projects";
-import * as repoShots from "@/db/shots";
-import * as repoAssets from "@/db/assets";
-import * as repoChat from "@/db/chat";
-import * as contextSettings from "@/db/contextSettings";
-import {GENERAL_AGENT_ID} from "@/domain/agent";
-import {DEFAULT_CONTEXT_POLICY} from "@/lib/agent/contextPolicy";
-import {emptySlot} from "@/domain/slot";
-import {ContextParameters} from "@/components/agent/ContextParameters";
-import {ShotEditorPage} from "@/components/shots/ShotEditorPage";
-import {DropdownMenuCheckboxItem} from "@/components/ui/dropdown-menu";
+import {db} from "@/platform/product/store";
+import * as repoProjects from "@/features/projects/commands/projects";
+import * as repoShots from "@/features/video/commands/shots";
+import * as repoAssets from "@/features/library/commands/assets";
+import * as repoChat from "@/features/agent/commands/chat";
+import * as contextSettings from "@/features/agent/commands/contextSettings";
+import {GENERAL_AGENT_ID} from "@/features/agent/models/agent";
+import {DEFAULT_CONTEXT_POLICY} from "@/features/agent/runtime/contextPolicy";
+import {emptySlot} from "@/features/library/models/slot";
+import {ContextParameters} from "@/features/agent/ui/ContextParameters";
+import {ShotEditorPage} from "@/features/video/ui/ShotEditorPage";
+import {DropdownMenuCheckboxItem} from "@/ui/dropdown-menu";
 
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(tree: unknown): Node[] {

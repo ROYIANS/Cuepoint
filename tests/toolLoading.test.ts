@@ -1,20 +1,20 @@
-import { prepareRunContext } from "@/lib/agent/contextCompaction";
-import { buildContextMessages } from "@/lib/agent/contextPlanner";
-import { toResponseInput } from "@/lib/ai/responsesStream";
-import { filterProjectMemoryTools } from "@/lib/agent/memoryToolNames";
+import { prepareRunContext } from "@/features/agent/runtime/contextCompaction";
+import { buildContextMessages } from "@/features/agent/runtime/contextPlanner";
+import { toResponseInput } from "@/features/agent/providers/responsesStream";
+import { filterProjectMemoryTools } from "@/features/memory/agent/memoryToolNames";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import {createChatThread} from "@/db/chat";
-import { beginAgentRun } from "@/db/agentRuns";
-import { resolveAgentToolApproval, saveToolRound, startModelStep } from "@/db/agentTools";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import { BUILTIN_TOOLS, toolSchemas, type AgentToolDefinition } from "@/lib/agent/tools";
-import { assembleSkills, DEFAULT_SKILL_IDS } from "@/lib/agent/skills";
-import { estimateTokens } from "@/lib/agent/contextUsage";
-import { createToolLoading, DISCOVERY_TOOL_NAME, getOfferedToolNames, refreshRunToolLoading, toolLoadingInstructions, toolNamesForCall } from "@/lib/agent/toolLoading";
-import type { AgentRun, AgentWireToolCall } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import {createChatThread} from "@/features/agent/commands/chat";
+import { beginAgentRun } from "@/features/agent/commands/agentRuns";
+import { resolveAgentToolApproval, saveToolRound, startModelStep } from "@/features/agent/commands/agentTools";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import { BUILTIN_TOOLS, toolSchemas, type AgentToolDefinition } from "@/features/agent/runtime/tools";
+import { assembleSkills, DEFAULT_SKILL_IDS } from "@/features/agent/runtime/skills";
+import { estimateTokens } from "@/features/agent/runtime/contextUsage";
+import { createToolLoading, DISCOVERY_TOOL_NAME, getOfferedToolNames, refreshRunToolLoading, toolLoadingInstructions, toolNamesForCall } from "@/features/agent/runtime/toolLoading";
+import type { AgentRun, AgentWireToolCall } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = { id: "loading-cx", name: "loading", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret", updatedAt: "2026-09-21" };
 async function begin(protocol: "chat-completions" | "responses" = "chat-completions", permissionMode: "full" | "ask" = "full") {

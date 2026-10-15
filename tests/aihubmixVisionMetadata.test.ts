@@ -1,16 +1,16 @@
 import {describe, expect, it, vi} from "vitest";
-import {listAIHubMixModels} from "@/lib/ai/aihubmix";
-import {discoverConnectorChatModels} from "@/lib/ai/connectors";
-import {requireVision, resolveVisionCapability} from "@/lib/ai/visionCapability";
-import {db} from "@/db/database";
-import {createProject} from "@/db/projects";
-import {createChatThread} from "@/db/chat";
-import {beginAgentRun} from "@/db/agentRuns";
-import {importReferenceFile} from "@/lib/references/import";
-import {referenceAttachment} from "@/domain/references";
-import {materializeChatMessages, materializeResponseItems} from "@/lib/ai/referenceWire";
-import {toResponseInput} from "@/lib/ai/responsesStream";
-import type {ConnectorConfig} from "@/domain/types";
+import {listAIHubMixModels} from "@/features/video/providers/aihubmix";
+import {discoverConnectorChatModels} from "@/features/settings/models/connectors";
+import {requireVision, resolveVisionCapability} from "@/features/settings/models/visionCapability";
+import {db} from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {beginAgentRun} from "@/features/agent/commands/agentRuns";
+import {importReferenceFile} from "@/features/references/documents/import";
+import {referenceAttachment} from "@/features/references/models/references";
+import {materializeChatMessages, materializeResponseItems} from "@/features/agent/providers/referenceWire";
+import {toResponseInput} from "@/features/agent/providers/responsesStream";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 const connector: ConnectorConfig = {id: "hub", definitionId: "aihubmix", protocol: "openai-compatible", baseUrl: "https://hub.test/v1", apiKey: "fixture-key", updatedAt: "2026-10-11"};
 const row = (fields: Record<string, unknown> = {}) => ({model_id: "unlisted-vision-fixture", types: "llm", output_modalities: "text", ...fields});

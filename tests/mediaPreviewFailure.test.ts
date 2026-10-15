@@ -1,21 +1,21 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {ReactElement} from "react";
-import type {BinaryContent} from "@/domain/binary";
-import type {MediaRecord} from "@/domain/types";
+import type {BinaryContent} from "@/platform/media/binaryTypes";
+import type {MediaRecord} from "@/features/library/models/media";
 import {mountedHookHost} from "./helpers/mountedHookHost";
 
 const host = vi.hoisted(() => ({hooks: undefined as ReturnType<typeof mountedHookHost> | undefined, create: vi.fn(), availability: vi.fn(), query: vi.fn()}));
 vi.mock("react", async original => ({...await original<typeof import("react")>(), useState: (initial: unknown) => host.hooks!.useState(initial), useRef: (initial: unknown) => host.hooks!.useRef(initial), useEffect: (effect: () => unknown, deps?: readonly unknown[]) => host.hooks!.useEffect(effect, deps)}));
-vi.mock("@/lib/storage/hooks", () => ({useProductQuery: host.query}));
-vi.mock("@/lib/storage/binary", async original => {
-    const actual = await original<typeof import("@/lib/storage/binary")>();
+vi.mock("@/platform/product/queries", () => ({useProductQuery: host.query}));
+vi.mock("@/platform/storage/binary", async original => {
+    const actual = await original<typeof import("@/platform/storage/binary")>();
     return {...actual, createBinaryObjectUrl: host.create, binaryAvailability: (binary: BinaryContent, signal?: AbortSignal) => binary instanceof Blob ? actual.binaryAvailability(binary, signal) : host.availability(binary, signal)};
 });
-import {registerBinaryReference} from "@/lib/storage/codec";
-import {useBinaryPreview} from "@/lib/media";
-import {MediaPreview} from "@/components/media/MediaThumb";
-import {MaterialPreview} from "@/components/studio/materials/MaterialPreview";
-import {SourcePlayer} from "@/components/audioMusic/controls";
+import {registerBinaryReference} from "@/platform/storage/codec";
+import {useBinaryPreview} from "@/features/library/services/media";
+import {MediaPreview} from "@/features/library/ui/MediaThumb";
+import {MaterialPreview} from "@/features/library/ui/materials/MaterialPreview";
+import {SourcePlayer} from "@/features/audio/presentation/controls";
 
 type Node = ReactElement<Record<string, unknown>>;
 function nodes(value: unknown): Node[] {

@@ -1,12 +1,12 @@
 import {createHash} from "node:crypto";
 import {readFileSync} from "node:fs";
 import {describe, expect, it, vi} from "vitest";
-import {Sha256, sha256Bytes} from "@/lib/sha256";
-import {targetRevision} from "@/lib/productionRevision";
+import {Sha256, sha256Bytes} from "@/platform/media/sha256";
+import {targetRevision} from "@/platform/data/revision";
 import {targetRevision as originalTargetRevision} from "./fixtures/workspace/originalProductionRevision";
-import {uploadMediaFile} from "@/lib/media";
-import {db} from "@/db/database";
-import {STUDIO_LIBRARY_ID} from "@/domain/types";
+import {uploadMediaFile} from "@/features/library/services/media";
+import {db} from "@/platform/product/store";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
 
 describe("shared byte hashing compatibility", () => {
     it("retains the original production-revision source fixture bytes", () => {

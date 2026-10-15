@@ -1,31 +1,32 @@
 import {interceptStoreTable} from "./helpers/storeFaults";
 import {describe, expect, it, vi} from "vitest";
 import JSZip from "jszip";
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {addAudioChapter, addAudioSegment, addAudioSpeaker, deleteAudioChapter, deleteAudioSegment, patchAudioSegment, patchAudioSpeaker} from "@/db/audio";
-import {deleteChatThread, deleteProject} from "@/db/cascadeCommands";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {addAudioChapter, addAudioSegment, addAudioSpeaker, deleteAudioChapter, deleteAudioSegment, patchAudioSegment, patchAudioSpeaker} from "@/features/audio/commands/audio";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import {deleteProject} from "@/features/projects/commands/lifecycle";
 import {
     confirmAudioGenerationBatch, controlAudioGenerationBatch, includeAudioBatchItem, prepareAudioGenerationBatch,
     readAudioGenerationBatch, retryFailedAudioBatch
-} from "@/db/audioGenerationBatches";
-import {audioBatchUserAction, reconcileAudioBatchHistory, recoverAudioGenerationBatch, startAudioGenerationBatch, stopAudioGenerationBatch} from "@/lib/audioGeneration/batchRuntime";
-import {collectMediaIds, deleteMediaIfOrphan} from "@/db/media";
-import {exportProjectZip, importProjectZip} from "@/lib/projectPackage";
-import {createChatThread} from "@/db/chat";
-import {beginAgentRun, finishAgentRun} from "@/db/agentRuns";
-import {transitionToolCall} from "@/db/agentTools";
-import {createAgentTaskForThread} from "@/db/agentTasks";
-import {getTaskWrapupState} from "@/db/agentTaskWrapups";
-import {collectWrapupSnapshot} from "@/lib/agent/wrapupEvidence";
-import {ownedTaskAudioGenerationJob, taskAudioGenerationSource} from "@/db/taskAudioGenerationEvidence";
-import {AUDIO_BATCH_TOOLS} from "@/lib/agent/audioBatchTools";
+} from "@/features/audio/commands/batches";
+import {audioBatchUserAction, reconcileAudioBatchHistory, recoverAudioGenerationBatch, startAudioGenerationBatch, stopAudioGenerationBatch} from "@/features/audio/generation/batchRuntime";
+import {collectMediaIds, deleteMediaIfOrphan} from "@/features/library/commands/media";
+import {exportProjectZip, importProjectZip} from "@/app/workflows/packages/projectPackage";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {beginAgentRun, finishAgentRun} from "@/features/agent/commands/agentRuns";
+import {transitionToolCall} from "@/features/agent/commands/agentTools";
+import {createAgentTaskForThread} from "@/features/agent/commands/agentTasks";
+import {getTaskWrapupState} from "@/features/agent/commands/agentTaskWrapups";
+import {collectWrapupSnapshot} from "@/features/agent/runtime/wrapupEvidence";
+import {ownedTaskAudioGenerationJob, taskAudioGenerationSource} from "@/features/audio/agent/taskEvidence";
+import {AUDIO_BATCH_TOOLS} from "@/features/audio/agent/audioBatchTools";
 import {registeredTools} from "./helpers/registeredTools";
 import {saveFixtureToolRound} from "./helpers/toolDispatch";
-import type {ConnectorConfig} from "@/domain/types";
-import type {ThreadLockManager} from "@/lib/agent/runOwnership";
-import type {AgentToolContext} from "@/lib/agent/tools";
-import {encodePcm16Wav} from "@/lib/audio/wav";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import type {ThreadLockManager} from "@/features/agent/runtime/runOwnership";
+import type {AgentToolContext} from "@/features/agent/runtime/tools";
+import {encodePcm16Wav} from "@/features/audio/engine/wav";
 
 const connector: ConnectorConfig = {id: "batch-apimart", definitionId: "apimart", apiKey: "batch-private-key", baseUrl: "https://audio.example/v1", updatedAt: "2026-10-10"};
 const decode = async () => ({durationSec: 2.5, sampleRate: 48000, channels: 1});
@@ -252,9 +253,9 @@ describe("durable reviewed audio batches", () => {
     it("reconciles abandoned claimed records without POST and retains remaining confirmed unsent items", async () => {
         const f = await fixture(3), batch = await ready(f);
         await controlAudioGenerationBatch(f.project.id, batch.id, "run");
-        const {linkAudioBatchJob} = await import("@/db/audioGenerationBatches");
+        const {linkAudioBatchJob} = await import("@/features/audio/commands/batches");
         const item = (await readAudioGenerationBatch(f.project.id, batch.id)).items[0], job = (await linkAudioBatchJob(f.project.id, batch.id, item.id))!;
-        const {claimAudioGenerationJob} = await import("@/db/audioGeneration"); await claimAudioGenerationJob(f.project.id, job.id, job.revision, "abandoned");
+        const {claimAudioGenerationJob} = await import("@/features/audio/commands/generation"); await claimAudioGenerationJob(f.project.id, job.id, job.revision, "abandoned");
         const network = vi.fn<typeof fetch>(); vi.stubGlobal("fetch", network);
         try {
             await reconcileAudioBatchHistory(f.project.id, batch.id, f.locks);
@@ -302,7 +303,7 @@ describe("durable reviewed audio batches", () => {
         const f = await fixture(1), batch = await ready(f), fetchImpl = vi.fn<typeof fetch>(async () => binary());
         await startAudioGenerationBatch(f.project.id, batch.id, {locks: f.locks, fetchImpl, decode});
         const before = await readAudioGenerationBatch(f.project.id, batch.id), take = (await db.audioTakes.get(before.jobs[0].results[0].takeId!))!;
-        const {deleteAudioTake} = await import("@/db/audio"); await deleteAudioTake(f.project.id, take.id, take.revision);
+        const {deleteAudioTake} = await import("@/features/audio/commands/audio"); await deleteAudioTake(f.project.id, take.id, take.revision);
         await startAudioGenerationBatch(f.project.id, batch.id, {locks: f.locks, fetchImpl, decode});
         const view = await readAudioGenerationBatch(f.project.id, batch.id); expect(view.counts.unavailable).toBe(1); expect(await db.audioTakes.count()).toBe(0); expect(fetchImpl).toHaveBeenCalledOnce();
     });

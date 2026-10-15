@@ -4,7 +4,7 @@ import {
   THINK_ROWS,
   paintSnakeCells,
   stepColumn,
-} from "@/components/agent/ThinkingMatrix";
+} from "@/features/agent/ui/ThinkingMatrix";
 
 describe("ThinkingMatrix snakes", () => {
   it("lights two stacked cells in a column for a downward snake", () => {

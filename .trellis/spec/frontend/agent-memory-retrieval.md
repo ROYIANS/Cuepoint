@@ -9,11 +9,11 @@ Retrieval is local and lexical, with no embeddings or model call for ranking.
 
 ## 2. Signatures (API / DB)
 
-- `domain/memoryRetrieval.ts`: `MemoryQueryOptions`, `MemorySelection`,
+- `features/memory/models/memoryRetrieval.ts`: `MemoryQueryOptions`, `MemorySelection`,
   `MemorySelectionEntry`, `MemoryDispatchAudit`.
-- `lib/memory/retrieval.ts`: `buildMemoryQuery`, `rankMemoryCandidates`,
+- `features/memory/services/retrieval.ts`: `buildMemoryQuery`, `rankMemoryCandidates`,
   `planMemorySelection`, `serializeMemoryEntries`, `withMemoryContext`.
-- `db/memoryRetrieval.ts`: `getMemorySelection(options)`,
+- `features/memory/queries/memoryRetrieval.ts`: `getMemorySelection(options)`,
   `getEligibleProjectMemories(projectId, threadId?)`,
   `getThreadMemoryExclusions(threadId, projectId)`,
   `setThreadMemoryExcluded(threadId, projectId, memoryId, excluded)`.

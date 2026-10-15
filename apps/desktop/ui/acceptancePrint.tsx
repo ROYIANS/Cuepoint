@@ -12,16 +12,12 @@ import {z} from 'zod';
 import {StoryboardPrintPage} from '@cuepoint/studio/reference/components/produce/StoryboardPrintPage';
 import {Button} from '@cuepoint/studio/reference/components/ui/button';
 import {db} from '@cuepoint/studio/reference/db/database';
-import {
-    DEFAULT_SHOT_SETTINGS,
-    emptyEpisodeStory,
-    emptySeriesStory,
-    emptySetting,
-    type Episode,
-    type MediaRecord,
-    type Project,
-    type Shot
-} from '@cuepoint/studio/reference/domain/types';
+import {DEFAULT_SHOT_SETTINGS, type Shot} from "@cuepoint/studio/reference/features/video/models/shots";
+import {emptyEpisodeStory, emptySeriesStory} from "@cuepoint/studio/reference/features/video/models/story";
+import {emptySetting} from "@cuepoint/studio/reference/features/video/models/world";
+import {type Episode} from "@cuepoint/studio/reference/features/video/models/episodes";
+import {type MediaRecord} from "@cuepoint/studio/reference/features/library/models/media";
+import {type Project} from "@cuepoint/studio/reference/features/projects/models/project";
 import {emptySlot} from '@cuepoint/studio/reference/domain/slot';
 import {deriveEpisodeDelivery, episodeDeliveryCsv} from '@cuepoint/studio/reference/lib/episodeDelivery';
 import {exportProjectZip} from '@cuepoint/studio/reference/lib/projectPackage';

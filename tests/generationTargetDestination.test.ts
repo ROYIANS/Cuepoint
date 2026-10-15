@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generationTargetDestination } from "@/lib/generationTargetDestination";
+import { generationTargetDestination } from "@/features/video/services/generationTargetDestination";
 
 describe("generation target destination", () => {
   it("locates the exact shot in its owning episode", () => {

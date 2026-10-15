@@ -1,12 +1,12 @@
 import {registerSharedStorageCases} from "./helpers/sharedStorageCases";
 import {describe,expect,it} from "vitest";
 import {createNativeProbe} from "./helpers/nativeProductProbe";
-import {TABLE_NAMES,PRODUCT_SCHEMA} from "@/lib/storage/schema";
-import {targetRevision} from "@/lib/productionRevision";
-import {createNativeProductStore} from "@/lib/storage/native";
-import type {NativeQuery} from "@/lib/storage/protocol";
-import {requireKey} from "@/lib/storage/keys";
-import {encodeWireKey} from "@/lib/storage/wireText";
+import {TABLE_NAMES,PRODUCT_SCHEMA} from "@/platform/storage/schema";
+import {targetRevision} from "@/platform/data/revision";
+import {createNativeProductStore} from "@/platform/storage/native";
+import type {NativeQuery} from "@/platform/storage/protocol";
+import {requireKey} from "@/platform/storage/keys";
+import {encodeWireKey} from "@/platform/storage/wireText";
 
 registerSharedStorageCases("sqlite",createNativeProbe);
 

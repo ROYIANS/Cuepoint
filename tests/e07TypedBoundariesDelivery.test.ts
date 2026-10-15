@@ -1,9 +1,9 @@
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
-import {createProject} from "@/db/projects";
-import {firstEpisode} from "@/db/episodes";
-import {addShot, patchShot} from "@/db/shots";
-import {deriveEpisodeDelivery, episodeDeliveryCsv, escapeCsvCell} from "@/lib/episodeDelivery";
+import {db} from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import {firstEpisode} from "@/features/video/commands/episodes";
+import {addShot, patchShot} from "@/features/video/commands/shots";
+import {deriveEpisodeDelivery, episodeDeliveryCsv, escapeCsvCell} from "@/features/video/services/episodeDelivery";
 
 it("E07 exports all seven authored extra columns with unchanged base fields and CSV escaping", async () => {
     const project = await createProject("CSV"), episode = (await firstEpisode(project.id))!;

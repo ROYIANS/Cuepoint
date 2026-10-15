@@ -1,19 +1,20 @@
 import {describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {createAudioMusicProject} from "@/db/projects";
-import {addAudioChapter, addAudioClip, addAudioSegment, addAudioTake, getAudioProjectSnapshot, patchAudioSegment} from "@/db/audio";
-import {addMusicDraft} from "@/db/music";
-import {defaultMusicSettings} from "@/domain/music";
-import {deriveAudioSelection} from "@/components/audio/audioSelection";
-import {switchMusicVariant} from "@/components/music/switchMusicVariant";
-import {exportAudioMix} from "@/lib/audio/exportMix";
-import {loadAudioBuffer} from "@/lib/audio/buffers";
-import {getAudioExportFreshness} from "@/lib/audio/fingerprint";
-import {registerPendingDraft} from "@/lib/debouncedDraft";
+import {db} from "@/platform/product/store";
+import {createAudioMusicProject} from "@/features/projects/commands/projects";
+import {addAudioChapter, addAudioClip, addAudioSegment, addAudioTake,  patchAudioSegment} from "@/features/audio/commands/audio";
+import {getAudioProjectSnapshot} from "@/features/audio/queries/snapshot";
+import {addMusicDraft} from "@/features/music/commands/music";
+import {defaultMusicSettings} from "@/features/music/models/music";
+import {deriveAudioSelection} from "@/features/audio/ui/audioSelection";
+import {switchMusicVariant} from "@/features/music/ui/switchMusicVariant";
+import {exportAudioMix} from "@/features/audio/engine/exportMix";
+import {loadAudioBuffer} from "@/features/audio/engine/buffers";
+import {getAudioExportFreshness} from "@/features/audio/engine/fingerprint";
+import {registerPendingDraft} from "@/platform/product/drafts";
 import Dexie from "dexie";
 
 const audio = vi.hoisted(() => ({decode: vi.fn(), render: vi.fn()}));
-vi.mock("@/lib/audio/engine", async original => ({...await original<typeof import("@/lib/audio/engine")>(),
+vi.mock("@/features/audio/engine/engine", async original => ({...await original<typeof import("@/features/audio/engine/engine")>(),
     decodeAudioBlob: audio.decode, renderAudioMix: audio.render}));
 
 async function fixture() {

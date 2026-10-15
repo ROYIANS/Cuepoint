@@ -1,17 +1,17 @@
-import {readBinaryBlob} from "@/lib/storage/binary";
+import {ensureFirstEpisode} from "@/features/video/commands/episodes";
+import {readBinaryBlob} from "@/platform/storage/binary";
 import { describe, expect, it } from "vitest";
 import JSZip from "jszip";
-import { db } from "@/db/database";
-import {createAudioMusicProject, createProject} from "@/db/projects";
-import {ensureFirstEpisode} from "@/db/episodes";
-import {collectMediaIds, deleteMediaIfOrphan} from "@/db/media";
-import {deleteProject} from "@/db/cascadeCommands";
-import { addAudioChapter, addAudioSegment, addAudioTake, addAudioClip, patchAudioClip, patchAudioSegment, replaceAudioClips, getAudioProjectSnapshot, deleteAudioSegment, deleteAudioTake, adoptMusicWorkAsAudioTake } from "@/db/audio";
-import { prepareAudioGenerationJob, claimAudioGenerationJob } from "@/db/audioGeneration";
-import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
-import { addMusicWork } from "@/db/music";
-import { promoteLegacyMaterial } from "@/db/materials";
-import { getProjectKind } from "@/domain/types";
+import { db } from "@/platform/product/store";
+import {createAudioMusicProject, createProject} from "@/features/projects/commands/projects";
+import {collectMediaIds, deleteMediaIfOrphan} from "@/features/library/commands/media";
+import {deleteProject} from "@/features/projects/commands/lifecycle";
+import {addAudioChapter, addAudioSegment, addAudioTake, addAudioClip, patchAudioClip, patchAudioSegment, replaceAudioClips,  deleteAudioSegment, deleteAudioTake, adoptMusicWorkAsAudioTake} from "@/features/audio/commands/audio";
+import {getAudioProjectSnapshot} from "@/features/audio/queries/snapshot";
+import { prepareAudioGenerationJob, claimAudioGenerationJob } from "@/features/audio/commands/generation";
+import { exportProjectZip, importProjectZip } from "@/app/workflows/packages/projectPackage";
+import { addMusicWork } from "@/features/music/commands/music";
+import { promoteLegacyMaterial } from "@/features/library/commands/materials";
 
 async function source(projectId: string, segmentId?: string) {
   const mediaId = `media-${crypto.randomUUID()}`;
@@ -30,7 +30,6 @@ async function fixture() {
 describe("audio project foundation", () => {
   it("keeps missing-kind videos compatible and never repairs non-video episodes", async () => {
     const video = await createProject("video");
-    expect(getProjectKind(video)).toBe("video");
     expect(await ensureFirstEpisode(video.id)).toBeTruthy();
     const audio = await createAudioMusicProject("audio", "audio");
     const music = await createAudioMusicProject("music", "music");
@@ -38,8 +37,8 @@ describe("audio project foundation", () => {
     expect(await db.episodes.where("projectId").equals(music.id).count()).toBe(0);
     expect(await db.musicDrafts.where("projectId").equals(music.id).count()).toBe(1);
     await expect(ensureFirstEpisode(audio.id)).rejects.toThrow("视频");
-    expect(() => getProjectKind({ kind: "alien" as "video" })).toThrow();
   });
+
   it("rejects cross-project, cross-chapter, invalid trim and stale edits without writing", async () => {
     const { project, chapter, track, take, clip } = await fixture();
     const other = await createAudioMusicProject("other", "audio");

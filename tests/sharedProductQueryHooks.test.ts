@@ -1,5 +1,5 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import type {StoreObserver,StoreTx} from "@/lib/storage/types";
+import type {StoreObserver,StoreTx} from "@/platform/storage/types";
 type Effect={deps?:unknown[];cleanup?:()=>void};
 const host=vi.hoisted(()=>({cells:[] as unknown[], cursor:0, pending:[] as Array<()=>void>}));
 vi.mock("react",async original=>{
@@ -15,8 +15,8 @@ vi.mock("react",async original=>{
         },
     };
 });
-import {db} from "@/db/database";
-import {useProductQuery,useProductQueryState} from "@/lib/storage/hooks";
+import {db} from "@/platform/product/store";
+import {useProductQuery,useProductQueryState} from "@/platform/product/queries";
 function draw<T>(query:()=>T):T {host.cursor=0;const value=query();host.pending.splice(0).forEach(effect=>effect());return value;}
 function cleanup(){for(const cell of host.cells){if(cell && typeof cell==="object" && "cleanup" in cell)(cell as Effect).cleanup?.();}host.cells=[];host.pending=[];}
 afterEach(()=>{cleanup();vi.restoreAllMocks();});

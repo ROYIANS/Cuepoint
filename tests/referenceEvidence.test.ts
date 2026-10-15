@@ -1,17 +1,17 @@
 import {registeredTools} from "./helpers/registeredTools";
-import { beginAgentRun, finishAgentRun } from "@/db/agentRuns";
-import { prepareTaskWrapup } from "@/lib/agent/taskWrapup";
-import { saveTaskRecord } from "@/db/agentTaskRecords";
-import { REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS } from "@/lib/agent/referenceTools";
-import type { ConnectorConfig } from "@/domain/types";
-import type { ThreadLockManager } from "@/lib/agent/runOwnership";
+import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
+import { prepareTaskWrapup } from "@/features/agent/runtime/taskWrapup";
+import { saveTaskRecord } from "@/features/agent/commands/agentTaskRecords";
+import { REFERENCE_TOOLS as REFERENCE_TOOLS_DEFINITIONS } from "@/features/references/agent/referenceTools";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import type { ThreadLockManager } from "@/features/agent/runtime/runOwnership";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import {createProject} from "@/db/projects";
-import { createAgentTask } from "@/db/agentTasks";
-import { createManualWrapup, getTaskWrapupState } from "@/db/agentTaskWrapups";
-import { collectReferenceEvidence, toolReferenceAttachments, referenceToolSummary } from "@/lib/agent/referenceEvidence";
-import type { ProjectReference } from "@/domain/references";
+import { db } from "@/platform/product/store";
+import {createProject} from "@/features/projects/commands/projects";
+import { createAgentTask } from "@/features/agent/commands/agentTasks";
+import { createManualWrapup, getTaskWrapupState } from "@/features/agent/commands/agentTaskWrapups";
+import { collectReferenceEvidence, toolReferenceAttachments, referenceToolSummary } from "@/features/references/agent/referenceEvidence";
+import type { ProjectReference } from "@/features/references/models/references";
 const REFERENCE_TOOLS = registeredTools(REFERENCE_TOOLS_DEFINITIONS);
 
 

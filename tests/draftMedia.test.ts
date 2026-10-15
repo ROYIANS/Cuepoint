@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { DraftMediaSession } from "@/lib/draftMedia";
-import {deleteMediaIfOrphan, putMedia} from "@/db/media";
-import {createProject} from "@/db/projects";
-import {addCharacter, setCharacterSlot} from "@/db/assets";
-import { db } from "@/db/database";
-import { emptySlot } from "@/domain/slot";
+import { DraftMediaSession } from "@/features/library/services/draftMedia";
+import {deleteMediaIfOrphan, putMedia} from "@/features/library/commands/media";
+import {createProject} from "@/features/projects/commands/projects";
+import {addCharacter, setCharacterSlot} from "@/features/library/commands/assets";
+import { db } from "@/platform/product/store";
+import { emptySlot } from "@/features/library/models/slot";
 
 function deferred<T>() {
   let resolve!: (value: T) => void;

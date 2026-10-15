@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   downloadAIHubMixResult, getAIHubMixImageTask, getAIHubMixModelSchema, getAIHubMixVideoTask,
   listAIHubMixModels, submitAIHubMixImageGeneration, submitAIHubMixVideoGeneration, testAIHubMixConnection,
-} from "@/lib/ai/aihubmix";
-import type { AIHubMixGenerationRequest, AIHubMixImageGenerationRequest, AIHubMixTask } from "@/lib/ai/aihubmix";
+} from "@/features/video/providers/aihubmix";
+import type { AIHubMixGenerationRequest, AIHubMixImageGenerationRequest, AIHubMixTask } from "@/features/video/providers/aihubmix";
 
 const credentials = { baseUrl: " https://aihubmix.com/v1/ ", apiKey: " sk-secret-key " };
 const fetchResponse = (body: unknown, status = 200) => vi.fn<typeof fetch>(async () => Response.json(body, { status }));

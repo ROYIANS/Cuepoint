@@ -1,13 +1,13 @@
 import {beforeEach,describe,expect,it,vi} from 'vitest';
-import {db} from '@/db/database';
+import {db} from '@/platform/product/store';
 import {checkTavilyNative} from '../apps/desktop/ui/tavilyProbe';
 import {fixtureTavilyFetch} from '../apps/desktop/ui/tavilyProbeFetch';
 import {Evidence} from '../apps/desktop/ui/acceptanceEvidence';
 
 const state=vi.hoisted(()=>({native:true,profile:'dev.cuepoint.review.tavily.source-test',transport:vi.fn<typeof fetch>()}));
-vi.mock('@/lib/runtimeIdentity',()=>({isTauriRuntime:()=>state.native}));
-vi.mock('@/lib/productStorage',()=>({getProductStorage:()=>({runtime:'tauri',storage:'sqlite',profileId:state.profile,databaseName:`cuepoint-desktop:${state.profile}:v1`})}));
-vi.mock('@/lib/runtimeFetch',()=>({connectorProbeFetch:()=>state.transport}));
+vi.mock('@/platform/runtime/runtimeIdentity',()=>({isTauriRuntime:()=>state.native}));
+vi.mock('@/platform/runtime/storageProfile',()=>({getProductStorage:()=>({runtime:'tauri',storage:'sqlite',profileId:state.profile,databaseName:`cuepoint-desktop:${state.profile}:v1`})}));
+vi.mock('@/platform/runtime/runtimeFetch',()=>({connectorProbeFetch:()=>state.transport}));
 
 const endpoint='http://127.0.0.1:56368/v1';
 const init=(path:string):RequestInit=>({method:path==='/usage'?'GET':'POST',headers:{Authorization:'Bearer synthetic-tavily-probe-only'},

@@ -1,15 +1,16 @@
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
-import { db } from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle, deleteProp, deleteStyle, patchCharacter, patchProp, patchScene, patchStyle} from "@/db/assets";
-import {addEpisode, addStoryBeat, deleteEpisode, duplicateBeat, patchStoryBeat, restoreEpisode} from "@/db/episodes";
-import {addShot, addShots, deleteShots, duplicateShot, patchEpisodeShots, patchShot, restoreShots, setShotSlot} from "@/db/shots";
-import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/db/assetReuse";
-import {createProject, patchProjectDetails} from "@/db/projects";
-import { defaultImageGeneration, defaultVideoGeneration } from "@/domain/output";
-import { PACKAGE_FORMAT, STUDIO_LIBRARY_ID } from "@/domain/types";
-import { emptySlot } from "@/domain/slot";
-import { exportProjectZip, importProjectZip } from "@/lib/projectPackage";
+import { db } from "@/platform/product/store";
+import {addCharacter, addProp, addScene, addStyle, deleteProp, deleteStyle, patchCharacter, patchProp, patchScene, patchStyle} from "@/features/library/commands/assets";
+import {addEpisode, addStoryBeat, deleteEpisode, duplicateBeat, patchStoryBeat, restoreEpisode} from "@/features/video/commands/episodes";
+import {addShot, addShots, deleteShots, duplicateShot, patchEpisodeShots, patchShot, restoreShots, setShotSlot} from "@/features/video/commands/shots";
+import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/features/library/commands/assetReuse";
+import {createProject, patchProjectDetails} from "@/features/projects/commands/projects";
+import { defaultImageGeneration, defaultVideoGeneration } from "@/features/video/models/output";
+import {PACKAGE_FORMAT} from "@/platform/data/packageFormat";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
+import { emptySlot } from "@/features/library/models/slot";
+import { exportProjectZip, importProjectZip } from "@/app/workflows/packages/projectPackage";
 
 async function fixture() {
   const project = await createProject("电影");

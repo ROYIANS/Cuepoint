@@ -1,16 +1,16 @@
 import {failStoreTableOnce} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
-import { db } from "@/db/database";
-import { beginAgentRun, checkpointAgentRun, interruptThreadRuns } from "@/db/agentRuns";
-import { resolveAgentToolApproval, saveToolRound, startModelStep, transitionToolCall } from "@/db/agentTools";
-import { updateGeneralAgentConfig } from "@/db/agentSettings";
-import {createChatThread} from "@/db/chat";
-import {deleteChatThread} from "@/db/cascadeCommands";
-import type { AgentWireToolCall } from "@/domain/agent";
-import type { ConnectorConfig } from "@/domain/types";
-import { executeChatRun, resumeChatRun } from "@/lib/agent/runChat";
-import { recoverAbandonedRuns, withThreadRunLock, type ThreadLockManager } from "@/lib/agent/runOwnership";
-import { BUILTIN_TOOLS, type AgentToolDefinition } from "@/lib/agent/tools";
+import { db } from "@/platform/product/store";
+import { beginAgentRun, checkpointAgentRun, interruptThreadRuns } from "@/features/agent/commands/agentRuns";
+import { resolveAgentToolApproval, saveToolRound, startModelStep, transitionToolCall } from "@/features/agent/commands/agentTools";
+import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
+import {createChatThread} from "@/features/agent/commands/chat";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
+import type { AgentWireToolCall } from "@/features/agent/models/agent";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
+import { recoverAbandonedRuns, withThreadRunLock, type ThreadLockManager } from "@/features/agent/runtime/runOwnership";
+import { BUILTIN_TOOLS, type AgentToolDefinition } from "@/features/agent/runtime/tools";
 
 const connector: ConnectorConfig = { id: "review", name: "Review fixture", definitionId: "openai-compatible", baseUrl: "https://review.invalid/v1", apiKey: "fixture-key", updatedAt: "2026-09-18" };
 const wireCall = (id: string): AgentWireToolCall => ({ id, type: "function", function: { name: "workspace_overview", arguments: "{}" } });

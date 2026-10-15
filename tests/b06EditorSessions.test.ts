@@ -45,30 +45,31 @@ vi.mock("react", async original => {
         },
     };
 });
-vi.mock("@/lib/storage/hooks", () => {
+vi.mock("@/platform/product/queries", () => {
     const read = () => {const host = runtime.active!; return host.results[host.queryIndex++];};
     return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
 });
 vi.mock("@tanstack/react-router", () => ({useBlocker: () => ({status: "idle"})}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
-vi.mock("@/lib/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
+vi.mock("@/app/drafts/undo", () => ({useUndo: () => ({registerUndo: vi.fn()})}));
 
 import {toast} from "sonner";
-import {db} from "@/db/database";
-import * as repoProjects from "@/db/projects";
-import * as repoEpisodes from "@/db/episodes";
-import * as repoConnectors from "@/db/connectors";
-import * as connectors from "@/lib/ai/connectors";
-import {ConnectorsSection as ConnectorsPage} from "@/components/studio/ConnectorsPage";
-import {StoryPage} from "@/components/story/StoryPage";
-import {PageHeader} from "@/components/layout/PageLayout";
-import {Dialog, DialogContent} from "@/components/ui/dialog";
-import {DraftStatus} from "@/components/ui/draft-status";
-import {Input} from "@/components/ui/input";
-import {Textarea} from "@/components/ui/textarea";
-import type {ConnectorConfig, Episode} from "@/domain/types";
+import {db} from "@/platform/product/store";
+import * as repoProjects from "@/features/projects/commands/projects";
+import * as repoEpisodes from "@/features/video/commands/episodes";
+import * as repoConnectors from "@/features/settings/commands/connectors";
+import * as connectors from "@/features/settings/models/connectors";
+import {ConnectorsSection as ConnectorsPage} from "@/features/settings/ui/ConnectorsPage";
+import {StoryPage} from "@/features/video/ui/StoryPage";
+import {PageHeader} from "@/app/layout/PageLayout";
+import {Dialog, DialogContent} from "@/ui/dialog";
+import {DraftStatus} from "@/app/drafts/draft-status";
+import {Input} from "@/ui/input";
+import {Textarea} from "@/ui/textarea";
+import type {ConnectorConfig} from "@/features/settings/models/connector";
+import type {Episode} from "@/features/video/models/episodes";
 
-import {ModuleLayout} from "@/components/layout/ModuleLayout";
+import {ModuleLayout} from "@/app/layout/ModuleLayout";
 type Node = ReactElement<Record<string, unknown>>;
 const hosts: Host[] = [];
 function mount(results: unknown[] = []) {

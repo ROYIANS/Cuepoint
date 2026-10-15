@@ -1,9 +1,9 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {downloadBlob, isPublishedSaveError} from "@/lib/runtimeSave";
-import {pickZipFile} from "@/lib/library";
+import {downloadBlob, isPublishedSaveError} from "@/platform/runtime/runtimeSave";
+import {pickZipFile} from "@/features/library/services/library";
 
 const native = vi.hoisted(() => ({save: vi.fn()}));
-vi.mock("@/lib/nativeSystemServices", () => ({saveNativeBlob: native.save}));
+vi.mock("@/platform/runtime/nativeSystemServices", () => ({saveNativeBlob: native.save}));
 
 afterEach(() => {
     vi.restoreAllMocks();

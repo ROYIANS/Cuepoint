@@ -9,7 +9,7 @@ export default defineConfig({
     envDir: "../..",
     publicDir: sharedPublic,
     define: {__APP_VERSION__: JSON.stringify(appVersion)},
-    plugins: [tanstackRouter({target: "react", autoCodeSplitting: true, routesDirectory: join(studioSource, "routes"), generatedRouteTree: join(studioSource, "routeTree.gen.ts")}), react(), tailwindcss(), chunkModuleReport()],
+    plugins: [tanstackRouter({target: "react", autoCodeSplitting: true, routesDirectory: join(studioSource, "app/routes"), generatedRouteTree: join(studioSource, "app/routeTree.gen.ts")}), react(), tailwindcss(), chunkModuleReport()],
     build: {manifest: true, assetsDir: "assets/web"},
     worker: {format: "es"},
 });

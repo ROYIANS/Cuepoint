@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {db} from "@/db/database";
+import {db} from "@/platform/product/store";
 
 /**
  * Every `useProductQuery` callback runs inside one read transaction covering all tables.

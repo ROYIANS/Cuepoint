@@ -3,7 +3,7 @@ import {
   moveIdToPosition,
   reorderGroupInFullOrder,
   sameIdOrder,
-} from "@/lib/reorderIds";
+} from "@/platform/collections/reorderIds";
 
 describe("moveIdToPosition", () => {
   it("moves an id to another position", () => {

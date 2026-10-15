@@ -1,19 +1,19 @@
 import {failStoreTableOnce,interceptStoreTable} from "./helpers/storeFaults";
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {db} from "@/db/database";
-import {addCharacter, addProp, addScene, addStyle, patchCharacter, patchProp, patchScene, patchStyle, setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "@/db/assets";
-import {addShot, patchShot, setShotSlot} from "@/db/shots";
-import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/db/assetReuse";
-import {createProject, patchProjectOutput} from "@/db/projects";
-import {putMedia} from "@/db/media";
-import {PRODUCTION_TABLES} from "@/db/productionShared";
-import {applyProductionProposal, createProductionProposal, undoProductionProposal} from "@/db/productionProposals";
-import {emptySlot} from "@/domain/slot";
-import {STUDIO_LIBRARY_ID} from "@/domain/types";
-import type {GenerationSlot, MediaKind} from "@/domain/types";
-import type {AgentGenerationJob} from "@/domain/agentGeneration";
-import type {GenerationBatch} from "@/domain/agentGenerationBatch";
-import {DraftConflictError} from "@/lib/draftConflict";
+import {db} from "@/platform/product/store";
+import {addCharacter, addProp, addScene, addStyle, patchCharacter, patchProp, patchScene, patchStyle, setCharacterSlot, setPropSlot, setSceneSlot, setStyleSlot} from "@/features/library/commands/assets";
+import {addShot, patchShot, setShotSlot} from "@/features/video/commands/shots";
+import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} from "@/features/library/commands/assetReuse";
+import {createProject, patchProjectOutput} from "@/features/projects/commands/projects";
+import {putMedia} from "@/features/library/commands/media";
+import {PRODUCTION_TABLES} from "@/platform/product/scopes";
+import {applyProductionProposal, createProductionProposal, undoProductionProposal} from "@/features/video/commands/proposals";
+import {emptySlot} from "@/features/library/models/slot";
+import {STUDIO_LIBRARY_ID} from "@/features/library/models/ownership";
+import type {GenerationSlot, MediaKind} from "@/features/library/models/slots";
+import type {AgentGenerationJob} from "@/features/agent/models/agentGeneration";
+import type {GenerationBatch} from "@/features/agent/models/agentGenerationBatch";
+import {DraftConflictError} from "@/platform/product/draftConflict";
 
 const assetApis = [
     {kind: "character", add: addCharacter, patch: patchCharacter, copy: copyStudioCharacter,

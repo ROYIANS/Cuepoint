@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildAudioSchedule, envelopeGainAt, seekAudioSchedule } from "@/lib/audio/schedule";
-import type { AudioScheduleInput } from "@/lib/audio/schedule";
-import { encodePcm16Wav, preflightAudioRender } from "@/lib/audio/wav";
-import { createWaveformPeaks } from "@/lib/audio/waveform";
-import { AudioBufferCache, scheduleAudioNodes, validateScheduleBuffers } from "@/lib/audio/engine";
+import { buildAudioSchedule, envelopeGainAt, seekAudioSchedule } from "@/features/audio/engine/schedule";
+import type { AudioScheduleInput } from "@/features/audio/engine/schedule";
+import { encodePcm16Wav, preflightAudioRender } from "@/features/audio/engine/wav";
+import { createWaveformPeaks } from "@/features/audio/engine/waveform";
+import { AudioBufferCache, scheduleAudioNodes, validateScheduleBuffers } from "@/features/audio/engine/engine";
 
 const fixture = (): AudioScheduleInput => ({
   chapters: [{ id: "chapter", order: 0 }],
