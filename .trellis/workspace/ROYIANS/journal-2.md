@@ -258,3 +258,42 @@ Completed project/Studio asset duplicate protection and certainty-aware recovery
 ### Next Steps
 
 - Converge and activate E16 finite asset/shot details with retained batch-review handoff, then independently verify and commit.
+
+
+## Session 76: E16 finite business details and retained batch review
+<!-- trellis-session: v=2 fp=1f5d30a9b680132b -->
+
+**Date**: 2026-10-15
+**Task**: E16 finite business details and retained batch review
+**Package**: studio
+**Branch**: `codex/business-detail-links`
+
+### Summary
+
+Shipped exact shot/four-asset project/Studio detail links, reused real asset editors, and retained batch review through guarded modal handoff and return. Completed independent changed-scope review and archival.
+
+### Main Changes
+
+- One finite BusinessDetails facade retains shot/asset owners and confirms selected-frame DOM commitment; stale/teardown requests settle without reopening old sources.
+- Library routes and embedded panels share actual fields/slots, exact owner queries, synchronous departure protection, frozen CAS saves and typed unknown text-intent quarantine.
+- Batch target inspection releases only Radix presentation, retaining drafts/revisions/groups/pending commands and restoring scroll/focus/caret after guarded return.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `8ac73652` | feat: open asset details beside agent and retain batch review |
+
+### Testing
+
+- [OK] Necessary worker suites passed; checker reran affected facade/host/batch 5 suites/34 and asset 2 suites/19 after two fixes. Overlapping runs are not accumulated.
+- [OK] Direct Studio types passed; 17-file scoped lint 0 errors/12 visible reviewed warnings; architecture 652 sources/2556 static/12 dynamic/0 failures or cycles; final 31-file digest matched.
+- [OK] Actual isolated Chromium project-character edit/save and Studio-style detail passed wide/full-width same-input-DOM and return without route departure; no provider/native/build/package coverage claimed.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Continue E06 reviewed neutral capability/binding/grant foundation through public core and independent Todo; preserve no-build source-only checks and deferred packed/native batch gates.

@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-2.md`
-- **Total Sessions**: 75
+- **Total Sessions**: 76
 - **Last Active**: 2026-10-15
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-2.md` | ~260 | Active |
+| `journal-2.md` | ~299 | Active |
 | `journal-1.md` | ~1968 | Archived |
 <!-- @@@/auto:active-documents -->
 
@@ -30,6 +30,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 76 | 2026-10-15 | E16 finite business details and retained batch review | `8ac73652` | `codex/business-detail-links` |
 | 75 | 2026-10-15 | E05 guarded creative operations and serial import recovery | `04d47969` | `codex/creative-operation-feedback` |
 | 74 | 2026-10-15 | E04 owned topic reads and centered return to latest | `982dece3`, `8220faf5` | `codex/agent-thread-reading` |
 | 73 | 2026-10-15 | E03 execution feedback and quiet preparation | `9e3b8dcb` | `codex/agent-execution-feedback` |
