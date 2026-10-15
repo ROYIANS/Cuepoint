@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import type {ShotDetailTarget} from "../models/shotDetailTarget";
+import type {DetailPanelClose, DetailPanelCloseRequest, DetailPanelOutcome, DetailPanelRequest} from "../../../app/layout/detailPanelSession";
 import {useProductQueryState} from "../../../platform/product/queries";
 import {type ManualDraftState, useManualDraftDeparture} from "../../../app/drafts/useManualDraftGuard";
 import {ContextPanel, ContextPanelContent, ContextPanelDescription, ContextPanelHeader, ContextPanelTitle} from "../../../app/layout/context-panel";
@@ -26,11 +27,16 @@ type DraftEntry = ManualDraftState & {discard?: () => void};
 type ReportDraft = (key: string, state: ManualDraftState, discard?: () => void) => void;
 const targetKey = (target: ShotDetailTarget) => JSON.stringify([target.projectId, target.episodeId, target.shotId]);
 
-/** A local entity selection is guarded before changing the keyed editor, independently of host registration. */
-export function ShotDetailPanel({target, onTargetChange, onClose}: {
-    target: ShotDetailTarget; onTargetChange: (target: ShotDetailTarget) => void; onClose: () => void;
+/** Video retains its editor until its own departure guard accepts a selection. */
+export function ShotDetailPanel({request, onRequestOutcome, onClosed, closeRequest, onCloseRefused, returnLabel}: {
+    request: DetailPanelRequest<ShotDetailTarget>;
+    onRequestOutcome: (outcome: DetailPanelOutcome) => void;
+    onClosed: (event: DetailPanelClose) => void;
+    closeRequest?: DetailPanelCloseRequest;
+    onCloseRefused?: (closeRequestId: string) => void;
+    returnLabel?: string;
 }) {
-    const [active, setActive] = useState(target);
+    const [active, setActive] = useState(request);
     const entries = useRef(new Map<string, DraftEntry>());
     const [state, setState] = useState<ManualDraftState>({dirty: false, pending: false});
     const readState = useCallback(() => {
@@ -53,29 +59,74 @@ export function ShotDetailPanel({target, onTargetChange, onClose}: {
         setState({dirty: false, pending: false});
     }, []);
     const {requestDeparture, confirmation} = useManualDraftDeparture(state.dirty, state.pending, discard, {readState});
-    const requested = useRef(target);
-    requested.current = target;
+    const callbacks = useRef({onRequestOutcome, onClosed, onCloseRefused});
+    callbacks.current = {onRequestOutcome, onClosed, onCloseRefused};
+    const handled = useRef(request.id);
+    const presented = useRef<string | undefined>(undefined);
     const switching = useRef(false);
     useEffect(() => {
-        if (targetKey(target) === targetKey(active) || switching.current) return;
+        if (request.id === handled.current) return;
+        handled.current = request.id;
+        if (switching.current) {
+            callbacks.current.onRequestOutcome({requestId: request.id, status: "refused", reason: "busy"});
+            return;
+        }
+        if (targetKey(request.target) === targetKey(active.target)) {
+            setActive(request);
+            return;
+        }
         switching.current = true;
         requestDeparture(() => {
             switching.current = false;
             entries.current.clear();
             setState({dirty: false, pending: false});
-            setActive(requested.current);
+            setActive(request);
         }, discard, () => {
             switching.current = false;
-            onTargetChange(active);
+            callbacks.current.onRequestOutcome({requestId: request.id, status: "refused", reason: "guard"});
         });
-    }, [target, active, requestDeparture, discard, onTargetChange]);
-    return <><ContextPanel open onOpenChange={open => {if (!open) onClose();}}
-        onRequestDeparture={(proceed, cancel) => requestDeparture(proceed, discard, cancel)}>
-        <ContextPanelContent returnLabel="返回对话" className="flex min-h-0 flex-col" data-shot-detail={active.shotId}
+    }, [request, active, requestDeparture, discard]);
+    const close = useCallback((reason: "return", closeRequestId?: string) => {
+        if (switching.current) {
+            if (closeRequestId) callbacks.current.onCloseRefused?.(closeRequestId);
+            return;
+        }
+        switching.current = true;
+        requestDeparture(() => {
+            switching.current = false;
+            callbacks.current.onClosed({requestId: active.id, reason});
+        }, discard, () => {
+            switching.current = false;
+            if (closeRequestId) callbacks.current.onCloseRefused?.(closeRequestId);
+        });
+    }, [active.id, requestDeparture, discard]);
+    const handledClose = useRef<string | undefined>(undefined);
+    useEffect(() => {
+        if (!closeRequest || handledClose.current === closeRequest.id) return;
+        handledClose.current = closeRequest.id;
+        if (closeRequest.requestId !== active.id) {
+            callbacks.current.onCloseRefused?.(closeRequest.id);
+            return;
+        }
+        close(closeRequest.reason, closeRequest.id);
+    }, [closeRequest, active.id, close]);
+    return <><ContextPanel open onOpenChange={(open, reason) => {
+        if (open) return;
+        if (reason === "guard-refused" || reason === "busy") {
+            callbacks.current.onRequestOutcome({requestId: active.id, status: "refused", reason: reason === "busy" ? "busy" : "guard"});
+        } else callbacks.current.onClosed({requestId: active.id, reason: reason ?? "close"});
+    }} onRequestDeparture={(proceed, cancel) => requestDeparture(proceed, discard, cancel)}>
+        <ContextPanelContent returnLabel={returnLabel ?? "返回对话"} showReturnWhenDocked={!!returnLabel}
+            onReturn={returnLabel ? () => close("return") : undefined}
+            onPresented={() => {
+                if (presented.current === active.id) return;
+                presented.current = active.id;
+                callbacks.current.onRequestOutcome({requestId: active.id, status: "presented"});
+            }} className="flex min-h-0 flex-col" data-shot-detail={active.target.shotId}
             aria-busy={state.pending} data-unsaved-fields={[...entries.current].filter(([, entry]) => entry.dirty).map(([key]) => key).join(",")}>
             <ContextPanelHeader><ContextPanelTitle>镜头详情</ContextPanelTitle>
                 <ContextPanelDescription>查看与编辑镜头，对话会继续运行。</ContextPanelDescription></ContextPanelHeader>
-            <ShotDetailContent key={targetKey(active)} target={active} report={report} readState={readState}/>
+            <ShotDetailContent key={targetKey(active.target)} target={active.target} report={report} readState={readState}/>
         </ContextPanelContent>
     </ContextPanel>{confirmation}</>;
 }

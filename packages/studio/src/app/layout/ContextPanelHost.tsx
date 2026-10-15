@@ -1,10 +1,11 @@
 import {createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState} from "react";
 
+export type ContextPanelHostCloseReason = "replaced" | "guard-refused" | "busy";
 type Registration = {
     id: string;
     width: number;
     depart: (proceed: () => void, cancel: () => void) => void;
-    close: () => void
+    close: (reason: ContextPanelHostCloseReason) => void
 };
 type Host = {
     target: HTMLElement | null; width: number; docked: boolean; fullWidth: boolean; active: string | null;
@@ -51,7 +52,7 @@ export function ContextPanelHostProvider({children, target, surfaceWidth, naviga
     const request = useCallback((id: string) => {
         if (activeRef.current === id) return;
         if (pending.current) {
-            if (pending.current !== id) registrations.current.get(id)?.close();
+            if (pending.current !== id) registrations.current.get(id)?.close("busy");
             return;
         }
         const attempt = ++generation.current;
@@ -65,13 +66,13 @@ export function ContextPanelHostProvider({children, target, surfaceWidth, naviga
             if (attempt !== generation.current || !registrations.current.has(id)) return;
             pending.current = null;
             generation.current++;
-            outgoing.close();
+            outgoing.close("replaced");
             activate(id);
         }, () => {
             if (attempt !== generation.current) return;
             pending.current = null;
             generation.current++;
-            registrations.current.get(id)?.close();
+            registrations.current.get(id)?.close("guard-refused");
         });
     }, [activate]);
     const docked = surfaceWidth >= navigationWidth + width + 480;

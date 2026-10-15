@@ -62,6 +62,8 @@ import {CharacterDetailPage} from "@/features/library/ui/CharacterDetailPage";
 import {SceneDetailPage} from "@/features/library/ui/SceneDetailPage";
 import {PropDetailPage} from "@/features/library/ui/PropDetailPage";
 import {StyleDetailPage} from "@/features/library/ui/StyleDetailPage";
+import {AssetDetailContent, assetTargetKey} from "@/features/library/ui/AssetDetailContent";
+import {CharacterDetailFields, SceneDetailFields, PropDetailFields, StyleDetailFields} from "@/features/library/ui/assetDetailFields";
 import {EditableGenerationSlot} from "@/features/library/ui/GenerationSlotCard";
 import {ShotEditorPage} from "@/features/video/ui/ShotEditorPage";
 import {StoryboardPrintPage} from "@/features/video/ui/StoryboardPrintPage";
@@ -78,6 +80,8 @@ function nodes(tree: unknown): Node[] {
     if (Array.isArray(tree)) return tree.flatMap(nodes);
     if (!tree || typeof tree !== "object" || !("props" in tree)) return [];
     const node = tree as Node;
+    if ([AssetDetailContent, CharacterDetailFields, SceneDetailFields, PropDetailFields, StyleDetailFields].includes(node.type as never))
+        return [node, ...nodes((node.type as (props: Record<string, unknown>) => unknown)(node.props))];
     // These actual pure presentation boundaries receive visible content through
     // named props. Keep hookful frame/feature/slot owners opaque so inspecting a
     // title cannot consume extra mocked queries or alter the owner's hook cells.
@@ -88,7 +92,7 @@ function nodes(tree: unknown): Node[] {
 }
 function unwrap(tree: unknown): unknown {
     const node = tree as Node;
-    if (node && typeof node.type === "function" && /DetailContent|PageContent|^ProjectHomePage$/.test(node.type.name)) {
+    if (node && typeof node.type === "function" && /DetailContent|AssetDetailRoute|PageContent|^ProjectHomePage$/.test(node.type.name)) {
         return unwrap((node.type as (props: Record<string, unknown>) => unknown)(node.props));
     }
     return tree;
@@ -124,18 +128,22 @@ describe("B01 actual query consumers", () => {
         const a = await repoProjects.createProject("A"); const b = await repoProjects.createProject("B");
         const first = await c.add(a.id); const second = await c.add(a.id);
         const run = () => c.page(second.id, a.id);
+        const envelope = (ownerId: string, id: string, value: unknown) => ({
+            key: assetTargetKey((c.page(id, ownerId) as ReactElement<{target: Parameters<typeof assetTargetKey>[0]}>).props.target),
+            value: value === null ? null : {kind: c.kind, asset: value},
+        });
         for (const value of [first, null]) {
             reset();
-            const tree = draw(run, [{ownerId: a.id, id: first.id, value}]);
+            const tree = draw(run, [envelope(a.id, first.id, value)]);
             expectLoading(tree);
             expect(tree.some(node => node.type === EditableGenerationSlot)).toBe(false);
         }
         reset();
-        expect(texts(draw(run, [{ownerId: a.id, id: second.id, value: null}])).join("")).toContain("找不到");
+        expect(texts(draw(run, [envelope(a.id, second.id, null)])).join("")).toContain("找不到");
         reset();
-        expect(texts(draw(() => c.page(second.id, b.id), [{ownerId: b.id, id: second.id, value: second}])).join("")).toContain("找不到");
+        expect(texts(draw(() => c.page(second.id, b.id), [envelope(b.id, second.id, second)])).join("")).toContain("找不到");
         reset(); draw(() => c.page("missing", a.id), []);
-        expect(await host.queriers[0]()).toEqual({ownerId: a.id, id: "missing", value: null});
+        expect(await host.queriers[0]()).toEqual(envelope(a.id, "missing", null));
         const key = (c.page(second.id, a.id) as Node).key;
         expect((c.page(second.id, b.id) as Node).key).not.toBe(key);
         expect((c.page(first.id, a.id) as Node).key).not.toBe(key);

@@ -12,7 +12,7 @@
 - Read [Interaction Feedback](../../frontend/interaction-feedback.md) before adding loading/progress/success/recovery UI; keep ordinary success quiet and internal phases out of product copy.
 - Read [Creative operation feedback](../../frontend/creative-operation-feedback.md) before changing library create/delete or file import; preserve acknowledged receipts, uncertain intent quarantine and serial next-file stop.
 - Read the relevant business/Agent contracts linked by the canonical frontend index before editing that feature. Full specs may require chunked reads beyond injection limits.
-- Read [Agent business details](../../frontend/agent-business-details.md) for shot-link activation, in-workspace detail presentation and aggregate editor departure; keep Agent execution and Video editing with their existing owners.
+- Read [Agent business details](../../frontend/agent-business-details.md) for finite shot/asset-link activation, retained batch-review handoff and aggregate editor departure; keep execution and real feature editing with their existing owners.
 - Read [Agent send recovery](../../frontend/agent-send-recovery.md) for immediate submitted content, whole-draft restoration, reserved identities and unknown-outcome reconciliation.
 - Read [Agent execution feedback](../../frontend/agent-execution-feedback.md) for invocation-bound phases, repeat-safe Stop and private timing; preserve existing runtime ownership and quiet successful messages.
 - Read [Agent topic reading](../../frontend/agent-thread-reading.md) for requested-topic query envelopes, owned departure and local return-to-latest; preserve the execution/composer owner.

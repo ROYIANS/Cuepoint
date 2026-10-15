@@ -12,7 +12,7 @@ import {
 import {createPortal} from "react-dom";
 import {FocusScope} from "@radix-ui/react-focus-scope";
 import {DismissableLayer} from "@radix-ui/react-dismissable-layer";
-import {useContextPanelHost} from "./ContextPanelHost";
+import {useContextPanelHost, type ContextPanelHostCloseReason} from "./ContextPanelHost";
 import {ArrowLeft, XIcon} from "../../ui/icons";
 import {createOverlayFocusReturn} from "../../ui/overlayFocusReturn";
 import {cn} from "../../ui/cn";
@@ -35,7 +35,7 @@ function usePanel() {
 
 /** Feature-owned open/draft state; the frame arbitrates presentation only. */
 export function ContextPanel({open, onOpenChange, width = 400, onRequestDeparture, children}: {
-    open: boolean; onOpenChange: (open: boolean) => void; width?: number; children: ReactNode;
+    open: boolean; onOpenChange: (open: boolean, reason?: ContextPanelHostCloseReason) => void; width?: number; children: ReactNode;
     onRequestDeparture?: (proceed: () => void, cancel?: () => void) => void;
 }) {
     const id = useId();
@@ -47,11 +47,21 @@ export function ContextPanel({open, onOpenChange, width = 400, onRequestDepartur
     const current = useRef({onOpenChange, onRequestDeparture});
     current.current = {onOpenChange, onRequestDeparture};
     const register = host?.register, request = host?.request, release = host?.release;
-    useEffect(() => register?.({
-        id, width, depart: (proceed, cancel) => {
-            if (current.current.onRequestDeparture) current.current.onRequestDeparture(proceed, cancel); else proceed();
-        }, close: () => current.current.onOpenChange(false)
-    }), [register, id, width]);
+    const registrationLifetime = useRef({generation: 0});
+    useEffect(() => {
+        const lifetimeState = registrationLifetime.current;
+        const lifetime = ++lifetimeState.generation;
+        const unregister = register?.({
+            id, width, depart: (proceed, cancel) => {
+                if (current.current.onRequestDeparture) current.current.onRequestDeparture(proceed, cancel); else proceed();
+            }, close: reason => current.current.onOpenChange(false, reason)
+        });
+        return () => {
+            // A setup replay replaces this registration before its cleanup runs.
+            // Preserve the host's pending guard rather than request it twice.
+            queueMicrotask(() => {if (lifetimeState.generation === lifetime) unregister?.();});
+        };
+    }, [register, id, width]);
     useEffect(() => {
         if (open) request?.(id); else release?.(id);
     }, [open, request, release, id]);
@@ -71,18 +81,27 @@ export function ContextPanelContent({
                                         className,
                                         showCloseButton = true,
                                         returnLabel = "返回工作区",
+                                        showReturnWhenDocked = false,
+                                        onReturn,
+                                        onPresented,
                                         onOpenAutoFocus,
                                         onCloseAutoFocus,
                                         side: _side,
                                         ...props
                                     }: ComponentProps<"div"> & {
     side?: "right" | "left"; showCloseButton?: boolean; returnLabel?: string;
+    showReturnWhenDocked?: boolean; onReturn?: () => void; onPresented?: () => void;
     onOpenAutoFocus?: (event: Event) => void; onCloseAutoFocus?: (event: Event) => void;
 }) {
     const panel = usePanel();
     const host = useContextPanelHost();
     const focusReturn = panel.focusReturn;
     const ref = useRef<HTMLDivElement>(null);
+    const presented = useRef(onPresented);
+    presented.current = onPresented;
+    useLayoutEffect(() => {
+        if (panel.shown && ref.current?.isConnected) presented.current?.();
+    });
     const lastFullWidth = useRef(panel.fullWidth);
     useLayoutEffect(() => {
         const becameFullWidth = panel.fullWidth && !lastFullWidth.current;
@@ -93,7 +112,7 @@ export function ContextPanelContent({
         const focused = document.activeElement;
         if (!panel.shown || !ref.current || !(focused instanceof Element)) return;
         const workspaceFocus = becameFullWidth && focused.closest("[data-context-panel-workspace]");
-        const hiddenReturnFocus = becameDocked && ref.current.contains(focused) && focused.closest(".context-panel-return-bar");
+        const hiddenReturnFocus = becameDocked && ref.current.contains(focused) && focused.closest(".context-panel-return-bar[hidden]");
         if (workspaceFocus || hiddenReturnFocus) {
             const target = [...ref.current.querySelectorAll<HTMLElement>("[autofocus], button:not(:disabled), input:not(:disabled), textarea:not(:disabled), a[href], [tabindex='0']")]
                 .find(element => !element.closest("[hidden], [inert], [aria-hidden=true]"));
@@ -124,8 +143,8 @@ export function ContextPanelContent({
                      className={cn("context-panel-content", className)}
                      role="complementary"
                      aria-labelledby={panel.titleId} aria-describedby={panel.descriptionId} tabIndex={-1}>
-                    <div className="context-panel-return-bar" hidden={!panel.fullWidth}>
-                        <button type="button" className="context-panel-return" onClick={panel.close}>
+                    <div className="context-panel-return-bar" hidden={!panel.fullWidth && !showReturnWhenDocked}>
+                        <button type="button" className="context-panel-return" onClick={onReturn ?? panel.close}>
                             <ArrowLeft className="size-4" aria-hidden/>{returnLabel}
                         </button>
                     </div>

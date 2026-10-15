@@ -3,7 +3,7 @@
   "name": "business-detail-link-rollout",
   "title": "E16 · 业务详情链接覆盖与复核入口衔接",
   "description": "在首个单镜头并排详情交付后推广其他业务实体，并解决批量复核弹窗中查看目标时的详情可达性与草稿返回。",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "studio",
@@ -12,22 +12,38 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": null,
-  "base_branch": "main",
+  "branch": "codex/business-detail-links",
+  "base_branch": "codex/creative-operation-feedback",
   "worktree_path": null,
   "commit": null,
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
-  "relatedFiles": [],
-  "notes": "Backlog follows E01; expanded entity coverage and modal review handoff require focused design before implementation.",
+  "relatedFiles": [
+    "packages/studio/src/app/details",
+    "packages/studio/src/app/layout/ContextPanelHost.tsx",
+    "packages/studio/src/app/layout/context-panel.tsx",
+    "packages/studio/src/app/layout/detailPanelSession.ts",
+    "packages/studio/src/features/library",
+    "packages/studio/src/features/video/ui/ShotDetailPanel.tsx",
+    "packages/studio/src/features/agent/ui/AgentGenerationBatches.tsx",
+    ".trellis/spec/frontend/agent-business-details.md",
+    "quality/studio-ownership.json",
+    "tests/fixtures/shared-storage/nativeAcceptanceSuites.json"
+  ],
+  "notes": "Source-backed finite shot/four-asset editable details and retained batch-review handoff design reviewed after E01–E05. Intentional non-detail destinations and residual family work remain explicit in coverage inventory.",
   "meta": {
     "epicCode": "E16",
-    "deliveryState": "planning-backlog",
-    "implementationApproved": false,
+    "deliveryState": "verified-ready-for-stage-commit",
+    "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-parallel-details"
-    ]
+    ],
+    "readiness": "Reviewed finite entity coverage, explicit host/feature/facade admission contract and actual draft/modal validation plan.",
+    "approvalDate": "2026-10-15",
+    "approvalText": "ok，继续，每个阶段完了就提交代码，然后再继续",
+    "testingPolicy": "necessary affected checks only; full regression/build/package at batch end",
+    "validation": "Direct affected UI/store suites and independent review passed; final Studio types, scoped lint and architecture passed. Actual isolated browser project/Studio asset paths passed. Broad/native/build/package/live gates deferred to batch end."
   }
 }

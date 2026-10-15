@@ -77,6 +77,8 @@ import {EditableGenerationSlot, GenerationSlotEditor} from "@/features/library/u
 import {ProjectSettingsPanel} from "@/features/projects/ui/ProjectSettingsPanel";
 import {ShotEditorPage} from "@/features/video/ui/ShotEditorPage";
 import {DurationInput} from "@/features/video/ui/DurationInput";
+import {AssetDetailContent, assetTargetKey} from "@/features/library/ui/AssetDetailContent";
+import {CharacterDetailFields, SceneDetailFields, PropDetailFields, StyleDetailFields} from "@/features/library/ui/assetDetailFields";
 import {AssetTextField} from "@/features/library/ui/AssetTextField";
 
 vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn()});
@@ -87,12 +89,14 @@ function nodes(tree: unknown): Node[] {
     if (Array.isArray(tree)) return tree.flatMap(nodes);
     if (!tree || typeof tree !== "object" || !("props" in tree)) return [];
     const node = tree as Node;
+    if ([AssetDetailContent, CharacterDetailFields, SceneDetailFields, PropDetailFields, StyleDetailFields].includes(node.type as never))
+        return [node, ...nodes((node.type as (props: Record<string, unknown>) => unknown)(node.props))];
     return [node, ...nodes(node.props.children)];
 }
 // Identity wrappers must be traversed to keep exercising their actual consumers.
 function unwrap(tree: unknown): unknown {
     const node = tree as Node;
-    if (node && typeof node.type === "function" && /DetailContent|ShotEditorPageContent/.test(node.type.name)) {
+    if (node && typeof node.type === "function" && /DetailContent|AssetDetailRoute|ShotEditorPageContent/.test(node.type.name)) {
         return (node.type as (props: Record<string, unknown>) => unknown)(node.props);
     }
     return tree;
@@ -202,7 +206,9 @@ describe("actual manual consumer wiring", () => {
             {row: await repoAssets.addStyle(project.id), page: (id: string) => StyleDetailPage({styleId: id, back: {kind: "project", projectId: project.id}}), write: (id: string) => repoAssets.setStyleSlot(id, "look", {...emptySlot(), prompt: "theirs"})},
         ];
         for (const c of cases) {
-            reset(); host.row = {ownerId: project.id, id: c.row.id, value: c.row};
+            reset();
+            const target = (c.page(c.row.id) as ReactElement<{target: Parameters<typeof assetTargetKey>[0]}>).props.target;
+            host.row = {key: assetTargetKey(target), value: {kind: target.kind, asset: c.row}};
             const slot = render(() => c.page(c.row.id)).find(n => n.type === EditableGenerationSlot)!;
             expect(slot.props.targetKey).toContain(c.row.id);
             reset();

@@ -1,4 +1,5 @@
-import {useEffect, useRef, useState} from "react";
+import {type MouseEvent, useCallback, useEffect, useId, useRef, useState} from "react";
+import {readBusinessDetailTarget, useBusinessDetails, type BusinessDetailTarget, type DetailReturnOrigin} from "../../../app/details/BusinessDetails";
 import {useProductQuery} from "../../../platform/product/queries";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {Link, useBlocker} from "@tanstack/react-router";
@@ -35,6 +36,8 @@ import {
     generationKind
 } from "../models/agentGenerationBatch";
 import {CHARACTER_SLOTS, PROP_SLOTS, SCENE_SLOTS, STYLE_SLOTS} from "../../library/models/slots";
+import {STUDIO_LIBRARY_ID} from "../../library/models/ownership";
+import type {ProductionTarget} from "../../video/models/production";
 import type {AgentGenerationJob, AgentGenerationStatus} from "../models/agentGeneration";
 import {type GenerationSubmitArgs, generationSubmitSchema, profileRequest} from "../../video/agent/generationProfiles";
 import {getGenerationPreferenceState} from "../../settings/commands/generationPreferences";
@@ -59,6 +62,72 @@ import "./generationBatch.css";
 
 type BatchDetail = Awaited<ReturnType<typeof readGenerationBatch>>;
 type DraftEdit = { id: string; draft: GenerationSubmitArgs; included: boolean };
+type ReviewBookmark = {
+    scrollTop: number;
+    itemId?: string;
+    controlKey: string;
+    controlIndex: number;
+    selection?: {start: number; end: number; direction: "forward" | "backward" | "none"};
+};
+type ReviewHandoff = {
+    token: string;
+    target: BusinessDetailTarget;
+    bookmark: ReviewBookmark;
+    phase: "releasing" | "opening" | "opened";
+    requestId?: string;
+    returnRequested?: boolean;
+};
+const REVIEW_CONTROLS = "button, a[href], input, textarea, select, summary, [tabindex]";
+
+function reviewControlKey(control: HTMLElement) {
+    const labels = control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement || control instanceof HTMLSelectElement
+        ? [...control.labels ?? []].map(label => label.textContent?.trim()).join("|") : "";
+    const name = control.getAttribute("aria-label") ?? (labels || control.textContent?.trim());
+    return [control.tagName, control.getAttribute("type"), name].join(":");
+}
+
+function captureReviewBookmark(body: HTMLElement, fallback: HTMLElement): ReviewBookmark {
+    const focused = document.activeElement instanceof HTMLElement && body.contains(document.activeElement) ? document.activeElement : fallback;
+    const item = focused.closest<HTMLElement>("[data-batch-item-id]");
+    const scope = item ?? body;
+    const controlKey = reviewControlKey(focused);
+    const controls = [...scope.querySelectorAll<HTMLElement>(REVIEW_CONTROLS)].filter(control => reviewControlKey(control) === controlKey);
+    const bookmark: ReviewBookmark = {
+        scrollTop: body.scrollTop,
+        itemId: item?.dataset.batchItemId,
+        controlKey,
+        controlIndex: controls.indexOf(focused),
+    };
+    if ((focused instanceof HTMLInputElement || focused instanceof HTMLTextAreaElement)
+        && focused.selectionStart !== null && focused.selectionEnd !== null) {
+        bookmark.selection = {start: focused.selectionStart, end: focused.selectionEnd, direction: focused.selectionDirection ?? "none"};
+    }
+    return bookmark;
+}
+
+function restoreReviewBookmark(body: HTMLElement, bookmark: ReviewBookmark) {
+    const item = bookmark.itemId ? [...body.querySelectorAll<HTMLElement>("[data-batch-item-id]")]
+        .find(row => row.dataset.batchItemId === bookmark.itemId) : undefined;
+    const control = [...(item ?? body).querySelectorAll<HTMLElement>(REVIEW_CONTROLS)]
+        .filter(candidate => reviewControlKey(candidate) === bookmark.controlKey)[bookmark.controlIndex];
+    if (control && !control.matches(":disabled") && !control.closest("[inert], [hidden]")) {
+        control.focus({preventScroll: true});
+        if (bookmark.selection && (control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement)
+            && control.selectionStart !== null && control.selectionEnd !== null) {
+            control.setSelectionRange(bookmark.selection.start, bookmark.selection.end, bookmark.selection.direction);
+        }
+    } else {
+        body.closest<HTMLElement>("[role=dialog]")?.focus({preventScroll: true});
+    }
+    body.scrollTop = bookmark.scrollTop;
+}
+
+function matchesProductionTarget(parsed: BusinessDetailTarget, target: ProductionTarget) {
+    if (parsed.kind === "shot") return target.kind === "shot" && parsed.target.projectId === target.projectId
+        && parsed.target.episodeId === target.episodeId && parsed.target.shotId === target.entityId;
+    return target.kind !== "shot" && parsed.target.kind === target.kind && parsed.target.entityId === target.entityId
+        && (parsed.target.owner.kind === "studio" ? target.projectId === STUDIO_LIBRARY_ID : parsed.target.owner.projectId === target.projectId);
+}
 const BATCH_LABELS = {
     draft: "待确认",
     ready: "等待开始",
@@ -128,12 +197,45 @@ export function AgentGenerationBatches({runId}: { runId: string }) {
 
 function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parentReadError: boolean }) {
     const {request} = useAgentActivityNavigation();
+    const details = useBusinessDetails();
+    const openDetail = details?.open, returnToOrigin = details?.returnToOrigin;
+    const session = useId();
+    const sequence = useRef(0);
+    const alive = useRef(true);
+    const handoffRef = useRef<ReviewHandoff | null>(null);
+    const restoreBookmark = useRef<ReviewBookmark | null>(null);
+    const bodyRef = useRef<HTMLDivElement>(null);
+    const [handoff, setHandoff] = useState(false);
     const last = useRef<BatchDetail | undefined>(undefined);
     const [readAttempt, setReadAttempt] = useState(0);
     const [open, setOpen] = useState(false);
+    const finishHandoff = useCallback((token: string, restore: boolean) => {
+        const current = handoffRef.current;
+        if (!alive.current || current?.token !== token) return;
+        restoreBookmark.current = restore ? current.bookmark : null;
+        handoffRef.current = null;
+        // Replacement retires the old origin without opening its modal over the new detail.
+        setOpen(restore);
+        setHandoff(false);
+    }, []);
+    const revealReview = useCallback(() => {
+        const current = handoffRef.current;
+        if (!current) {setOpen(true); return;}
+        if (current.phase !== "opened") {current.returnRequested = true; return;}
+        if (returnToOrigin) void returnToOrigin(current.token).then(result => {
+            if (result === "stale") finishHandoff(current.token, true);
+        });
+    }, [returnToOrigin, finishHandoff]);
     useEffect(() => {
-        if (request?.runId === batch.runId && request.batchId === batch.id) setOpen(true);
-    }, [request, batch.runId, batch.id]);
+        if (request?.runId === batch.runId && request.batchId === batch.id) revealReview();
+    }, [request, batch.runId, batch.id, revealReview]);
+    useEffect(() => {
+        alive.current = true;
+        return () => {
+            alive.current = false;
+            queueMicrotask(() => {if (!alive.current) handoffRef.current = null;});
+        };
+    }, []);
     const [inspecting, setInspecting] = useState(false);
     const [local, setLocal] = useState<{ revision: number; edits: DraftEdit[] } | null>(null);
     const [expanded, setExpanded] = useState<string>();
@@ -254,6 +356,48 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
         setOpen(next);
     }
 
+    const endOrigin: DetailReturnOrigin["onEnd"] = event => {
+        const current = handoffRef.current;
+        if (!current || current.token !== event.token || (current.requestId && current.requestId !== event.requestId)) return;
+        finishHandoff(event.token, event.reason !== "replaced");
+    };
+
+    function activateTarget(event: MouseEvent<HTMLAnchorElement>, target: ProductionTarget) {
+        if (!openDetail || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey
+            || event.altKey || event.currentTarget.hasAttribute("download") || inspecting) return;
+        const parsed = readBusinessDetailTarget(event.currentTarget.getAttribute("href") ?? "");
+        if (!parsed || !matchesProductionTarget(parsed, target) || !bodyRef.current) return;
+        event.preventDefault();
+        if (handoffRef.current) return;
+        handoffRef.current = {
+            token: `${session}-review-${++sequence.current}`,
+            target: parsed,
+            bookmark: captureReviewBookmark(bodyRef.current, event.currentTarget),
+            phase: "releasing",
+        };
+        setHandoff(true);
+    }
+
+    function openAfterModalRelease() {
+        const source = handoffRef.current;
+        if (!alive.current || !source || source.phase !== "releasing" || !openDetail) return;
+        source.phase = "opening";
+        void openDetail(source.target, {origin: {token: source.token, label: "返回批量审阅", onEnd: endOrigin}}).then(result => {
+            if (!alive.current || handoffRef.current !== source) return;
+            if (result.status === "refused") {finishHandoff(source.token, true); return;}
+            source.phase = "opened";
+            source.requestId = result.requestId;
+            if (source.returnRequested && returnToOrigin) void returnToOrigin(source.token).then(outcome => {
+                if (outcome === "stale") finishHandoff(source.token, true);
+            });
+        }, () => {
+            if (alive.current && handoffRef.current === source) {
+                setError("无法打开目标详情，批次编辑已保留。");
+                finishHandoff(source.token, true);
+            }
+        });
+    }
+
     return <section className="agent-batch" aria-label={current.title}>
         <div className="agent-batch-strip">
             <Images size={18} aria-hidden/>
@@ -265,20 +409,31 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                 <LoaderCircle size={12} className="animate-spin motion-reduce:animate-none"
                               aria-hidden/>}{BATCH_LABELS[current.status]}</span>
             <button ref={triggerRef} type="button" className="agent-batch-open"
-                    aria-label={`打开批量生成：${current.title}`} onClick={() => setOpen(true)}>打开<ChevronRight
+                    aria-label={`打开批量生成：${current.title}`} onClick={revealReview}>打开<ChevronRight
                 size={14} aria-hidden/></button>
         </div>
         {view?.error && !open && <p className="agent-batch-error" role="alert">{view.error}
             <button type="button" onClick={() => setReadAttempt(value => value + 1)}>重新读取</button>
         </p>}
-        <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
+        <DialogPrimitive.Root open={open && !handoff} onOpenChange={onOpenChange}>
             <DialogPrimitive.Portal container={portalRoot}>
                 <DialogPrimitive.Overlay className="agent-batch-overlay"/>
                 <DialogPrimitive.Content className="agent-batch-dialog" onEscapeKeyDown={event => {
                     if (inspecting) event.preventDefault();
+                }} onOpenAutoFocus={event => {
+                    const bookmark = restoreBookmark.current;
+                    if (bookmark && bodyRef.current) {
+                        event.preventDefault();
+                        restoreBookmark.current = null;
+                        restoreReviewBookmark(bodyRef.current, bookmark);
+                    }
                 }} onCloseAutoFocus={event => {
                     event.preventDefault();
-                    triggerRef.current?.focus();
+                    if (handoffRef.current) {
+                        // Radix removes its focus scope after this event returns. Do not
+                        // open an external detail while the departing modal owns focus.
+                        queueMicrotask(openAfterModalRelease);
+                    } else if (alive.current) triggerRef.current?.focus({preventScroll: true});
                 }}>
                     <header className="agent-batch-header">
                         <div><span
@@ -288,7 +443,7 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                         <button type="button" className="agent-batch-icon" aria-label="关闭批量生成" disabled={pending}
                                 onClick={() => onOpenChange(false)}><X size={20} aria-hidden/></button>
                     </header>
-                    <div className="agent-batch-body">
+                    <div ref={bodyRef} className="agent-batch-body">
                         {(view?.error || parentReadError) &&
                             <p role="alert" className="agent-batch-error">读取失败，当前视图与编辑已保留。{view?.error}
                                 <button type="button" onClick={() => setReadAttempt(value => value + 1)}>重新读取
@@ -306,6 +461,7 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                                 const siblings = items.filter(row => row.targetKey === item.targetKey);
                                 const letter = String.fromCharCode(65 + siblings.findIndex(row => row.id === item.id));
                                 return <div className="agent-batch-draft-row" key={item.id}
+                                            data-batch-item-id={item.id}
                                             data-included={value.included}>
                                     <div className="agent-batch-row-summary">
                                         <label className="agent-batch-include"><input type="checkbox"
@@ -340,6 +496,7 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                                     {expanded === item.id &&
                                         <div id={`batch-fields-${item.id}`} className="agent-batch-fields">
                                             <Link {...generationTargetDestination(item.baseline.target)}
+                                                  onClick={event => activateTarget(event, item.baseline.target)}
                                                   className="agent-batch-target">查看目标
                                                 · {targetLabel(item)}<ArrowUpRight size={14} aria-hidden/></Link>
                                             <BatchConfigurationFields draft={value.draft}
@@ -365,7 +522,7 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                                 </button>;
                             })}</div>
                             {groupItems.length > 0 && <div className="agent-batch-comparison-heading">
-                                <strong>{targetLabel(groupItems[0])}</strong><Link {...generationTargetDestination(groupItems[0].baseline.target)}>查看目标<ArrowUpRight
+                                <strong>{targetLabel(groupItems[0])}</strong><Link {...generationTargetDestination(groupItems[0].baseline.target)} onClick={event => activateTarget(event, groupItems[0].baseline.target)}>查看目标<ArrowUpRight
                                 size={14} aria-hidden/></Link></div>}
                             <div className="agent-batch-candidates"
                                  data-video={groupItems.some(item => generationKind(item.draft.target) === "video")}>

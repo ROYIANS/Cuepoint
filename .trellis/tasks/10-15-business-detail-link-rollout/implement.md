@@ -1,0 +1,8 @@
+# E16 implementation order
+
+1. Activate after E05 archive under the standing sequential instruction. Main owns this plan, specs, ownership/discovery and Git. Workers are not alone and must not revert concurrent changes.
+2. App/shot owner first lands the shared type-only session protocol, compatible host close-reason and actual presented callback APIs. Publish exact paths/signatures before consumers. Work independently on finite app parser; never import a not-yet-existing asset panel.
+3. Library owner extracts real four asset bodies, target model and panel, and adds synchronous unavailable/draft reporting through existing AssetTextField. Coordinate shared session dependency first; define exports before app facade consumes them. Main registers only actual new source/public symbols.
+4. App/shot owner adapts shot panel to the same request/outcome/close protocol and composes the one facade with separate retained family slots, preserving existing consumed delegate exports. Finish necessary parser/host/shot/cross-family tests. Announce facade API ready before batch imports.
+5. Agent batch owner then wires only two exact target links and retained presentation/return bookmark; preserve command/revision/approval owner and add actual batch DOM regression. Preparation/tests may be designed earlier but no imports into missing facade modules.
+6. Freeze all scopes, independently check the complete changed product/test/discovery inputs, run necessary types/lint/architecture once, sync canonical specs/coverage/residuals, commit stage then archive/journal and continue E06. No broad wrappers/build/native/install/paid/Git writes by workers.

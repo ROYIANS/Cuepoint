@@ -26,10 +26,10 @@ let root: Root, container: HTMLDivElement, portal: HTMLDivElement;
 let first: ShotDetailTarget, second: ShotDetailTarget;
 let reads: Read[];
 function Fixture() {
-    const [target, setTarget] = useState(first);
+    const [target, setTarget] = useState({id: "a", target: first});
     return h(ContextPanelHostProvider, {target: portal, surfaceWidth: 1440, navigationWidth: 260},
-        h("button", {onClick: () => setTarget(second)}, "Inspect B"),
-        h(ShotDetailPanel, {target, onTargetChange: setTarget, onClose: () => undefined}));
+        h("button", {onClick: () => setTarget({id: "b", target: second})}, "Inspect B"),
+        h(ShotDetailPanel, {request: target, onRequestOutcome: () => undefined, onClosed: () => undefined}));
 }
 async function click(label: string) {
     const button = [...document.querySelectorAll("button")].find(node => node.textContent === label)!;

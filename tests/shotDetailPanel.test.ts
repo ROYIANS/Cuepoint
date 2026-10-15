@@ -28,13 +28,14 @@ vi.mock("@tanstack/react-router", () => ({
 
 let root: Root, container: HTMLDivElement, portal: HTMLDivElement;
 let target: ShotDetailTarget, second: ShotDetailTarget, third: ShotDetailTarget;
-const closed = vi.fn();
+const closed = vi.fn(), outcomes = vi.fn();
 function Fixture() {
-    const [requested, setRequested] = useState(target);
+    const [requested, setRequested] = useState({id: "a", target});
+    const sequence = useRef(0);
     return h(ContextPanelHostProvider, {target: portal, surfaceWidth: 1440, navigationWidth: 260},
-        h("button", {onClick: () => setRequested(second)}, "Inspect B"),
-        h("button", {onClick: () => setRequested(third)}, "Inspect C"),
-        h(ShotDetailPanel, {target: requested, onTargetChange: setRequested, onClose: closed}));
+        h("button", {onClick: () => setRequested({id: `b-${++sequence.current}`, target: second})}, "Inspect B"),
+        h("button", {onClick: () => setRequested({id: `c-${++sequence.current}`, target: third})}, "Inspect C"),
+        h(ShotDetailPanel, {request: requested, onRequestOutcome: outcomes, onClosed: closed}));
 }
 async function settle(check: () => void) {await vi.waitFor(async () => {await act(async () => {}); check();});}
 async function click(label: string) {
@@ -55,7 +56,7 @@ beforeEach(async () => {
     vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
     vi.stubGlobal("ResizeObserver", class {observe() {} unobserve() {} disconnect() {}});
     container = document.createElement("div"); portal = document.createElement("div");
-    document.body.append(container, portal); root = createRoot(container); closed.mockClear();
+    document.body.append(container, portal); root = createRoot(container); closed.mockClear(); outcomes.mockClear();
     blockers.clear();
     routeResolution.status = "idle";
     routeResolution.assigned = false;
@@ -159,7 +160,7 @@ describe("single-shot real DOM and product commands", () => {
         await click("Inspect B");
         await settle(() => expect(portal.querySelector("[data-shot-editor]")?.getAttribute("data-shot-editor")).toBe(second.shotId));
     });
-    it("keeps invalid duration and the original identity on cancel; latest B/C selection waits for explicit discard", async () => {
+    it("keeps invalid duration and the original identity on cancel; a competing selection is refused while the frozen B request waits for discard", async () => {
         const duration = await input("时长（秒）", "invalid");
         expect(duration.getAttribute("aria-invalid")).toBe("true");
         await click("Inspect B");
@@ -172,7 +173,8 @@ describe("single-shot real DOM and product commands", () => {
         // Programmatic request represents a competing owner callback while the modal is active.
         await click("Inspect C");
         await click("放弃并离开");
-        await settle(() => expect(portal.querySelector("[data-shot-editor]")?.getAttribute("data-shot-editor")).toBe(third.shotId));
+        await settle(() => expect(portal.querySelector("[data-shot-editor]")?.getAttribute("data-shot-editor")).toBe(second.shotId));
+        expect(outcomes).toHaveBeenCalledWith(expect.objectContaining({status: "refused", reason: "busy"}));
         expect((await db.shots.get(target.shotId))?.durationSec).not.toBeNaN();
     });
     it("merges independent Agent writes and preserves a conflicting manual draft with explicit latest recovery", async () => {

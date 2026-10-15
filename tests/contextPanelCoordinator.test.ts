@@ -29,10 +29,10 @@ describe("controlled context-panel coordination", () => {
         host.register({id:"memory",width:400,close:competitorClose,depart:yes=>yes()});
         host.request("material"); host = draw(); expect(host.active).toBe("material");
         host.request("task"); expect(draw().active).toBe("material");
-        host.request("memory"); expect(competitorClose).toHaveBeenCalledOnce();
+        host.request("memory"); expect(competitorClose).toHaveBeenCalledExactlyOnceWith("busy");
         const staleAcceptance = accept;
-        cancel(); staleAcceptance(); expect(incomingClose).toHaveBeenCalledOnce(); expect(draw().active).toBe("material");
-        host.request("task"); accept(); expect(outgoingClose).toHaveBeenCalledOnce(); expect(draw().active).toBe("task");
+        cancel(); staleAcceptance(); expect(incomingClose).toHaveBeenCalledExactlyOnceWith("guard-refused"); expect(draw().active).toBe("material");
+        host.request("task"); accept(); expect(outgoingClose).toHaveBeenCalledExactlyOnceWith("replaced"); expect(draw().active).toBe("task");
     });
     it("cannot activate a removed candidate from an old discard completion", () => {
         let accept = () => {};

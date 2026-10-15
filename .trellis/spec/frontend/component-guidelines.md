@@ -73,7 +73,7 @@ Follow [Interaction Feedback](./interaction-feedback.md) before adding pending/p
 ## Forms and Generation Slots
 
 - Label + control: wrap with `Field` from `packages/studio/src/ui/field.tsx` (`label` + `children`).
-- Asset text uses `AssetTextField` with a scoped keyed `useDebouncedDraft`, saving/error/retry feedback, and field-only repo patches. Do not bind an actively edited input directly to a live database row. `Field` associates label and child control IDs.
+- Asset text uses `AssetTextField` with a scoped keyed `useDebouncedDraft`, saving/error/retry feedback, and field-only repo patches. Freeze persistence to that field's original target; report input departure state synchronously and block writes while its record is unavailable. A typed unknown submission preserves the draft and quarantines that intent from retry/background flush until explicit discard. Do not bind an actively edited input directly to a live database row. `Field` associates label and child control IDs.
 - Slot dialogs track only uploads they created; cancellation/replacement cleans orphan uploads, including late completion after unmount. Disable overlapping save/upload/close while a commit is pending. Never delete shared committed media.
 - Preview tiles remain buttons; inspection inside dialogs uses full-image `object-contain` or video controls outside clickable tile buttons. Removal controls must remain keyboard-focusable and visible on touch devices.
 - Image/video generation tiles use `EditableGenerationSlot` (`projectId`, `slot`, `variant`, `title`, `onSave`). Do not fork a second slot editor for assets/shots.

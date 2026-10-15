@@ -21,7 +21,7 @@
 | [Interaction Feedback](./interaction-feedback.md) | Quiet success paths, immediate results, purposeful progress and actionable product copy | Filled |
 | [Creative Operation Feedback](./creative-operation-feedback.md) | Guarded asset intents, receipt-aware recovery, archive filters and serial import progress/stop | Filled |
 | [Shared Desktop UI](./desktop-ui.md) | Frame/navigation, page typography, scroll owners, overlay focus and print | Filled |
-| [Agent Business Details](./agent-business-details.md) | In-workspace shot links, retained chat, full-width details and guarded single-shot editing | Filled |
+| [Agent Business Details](./agent-business-details.md) | Finite shot/asset details, retained chat and batch review, guarded editing and responsive return | Filled |
 | [Settings and Desktop Updates](./settings-update.md) | Settings search, embedded connections, device preferences, anonymous release checks and verified installer saves | Filled |
 | [Shared Product Storage](./shared-product-storage.md) | All-table adapters, explicit transactions, durable certainty, observation and managed bytes | Filled |
 | [Agent IP / Materials / Tool Loading](./agent-library-tools.md) | Confirmed IP/library operations, real content and per-request capability loading | Filled |

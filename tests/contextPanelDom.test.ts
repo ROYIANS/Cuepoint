@@ -47,6 +47,18 @@ beforeEach(() => {
 });
 afterEach(async () => {await act(async () => {root.unmount();}); await settleFocus(); container.remove(); host.remove(); vi.unstubAllGlobals();});
 describe("real React DOM context panel lifecycle", () => {
+    it("reports presentation only after the selected frame is connected to the actual host", async () => {
+        const presented = vi.fn();
+        function PresentedFixture({target}: {target: HTMLElement | null}) {
+            return h(ContextPanelHostProvider, {target, surfaceWidth: 1440, navigationWidth: 260},
+                h(ContextPanel, {open: true, onOpenChange: () => undefined},
+                    h(ContextPanelContent, {onPresented: () => {expect(host.querySelector('[role="complementary"]')?.isConnected).toBe(true); presented();}}, "Current frame")));
+        }
+        await act(async () => root.render(h(PresentedFixture, {target: null})));
+        expect(presented).not.toHaveBeenCalled(); expect(host.childElementCount).toBe(0);
+        await act(async () => root.render(h(PresentedFixture, {target: host})));
+        expect(presented).toHaveBeenCalled(); expect(host.textContent).toContain("Current frame");
+    });
     it("retains the editor node, draft, caret and SVG ref across docking and nested popup writes", async () => {
         await draw(1440);
         const opener = container.querySelector<HTMLButtonElement>("#opener")!; opener.focus(); await click(opener);
