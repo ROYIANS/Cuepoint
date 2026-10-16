@@ -287,3 +287,129 @@ impl CredentialVault {
         Ok(())
     }
 }
+
+impl CredentialVault {
+    /// Small native-vault pointer for OAuth rotation, scoped to one immutable
+    /// private configuration. Token bytes remain in immutable vault chunks.
+    pub(crate) fn read_slot_payload(&self, slot: &str) -> Result<Option<Vec<u8>>> {
+        if !valid_id(slot) {
+            return Err(McpError::VaultConflict);
+        }
+        let _guard = self.serial.lock().map_err(|_| McpError::VaultUnavailable)?;
+        let Some(head) = self.store.get(&self.key(slot, "oauth-head"))? else {
+            return Ok(None);
+        };
+        let revision = String::from_utf8(head).map_err(|_| McpError::VaultCorrupt)?;
+        Ok(Some(
+            self.read_unlocked(&revision)?
+                .ok_or(McpError::VaultCorrupt)?
+                .1,
+        ))
+    }
+    pub(crate) fn read_slot(&self, slot: &str) -> Result<Option<String>> {
+        if !valid_id(slot) {
+            return Err(McpError::VaultConflict);
+        }
+        let _guard = self.serial.lock().map_err(|_| McpError::VaultUnavailable)?;
+        self.store
+            .get(&self.key(slot, "oauth-head"))?
+            .map(|v| String::from_utf8(v).map_err(|_| McpError::VaultCorrupt))
+            .transpose()
+    }
+    fn slot_garbage(&self, slot: &str) -> Result<Vec<String>> {
+        let Some(bytes) = self.store.get(&self.key(slot, "oauth-garbage"))? else {
+            return Ok(Vec::new());
+        };
+        let values: Vec<String> =
+            serde_json::from_slice(&bytes).map_err(|_| McpError::VaultCorrupt)?;
+        if values.len() > 32 || values.iter().any(|v| !valid_id(v)) {
+            return Err(McpError::VaultCorrupt);
+        }
+        Ok(values)
+    }
+    fn write_garbage(&self, slot: &str, garbage: &[String]) -> Result<()> {
+        let bytes = serde_json::to_vec(garbage).map_err(|_| McpError::VaultCorrupt)?;
+        if bytes.len() > STORED {
+            return Err(McpError::Limit);
+        }
+        let result = self.store.put(&self.key(slot, "oauth-garbage"), &bytes);
+        if self.store.get(&self.key(slot, "oauth-garbage"))?.as_deref() != Some(bytes.as_slice()) {
+            return result.and(Err(McpError::VaultUnknown));
+        }
+        Ok(())
+    }
+    fn collect_slot_garbage(
+        &self,
+        slot: &str,
+        current: Option<&str>,
+        garbage: &[String],
+    ) -> Result<()> {
+        for revision in garbage {
+            if Some(revision.as_str()) == current {
+                return Err(McpError::VaultConflict);
+            }
+            if let Some(receipt) = self.manifest(revision)? {
+                for i in 0..receipt.chunks {
+                    self.store.delete(&self.key(revision, &i.to_string()))?;
+                }
+                self.store.delete(&self.key(revision, "intent"))?;
+                self.store.delete(&self.key(revision, "manifest"))?;
+            }
+        }
+        self.write_garbage(slot, &[])
+    }
+    pub(crate) fn publish_slot(&self, slot: &str, revision: &str) -> Result<()> {
+        if !valid_id(slot) || !valid_id(revision) {
+            return Err(McpError::VaultConflict);
+        }
+        let _guard = self.serial.lock().map_err(|_| McpError::VaultUnavailable)?;
+        self.read_unlocked(revision)?
+            .ok_or(McpError::VaultUnknown)?;
+        let old = self
+            .store
+            .get(&self.key(slot, "oauth-head"))?
+            .map(String::from_utf8)
+            .transpose()
+            .map_err(|_| McpError::VaultCorrupt)?;
+        let mut garbage = self.slot_garbage(slot)?;
+        if let Some(old) = old.filter(|v| v != revision) {
+            if !garbage.contains(&old) {
+                if garbage.len() >= 32 {
+                    return Err(McpError::Limit);
+                }
+                garbage.push(old)
+            }
+        }
+        self.write_garbage(slot, &garbage)?;
+        let write = self
+            .store
+            .put(&self.key(slot, "oauth-head"), revision.as_bytes());
+        if self.store.get(&self.key(slot, "oauth-head"))?.as_deref() != Some(revision.as_bytes()) {
+            return write.and(Err(McpError::VaultUnknown));
+        }
+        self.collect_slot_garbage(slot, Some(revision), &garbage)
+    }
+    pub(crate) fn clear_slot(&self, slot: &str) -> Result<()> {
+        if !valid_id(slot) {
+            return Err(McpError::VaultConflict);
+        }
+        let _guard = self.serial.lock().map_err(|_| McpError::VaultUnavailable)?;
+        let mut garbage = self.slot_garbage(slot)?;
+        if let Some(bytes) = self.store.get(&self.key(slot, "oauth-head"))? {
+            let old = String::from_utf8(bytes).map_err(|_| McpError::VaultCorrupt)?;
+            if !garbage.contains(&old) {
+                if garbage.len() >= 32 {
+                    return Err(McpError::Limit);
+                }
+                garbage.push(old)
+            }
+        }
+        self.write_garbage(slot, &garbage)?;
+        let delete = self.store.delete(&self.key(slot, "oauth-head"));
+        if self.store.get(&self.key(slot, "oauth-head"))?.is_some() {
+            return delete.and(Err(McpError::VaultUnknown));
+        }
+        self.collect_slot_garbage(slot, None, &garbage)?;
+        self.store.delete(&self.key(slot, "oauth-garbage"))
+    }
+}

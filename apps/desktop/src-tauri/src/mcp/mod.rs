@@ -1,13 +1,18 @@
-//! Desktop MCP mechanisms. Stage one deliberately installs no renderer command.
+//! Finite desktop MCP owner, bounded SDK transports and native credential storage.
 //! All errors are closed codes: SDK payloads, tokens and stderr are never diagnostics.
 pub(crate) mod bounded;
+pub(crate) mod catalogue;
+pub(crate) mod oauth;
 pub(crate) mod process;
+pub(crate) mod protocol;
+pub(crate) mod service;
 pub(crate) mod transport;
 pub(crate) mod vault;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum McpError {
     Limit,
+    AuthRequired,
     Deadline,
     Transport,
     Endpoint,
@@ -30,3 +35,9 @@ pub(crate) const REQUEST_TIMEOUT: std::time::Duration = std::time::Duration::fro
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod oauth_tests;
+
+#[cfg(test)]
+mod service_tests;

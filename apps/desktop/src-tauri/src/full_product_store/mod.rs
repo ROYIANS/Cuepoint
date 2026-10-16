@@ -911,6 +911,69 @@ impl FullProductStore {
             }
         }
     }
+    pub(crate) fn mcp_catalogue(&self, session: &Session) -> Result<Value> {
+        self.validate_session(session)?;
+        let key = WireText::from("agentMcp.catalog.v1");
+        let payload:Option<String> = self.db.query_row("SELECT payload FROM product_records WHERE table_name='deviceSettings' AND row_key=?", [key], |row| row.get(0)).optional()?;
+        match payload {
+            None => Ok(Value::Null),
+            Some(payload) if payload.len() <= 4 * 1024 * 1024 => {
+                let encoded: Value = serde_json::from_str(&payload)?;
+                let value = registry::field(&encoded, "value")
+                    .ok_or_else(|| Error::new("corrupt", "MCP catalogue record missing value"))?;
+                fn decode(value: &Value, depth: usize) -> Result<Value> {
+                    if depth > 48 {
+                        return Err(Error::new("corrupt", "MCP catalogue depth"));
+                    }
+                    let array = value
+                        .as_array()
+                        .ok_or_else(|| Error::new("corrupt", "MCP catalogue encoding"))?;
+                    let bad = || Error::new("corrupt", "MCP catalogue encoding");
+                    Ok(match array.first().and_then(Value::as_str) {
+                        Some("null") => Value::Null,
+                        Some("str" | "bool" | "num") => array
+                            .get(1)
+                            .filter(|v| !v.is_array() && !v.is_object())
+                            .ok_or_else(bad)?
+                            .clone(),
+                        Some("arr") => Value::Array(
+                            array
+                                .get(1)
+                                .and_then(Value::as_array)
+                                .ok_or_else(bad)?
+                                .iter()
+                                .map(|v| decode(v, depth + 1))
+                                .collect::<Result<_>>()?,
+                        ),
+                        Some("obj") => {
+                            let mut out = serde_json::Map::new();
+                            for item in array.get(1).and_then(Value::as_array).ok_or_else(bad)? {
+                                let entry = item.as_array().ok_or_else(bad)?;
+                                let name = entry.first().and_then(Value::as_str).ok_or_else(bad)?;
+                                if out
+                                    .insert(
+                                        name.into(),
+                                        decode(entry.get(1).ok_or_else(bad)?, depth + 1)?,
+                                    )
+                                    .is_some()
+                                {
+                                    return Err(bad());
+                                }
+                            }
+                            Value::Object(out)
+                        }
+                        _ => return Err(bad()),
+                    })
+                }
+                let decoded = decode(value, 0)?;
+                if decoded.is_null() {
+                    return Err(Error::new("corrupt", "MCP catalogue cannot be null"));
+                }
+                Ok(decoded)
+            }
+            Some(_) => Err(Error::new("corrupt", "MCP catalogue too large")),
+        }
+    }
     fn status(&self, operation: &str, fingerprint: &str) -> Result<Value> {
         let outcome: Option<(Option<String>, String, Option<String>)> = self
             .db

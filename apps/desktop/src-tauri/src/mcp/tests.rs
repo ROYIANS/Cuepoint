@@ -143,10 +143,10 @@ async fn mcp_real_owned_process_group_drains_child_and_descendant() {
     assert_eq!(owner.stderr_bytes.load(Ordering::Relaxed), 0);
 }
 
-struct Fixture {
-    url: String,
-    effects: Arc<AtomicUsize>,
-    requests: Arc<Mutex<Vec<String>>>,
+pub(super) struct Fixture {
+    pub(super) url: String,
+    pub(super) effects: Arc<AtomicUsize>,
+    pub(super) requests: Arc<Mutex<Vec<String>>>,
     task: JoinHandle<()>,
 }
 impl Drop for Fixture {
@@ -154,7 +154,7 @@ impl Drop for Fixture {
         self.task.abort();
     }
 }
-async fn fixture(mode: &'static str) -> Fixture {
+pub(super) async fn fixture(mode: &'static str) -> Fixture {
     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
     let address = listener.local_addr().unwrap();
     let effects = Arc::new(AtomicUsize::new(0));
@@ -241,8 +241,17 @@ async fn fixture(mode: &'static str) -> Fixture {
                     "tools/list" => {
                         json!({"jsonrpc":"2.0","id":id,"result":{"resultType":"complete","tools":[{"name":"counter","inputSchema":{"type":"object"}}]}})
                     }
+                    "resources/list" => {
+                        json!({"jsonrpc":"2.0","id":id,"result":{"resultType":"complete","resources":[{"uri":"fixture://note/镜头?x=\"q\"","name":"note"}]}})
+                    }
+                    "resources/read" => {
+                        json!({"jsonrpc":"2.0","id":id,"result":{"resultType":"complete","contents":[{"uri":"fixture://note/镜头?x=\"q\"","text":"fixture note"}]}})
+                    }
                     "tools/call" => {
                         counter.fetch_add(1, Ordering::SeqCst);
+                        if mode == "slow_call" {
+                            tokio::time::sleep(Duration::from_millis(150)).await;
+                        }
                         if mode == "lost" {
                             return;
                         }

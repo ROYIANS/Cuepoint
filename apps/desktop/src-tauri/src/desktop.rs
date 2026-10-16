@@ -28,6 +28,7 @@ pub struct ProductBridge {
     media_server: Mutex<Option<crate::product_media::MediaServer>>,
     local_media: crate::desktop_media::DesktopMedia,
     skill_import: crate::skill_import::SkillDirectoryImport,
+    mcp: Mutex<Option<Arc<crate::mcp::service::Service>>>,
 }
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -79,7 +80,15 @@ fn full_product_worker(
     *current = Some(Arc::clone(&worker));
     Ok(worker)
 }
+fn invalidate_mcp(bridge: &ProductBridge) {
+    if let Ok(mut slot) = bridge.mcp.lock() {
+        if let Some(service) = slot.take() {
+            service.invalidate()
+        }
+    }
+}
 fn close_product(bridge: &ProductBridge) {
+    invalidate_mcp(bridge);
     bridge.skill_import.invalidate();
     bridge.local_media.stop_all();
     bridge.previews.clear();
@@ -91,6 +100,77 @@ fn close_product(bridge: &ProductBridge) {
     {
         let _ = worker.close();
     }
+}
+#[tauri::command]
+async fn mcp_service_request(
+    window: WebviewWindow,
+    bridge: tauri::State<'_, Arc<ProductBridge>>,
+    request: crate::mcp::protocol::Envelope,
+) -> Result<crate::mcp::protocol::Reply> {
+    trusted(&window)?;
+    let worker = full_product_worker(&window, &bridge, false)?;
+    let session = request.session.clone();
+    let validate_worker = worker.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        validate_worker.run_product(crate::ProductJob::Validate(session))
+    })
+    .await
+    .map_err(|_| Error::new("unavailable", "MCP store validation interrupted"))??;
+    let service = {
+        let mut slot = bridge
+            .mcp
+            .lock()
+            .map_err(|_| Error::new("unavailable", "MCP owner unavailable"))?;
+        if slot
+            .as_ref()
+            .is_some_and(|s| !s.matches_session(&request.session))
+        {
+            if let Some(previous) = slot.take() {
+                previous.invalidate()
+            }
+        }
+        if slot.is_none() {
+            let source = Arc::new(
+                move |session: &crate::full_product_store::protocol::Session| {
+                    let value = worker
+                        .run_product(crate::ProductJob::McpCatalogue(session.clone()))
+                        .map_err(|_| crate::mcp::McpError::VaultConflict)?;
+                    crate::mcp::catalogue::Catalogue::parse(value)
+                },
+            );
+            let open_window = window.clone();
+            let open = Arc::new(move |url: &str| {
+                crate::runtime_services::product_open_external(open_window.clone(), url.to_owned())
+                    .map_err(|_| crate::mcp::McpError::Transport)
+            });
+            let app = window.app_handle().config().identifier.clone();
+            let profile = if cfg!(feature = "acceptance") {
+                "isolated"
+            } else if cfg!(feature = "product-sqlite") {
+                "product-sqlite"
+            } else {
+                "reference"
+            }
+            .to_owned();
+            *slot = Some(
+                crate::mcp::service::Service::native(
+                    request.session.clone(),
+                    source,
+                    app,
+                    profile,
+                    open,
+                )
+                .map_err(|_| {
+                    Error::new(
+                        "vaultUnavailable",
+                        "Native MCP credential owner unavailable",
+                    )
+                })?,
+            );
+        }
+        slot.as_ref().unwrap().clone()
+    };
+    Ok(service.request(request).await)
 }
 #[tauri::command]
 async fn skill_import_directory(
@@ -113,7 +193,11 @@ async fn skill_import_directory(
             &request.operation_id,
             || {
                 select_path(
-                    window.dialog().file().set_title("选择技能文件夹").blocking_pick_folder(),
+                    window
+                        .dialog()
+                        .file()
+                        .set_title("选择技能文件夹")
+                        .blocking_pick_folder(),
                 )
             },
             || {
@@ -185,6 +269,7 @@ async fn product_store_request(
     );
     let bridge = Arc::clone(bridge.inner());
     if opening {
+        invalidate_mcp(&bridge);
         bridge.skill_import.invalidate();
         bridge.previews.clear();
         bridge.local_media.stop_all();
@@ -1812,7 +1897,11 @@ pub fn run() {
                 webview.state::<Arc<RuntimeServices>>().saves.close();
                 webview.state::<Arc<ProductBridge>>().previews.clear();
                 webview.state::<Arc<ProductBridge>>().local_media.stop_all();
-                webview.state::<Arc<ProductBridge>>().skill_import.invalidate();
+                webview
+                    .state::<Arc<ProductBridge>>()
+                    .skill_import
+                    .invalidate();
+                invalidate_mcp(webview.state::<Arc<ProductBridge>>().inner());
             }
         })
         .on_permission_request(|window, kind| {
@@ -1830,6 +1919,7 @@ pub fn run() {
     let builder = builder.invoke_handler(tauri::generate_handler![
         workspace_request,
         product_store_request,
+        mcp_service_request,
         product_binary_request,
         product_binary_read,
         product_binary_write,
@@ -1851,6 +1941,7 @@ pub fn run() {
     let builder = builder.invoke_handler(tauri::generate_handler![
         workspace_request,
         product_store_request,
+        mcp_service_request,
         product_binary_request,
         product_binary_read,
         product_binary_write,

@@ -38,6 +38,7 @@ futures = "=0.3.34"
 reqwest = { version = "=0.13.5", default-features = false, features = ["rustls", "stream", "json"] }
 process-wrap = { version = "=10.0.1", default-features = false, features = ["tokio1", "process-group", "job-object", "kill-on-drop"] }
 keyring-core = "=1.0.1"
+async-trait = "=0.1.92"
 base64 = "=0.22.1"
 http = "=1.5.0"
 sse-stream = "=0.2.6"

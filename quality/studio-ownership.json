@@ -6278,6 +6278,62 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/models/operations.ts",
+      "file": "packages/studio/src/features/agent/mcp/models/operations.ts",
+      "target": "packages/studio/src/features/agent/mcp/models/operations.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/configuration.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/configuration.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/configuration.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/connections.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/connections.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/connections.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/mcpErrors.ts",
+      "file": "packages/studio/src/platform/runtime/mcpErrors.ts",
+      "target": "packages/studio/src/platform/runtime/mcpErrors.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/mcpServices.ts",
+      "file": "packages/studio/src/platform/runtime/mcpServices.ts",
+      "target": "packages/studio/src/platform/runtime/mcpServices.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/mcpWire.ts",
+      "file": "packages/studio/src/platform/runtime/mcpWire.ts",
+      "target": "packages/studio/src/platform/runtime/mcpWire.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/nativeMcp.ts",
+      "file": "packages/studio/src/platform/runtime/nativeMcp.ts",
+      "target": "packages/studio/src/platform/runtime/nativeMcp.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

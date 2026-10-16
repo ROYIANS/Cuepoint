@@ -767,7 +767,9 @@ fn legacy_49_registry_is_not_silently_migrated_to_current_53() {
     store.close().unwrap();
     drop(store);
     downgrade_to_legacy_registry(&root, None);
-    let error = FullProductStore::open(root.clone(), false, Hooks::default()).err().unwrap();
+    let error = FullProductStore::open(root.clone(), false, Hooks::default())
+        .err()
+        .unwrap();
     assert_eq!(error.code, "schema");
     let db = rusqlite::Connection::open(root.join(".local/state.sqlite")).unwrap();
     let (rows, device, hash): (i64, i64, String) = db.query_row(
@@ -802,4 +804,56 @@ fn legacy_registry_with_other_differences_is_still_rejected() {
     assert_eq!(rows, 0);
     drop(db);
     fs::remove_dir_all(&root).unwrap();
+}
+
+#[test]
+fn mcp_native_catalogue_distinguishes_missing_present_null_and_stale_session() {
+    let store = fixture(Hooks::default());
+    let session: Session = serde_json::from_value(store.token()).unwrap();
+    assert!(store.mcp_catalogue(&session).unwrap().is_null());
+    let key = WireText::from("agentMcp.catalog.v1");
+    let encoded = row("agentMcp.catalog.v1", vec![("value", json!(["null"]))]);
+    store
+        .db
+        .execute(
+            "INSERT INTO product_records VALUES (?,?,?,?,?)",
+            rusqlite::params![
+                "deviceSettings",
+                key.clone(),
+                Vec::<u8>::new(),
+                encoded.to_string(),
+                1
+            ],
+        )
+        .unwrap();
+    assert!(store.mcp_catalogue(&session).is_err());
+    let public = json!({"version":1,"revision":0,"entries":[],"receipts":[]});
+    fn encode(value: &Value) -> Value {
+        match value {
+            Value::Null => json!(["null"]),
+            Value::Bool(b) => json!(["bool", b]),
+            Value::Number(n) => json!(["num", n]),
+            Value::String(s) => json!(["str", s]),
+            Value::Array(a) => json!(["arr", a.iter().map(encode).collect::<Vec<_>>()]),
+            Value::Object(o) => json!([
+                "obj",
+                o.iter()
+                    .map(|(k, v)| json!([k, encode(v)]))
+                    .collect::<Vec<_>>()
+            ]),
+        }
+    }
+    let encoded = row("agentMcp.catalog.v1", vec![("value", encode(&public))]);
+    store
+        .db
+        .execute(
+            "UPDATE product_records SET payload=? WHERE table_name='deviceSettings' AND row_key=?",
+            rusqlite::params![encoded.to_string(), key],
+        )
+        .unwrap();
+    assert_eq!(store.mcp_catalogue(&session).unwrap(), public);
+    let mut stale = session.clone();
+    stale.generation += 1;
+    assert!(store.mcp_catalogue(&stale).is_err());
+    dispose(store);
 }

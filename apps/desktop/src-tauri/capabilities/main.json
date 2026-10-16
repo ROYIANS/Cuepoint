@@ -7,6 +7,7 @@
   ],
   "permissions": [
     "allow-product-store-request",
+    "allow-mcp-service-request",
     "allow-product-binary-request",
     "allow-product-binary-read",
     "allow-product-binary-write",

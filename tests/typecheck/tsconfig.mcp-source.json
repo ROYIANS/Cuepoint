@@ -7,6 +7,8 @@
     "../../packages/agent-providers/src/**/*.ts",
     "../mcpCatalogue.test.ts",
     "../mcpManifest.test.ts",
+    "../mcpNativePort.test.ts",
+    "../mcpConnections.test.ts",
     "../mcp*.test.tsx"
   ]
 }

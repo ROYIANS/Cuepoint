@@ -4,9 +4,9 @@
 
 E10 adds desktop-first MCP support to the existing Agent and ProductStore.
 Stage 1 establishes strict device configuration, immutable discovery and bounded
-native SDK adapters. It does not itself install a production IPC connection,
-OAuth callback, Agent tool or management UI. Later delivery stages must extend
-this contract with their actual installed owners and tests. Keep macOS/Windows
+native SDK adapters. Stage 2 adds the finite desktop port, connection/configuration
+owners and native OAuth/service lifecycle. Agent execution and management UI are
+separate later stages. Review each stage against actual executed evidence. Keep macOS/Windows
 evidence separate; practical browser remote support must not require a proxy
 or block desktop delivery.
 
@@ -21,12 +21,22 @@ or block desktop delivery.
   expectedConfigRevision, plus one finite save/set_enabled/remove operation.
 - platform/runtime/mcp.ts owns McpHostServices and its private-revision
   prepare/status/discard, connect/disconnect, prepare/invoke/status/stop/dispose
-  operations. Saved IDs do not grant native authority.
+  operations, plus initialize, private confirmation, retirement and finite OAuth
+  begin/status/cancel. Saved IDs do not grant native authority.
 - Agent mcp/runtime owns normalizeMcpManifest, compileMcpInputSchema,
   composeMcpRunSnapshot, resolveMcpSnapshotTool and mcpPrivateCleanupDecision.
-- Rust mcp/{bounded,transport,process,vault} owns SDK IO, exact network endpoints,
-  owned processes and CredentialVault over SecretStore. The SDK is rmcp 3.5.1;
-  native public IPC installation belongs to the next stage.
+- platform/runtime/{nativeMcp,mcpWire,mcpErrors,mcpServices}.ts owns the exact
+  mcp_service_request adapter, bounded decoded replies, closed safe errors and
+  install/read/clear lifecycle. platform/product/store.ts installs it only beside
+  the actual fixed SQLite driver, for both normal and isolated apps.
+- Agent mcp/runtime/configuration.ts owns createMcpConfigurationOwner and original
+  multi-boundary save/mutate/reconcile intents. runtime/connections.ts owns
+  createMcpConnectionOwner, explicit connect/login, current frozen generations and
+  local retirement. These feature owners do not become another store or Agent loop.
+- Rust mcp/{bounded,transport,process,vault,protocol,catalogue,service,oauth} owns
+  SDK IO, exact endpoints, owned processes, CredentialVault over SecretStore and
+  native connection/login/invocation authority. The SDK is rmcp 3.5.1. The trusted
+  desktop handler and normal/isolated ACL closure must move together.
 
 ## 3. Contracts / Invariants
 
@@ -47,6 +57,44 @@ Only acknowledged retirement or established rollback can propose collection;
 the native owner must independently refuse current references.
 Compare private-reference identity by kind/ownerId/revisionId fields, never
 JSON serialization/key order, including confirmed-rollback cleanup proposals.
+
+**Installed host and operation certainty.** The finite wire carries version,
+original operationId, real NativeSession and native-issued hostSessionId. Native
+validates the trusted window and actual current store/session/catalogue itself;
+renderer configuration assertions do not establish enablement or credential
+ownership. IndexedDB reference storage cannot fabricate the native session.
+Only explicit connect starts IO/processes; configuration restoration does not.
+
+Retire local generation eligibility before edit/disable/remove/disconnect. Clear
+or dispose closes local calls immediately, then awaits the original in-flight
+initialization before disposing that returned host. A missing handshake reply is
+not proof that native did nothing. Store/window teardown retains actual cleanup
+ownership; a renderer unload promise cannot establish process drainage.
+
+A canceled beforeunload is not owner termination: the draft guard may keep the
+same page alive. Permanent service clearing belongs to pagehide/final teardown;
+an early unload hook must remain recoverable. When dispose reports draining,
+later disposal/status must await the same original cleanup owner and observe
+its eventual drained receipt, rather than cache draining forever. Failed or
+canceled connection attempts own every already-spawned process until actual
+drain, including handshake/discovery/publication failures before registration.
+Close admission and capture existing owners under the same state lock before
+retirement starts, so teardown cannot miss a newly admitted server. Canceled
+OAuth listeners remain draining until their original task has actually finished;
+issuing a cancellation token alone is not a listener-close receipt.
+
+The configuration owner records whether retirement, private prepare and catalogue
+CAS were actually issued. A proven pre-write rejection can settle without waiting
+for a nonexistent private candidate. An uncertain retirement uses its idempotent
+native owner; unknown private/store acknowledgements reconcile the exact original
+intent, never prepare a fresh revision or repeat a store mutation. Preserve
+unresolved intent capacity; do not evict uncertain originals to make room.
+
+IPC/SDK failures expose only closed safe codes, certainty and original identity.
+Do not chain raw SDK errors, response bodies or private launch/header data into
+public diagnostics. Own bounded request data before the first await so callers
+cannot change a queued target. Compare parsed identity fields, not caller object
+property order.
 
 **Two manifest identities.** McpHostBinding.manifestRevision is the host's
 opaque frozen raw-catalogue revision. Studio's normalized manifest revision is
@@ -99,6 +147,35 @@ reacquire the same refresh lock in load/save. Namespace by app/profile/store/
 server, use Windows Local persistence, and fail closed without plaintext fallback.
 Normal and isolated acceptance apps cannot share credential namespaces.
 
+**OAuth ownership.** Use the native system-browser opener and a fresh short-lived
+numeric-loopback callback listener, exact recorded path/Host/redirect URI, S256
+PKCE, state and discovered issuer/resource/client identity. Pre-registered public
+clients and advertised DCR are supported by the SDK seam; missing registration is
+an actionable refusal. Do not invent a hosted client metadata document or backend.
+
+Validate success and error callbacks before consuming an attempt. The SDK URL
+parser requires code and does not validate an OAuth error callback for this host.
+A forged state/issuer, duplicate parameter or wrong callback target rejects while
+keeping the legitimate pending attempt available. Cancellation, timeout, retirement
+and consumed callback close the listener; stale attempts cannot exchange/publish
+for replacement configuration or account owners.
+
+Serialize refresh and final credential publication under the same owner fence.
+A current() check before a separate pointer write is insufficient; retirement must
+not fit between the check and publication. Use immutable revisions and owned slots
+so late writes cannot replace a current registration. Token refresh rejection
+never starts interactive login or repeats an effect. Keep raw SDK debug token/code
+logging out of installed diagnostics/subscribers.
+
+Refreshing a token may retain principal identity only while issuer, resource,
+client and granted scopes remain identical. A refresh which changes those facts
+must retire the old principal before dispatch; existing approval cannot gain the
+new identity. Resource means the actual SDK-accepted protected-resource metadata
+identifier; the configured endpoint is not a substitute. The SDK also accepts
+same-origin parent resource paths, so equal endpoints do not prove equal audience.
+Collect retired OAuth revisions only after an acknowledged current
+pointer or proven original rollback; uncertain writes remain quarantined.
+
 ## 4. Validation / Error Matrix
 
 | Trigger | Required behavior |
@@ -140,6 +217,19 @@ Bad: reconnect a same-label server and reuse its old approval.
   delete acknowledgement loss and refresh serialization.
 - A controllable process-wrapper regression must hold descendant drainage past
   the first Stop timeout and prove a second Stop does not report early completion.
+- Stage 2 finite wire/coordinator tests must exercise actual ProductStore CAS,
+  unknown prepare/store acknowledgements, original reconciliation, retired pending
+  connect/login, duplicate controls, initialization/dispose, session replacement,
+  bounded malformed replies and absence of secrets in public errors.
+- Native service fixtures must exercise the actual prepared/invoke/status owner,
+  atomic original-operation reservations, final retirement fences and truthful
+  repeated disconnect/dispose drainage. Wrong/stale authorities cannot dispatch;
+  known late replies settle only their original invocation receipts.
+- Native OAuth fixtures use real TCP metadata/DCR/token servers and the production
+  loopback receiver with an injected opener/SecretStore. Verify PKCE/resource,
+  pre-registration, wrong/error/duplicate/stale callbacks, cancel/timeout, missing
+  registration, serial refresh/rotation and stale publication fencing. Clearly
+  label memory SecretStore as fixture evidence.
 - Real Keychain test is explicit opt-in and cannot be counted when ignored.
   Unix fixtures/compilation do not prove Windows credential/Job Object execution.
   Full app, installed hosts and packed-library gates remain epic-end acceptance.

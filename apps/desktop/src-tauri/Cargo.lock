@@ -731,6 +731,7 @@ name = "cuepoint-prototype"
 version = "0.1.3"
 dependencies = [
  "apple-native-keyring-store",
+ "async-trait",
  "base64 0.22.1",
  "futures",
  "http",

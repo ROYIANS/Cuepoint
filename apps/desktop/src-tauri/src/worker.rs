@@ -15,6 +15,7 @@ type ProductReply = mpsc::Sender<Result<serde_json::Value>>;
 pub enum ProductJob {
     Store(crate::full_product_store::protocol::Request),
     Validate(crate::full_product_store::protocol::Session),
+    McpCatalogue(crate::full_product_store::protocol::Session),
     Binary {
         session: crate::full_product_store::protocol::Session,
         request: crate::product_binary::BinaryRequest,
@@ -187,6 +188,7 @@ impl StorageWorker {
                                     ProductJob::Store(request) => {
                                         request.validate_wire().and_then(|()| w.run(request, check))
                                     }
+                                    ProductJob::McpCatalogue(session) => w.mcp_catalogue(&session),
                                     ProductJob::Validate(session) => {
                                         w.validate_session(&session)?;
                                         Ok(serde_json::json!({}))

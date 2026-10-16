@@ -2,6 +2,8 @@
 import json
 import subprocess
 import sys
+import time
+from pathlib import Path
 
 mode = sys.argv[1]
 if mode == "tree":
@@ -23,8 +25,16 @@ for line in sys.stdin:
     elif method == "initialize":
         result = {"protocolVersion": "2025-11-25", "capabilities": {"tools": {}, "resources": {}}, "serverInfo": {"name": "fixture", "version": "1"}}
     elif method == "tools/list":
+        if mode == "slow_discovery":
+            child = subprocess.Popen(["/bin/sleep", "30"])
+            Path(sys.argv[2]).write_text(json.dumps([__import__("os").getpid(), child.pid]))
+            while not Path(sys.argv[3]).exists():
+                time.sleep(0.01)
         result = {"resultType": "complete", "tools": [{"name": "counter", "inputSchema": {"type": "object"}}]}
     elif method == "tools/call":
+        if mode == "slow_call":
+            Path(sys.argv[2]).write_text("one")
+            time.sleep(0.15)
         if mode == "oversized":
             sys.stdout.write("x" * (1024*1024+1))
             sys.stdout.flush()

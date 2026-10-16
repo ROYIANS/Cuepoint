@@ -66,13 +66,30 @@ export interface McpHostConnection {
     readonly discovery: unknown;
 }
 
+export interface McpOAuthAttempt {
+    readonly attemptId: string;
+    readonly redirectDisplay?: string;
+}
+
+export interface McpOAuthStatus {
+    readonly attemptId: string;
+    readonly state: "pending" | "authorized" | "canceled" | "expired" | "failed";
+}
+
 export interface McpHostServices {
+    readonly active: boolean;
     readonly capabilities: McpHostCapabilities;
-    preparePrivateRevision(input: {readonly operationId: string; readonly serverId: string; readonly config: McpPrivateConfig}): Promise<McpPrivateRevisionRef>;
+    initialize(): Promise<McpHostCapabilities>;
+    preparePrivateRevision(input: {readonly operationId: string; readonly serverId: string; readonly catalogueRevision: number; readonly expectedConfigRevision: number; readonly config: McpPrivateConfig}): Promise<McpPrivateRevisionRef>;
     /** Reconciles the original write without creating a second vault revision. */
     privateRevisionStatus(input: {readonly operationId: string; readonly serverId: string}): Promise<{readonly status: "prepared"; readonly reference: McpPrivateRevisionRef} | {readonly status: "unknown"}>;
     /** Native must serialize and reject references still used by the current catalogue. */
     discardPrivateRevision(input: {readonly serverId: string; readonly reference: McpPrivateRevisionRef}): Promise<void>;
+    confirmPrivateRevision(input: {readonly operationId: string; readonly serverId: string; readonly reference: McpPrivateRevisionRef; readonly catalogueFingerprint: string}): Promise<void>;
+    retireServer(input: {readonly serverId: string; readonly expectedConfigRevision?: number}): Promise<{readonly status: "drained" | "draining"}>;
+    oauthBegin(input: {readonly operationId: string; readonly serverId: string; readonly configRevision: number; readonly privateRevision: McpPrivateRevisionRef}): Promise<McpOAuthAttempt>;
+    oauthStatus(attemptId: string): Promise<McpOAuthStatus>;
+    oauthCancel(attemptId: string): Promise<void>;
     connect(input: {readonly operationId: string; readonly serverId: string; readonly configRevision: number; readonly privateRevision: McpPrivateRevisionRef}, signal: AbortSignal): Promise<McpHostConnection>;
     disconnect(binding: McpHostBinding): Promise<{readonly status: "drained" | "draining"}>;
     prepare(input: {readonly binding: McpHostBinding; readonly scope: McpHostScope; readonly target: McpHostTarget; readonly arguments: unknown}): Promise<McpPreparedAuthority>;

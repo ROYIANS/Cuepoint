@@ -25,6 +25,7 @@ pub(crate) struct BoundedHttpClient {
     client: reqwest::Client,
     endpoints: Arc<Vec<reqwest::Url>>,
     limit: usize,
+    token: Option<Arc<std::sync::Mutex<Option<String>>>>,
 }
 impl BoundedHttpClient {
     pub(crate) fn new(endpoints: Vec<reqwest::Url>, limit: usize) -> Result<Self> {
@@ -42,9 +43,9 @@ impl BoundedHttpClient {
             return Err(McpError::Endpoint);
         }
         for endpoint in &endpoints {
-            let local = endpoint
-                .host_str()
-                .is_some_and(|h| h == "127.0.0.1" || h == "[::1]" || h == "::1");
+            let local = endpoint.host_str().is_some_and(|h| {
+                h == "localhost" || h == "127.0.0.1" || h == "[::1]" || h == "::1"
+            });
             if !endpoint.username().is_empty()
                 || endpoint.password().is_some()
                 || endpoint.fragment().is_some()
@@ -63,7 +64,12 @@ impl BoundedHttpClient {
             client,
             endpoints: Arc::new(endpoints),
             limit,
+            token: None,
         })
+    }
+    pub(crate) fn with_token(mut self, token: Arc<std::sync::Mutex<Option<String>>>) -> Self {
+        self.token = Some(token);
+        self
     }
     fn endpoint(&self, uri: &str) -> Result<reqwest::Url> {
         let url = reqwest::Url::parse(uri).map_err(|_| McpError::Endpoint)?;
@@ -87,6 +93,11 @@ impl BoundedHttpClient {
         if let Some(session) = session {
             request = request.header("mcp-session-id", session.as_ref());
         }
+        let auth = self
+            .token
+            .as_ref()
+            .and_then(|t| t.lock().ok().and_then(|v| v.clone()))
+            .or(auth);
         if let Some(auth) = auth {
             request = request.bearer_auth(auth);
         }

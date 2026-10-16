@@ -28,7 +28,7 @@
 | [Agent Tools](./agent-tools.md) | Strict tools, permission snapshots, approval ledger and continuation | Filled |
 | [Creative Skills](./agent-creative-skills.md) | Business CRUD, frozen previews, atomic writes and durable media generation | Filled |
 | [Installed Text Skills](./agent-installable-skills.md) | Portable text imports, immutable device-local versions, metadata discovery and recorded-run retention | Filled |
-| [MCP Connections](./agent-mcp.md) | Strict device catalogue, frozen discovery, finite host authority and bounded native SDK/process/credential contracts | Stage 1 source contracts |
+| [MCP Connections](./agent-mcp.md) | Strict device catalogue, frozen discovery, finite host authority and bounded native SDK/process/credential contracts | Staged source contracts |
 | [Batch Generation](./agent-batch-generation.md) | Reviewed 20-item queue, two-worker safety, candidate selection and current evidence | Filled |
 | [Web Research](./agent-web-research.md) | Independent search connection, bounded source reads and truthful network recovery | Filled |
 | [Agent Jobs / Retained Reports](./agent-jobs-results.md) | Owned foreground progress, bounded original results, authorized readback, retention and truthful Stop | Filled |

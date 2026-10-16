@@ -56,28 +56,30 @@ Stage 1 source evidence: [reviewed results](./research/stage-1-results.md).
 Ownership: Rust mcp service/modules, exact normal/acceptance IPC registration,
 native port installation and vault/OAuth owner. Do not widen media authority.
 
-- [ ] Complete actual native stdio and HTTP discovery/call/resource methods with
+- [x] Complete actual native stdio and HTTP discovery/call/resource methods with
   trusted-window/store-session/generation checks and original invocation status.
-- [ ] Connect only explicit configured executables/argument vectors; no shell,
+- [x] Connect only explicit configured executables/argument vectors; no shell,
   download/install or automatically restored process. Scrub environment, capture
   bounded stderr and drain real owned process trees on disconnect/teardown.
-- [ ] Add no-auth/manual headers and native SDK CredentialStore adapter with
+- [x] Add no-auth/manual headers and native SDK CredentialStore adapter with
   macOS Keychain and Windows Local persistence; handle chunked large credentials,
   unavailable vault, partial rotation and removal without plaintext fallback.
-- [ ] Add short-lived loopback PKCE callback and system-browser login. Test exact
+- [x] Add short-lived loopback PKCE callback and system-browser login. Test exact
   state/issuer/resource/configuration identity, duplicate/error/stale callback,
   timeout/cancel and missing registration. Cover preregistered public clients and
   advertised DCR; use CIMD only with an actual supported metadata fixture.
-- [ ] Serialize refresh and fence stale callbacks; expiry never replays a sent
+- [x] Serialize refresh and fence stale callbacks; expiry never replays a sent
   tool. Do not wrap effect POSTs in SDK AuthClient's reactive AuthRequired
   refresh/repost; acquire the token before the one original dispatch.
   Retire dispatch authority before edit/disconnect/remove; record truthful
   not-started/known/unknown outcomes and actual process drainage.
-- [ ] Run relevant native/transport/port checks and independent review; fix and commit.
+- [x] Run relevant native/transport/port checks and independent review; fix and commit.
 
 Outcome: both desktop transports and authentication run through the real native
 port against deterministic servers. Source evidence remains separate from
 installed macOS/Windows acceptance.
+
+Stage 2 source evidence: [reviewed results](./research/stage-2-results.md).
 
 ## Stage 3 — real Agent offers, approval and retained results
 

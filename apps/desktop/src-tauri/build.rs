@@ -11,6 +11,7 @@ fn main() {
         let commands: &'static [&'static str] = &[
             "workspace_request",
             "product_store_request",
+            "mcp_service_request",
             "product_binary_request",
             "product_binary_read",
             "product_binary_write",
@@ -32,6 +33,7 @@ fn main() {
         let commands: &'static [&'static str] = &[
             "workspace_request",
             "product_store_request",
+            "mcp_service_request",
             "product_binary_request",
             "product_binary_read",
             "product_binary_write",
