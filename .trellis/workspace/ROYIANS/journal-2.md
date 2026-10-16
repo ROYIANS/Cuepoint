@@ -712,3 +712,45 @@ Owner-authorized E09 archive complete. Deferred acceptance is carried by the par
 ### Next Steps
 
 - E11桌面后台Agent宿主和重连恢复先做具体生命周期设计；父任务承担E08/E09/E10批次完整质量、构建、packed与安装版验收。
+
+
+## Session 88: E11 retained background execution and stable conversation reentry
+<!-- trellis-session: v=2 fp=74daaf36468a60c3 -->
+
+**Date**: 2026-10-16
+**Task**: E11 retained background execution and stable conversation reentry
+**Package**: studio
+**Branch**: `codex/agent-background-host`
+
+### Summary
+
+Completed four reviewed E11 source stages; fixed exact completed-background attempt dismissal crash and sidebar remount; preserved deferred installed/full acceptance.
+
+### Main Changes
+
+- App-owned concurrent Agent execution and retained drafts/generation; desktop one-window background lifetime and bounded Quit.
+- Viewed-only ordinary/report unread, far-right running ring, stable sidebar DOM and narrow count-based control reads.
+- Reproduced exact attemptFor/dismissAttempt/StrictMode reappear crash; repeated observation is an exact-owner no-op without replay or canonical message deletion.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `7f602119` | feat: add application-owned Agent execution service |
+| `fe4fcb59` | feat: retain Agent work and drafts across navigation |
+| `59701819` | feat: retain desktop Agent work in a single background window |
+| `7fb1b3c0` | feat: add per-conversation activity and stable background reentry |
+
+### Testing
+
+- [OK] Independent integrated40 suites/524 before final delta, then finalaffected4/82 separately; source+Node types, 70file lint0errors/101warnings, architecture742/0/0, changedtyped100/100.
+- [OK] Actual Chromium13cases; populated local send→DOM160.9ms; Stage3 native12 plus macOS370429ms original-session hidden progress reused.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- E12 planning candidate remains subject to its concrete scope/design review; real provider seconds-level latency was not reproduced by controlled transport.
+- Parent epic retains full regression/formal quality/build/package, Windows/WebView2 and signed installed both-OS acceptance, footprint and unexplained earlier native probe exit.
