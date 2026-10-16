@@ -1,4 +1,4 @@
-import {currentAgentThreadWork, reserveAgentThreadWork, subscribeAgentThreadWork, shutdownAgentThreadWork} from "./threadWork";
+import {currentAgentThreadWork, reserveAgentThreadWork, subscribeAgentThreadWork, shutdownAgentThreadWork, type AgentThreadWork} from "./threadWork";
 import {recoverTaskWrapups, prepareTaskWrapup} from "./taskWrapup";
 import {compactThreadNow, ManualCompactionError, recoverManualCompactions} from "./manualCompaction";
 import type {AgentReasoningEffort} from "../models/agent";
@@ -32,7 +32,7 @@ export interface AgentExecutionSnapshot {
     readonly attempts: readonly ChatSubmissionAttempt[];
     readonly error?: string;
     readonly wrapupId?: string;
-    readonly work?: import("./threadWork").AgentThreadWork;
+    readonly work?: AgentThreadWork;
 }
 interface Invocation {
     token: AgentExecutionToken;
@@ -388,7 +388,7 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             entry.controller.abort();
             return true;
         },
-        requestWorkStop(input: {threadId: string; work: import("./threadWork").AgentThreadWork}): boolean {
+        requestWorkStop(input: {threadId: string; work: AgentThreadWork}): boolean {
             if (currentAgentThreadWork(binding.store, input.threadId) !== input.work || input.work.controller.signal.aborted) return false;
             input.work.controller.abort();
             publish(input.threadId, state(input.threadId));

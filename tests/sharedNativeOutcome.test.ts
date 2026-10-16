@@ -9,7 +9,7 @@ import {createNativeProductStore} from "@/platform/storage/native";
 async function seedTool(store:ProductStore) {
     await store.transaction("rw",["chatThreads","chatMessages","agentRuns","agentToolCalls"],async tx=> {
         await tx.chatThreads.add({id:"thread"} as never);
-        await tx.chatMessages.add({id:"assistant",threadId:"thread",runId:"run"} as never);
+        await tx.chatMessages.add({id:"assistant",threadId:"thread",runId:"run",role:"assistant"} as never);
         await tx.agentRuns.add({id:"run",threadId:"thread",assistantMessageId:"assistant",status:"running"} as never);
         await tx.agentToolCalls.add({id:"call",threadId:"thread",runId:"run",status:"running"} as never);
     });

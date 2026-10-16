@@ -5,7 +5,7 @@ import { beginAgentRun } from "@/features/agent/commands/agentRuns";
 import {createChatThread} from "@/features/agent/commands/chat";
 import { GENERAL_AGENT_ID } from "@/features/agent/models/agent";
 
-const skills = ["audio-production", "music-creation", "project-references", "project-memory", "workspace", "planning", "business-read", "story-edit", "asset-edit", "media-generation", "ip-management", "material-library"];
+const skills = ["desktop-media", "audio-production", "music-creation", "project-references", "project-memory", "workspace", "planning", "business-read", "story-edit", "asset-edit", "media-generation", "ip-management", "material-library"];
 
 describe("foundational skill defaults", () => {
   it("persists all default capabilities for new installations", async () => {

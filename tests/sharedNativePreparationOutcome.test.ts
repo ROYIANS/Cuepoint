@@ -24,7 +24,7 @@ describe("actual native local preparation certainty",()=> {
             await native.store.connectors.put(connector);
             await native.store.transaction("rw",["chatThreads","chatMessages","agentRuns","agentToolCalls"],async tx=> {
                 await tx.chatThreads.add({id:"thread",projectId:project.id} as never);
-                await tx.chatMessages.add({id:"assistant",threadId:"thread",runId:"run"} as never);
+                await tx.chatMessages.add({id:"assistant",threadId:"thread",runId:"run",role:"assistant"} as never);
                 await tx.agentRuns.add({id:"run",projectId:project.id,threadId:"thread",assistantMessageId:"assistant",status:"running"} as never);
                 await tx.agentToolCalls.add({id:"call",threadId:"thread",runId:"run",name:scenario === "batch" ? "prepare_generation_batch" : "submit_generation",status:"running",decision:"approve",requiresConfirmation:true} as never);
             });

@@ -73,7 +73,6 @@ vi.mock("@/features/agent/runtime/runChat", () => ({executeChatRun: io.execute, 
 vi.mock("@/features/agent/runtime/runOwnership", async original => ({...await original<typeof import("@/features/agent/runtime/runOwnership")>(),
     recoverAbandonedRuns: vi.fn().mockResolvedValue(undefined), withThreadRunLock: io.lock}));
 vi.mock("@/features/agent/runtime/taskWrapup", () => ({recoverTaskWrapups: vi.fn().mockResolvedValue(undefined)}));
-vi.mock("@/features/video/agent/generationBatchRuntime", () => ({pauseThreadGeneration: vi.fn()}));
 vi.mock("@/features/settings/models/connectors", () => ({runWithCompatibleChatModel: io.compatible,
     discoverConnectorChatModels: io.discover}));
 vi.mock("@/features/references/documents/import", () => ({importReferenceFile: io.importFile, retryReferenceImport: io.retryImport}));
@@ -87,7 +86,7 @@ vi.mock("@/features/agent/ui/ContextUsagePanel", () => ({ContextUsageTrigger: "c
 vi.mock("@lobehub/ui", () => ({Button: "button", Empty: "empty", Flexbox: "div"}));
 
 
-const retained = vi.hoisted(() => ({execution: undefined as import("@/features/agent/runtime/agentExecutionService").AgentExecutionService | undefined,
+const retained = vi.hoisted(() => ({execution: undefined as AgentExecutionService | undefined,
     drafts: undefined as ReturnType<typeof import("@/features/agent/runtime/chatDraftStore").createChatDraftStore> | undefined}));
 vi.mock("@/features/agent/runtime/agentExecution", () => ({get agentExecution() {return retained.execution!;}}));
 vi.mock("@/features/agent/runtime/chatDraftStore", async original => ({...await original<typeof import("@/features/agent/runtime/chatDraftStore")>(),
@@ -99,7 +98,7 @@ import {UnknownCommitError} from "@/platform/storage/errors";
 import {resetReportedErrorsForTests} from "@/platform/diagnostics/reportError";
 import {AgentChatPage} from "@/features/agent/ui/AgentChatPage";
 import {useReferenceDraft} from "@/features/agent/ui/useReferenceDraft";
-import {createAgentExecutionService} from "@/features/agent/runtime/agentExecutionService";
+import {createAgentExecutionService, type AgentExecutionService} from "@/features/agent/runtime/agentExecutionService";
 import {createChatDraftStore} from "@/features/agent/runtime/chatDraftStore";
 import type {ComposerProps} from "@/features/agent/ui/composerTypes";
 import type {TurnProblem, TurnProblemActionKind} from "@/features/agent/models/turnProblem";

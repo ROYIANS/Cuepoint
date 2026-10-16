@@ -16,9 +16,8 @@ async function inventory(root) {
     try { files.push(...await filesUnder(root, directory)); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
   for (const [directory, extension] of [['apps/desktop/scripts', /\.(?:ts|mjs)$/], ['apps/desktop/ui', /\.(?:ts|tsx)$/]]) {
-    try { files.push(...(await filesUnder(root, directory)).filter(file => extension.test(file))); } catch (error) { if (error.code !== 'ENOENT') throw error; }
+    try { files.push(...(await filesUnder(root, directory)).filter(file => extension.test(file) || file === 'apps/desktop/ui/e11-background/index.html')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
-  files.push('apps/desktop/ui/e11-background/index.html');
   for (const file of ['pnpm-workspace.yaml', ...workspacePolicy(root).packages.flatMap(row => ['package.json', 'tsconfig.json', 'vite.config.ts', 'components.json', 'eslint.config.mjs', 'knip.json', 'index.html', 'landing.html'].map(file => `${row.path}/${file}`)), 'package.json', 'pnpm-lock.yaml', 'eslint.config.mjs', 'knip.json', 'tsconfig.json', 'tsconfig.app.json', 'tsconfig.node.json', 'vite.config.ts', 'vitest.config.ts', 'vitest.agent-source.config.ts', 'vitest.studio-source.config.ts', 'vitest.desktop-media-source.config.ts', 'vitest.installable-skills-source.config.ts', 'vitest.mcp-source.config.ts', 'vitest.agent-background-source.config.ts', 'tests/typecheck/tsconfig.mcp-source.json', 'tests/typecheck/tsconfig.installable-skills-source.json', 'index.html']) {
     try { if ((await stat(path.join(root, file))).isFile()) files.push(file); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }

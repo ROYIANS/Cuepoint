@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { db } from "@/platform/product/store";
 import {createProject} from "@/features/projects/commands/projects";
 import {createChatThread} from "@/features/agent/commands/chat";
+import {deleteChatThread} from "@/features/agent/commands/lifecycle";
 import { beginAgentRun, finishAgentRun } from "@/features/agent/commands/agentRuns";
 import { appendToolResults } from "@/features/agent/commands/agentTools";
 import { updateGeneralAgentConfig } from "@/features/agent/commands/agentSettings";
@@ -155,14 +156,20 @@ describe("bounded project references and native same-model vision", () => {
     const spy = vi.spyOn(Blob.prototype, "arrayBuffer").mockImplementationOnce(async function (this: Blob) {
       const bytes = await original.call(this);
       if (target === "source") await removeProjectReference(p.id, ref.referenceId);
-      else await db.chatThreads.delete(run.threadId);
+      else await deleteChatThread(run.threadId);
       return bytes;
     });
     const fetcher = vi.fn(async () => chatAnswer());
     try { await executeChatRun(run, connector.apiKey, new AbortController(), fetcher); }
     finally { spy.mockRestore(); }
     expect(fetcher).not.toHaveBeenCalled();
-    expect((await db.agentRuns.get(run.id))?.status).toBe("failed");
+    if (target === "source") expect((await db.agentRuns.get(run.id))?.status).toBe("failed");
+    else {
+      expect(await db.chatThreads.get(run.threadId)).toBeUndefined();
+      expect(await db.agentRuns.get(run.id)).toBeUndefined();
+      expect(await db.chatMessages.where("threadId").equals(run.threadId).count()).toBe(0);
+      expect(await db.agentToolCalls.where("threadId").equals(run.threadId).count()).toBe(0);
+    }
   });
   it("rejects the eleventh queued tool image before poisoning the next request", async () => {
     const p = await createProject("P"), ref = await source(p.id, "limit", "image"), run = await begin(p.id);

@@ -18,8 +18,8 @@ describe('portable skill document and metadata boundary', () => {
         expect(splitSkillDocument('---\nname: media-notes\n---')).toEqual({frontmatter: 'name: media-notes\n', body: ''});
     });
 
-    it.each(['name: media-notes', ' ---\nname: media-notes\n---\nbody', '---\nname: media-notes\n--\nbody', '---\rname: media-notes\r---\rbody'])
-    ('rejects missing or ambiguous frontmatter delimiters: %j', document => {
+    it.each(['name: media-notes', ' ---\nname: media-notes\n---\nbody', '---\nname: media-notes\n--\nbody', '---\rname: media-notes\r---\rbody'])(
+        'rejects missing or ambiguous frontmatter delimiters: %j', document => {
         expect(() => splitSkillDocument(document)).toThrow();
     });
 
@@ -85,8 +85,8 @@ describe('captured logical text resources', () => {
         'references/name:.md', 'references/CON.md', 'references/Lpt¹.txt', 'references/clock$.md',
         'references/file .', 'references/file.md ', 'references/a\u0000.md', 'references/a\u202E.md',
         'references/a?b.md', 'references/skill.md', 'references/nested/SKILL.md', 'scripts/a.md',
-        'assets/image.png', 'notes.md', 'references/a/b/c/d.md'])
-    ('rejects unsafe or unsupported manifest name %j before a host lookup', path => {
+        'assets/image.png', 'notes.md', 'references/a/b/c/d.md'])(
+        'rejects unsafe or unsupported manifest name %j before a host lookup', path => {
         expect(() => validateSkillResourcePath(path)).toThrow();
     });
 

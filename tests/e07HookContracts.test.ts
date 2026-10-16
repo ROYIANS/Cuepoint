@@ -3,6 +3,7 @@ import type {ReactElement} from "react";
 import type {AudioProjectSnapshot} from "@/features/audio/models/audio";
 import type {ChatThread} from "@/features/agent/models/chat";
 import type {ConnectorConfig} from "@/features/settings/models/connector";
+import type {ProjectReference} from "@/features/references/models/references";
 
 // Deterministic effect host for actual hook owners. Native scheduling is covered
 // separately; this host keeps stable setters/memos and executes dependency cleanup.
@@ -18,9 +19,28 @@ vi.mock("react", async original => {
         if (!previous || !same(deps, previous.deps)) host.cells[i] = {deps, value: fn()};
         return (host.cells[i] as {value: unknown}).value;
     };
+    const effect = (setup: Effect["setup"], deps?: readonly unknown[]) => {
+        const host = runtime.host!, i = host.cursor++;
+        const previous = host.cells[i] as Effect | undefined;
+        if (!previous || !same(deps, previous.deps)) {
+            const cell: Effect = {kind: "effect", deps, setup}; host.cells[i] = cell;
+            host.effects.push(() => {previous?.cleanup?.(); cell.cleanup = setup() || undefined;});
+        }
+    };
     return {...react,
         useMemo: memo,
         useCallback: (fn: unknown, deps?: readonly unknown[]) => memo(() => fn, deps),
+        useEffect: effect,
+        useSyncExternalStore: (subscribe: (listener: () => void) => () => void, getSnapshot: () => unknown) => {
+            const host = runtime.host!;
+            const cell = memo(() => ({read: getSnapshot, value: getSnapshot()}), []) as {read: () => unknown; value: unknown};
+            cell.read = getSnapshot; cell.value = getSnapshot();
+            effect(() => subscribe(() => {
+                if (!host.mounted) host.lateWrites++;
+                cell.value = cell.read();
+            }), [subscribe]);
+            return cell.value;
+        },
         useState: (initial: unknown) => {
             const host = runtime.host!, i = host.cursor++;
             if (!(i in host.cells)) {
@@ -37,14 +57,6 @@ vi.mock("react", async original => {
             const host = runtime.host!, i = host.cursor++;
             if (!(i in host.cells)) host.cells[i] = {current: initial};
             return host.cells[i];
-        },
-        useEffect: (setup: Effect["setup"], deps?: readonly unknown[]) => {
-            const host = runtime.host!, i = host.cursor++;
-            const previous = host.cells[i] as Effect | undefined;
-            if (!previous || !same(deps, previous.deps)) {
-                const cell: Effect = {kind: "effect", deps, setup}; host.cells[i] = cell;
-                host.effects.push(() => {previous?.cleanup?.(); cell.cleanup = setup() || undefined;});
-            }
         },
     };
 });
@@ -66,11 +78,16 @@ const chat = vi.hoisted(() => ({update: vi.fn()}));
 vi.mock("@/features/agent/commands/chat", () => ({updateChatThread: chat.update, bindChatThreadProject: vi.fn()}));
 const imports = vi.hoisted(() => ({importFile: vi.fn()}));
 vi.mock("@/features/references/documents/import", () => ({importReferenceFile: imports.importFile, retryReferenceImport: vi.fn()}));
+const drafts = vi.hoisted(() => ({owner: undefined as ReturnType<typeof createChatDraftStore> | undefined}));
+vi.mock("@/features/agent/runtime/chatDraftStore", async original => ({...await original<typeof import("@/features/agent/runtime/chatDraftStore")>(),
+    get chatDrafts() {return drafts.owner!;},
+}));
 vi.mock("sonner", () => ({toast: {error: vi.fn(), success: vi.fn()}}));
 
 import {AudioTimeline, type AudioTimelineProps} from "@/features/audio/ui/AudioTimeline";
 import {useReferenceDraft} from "@/features/agent/ui/useReferenceDraft";
 import {useChatSelection} from "@/features/agent/ui/useChatSelection";
+import {createChatDraftStore} from "@/features/agent/runtime/chatDraftStore";
 
 type Node = ReactElement<Record<string, unknown>>;
 const hosts: Host[] = [];
@@ -102,14 +119,20 @@ function snapshot(): AudioProjectSnapshot {
     };
 }
 function timelineProps(): AudioTimelineProps {return {projectId: "project", projectName: "Project", chapterId: "chapter", snapshot: snapshot(), selectedId: "", onSelect: vi.fn()};}
+function importedReference(): ProjectReference {
+    return {id: "reference", projectId: "project", mediaId: "media", digest: "digest", kind: "text", filename: "reference.txt", mimeType: "text/plain",
+        size: 9, revision: 1, status: "ready", operationId: "import", warnings: [], createdAt: "2026-10-09", updatedAt: "2026-10-09",
+        coverage: {totalUnits: 1, processedUnits: 1, emptyUnits: [], characters: 9, truncated: false}};
+}
 
 beforeEach(() => {
     vi.useFakeTimers(); audio.players.length = 0; audio.load.mockReset(); imports.importFile.mockReset(); chat.update.mockReset();
+    drafts.owner = createChatDraftStore();
     const windowTarget = new EventTarget();
     vi.stubGlobal("window", Object.assign(windowTarget, {setInterval, clearInterval}));
     vi.stubGlobal("document", Object.assign(new EventTarget(), {querySelectorAll: () => [], activeElement: null}));
 });
-afterEach(() => {for (const host of hosts.splice(0)) if (host.mounted) unmount(host); vi.useRealTimers(); vi.unstubAllGlobals();});
+afterEach(async () => {for (const host of hosts.splice(0)) if (host.mounted) unmount(host); await drafts.owner!.shutdown(); vi.useRealTimers(); vi.unstubAllGlobals();});
 
 describe("E07 actual UI hook lifecycle contracts", () => {
     it("consumes one seek ID without pausing playback on resize or equivalent request objects", async () => {
@@ -158,18 +181,49 @@ describe("E07 actual UI hook lifecycle contracts", () => {
         unmount(host); expect(vi.getTimerCount()).toBe(0);
     });
 
-    it("aborts imports added after mount without publishing late completions", async () => {
-        const host = mount(), pending = deferred<never>();
+    it("retains an import through view changes and unmount, publishing only to its original draft", async () => {
+        const host = mount(), pending = deferred<ProjectReference>();
         imports.importFile.mockReturnValue(pending.promise);
         const draft = draw(host, () => useReferenceDraft("thread", "project"));
         const importing = draft.importFiles([new File(["reference"], "reference.txt", {type: "text/plain"})]);
-        const options = imports.importFile.mock.calls[0][2] as {signal: AbortSignal};
-        expect(options.signal.aborted).toBe(false);
-        draw(host, () => useReferenceDraft("other-thread", "project"));
-        expect(options.signal.aborted).toBe(false);
-        unmount(host); expect(options.signal.aborted).toBe(true);
-        pending.resolve(undefined as never); await importing;
-        expect(host.lateWrites).toBe(0);
+        try {
+            const options = imports.importFile.mock.calls[0][2] as {signal: AbortSignal; onProgress: (reference: {id: string}) => void};
+            expect(options.signal.aborted).toBe(false);
+            const other = draw(host, () => useReferenceDraft("other-thread", "project"));
+            expect(other.imports).toEqual([]);
+            expect(options.signal.aborted).toBe(false);
+            unmount(host);
+            expect(options.signal.aborted).toBe(false);
+            options.onProgress({id: "reference"});
+            expect(drafts.owner!.snapshot("thread").imports[0].referenceId).toBe("reference");
+            pending.resolve(importedReference()); await importing;
+            expect(drafts.owner!.snapshot("thread").attachments).toEqual([{referenceId: "reference", revision: 1}]);
+            expect(drafts.owner!.snapshot("thread").imports).toEqual([]);
+            expect(drafts.owner!.snapshot("other-thread").attachments).toEqual([]);
+            expect(host.lateWrites).toBe(0);
+            const returned = draw(mount(), () => useReferenceDraft("thread", "project"));
+            expect(returned.attachments).toEqual([{referenceId: "reference", revision: 1}]);
+            expect(imports.importFile).toHaveBeenCalledTimes(1);
+        } finally {pending.resolve(importedReference()); await importing;}
+    });
+
+    it("aborts an explicitly cancelled retained import and ignores its late completion", async () => {
+        const host = mount(), pending = deferred<ProjectReference>();
+        imports.importFile.mockReturnValue(pending.promise);
+        const draft = draw(host, () => useReferenceDraft("thread", "project"));
+        const importing = draft.importFiles([new File(["reference"], "reference.txt", {type: "text/plain"})]);
+        try {
+            const options = imports.importFile.mock.calls[0][2] as {signal: AbortSignal};
+            const job = drafts.owner!.snapshot("thread").imports[0];
+            unmount(host);
+            expect(options.signal.aborted).toBe(false);
+            draft.cancel(job.id);
+            expect(options.signal.aborted).toBe(true);
+            pending.resolve(importedReference()); await importing;
+            expect(drafts.owner!.snapshot("thread").imports).toEqual([]);
+            expect(drafts.owner!.snapshot("thread").attachments).toEqual([]);
+            expect(host.lateWrites).toBe(0);
+        } finally {pending.resolve(importedReference()); await importing;}
     });
 
     it("retains an in-flight model choice across unrelated thread metadata refresh", async () => {

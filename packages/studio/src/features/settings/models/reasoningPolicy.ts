@@ -17,7 +17,7 @@ export interface ReasoningCapabilityHints {
 }
 
 /** models.dev only says "reasoning: true"; without level data these are the safe common levels. */
-export const DEFAULT_REASONING_LEVELS: readonly AgentReasoningEffort[] = ["low", "medium", "high"];
+const DEFAULT_REASONING_LEVELS: readonly AgentReasoningEffort[] = ["low", "medium", "high"];
 
 /** Built-in per-model level sets for models with documented, narrower or wider contracts. */
 const KNOWN_LEVELS: Readonly<Record<string, { levels: readonly AgentReasoningEffort[]; source: string }>> = {

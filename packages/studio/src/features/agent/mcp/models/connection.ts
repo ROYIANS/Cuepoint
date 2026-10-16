@@ -1,4 +1,4 @@
-import type {McpHostBinding, McpPrivateRevisionRef} from "../../../../platform/runtime/mcp";
+import type {McpPrivateRevisionRef} from "../../../../platform/runtime/mcp";
 
 /** Device-only safe projection. Never contains launch details, endpoint query or headers. */
 export interface McpServerConfig {
@@ -44,9 +44,3 @@ export interface McpCatalogue {
 
 export type McpMutationReconciliation = {readonly status: "committed"; readonly receipt: McpMutationReceipt}
     | {readonly status: "unresolved"} | {readonly status: "conflict"};
-
-export interface McpConnectedGeneration {
-    readonly binding: McpHostBinding;
-    readonly label: string;
-    readonly enabled: boolean;
-}

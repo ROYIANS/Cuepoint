@@ -123,12 +123,19 @@ describe("prepared approvals and known rollback continuation", () => {
     await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => responseWithTool()), [tool]);
     const call = (await db.agentToolCalls.where("runId").equals(run.id).toArray())[0];
     await resolveAgentToolApproval(run.id, call.id, "approve");
-    const fetcher = vi.fn(async () => answer());
+    const fetcher = vi.fn<typeof fetch>(async (_url, init) => {
+      const failed = (await db.agentToolCalls.get(call.id))!;
+      expect(failed).toMatchObject({status: "failed", decision: "approve", atomic: true, arguments: call.arguments, preview: call.preview, error: expect.stringContaining("定义已变化")});
+      expect(JSON.parse(String(init?.body)).messages).toContainEqual({role: "tool", tool_call_id: call.providerCallId, content: failed.result});
+      return answer();
+    });
     await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [{ ...tool, atomic: false }]);
     expect(tool.execute).not.toHaveBeenCalled();
-    expect(fetcher).not.toHaveBeenCalled();
-    expect((await db.agentRuns.get(run.id))?.error).toContain("定义已变化");
+    expect(tool.prepare).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({status: "completed", error: undefined});
     expect(await db.projects.count()).toBe(0);
+    expect(await db.episodes.count()).toBe(0);
   });
 
   it.each(["ask", "full"] as const)("recovers an uncommitted atomic call in %s mode and keeps its original preview", async (mode) => {

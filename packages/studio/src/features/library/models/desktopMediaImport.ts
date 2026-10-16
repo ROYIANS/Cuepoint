@@ -2,7 +2,7 @@ import type {DesktopImportProvenance} from "./media";
 
 export type DesktopMediaImportActor = {kind: "human"} | {kind: "agent"; runId: string; threadId: string; callId: string};
 export type DesktopMediaImportStatus = "accepted" | "running" | "stopping" | "stopped" | "completed" | "failed" | "unknown";
-export interface DesktopMediaImportSelectionItem {
+interface DesktopMediaImportSelectionItem {
     entryId: string;
     revision: string;
     filename: string;

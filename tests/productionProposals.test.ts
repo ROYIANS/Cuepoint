@@ -29,7 +29,8 @@ describe("reviewed production proposals", () => {
     const {project,episode,shot} = await fixture();
     await media(project.id,"legacy-media");
     const storedMedia = await db.media.get("legacy-media");
-    const newlyAdded = new Set(["productionProposals", "audioGenerationBatches", "audioGenerationBatchItems", "audioArrangementProposals"]);
+    const currentSchemaVersion = db.verno;
+    const newlyAdded = new Set(["productionProposals", "audioGenerationBatches", "audioGenerationBatchItems", "audioArrangementProposals", "desktopMediaImports"]);
     const stores = Object.fromEntries(browserDatabase!.tables.filter((table) => !newlyAdded.has(table.name))
       .map((table) => [table.name,[table.schema.primKey.src,...table.schema.indexes.map((index) => index.src)].join(", ")]));
     await db.delete();
@@ -42,7 +43,8 @@ describe("reviewed production proposals", () => {
     await legacy.table("media").add(storedMedia);
     legacy.close();
     await db.open();
-    expect(db.verno).toBe(25);
+    expect(db.verno).toBe(currentSchemaVersion);
+    expect(await db.desktopMediaImports.count()).toBe(0);
     expect(await db.audioGenerationBatches.count()).toBe(0);
     expect(await db.audioGenerationBatchItems.count()).toBe(0);
     expect(await db.audioArrangementProposals.count()).toBe(0);

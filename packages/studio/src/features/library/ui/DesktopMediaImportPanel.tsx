@@ -7,7 +7,7 @@ import type {DesktopMediaImport} from "../models/desktopMediaImport";
 import {desktopMediaSelection, importDesktopMedia, inspectDesktopMediaImport, ownsDesktopMediaImport, pickDesktopMediaDirectory, revokeDesktopMediaCandidates, stopDesktopMediaImport, type DesktopMediaCandidates} from "../services/desktopMediaImport";
 import "./desktopMediaImport.css";
 
-export function DesktopMediaImportProgress({record, currentFilename, allowStop = false}: {record: DesktopMediaImport; currentFilename?: string; allowStop?: boolean}) {
+function DesktopMediaImportProgress({record, currentFilename, allowStop = false}: {record: DesktopMediaImport; currentFilename?: string; allowStop?: boolean}) {
     const [stopping, setStopping] = useState(false);
     const active = ["accepted", "running", "stopping"].includes(record.status);
     const canStop = allowStop && active && ownsDesktopMediaImport(record.id, record.projectId);

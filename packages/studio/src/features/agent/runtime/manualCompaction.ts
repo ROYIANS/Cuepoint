@@ -46,7 +46,7 @@ export interface ManualCompactionResult {
     turns: number;
 }
 
-export const MANUAL_RUN_ID = "manual";
+const MANUAL_RUN_ID = "manual";
 
 function groups(history: readonly ContextSource[]): ContextSource[][] {
     const result: ContextSource[][] = [];

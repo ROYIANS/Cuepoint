@@ -20,11 +20,11 @@ import type {ContextAnchor} from "../models/context";
  * `referenceInput`/`sourceToolCallId` never serialize; Responses uses flat tools and items), and
  * images are priced separately by `estimateImageTokens`.
  */
-export type ContextSourceKind = "reported" | "estimated";
+type ContextSourceKind = "reported" | "estimated";
 export type WireProtocol = NonNullable<ContextAnchor["protocol"]>;
 
 /** Safety allowance applied to estimated tokens only, before comparing to thresholds. */
-export const ESTIMATE_MARGIN = 0.25;
+const ESTIMATE_MARGIN = 0.25;
 /** Inclusive bounds of the per-image estimate; providers price images by size tiers, not bytes. */
 export const IMAGE_TOKEN_FLOOR = 256;
 export const IMAGE_TOKEN_CAP = 1600;
@@ -40,7 +40,7 @@ export function estimateImageTokens(image: Pick<AgentImageReference, "size">): n
     return Math.min(IMAGE_TOKEN_CAP, Math.max(IMAGE_TOKEN_FLOOR, Math.ceil(bytes / IMAGE_BYTES_PER_TOKEN)));
 }
 
-export function imageTokensOf(messages: readonly AgentRequestMessage[]): number {
+function imageTokensOf(messages: readonly AgentRequestMessage[]): number {
     return messages.reduce((sum, message) => sum + (message.referenceInput?.images ?? []).reduce((inner, image) => inner + estimateImageTokens(image), 0), 0);
 }
 

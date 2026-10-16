@@ -31,7 +31,7 @@ async function run(label, only, expected) {
   const directory = path.join(output, `${String(++sequence).padStart(2, '0')}-${label}`);
   await mkdir(directory);
   const source = {};
-  for (const dir of ['src', 'tests', 'quality', 'contract-evidence']) {
+  for (const dir of ['src', 'tests', 'quality', 'contract-evidence', 'apps/desktop/ui']) {
     let files = [];
     try { files = await filesUnder(fixture, dir); } catch (error) { if (error.code !== 'ENOENT') throw error; }
     for (const file of files) source[file] = await readFile(path.join(fixture, file), 'utf8');
@@ -74,7 +74,14 @@ try {
   await json('tsconfig.json', { extends: './tsconfig.app.json' });
   await json('package.json', { name: 'quality-fixture', private: true, type: 'module' });
   await reset();
-  await run('clean-lint', 'lint', 0);
+  const clean = await run('clean-lint', 'lint', 0);
+  const nativeFixtureFile = 'apps/desktop/ui/e11-background/index.html';
+  assert.ok(!Object.hasOwn(clean.inputs, nativeFixtureFile), 'A project without desktop fixtures must not require their inputs');
+  const nativeFixtureText = '<script type="module" src="../e11Background.ts"></script>\n';
+  await write(nativeFixtureFile, nativeFixtureText);
+  const nativeFixture = await run('present-native-fixture-input-is-hashed', 'lint', 0);
+  assert.equal(nativeFixture.inputs[nativeFixtureFile], hash(nativeFixtureText), 'An existing native HTML entry must participate in before/after inventory');
+  await rm(path.join(fixture, 'apps'), {recursive: true, force: true});
   await write('src/metric.ts', 'export function metric(a: boolean, b: boolean) { return a ? 1 : b ? 2 : 3; }\n');
   const metric = await run('review-warning-visible-nonblocking', 'lint', 0);
   const warning = metric.sections.lint.diagnostics.find(row => row.rule === 'no-nested-ternary');

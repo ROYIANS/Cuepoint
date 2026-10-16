@@ -9,7 +9,6 @@ let callsFixture: AgentToolCall[] = [];
 let writesFixture: {total: number; groups: Array<{label: string; count: number}>; entries: unknown[]; omitted: number; uncoveredCalls: number} =
     {total: 0, groups: [], entries: [], omitted: 0, uncoveredCalls: 0};
 
-vi.mock("@/platform/product/queries", () => ({useProductQuery: () => callsFixture}));
 vi.mock("@lobehub/ui", () => ({
     Markdown: ({children}: {children?: ReactNode}) => h("div", {"data-md": ""}, children),
     CopyButton: () => h("button", {type: "button"}, "复制"),
@@ -56,7 +55,7 @@ function toolCall(id: string, patch: Partial<AgentToolCall> = {}): AgentToolCall
 let root: Root, container: HTMLDivElement;
 async function render(messages: ChatMessage[], runs: AgentRun[]) {
     await act(async () => {
-        root.render(h(MessageList, {threadId: "t1", messages, runs, busy: false, onRunAction: vi.fn()}));
+        root.render(h(MessageList, {threadId: "t1", messages, runs, calls: callsFixture, busy: false, onRunAction: vi.fn()}));
     });
 }
 const text = () => container.textContent ?? "";

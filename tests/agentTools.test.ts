@@ -1,4 +1,4 @@
-import {failStoreTableOnce} from "./helpers/storeFaults";
+import {failStoreTableOnce, interceptStoreTable} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/platform/product/store";
 import { beginAgentRun, canRetryRun, interruptThreadRuns } from "@/features/agent/commands/agentRuns";
@@ -314,9 +314,16 @@ describe("durable bounded tool loop", () => {
     const call = (await db.agentToolCalls.toArray())[0];
     await resolveAgentToolApproval(run.id, call.id, "approve");
     const changed = { ...tool, effect: "network" as const };
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [changed, BUILTIN_TOOLS[1]]);
+    const fetcher = vi.fn<typeof fetch>(async (_url, init) => {
+      const failed = (await db.agentToolCalls.get(call.id))!;
+      expect(failed).toMatchObject({status: "failed", decision: "approve", effect: "write", arguments: call.arguments, error: expect.stringContaining("定义已变化")});
+      expect(JSON.parse(String(init?.body)).messages).toContainEqual({role: "tool", tool_call_id: call.providerCallId, content: failed.result});
+      return answer();
+    });
+    await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [changed, BUILTIN_TOOLS[1]]);
     expect(tool.execute).not.toHaveBeenCalled();
-    expect((await db.agentRuns.get(run.id))?.error).toContain("定义已变化");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(await db.agentRuns.get(run.id)).toMatchObject({status: "completed", error: undefined});
   });
   it("thread deletion cascades pending ledger without resurrection", async () => {
     const run = await begin(); const tool = controlled();
@@ -336,13 +343,26 @@ describe("durable bounded tool loop", () => {
     expect(tool.execute).toHaveBeenCalledTimes(1);
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
   });
-  it("preserves the saved reply when a resumed pending step fails before the next request", async () => {
+  it("preserves the saved reply when a resumed approved claim cannot be saved before the next request", async () => {
     const run = await begin(); const tool = controlled();
     await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => toolResponse(tool.name)), [tool, BUILTIN_TOOLS[1]]);
     const call = (await db.agentToolCalls.toArray())[0];
     await db.chatMessages.update(run.assistantMessageId, { content: "已保存的解释", reasoning: "已保存思考" });
     await resolveAgentToolApproval(run.id, call.id, "approve");
-    await resumeChatRun(run.id, connector.apiKey, new AbortController(), vi.fn(async () => answer()), [{ ...tool, effect: "network" }, BUILTIN_TOOLS[1]]);
+    const fetcher = vi.fn(async () => answer());
+    let failedClaims = 0;
+    const failure = interceptStoreTable(db, "agentToolCalls", "update", async (_tx, args, next) => {
+      if (args[0] === call.id && (args[1] as {status?: string}).status === "running") {
+        failedClaims++; throw new Error("claim ledger save failed");
+      }
+      return next();
+    });
+    try {await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [tool, BUILTIN_TOOLS[1]]);}
+    finally {failure.mockRestore();}
+    expect(failedClaims).toBe(1);
+    expect(tool.execute).not.toHaveBeenCalled(); expect(fetcher).not.toHaveBeenCalled();
+    expect(await db.agentToolCalls.get(call.id)).toMatchObject({status: "approved", decision: "approve", arguments: call.arguments});
+    expect(await db.agentRuns.get(run.id)).toMatchObject({status: "failed", error: "claim ledger save failed", modelStep: call.step});
     expect(await db.chatMessages.get(run.assistantMessageId)).toMatchObject({ content: "已保存的解释", reasoning: "已保存思考" });
   });
   it("does not dispatch a second tool after Stop during the first tool", async () => {

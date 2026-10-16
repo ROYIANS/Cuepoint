@@ -162,8 +162,3 @@ export async function stopGenerationBatch(id: string, threadId: string, action: 
     }
     await batchUserAction(threadId, () => controlGenerationBatch(id, threadId, action), locks);
 }
-
-/** Explicit scoped Stop; ordinary view departure does not invoke this. */
-export function pauseThreadGeneration(threadId: string) {
-    workers.get(threadId)?.controller.abort();
-}

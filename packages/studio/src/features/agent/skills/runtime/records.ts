@@ -10,7 +10,7 @@ export const skillBodyKey = (revision: string) => `agentSkills.body.${revision}`
 export const skillResourceKey = (revision: string, ordinal: number) => `agentSkills.resource.${revision}.${ordinal}`;
 export const skillRetentionKey = (revision: string) => `agentSkills.retention.${revision}`;
 
-export function skillRecord(raw: unknown): Record<string, unknown> {
+function skillRecord(raw: unknown): Record<string, unknown> {
     if (!raw || typeof raw !== "object" || Array.isArray(raw) || Object.getPrototypeOf(raw) !== Object.prototype) throw new Error("技能存储记录无效");
     return raw as Record<string, unknown>;
 }
@@ -71,11 +71,11 @@ function parseReceipt(raw: unknown): SkillMutationReceipt {
         skillId: skillId(record.skillId), revision: skillRevision(record.revision), catalogueRevision: integer(record.catalogueRevision)};
 }
 
-export function emptySkillCatalogue(): SkillCatalogue {
+function emptySkillCatalogue(): SkillCatalogue {
     return {version: 1, revision: 0, entries: [], retainedRevisions: [], serializedBytes: 0};
 }
 
-export function parseSkillCatalogue(raw: unknown): SkillCatalogue {
+function parseSkillCatalogue(raw: unknown): SkillCatalogue {
     skillSerializedBytes(raw);
     const record = skillRecord(raw);
     version(record);
@@ -103,7 +103,7 @@ function parseComponent(raw: unknown): SkillComponent {
     return {path: text(record.path, SKILL_LIMITS.pathBytes), digest: skillRevision(record.digest), byteLength: integer(record.byteLength, SKILL_LIMITS.resourceBytes), ordinal: integer(record.ordinal, SKILL_LIMITS.fileCount - 1)};
 }
 
-export function parseSkillManifest(raw: unknown, expectedRevision: string): SkillManifest {
+function parseSkillManifest(raw: unknown, expectedRevision: string): SkillManifest {
     skillSerializedBytes(raw);
     const record = skillRecord(raw);
     version(record);
@@ -125,7 +125,7 @@ export async function readSkillManifestRecord(revision: string, store: ProductSt
     return parseSkillManifest(row.value, revision);
 }
 
-export function parseSkillRetention(raw: unknown, expectedRevision: string): SkillRetention {
+function parseSkillRetention(raw: unknown, expectedRevision: string): SkillRetention {
     const record = skillRecord(raw);
     version(record);
     const revision = skillRevision(record.revision);

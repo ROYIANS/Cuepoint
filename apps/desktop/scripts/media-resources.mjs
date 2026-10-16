@@ -27,7 +27,7 @@ async function regular(path) {
     if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1) throw new Error('Media resource must be an ordinary single-link file');
     return stat;
 }
-export async function verifyMediaFile(path, expected, signal) {
+async function verifyMediaFile(path, expected, signal) {
     const before = await regular(path);
     if (before.size !== expected.bytes) throw new Error('Media resource length mismatch');
     const digest = createHash('sha256');

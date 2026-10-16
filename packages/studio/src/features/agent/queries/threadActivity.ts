@@ -3,7 +3,7 @@ import {db} from "../../../platform/product/store";
 import {prepareThreadActivityKey, readThreadActivity} from "../commands/threadActivity";
 import {agentExecution} from "../runtime/agentExecution";
 
-export interface TopicActivitySnapshot {
+interface TopicActivitySnapshot {
     readonly threadId: string;
     readonly busy: boolean;
     readonly waitingApproval: boolean;

@@ -2851,6 +2851,14 @@
       "publicTypes": []
     },
     {
+      "original": "packages/studio/src/features/agent/runtime/contextMeasurement.ts",
+      "file": "packages/studio/src/features/agent/runtime/contextMeasurement.ts",
+      "target": "packages/studio/src/features/agent/runtime/contextMeasurement.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
       "original": "packages/studio/src/lib/agent/contextPlanner.ts",
       "file": "packages/studio/src/features/agent/runtime/contextPlanner.ts",
       "target": "packages/studio/src/features/agent/runtime/contextPlanner.ts",
@@ -2894,7 +2902,6 @@
       "publicTypes": [],
       "publicSymbols": [
         "batchUserAction",
-        "pauseThreadGeneration",
         "startGenerationBatch",
         "stopGenerationBatch"
       ]
@@ -6760,6 +6767,14 @@
       "original": "packages/studio/src/features/agent/ui/ComposerCards.tsx",
       "file": "packages/studio/src/features/agent/ui/ComposerCards.tsx",
       "target": "packages/studio/src/features/agent/ui/ComposerCards.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/runtime/manualCompaction.ts",
+      "file": "packages/studio/src/features/agent/runtime/manualCompaction.ts",
+      "target": "packages/studio/src/features/agent/runtime/manualCompaction.ts",
       "owner": "features/agent",
       "public": false,
       "publicTypes": []

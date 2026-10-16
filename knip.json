@@ -112,6 +112,7 @@
         "ui/main.tsx",
         "ui/tavilyProbeMain.tsx",
         "ui/e11-background/index.html",
+        "ui/e11Background.ts",
         "scripts/e11-background-probe.mjs",
         "scripts/prepare-release.mjs",
         "scripts/configure-hosted-tools.mjs",

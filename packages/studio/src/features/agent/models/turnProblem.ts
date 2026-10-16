@@ -1,11 +1,11 @@
 import type {AgentRun} from "./agent";
 import type {ChatSubmissionAttempt} from "./chatSubmissionAttempt";
 
-export type TurnProblemKind = "unsent" | "interrupted" | "failed" | "stopped";
+type TurnProblemKind = "unsent" | "interrupted" | "failed" | "stopped";
 /** Every action maps onto an existing owner behaviour; the bubble never invents recovery. */
 export type TurnProblemActionKind = "retry-send" | "retry-run" | "continue" | "check" | "recover" | "confirm";
 
-export interface TurnProblemAction {kind: TurnProblemActionKind; label: string}
+interface TurnProblemAction {kind: TurnProblemActionKind; label: string}
 
 export interface TurnProblem {
     /** Dismissal identity: a new failure always has a new id. */

@@ -13,6 +13,7 @@ import type {ConnectorConfig} from "@/features/settings/models/connector";
 const connector: ConnectorConfig = {id: 'metadata', definitionId: 'openai-compatible', baseUrl: 'https://example.test/v1', apiKey: 'fixture', updatedAt: '2026-10-08'};
 const answer = () => Response.json({choices: [{message: {content: 'done'}, finish_reason: 'stop'}]});
 const response = (names: string[]) => Response.json({choices: [{message: {content: '', tool_calls: names.map((name, index) => ({id: `provider-${index}`, type: 'function', function: {name, arguments: '{}'}}))}, finish_reason: 'tool_calls'}]});
+const metadataError = '工具定义已变化，请结束本次执行后重新发起任务';
 function fixture(name = 'fixture'): AgentToolDefinition {
     return {
         name, title: name, description: name, parameters: {type: 'object', properties: {}, additionalProperties: false},
@@ -44,14 +45,21 @@ describe.each(drifts)('%s metadata agreement', (_field, drift) => {
         const originalParse = tool.parseArguments;
         let parses = 0;
         tool.parseArguments = raw => {const args = originalParse(raw); if (++parses === 2) drift(tool); return args;};
-        const fetcher = vi.fn(async () => response([tool.name]));
+        let round = 0;
+        const fetcher = vi.fn<typeof fetch>(async (_url, init) => {
+            if (++round === 1) return response([tool.name]);
+            expect(JSON.parse(String(init?.body)).messages).toContainEqual({role: 'tool', tool_call_id: 'provider-0', content: JSON.stringify({error: metadataError})});
+            return answer();
+        });
         await executeChatRun(run, connector.apiKey, new AbortController(), fetcher, [tool]);
         expect(parses).toBe(2);
         expect(tool.prepare).not.toHaveBeenCalled(); expect(tool.execute).not.toHaveBeenCalled();
-        expect(fetcher).toHaveBeenCalledTimes(1);
-        expect(await db.agentRuns.get(run.id)).toMatchObject({status: 'failed', error: expect.stringContaining('定义已变化')});
+        expect(fetcher).toHaveBeenCalledTimes(2);
+        expect(await db.agentRuns.get(run.id)).toMatchObject({status: 'completed', error: undefined});
         const calls = await db.agentToolCalls.where('runId').equals(run.id).toArray();
-        expect(calls).toHaveLength(1); expect(calls[0].status).toBe('pending'); expect(calls[0].preview).toBeUndefined(); expect(calls[0].decision).toBeUndefined(); expect(Object.hasOwn(calls[0], 'preview')).toBe(false); expect(Object.hasOwn(calls[0], 'decision')).toBe(false);
+        expect(calls).toHaveLength(1);
+        expect(calls[0]).toMatchObject({status: 'failed', arguments: '{}', error: metadataError, result: JSON.stringify({error: metadataError})});
+        expect(calls[0].preview).toBeUndefined(); expect(calls[0].decision).toBeUndefined(); expect(Object.hasOwn(calls[0], 'preview')).toBe(false); expect(Object.hasOwn(calls[0], 'decision')).toBe(false);
     });
     it('rejects an approved resume before execution without reusing approval for drifted metadata', async () => {
         const tool = fixture(), run = await begin([tool.name], 'ask');
@@ -59,11 +67,14 @@ describe.each(drifts)('%s metadata agreement', (_field, drift) => {
         const call = (await db.agentToolCalls.where('runId').equals(run.id).toArray())[0];
         expect(call.status).toBe('awaiting_approval'); expect(tool.prepare).toHaveBeenCalledTimes(1);
         await resolveAgentToolApproval(run.id, call.id, 'approve'); drift(tool);
-        const fetcher = vi.fn(async () => answer());
+        const fetcher = vi.fn<typeof fetch>(async (_url, init) => {
+            expect(JSON.parse(String(init?.body)).messages).toContainEqual({role: 'tool', tool_call_id: call.providerCallId, content: JSON.stringify({error: metadataError})});
+            return answer();
+        });
         await resumeChatRun(run.id, connector.apiKey, new AbortController(), fetcher, [tool]);
-        expect(tool.execute).not.toHaveBeenCalled(); expect(fetcher).not.toHaveBeenCalled();
-        expect(await db.agentToolCalls.get(call.id)).toMatchObject({status: 'approved', decision: 'approve'});
-        expect(await db.agentRuns.get(run.id)).toMatchObject({status: 'failed', error: expect.stringContaining('定义已变化')});
+        expect(tool.execute).not.toHaveBeenCalled(); expect(tool.prepare).toHaveBeenCalledTimes(1); expect(fetcher).toHaveBeenCalledTimes(1);
+        expect(await db.agentToolCalls.get(call.id)).toMatchObject({status: 'failed', decision: 'approve', arguments: call.arguments, preview: call.preview, error: metadataError, result: JSON.stringify({error: metadataError})});
+        expect(await db.agentRuns.get(run.id)).toMatchObject({status: 'completed', error: undefined});
     });
     it('rechecks earlier preflighted definitions after a later awaited preparation and before claim', async () => {
         const tool = fixture(), later = fixture('later'), run = await begin([tool.name, later.name]);
@@ -98,8 +109,8 @@ it('normalizes absent versus false legacy flags at both checks without granting 
     });
     let round = 0;
     await executeChatRun(run, connector.apiKey, new AbortController(), vi.fn(async () => ++round === 1 ? response([tool.name, later.name]) : answer()), [tool, later]);
-    // Request metadata, preflight, execution recheck and the same-transaction claim each parse independently.
-    expect(parses).toBe(4); expect(later.prepare).toHaveBeenCalledTimes(1);
+    // Metadata and transaction claims parse once; preflight and fresh execution each parse both current and frozen definitions.
+    expect(parses).toBe(6); expect(later.prepare).toHaveBeenCalledTimes(1);
     expect(tool.execute).toHaveBeenCalledTimes(1); expect(later.execute).toHaveBeenCalledTimes(1);
     const calls = await db.agentToolCalls.where('runId').equals(run.id).toArray();
     expect(calls).toHaveLength(2); expect(calls.every(call => call.status === 'completed')).toBe(true);

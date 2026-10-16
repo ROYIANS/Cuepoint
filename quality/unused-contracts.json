@@ -38,6 +38,20 @@
       ]
     },
     {
+      "issue": "binaries",
+      "file": "tooling/mcp-browser-regression.mjs",
+      "symbol": "openssl",
+      "count": 1,
+      "reason": "The standalone MCP browser regression invokes the host OpenSSL CLI to generate a one-day self-signed localhost certificate in a fresh temporary directory. This is an external test prerequisite, not an npm dependency or a shipped product binary; preserve the real local HTTPS transport fixture.",
+      "owner": "MCP browser regression",
+      "evidence": [
+        {
+          "file": "tooling/mcp-browser-regression.mjs",
+          "sha256": "ca1e0d3def9799212b02ba31384a0a0ec9b0cfa8846f1bd54d96d3cd36064e29"
+        }
+      ]
+    },
+    {
       "issue": "unresolved",
       "file": "tooling/e06-root-parity.mjs",
       "symbol": "/e06-fixture-dexie.mjs",
@@ -339,7 +353,7 @@
       "evidence": [
         {
           "file": "apps/desktop/package.json",
-          "sha256": "6d6a361398999e396fcdfb1b55c2785862dcc31d6a31be9ee83cf52c84c4317f"
+          "sha256": "251d8ffe1573edc4c03b3f0a9fd875c46f49b6f8f06a783e0a7c1b203cb3f5e7"
         },
         {
           "file": "apps/desktop/scripts/build-app.mjs",

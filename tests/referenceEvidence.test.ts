@@ -53,6 +53,7 @@ describe("reference task evidence", () => {
     const task = await createAgentTask({ projectId: project.id, title: "参考研究", goal: "总结", acceptanceCriteria: [] });
     const ref = await source(project.id);
     const connector: ConnectorConfig = { id: "summary", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture-key", updatedAt: "2026-09-19" };
+    await db.connectors.put(connector);
     const run = await beginAgentRun({ threadId: task.threadId, connector, model: "model", content: "人工说明保留" });
     const attachment = { referenceId: ref.id, revision: ref.revision };
     const result = JSON.stringify({ chunks: [{ text: "WITHDRAWN_RAW_BODY", index: 0 }], results: [{ excerpt: "WITHDRAWN_SEARCH_EXCERPT" }], referenceInput: { projectId: project.id, references: [attachment], coverage: [{ ...attachment, kind: "text", includedChunkIndices: [0], totalChunks: 1, includedCharacters: 18, partial: false }] } });

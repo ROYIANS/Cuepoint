@@ -14,8 +14,36 @@ type Host = {
 const runtime = vi.hoisted(() => ({active: undefined as Host | undefined}));
 vi.mock("react", async original => {
     const react = await original<typeof import("react")>();
+    const useMemo = (compute: () => unknown, deps: unknown[]) => {
+        const host = runtime.active!; const index = host.cursor++;
+        const previous = host.cells[index] as {deps: unknown[]; value: unknown} | undefined;
+        if (!previous || deps.length !== previous.deps.length || deps.some((value, i) => !Object.is(value, previous.deps[i]))) {
+            host.cells[index] = {deps, value: compute()};
+        }
+        return (host.cells[index] as {value: unknown}).value;
+    };
+    const useEffect = (effect: () => (() => void) | void, deps?: unknown[]) => {
+        const host = runtime.active!; const index = host.cursor++;
+        const previous = host.cells[index] as EffectCell | undefined;
+        if (!previous || !deps || deps.length !== previous.deps?.length || deps.some((value, i) => !Object.is(value, previous.deps?.[i]))) {
+            const cell: EffectCell = {deps, setup: effect}; host.cells[index] = cell;
+            host.effects.push(() => {previous?.cleanup?.(); cell.cleanup = effect() || undefined;});
+        }
+    };
     return {...react,
         useCallback: (callback: unknown) => callback,
+        useMemo,
+        useEffect,
+        useSyncExternalStore: (subscribe: (listener: () => void) => () => void, getSnapshot: () => unknown) => {
+            const host = runtime.active!;
+            const cell = useMemo(() => ({read: getSnapshot, value: getSnapshot()}), []) as {read: () => unknown; value: unknown};
+            cell.read = getSnapshot; cell.value = getSnapshot();
+            useEffect(() => subscribe(() => {
+                if (!host.mounted) host.lateWrites++;
+                cell.value = cell.read();
+            }), [subscribe]);
+            return cell.value;
+        },
         useState: (initial: unknown) => {
             const host = runtime.active!; const index = host.cursor++;
             if (!(index in host.cells)) host.cells[index] = typeof initial === "function" ? initial() : initial;
@@ -28,14 +56,6 @@ vi.mock("react", async original => {
             const host = runtime.active!; const index = host.cursor++;
             if (!(index in host.cells)) host.cells[index] = {current: initial};
             return host.cells[index];
-        },
-        useEffect: (effect: () => (() => void) | void, deps?: unknown[]) => {
-            const host = runtime.active!; const index = host.cursor++;
-            const previous = host.cells[index] as EffectCell | undefined;
-            if (!previous || !deps || deps.some((value, i) => !Object.is(value, previous.deps?.[i]))) {
-                const cell: EffectCell = {deps, setup: effect}; host.cells[index] = cell;
-                host.effects.push(() => {previous?.cleanup?.(); cell.cleanup = effect() || undefined;});
-            }
         },
     };
 });

@@ -13,7 +13,7 @@ const activeImports = new Map<string, {projectId: string; controller: AbortContr
 const directorySelections = new Set<{controller: AbortController; done: Promise<DesktopMediaCandidates | undefined>}>();
 let importShutdown: Promise<void> | undefined;
 const candidatesByScan = new Map<string, DesktopMediaCandidates>();
-export interface DesktopMediaProgress {record: DesktopMediaImport; currentFilename?: string}
+interface DesktopMediaProgress {record: DesktopMediaImport; currentFilename?: string}
 const terminal = (status: string) => !["accepted", "running", "stopping"].includes(status);
 const uncertain = (cause: unknown) => cause instanceof DesktopMediaUncertainError || cause instanceof StorageError && cause.certainty === "unknown";
 function native(services?: DesktopMediaServices): DesktopMediaServices {
@@ -80,7 +80,7 @@ async function runNative(services: DesktopMediaServices, projectId: string, acti
     } finally {pending = false; complete(); signal.removeEventListener("abort", stop); await cancelRequest;}
 }
 
-export async function readDesktopMediaCandidates(projectId: string, grant: DesktopMediaGrant, scan: DesktopMediaScan, services?: DesktopMediaServices): Promise<DesktopMediaCandidates> {
+async function readDesktopMediaCandidates(projectId: string, grant: DesktopMediaGrant, scan: DesktopMediaScan, services?: DesktopMediaServices): Promise<DesktopMediaCandidates> {
     const host = native(services), entries: DesktopMediaEntry[] = [];
     let offset = 0;
     do {

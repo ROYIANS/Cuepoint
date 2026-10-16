@@ -38,7 +38,7 @@ function actionError(cause: unknown, browser = false): string {
 }
 
 /** Foreground UI intent is shared across Agent/Settings and survives panel unmount. */
-export function createMcpManagementOwner(runtime: Runtime) {
+function createMcpManagementOwner(runtime: Runtime) {
     let state: McpManagementState = {generations: runtime.connections.capture()};
     const listeners = new Set<() => void>();
     let stopStore: (() => void) | undefined, stopConnections: (() => void) | undefined;

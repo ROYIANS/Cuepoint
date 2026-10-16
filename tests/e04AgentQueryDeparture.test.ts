@@ -57,7 +57,6 @@ vi.mock("@/features/agent/ui/ChatWorkspace", async () => {
 });
 vi.mock("@/features/agent/runtime/runOwnership", () => ({recoverAbandonedRuns: vi.fn().mockResolvedValue(undefined), withThreadRunLock: vi.fn()}));
 vi.mock("@/features/agent/runtime/taskWrapup", () => ({recoverTaskWrapups: vi.fn().mockResolvedValue(undefined)}));
-vi.mock("@/features/video/agent/generationBatchRuntime", () => ({pauseThreadGeneration: vi.fn()}));
 vi.mock("@/features/audio/generation/batchRuntime", () => ({pauseAudioGenerationBatches: vi.fn()}));
 vi.mock("@/features/settings/models/connectors", () => ({discoverConnectorChatModels: vi.fn().mockResolvedValue({ok: true, models: ["model"]}), runWithCompatibleChatModel: vi.fn()}));
 

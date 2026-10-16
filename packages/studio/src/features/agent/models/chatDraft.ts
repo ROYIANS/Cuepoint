@@ -8,7 +8,7 @@ export type ReferenceImportDraft = {
     file: File;
     referenceId?: string
 };
-export type DraftState = {
+type DraftState = {
     text: string;
     textRevision: number;
     revision: number;

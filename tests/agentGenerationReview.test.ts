@@ -16,6 +16,7 @@ import { reviewAndApproveGeneration } from "@/features/video/agent/generationRev
 import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat";
 import { GENERATION_TOOLS as GENERATION_TOOLS_DEFINITIONS } from "@/features/video/agent/generationTools";
 import type { GenerationSubmitArgs } from "@/features/video/agent/generationProfiles";
+import { BUILTIN_TOOLS } from "@/features/agent/runtime/tools";
 const GENERATION_TOOLS = registeredTools(GENERATION_TOOLS_DEFINITIONS);
 
 
@@ -143,11 +144,19 @@ describe("reviewed generation submission",()=>{
     await expect(tool.execute(tool.parseArguments({projectId:"missing"}),context)).rejects.toThrow("不存在");
   });
   it("blocks stale permission snapshots instead of bypassing confirmation",async()=>{
+    const paid=paidFixture();vi.stubGlobal("fetch",paid);
     const f=await pending();await db.agentToolCalls.update(f.call.id,{requiresConfirmation:undefined});
     await expect(reviewAndApproveGeneration(f.run.id,f.call.id,f.edited,f.expected)).rejects.toThrow();
     await resolveAgentToolApproval(f.run.id,f.call.id,"approve");
-    const execute=vi.fn();const registry=GENERATION_TOOLS.map((tool)=>tool.name==="submit_generation"?{...tool,execute}:tool);
-    await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),vi.fn(async()=>answer()),registry);
-    expect(execute).not.toHaveBeenCalled();expect((await db.agentRuns.get(f.run.id))?.error).toContain("定义已变化");
+    const execute=vi.fn();const registry=BUILTIN_TOOLS.map((tool)=>tool.name==="submit_generation"?{...tool,execute}:tool);
+    const fetcher=vi.fn<typeof fetch>(async(_url,init)=>{
+      const failed=(await db.agentToolCalls.get(f.call.id))!;
+      expect(failed).toMatchObject({status:"failed",decision:"approve",arguments:f.original,error:expect.stringContaining("定义已变化")});
+      expect(JSON.parse(String(init?.body)).messages).toContainEqual({role:"tool",tool_call_id:f.call.providerCallId,content:failed.result});
+      return answer();
+    });
+    await resumeChatRun(f.run.id,connector.apiKey,new AbortController(),fetcher,registry);
+    expect(execute).not.toHaveBeenCalled();expect(paid).not.toHaveBeenCalled();expect(await db.agentGenerationJobs.count()).toBe(0);
+    expect(fetcher).toHaveBeenCalledTimes(1);expect(await db.agentRuns.get(f.run.id)).toMatchObject({status:"completed",error:undefined});
   });
 });

@@ -9,18 +9,18 @@
     {
       "rule": "preserve-caught-error",
       "file": "packages/agent-core/src/compaction.ts",
-      "signature": "66e7a0aa7ca98159915efb9b170db362fdfed643e425dcb6f3dc6ffbc3741d7a",
+      "signature": "929dc15f25d7ea28d8f84531d62e53bf1e5ea9afa05e158236a63323ee0d3eb0",
       "count": 1,
-      "reason": "Throw only the already credential-redacted bounded compaction message. Attaching the original provider/parse exception would preserve unredacted transport/request state.",
+      "reason": "After an aborted summary attempt, persist the host-owned interrupted outcome and throw only the bounded credential-redacted message returned by host.fail. Attaching the original provider/parse exception would retain unredacted transport/request state.",
       "owner": "Agent context"
     },
     {
-      "rule": "@typescript-eslint/only-throw-error",
-      "file": "packages/studio/src/features/video/agent/generationBatchRuntime.ts",
-      "signature": "ed27e36ef4cc5bf4bb1b5ae1247029438eb7c962eb06d1e01574c82671629892",
+      "rule": "preserve-caught-error",
+      "file": "packages/agent-core/src/compaction.ts",
+      "signature": "4a27cf79461401bb6640c2f330d50d44506341ccf961f281579a5f5b492c8eb8",
       "count": 1,
-      "reason": "Propagate the actual rejected worker settlement reason after all workers settle; retain failure identity and existing conservative dispatch stop rather than manufacture a new error.",
-      "owner": "Agent batch runtime"
+      "reason": "A failed summary activation is recorded by host.fail before throwing its bounded credential-redacted message. Preserve the host's existing completed-summary handling without attaching the original activation/provider cause or its request state.",
+      "owner": "Agent context"
     },
     {
       "rule": "@typescript-eslint/only-throw-error",
@@ -33,7 +33,7 @@
     {
       "rule": "preserve-caught-error",
       "file": "packages/studio/src/features/agent/runtime/taskWrapup.ts",
-      "signature": "371ccbf1379bcb8c1940601aae483c4480b360f041eb6969c57be519b78e29a0",
+      "signature": "9e35481e1d0932a872b1042aeae9c8e2d0befe836cd095b1b9b4deb28a260030",
       "count": 1,
       "reason": "Publish only the bounded credential-redacted failure/cancellation message and retain the original summary. Raw provider/parsing cause is intentionally excluded from user-visible exceptions.",
       "owner": "Agent task wrapup"

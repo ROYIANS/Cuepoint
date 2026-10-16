@@ -8,7 +8,7 @@ Read before changing multi-target generation, paid dispatch, candidate compariso
 - Dexie v18 adds `agentGenerationBatches` and `agentGenerationBatchItems`. Jobs retain sparse unique `callId`, add sparse unique `batchItemId` and a `batchId` index. The job owner is a typed union: single call OR batch/item. Never create synthetic call IDs.
 - Repository: `prepareGenerationBatch(title,candidates,context)`, `readGenerationBatch(id,threadId)`, `saveGenerationBatchDraft(id,threadId,revision,edits)`, `changeGenerationBatchItems(id,threadId,revision,itemId,'clone'|'remove')`, `confirmGenerationBatch(id,threadId,revision,signal)`.
 - Review edits are `{id,draft,included}`. Read returns `{batch,items,jobs,currentMedia}`. Confirmation stores snapshots only; it performs no upload or POST.
-- Execution: `batchUserAction(threadId,action,locks?)`, `startGenerationBatch(id,threadId,options?)`, `stopGenerationBatch(id,threadId,'pause'|'cancel',locks?)`, `pauseThreadGeneration(threadId)`.
+- Execution: `batchUserAction(threadId,action,locks?)`, `startGenerationBatch(id,threadId,options?)`, `stopGenerationBatch(id,threadId,'pause'|'cancel',locks?)`. Aggregate Stop uses the current thread-work owner described in the E11 lifecycle contract below.
 - Result actions: `selectBatchCandidate(id,threadId,itemId)`, `applyBatchSelections(id,threadId)` returning per-target `{targetKey,applied,error?}`, `retryFailedBatch(id,threadId)` returning a fresh unconfirmed draft.
 - `TaskRecordSource` adds `{type:'generation',id:jobId}`; `taskGenerationSource(task,jobId)` returns owned current `{id,label,available,applied,body}`. Record and wrap-up transaction scopes must include jobs, batches, media and target tables.
 

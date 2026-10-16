@@ -6,7 +6,7 @@ import {freezeMcp, mcpId, mcpInteger, mcpJson, mcpKeys, mcpRecord, mcpText} from
 
 export const MCP_CATALOGUE_KEY = "agentMcp.catalog.v1";
 
-export function parseMcpPrivateRevision(raw: unknown): McpPrivateRevisionRef {
+function parseMcpPrivateRevision(raw: unknown): McpPrivateRevisionRef {
     const record = mcpRecord(raw);
     mcpKeys(record, ["kind", "ownerId", "revisionId"]);
     if (record.kind !== "native_vault" && record.kind !== "session_memory") throw new Error("MCP 凭据引用无效");
