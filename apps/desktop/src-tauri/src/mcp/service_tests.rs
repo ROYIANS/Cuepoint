@@ -191,6 +191,77 @@ fn identity(authority: Authority) -> Identity {
     }
 }
 #[tokio::test]
+async fn desktop_lifecycle_mcp_quiesce_preserves_original_stop_status_and_result() {
+    let fixture = tests::fixture("slow_call").await;
+    let h = Arc::new(Harness::new());
+    let reference = h.config(http(fixture.url.clone())).await;
+    let binding = h.connect(&reference).await;
+    let original = identity(
+        h.prepare(
+            &binding,
+            Target::Tool {
+                raw_name: "counter".into(),
+            },
+        )
+        .await,
+    );
+    let worker = h.clone();
+    let target = original.clone();
+    let work = tokio::spawn(async move {
+        worker
+            .call(
+                "effect1",
+                Action::Invoke {
+                    identity: target,
+                    arguments: json!({}),
+                },
+            )
+            .await
+    });
+    tokio::time::timeout(Duration::from_secs(3), async {
+        while fixture.effects.load(Ordering::SeqCst) == 0 {
+            tokio::task::yield_now().await;
+        }
+    })
+    .await
+    .unwrap();
+    h.service.quiesce();
+    let stop = h
+        .call(
+            "effect1",
+            Action::Stop {
+                identity: original.clone(),
+            },
+        )
+        .await;
+    assert_ne!(stop.status, "notStarted");
+    assert_eq!(
+        h.call(
+            "fresh",
+            Action::Connect {
+                server_id: "server1".into(),
+                config_revision: 1,
+                private_revision: reference
+            }
+        )
+        .await
+        .status,
+        "notStarted"
+    );
+    let reply = work.await.unwrap();
+    // Stop after dispatch cannot establish a remote rollback. Preserve that
+    // original terminal uncertainty and its exact retained readback.
+    assert_eq!(reply.status, "unknown");
+    let retained = h
+        .call("effect1", Action::Status { identity: original })
+        .await;
+    assert_eq!(retained.status, reply.status);
+    assert_eq!(retained.result, reply.result);
+    assert_eq!(fixture.effects.load(Ordering::SeqCst), 1);
+    assert!(h.service.shutdown().await);
+    assert_eq!(fixture.effects.load(Ordering::SeqCst), 1);
+}
+#[tokio::test]
 async fn mcp_service_real_http_lifecycles_original_receipts_and_resources() {
     for mode in ["modern", "legacy"] {
         let fixture = tests::fixture(mode).await;

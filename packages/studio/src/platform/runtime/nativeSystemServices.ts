@@ -1,6 +1,10 @@
+import {productEffectAdmission} from "./effectAdmission";
 import {invoke} from "@tauri-apps/api/core";
 import {z} from "zod";
 import {Sha256} from "../media/sha256";
+
+const originalSaves = new Set<{controller: AbortController; done: Promise<"saved" | "canceled">}>();
+let shutdownSaves: Promise<void> | undefined;
 
 const CHUNK_BYTES = 262_144;
 const receiptSchema = z.discriminatedUnion("type", [
@@ -36,7 +40,19 @@ class NativeSavePublishedError extends Error {
 }
 
 /** Transfers an existing product Blob; it never opens or invents a SQLite project. */
-export async function saveNativeBlob(blob: Blob, filename: string, signal?: AbortSignal): Promise<"saved" | "canceled"> {
+export function saveNativeBlob(blob: Blob, filename: string, signal?: AbortSignal): Promise<"saved" | "canceled"> {
+    if (!productEffectAdmission.open || shutdownSaves) return Promise.reject(new Error("应用正在退出，无法开始保存"));
+    const controller = new AbortController();
+    let resolve!: (value: "saved" | "canceled") => void, reject!: (cause: unknown) => void;
+    const done = new Promise<"saved" | "canceled">((yes, no) => {resolve = yes; reject = no;});
+    const owner = {controller, done};
+    originalSaves.add(owner);
+    void performSave(blob, filename, signal ? AbortSignal.any([signal, controller.signal]) : controller.signal).then(
+        value => {originalSaves.delete(owner); resolve(value);}, cause => {originalSaves.delete(owner); reject(cause);},
+    );
+    return done;
+}
+async function performSave(blob: Blob, filename: string, signal: AbortSignal): Promise<"saved" | "canceled"> {
     if (signal?.aborted) return "canceled";
     if (!Number.isSafeInteger(blob.size)) throw new Error("文件大小无法安全传输。");
     const operationId = crypto.randomUUID();
@@ -101,7 +117,18 @@ export async function saveNativeBlob(blob: Blob, filename: string, signal?: Abor
     }
 }
 
+export function shutdownNativeSaves(): Promise<void> {
+    if (shutdownSaves) return shutdownSaves;
+    let resolve!: () => void;
+    shutdownSaves = new Promise<void>(done => {resolve = done;});
+    const owners = [...originalSaves];
+    for (const owner of owners) owner.controller.abort();
+    void Promise.allSettled(owners.map(owner => owner.done)).then(() => resolve());
+    return shutdownSaves;
+}
+
 export async function nativeOpenExternalUrl(url: string): Promise<void> {
+    productEffectAdmission.assertOpen();
     const parsed = new URL(url);
     if (!["http:", "https:"].includes(parsed.protocol) || parsed.username || parsed.password) throw new Error("只能打开 HTTP 或 HTTPS 外部链接。");
     await invoke("product_open_external", {url: parsed.href});

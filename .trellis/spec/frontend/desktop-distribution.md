@@ -17,6 +17,8 @@ runtime validation from a successful package build.
 
 ## 2. Signatures / Owners
 
+E11's application lifetime adds native tray/lifecycle code using the existing Tauri dependency closure, with no new JavaScript runtime binary or single-instance plugin. Its targeted native debug/fixture compile and more-than-six-minute available-host hidden-progress probe are necessary source-stage feasibility evidence. They do not replace the final full build, signed installed macOS/Windows, WebView2/Job Object/firewall or installer-footprint checks. Keep those pending until actually performed; do not run release packaging at each source stage.
+
 Owners are `apps/desktop/scripts/tool-resolver.mjs`, `release-policy.mjs`,
 `build-release.mjs`, `release-source-hashes.mjs`, `release-artifacts.mjs`, `finalize-release.mjs`,
 `collect-release.mjs`, `publish-draft.mjs`, the dedicated workflow, and the external

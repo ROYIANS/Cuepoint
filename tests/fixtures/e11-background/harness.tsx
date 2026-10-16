@@ -1,3 +1,10 @@
+import {manualQuitGuards} from "@/app/drafts/manualQuitGuards";
+import {createApplicationQuit} from "@/app/lifecycle/applicationQuit";
+import {createEffectAdmission} from "@/platform/runtime/effectAdmission";
+import type {DesktopLifecycleEvent, DesktopLifecycleAction} from "@/platform/runtime/desktopLifecycle";
+import {chatDrafts} from "@/features/agent/runtime/chatDraftStore";
+import {useState} from "react";
+import {useManualDraftDeparture} from "@/app/drafts/useManualDraftGuard";
 import {createRoot} from "react-dom/client";
 import {createRootRoute, createRoute, createRouter, createBrowserHistory, Outlet, RouterProvider, useLocation, useParams} from "@tanstack/react-router";
 import {Toaster} from "sonner";
@@ -79,6 +86,14 @@ const home = createRoute({getParentRoute: () => agent, path: "/"});
 const chat = createRoute({getParentRoute: () => agent, path: "$threadId"});
 const tasks = createRoute({getParentRoute: () => agent, path: "tasks"});
 const noop = () => {};
+let setOverlayPending = (_value: boolean) => {};
+function ManualOverlay() {
+    const [dirty, setDirty] = useState(true), [pending, setPending] = useState(true);
+    setOverlayPending = setPending;
+    const guard = useManualDraftDeparture(dirty, pending, () => setDirty(false), {route: false});
+    return <><p>Retained local editor</p>{guard.confirmation}</>;
+}
+const overlayRoute = createRoute({getParentRoute: () => root, path: "/manual-overlay", component: ManualOverlay});
 const wrapupRoute = createRoute({getParentRoute: () => root, path: "/wrapup", component: () => <TaskWrapup task={wrapupTask}
     modelSelection={{connector, model: "gpt-4o"}} busy={false} onEditingChange={noop} onPendingChange={noop}/>});
 const settings = createRoute({getParentRoute: () => root, path: "/settings", component: () => <SettingsPage onSectionChange={() => undefined}/>});
@@ -86,7 +101,14 @@ const projectRoute = createRoute({getParentRoute: () => root, path: "/p/$project
 const batchRoute = createRoute({getParentRoute: () => root, path: "/batch", component: BatchSurface});
 window.history.replaceState(null, "", `/agent/${a.id}`);
 const errors: string[] = [];
-const router = createRouter({defaultErrorComponent: ({error}) => {const failure = error instanceof Error ? error.stack ?? error.message : String(error); errors.push(failure); return <pre role="alert">{failure}</pre>;}, routeTree: root.addChildren([agent.addChildren([home, chat, tasks]), settings, projectRoute, batchRoute, wrapupRoute]), history: createBrowserHistory()});
+const router = createRouter({defaultErrorComponent: ({error}) => {const failure = error instanceof Error ? error.stack ?? error.message : String(error); errors.push(failure); return <pre role="alert">{failure}</pre>;}, routeTree: root.addChildren([agent.addChildren([home, chat, tasks]), settings, projectRoute, batchRoute, wrapupRoute, overlayRoute]), history: createBrowserHistory()});
+const quitActions: DesktopLifecycleAction[] = [];
+const quitAdmission = createEffectAdmission();
+const quitEvent = (phase: DesktopLifecycleEvent["phase"], intentId: string | null): DesktopLifecycleEvent => ({version: 1, phase, intentId, session: null, visible: true, focused: true});
+const quit = createApplicationQuit({async request(action) {quitActions.push(action); return quitEvent("running", null);}, async subscribe() {return () => {};}}, manualQuitGuards, {
+    closeAdmission: () => quitAdmission.close(), stopAgent: () => agentExecution.shutdown(), stopReferences: () => chatDrafts.shutdown(),
+    stopDesktopImports: async () => {}, stopNativeEffects: async () => {}, disposeMcp: async () => ({status: "drained"}), closeStorage: async () => {},
+});
 let creationGate: Promise<void> | undefined, releaseCreation: (() => void) | undefined, creationEntered = false;
 const control = {holdCreation() {
         creationEntered = false;
@@ -94,6 +116,9 @@ const control = {holdCreation() {
         Object.assign(globalThis, {__e11BeforeCreate: async () => {creationEntered = true; await creationGate;}});
     }, releaseCreation() {releaseCreation?.(); Object.assign(globalThis, {__e11BeforeCreate: undefined});}, creationEntered: () => creationEntered,
     db, a, b, c, project, requests, generation, releaseGeneration, errors, wrapup, wrapupTask,
+    setOverlayPending: (value: boolean) => setOverlayPending(value),
+    quit: {actions: quitActions, needsDecision: () => manualQuitGuards.needsDecision(), admissionOpen: () => quitAdmission.open,
+        emit: (phase: DesktopLifecycleEvent["phase"], intentId: string | null) => quit.handle(quitEvent(phase, intentId)), done: () => quit.done},
     execution: (threadId: string) => ({active: agentExecution.snapshot(threadId).active, kind: agentExecution.snapshot(threadId).kind}),
     route: () => router.history.location.pathname,
     navigate: (to: string) => router.navigate({to}),

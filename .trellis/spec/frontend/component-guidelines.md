@@ -223,10 +223,12 @@ Shot and beat scalar text uses `TextDraftField` through `ShotTextField`/`BeatTex
 Manual dialogs/sheets whose draft must survive Escape, dismissal, owner replacement and route history changes; pending mutations must retain their owning UI. Source contracts live in `packages/studio/src/app/drafts/useManualDraftGuard.tsx`.
 
 ### 2. Signatures
-`ManualDraftState = {dirty: boolean; pending: boolean; routeDirty?: boolean; routePending?: boolean}`. `ManualDraftDeparture = (leave: () => void, discard?: () => void | Promise<void>) => void`. `useManualDraftDeparture(dirty, pending, onDiscard, {readState?, route?})` returns stable `requestDeparture` and JSX `confirmation`. `useManualDraftGuard(dirty, pending, onDiscard)` retains its route-only JSX API.
+`ManualDraftState = {dirty: boolean; pending: boolean; routeDirty?: boolean; routePending?: boolean}`. `ManualDraftDeparture = (leave: () => void, discard?: () => void | Promise<void>, onCancel?: () => void) => void`. `useManualDraftDeparture(dirty, pending, onDiscard, {readState?, route?})` returns stable `requestDeparture` and JSX `confirmation`. `useManualDraftGuard(dirty, pending, onDiscard)` retains its route-only JSX API.
 
 ### 3. Contracts
 Freeze the editor opening identity, revision and input baseline. Publish current dirty/pending through synchronous refs before close/duplicate actions, not only passive effects. Clean/reverted input can leave; dirty input requires explicit continue/discard; pending cannot discard. Local child actions reuse the owner's arbiter and may supply scoped discard, preserving unrelated pending editors. The first local request freezes its discard/leave callbacks; a later POP is reset before the original local departure completes. Same-path search retains the owner; an actual same-path owner replacement still needs local interception. Optional route flags delegate a nested editor's existing route blocker without relinquishing local parent ownership. Effects use the stable destructured `requestDeparture`, not an unstable returned object. Restore connected focus/scroll; call caret APIs only for numeric non-null selection bounds supported by the original input/textarea.
+
+E11 explicit desktop Quit aggregates mounted owners in `app/drafts/manualQuitGuards.ts`, including `route:false` overlays, and uses their same local confirmation. One original aggregate promise resolves the most recently mounted dirty/pending owner first. Accepted discard advances past that exact owner within the intent even if its React dirty state has not committed or its existing discard callback intentionally does nothing. Cancellation, a competing local request or unregistering the owner awaiting a decision must settle the original Quit attempt conservatively; it cannot leave a detached dialog promise waiting forever. Cancellation returns the native lifecycle to running before execution admission closes. Ordinary conversation navigation continues to use existing manual ownership without an execution-only Stop dialog.
 
 ### 4. Validation / Error Matrix
 | Trigger | Outcome |
@@ -237,6 +239,8 @@ Freeze the editor opening identity, revision and input baseline. Publish current
 | Local confirmation followed by route attempt | Resolve one initiating request, reset overlapping router request |
 | Old async owner completion | Preserve original authorized persistence, suppress newer-owner UI/navigation publication |
 | Number/range/date/color/checkbox focus | No unsupported selection API call |
+| Desktop Quit with dirty nested overlay | Same existing confirmation; cancel preserves execution, accepted owners are not selected again in the same intent |
+| Quit confirmation owner unmounts | Original aggregate request settles conservatively; no permanently waiting native intent |
 
 ### 5. Good / Base / Bad Cases
 Good: local close -> browser Back -> continue -> original draft remains; explicit discard resolves the original close. Base: an unchanged form closes immediately. Bad: clearing editing before departure resolves, treating every open form as dirty, or invoking setSelectionRange with null positions.

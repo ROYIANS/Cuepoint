@@ -124,6 +124,7 @@ pub(crate) struct Transfer {
 #[derive(Default)]
 pub(crate) struct Saves {
     transfers: Mutex<HashMap<String, Arc<Transfer>>>,
+    gate: Option<Arc<AtomicBool>>,
 }
 
 fn invalid(message: &'static str) -> Error {
@@ -158,6 +159,12 @@ pub(crate) fn validate_begin(request: &SaveBegin) -> Result<()> {
     Ok(())
 }
 impl Saves {
+    pub(crate) fn with_gate(gate: Arc<AtomicBool>) -> Self {
+        Self {
+            transfers: Mutex::new(HashMap::new()),
+            gate: Some(gate),
+        }
+    }
     pub(crate) fn reserve(&self, request: &SaveBegin) -> Result<Arc<Transfer>> {
         validate_begin(request)?;
         self.reap();
@@ -165,6 +172,13 @@ impl Saves {
             .transfers
             .lock()
             .map_err(|_| invalid("Export state poisoned"))?;
+        if self
+            .gate
+            .as_ref()
+            .is_some_and(|gate| !gate.load(Ordering::SeqCst))
+        {
+            return Err(Error::new("closing", "Application is shutting down"));
+        }
         if entries.len() >= MAX_TRANSFERS || entries.contains_key(&request.operation_id) {
             return Err(invalid("Duplicate or excessive active exports"));
         }

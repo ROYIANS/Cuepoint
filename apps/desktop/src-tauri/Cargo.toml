@@ -33,7 +33,7 @@ required-features = ["desktop"]
 [dependencies]
 rmcp = { version = "=3.5.1", default-features = false, features = ["client", "transport-async-rw", "transport-streamable-http-client", "auth", "reqwest"] }
 tokio = { version = "=1.53.2", features = ["rt-multi-thread", "macros", "process", "io-util", "net", "time", "sync"] }
-tokio-util = { version = "=0.7.20", features = ["codec", "io"] }
+tokio-util = { version = "=0.7.20", features = ["codec", "io", "rt"] }
 futures = "=0.3.34"
 reqwest = { version = "=0.13.5", default-features = false, features = ["rustls", "stream", "json"] }
 process-wrap = { version = "=10.0.1", default-features = false, features = ["tokio1", "process-group", "job-object", "kill-on-drop"] }
@@ -47,7 +47,7 @@ serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = "=1.0.151"
 sha2 = "=0.11.0"
 uuid = { version = "=1.28.0", features = ["v4", "serde"] }
-tauri = { version = "=2.12.2", optional = true , features = [] }
+tauri = { version = "=2.12.2", optional = true , features = ["tray-icon"] }
 tauri-plugin-dialog = { version = "=2.8.1", optional = true }
 tauri-plugin-http = { version = "=2.8.2", optional = true, default-features = false, features = ["rustls-tls", "http2", "charset", "system-proxy"] }
 tauri-plugin-opener = { version = "=2.5.4", optional = true, default-features = false }
@@ -55,7 +55,7 @@ tauri-plugin-opener = { version = "=2.5.4", optional = true, default-features = 
 [target.'cfg(windows)'.dependencies]
 windows-native-keyring-store = { version = "=1.1.0", default-features = false }
 # Stable handle APIs only; no unstable Windows MetadataExt identity methods.
-windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_WindowsProgramming", "Win32_System_SystemServices"] }
+windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_WindowsProgramming", "Win32_System_SystemServices", "Win32_Security_Authorization", "Win32_UI_Shell", "Win32_System_Com"] }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 apple-native-keyring-store = { version = "=1.0.2", default-features = false, features = ["keychain"] }

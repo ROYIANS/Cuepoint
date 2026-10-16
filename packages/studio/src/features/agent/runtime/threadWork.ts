@@ -1,4 +1,5 @@
 import type {ProductStore} from "../../../platform/storage/types";
+import {productEffectAdmission} from "../../../platform/runtime/effectAdmission";
 
 /** Finite live owners, never reconstructed from stored run/batch IDs. */
 export type AgentWorkIdentity =
@@ -27,6 +28,7 @@ export function subscribeAgentThreadWork(store: ProductStore, listener: () => vo
 }
 /** Reserve synchronously; runtime keeps its existing Web Lock and original completion. */
 export function reserveAgentThreadWork(store: ProductStore, identity: AgentWorkIdentity, controller: AbortController) {
+    productEffectAdmission.assertOpen();
     const owner = owners(store);
     if (owner.closed) throw new Error("应用正在退出，暂时无法开始执行");
     if (owner.current.has(identity.threadId)) throw new Error("当前对话尚有执行未结束，请等待完成或先停止");

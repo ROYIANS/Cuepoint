@@ -1,4 +1,5 @@
 import {Client, StreamableHTTPClientTransport, ProtocolError, UnauthorizedError, InsufficientScopeError} from "@modelcontextprotocol/client";
+import {productEffectAdmission} from "./effectAdmission";
 import type {McpHostBinding, McpHostScope, McpHostServices, McpHostTarget, McpInvocationIdentity, McpInvocationOutcome,
     McpPreparedAuthority, McpPrivateConfig, McpPrivateRevisionRef} from "./mcp";
 import {McpHostError} from "./mcpErrors";
@@ -210,6 +211,7 @@ export function createBrowserMcpServices(options: BrowserMcpOptions): McpHostSer
         return found;
     }
     function assertConnectAdmission(serverId: string, expected: number, operationId: string): void {
+        if (!productEffectAdmission.open) fail("closed", operationId);
         if (!active || epoch(serverId) !== expected) fail("retired", operationId);
         if (pending.has(serverId)) fail("conflict", operationId);
         if (connections.size + pending.size + retired.size >= 8) fail("limit", operationId);
@@ -217,9 +219,10 @@ export function createBrowserMcpServices(options: BrowserMcpOptions): McpHostSer
     const host: McpHostServices = {
         get active() {return active;}, capabilities,
         async initialize() {assertActive("initialize"); await catalogue(); return capabilities;},
-        reserveOAuthPopup() {assertActive("oauth_popup"); oauth.reserve();},
+        reserveOAuthPopup() {productEffectAdmission.assertOpen(); assertActive("oauth_popup"); oauth.reserve();},
         cancelReservedOAuthPopup() {oauth.cancelReserved();},
         preparePrivateRevision(raw) {
+            productEffectAdmission.assertOpen();
             const input = own(() => mcpPrivatePrepareInputSchema.parse(JSON.parse(browserMcpJson(raw, 65_536)) as unknown), raw.operationId);
             return operation(`private_${input.operationId}`, input, async () => {
                 if (input.config.transport !== "streamable_http") fail("unsupported", input.operationId);
@@ -229,6 +232,7 @@ export function createBrowserMcpServices(options: BrowserMcpOptions): McpHostSer
                     if (Object.keys(input.config.auth.headers).some(name => forbidden.test(name))) fail("unsupported", input.operationId);
                 }
                 const snapshot = await catalogue();
+                productEffectAdmission.assertOpen();
                 if (snapshot.revision !== input.catalogueRevision || (snapshot.entries.find(row => row.serverId === input.serverId)?.configRevision ?? 0) !== input.expectedConfigRevision) fail("conflict", input.operationId);
                 assertActive(input.operationId);
                 if (revisions.size >= 64) fail("limit", input.operationId);
@@ -272,6 +276,7 @@ export function createBrowserMcpServices(options: BrowserMcpOptions): McpHostSer
             return boundedDrain(drainTasks(input.serverId));
         },
         oauthBegin(raw) {
+            productEffectAdmission.assertOpen();
             const input = own(() => mcpConnectInputSchema.parse(raw), raw.operationId);
             const expected = epoch(input.serverId);
             return track(input.serverId, operation(`login_${input.operationId}`, input, async () => {
@@ -288,6 +293,7 @@ export function createBrowserMcpServices(options: BrowserMcpOptions): McpHostSer
         oauthStatus(id) {mcpWireId.parse(id); assertActive(id); return Promise.resolve(oauth.status(id));},
         oauthCancel(id) {mcpWireId.parse(id); oauth.cancel(id); return Promise.resolve();},
         connect(raw, signal) {
+            productEffectAdmission.assertOpen();
             const input = own(() => mcpConnectInputSchema.parse(raw), raw.operationId);
             const admittedEpoch = epoch(input.serverId);
             return track(input.serverId, operation(`connect_${input.operationId}`, input, async () => {
@@ -353,8 +359,10 @@ export function createBrowserMcpServices(options: BrowserMcpOptions): McpHostSer
             return {status: "drained"};
         },
         async prepare(raw) {
+            productEffectAdmission.assertOpen();
             const binding = mcpBindingSchema.parse(raw.binding), scope: McpHostScope = mcpScopeSchema.parse(raw.scope), target: McpHostTarget = mcpTargetSchema.parse(raw.target);
             const args = JSON.parse(browserMcpJson(raw.arguments)) as unknown, connection = await checkedConnection(binding, scope.callId);
+            productEffectAdmission.assertOpen();
             if (target.kind === "tool" ? !connection.tools.has(target.rawName) : !connection.resources.has(target.handleId)) fail("denied", scope.callId);
             if (target.kind === "resource" && browserMcpJson(args) !== "{}" || target.kind === "tool" && (!args || typeof args !== "object" || Array.isArray(args))) fail("invalid", scope.callId);
             if (authorities.size >= 256) fail("limit", scope.callId);
@@ -367,6 +375,7 @@ export function createBrowserMcpServices(options: BrowserMcpOptions): McpHostSer
             const args = JSON.parse(browserMcpJson(raw.arguments)) as Record<string, unknown>, fingerprint = argumentDigest(args);
             const previous = original(identity);
             if (previous) {if (previous.fingerprint !== fingerprint) fail("conflict", identity.operationId); return previous.pending ?? previous.outcome;}
+            productEffectAdmission.assertOpen();
             if (invocations.size >= 256) fail("limit", identity.operationId);
             const authority = authorities.get(identity.authority.authorityId);
             const connection = connections.get(identity.authority.binding.serverId);
@@ -389,6 +398,7 @@ export function createBrowserMcpServices(options: BrowserMcpOptions): McpHostSer
                     if (auth.principal !== connection.principal) {if (connections.get(authority.binding.serverId) === connection) retireLocal(authority.binding.serverId); fail("auth_required", identity.operationId);}
                     await checkedConnection(authority.binding, identity.operationId);
                     controller.signal.throwIfAborted();
+                    productEffectAdmission.assertOpen();
                     connection.token = auth.token; connection.invocation = invocation; connection.status = undefined;
                     const requestOptions = {signal: controller.signal, timeout: options.requestTimeoutMs ?? 30_000, maxTotalTimeout: options.requestTimeoutMs ?? 30_000, resetTimeoutOnProgress: false};
                     const result = authority.target.kind === "tool"

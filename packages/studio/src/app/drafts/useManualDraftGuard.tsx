@@ -1,5 +1,6 @@
 import {useBlocker} from "@tanstack/react-router";
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {manualQuitGuards} from "./manualQuitGuards";
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -102,6 +103,8 @@ export function useManualDraftDeparture(
         localRequest.current = request;
         setLocalLeave(request);
     }, [readState, capturePosition]);
+
+    useEffect(() => manualQuitGuards.register({readState, requestDeparture}), [readState, requestDeparture]);
 
     async function discard() {
         const state = readState();

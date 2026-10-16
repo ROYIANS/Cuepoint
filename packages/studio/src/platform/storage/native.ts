@@ -319,11 +319,16 @@ export class NativeStoreDriver implements StoreDriver {
     private readers = 0;
     private writer = false;
     private readonly rootQueue: RootWaiter[] = [];
+    private closed = false;
+    private closing: Promise<void> | undefined;
+    private completeClose: (() => void) | undefined;
+    private readonly observers = new Set<() => void>();
 
     constructor(private readonly bridge: NativeStoreBridge, private readonly binaries: BinaryAdapterServices) {
     }
 
     getSession(): Promise<NativeSession> {
+        if (this.closed && !this.sessionPromise) return Promise.reject(new StorageError("closed", "Storage is closed"));
         this.sessionPromise ??= this.bridge.open().then(session => {
             this.lastSequence = session.changeSequence;
             return {
@@ -350,6 +355,7 @@ export class NativeStoreDriver implements StoreDriver {
     }
 
     observe<T>(query: (backend: TransactionBackend) => Promise<T>, observer: StoreObserver<T>): () => void {
+        if (this.closed) {observer.error(new StorageError("closed", "Storage is closed")); return () => undefined;}
         let disposed = false, running = false, dirty = true;
         const controller = new AbortController();
         let retryTimer: ReturnType<typeof setTimeout> | undefined;
@@ -391,12 +397,30 @@ export class NativeStoreDriver implements StoreDriver {
             }
         });
         void run();
-        return () => {
+        const dispose = () => {
             disposed = true;
             controller.abort();
             if (retryTimer !== undefined) clearTimeout(retryTimer);
             unsubscribe();
+            this.observers.delete(dispose);
         };
+        this.observers.add(dispose);
+        return dispose;
+    }
+
+    /** Final renderer boundary only: native closes the actual worker after the drained receipt. */
+    close(): Promise<void> {
+        if (this.closing) return this.closing;
+        this.closing = new Promise<void>(resolve => {this.completeClose = resolve;});
+        for (const dispose of [...this.observers]) dispose();
+        this.closed = true;
+        this.listeners.clear();
+        this.finishClose();
+        return this.closing;
+    }
+
+    private finishClose(): void {
+        if (this.closed && !this.writer && this.readers === 0 && this.rootQueue.length === 0) this.completeClose?.();
     }
 
     async receiveChangeSequence(sequence: number): Promise<void> {
@@ -463,11 +487,13 @@ export class NativeStoreDriver implements StoreDriver {
                 released = true;
                 if (next.mode === "rw") this.writer = false; else this.readers--;
                 this.drainRoots();
+                this.finishClose();
             });
         }
     }
 
     private acquireRoot(mode: "r" | "rw", signal?: AbortSignal): Promise<() => void> {
+        if (this.closed) return Promise.reject(new StorageError("closed", "Storage is closed"));
         const cancellation = (): Error => signal?.reason instanceof Error ? signal.reason : new DOMException("Storage query was canceled", "AbortError");
         return new Promise((resolve, reject) => {
             if (signal?.aborted) {
@@ -481,6 +507,7 @@ export class NativeStoreDriver implements StoreDriver {
                     this.rootQueue.splice(index, 1);
                     reject(cancellation());
                     this.drainRoots();
+                    this.finishClose();
                 }
             };
             this.rootQueue.push(waiter);

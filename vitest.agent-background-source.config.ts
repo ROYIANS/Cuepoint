@@ -5,6 +5,18 @@ import {createStudioVitestConfig} from "./tooling/vitest.studio.ts";
 export default createStudioVitestConfig({
     aliases: createAgentSourceAliases(),
     include: [
+        "tests/e11McpQuit.test.ts",
+        "tests/mcpNativePort.test.ts",
+        "tests/mcpBrowserHost.test.ts",
+        "tests/mcpBrowserLifecycle.test.ts",
+        "tests/e11DesktopLifecycle.test.ts",
+        "tests/e11QuitResources.test.ts",
+        "tests/nativePreparedBinary.test.ts",
+        "tests/e11ApplicationQuit.test.ts",
+        "tests/nativeSystemServices.test.ts",
+        "tests/skillImportTransport.test.ts",
+        "tests/desktopMediaTransport.test.ts",
+        "tests/desktopMediaWorkflow.test.ts",
         "tests/agentExecutionService.test.ts",
         "tests/agentRuntimeOwnership.test.ts",
         "tests/agentRuntimeCredentials.test.ts",

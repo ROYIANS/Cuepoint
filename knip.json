@@ -111,6 +111,8 @@
         "scripts/fixture-audio.ts!",
         "ui/main.tsx",
         "ui/tavilyProbeMain.tsx",
+        "ui/e11-background/index.html",
+        "scripts/e11-background-probe.mjs",
         "scripts/prepare-release.mjs",
         "scripts/configure-hosted-tools.mjs",
         "scripts/finalize-release.mjs",

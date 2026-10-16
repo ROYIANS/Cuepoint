@@ -1,3 +1,4 @@
+import {emptyProject} from "@/features/projects/models/newProject";
 import {describe, expect, it, vi} from "vitest";
 import {cloneStoredValue, reservePreparedBinaryReference} from "@/platform/storage/codec";
 import {registerNativePreparedBinary} from "@/platform/storage/nativeBinary";
@@ -97,5 +98,24 @@ describe('trusted native prepared claims through actual TS transaction encoding'
         expect(() => codec.registerPreparedBinaryReference({...claim, stageId: crypto.randomUUID()}, session)).toThrow('retention limit');
         expect(() => codec.reservePreparedBinaryReference(codec.registerPreparedBinaryReference(claim, session), session, 'new-operation')).toThrow(IsolatedUnknownCommitError);
         vi.resetModules();
+    });
+});
+
+
+describe("E11 native driver final close", () => {
+    it("waits admitted original root publication and queued reads, rejects fresh roots and joins the same close", async () => {
+        let release!: () => void, entered!: () => void;
+        const held = new Promise<void>(resolve => {release = resolve;}), entering = new Promise<void>(resolve => {entered = resolve;});
+        const native = fixture({commit: async request => {entered(); await held; return {status: 'committed', operationId: request.operationId, fingerprint: request.fingerprint, changeSequence: 1, tables: ['projects']};}});
+        const original = native.store.projects.put({...emptyProject('retained'), id: 'original'});
+        await entering;
+        const queued = native.store.projects.get('original');
+        const closing = native.driver.close(); expect(native.driver.close()).toBe(closing);
+        let closed = false; void closing.then(() => {closed = true;});
+        await expect(native.store.projects.get('late')).rejects.toMatchObject({code: 'closed'});
+        await Promise.resolve(); expect(closed).toBe(false);
+        release(); await original; await queued; await closing;
+        expect(native.batches).toHaveLength(1); expect(closed).toBe(true);
+        expect(native.discard).not.toHaveBeenCalled();
     });
 });

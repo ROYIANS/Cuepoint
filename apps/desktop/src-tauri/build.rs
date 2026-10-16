@@ -9,6 +9,7 @@ fn main() {
         }
         #[cfg(feature = "acceptance")]
         let commands: &'static [&'static str] = &[
+            "product_lifecycle_request",
             "workspace_request",
             "product_store_request",
             "mcp_service_request",
@@ -31,6 +32,7 @@ fn main() {
         ];
         #[cfg(not(feature = "acceptance"))]
         let commands: &'static [&'static str] = &[
+            "product_lifecycle_request",
             "workspace_request",
             "product_store_request",
             "mcp_service_request",

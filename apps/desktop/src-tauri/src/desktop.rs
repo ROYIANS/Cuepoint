@@ -23,12 +23,87 @@ const MAX_READS: usize = 4;
 
 #[derive(Default)]
 pub struct ProductBridge {
+    lifecycle: Arc<crate::desktop_lifecycle::Lifecycle>,
     worker: Mutex<Option<Arc<StorageWorker>>>,
     previews: Arc<crate::product_media::MediaPreviews>,
     media_server: Mutex<Option<crate::product_media::MediaServer>>,
     local_media: crate::desktop_media::DesktopMedia,
     skill_import: crate::skill_import::SkillDirectoryImport,
     mcp: Mutex<Option<Arc<crate::mcp::service::Service>>>,
+}
+impl ProductBridge {
+    pub(crate) fn quiesce(
+        self: &Arc<Self>,
+    ) -> impl std::future::Future<Output = ()> + Send + 'static {
+        let imports = self.local_media.shutdown();
+        self.skill_import.quiesce();
+        if let Some(service) = self.mcp.lock().unwrap().as_ref() {
+            service.quiesce();
+        }
+        let bridge = self.clone();
+        async move {
+            tokio::join!(imports, bridge.skill_import.drain());
+        }
+    }
+    pub(crate) async fn cleanup(self: Arc<Self>) {
+        let service = self.mcp.lock().unwrap().as_ref().cloned();
+        if let Some(service) = service {
+            while !service.shutdown().await {
+                tokio::time::sleep(std::time::Duration::from_millis(20)).await;
+            }
+        }
+        self.local_media.stop_all();
+        self.previews.clear();
+        self.media_server.lock().unwrap().take();
+    }
+    pub(crate) fn close_worker(&self) {
+        if let Some(worker) = self.worker.lock().unwrap().take() {
+            let _ = worker.close();
+        }
+    }
+}
+fn validate_lifecycle_session(
+    worker: &StorageWorker,
+    session: crate::full_product_store::protocol::Session,
+) -> Result<()> {
+    worker.run_product(crate::ProductJob::Validate(session))?;
+    Ok(())
+}
+#[tauri::command]
+async fn product_lifecycle_request(
+    window: WebviewWindow,
+    bridge: tauri::State<'_, Arc<ProductBridge>>,
+    request: crate::desktop_lifecycle::Envelope,
+) -> Result<crate::desktop_lifecycle::Snapshot> {
+    use crate::desktop_lifecycle::Action;
+    trusted(&window)?;
+    if request.version != 1 {
+        return Err(Error::new("invalid", "Invalid lifecycle version"));
+    }
+    match &request.session {
+        Some(session) if cfg!(any(feature = "product-sqlite", feature = "acceptance")) => {
+            let worker = full_product_worker(&window, &bridge, false)?;
+            let session = session.clone();
+            tauri::async_runtime::spawn_blocking(move || {
+                validate_lifecycle_session(&worker, session)
+            })
+            .await
+            .map_err(|_| Error::new("closed", "Lifecycle session unavailable"))??;
+        }
+        None if !cfg!(any(feature = "product-sqlite", feature = "acceptance")) => {}
+        _ => return Err(Error::new("invalid", "Lifecycle storage owner mismatch")),
+    }
+    if matches!(request.action, Action::Status {}) {
+        bridge.lifecycle.attach(request.session)?;
+    } else {
+        bridge
+            .lifecycle
+            .acknowledge(&request.session, request.action)?;
+    }
+    Ok(bridge.lifecycle.snapshot(
+        window.is_visible().unwrap_or(false),
+        window.is_focused().unwrap_or(false),
+    ))
 }
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -54,10 +129,18 @@ fn full_product_worker(
     bridge: &ProductBridge,
     opening: bool,
 ) -> Result<Arc<StorageWorker>> {
+    if opening {
+        bridge.lifecycle.admit_effect()?;
+    }
     let mut current = bridge
         .worker
         .lock()
         .map_err(|_| Error::new("worker", "Product worker lifecycle poisoned"))?;
+    // The resource lock is the final worker reservation boundary. A queued
+    // bootstrap may have passed its entrance check before Quit closed admission.
+    if opening {
+        bridge.lifecycle.admit_effect()?;
+    }
     if let Some(worker) = current.as_ref() {
         return Ok(Arc::clone(worker));
     }
@@ -108,6 +191,16 @@ async fn mcp_service_request(
     request: crate::mcp::protocol::Envelope,
 ) -> Result<crate::mcp::protocol::Reply> {
     trusted(&window)?;
+    if matches!(
+        request.action,
+        crate::mcp::protocol::Action::PrivatePrepare { .. }
+            | crate::mcp::protocol::Action::Connect { .. }
+            | crate::mcp::protocol::Action::Prepare { .. }
+            | crate::mcp::protocol::Action::Invoke { .. }
+            | crate::mcp::protocol::Action::OauthBegin { .. }
+    ) {
+        bridge.lifecycle.admit_effect()?;
+    }
     let worker = full_product_worker(&window, &bridge, false)?;
     let session = request.session.clone();
     let validate_worker = worker.clone();
@@ -130,6 +223,7 @@ async fn mcp_service_request(
             }
         }
         if slot.is_none() {
+            bridge.lifecycle.admit_effect()?;
             let source = Arc::new(
                 move |session: &crate::full_product_store::protocol::Session| {
                     let value = worker
@@ -159,6 +253,7 @@ async fn mcp_service_request(
                     app,
                     profile,
                     open,
+                    bridge.lifecycle.effects.clone(),
                 )
                 .map_err(|_| {
                     Error::new(
@@ -179,6 +274,7 @@ async fn skill_import_directory(
     request: crate::skill_import::SkillImportEnvelope,
 ) -> Result<serde_json::Value> {
     trusted(&window)?;
+    bridge.lifecycle.admit_effect()?;
     if !cfg!(any(target_os = "macos", target_os = "windows")) {
         return Err(Error::new(
             "platform",
@@ -217,6 +313,14 @@ async fn desktop_media_request(
     request: crate::desktop_media::MediaEnvelope,
 ) -> Result<serde_json::Value> {
     trusted(&window)?;
+    if matches!(
+        request.action,
+        crate::desktop_media::MediaAction::PickDirectory { .. }
+            | crate::desktop_media::MediaAction::Scan { .. }
+            | crate::desktop_media::MediaAction::PrepareVideo { .. }
+    ) {
+        bridge.lifecycle.admit_effect()?;
+    }
     if !cfg!(any(target_os = "macos", target_os = "windows")) {
         return Err(Error::new(
             "platform",
@@ -269,6 +373,7 @@ async fn product_store_request(
     );
     let bridge = Arc::clone(bridge.inner());
     if opening {
+        bridge.lifecycle.detach();
         invalidate_mcp(&bridge);
         bridge.skill_import.invalidate();
         bridge.previews.clear();
@@ -1833,8 +1938,13 @@ mod acceptance;
 
 pub fn run() {
     use crate::runtime_services::*;
-    let services = Arc::new(RuntimeServices::default());
+    let context = tauri::generate_context!();
+    let singleton = crate::desktop_lifecycle::native::preflight(&context.config().identifier)
+        .expect("Acquire Cuepoint application ownership");
+    let lifecycle = Arc::new(crate::desktop_lifecycle::Lifecycle::default());
+    let services = Arc::new(RuntimeServices::with_gate(lifecycle.effects.clone()));
     let builder = tauri::Builder::default()
+        .manage(singleton)
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_http::init())
         // External opening is only reachable through our HTTP(S)-validated command.
@@ -1844,9 +1954,23 @@ pub fn run() {
                 .build(),
         )
         .manage(Arc::new(Bridge::default()))
-        .manage(Arc::new(ProductBridge::default()))
+        .manage(Arc::new(ProductBridge {
+            lifecycle: lifecycle.clone(),
+            local_media: crate::desktop_media::DesktopMedia::with_gate(lifecycle.effects.clone()),
+            skill_import: crate::skill_import::SkillDirectoryImport::with_gate(
+                lifecycle.effects.clone(),
+            ),
+            ..ProductBridge::default()
+        }))
+        .manage(lifecycle)
         .manage(services.clone())
         .setup(|app| {
+            crate::desktop_lifecycle::native::setup(
+                app,
+                app.state::<Arc<crate::desktop_lifecycle::Lifecycle>>()
+                    .inner()
+                    .clone(),
+            )?;
             let (script, store) = profile(
                 &app.config().identifier,
                 cfg!(feature = "acceptance") || cfg!(feature = "product-sqlite"),
@@ -1867,6 +1991,7 @@ pub fn run() {
                     .initialization_script(window_chrome_script());
             #[cfg(target_os = "macos")]
             let builder = builder
+                .background_throttling(tauri::utils::config::BackgroundThrottlingPolicy::Disabled)
                 .data_store_identifier(store)
                 .decorations(true)
                 .title_bar_style(tauri::TitleBarStyle::Overlay)
@@ -1882,10 +2007,29 @@ pub fn run() {
             builder
                 .on_navigation(crate::bundled_origin::accepts)
                 .build()?;
+            crate::desktop_lifecycle::native::ready(app.handle());
             Ok(())
         })
         .on_window_event(|window, event| {
+            if window.label() == "main" {
+                match event {
+                    tauri::WindowEvent::CloseRequested { api, .. } => {
+                        api.prevent_close();
+                        if window.hide().is_err() {
+                            eprintln!("Cuepoint: unable to hide existing window");
+                        }
+                        crate::desktop_lifecycle::native::window_state(window);
+                    }
+                    tauri::WindowEvent::Focused(_) | tauri::WindowEvent::Resized(_) => {
+                        crate::desktop_lifecycle::native::window_state(window)
+                    }
+                    _ => {}
+                }
+            }
             if window.label() == "main" && matches!(event, tauri::WindowEvent::Destroyed) {
+                window
+                    .state::<Arc<crate::desktop_lifecycle::Lifecycle>>()
+                    .detach();
                 window.state::<Arc<RuntimeServices>>().saves.close();
                 close_product(window.state::<Arc<ProductBridge>>().inner());
             }
@@ -1894,6 +2038,9 @@ pub fn run() {
             if webview.label() == "main"
                 && matches!(payload.event(), tauri::webview::PageLoadEvent::Started)
             {
+                webview
+                    .state::<Arc<crate::desktop_lifecycle::Lifecycle>>()
+                    .detach();
                 webview.state::<Arc<RuntimeServices>>().saves.close();
                 webview.state::<Arc<ProductBridge>>().previews.clear();
                 webview.state::<Arc<ProductBridge>>().local_media.stop_all();
@@ -1917,6 +2064,7 @@ pub fn run() {
         });
     #[cfg(feature = "acceptance")]
     let builder = builder.invoke_handler(tauri::generate_handler![
+        product_lifecycle_request,
         workspace_request,
         product_store_request,
         mcp_service_request,
@@ -1939,6 +2087,7 @@ pub fn run() {
     ]);
     #[cfg(not(feature = "acceptance"))]
     let builder = builder.invoke_handler(tauri::generate_handler![
+        product_lifecycle_request,
         workspace_request,
         product_store_request,
         mcp_service_request,
@@ -1959,13 +2108,86 @@ pub fn run() {
         product_open_external
     ]);
     builder
-        .run(tauri::generate_context!())
-        .expect("Run isolated native prototype");
+        .build(context)
+        .expect("Build Cuepoint native host")
+        .run(|app, event| match event {
+            tauri::RunEvent::ExitRequested { api, code, .. } => {
+                let phase = app
+                    .state::<Arc<crate::desktop_lifecycle::Lifecycle>>()
+                    .phase();
+                eprintln!(
+                    "Cuepoint lifecycle: native exit requested code={code:?} phase={phase:?}"
+                );
+                if phase != crate::desktop_lifecycle::Phase::Exiting {
+                    api.prevent_exit();
+                    crate::desktop_lifecycle::native::request_quit(app);
+                }
+            }
+            tauri::RunEvent::Exit => {
+                eprintln!("Cuepoint lifecycle: native event loop exited");
+            }
+            #[cfg(target_os = "macos")]
+            tauri::RunEvent::Reopen { .. } => crate::desktop_lifecycle::native::show(app),
+            _ => {}
+        });
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn desktop_lifecycle_ack_validation_uses_actual_product_store_generation() {
+        use crate::desktop_lifecycle::{Action, DrainOutcome, Lifecycle};
+        use crate::full_product_store::protocol::{Request, Session};
+        let root = std::env::temp_dir().join(format!(
+            "cuepoint-lifecycle-session-{}",
+            uuid::Uuid::new_v4()
+        ));
+        let worker = StorageWorker::product(&root, true, Hooks::default()).unwrap();
+        let open = || {
+            serde_json::from_value::<Request>(serde_json::json!({"type":"open","request":{}}))
+                .unwrap()
+        };
+        let session = |mut token: serde_json::Value| -> Session {
+            token.as_object_mut().unwrap().remove("changeSequence");
+            serde_json::from_value(token).unwrap()
+        };
+        let initial = session(
+            worker
+                .run_product(crate::ProductJob::Store(open()))
+                .unwrap(),
+        );
+        let lifecycle = Lifecycle::default();
+        lifecycle.attach(Some(initial.clone())).unwrap();
+        let intent = lifecycle.begin().unwrap();
+        assert!(lifecycle.quiesce(&intent));
+        validate_lifecycle_session(&worker, initial.clone()).unwrap();
+        let replacement = session(
+            worker
+                .run_product(crate::ProductJob::Store(open()))
+                .unwrap(),
+        );
+        assert_ne!(initial.session, replacement.session);
+        // Validate through the real worker before acknowledging the cached
+        // intent. A live document cannot reuse a retired storage generation.
+        assert!(validate_lifecycle_session(&worker, initial).is_err());
+        assert!(intent.outcome().is_none());
+        assert!(
+            lifecycle
+                .acknowledge(
+                    &Some(replacement),
+                    Action::Drained {
+                        intent_id: intent.id.clone(),
+                        outcome: DrainOutcome::Drained
+                    }
+                )
+                .is_err()
+        );
+        assert!(intent.outcome().is_none());
+        worker.close().unwrap();
+        drop(worker);
+        fs::remove_dir_all(root).unwrap();
+    }
     #[test]
     fn notification_failure_preserves_confirmed_commit_and_status_acknowledgements() {
         let acknowledged = serde_json::json!({

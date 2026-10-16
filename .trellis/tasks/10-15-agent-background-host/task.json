@@ -33,14 +33,14 @@
   "notes": "Final E11 plan approved on 2026-10-16: 进入开发吧. Six owner outcomes and four source stages are authorized. Stage commits preauthorized; no push. Full/installed gates remain epic batch.",
   "meta": {
     "epicCode": "E11",
-    "deliveryState": "stage-2-reviewed",
+    "deliveryState": "stage-3-reviewed",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Stages 1 and 2 reviewed; commit Stage 2, then native single-instance/background/Quit implementation.",
+    "readiness": "Stages 1/2 committed; Stage 3 Studio/native review and actual macOS 370429 ms hidden-progress/activation passed. Commit Stage 3 before Stage 4 sidebar/read implementation.",
     "ownerRequirements20261016": [
       "Sidebar per-conversation loading/in-progress icon",
       "Sidebar per-conversation unread indicator",
@@ -102,7 +102,40 @@
         },
         "lint": "18 changed product files; 0 errors; 35 existing warnings",
         "evidence": "results.md",
-        "nativeInstalledAcceptance": "not performed; Stage 3/final batch"
+        "nativeInstalledAcceptance": "not performed; Stage 3/final batch",
+        "commit": "fe4fcb59"
+      },
+      "stage3": {
+        "status": "reviewed-passed",
+        "date": "2026-10-16",
+        "sourceTests": {
+          "files": 28,
+          "passed": 313
+        },
+        "browserCases": 9,
+        "nativeLifecycleTests": 12,
+        "finiteTypecheck": "passed; all 28 changed TS inputs included; zero omitted",
+        "architecture": {
+          "sources": 736,
+          "failures": 0,
+          "cycles": 0
+        },
+        "lint": "Studio 0 errors/13 existing warnings; native fixture/probe 0 errors/0 warnings",
+        "nativeCompile": "desktop feature passed",
+        "macNativeProbe": {
+          "status": "passed",
+          "hiddenMs": 370429,
+          "sameSession": true,
+          "originalModelSteps": {
+            "A": 1,
+            "B": 3
+          },
+          "completedToolEffects": 1,
+          "evidence": "results.md; external e11-native-background-nR0cpc"
+        },
+        "earlierFailedProbe": "if5hwj exited at hidden205s; cause unproven and retained",
+        "evidence": "results.md",
+        "nativeInstalledAcceptance": "not performed; Windows/WebView2 and installed both-OS acceptance pending epic batch"
       }
     }
   }

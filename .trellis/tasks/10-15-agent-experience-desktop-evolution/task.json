@@ -60,7 +60,7 @@
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E11 Stage 1 committed 7f602119. Stage 2 retained page/draft/generation integration is completing focused checks and independent review before its local commit; native lifetime and sidebar follow sequentially. Full/installed acceptance remains epic batch.",
+    "nextAction": "E11 Stage 3 reviewed: Studio313/native12, actual macOS370429ms hidden progress and activation passed. Commit then implement Stage 4 sidebar running/unread and read publication. Full/installed acceptance stays epic batch.",
     "carriedAcceptance": {
       "E09": {
         "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",

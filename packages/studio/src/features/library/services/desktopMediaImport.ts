@@ -1,3 +1,4 @@
+import {productEffectAdmission} from "../../../platform/runtime/effectAdmission";
 import {targetRevision} from "../../../platform/data/revision";
 import {Sha256} from "../../../platform/media/sha256";
 import {db as productDb} from "../../../platform/product/store";
@@ -8,7 +9,9 @@ import {admitDesktopMediaImport, publishDesktopMediaImportItem, readDesktopMedia
 import type {DesktopMediaImport, DesktopMediaImportActor, DesktopMediaImportSelection} from "../models/desktopMediaImport";
 
 export interface DesktopMediaCandidates {projectId: string; grant: DesktopMediaGrant; scan: DesktopMediaScan; entries: DesktopMediaEntry[]; revision: string}
-const activeImports = new Map<string, {projectId: string; controller: AbortController}>();
+const activeImports = new Map<string, {projectId: string; controller: AbortController; done: Promise<DesktopMediaImport>}>();
+const directorySelections = new Set<{controller: AbortController; done: Promise<DesktopMediaCandidates | undefined>}>();
+let importShutdown: Promise<void> | undefined;
 const candidatesByScan = new Map<string, DesktopMediaCandidates>();
 export interface DesktopMediaProgress {record: DesktopMediaImport; currentFilename?: string}
 const terminal = (status: string) => !["accepted", "running", "stopping"].includes(status);
@@ -96,7 +99,20 @@ export async function readDesktopMediaCandidates(projectId: string, grant: Deskt
     candidatesByScan.set(scan.scanId, candidates);
     return candidates;
 }
-export async function pickDesktopMediaDirectory(projectId: string, signal: AbortSignal, services?: DesktopMediaServices, store?: ProductStore): Promise<DesktopMediaCandidates | undefined> {
+export function pickDesktopMediaDirectory(projectId: string, signal: AbortSignal, services?: DesktopMediaServices, store?: ProductStore): Promise<DesktopMediaCandidates | undefined> {
+    if (!productEffectAdmission.open || importShutdown) return Promise.reject(new Error("应用正在退出，无法选择素材目录"));
+    const controller = new AbortController();
+    let resolve!: (value: DesktopMediaCandidates | undefined) => void, reject!: (cause: unknown) => void;
+    const done = new Promise<DesktopMediaCandidates | undefined>((yes, no) => {resolve = yes; reject = no;});
+    const owner = {controller, done};
+    directorySelections.add(owner);
+    void selectDirectory(projectId, AbortSignal.any([signal, controller.signal]), services, store).then(
+        value => {directorySelections.delete(owner); resolve(value);},
+        cause => {directorySelections.delete(owner); reject(cause);},
+    );
+    return done;
+}
+async function selectDirectory(projectId: string, signal: AbortSignal, services?: DesktopMediaServices, store?: ProductStore): Promise<DesktopMediaCandidates | undefined> {
     const host = native(services), pickId = crypto.randomUUID();
     const retainedImports = await (store ?? productDb).desktopMediaImports.where("projectId").equals(projectId).toArray();
     if (retainedImports.some(row => ["accepted", "running", "stopping", "unknown"].includes(row.status))) throw new Error("请先核对当前项目已有的导入，再选择新的目录。");
@@ -140,16 +156,31 @@ export function desktopMediaSelection(candidates: DesktopMediaCandidates, entryI
     return {grantId: candidates.grant.grantId, scanId: candidates.scan.scanId, revision: candidates.revision, items};
 }
 
-export async function importDesktopMedia(input: {id: string; projectId: string; actor: DesktopMediaImportActor; selection: DesktopMediaImportSelection; signal: AbortSignal; onProgress?: (value: DesktopMediaProgress) => void}, options: {store?: ProductStore; services?: DesktopMediaServices} = {}): Promise<DesktopMediaImport> {
+type ImportInput = {id: string; projectId: string; actor: DesktopMediaImportActor; selection: DesktopMediaImportSelection; signal: AbortSignal; onProgress?: (value: DesktopMediaProgress) => void};
+type ImportOptions = {store?: ProductStore; services?: DesktopMediaServices};
+export function importDesktopMedia(input: ImportInput, options: ImportOptions = {}): Promise<DesktopMediaImport> {
+    if (!productEffectAdmission.open || importShutdown) return Promise.reject(new Error("应用正在退出，无法导入素材"));
+    if (activeImports.has(input.id)) return Promise.reject(new Error("此素材导入仍在进行，请等待原操作结束"));
+    const controller = new AbortController();
+    let resolve!: (value: DesktopMediaImport) => void, reject!: (cause: unknown) => void;
+    const done = new Promise<DesktopMediaImport>((yes, no) => {resolve = yes; reject = no;});
+    const owner = {projectId: input.projectId, controller, done};
+    activeImports.set(input.id, owner);
+    void performImport(input, options, controller).then(
+        value => {if (activeImports.get(input.id) === owner) activeImports.delete(input.id); resolve(value);},
+        cause => {if (activeImports.get(input.id) === owner) activeImports.delete(input.id); reject(cause);},
+    );
+    return done;
+}
+async function performImport(input: ImportInput, options: ImportOptions, controller: AbortController): Promise<DesktopMediaImport> {
     const store = options.store ?? productDb, host = native(options.services);
-    const controller = new AbortController(), signal = AbortSignal.any([input.signal, controller.signal]);
+    const signal = AbortSignal.any([input.signal, controller.signal]);
     signal.throwIfAborted();
     const admission = await admitDesktopMediaImport({id: input.id, projectId: input.projectId, actor: input.actor, selection: input.selection}, store);
     let row = admission.import;
     input.onProgress?.({record: row});
     // A readback proves retention, never admission permission to dispatch again.
     if (!admission.admitted) return row;
-    activeImports.set(row.id, {projectId: row.projectId, controller});
     let queue: Promise<void> = Promise.resolve(), stopping = false, activeOperation: string | undefined, currentFilename: string | undefined;
     let stopRequest: Promise<unknown> | undefined;
     let activePrepared: DesktopMediaPrepared | undefined;
@@ -225,7 +256,6 @@ export async function importDesktopMedia(input: {id: string; projectId: string; 
         input.onProgress?.({record: row, currentFilename});
         return row;
     } finally {
-        activeImports.delete(row.id);
         signal.removeEventListener("abort", stop);
         await queue.catch(() => undefined); await stopRequest;
         if (terminal(row.status) && row.status !== "unknown" && !activeOperation) {
@@ -278,4 +308,15 @@ export function stopDesktopMediaImport(id: string, projectId: string): boolean {
 }
 export function ownsDesktopMediaImport(id: string, projectId: string): boolean {
     return activeImports.get(id)?.projectId === projectId;
+}
+
+/** Capture the actual original picker/import promises before signalling any owner. */
+export function shutdownDesktopMediaImports(): Promise<void> {
+    if (importShutdown) return importShutdown;
+    let resolve!: () => void;
+    importShutdown = new Promise<void>(done => {resolve = done;});
+    const original = [...activeImports.values(), ...directorySelections];
+    for (const owner of original) owner.controller.abort();
+    void Promise.allSettled(original.map(owner => owner.done)).then(() => resolve());
+    return importShutdown;
 }

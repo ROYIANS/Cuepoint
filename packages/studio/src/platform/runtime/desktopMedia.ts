@@ -1,4 +1,5 @@
 import {invoke} from "@tauri-apps/api/core";
+import {productEffectAdmission} from "./effectAdmission";
 import {z} from "zod";
 import type {ManagedBinaryRef} from "../media/binaryTypes";
 import {registerNativePreparedBinary} from "../storage/nativeBinary";
@@ -49,9 +50,12 @@ export class DesktopMediaUncertainError extends Error {
 /** One finite IPC owner, installed only beside the actual native ProductStore driver. */
 export function createDesktopMediaServices(getSession: () => Promise<NativeSession>, call: (command: string, args: Record<string, unknown>) => Promise<unknown> = invoke): DesktopMediaServices {
     return {async request(projectId, action) {
+        const fresh = ["pickDirectory", "scan", "prepareVideo"].includes(action.type);
+        if (fresh) productEffectAdmission.assertOpen();
         actionSchema.parse(action);
         z.string().min(1).max(160).regex(/^[a-zA-Z0-9_-]+$/u).parse(projectId);
         const session = await getSession();
+        if (fresh) productEffectAdmission.assertOpen();
         const request = {version: session.version, session: session.session, workspaceId: session.workspaceId, generation: session.generation, projectId, action};
         let raw: unknown;
         try {raw = await call("desktop_media_request", {request});}

@@ -8,7 +8,7 @@ import {snapshotOwner, snapshotModule} from "./snapshot-owners.ts";
 /** Shared fixture configuration; callers choose artifact or explicit source resolution. */
 export function createStudioVitestConfig(options: {aliases?: Alias[]; include?: string[]} = {}) {
   const studioRequire = createRequire(new URL("../packages/studio/package.json", import.meta.url));
-  const integrationDependencies = ["@dnd-kit/core", "@dnd-kit/sortable", "@tauri-apps/api/core", "@tauri-apps/plugin-http"];
+  const integrationDependencies = ["@dnd-kit/core", "@dnd-kit/sortable", "@tauri-apps/api/core", "@tauri-apps/api/event", "@tauri-apps/plugin-http"];
 
   return defineConfig({
   plugins: [{

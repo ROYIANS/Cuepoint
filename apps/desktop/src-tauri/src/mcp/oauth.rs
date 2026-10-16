@@ -338,12 +338,39 @@ pub(crate) async fn begin(
 ) -> Result<Login> {
     begin_with_timeout(config, credentials, current, open, Duration::from_secs(300)).await
 }
+pub(crate) async fn begin_tracked(
+    config: PrivateConfig,
+    credentials: VaultCredentials,
+    current: Arc<dyn Fn() -> bool + Send + Sync>,
+    open: Arc<dyn Fn(&str) -> Result<()> + Send + Sync>,
+    tracker: tokio_util::task::TaskTracker,
+) -> Result<Login> {
+    begin_owned(
+        config,
+        credentials,
+        current,
+        open,
+        Duration::from_secs(300),
+        Some(tracker),
+    )
+    .await
+}
 pub(crate) async fn begin_with_timeout(
     config: PrivateConfig,
     credentials: VaultCredentials,
     current: Arc<dyn Fn() -> bool + Send + Sync>,
     open: Arc<dyn Fn(&str) -> Result<()> + Send + Sync>,
     timeout: Duration,
+) -> Result<Login> {
+    begin_owned(config, credentials, current, open, timeout, None).await
+}
+async fn begin_owned(
+    config: PrivateConfig,
+    credentials: VaultCredentials,
+    current: Arc<dyn Fn() -> bool + Send + Sync>,
+    open: Arc<dyn Fn(&str) -> Result<()> + Send + Sync>,
+    timeout: Duration,
+    tracker: Option<tokio_util::task::TaskTracker>,
 ) -> Result<Login> {
     let listener = TcpListener::bind("127.0.0.1:0")
         .await
@@ -403,7 +430,7 @@ pub(crate) async fn begin_with_timeout(
     let cancel = CancellationToken::new();
     let task_cancel = cancel.clone();
     let task_redirect = redirect.clone();
-    let task = tokio::spawn(async move {
+    let task_body = async move {
         let work = async {
             loop {
                 let (mut socket, address) =
@@ -493,7 +520,12 @@ pub(crate) async fn begin_with_timeout(
         if let Ok(mut state) = task_state.lock() {
             *state = result.into()
         }
-    });
+    };
+    let task = if let Some(tracker) = tracker {
+        tracker.spawn(task_body)
+    } else {
+        tokio::spawn(task_body)
+    };
     Ok(Login {
         server_id: String::new(),
         attempt_id: format!("login_{}", uuid::Uuid::new_v4()),

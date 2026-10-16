@@ -106,6 +106,7 @@ struct State {
     invocations: HashMap<String, Arc<Invocation>>,
     logins: HashMap<String, oauth::Login>,
     disposed: bool,
+    quiescing: bool,
 }
 impl Default for State {
     fn default() -> Self {
@@ -122,6 +123,7 @@ impl Default for State {
             invocations: HashMap::new(),
             logins: HashMap::new(),
             disposed: false,
+            quiescing: false,
         }
     }
 }
@@ -134,6 +136,8 @@ pub(crate) struct Service {
     profile: String,
     open: Open,
     state: Mutex<State>,
+    tasks: tokio_util::task::TaskTracker,
+    admission: Arc<std::sync::atomic::AtomicBool>,
 }
 struct Connection {
     binding: Binding,
@@ -196,15 +200,20 @@ impl Service {
         app: String,
         profile: String,
         open: Open,
+        admission: Arc<std::sync::atomic::AtomicBool>,
     ) -> Result<Arc<Self>> {
-        Self::new(
+        let mut service = Self::new(
             session,
             source,
             Arc::new(NativeSecretStore::open()?),
             app,
             profile,
             open,
-        )
+        )?;
+        Arc::get_mut(&mut service)
+            .expect("Fresh MCP native owner")
+            .admission = admission;
+        Ok(service)
     }
     pub(crate) fn new(
         session: Session,
@@ -233,6 +242,8 @@ impl Service {
             profile,
             open,
             state: Mutex::new(State::default()),
+            tasks: tokio_util::task::TaskTracker::new(),
+            admission: Arc::new(std::sync::atomic::AtomicBool::new(true)),
         }))
     }
     pub fn matches_session(&self, s: &Session) -> bool {
@@ -398,6 +409,55 @@ impl Service {
             self.retire(&server)
         }
     }
+    /// Reject new effects without retiring the authority required by original
+    /// Stop/status and late-result publication during the cooperative grace.
+    pub(crate) fn quiesce(&self) {
+        let mut state = self.state.lock().unwrap();
+        state.quiescing = true;
+        for invocation in state.invocations.values() {
+            invocation.cancel.cancel();
+        }
+    }
+    pub(crate) async fn shutdown(&self) -> bool {
+        self.invalidate();
+        self.tasks.close();
+        // Tasks remain the original connect/login/invoke bodies, including any
+        // spawned child/process cleanup. Do not reconstruct wait from booleans.
+        let connections = {
+            let state = self.state.lock().unwrap();
+            state
+                .connections
+                .values()
+                .chain(state.retired.values())
+                .cloned()
+                .collect::<Vec<_>>()
+        };
+        let close = async {
+            for connection in connections {
+                while !connection.close().await {
+                    tokio::time::sleep(Duration::from_millis(20)).await;
+                }
+            }
+        };
+        tokio::join!(self.tasks.wait(), close);
+        // A pending original connect may retire a discovered connection while
+        // shutting down. Task settlement precedes this final complete capture.
+        let connections = {
+            let state = self.state.lock().unwrap();
+            state
+                .connections
+                .values()
+                .chain(state.retired.values())
+                .cloned()
+                .collect::<Vec<_>>()
+        };
+        for connection in connections {
+            if !connection.close().await {
+                return false;
+            }
+        }
+        true
+    }
     fn reserve(&self, key: &str, fp: String) -> Result<(Arc<Receipt>, bool)> {
         let mut s = self.state.lock().unwrap();
         let (kind, op) = key.split_once(':').ok_or(McpError::Protocol)?;
@@ -410,7 +470,7 @@ impl Service {
             }
             return Ok((r.clone(), false));
         }
-        if s.disposed {
+        if s.disposed || s.quiescing || !self.admission.load(Ordering::SeqCst) {
             return Err(McpError::VaultConflict);
         }
         if s.operations.len() >= RECORDS {
@@ -457,6 +517,18 @@ impl Service {
             && !matches!(
                 e.action,
                 Action::Status { .. } | Action::Stop { .. } | Action::Dispose {}
+            )
+        {
+            return Err(McpError::VaultConflict);
+        }
+        if self.state.lock().unwrap().quiescing
+            && matches!(
+                e.action,
+                Action::PrivatePrepare { .. }
+                    | Action::Connect { .. }
+                    | Action::Prepare { .. }
+                    | Action::Invoke { .. }
+                    | Action::OauthBegin { .. }
             )
         {
             return Err(McpError::VaultConflict);
@@ -636,9 +708,12 @@ impl Service {
                 if new {
                     let (_, epoch, _, _) = self.server(&server_id)?;
                     let expected = epoch.load(Ordering::Acquire);
+                    let task_token;
                     {
                         let mut s = self.state.lock().unwrap();
                         if s.disposed
+                            || s.quiescing
+                            || !self.admission.load(Ordering::SeqCst)
                             || s.pending_connect.len()
                                 + s.connections.len()
                                 + s.retired
@@ -659,11 +734,13 @@ impl Service {
                             return Ok(reply);
                         }
                         s.pending_connect.insert(op.clone(), server_id.clone());
+                        task_token = self.tasks.token();
                     }
                     let owner = self.clone();
                     let op = op.clone();
                     let receipt = r.clone();
-                    tokio::spawn(async move {
+                    self.tasks.spawn(async move {
+                        let _task_token = task_token;
                         let result = owner
                             .connect(&server_id, config_revision, private_revision, expected)
                             .await;
@@ -741,6 +818,8 @@ impl Service {
                 };
                 let mut s = self.state.lock().unwrap();
                 if s.disposed
+                    || s.quiescing
+                    || !self.admission.load(Ordering::SeqCst)
                     || !s
                         .connections
                         .get(&authority.binding.server_id)
@@ -794,9 +873,14 @@ impl Service {
                     self.server(&server_id)?;
                     self.retire(&server_id);
                     let credentials = self.credentials(&server_id, &private_revision)?;
+                    let task_token;
                     {
                         let mut s = self.state.lock().unwrap();
-                        if s.disposed || s.pending_login.len() + s.logins.len() >= 16 {
+                        if s.disposed
+                            || s.quiescing
+                            || !self.admission.load(Ordering::SeqCst)
+                            || s.pending_login.len() + s.logins.len() >= 16
+                        {
                             let reply = Reply {
                                 status: "notStarted".into(),
                                 ..Reply::error(
@@ -809,11 +893,13 @@ impl Service {
                             return Ok(reply);
                         }
                         s.pending_login.insert(op.clone(), server_id.clone());
+                        task_token = self.tasks.token();
                     }
                     let owner = self.clone();
                     let op = op.clone();
                     let receipt = r.clone();
-                    tokio::spawn(async move {
+                    self.tasks.spawn(async move {
+                        let _task_token = task_token;
                         let result = owner
                             .login(&server_id, config_revision, private_revision, credentials)
                             .await;
@@ -1085,6 +1171,7 @@ impl Service {
             cancel: CancellationToken::new(),
             dispatched: std::sync::atomic::AtomicBool::new(false),
         });
+        let task_token;
         {
             let mut s = self.state.lock().unwrap();
             if let Some(v) = s.invocations.get(&identity.operation_id) {
@@ -1093,7 +1180,7 @@ impl Service {
                 }
                 return Ok(v.receipt.clone());
             }
-            if s.disposed {
+            if s.disposed || s.quiescing || !self.admission.load(Ordering::SeqCst) {
                 return Err(McpError::VaultConflict);
             }
             if s.operation_types
@@ -1115,9 +1202,11 @@ impl Service {
                 .insert(identity.operation_id.clone(), "invoke".into());
             s.invocations
                 .insert(identity.operation_id.clone(), invocation.clone());
+            task_token = self.tasks.token();
         }
         let owner = self.clone();
-        tokio::spawn(async move {
+        self.tasks.spawn(async move {
+            let _task_token=task_token;
             let result = async {
                 let _serial = conn.dispatch.lock().await;
                 if invocation.cancel.is_cancelled() {
@@ -1155,7 +1244,7 @@ impl Service {
                 // its original result remains observable even if retirement immediately follows.
                 {
                     let s = owner.state.lock().unwrap();
-                    if s.disposed
+                    if s.disposed || s.quiescing || !owner.admission.load(Ordering::SeqCst)
                         || !s
                             .connections
                             .get(&identity.authority.binding.server_id)
@@ -1270,7 +1359,13 @@ impl Service {
         }
         let mut login = tokio::time::timeout(
             REQUEST_TIMEOUT,
-            oauth::begin(config, credentials, current.clone(), self.open.clone()),
+            oauth::begin_tracked(
+                config,
+                credentials,
+                current.clone(),
+                self.open.clone(),
+                self.tasks.clone(),
+            ),
         )
         .await
         .map_err(|_| McpError::Deadline)??;
@@ -1301,6 +1396,27 @@ async fn drain_process(process: &mut Option<OwnedProcess>) {
 mod lifecycle_tests {
     use super::*;
     use crate::mcp::service_tests::Harness;
+    #[tokio::test]
+    async fn desktop_lifecycle_mcp_reserved_original_blocks_shutdown_before_spawn() {
+        let h = Harness::new();
+        // Same native tracker token taken while the production reservation lock
+        // is held, before connect/login/invoke may release that lock and spawn.
+        let token = {
+            let _state = h.service.state.lock().unwrap();
+            h.service.tasks.token()
+        };
+        h.service.quiesce();
+        assert!(h.service.reserve("connect:late", "a".repeat(64)).is_err());
+        let shutdown = h.service.shutdown();
+        tokio::pin!(shutdown);
+        assert!(
+            tokio::time::timeout(Duration::from_millis(20), shutdown.as_mut())
+                .await
+                .is_err()
+        );
+        drop(token);
+        assert!(shutdown.await);
+    }
 
     #[tokio::test]
     async fn mcp_service_closes_admission_before_retiring_existing_owners() {

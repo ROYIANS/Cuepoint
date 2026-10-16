@@ -1,5 +1,5 @@
 import {createNativeMcpServices} from "../runtime/nativeMcp";
-import {clearMcpHostServices, installMcpHostServices} from "../runtime/mcpServices";
+import {installMcpHostServices} from "../runtime/mcpServices";
 import {createDesktopMediaServices, installDesktopMediaServices} from "../runtime/desktopMedia";
 import {createSkillDirectoryImportServices, installSkillDirectoryImportServices} from "../runtime/skillImport";
 import {invoke} from "@tauri-apps/api/core";
@@ -12,6 +12,10 @@ import {createNativeBinaryServices, nativeBinaryTransport} from "../storage/nati
 import {installNativeBinaryAccess} from "../storage/binary";
 import {StorageError} from "../storage/errors";
 import type {ProductStore} from "../storage/types";
+import type {NativeSession} from "../storage/protocol";
+
+let currentSession: (() => Promise<NativeSession>) | undefined;
+let closeNativeStorage: (() => Promise<void>) | undefined;
 
 function selectProductStore(): ProductStore & BrowserStoreLifecycle {
     if (getProductStorage().storage === "indexeddb") {
@@ -21,6 +25,8 @@ function selectProductStore(): ProductStore & BrowserStoreLifecycle {
     const bridge = createNativeStoreBridge((command, args) => invoke(command, args));
     const services = createNativeBinaryServices(nativeBinaryTransport(() => driver.getSession()));
     const {store, driver} = createNativeProductStore(bridge, services);
+    currentSession = () => driver.getSession();
+    closeNativeStorage = () => driver.close();
     const mcp = createNativeMcpServices(() => driver.getSession());
     installMcpHostServices(mcp);
     installNativeBinaryAccess(services);
@@ -30,7 +36,7 @@ function selectProductStore(): ProductStore & BrowserStoreLifecycle {
         name: {value: getProductStorage().databaseName},
         verno: {value: 1},
         open: {value: () => driver.getSession()},
-        close: {value: () => {void clearMcpHostServices(mcp);}},
+        close: {value: () => {void driver.close();}},
         delete: {value: () => Promise.reject(new StorageError("scope", "原生工作区不允许通过浏览器重置接口删除"))}
     });
     return store as ProductStore & BrowserStoreLifecycle;
@@ -41,4 +47,10 @@ export const db = selectProductStore();
 
 export async function initializeProductStorage(): Promise<void> {
     await db.open();
+}
+
+export function currentProductSession(): Promise<NativeSession | null> {return currentSession ? currentSession() : Promise.resolve(null);}
+export async function closeProductStorage(): Promise<void> {
+    if (closeNativeStorage) await closeNativeStorage();
+    else db.close();
 }

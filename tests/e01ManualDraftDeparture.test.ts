@@ -19,6 +19,7 @@ vi.mock("react", async original => {
             return host.cells[index];
         },
         useCallback: (callback: unknown) => callback,
+        useEffect: () => undefined,
     };
 });
 vi.mock("@tanstack/react-router", () => ({useBlocker: (options: typeof host.options) => {host.options = options; return host.blocker;}}));

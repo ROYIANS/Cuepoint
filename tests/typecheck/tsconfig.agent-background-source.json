@@ -21,6 +21,16 @@
     "../fixtures/e11-background/harness.tsx",
     "../d03ChatOwners.test.ts",
     "../fixtures/d03/harness.tsx",
-    "../audioGenerationBatch.test.ts"
+    "../audioGenerationBatch.test.ts",
+    "../e11ApplicationQuit.test.ts",
+    "../nativeSystemServices.test.ts",
+    "../skillImportTransport.test.ts",
+    "../desktopMediaTransport.test.ts",
+    "../desktopMediaWorkflow.test.ts",
+    "../e11QuitResources.test.ts",
+    "../nativePreparedBinary.test.ts",
+    "../e11DesktopLifecycle.test.ts",
+    "../e11McpQuit.test.ts",
+    "../../apps/desktop/ui/e11Background.ts"
   ]
 }

@@ -1,6 +1,7 @@
 import {REFERENCE_LIMITS, referenceAttachment, type ReferenceAttachment} from "../../references/models/references";
 import {importReferenceFile, retryReferenceImport} from "../../references/documents/import";
 import type {DraftSnapshot, DraftRecovery, SubmittedDraft, ReferenceImportDraft} from "../models/chatDraft";
+import {productEffectAdmission} from "../../../platform/runtime/effectAdmission";
 
 const EMPTY: DraftSnapshot = Object.freeze({text: "", textRevision: 0, revision: 0, attachments: Object.freeze([]), imports: Object.freeze([])});
 
@@ -51,6 +52,7 @@ export function createChatDraftStore() {
         }
 
         function importFiles(files: File[], retryId?: string): Promise<void> {
+            if (!productEffectAdmission.open) return Promise.reject(new Error("应用正在退出，无法导入资料"));
             if (!admissionOpen) return Promise.reject(new Error("应用正在退出，无法导入资料"));
             if (!projectId) return Promise.resolve();
             if (files.length > REFERENCE_LIMITS.selection) {

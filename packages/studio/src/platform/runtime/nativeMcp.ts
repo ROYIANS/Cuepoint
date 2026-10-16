@@ -1,4 +1,5 @@
 import {invoke} from "@tauri-apps/api/core";
+import {productEffectAdmission} from "./effectAdmission";
 import {z} from "zod";
 import type {NativeSession} from "../storage/protocol";
 import type {McpHostBinding, McpHostCapabilities, McpHostConnection, McpHostServices, McpInvocationIdentity, McpInvocationOutcome, McpPreparedAuthority} from "./mcp";
@@ -40,6 +41,8 @@ export function createNativeMcpServices(
     const sessionIdentity = (session: NativeSession) => JSON.stringify([session.version, session.session, session.workspaceId, session.generation]);
 
     async function request(operationId: string, action: Action, allowClosed = false, beforeDispatch?: () => void): Promise<Reply> {
+        const fresh = ["privatePrepare", "connect", "prepare", "invoke", "oauthBegin"].includes(action.type);
+        if (fresh && !productEffectAdmission.open) throw new McpHostError("closed", "not_started", operationId);
         mcpWireId.parse(operationId);
         if (closed && !allowClosed) throw new McpHostError("closed", "not_started", operationId);
         if (action.type !== "capabilities" && !allowClosed) await initialize();
@@ -55,6 +58,7 @@ export function createNativeMcpServices(
             originalSession ??= {...session};
             if (closed && !allowClosed) throw new McpHostError("closed", "not_started", operationId);
             beforeDispatch?.();
+            if (fresh && !productEffectAdmission.open) throw new McpHostError("closed", "not_started", operationId);
             sent = true;
             if (action.type === "capabilities") handshakeIssued = true;
             const raw = await call("mcp_service_request", {request: {version: 1, operationId, session, ...(hostSessionId ? {hostSessionId} : {}), action}});

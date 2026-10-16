@@ -6,6 +6,7 @@
     "main"
   ],
   "permissions": [
+    "allow-product-lifecycle-request",
     "allow-product-store-request",
     "allow-mcp-service-request",
     "allow-product-binary-request",

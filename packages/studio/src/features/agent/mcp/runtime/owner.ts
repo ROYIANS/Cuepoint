@@ -15,3 +15,8 @@ export function mcpRuntimeOwner(): {readonly host: McpHostServices; readonly con
     }
     return installed;
 }
+
+/** Final Quit only, after original Stop/readback/checkpoint promises settle. */
+export async function disposeMcpRuntime(): Promise<{status: "drained" | "draining"}> {
+    return installed ? installed.connections.dispose() : {status: "drained"};
+}

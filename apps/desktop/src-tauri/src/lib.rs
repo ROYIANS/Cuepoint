@@ -13,6 +13,8 @@ mod desktop_media_process;
 mod media_decoder;
 #[cfg(feature = "desktop")]
 pub mod desktop;
+#[cfg(any(feature = "desktop", test))]
+pub(crate) mod desktop_lifecycle;
 mod error;
 #[cfg(any(feature = "desktop", test))]
 mod file_transfer;

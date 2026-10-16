@@ -138,6 +138,8 @@ acknowledged findings; dispatched web work is conservatively unknown. Recovery
 submits no work. Literal deferred loading of the recovery command avoids a
 static cycle with the actual ownership capability owner.
 
+E11 desktop window hide/reopen retains the original producer, session and report publication. Explicit application Quit closes fresh-effect admission, signals all original producers before waiting, and preserves their original completion, Stop/status/readback and final report transaction. Shared MCP disposal follows producer settlement; storage closes after final publication. The native coordinator owns the one bounded fallback deadline. Timeout or an unresponsive original read remains interrupted/unconfirmed; it is not proof of remote cancellation or permission to replay. Saved job rows alone never recreate background work on cold startup.
+
 Thread/project lifecycle transactions delete both job tables. Publication
 rechecks owner existence and scope within its write, so a late callback cannot
 resurrect rows. Reports do not retain source media against ordinary cleanup.

@@ -6016,6 +6016,7 @@
       "publicSymbols": [
         "inspectDesktopMediaImport",
         "ownsDesktopMediaImport",
+        "shutdownDesktopMediaImports",
         "stopDesktopMediaImport"
       ]
     },
@@ -6333,7 +6334,10 @@
       "target": "packages/studio/src/features/agent/mcp/runtime/owner.ts",
       "owner": "features/agent",
       "public": false,
-      "publicTypes": []
+      "publicTypes": [],
+      "publicSymbols": [
+        "disposeMcpRuntime"
+      ]
     },
     {
       "original": "packages/studio/src/features/agent/mcp/runtime/results.ts",
@@ -6522,6 +6526,7 @@
       "public": false,
       "publicTypes": [],
       "publicSymbols": [
+        "agentExecution",
         "initializeAgentExecution"
       ]
     },
@@ -6547,7 +6552,10 @@
       "target": "packages/studio/src/features/agent/runtime/chatDraftStore.ts",
       "owner": "features/agent",
       "public": false,
-      "publicTypes": []
+      "publicTypes": [],
+      "publicSymbols": [
+        "chatDrafts"
+      ]
     },
     {
       "original": "packages/studio/src/features/agent/runtime/threadWork.ts",
@@ -6559,6 +6567,46 @@
       "publicSymbols": [
         "reserveAgentThreadWork"
       ]
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/effectAdmission.ts",
+      "file": "packages/studio/src/platform/runtime/effectAdmission.ts",
+      "target": "packages/studio/src/platform/runtime/effectAdmission.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/desktopLifecycle.ts",
+      "file": "packages/studio/src/platform/runtime/desktopLifecycle.ts",
+      "target": "packages/studio/src/platform/runtime/desktopLifecycle.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/app/drafts/manualQuitGuards.ts",
+      "file": "packages/studio/src/app/drafts/manualQuitGuards.ts",
+      "target": "packages/studio/src/app/drafts/manualQuitGuards.ts",
+      "owner": "app",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/app/lifecycle/applicationQuit.ts",
+      "file": "packages/studio/src/app/lifecycle/applicationQuit.ts",
+      "target": "packages/studio/src/app/lifecycle/applicationQuit.ts",
+      "owner": "app",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/app/lifecycle/desktopApplication.ts",
+      "file": "packages/studio/src/app/lifecycle/desktopApplication.ts",
+      "target": "packages/studio/src/app/lifecycle/desktopApplication.ts",
+      "owner": "app",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

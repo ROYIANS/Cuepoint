@@ -7,7 +7,10 @@ use std::{
     fs::{self, File, OpenOptions},
     io::Read,
     path::{Path, PathBuf},
-    sync::atomic::{AtomicBool, AtomicU64, Ordering},
+    sync::{
+        Arc,
+        atomic::{AtomicBool, AtomicU64, Ordering},
+    },
 };
 
 const MAX_ENTRIES: usize = 1_024;
@@ -55,19 +58,44 @@ impl SkillImportEnvelope {
 #[derive(Default)]
 pub(crate) struct SkillDirectoryImport {
     busy: AtomicBool,
+    closing: AtomicBool,
     epoch: AtomicU64,
+    done: tokio::sync::Notify,
+    gate: Option<Arc<AtomicBool>>,
 }
-struct Selection<'a>(&'a AtomicBool);
+struct Selection<'a>(&'a SkillDirectoryImport);
 impl Drop for Selection<'_> {
     fn drop(&mut self) {
-        self.0.store(false, Ordering::SeqCst);
+        self.0.busy.store(false, Ordering::SeqCst);
+        self.0.done.notify_waiters();
     }
 }
 impl SkillDirectoryImport {
+    pub(crate) fn with_gate(gate: Arc<AtomicBool>) -> Self {
+        Self {
+            gate: Some(gate),
+            ..Self::default()
+        }
+    }
     // Invalidating never pretends the system dialog has closed. Its busy slot
     // remains held until the real picker/capture returns, including on reload.
     pub(crate) fn invalidate(&self) {
         self.epoch.fetch_add(1, Ordering::SeqCst);
+    }
+    pub(crate) fn quiesce(&self) {
+        self.closing.store(true, Ordering::SeqCst);
+        self.invalidate();
+    }
+    pub(crate) async fn drain(&self) {
+        loop {
+            let done = self.done.notified();
+            tokio::pin!(done);
+            done.as_mut().enable();
+            if !self.busy.load(Ordering::SeqCst) {
+                break;
+            }
+            done.await;
+        }
     }
     pub(crate) fn pick(
         &self,
@@ -85,7 +113,15 @@ impl SkillDirectoryImport {
                 "A skill directory selection is already active",
             ));
         }
-        let _selection = Selection(&self.busy);
+        let _selection = Selection(self);
+        if self.closing.load(Ordering::SeqCst)
+            || self
+                .gate
+                .as_ref()
+                .is_some_and(|gate| !gate.load(Ordering::SeqCst))
+        {
+            return Err(Error::new("closing", "Application is shutting down"));
+        }
         let epoch = self.epoch.load(Ordering::SeqCst);
         let mut check = || -> Result<()> {
             if self.epoch.load(Ordering::SeqCst) != epoch {
@@ -514,6 +550,52 @@ mod tests {
         sync::{Arc, Barrier},
         thread,
     };
+    #[tokio::test]
+    async fn desktop_lifecycle_skill_shutdown_waits_original_picker_return() {
+        let owner = Arc::new(SkillDirectoryImport::default());
+        let held = Arc::new(Barrier::new(2));
+        let release = Arc::new(Barrier::new(2));
+        let native = owner.clone();
+        let entered = held.clone();
+        let finish = release.clone();
+        let original = thread::spawn(move || {
+            native.pick(
+                "original",
+                || {
+                    entered.wait();
+                    finish.wait();
+                    Ok(None)
+                },
+                || Ok(()),
+            )
+        });
+        held.wait();
+        owner.quiesce();
+        assert!(owner.busy.load(Ordering::SeqCst));
+        assert!(
+            tokio::time::timeout(std::time::Duration::from_millis(20), owner.drain())
+                .await
+                .is_err()
+        );
+        release.wait();
+        assert!(original.join().unwrap().is_err());
+        owner.drain().await;
+        assert!(!owner.busy.load(Ordering::SeqCst));
+        let called = AtomicBool::new(false);
+        assert!(
+            owner
+                .pick(
+                    "late",
+                    || {
+                        called.store(true, Ordering::SeqCst);
+                        Ok(None)
+                    },
+                    || Ok(())
+                )
+                .is_err()
+        );
+        assert!(!called.load(Ordering::SeqCst));
+    }
     struct Fixture(PathBuf);
     impl Fixture {
         fn new() -> Self {

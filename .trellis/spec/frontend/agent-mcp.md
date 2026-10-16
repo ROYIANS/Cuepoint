@@ -85,6 +85,8 @@ retirement starts, so teardown cannot miss a newly admitted server. Canceled
 OAuth listeners remain draining until their original task has actually finished;
 issuing a cancellation token alone is not a listener-close receipt.
 
+E11 desktop close-to-hide retains the original main document, product session and MCP host. Conversation Stop and ordinary navigation do not dispose the shared host. Explicit application Quit first closes separate new-effect admission, signals the original Agent/import producers and retains MCP Stop/status/readback plus their final ProductStore publications. Only after those original completions settle does it dispose shared MCP and close storage. Rust `close_admission`/`invalidate` and JS `dispose` retire authority and cannot implement this earlier action gate. Repeated Quit shares the original native intent and global deadline; interruption/timeout is not a drained or remote-cancel receipt.
+
 The configuration owner records whether retirement, private prepare and catalogue
 CAS were actually issued. A proven pre-write rejection can settle without waiting
 for a nonexistent private candidate. An uncertain retirement uses its idempotent

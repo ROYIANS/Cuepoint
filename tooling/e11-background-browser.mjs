@@ -107,6 +107,17 @@ try {
         await go("/settings"); assert.equal(await page.evaluate(() => window.e11.requests[3].aborted), false);
         await page.evaluate(() => window.e11.finish(3));
     });
+    await test("explicit Quit includes pending route:false editor overlays and cancel keeps admission open", async () => {
+        await go("/manual-overlay"); await page.getByText("Retained local editor", {exact: true}).waitFor();
+        await page.evaluate(() => window.e11.quit.emit("checking_drafts", "overlay-quit"));
+        await page.getByRole("alertdialog").waitFor();
+        await page.getByText("正在处理修改", {exact: true}).waitFor();
+        assert.equal(await page.getByRole("button", {name: "放弃并离开", exact: true}).count(), 0);
+        await page.getByRole("button", {name: "继续编辑", exact: true}).click();
+        await page.waitForFunction(() => window.e11.quit.actions.some(action => action.kind === "guardDecision" && action.intentId === "overlay-quit" && action.decision === "cancel"));
+        assert.equal(await page.evaluate(() => window.e11.quit.admissionOpen()), true);
+        await page.evaluate(() => {window.e11.quit.emit("running", null); window.e11.setOverlayPending(false);});
+    });
     await test("AI wrapup continues detached while manual summary edits keep their real departure guard", async () => {
         await go("/wrapup"); await page.getByRole("button", {name: "AI 整理总结", exact: true}).click();
         await page.waitForFunction(() => window.e11.wrapup.requests === 1); await go("/settings");
@@ -121,6 +132,25 @@ try {
         await page.getByRole("button", {name: "继续编辑", exact: true}).click();
         assert.equal(await page.getByRole("textbox", {name: "总结", exact: true}).inputValue(), "Manual edits remain protected");
         assert.equal(await page.evaluate(() => window.e11.wrapup.requests), 1);
+    });
+    await test("application Quit reuses the mounted manual guard, cancellation keeps work eligible, discard admits one original drain", async () => {
+        assert.equal(await page.evaluate(() => window.e11.quit.needsDecision()), true);
+        await page.evaluate(() => window.e11.quit.emit("checking_drafts", "browser-quit-1"));
+        await page.getByRole("alertdialog").waitFor();
+        assert.equal(await page.getByRole("alertdialog").count(), 1);
+        await page.getByRole("button", {name: "继续编辑", exact: true}).click();
+        await page.waitForFunction(() => window.e11.quit.actions.some(action => action.kind === "guardDecision" && action.decision === "cancel"));
+        assert.equal(await page.evaluate(() => window.e11.quit.admissionOpen()), true);
+        assert.equal(await page.getByRole("textbox", {name: "总结", exact: true}).inputValue(), "Manual edits remain protected");
+        await page.evaluate(() => {window.e11.quit.emit("running", null); window.e11.quit.emit("checking_drafts", "browser-quit-2");});
+        await page.getByRole("alertdialog").waitFor();
+        await page.getByRole("button", {name: "放弃并离开", exact: true}).click();
+        await page.waitForFunction(() => window.e11.quit.actions.some(action => action.kind === "guardDecision" && action.intentId === "browser-quit-2" && action.decision === "proceed"));
+        await page.getByRole("alertdialog").waitFor({state: "hidden"});
+        assert.equal(await page.getByRole("alertdialog").count(), 0);
+        await page.evaluate(async () => {window.e11.quit.emit("quiescing", "browser-quit-2"); window.e11.quit.emit("quiescing", "browser-quit-2"); await window.e11.quit.done();});
+        assert.equal(await page.evaluate(() => window.e11.quit.admissionOpen()), false);
+        assert.equal(await page.evaluate(() => window.e11.quit.actions.filter(action => action.kind === "drained").length), 1);
     });
     await writeFile(join(output, "result.json"), JSON.stringify({status: "PASS", checks, errors, browser: browser.version(),
         limits: "Actual routed Agent/Settings/Project UI, IndexedDB and generation runtime; controlled local HTTP only. Chromium fixture does not establish packaged/native hidden scheduling."}, null, 2));

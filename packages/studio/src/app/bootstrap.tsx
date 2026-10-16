@@ -17,6 +17,7 @@ import {reportError} from "../platform/diagnostics/reportError";
 import {handleBrowserMcpCallback} from "../platform/runtime/browserMcpCallback";
 import {initializeAgentExecution} from "../features/agent/runtime/agentExecution";
 import {installBrowserMcpRuntime} from "../features/agent/mcp/runtime/browserRuntime";
+import {installDesktopApplicationLifecycle} from "./lifecycle/desktopApplication";
 
 function createApplicationRouter() {return createRouter({
     routeTree,
@@ -61,6 +62,7 @@ function mountApplication(): void {
             await initializeProductStorage();
             await installBrowserMcpRuntime();
             await initializeAgentExecution();
+            await installDesktopApplicationLifecycle();
             // Not awaited: the catalog is advisory and must not delay first paint. It never rejects, and
             // beginAgentRun awaits the same memoized promise before creating a run.
             void initModelCatalog();

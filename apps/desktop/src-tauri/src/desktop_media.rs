@@ -243,6 +243,7 @@ struct Operation {
     grant_id: Option<String>,
     cancel: AtomicBool,
     active: AtomicBool,
+    done: tokio::sync::Notify,
     started: Instant,
     result: Mutex<Value>,
 }
@@ -262,6 +263,7 @@ impl Operation {
 }
 #[derive(Default)]
 struct Owner {
+    closing: bool,
     grants: HashMap<String, Arc<Grant>>,
     operations: HashMap<String, Arc<Operation>>,
     released: HashMap<String, Instant>,
@@ -269,8 +271,15 @@ struct Owner {
 #[derive(Default)]
 pub(crate) struct DesktopMedia {
     owner: Mutex<Owner>,
+    gate: Option<Arc<AtomicBool>>,
 }
 impl DesktopMedia {
+    pub(crate) fn with_gate(gate: Arc<AtomicBool>) -> Self {
+        Self {
+            owner: Mutex::new(Owner::default()),
+            gate: Some(gate),
+        }
+    }
     fn reserve(
         &self,
         scope: &MediaScope,
@@ -280,6 +289,14 @@ impl DesktopMedia {
     ) -> Result<Arc<Operation>> {
         uuid(operation_id)?;
         let mut owner = lock(&self.owner)?;
+        if owner.closing
+            || self
+                .gate
+                .as_ref()
+                .is_some_and(|gate| !gate.load(Ordering::SeqCst))
+        {
+            return Err(Error::new("closing", "Application is shutting down"));
+        }
         owner
             .released
             .retain(|_, released| released.elapsed() <= GRANT_IDLE);
@@ -317,6 +334,7 @@ impl DesktopMedia {
             grant_id: grant_id.map(str::to_owned),
             cancel: AtomicBool::new(false),
             active: AtomicBool::new(true),
+            done: tokio::sync::Notify::new(),
             started: Instant::now(),
             result: Mutex::new(
                 json!({"status":"running","operationId":operation_id,"phase":phase}),
@@ -341,6 +359,7 @@ impl DesktopMedia {
         };
         *lock(&operation.result)? = value.clone();
         operation.active.store(false, Ordering::SeqCst);
+        operation.done.notify_waiters();
         Ok(value)
     }
     fn operation(&self, scope: &MediaScope, operation_id: &str) -> Result<Arc<Operation>> {
@@ -645,6 +664,33 @@ impl DesktopMedia {
                 operation.cancel.store(true, Ordering::SeqCst);
             }
             owner.grants.clear();
+        }
+    }
+    /// Close reservation and capture original operations under the same lock.
+    /// Cancellation is only a signal; completion follows finish after decoder
+    /// wait/cleanup and retained result publication.
+    pub(crate) fn shutdown(&self) -> impl std::future::Future<Output = ()> + Send + 'static {
+        let originals = {
+            let mut owner = self.owner.lock().unwrap();
+            owner.closing = true;
+            let originals = owner.operations.values().cloned().collect::<Vec<_>>();
+            for operation in &originals {
+                operation.cancel.store(true, Ordering::SeqCst);
+            }
+            originals
+        };
+        async move {
+            for operation in originals {
+                loop {
+                    let done = operation.done.notified();
+                    tokio::pin!(done);
+                    done.as_mut().enable();
+                    if !operation.active.load(Ordering::SeqCst) {
+                        break;
+                    }
+                    done.await;
+                }
+            }
         }
     }
 }
@@ -1059,6 +1105,35 @@ fn prepare_reader(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn desktop_lifecycle_media_shutdown_awaits_original_finish_not_stop_flag() {
+        let owner = Arc::new(DesktopMedia::default());
+        let scope = scope();
+        let operation_id = id();
+        let original = owner
+            .reserve(&scope, &operation_id, None, "copying")
+            .unwrap();
+        let completion = owner.shutdown();
+        tokio::pin!(completion);
+        assert!(original.cancel.load(Ordering::SeqCst));
+        assert!(owner.reserve(&scope, &id(), None, "copying").is_err());
+        assert!(
+            tokio::time::timeout(Duration::from_millis(20), completion.as_mut())
+                .await
+                .is_err()
+        );
+        assert!(original.active.load(Ordering::SeqCst));
+        owner
+            .finish(
+                &original,
+                &operation_id,
+                Err(Error::new("canceled", "stopped")),
+            )
+            .unwrap();
+        completion.await;
+        assert_eq!(lock(&original.result).unwrap()["status"], "stopped");
+        assert!(!original.active.load(Ordering::SeqCst));
+    }
     struct Fixture(PathBuf);
     impl Fixture {
         fn new() -> Self {
@@ -1379,7 +1454,10 @@ mod tests {
             .reserve(&scope, &id(), Some(&grant_id), "scanning")
             .unwrap();
         *lock(&native.touched).unwrap() = Instant::now() - GRANT_IDLE - Duration::from_secs(1);
-        assert_eq!(owner.grant(&scope, &grant_id).err().unwrap().code, "grantRevoked");
+        assert_eq!(
+            owner.grant(&scope, &grant_id).err().unwrap().code,
+            "grantRevoked"
+        );
         let result = owner
             .request(
                 &scope,

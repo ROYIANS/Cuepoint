@@ -1,6 +1,10 @@
+import {productEffectAdmission} from "./effectAdmission";
 import {invoke} from "@tauri-apps/api/core";
 import {z} from "zod";
 import type {NativeSession} from "../storage/protocol";
+
+const originalSelections = new Set<Promise<SkillDirectorySnapshot>>();
+let shutdownSelections: Promise<void> | undefined;
 
 const MAX_RESPONSE_BYTES = 2_097_152;
 const encoder = new TextEncoder();
@@ -86,12 +90,21 @@ export function createSkillDirectoryImportServices(
     call: (command: string, args: Record<string, unknown>) => Promise<unknown> = invoke,
 ): SkillDirectoryImportServices {
     let pending = false;
-    return {async pickDirectory(operationId) {
+    return {pickDirectory(operationId) {
+        if (!productEffectAdmission.open || shutdownSelections) return Promise.reject(new Error("应用正在退出，无法选择技能目录"));
+        let resolve!: (value: SkillDirectorySnapshot) => void, reject!: (cause: unknown) => void;
+        const done = new Promise<SkillDirectorySnapshot>((yes, no) => {resolve = yes; reject = no;});
+        originalSelections.add(done);
+        void select(operationId).then(value => {originalSelections.delete(done); resolve(value);}, cause => {originalSelections.delete(done); reject(cause);});
+        return done;
+    }};
+    async function select(operationId: string): Promise<SkillDirectorySnapshot> {
         operationIdSchema.parse(operationId);
         if (pending) throw new Error("技能文件夹选择仍在进行，请先完成当前系统窗口。");
         pending = true;
         try {
             const session = await getSession();
+            productEffectAdmission.assertOpen();
             const raw = await call("skill_import_directory", {request: {...session, operationId}});
             return decodeSnapshot(raw, operationId);
         } catch (cause) {
@@ -99,7 +112,12 @@ export function createSkillDirectoryImportServices(
         } finally {
             pending = false;
         }
-    }};
+    }
+}
+
+export function shutdownSkillDirectoryImports(): Promise<void> {
+    shutdownSelections ??= Promise.allSettled([...originalSelections]).then(() => undefined);
+    return shutdownSelections;
 }
 
 let installed: SkillDirectoryImportServices | undefined;

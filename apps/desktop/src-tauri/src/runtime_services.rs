@@ -40,6 +40,14 @@ pub(crate) struct RuntimeServices {
     origins: Mutex<HashSet<String>>,
     pub saves: Saves,
 }
+impl RuntimeServices {
+    pub(crate) fn with_gate(gate: Arc<std::sync::atomic::AtomicBool>) -> Self {
+        Self {
+            origins: Mutex::new(HashSet::new()),
+            saves: Saves::with_gate(gate),
+        }
+    }
+}
 #[derive(Serialize)]
 pub(crate) struct AuthorizedOrigin {
     origin: String,
@@ -268,12 +276,18 @@ pub(crate) fn product_save_cancel(
 #[tauri::command]
 pub(crate) async fn product_print_storyboard(window: WebviewWindow) -> Result<()> {
     trusted(&window)?;
+    window
+        .state::<Arc<crate::desktop_lifecycle::Lifecycle>>()
+        .admit_effect()?;
     crate::native_print::open_storyboard(window).await
 }
 
 #[tauri::command]
 pub(crate) fn product_open_external(window: WebviewWindow, url: String) -> Result<()> {
     trusted(&window)?;
+    window
+        .state::<Arc<crate::desktop_lifecycle::Lifecycle>>()
+        .admit_effect()?;
     let parsed =
         tauri::Url::parse(&url).map_err(|_| Error::new("external", "Invalid external URL"))?;
     if url.len() > 8192
