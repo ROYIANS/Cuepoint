@@ -363,3 +363,10 @@ Read before touching `apps/site/landing.html`, `apps/site/src/**`, `tooling/land
 ### 6. Wrong vs Correct
 Wrong: `url.startsWith(PREFIX)` on a server-provided address (`.../releases/download/../../x` passes). Correct: compare `new URL(url).href` to the prefix.
 Wrong: showing scene titles on the stage or reading `scrollY` events to interrupt playback. Correct: titles in the sr-only layer, interrupts only from wheel/touch/pointer/keys.
+
+## Popover surfaces
+
+- Every floating surface (`ui/popover`, `ui/dropdown-menu` content and sub-content, `ui/select`, raw-Radix feature popovers, antd composer menus) caps height at the Radix `--radix-*-content-available-height` (antd menus: `100dvh - 68px`), scrolls internally and caps width at the available width. Sub-menus scroll too; none may use `overflow-hidden` as the only overflow rule.
+- Collision padding always comes from `ui/popupCollision.ts` (`popupCollisionPadding`, 52px top-bar clearance); do not hand-write padding.
+- Z-index scale: `ui/` wrappers portal to body at `z-50`; chat popovers inside `.agent-chat-root` use 80 (pickers) / 1100 (model, context). Do not add other layers; portal into the nearest `[role=dialog]` or `.agent-chat-root`.
+- Truncated labels (model ids, project names, titles) expose the full text through `title` or a `ui/tooltip`; tooltips wrap at 20rem.
