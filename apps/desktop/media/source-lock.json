@@ -163,7 +163,8 @@
         }
       ],
       "archiveBytes": 6692277,
-      "archiveSha256": "b625df62e994c97dcd7a37d21252d544fa61a956b482e6228673e029d18bba22"
+      "archiveSha256": "b625df62e994c97dcd7a37d21252d544fa61a956b482e6228673e029d18bba22",
+      "archiveFile": "sources/libaom-de4c1d1edc49723a78954d30a83690aa1937422f.tar.gz"
     }
   ]
 }

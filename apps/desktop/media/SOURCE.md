@@ -11,6 +11,13 @@ source availability does not depend on an expiring CI log or a network request.
 The decoder lock separately pins the three actual executable archive identities
 and the measured extracted executable identities.
 
+The libaom source entry also names a tracked `archiveFile` under `sources/`.
+Its upstream Gitiles archive regenerates per-file timestamps on each request,
+changing archive bytes for the same commit. The tracked copy preserves the
+original reviewed length and SHA-256; build preparation verifies and copies it
+instead of redownloading that generated archive. Its upstream URL remains in
+the registry as provenance. Other source archives retain their pinned downloads.
+
 ## Build configuration and modifications
 
 The published per-target build reports in `provenance/` contain the runtime

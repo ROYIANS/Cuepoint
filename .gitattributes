@@ -12,3 +12,4 @@
 # their original line endings and final blank lines, on macOS and Windows.
 apps/desktop/media/licenses/* -text whitespace=-blank-at-eof
 apps/desktop/media/provenance/*.configure.txt -text whitespace=cr-at-eol,-blank-at-eof
+apps/desktop/media/sources/*.tar.gz binary

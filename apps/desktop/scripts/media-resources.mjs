@@ -48,8 +48,13 @@ export async function downloadMediaFile(url, path, expected, {fetchImpl = global
     abort(signal);
     const deadline = AbortSignal.timeout(180_000);
     const combined = signal ? AbortSignal.any([signal, deadline]) : deadline;
-    const response = await fetchImpl(url, {signal: combined, redirect: 'follow'});
-    if (!response.ok || !response.body) throw new Error('Pinned media asset download failed');
+    // VideoLAN rejects Node's default cors fetch metadata; other sources need cross-origin redirects.
+    const mode = new URL(url).origin === 'https://code.videolan.org' ? {mode: 'same-origin'} : {};
+    const response = await fetchImpl(url, {signal: combined, redirect: 'follow', ...mode});
+    if (!response.ok || !response.body) {
+        await response.body?.cancel().catch(() => {});
+        throw new Error(`Pinned media asset download failed: ${url} (HTTP ${response.status})`);
+    }
     const length = response.headers.get('content-length');
     if (length !== null && length !== String(expected.bytes)) {await response.body.cancel();throw new Error('Media download length mismatch');}
     const digest = createHash('sha256');
@@ -70,13 +75,24 @@ export async function downloadMediaFile(url, path, expected, {fetchImpl = global
         if (!response.body.locked) await response.body.cancel().catch(() => {});
     }
 }
-async function ensureSourceArchive(source, root, options) {
+export async function ensureSourceArchive(source, root, options = {}) {
     const path = resolve(root, `${source.name}-${source.commit}.tar.gz`);
     const expected = {bytes: source.archiveBytes, sha256: source.archiveSha256};
+    let local;
+    if (source.archiveFile !== undefined) {
+        if (source.archiveFile !== `sources/${source.name}-${source.commit}.tar.gz`) throw new Error('Invalid pinned source archive file');
+        local = resolve(materials, source.archiveFile);
+        // Retained upstream bytes remain mandatory even when an exact cache entry exists.
+        await verifyMediaFile(local, expected, options.signal);
+    }
     try {await lstat(path);await verifyMediaFile(path, expected, options.signal);return path;} catch (error) {if (error.code !== 'ENOENT') throw error;}
     const temporary = `${path}.${randomUUID()}.part`;
     try {
-        await downloadMediaFile(source.archiveUrl, temporary, expected, options);
+        if (local) {
+            await copyFile(local, temporary);
+            await verifyMediaFile(temporary, expected, options.signal);
+        }
+        else await downloadMediaFile(source.archiveUrl, temporary, expected, options);
         abort(options.signal);
         try {await rename(temporary, path);} catch (error) {
             if (!['EEXIST', 'EPERM'].includes(error.code)) throw error;

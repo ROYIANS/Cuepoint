@@ -88,6 +88,23 @@ process-recovery contract; new namespace survival after sudden OS crash or power
 loss is unpromised. Retain corresponding-host test commands for explicit local
 development; their execution is not required by the packaging workflow.
 
+Build-time media downloads use `same-origin` fetch mode only for the exact
+`https://code.videolan.org` origin: its pinned dav1d archive rejects Node24's
+default `Sec-Fetch-Mode: cors` with HTTP406. Other origins retain the default mode
+and cross-origin redirects required by GitHub release assets. Keep the original
+archive URLs, byte lengths, hashes and deadlines; report the trusted source URL
+and HTTP status on a rejected response and cancel its body. Loopback regressions
+exercise actual Node fetch metadata and cross-origin redirect behavior.
+
+The libaom Gitiles archive regenerates per-member timestamps even at a fixed
+commit. Its source-lock entry selects the tracked `archiveFile` under
+`apps/desktop/media/sources/`, containing the original pinned archive bytes.
+Verify that file against the same length/hash before copying it into the source
+cache; missing or changed tracked input must fail without a network fallback.
+Retain the upstream URL as provenance and the unchanged source archive in each
+target's bundled inventory. New downloads cannot be accepted by updating a pin
+to each request's newly generated timestamp bytes.
+
 Windows `pin_directory` opens an ordinary local NTFS directory with
 `FILE_LIST_DIRECTORY | FILE_READ_ATTRIBUTES`, read/write sharing and no delete
 sharing, retaining no-follow/backup flags and real handle identity checks.
