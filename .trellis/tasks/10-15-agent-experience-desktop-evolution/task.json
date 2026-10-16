@@ -56,11 +56,11 @@
     "firstCandidate": "10-15-agent-parallel-details",
     "narrowDetailMode": "full-width working-surface detail, retained running conversation, explicit return; no modal drawer",
     "shotDetailScope": "view and edit one shot with existing save/conflict/draft guarantees",
-    "activeDelivery": "10-15-agent-background-host",
+    "activeDelivery": null,
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E11 all four source stages reviewed; final stage commit/source closure underway. Sidebar flash and completed-background reentry crash fixed with actual regressions. E12 is the next planning candidate; full/installed acceptance stays epic batch.",
+    "nextAction": "E11 four source stages reviewed, final stage committed7fb1b3c0 and source delivery archived. Completed-background reentry crash and sidebar flash fixed with actual regressions. E12 is next planning candidate; do not skip its design review. Full/installed acceptance stays epic batch.",
     "carriedAcceptance": {
       "E09": {
         "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",
@@ -88,7 +88,7 @@
         ]
       },
       "E11": {
-        "record": "../10-15-agent-background-host/task.json",
+        "record": "../archive/2026-10/10-15-agent-background-host/task.json",
         "state": "pending-epic-batch",
         "items": [
           "full formal quality/regression/whole-app builds and affected TSX aggregate discovery",

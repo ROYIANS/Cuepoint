@@ -16,7 +16,7 @@ Backlog/planning under [Agent experience and desktop evolution](../10-15-agent-e
 ## Dependencies and order
 
 - E07: `../10-15-agent-jobs-results/` — use its reviewed contracts/results before this task is activated.
-- E11: `../10-15-agent-background-host/` — use its reviewed contracts/results before this task is activated.
+- E11: `../archive/2026-10/10-15-agent-background-host/` — use its reviewed contracts/results before this task is activated.
 
 Tree position does not enforce these dependencies. If a dependency is deliberately narrowed or removed, update this PRD and the parent roadmap with the corresponding lifecycle/acceptance consequence before review.
 
