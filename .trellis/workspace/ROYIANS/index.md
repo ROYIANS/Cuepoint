@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-2.md`
-- **Total Sessions**: 86
+- **Total Sessions**: 87
 - **Last Active**: 2026-10-16
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-2.md` | ~672 | Active |
+| `journal-2.md` | ~714 | Active |
 | `journal-1.md` | ~1968 | Archived |
 <!-- @@@/auto:active-documents -->
 
@@ -30,6 +30,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 87 | 2026-10-16 | E10 MCP四阶段源码交付与归档 | `45bffe3c`, `9d2d2de6`, `80513428`, `bc492b38` | `codex/agent-mcp-integration` |
 | 86 | 2026-10-16 | Archive E09 and investigate E10 MCP scope | `96bdeaf3`, `5c7627d3` | `codex/agent-installable-skills` |
 | 85 | 2026-10-16 | E09 runtime and uncertain skill toggle repair | `1e74e0c8` | `codex/agent-installable-skills` |
 | 84 | 2026-10-16 | E09 stage 3 frozen skills and source delivery | `0449ed6f` | `codex/agent-installable-skills` |

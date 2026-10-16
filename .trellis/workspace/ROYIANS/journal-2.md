@@ -670,3 +670,45 @@ Owner-authorized E09 archive complete. Deferred acceptance is carried by the par
 ### Next Steps
 
 - Converge E10 first-delivery transport scope with the owner, then initial server/auth/UX and concrete design before task activation.
+
+
+## Session 87: E10 MCP四阶段源码交付与归档
+<!-- trellis-session: v=2 fp=8b10c0e300a13a05 -->
+
+**Date**: 2026-10-16
+**Task**: E10 MCP四阶段源码交付与归档
+**Package**: studio
+**Branch**: `codex/agent-mcp-integration`
+
+### Summary
+
+完成桌面优先 MCP stdio/HTTP、none/manual/OAuth、实际Agent审批和E07结果、共享保留式管理界面及兼容Web；四阶段分别审查提交并归档。全量构建和安装版验收保留在总任务。
+
+### Main Changes
+
+- 桌面原生有限接口、凭据版本、真实进程树清理与OAuth回调；原始操作未知结果不重复执行。
+- 每次运行冻结工具与资源、实际模型offers和既有审批、E07保留结果及只读原调用核对。
+- Agent和Settings共享MCP管理，宽窄屏保留对话/草稿；Web使用会话内存凭据与单次流式POST，要求HTTP2/3+CORS。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `45bffe3c` | feat: add bounded MCP contracts and native adapters |
+| `9d2d2de6` | feat: connect desktop MCP services and OAuth |
+| `80513428` | feat: integrate MCP tools with Agent approval and reports |
+| `bc492b38` | feat: add shared MCP management and compatible Web connections |
+
+### Testing
+
+- [OK] Stage4独立整合：19 files/232 tests；source noEmit；19 changed Studio source lint0errors/2既有warnings；architecture725/ownership678/4538edges，0failures。
+- [OK] 实际Chromium SDK24场景与保留会话UI12场景通过、当前源码hash一致；actual workspace browser closure155modules；实际dist freshness/exports及/agent→Settings→MCP表单smoke通过。
+- [OK] 沿用Stage1/2独立native收据，未重复全量native、build、packaging或installedOS；实际Keychain/Windows/系统浏览器验收未宣称通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- E11桌面后台Agent宿主和重连恢复先做具体生命周期设计；父任务承担E08/E09/E10批次完整质量、构建、packed与安装版验收。
