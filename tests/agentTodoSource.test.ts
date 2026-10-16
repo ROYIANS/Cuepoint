@@ -218,6 +218,49 @@ describe.skipIf(!hasSQLite)('Node24 SQLite actual independent Todo source host',
         }
     });
 
+    it('complete_todo and list_todos need their own host-issued action grant, even in full mode', async () => {
+        const f = await fixture(); try {
+            const seed = begin(f.store, 'full'); await api.execute(f.store, seed.run);
+            expect(f.store.list(seed.run.scope)).toHaveLength(1);
+            // A create-only root cannot complete or list.
+            const creator = f.store.begin(seed.run.scope, 'update', 'full'); f.store.issueCreateAuthority(creator.id, ['create']);
+            await api.execute(f.store, creator);
+            const names = f.store.calls(creator.id).map(call => `${call.name}:${call.status}`);
+            expect(names).toContain('create_todo:completed'); expect(names).toContain('complete_todo:failed');
+            expect(f.store.list(seed.run.scope).filter(todo => todo.done)).toEqual([]);
+            const reader = f.store.begin('list-r', 'budget', 'full'); f.store.issueCreateAuthority(reader.id, ['create', 'complete']);
+            await api.execute(f.store, reader);
+            expect(f.store.calls(reader.id).every(call => call.name === 'list_todos' && call.status === 'failed')).toBe(true);
+            // Exactly the granted action succeeds and records its fact in the snapshot.
+            const complete = f.store.begin('list-c', 'todo', 'full'); f.store.issueCreateAuthority(complete.id, ['create', 'complete', 'list']);
+            await api.execute(f.store, complete);
+            const granted = f.store.calls(complete.id)[0];
+            expect(granted.preview?.authority?.facts).toEqual([{kind: 'todo-list', listId: 'list-c', action: 'create'}]);
+        } finally {await f.cleanup();}
+    });
+
+    it('revoking the installation or a grant stops complete_todo and list_todos before their effects', async () => {
+        for (const kind of ['grant', 'installation'] as const) {
+            const f = await fixture(); try {
+                const seed = begin(f.store, 'full'); await api.execute(f.store, seed.run);
+                const todo = f.store.list(seed.run.scope)[0];
+                const run = f.store.begin(seed.run.scope, 'update', 'full'), grant = f.store.issueCreateAuthority(run.id);
+                const host = api.createHost(f.store, run), request = host.request;
+                host.request = async (...args) => {
+                    const result = await request(...args);
+                    if (result.ok && result.toolCalls?.[0].function.name === 'complete_todo') {
+                        if (kind === 'grant') f.store.revokeAuthority(grant.id); else f.store.installCreateCapability();
+                    }
+                    return result;
+                };
+                await core.executeRun(run, new AbortController(), host);
+                const completes = f.store.calls(run.id).filter(call => call.name === 'complete_todo');
+                expect(completes.every(call => call.status === 'failed')).toBe(true);
+                expect(f.store.list(seed.run.scope).find(item => item.id === todo.id)?.done).toBe(false);
+            } finally {await f.cleanup();}
+        }
+    });
+
     it.each(['filesystem', 'process', 'network', 'server'] as const)('unsupported %s policy fixture denies before the Todo effect seam', async family => {
         const f = await fixture(); try {
             const {run} = begin(f.store), call = await waiting(f.store, run);

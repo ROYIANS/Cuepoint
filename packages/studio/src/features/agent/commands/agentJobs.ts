@@ -8,19 +8,19 @@ import {StorageError} from '../../../platform/storage/errors';
 import type {ProductStore} from '../../../platform/storage/types';
 import {toolNamesForCall} from '../models/agentToolSelection';
 import type {AgentToolCall} from '../models/agent';
-import type {AgentJob, AgentJobObservation, AgentJobOutputMetadata, AgentJobPage, AgentJobReader, AgentJobResult, AgentJobResultChunk, AgentJobSelection} from '../models/agentJob';
+import type {AgentJob, AgentJobObservation, AgentJobOutput, AgentJobOutputMetadata, AgentJobPage, AgentJobReader, AgentJobResult, AgentJobResultChunk, AgentJobSelection} from '../models/agentJob';
 import {parseMcpBinding, mcpBindingMatches} from '../mcp/runtime/manifest';
 import {mcpJson, mcpKeys, mcpRecord} from '../mcp/runtime/validation';
 import {assertThreadOwnership, type ThreadOwnership} from '../runtime/runOwnership';
 
 export const AGENT_JOB_LIMITS = {outputBytes: 2 * 1024 * 1024, threadBytes: 16 * 1024 * 1024,
     totalBytes: 128 * 1024 * 1024, threadJobs: 128, totalJobs: 1024, metadataUnits: 16000,
-    previewUnits: 8000, pageUnits: 6000} as const;
+    previewUnits: 8000, pageUnits: 6000, clearedDescriptorFactor: 8} as const;
 export interface AgentJobContext {runId: string; threadId: string; callId: string; projectId?: string; store?: ProductStore}
 /** Known pre-producer quota refusal; does not classify storage/commit uncertainty. */
 export class AgentJobAdmissionError extends Error {
     constructor(readonly kind: 'byte_quota' | 'job_limit') {
-        super(kind === 'job_limit' ? '报告记录数量已满，请删除不再需要的所属对话或项目以释放记录' : '报告存储空间已满，请先清理不再需要的结果');
+        super(kind === 'job_limit' ? '报告记录数量已满，请清理不再需要的报告结果，或删除不再需要的所属对话或项目以释放记录' : '报告存储空间已满，请先清理不再需要的结果');
         this.name = 'AgentJobAdmissionError';
     }
 }
@@ -35,6 +35,34 @@ const envelope = (call: AgentToolCall) => targetRevision({runId: call.runId, thr
 function boundary(text: string, offset: number): number {
     const n = Math.max(0, Math.min(text.length, offset));
     return n > 0 && n < text.length && /[\uD800-\uDBFF]/.test(text[n - 1]) && /[\uDC00-\uDFFF]/.test(text[n]) ? n - 1 : n;
+}
+/** Chunks are at most CHUNK_UNITS long, so the chunk holding an offset has ordinal >= floor(offset / CHUNK_UNITS). */
+const CHUNK_UNITS = 12000;
+function chunkText(jobId: string, text: string): AgentJobResultChunk[] {
+    const chunks: AgentJobResultChunk[] = [];
+    for (let offset = 0; offset < text.length;) {
+        const end = boundary(text, offset + CHUNK_UNITS), piece = text.slice(offset, end);
+        chunks.push({id: `${jobId}:${chunks.length}`, jobId, ordinal: chunks.length, offset, text: piece, byteLength: bytes(piece)}); offset = end;
+    }
+    return chunks;
+}
+/** Range read by the unique [jobId+ordinal] index: validates only the chunks it returns, never the whole report. */
+async function readChunkWindow(db: ProductStore, jobId: string, from: number, to: number, total: number): Promise<{base: number; text: string}> {
+    if (total === 0) return {base: 0, text: ''};
+    const at = (ordinal: number) => db.agentJobResultChunks.where('[jobId+ordinal]').equals([jobId, ordinal]).first();
+    let ordinal = Math.floor(from / CHUNK_UNITS), first = await at(ordinal);
+    while (first && first.offset > from && ordinal > 0) first = await at(--ordinal);
+    if (!first || first.offset > from) throw new Error('已保存报告分段不完整');
+    const parts: string[] = [], base = first.offset;
+    let next = first.offset, chunk: AgentJobResultChunk | undefined = first;
+    while (chunk) {
+        if (chunk.ordinal !== ordinal || chunk.offset !== next || chunk.byteLength !== bytes(chunk.text)) throw new Error('已保存报告分段不完整');
+        parts.push(chunk.text); next += chunk.text.length;
+        if (next >= to) break;
+        chunk = await at(++ordinal);
+    }
+    if (next < to || next > total || to === total && next !== total) throw new Error('已保存报告不完整');
+    return {base, text: parts.join('')};
 }
 function boundedJson<T extends {text?: string; output?: {preview: string}}>(value: T): T {
     while (JSON.stringify(value).length > AGENT_JOB_LIMITS.metadataUnits) {
@@ -155,7 +183,10 @@ export async function admitAgentJob(context: AgentJobContext, input: AgentJobSel
                 }
             }
             const rows = await tx.agentJobs.toArray(), threadRows = rows.filter(row => row.threadId === context.threadId);
-            if (rows.length >= AGENT_JOB_LIMITS.totalJobs || threadRows.length >= AGENT_JOB_LIMITS.threadJobs) throw new AgentJobAdmissionError('job_limit');
+            // A cleared descriptor holds no content or quota; it frees its slot, with a hard cap on retained descriptors.
+            const live = rows.filter(row => row.output?.retention !== 'cleared'), threadLive = live.filter(row => row.threadId === context.threadId);
+            if (live.length >= AGENT_JOB_LIMITS.totalJobs || threadLive.length >= AGENT_JOB_LIMITS.threadJobs ||
+                rows.length >= AGENT_JOB_LIMITS.totalJobs * AGENT_JOB_LIMITS.clearedDescriptorFactor || threadRows.length >= AGENT_JOB_LIMITS.threadJobs * AGENT_JOB_LIMITS.clearedDescriptorFactor) throw new AgentJobAdmissionError('job_limit');
             if (rows.reduce((n, row) => n + row.reservedBytes, 0) + AGENT_JOB_LIMITS.outputBytes > AGENT_JOB_LIMITS.totalBytes ||
                 threadRows.reduce((n, row) => n + row.reservedBytes, 0) + AGENT_JOB_LIMITS.outputBytes > AGENT_JOB_LIMITS.threadBytes) throw new AgentJobAdmissionError('byte_quota');
             const at = nowIso(), job: AgentJob = {id: createId('ajob'), threadId: context.threadId, runId: context.runId, callId: context.callId,
@@ -224,11 +255,7 @@ export async function publishAgentJob(context: AgentJobContext, jobId: string, e
     };
     if (bytes(suppliedText) > AGENT_JOB_LIMITS.outputBytes || publication.error && publication.error.length > 1000 ||
         JSON.stringify(metadata ?? {}).length > 5000) throw new Error('报告内容超过保存限制');
-    const chunks: AgentJobResultChunk[] = [];
-    for (let offset = 0; offset < suppliedText.length;) {
-        const end = boundary(suppliedText, offset + 12000), text = suppliedText.slice(offset, end);
-        chunks.push({id: `${jobId}:${chunks.length}`, jobId, ordinal: chunks.length, offset, text, byteLength: bytes(text)}); offset = end;
-    }
+    const chunks = chunkText(jobId, suppliedText);
     try {
         return await db.transaction('rw', tables(db), async tx => {
             const job = await ownedJob(publicationReader, jobId, tx, !originalMcp), call = (await tx.agentToolCalls.get(job.callId))!;
@@ -253,7 +280,7 @@ export async function publishAgentJob(context: AgentJobContext, jobId: string, e
             const retainedText = job.kind === 'project_media_check'
                 ? mediaReport(job, observations)
                 : suppliedText;
-            const savedChunks = job.kind === 'project_media_check' ? [{id: `${jobId}:0`, jobId, ordinal: 0, offset: 0, text: retainedText, byteLength: bytes(retainedText)}] : chunks;
+            const savedChunks = job.kind === 'project_media_check' ? chunkText(jobId, retainedText) : chunks;
             const revision = job.revision + 1;
             const next: AgentJob = {...job, ...(lateKnown && publication.status === 'completed' ? {completed: job.selected} : {}), observations, status: publication.status, revision, reservedBytes: bytes(retainedText), updatedAt: nowIso(),
                 error: publication.error, serviceMayHaveRun: publication.serviceMayHaveRun ?? job.serviceMayHaveRun,
@@ -298,20 +325,17 @@ export async function readAgentJobPage(reader: AgentJobReader, jobId: string, of
         const original = await tx.agentToolCalls.get(job.callId);
         if (!original || !(original.status === 'completed' || job.kind === 'mcp' && original.status === 'unknown') || !original.result) return {available: false, reason: 'unavailable'};
         if (targetRevision(savedResult(original, job).output) !== targetRevision(job.output)) throw new Error('报告完成记录与保存内容不一致');
-        const chunks = (await tx.agentJobResultChunks.where('jobId').equals(jobId).toArray()).sort((a, b) => a.ordinal - b.ordinal);
-        let expectedOffset = 0;
-        for (const [ordinal, chunk] of chunks.entries()) {
-            if (chunk.ordinal !== ordinal || chunk.offset !== expectedOffset || chunk.byteLength !== bytes(chunk.text)) throw new Error('已保存报告分段不完整');
-            expectedOffset += chunk.text.length;
-        }
-        const text = chunks.map(chunk => chunk.text).join('');
-        if (text.length !== job.output.length || bytes(text) !== job.output.byteLength) throw new Error('已保存报告不完整');
-        const start = boundary(text, offset), end = boundary(text, start + limit);
-        if (start < text.length && end === start) throw new Error('分页长度不足以容纳当前字符，请使用至少 2 个字符');
+        const total = job.output.length;
+        // Read only the chunks covering the page (plus one unit each side for surrogate boundaries).
+        const wanted = Math.min(offset, total), windowStart = Math.max(0, wanted - 1), windowEnd = Math.min(total, wanted + limit + 1);
+        const window = await readChunkWindow(tx, jobId, windowStart, windowEnd, total);
+        const start = window.base + boundary(window.text, wanted - window.base);
+        const end = window.base + boundary(window.text, Math.min(start + limit - window.base, window.text.length));
+        if (start < total && end === start) throw new Error('分页长度不足以容纳当前字符，请使用至少 2 个字符');
         const page = boundedJson({available: true as const, jobId, revision: job.output.revision, status: job.status as AgentJobResult['status'], offset: start,
-            text: text.slice(start, end), length: text.length, byteLength: job.output.byteLength, selected: job.selected, completed: job.completed});
+            text: window.text.slice(start - window.base, end - window.base), length: total, byteLength: job.output.byteLength, selected: job.selected, completed: job.completed});
         const nextOffset = start + page.text.length;
-        return {...page, ...(nextOffset < text.length ? {nextOffset} : {})};
+        return {...page, ...(nextOffset < total ? {nextOffset} : {})};
     });
 }
 function clearedSelection(selection: AgentJobSelection): AgentJobSelection {
@@ -326,8 +350,13 @@ export async function clearAgentJobResult(reader: AgentJobReader, jobId: string,
         if (!terminal(job)) throw new Error('请先停止作业，再清理结果');
         await clearAgentReportActivity(activity, jobId, tx);
         await tx.agentJobResultChunks.where('jobId').equals(jobId).delete();
+        const output: AgentJobOutput = {version: 1, jobId, revision: job.revision + 1, retention: 'cleared', length: 0, byteLength: 0, preview: ''};
         await tx.agentJobs.put({...job, reservedBytes: 0, observations: [], selection: clearedSelection(job.selection),
-            revision: job.revision + 1, output: {version: 1, jobId, revision: job.revision + 1, retention: 'cleared', length: 0, byteLength: 0, preview: ''}, updatedAt: nowIso()});
+            revision: job.revision + 1, output, updatedAt: nowIso()});
+        // The saved completion embeds a bounded text preview. Redact only that preview (and its
+        // descriptor facts); the call, arguments, status and every other result field stay original.
+        const call = await tx.agentToolCalls.get(job.callId);
+        if (call?.result) await tx.agentToolCalls.update(call.id, {result: JSON.stringify({...savedResult(call, job), output}), updatedAt: nowIso()});
     });
 }
 
@@ -359,7 +388,16 @@ export async function recoverAgentJobs(threadId: string, ownership: ThreadOwners
             } else {
                 // Reuse the same local publication transaction after re-establishing a conservative current owner.
                 const context = {runId: run.id, threadId, callId: call.id, projectId: job.projectId, store: tx};
-                if (run.status !== 'running' || call.status !== 'running') continue;
+                if (run.status !== 'running' || call.status !== 'running') {
+                    // The run/call was settled by another path. A non-terminal job must not stay stranded with
+                    // its reservation: end it without dispatch, honestly unknown when completion was unconfirmed.
+                    const unsure = call.status === 'unknown' || job.serviceMayHaveRun === true;
+                    const ended: AgentJob = {...job, status: unsure ? 'unknown' : 'stopped', reservedBytes: 0, revision: job.revision + 1, updatedAt: nowIso(),
+                        error: unsure ? '服务可能已经执行，未收到可确认的完整结果；不会自动重新请求。' : '执行已结束，未完成的检查记录已关闭。'};
+                    await tx.agentJobs.put(ended);
+                    await publishAgentReportActivity(activity, ended, run, tx);
+                    continue;
+                }
                 await publishAgentJob(context, job.id, job.revision, {status: 'stopped', ...(job.kind === 'web_read' ? {text: ''} : {}), error: '上次检查已中断，仅保留已确认的检查记录。'}, false, activity);
             }
         }

@@ -1,7 +1,7 @@
 import {snapshotToolDefinitions} from './capabilityRegistry.js';
 import {createRunWriter} from './checkpoint.js';
 import {accumulateStreamDelta,createReasoningAccum,finalizeReasoningAccum,type StreamDelta,type ReasoningAccum} from './reasoning.js';
-import {toolMetadataMatches,type ToolContext,type ToolDefinition,type ToolMetadata} from './tools.js';
+import {toolMetadataMatches,type ToolBindingIdentity,type ToolContext,type ToolDefinition,type ToolMetadata} from './tools.js';
 import {MODEL_STEPS_PER_SEGMENT,type AgentRunStatus,type AgentPermissionMode,type AgentToolCallStatus,type AgentRunOutput,type AgentWireToolCall,type AgentModelMetrics,type AgentTokenUsage} from './types.js';
 
 export interface RuntimeRun {
@@ -52,6 +52,8 @@ export interface RuntimeHost<Run extends RuntimeRun,Call extends RuntimeCall<Pre
         validateEnvelope:(run:Run,calls:Call[])=>void;
         readCall:(run:Run,id:string)=>Promise<Call|undefined>;
         assertScope:(run:Run,call:Call,signal:AbortSignal)=>Promise<void>;
+        /** Live-registration check for a call's pinned binding. Core invokes it at every scope check of a bound call and fails closed when absent. */
+        assertBinding?:(binding:ToolBindingIdentity,signal:AbortSignal)=>Promise<void>;
         input:(call:Call)=>{arguments:string;preview?:Preview};
         validate:(name:string,raw:string,offered:readonly string[])=>{tool:ToolDefinition<unknown,Context,Preview,unknown>;args:unknown};
         context:(run:Run,call:Call,signal:AbortSignal,preview?:Preview)=>Context;
@@ -87,6 +89,12 @@ const settled=(status:AgentToolCallStatus)=>['completed','failed','rejected'].in
 /** First establish the complete approval barrier, then freshly read and claim each execution candidate. */
 async function executePendingTools<Run extends RuntimeRun,Call extends RuntimeCall<Preview>,Context extends ToolContext<Preview>,Preview,Continuation>(run:Run,controller:AbortController,host:RuntimeHost<Run,Call,Context,Preview,Continuation>,emit:(event:RuntimeEventData)=>void=()=>undefined,offeredDefinitions:ReadonlyMap<number,readonly ToolDefinition<unknown,Context,Preview,unknown>[]> = new Map()):Promise<boolean> {
     const {tools,errors}=host;
+    const assertScope=async(scopeRun:Run,call:Call)=>{
+        await tools.assertScope(scopeRun,call,controller.signal);
+        if (!call.binding) return;
+        if (!tools.assertBinding) throw new Error('宿主未提供能力注册检查，已阻止绑定工具');
+        await tools.assertBinding(call.binding,controller.signal);
+    };
     host.ownership.assertHeld();
     const calls=(await tools.readRound(run)).sort((a,b)=>a.step-b.step || a.order-b.order);
     tools.validateEnvelope(run,calls);
@@ -111,7 +119,7 @@ async function executePendingTools<Run extends RuntimeRun,Call extends RuntimeCa
         if (call.status === 'unknown' || call.status === 'running') throw new Error('有工具结果不确定，不能重跑');
         let validated:ReturnType<typeof tools.validate>;
         try {
-            await tools.assertScope(run,call,controller.signal);
+            await assertScope(run,call);
             validated=validate(call,run);
         } catch (cause) {
             const error=cause instanceof Error ? cause.message : '工具参数无效';
@@ -125,7 +133,7 @@ async function executePendingTools<Run extends RuntimeRun,Call extends RuntimeCa
             try {
                 if (call.status !== 'pending') throw new Error('操作缺少批准前预览，请重新发起');
                 const preview=await tool.prepare(args,tools.context(run,call,controller.signal));
-                await tools.assertScope(run,call,controller.signal);
+                await assertScope(run,call);
                 await tools.preview(run,call,preview);
             } catch (cause) {
                 controller.signal.throwIfAborted();
@@ -134,7 +142,7 @@ async function executePendingTools<Run extends RuntimeRun,Call extends RuntimeCa
                 continue;
             }
         }
-        await tools.assertScope(run,call,controller.signal);
+        await assertScope(run,call);
         if (call.status !== 'approved' && tools.approval(run.permissionMode ?? 'ask',tool,args)) {
             await tools.transition(run,call,['pending'],'awaiting_approval');waiting=true;
         }
@@ -147,7 +155,7 @@ async function executePendingTools<Run extends RuntimeRun,Call extends RuntimeCa
         if (!call || settled(call.status)) continue;
         const current=await host.readRun(run.id);
         if (!current || current.status !== 'running') throw new Error('执行已停止');
-        await tools.assertScope(current,call,controller.signal);
+        await assertScope(current,call);
         const {tool,args}=validate(call,current);
         if (!toolMetadataMatches(tool,args,call)) throw new Error('工具定义已变化，请结束本次执行后重新发起任务');
         if (tools.approval(run.permissionMode ?? 'ask',tool,args) && call.status !== 'approved') throw new Error('工具尚未获得批准');

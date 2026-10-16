@@ -120,6 +120,7 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
                 await frozenProjectScope({runId:run.id,threadId:run.threadId,callId:call.id,signal,projectId:run.projectId},db);
                 await materialized.assertBinding(call.binding);
             },
+            assertBinding:binding=>materialized.assertBinding(binding),
             input:effectiveToolInput,
             validate:(name,raw,offered)=>validateToolCall(name,raw,offered,registry),
             context:(run,call,signal,preview)=>({projectId:run.projectId,runId:run.id,threadId:run.threadId,callId:call.id,signal,preview,store:db}),

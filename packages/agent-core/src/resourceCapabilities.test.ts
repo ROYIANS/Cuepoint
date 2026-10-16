@@ -85,6 +85,6 @@ describe('neutral capability registration and immutable identity', () => {
     });
     it.each(['ask', 'assist', 'full'] as const)('keeps mandatory confirmation ahead of %s permission', mode => {
         const {tool} = definition();
-        expect(requiresToolApproval(mode, {...tool, binding: identity(), requiresConfirmation: true}, {title: 'ordinary'})).toBe(true);
+        expect(requiresToolApproval(mode, {...tool, requiresConfirmation: true}, {title: 'ordinary'})).toBe(true);
     });
 });

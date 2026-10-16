@@ -4,8 +4,8 @@ import {mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {canSettleRun, createCapabilityLoading, modelStepLimitReached, offeredToolNames, offeredToolNamesForCall, requiresToolApproval, toolMetadataMatches, selectCapabilityGroups, type AgentRunOutput, type AgentRunStatus, type AgentPermissionMode, type ToolBindingIdentity, type ResourceGrantRequest, type ResourceGrantSnapshot, type ResourceGrantRef} from '@cuepoint/agent-core';
 import {appendResponseToolResult} from '@cuepoint/agent-providers';
-import {RolledBackError, UnknownOutcomeError, type Faults, type Scenario, type TodoRun, type TodoCall, type TodoSummary, type TodoAuthority, type TodoResourceFact} from './types.js';
-import {CREATE_CAPABILITY, CREATE_VERSION, createTodoToolset, registry, validate} from './tools.js';
+import {RolledBackError, UnknownOutcomeError, type Faults, type Scenario, type TodoRun, type TodoCall, type TodoSummary, type TodoAuthority, type TodoResourceFact, type TodoAction} from './types.js';
+import {CREATE_CAPABILITY, CREATE_VERSION, actionOf, createTodoToolset, previewTitle, registry, validate} from './tools.js';
 
 export function encode(value: unknown): string {
     const json = JSON.stringify(value);
@@ -22,8 +22,10 @@ const groups = [
 ];
 const allowed = ['list_todos', 'create_todo', 'complete_todo', 'load_tools', 'external_notice'];
 const sameBinding = (a: ToolBindingIdentity | undefined, b: ToolBindingIdentity | undefined) => !!a && !!b && a.capabilityId === b.capabilityId && a.version === b.version && a.registrationId === b.registrationId;
-const factFor = (run: TodoRun): TodoResourceFact => ({kind: 'todo-list', listId: run.scope, action: 'create'});
-const sameFacts = (facts: readonly TodoResourceFact[], run: TodoRun) => facts.length === 1 && encode(facts[0]) === encode(factFor(run));
+const ACTIONS: readonly TodoAction[] = ['create', 'complete', 'list'];
+const factFor = (run: TodoRun, action: TodoAction = 'create'): TodoResourceFact => ({kind: 'todo-list', listId: run.scope, action});
+const sameFacts = (facts: readonly TodoResourceFact[], run: TodoRun, action: TodoAction) => facts.length === 1 && encode(facts[0]) === encode(factFor(run, action));
+const grantsAction = (facts: readonly TodoResourceFact[], run: TodoRun, action: TodoAction) => facts.some(fact => encode(fact) === encode(factFor(run, action)));
 const callIdentity = (call: TodoCall) => encode({...call, status: undefined, result: undefined, error: undefined, appended: undefined});
 
 /** A sidecar lifetime lock excludes actual live processes while business commits stay short. */
@@ -125,11 +127,11 @@ export class TodoStore {
         this.toolsets.get(expected.registrationId)?.assertCurrent();
     }
     /** Root issuance belongs to a trusted host, for this exact durable run/list/action. */
-    issueCreateAuthority(runId: string): TodoAuthority {
+    issueCreateAuthority(runId: string, actions: readonly TodoAction[] = ACTIONS): TodoAuthority {
         return this.transaction(() => {
             const run = this.current(runId); if (!run.createBinding) throw new Error('Missing Todo installation');
             this.assertInstallation(run.createBinding);
-            const authority: TodoAuthority = {id: randomUUID(), revision: 1, runId, scopeId: run.scope, binding: {...run.createBinding}, facts: [factFor(run)], revoked: false};
+            const authority: TodoAuthority = {id: randomUUID(), revision: 1, runId, scopeId: run.scope, binding: {...run.createBinding}, facts: actions.map(action => factFor(run, action)), revoked: false};
             this.db.prepare('INSERT INTO todo_authorities VALUES(?,?,?)').run(authority.id, runId, encode(authority)); return authority;
         });
     }
@@ -153,8 +155,8 @@ export class TodoStore {
             const run = this.current(childRunId), source = this.authority(parent.id);
             if (!source || source.revision !== parent.revision || !run.createBinding || !sameBinding(run.createBinding, source.binding)) throw new Error('Foreign Todo parent authority');
             this.assertInstallation(run.createBinding); this.ancestry(source);
-            const selected = facts ?? [factFor(run)];
-            if (selected.length > 1 || selected.some(fact => encode(fact) !== encode(factFor(run)) || !source.facts.some(allowed => encode(allowed) === encode(fact)))) throw new Error('Child Todo authority cannot widen its parent');
+            const selected = facts ?? source.facts;
+            if (selected.length > ACTIONS.length || selected.some(fact => !ACTIONS.some(action => encode(fact) === encode(factFor(run, action))) || !source.facts.some(allowed => encode(allowed) === encode(fact)))) throw new Error('Child Todo authority cannot widen its parent');
             const child: TodoAuthority = {id: randomUUID(), revision: 1, runId: childRunId, scopeId: run.scope, binding: {...run.createBinding}, facts: structuredClone(selected), parent: {...parent}, revoked: false};
             this.db.prepare('INSERT INTO todo_authorities VALUES(?,?,?)').run(child.id, childRunId, encode(child)); return child;
         });
@@ -167,7 +169,7 @@ export class TodoStore {
         });
     }
     private assertCreateIdentity(run: TodoRun, call: TodoCall): void {
-        if (call.runId !== run.id || call.name !== 'create_todo' || !run.createBinding || !sameBinding(call.binding, run.createBinding)) throw new Error('Foreign Todo call binding');
+        if (call.runId !== run.id || !actionOf(call.name) || !run.createBinding || !sameBinding(call.binding, run.createBinding)) throw new Error('Foreign Todo call binding');
         this.assertInstallation(run.createBinding);
         const {tool, args} = validate(call.name, call.arguments, offeredToolNamesForCall(run, call.step), this.toolsFor(run));
         if (!toolMetadataMatches(tool, args, call)) throw new Error('Todo metadata changed');
@@ -175,31 +177,33 @@ export class TodoStore {
     prepareCreateAuthority(request: ResourceGrantRequest<TodoResourceFact>): ResourceGrantSnapshot<TodoResourceFact> {
         return this.transaction(() => {
             request.signal.throwIfAborted(); const run = this.current(request.subject.runId), call = this.call(request.subject.callId);
-            if (!call || run.status !== 'running' || call.status !== 'pending' || request.subject.scopeId !== run.scope || !sameBinding(request.binding, run.createBinding) || !sameFacts(request.facts, run)) throw new Error('Foreign or unsupported Todo resource');
+            const action = call && actionOf(call.name);
+            if (!call || !action || run.status !== 'running' || call.status !== 'pending' || request.subject.scopeId !== run.scope || !sameBinding(request.binding, run.createBinding) || !sameFacts(request.facts, run, action)) throw new Error('Foreign or unsupported Todo resource');
             this.assertCreateIdentity(run, call);
             const candidates = this.db.prepare('SELECT data FROM todo_authorities WHERE run_id=?').all(run.id).map(row => decode<TodoAuthority>(row.data));
             let chain: TodoAuthority[] | undefined;
             for (const row of candidates) {
-                if (row.revoked || row.scopeId !== run.scope || !sameBinding(row.binding, request.binding) || !sameFacts(row.facts, run)) continue;
+                if (row.revoked || row.scopeId !== run.scope || !sameBinding(row.binding, request.binding) || !grantsAction(row.facts, run, action)) continue;
                 // A stale child cannot shadow a later explicit host issuance for
                 // a new call. Existing prepared references never use this lookup.
                 try {chain = this.ancestry(row); break;} catch {continue;}
             }
             if (!chain) throw new Error('Missing host-issued Todo create authority');
             return Object.freeze({version: 1 as const, subject: Object.freeze({...request.subject}), binding: Object.freeze({...request.binding}),
-                facts: Object.freeze([Object.freeze(factFor(run))]), grants: Object.freeze(chain.map(row => Object.freeze({id: row.id, revision: row.revision})))});
+                facts: Object.freeze([Object.freeze(factFor(run, action))]), grants: Object.freeze(chain.map(row => Object.freeze({id: row.id, revision: row.revision})))});
         });
     }
     assertCreateAuthority(run: TodoRun, call: TodoCall, expected: ResourceGrantSnapshot<TodoResourceFact>): void {
         this.assertCreateIdentity(run, call);
-        if (expected.version !== 1 || expected.subject.runId !== run.id || expected.subject.callId !== call.id || expected.subject.scopeId !== run.scope || !sameBinding(expected.binding, run.createBinding) || !sameFacts(expected.facts, run) || expected.grants.length < 1) throw new Error('Foreign Todo prepared resource');
+        const action = actionOf(call.name)!;
+        if (expected.version !== 1 || expected.subject.runId !== run.id || expected.subject.callId !== call.id || expected.subject.scopeId !== run.scope || !sameBinding(expected.binding, run.createBinding) || !sameFacts(expected.facts, run, action) || expected.grants.length < 1) throw new Error('Foreign Todo prepared resource');
         const leaf = this.authority(expected.grants[0].id);
-        if (!leaf || leaf.runId !== run.id || leaf.scopeId !== run.scope || !sameBinding(leaf.binding, expected.binding) || !sameFacts(leaf.facts, run)) throw new Error('Foreign Todo grant reference');
+        if (!leaf || leaf.runId !== run.id || leaf.scopeId !== run.scope || !sameBinding(leaf.binding, expected.binding) || !grantsAction(leaf.facts, run, action)) throw new Error('Foreign Todo grant reference');
         const chain = this.ancestry(leaf);
         if (encode(chain.map(row => ({id: row.id, revision: row.revision}))) !== encode(expected.grants)) throw new Error('Stale Todo grant revision');
         if (call.preview?.authority && encode(call.preview.authority) !== encode(expected)) throw new Error('Todo preview resource changed');
         const args = validate(call.name, call.arguments, offeredToolNamesForCall(run, call.step), this.toolsFor(run)).args;
-        if (call.preview && (!args || typeof args !== 'object' || !('title' in args) || call.preview.title !== args.title)) throw new Error('Todo preview arguments changed');
+        if (call.preview && call.preview.title !== previewTitle(call.name, args)) throw new Error('Todo preview arguments changed');
     }
     begin(scope: string, scenario: Scenario, permissionMode: AgentPermissionMode = 'ask', enabled = allowed): TodoRun {
         return this.transaction(() => {
@@ -249,7 +253,7 @@ export class TodoStore {
     saveCall(call: TodoCall): void {this.db.prepare('UPDATE todo_calls SET data=? WHERE id=?').run(encode(call), call.id);}
     decide(id: string, callId: string, expected: string, approve: boolean): void {
         this.transaction(() => {const run = this.current(id), call = this.call(callId); if (run.status !== 'waiting_approval' || !call || call.runId !== id || call.status !== 'awaiting_approval' || encode(call) !== expected) throw new Error('Stale approval');
-            if (approve && call.name === 'create_todo') {if (!call.preview?.authority) throw new Error('Missing Todo resource preview'); this.assertCreateAuthority(run, call, call.preview.authority);}
+            if (approve && actionOf(call.name)) {if (!call.preview?.authority) throw new Error('Missing Todo resource preview'); this.assertCreateAuthority(run, call, call.preview.authority);}
             call.decision = approve ? 'approved' : 'rejected'; call.status = call.decision; if (!approve) call.result = encode({rejected: true}); this.saveCall(call);});
     }
     append(id: string): void {
@@ -269,8 +273,8 @@ export class TodoStore {
         try {result = this.transaction(() => {
             const run = this.current(id), call = this.call(callId);
             if (run.status !== 'running' || !call || call.runId !== id || call.status !== 'running') throw new Error('Stale local commit');
-            if (expected || call.name === 'create_todo') {
-                if (call.name !== 'create_todo' || !expected || callIdentity(call) !== callIdentity(expected.call) || !call.preview?.authority) throw new Error('Stale Todo atomic identity');
+            if (expected || actionOf(call.name)) {
+                if (!actionOf(call.name) || !expected || callIdentity(call) !== callIdentity(expected.call) || !call.preview?.authority) throw new Error('Stale Todo atomic identity');
                 this.assertCreateAuthority(run, call, expected.authority);
                 const {tool, args} = validate(call.name, call.arguments, offeredToolNamesForCall(run, call.step), this.toolsFor(run));
                 if (requiresToolApproval(run.permissionMode ?? 'ask', tool, args) && call.decision !== 'approved') throw new Error('Todo approval missing');
@@ -291,7 +295,8 @@ export class TodoStore {
                 const args: unknown = expectedCall ? JSON.parse(expectedCall.arguments) : undefined;
                 if (!expectedCall || expectedCall.name !== 'create_todo' || !args || typeof args !== 'object' || !('title' in args) || args.title !== operation.title) throw new Error('Todo effect arguments changed');
                 const todoId = callId; this.db.prepare('INSERT INTO todos VALUES(?,?,?,0)').run(todoId, run.scope, operation.title); return {id: todoId, title: operation.title, done: false};}
-            if (this.call(callId)?.name !== 'complete_todo') throw new Error('Todo effect operation changed');
+            const saved = this.call(callId);
+            if (!expectedCall || !saved || saved.name !== 'complete_todo' || expectedCall.name !== 'complete_todo' || (JSON.parse(expectedCall.arguments) as {id?: unknown}).id !== operation.id) throw new Error('Todo effect operation changed');
             const changed = this.db.prepare('UPDATE todos SET done=1 WHERE id=? AND scope=?').run(operation.id, run.scope).changes;
             if (!changed) throw new Error('Todo outside this scope or missing'); return {id: operation.id, done: true};
         }, authority && expectedCall ? {authority, call: expectedCall} : undefined);

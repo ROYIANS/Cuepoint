@@ -84,7 +84,7 @@ export const WEB_TOOLS = [
             const admitted = await admitAgentJob(owned, {kind: 'web_read', urls: [args.url]}).catch((cause: unknown) => {
                 if (cause instanceof AgentJobAdmissionError) return webFailure('retention_unavailable', cause.kind === 'byte_quota' ?
                     '报告存储空间已满，请先清理不再需要的结果。尚未访问网页服务，没有自动重试。' :
-                    '报告记录数量已满，请删除不再需要的所属对话或项目。尚未访问网页服务，没有自动重试。');
+                    '报告记录数量已满，请清理不再需要的报告结果，或删除不再需要的所属对话或项目。尚未访问网页服务，没有自动重试。');
                 if (cause instanceof StorageError && cause.certainty === 'rollback') return webFailure('retention_unavailable', '报告暂时无法受理，请检查存储后重新发起。尚未访问网页服务，没有自动重试。');
                 // Unknown acknowledgements and unclassified lookup failures keep
                 // their certainty; never copy arbitrary thrown text into results.

@@ -78,6 +78,19 @@ describe("production Agent MCP admission and exact offers", () => {
         expect(run.toolLoading?.groups.map(group => group.id)).toEqual(snapshot.groups.map(group => group.id));
     });
 
+    it("MCP binding checks keep the same registration guarantees as the core registry (documented no-grant-port divergence)", async () => {
+        const {begin} = await fixture({tools: 1});
+        const run = await begin();
+        const registry = createMcpRunRegistry(run.mcpSnapshot);
+        const binding = mcpCapabilityBinding(run.mcpSnapshot!.generations[0]);
+        await expect(registry.assertBinding(undefined)).resolves.toBeUndefined();
+        await expect(registry.assertBinding(binding)).resolves.toBeUndefined();
+        for (const forged of [{...binding, registrationId: "other"}, {...binding, version: "other"}, {...binding, capabilityId: "mcp/other"}])
+            await expect(registry.assertBinding(forged)).rejects.toThrow();
+        // Every offered MCP tool is advertised with exactly the saved binding.
+        expect(registry.definitions.filter(tool => tool.binding).every(tool => tool.binding!.registrationId === binding.registrationId)).toBe(true);
+    });
+
     it("keeps every built-in group loadable after eight resource servers consume the final foundation", async () => {
         const {host, owner, begin} = await fixture({tools: 0, resources: true, skills: ["workspace", "planning", "business-read", "story-edit", "asset-edit", "audio-production"]});
         vi.spyOn(host, "preparePrivateRevision").mockImplementation(async input => ({...reference, revisionId: `private_${input.serverId}`}));

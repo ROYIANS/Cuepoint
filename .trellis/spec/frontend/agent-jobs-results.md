@@ -84,17 +84,28 @@ do not weaken readback integrity checks or add fake metadata in consumers.
 Limits are 2 MiB per output, 16 MiB per thread, 128 MiB total, 128 job records
 per thread and 1,024 globally. Reserve 2 MiB before work and release excess on
 publication. Count UTF-8 payload bytes; bound selection/metadata too. A byte
-quota can be relieved by clearing terminal results. A record-count limit needs
-deleting an unneeded owning conversation/project where applicable; clearing
-text preserves its small record and cannot falsely promise to release that
-count. No silent expiry or automatic eviction.
+quota can be relieved by clearing terminal results. A cleared descriptor holds
+no content or quota and no longer counts toward the 128/1,024 record limits;
+descriptors are still bounded (8 times those limits) and otherwise leave with
+their owning conversation/project. No silent expiry or automatic eviction.
 
 The original serialized result is at most 16,000 UTF-16 units; its preview is
 at most 8,000. JSON escaping and metadata count toward the serialized budget.
 Only the new preview shrinks. Core's 65,536 guard, existing continuation and
 compaction remain unchanged. Published text is immutable until explicit clear.
 Clear drops chunks and large selection/observations, retains a small cleared
-descriptor and preserves original tool history. Active jobs cannot be cleared.
+descriptor and preserves original tool history except the inline text preview:
+the saved completion keeps its call, status and every other field, but its
+`output` becomes the cleared descriptor (empty preview). Replay returns that
+redacted completion. Active jobs cannot be cleared.
+
+Readback reads only the chunks covering the page through the unique
+`[jobId+ordinal]` index (chunks are at most 12,000 units), validating
+contiguity/bytes of the chunks it reads and the descriptor length at the end of
+the report; it never joins the whole report per page. Recovery closes a
+non-terminal job whose run or call is no longer `running` (`stopped`, or
+`unknown` when the call is unknown/service may have run), releasing its
+reservation without dispatch.
 
 Page offsets and lengths use UTF-16 units, with at most 6,000 per requested page
 and a bounded serialized envelope. Never split surrogate pairs. A nonfinal page
@@ -174,7 +185,7 @@ See [Sidebar Activity / Read Revisions](./agent-thread-activity.md).
 | Committed completion with lost acknowledgement / late Stop | Return exact original durable result |
 | Completion lookup unreadable | Unknown; no producer replay |
 | Foreign, deleted or unpublished output | Explicit unavailable, zero provider requests |
-| Cleared output | Explicit cleared; original history unchanged |
+| Cleared output | Explicit cleared; original history unchanged except the redacted inline preview; record slot freed |
 | One-unit page cannot fit supplementary character | Explicit error; no empty advancing claim |
 | Stop during held media availability | Stopping while held; await current result; no next item |
 | Recovery cannot acquire actual thread lock | Do not touch active work |
@@ -185,7 +196,7 @@ See [Sidebar Activity / Read Revisions](./agent-thread-activity.md).
 Good: retain a large extraction, send only its bounded projection to the model,
 then reconstruct it exactly through authorized pages without another request.
 Base: an empty bound-project video selection publishes an explicit empty report.
-Bad: silently clip retained content, replace original history after clear,
+Bad: silently clip retained content, replace original history after clear (beyond redacting the inline preview),
 declare native work stopped while the actual read is pending, or replay HTTP
 because publication acknowledgement was lost.
 

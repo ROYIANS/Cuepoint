@@ -18,7 +18,8 @@ export interface TodoRun extends RuntimeRun {
     createBinding?: ToolBindingIdentity;
     error?: string;
 }
-export interface TodoResourceFact {readonly kind: 'todo-list'; readonly listId: string; readonly action: 'create'}
+export type TodoAction = 'create' | 'complete' | 'list';
+export interface TodoResourceFact {readonly kind: 'todo-list'; readonly listId: string; readonly action: TodoAction}
 export interface TodoAuthority {
     readonly id: string;
     revision: number;
@@ -40,7 +41,7 @@ export interface TodoCall extends RuntimeCall<Preview> {
 export interface TodoContext extends ToolContext<Preview> {
     services: {
         list: () => Array<{id: string; title: string; done: boolean}>;
-        prepareCreate: () => Promise<ResourceGrantSnapshot<TodoResourceFact>>;
+        prepare: (action: TodoAction) => Promise<ResourceGrantSnapshot<TodoResourceFact>>;
         mutate: (callId: string, signal: AbortSignal, operation: {kind: 'create'; title: string} | {kind: 'complete'; id: string}, expected?: ResourceGrantSnapshot<TodoResourceFact>) => unknown;
         load: (callId: string, groups: string[], signal: AbortSignal) => unknown;
         external: (callId: string, signal: AbortSignal) => never;

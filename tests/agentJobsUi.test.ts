@@ -189,7 +189,9 @@ it("keeps readOnly inspection, synchronously excludes repeated clears, and clear
     await vi.waitFor(async () => expect((await db.agentJobs.get(owner.job.id))?.output?.retention).toBe("cleared"));
     await publish(); expect(container.textContent).toContain("保留结果已清理"); expect(button("查看报告")).toBeUndefined();
     expect(await db.agentJobResultChunks.where("jobId").equals(owner.job.id).count()).toBe(0);
-    expect((await db.agentToolCalls.get(owner.call.id))?.result).toBe(originalResult); expect(clears).toBe(1); expect(network).not.toHaveBeenCalled(); spy.mockRestore();
+    const redacted = await db.agentToolCalls.get(owner.call.id), before = JSON.parse(originalResult!);
+    expect(redacted?.status).toBe("completed"); expect(JSON.parse(redacted!.result!)).toEqual({...before, output: {version: 1, jobId: owner.job.id, revision: before.output.revision + 1, retention: "cleared", length: 0, byteLength: 0, preview: ""}});
+    expect(clears).toBe(1); expect(network).not.toHaveBeenCalled(); spy.mockRestore();
 });
 
 it("keeps actual read failure distinct from missing and retries the same original owner", async () => {

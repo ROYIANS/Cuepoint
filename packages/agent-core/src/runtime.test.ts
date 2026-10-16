@@ -117,12 +117,25 @@ describe('actual reusable execution loop', () => {
         expect(modelOffer).toEqual([{name: 'write', parameters: {type: 'object', properties: {title: {type: 'string'}}}}]);
         expect(oldExecute).toHaveBeenCalledOnce(); expect(replacement).not.toHaveBeenCalled();
     });
+    it('fails closed for a bound call when the host has no binding check, and revokes through assertBinding alone', async () => {
+        for (const checked of [false, true]) {
+            const f = fixture(), registry = createCapabilityRegistry<Context, number>();
+            const binding = {capabilityId: 'example/write', version: '1', registrationId: 'first'};
+            const installation = registry.register({identity: binding, tools: [f.tool('write')]});
+            f.registry.push(...registry.snapshot());
+            if (checked) {f.host.tools.assertBinding = current => {registry.assertCurrent(current); return Promise.resolve();}; installation.dispose();}
+            f.requests.unshift({ok: true, content: '', toolCalls: [wire('write')]});
+            await executeRun(f.run(), new AbortController(), f.host);
+            expect(f.calls.get('write')).toMatchObject({status: 'failed', binding});
+            expect(f.effects()).toBe(0); expect(f.transitions).not.toContain('write:running');
+        }
+    });
     it('does not retarget a bound response when its installation changes while awaiting the model', async () => {
         const f = fixture(), registry = createCapabilityRegistry<Context, number>();
         const oldBinding = {capabilityId: 'example/write', version: '1', registrationId: 'old'};
         const old = registry.register({identity: oldBinding, tools: [f.tool('write')]});
         f.registry.push(...registry.snapshot());
-        f.host.tools.assertScope = (_run, call) => {if (call.binding) registry.assertCurrent(call.binding); return Promise.resolve();};
+        f.host.tools.assertBinding = binding => {registry.assertCurrent(binding); return Promise.resolve();};
         let release!: (result: ModelResult<string>) => void, started!: () => void;
         const ready = new Promise<void>(resolve => {started = resolve;});
         const request = f.host.request;
@@ -144,7 +157,7 @@ describe('actual reusable execution loop', () => {
         const tool = {...f.tool('write'), requiresConfirmation: true, prepare: () => Promise.resolve(7)};
         const installation = registry.register({identity: binding, tools: [tool]});
         f.registry.push(...registry.snapshot());
-        f.host.tools.assertScope = (_run, call) => {if (call.binding) registry.assertCurrent(call.binding); return Promise.resolve();};
+        f.host.tools.assertBinding = binding => {registry.assertCurrent(binding); return Promise.resolve();};
         f.requests.unshift({ok: true, content: '', toolCalls: [wire('write')]});
         await executeRun(f.run(), new AbortController(), f.host);
         expect(f.run().status).toBe('waiting_approval'); expect(f.calls.get('write')?.preview).toBe(7);
@@ -165,7 +178,7 @@ describe('actual reusable execution loop', () => {
         const installation = registry.register({identity: binding, tools: [{...f.tool('write'), requiresConfirmation: true,
             prepare: async () => {prepared(); await gate; return 7;}}]});
         f.registry.push(...registry.snapshot());
-        f.host.tools.assertScope = (_run, call) => {if (call.binding) registry.assertCurrent(call.binding); return Promise.resolve();};
+        f.host.tools.assertBinding = binding => {registry.assertCurrent(binding); return Promise.resolve();};
         f.requests.unshift({ok: true, content: '', toolCalls: [wire('write')]});
         const executing = executeRun(f.run(), new AbortController(), f.host); await started;
         installation.dispose(); release(); await executing;

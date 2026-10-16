@@ -71,11 +71,72 @@ describe('owned retained Agent jobs', () => {
         await clearAgentJobResult(f.reader, f.job.id);
         expect(await db.agentJobResultChunks.where('jobId').equals(f.job.id).count()).toBe(0);
         expect(await readAgentJobPage(f.reader, f.job.id)).toEqual({available: false, reason: 'cleared'});
-        expect((await db.agentToolCalls.get(f.call.id))!.result).toBe(call.result);
+        // Clear redacts only the inline text preview; the rest of the original completion is unchanged.
+        const afterClear = (await db.agentToolCalls.get(f.call.id))!;
+        const original = JSON.parse(call.result!), redacted = JSON.parse(afterClear.result!);
+        expect(original.output.preview).not.toBe(''); expect(afterClear.status).toBe('completed');
+        expect(redacted).toEqual({...original, output: {version: 1, jobId: f.job.id, revision: f.job.revision + 1, retention: 'cleared', length: 0, byteLength: 0, preview: ''}});
+        expect(afterClear.result).not.toContain(original.output.preview.slice(0, 40));
         const replay = await admitAgentJob(f.context, f.selection);
-        expect(replay.admitted).toBe(false); expect(replay.result).toEqual(JSON.parse(call.result!));
+        expect(replay.admitted).toBe(false); expect(replay.result).toEqual(redacted);
         expect(await publishAgentJob(f.context, f.job.id, 1, {status: 'completed', text: 'replacement'})).toEqual(replay.result);
         expect(await db.agentJobs.count()).toBe(1);
+    });
+    it('reads a page from the covering chunks only and still reconstructs the exact report', async () => {
+        const text = Array.from({length: 40000}, (_, i) => i % 997 === 0 ? '😀' : String.fromCharCode(97 + i % 26)).join('') + '😀'.repeat(3000);
+        const f = await completedWeb(text);
+        const chunkCount = await db.agentJobResultChunks.where('jobId').equals(f.job.id).count();
+        expect(chunkCount).toBeGreaterThanOrEqual(4);
+        const middle = await readAgentJobPage(f.reader, f.job.id, 30000, 500);
+        expect(middle).toMatchObject({available: true, offset: 30000, length: text.length});
+        if (!middle.available) throw new Error('missing');
+        expect(middle.text).toBe(text.slice(30000, 30000 + middle.text.length)); expect(middle.text.length).toBeGreaterThan(498);
+        let content = '', offset = 0;
+        for (;;) {
+            const page = await readAgentJobPage(f.reader, f.job.id, offset, 6000);
+            if (!page.available) throw new Error('missing'); content += page.text;
+            if (page.nextOffset === undefined) break; offset = page.nextOffset;
+        }
+        expect(content).toBe(text);
+        // Only the requested window is validated: damage elsewhere does not block it, damage inside it is detected.
+        const damaged = (await db.agentJobResultChunks.where('[jobId+ordinal]').equals([f.job.id, 1]).first())!;
+        await db.agentJobResultChunks.put({...damaged, byteLength: damaged.byteLength + 1});
+        await expect(readAgentJobPage(f.reader, f.job.id, damaged.offset + 10, 100)).rejects.toThrow('分段不完整');
+        await expect(readAgentJobPage(f.reader, f.job.id, 0, 100)).resolves.toMatchObject({available: true});
+        await expect(readAgentJobPage(f.reader, f.job.id, text.length - 100, 100)).resolves.toMatchObject({available: true});
+    });
+    it('frees the record slot of a cleared report while keeping a bounded descriptor set', async () => {
+        for (const cleared of [false, true]) {
+            const f = await completedWeb('slot report');
+            if (cleared) await clearAgentJobResult(f.reader, f.job.id);
+            await db.agentJobs.bulkAdd(Array.from({length: 127}, (_, i): AgentJob => ({...f.job, id: `slot-${cleared}-${i}`, callId: `slot-call-${cleared}-${i}`, output: undefined, reservedBytes: 0, status: 'stopped'})));
+            const next = await fixture(); await db.agentJobs.where('threadId').equals(f.thread.id).modify({threadId: next.thread.id});
+            const attempt = admitAgentJob(next.context, next.selection);
+            if (cleared) await expect(attempt).resolves.toMatchObject({admitted: true});
+            else await expect(attempt).rejects.toMatchObject({kind: 'job_limit'});
+            await db.agentJobs.where('threadId').equals(next.thread.id).delete();
+        }
+        const g = await fixture(), {job} = await admitAgentJob(g.context, g.selection);
+        const descriptors = Array.from({length: AGENT_JOB_LIMITS.threadJobs * AGENT_JOB_LIMITS.clearedDescriptorFactor}, (_, i): AgentJob => ({...job, id: `cleared-${i}`, callId: `cleared-call-${i}`, reservedBytes: 0, status: 'stopped',
+            output: {version: 1, jobId: `cleared-${i}`, revision: 2, retention: 'cleared', length: 0, byteLength: 0, preview: ''}}));
+        await db.agentJobs.bulkAdd(descriptors);
+        const h = await fixture(); await db.agentJobs.where('threadId').equals(g.thread.id).modify({threadId: h.thread.id});
+        await expect(admitAgentJob(h.context, h.selection)).rejects.toMatchObject({kind: 'job_limit'});
+    });
+    it('closes a stranded non-terminal job when its run or call is no longer running, without dispatch', async () => {
+        for (const [callStatus, expected] of [['failed', 'stopped'], ['unknown', 'unknown']] as const) {
+            const f = await fixture('project_media_check', true), {job: initial} = await admitAgentJob(f.context, f.selection);
+            const job = await markAgentJobRunning(f.context, initial.id, 1);
+            expect(job.reservedBytes).toBe(AGENT_JOB_LIMITS.outputBytes);
+            await db.agentRuns.update(f.run.id, {status: 'interrupted'});
+            await db.agentToolCalls.update(f.call.id, {status: callStatus});
+            await withExecutionOwnership(f.thread.id, ownership => recoverAgentJobs(f.thread.id, ownership));
+            expect(await db.agentJobs.get(job.id)).toMatchObject({status: expected, reservedBytes: 0, revision: job.revision + 1});
+            expect((await db.agentToolCalls.get(f.call.id))!.status).toBe(callStatus);
+            // Recovery is idempotent: terminal rows are left untouched.
+            await withExecutionOwnership(f.thread.id, ownership => recoverAgentJobs(f.thread.id, ownership));
+            expect((await db.agentJobs.get(job.id))!.revision).toBe(job.revision + 1);
+        }
     });
     it('rejects insufficient surrogate pages and permits current later read calls without granting foreign threads', async () => {
         const f = await completedWeb('😀tail');

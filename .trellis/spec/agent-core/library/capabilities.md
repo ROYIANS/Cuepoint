@@ -44,6 +44,16 @@ credentials and effects belong to each host. Follow [runtime](./runtime.md) and
 - Matching compares all three binding fields and bound/unbound presence.
   Changing or removing any binding invalidates a pending call. After restart,
   the host may attach only the exact durable installation generation.
+- `RuntimeHost.tools.assertBinding(binding, signal)` is the core-enforced
+  live-registration check. Core calls it after `assertScope` at every scope
+  check (admission, after preparation, before approval park, fresh claim
+  candidate) for any call carrying a `binding`, and fails closed (the call is
+  failed before execution) when a host with bound calls does not provide it.
+  Revocation therefore does not depend on `assertScope` host convention.
+  `ResourceGrantPort.assertCurrent` is still host-called: grant facts are host
+  vocabulary, so core cannot enforce them. Hosts gate every effectful or
+  readable tool of a bound family with its own action fact (the Todo example
+  grants `create`, `complete` and `list` separately).
 - Check current scope/registration around asynchronous preparation, throughout
   the complete approval barrier and again before fresh execution claim. The
   actual host transaction must also check its own predicates; a preflight
@@ -61,6 +71,13 @@ credentials and effects belong to each host. Follow [runtime](./runtime.md) and
 - Retain the 36-tool/two-group discovery bounds, unsettled-call pinning,
   32-step budget, serial rounds, mandatory confirmation before `full` mode and
   unknown-result no-replay semantics. No second loop or parallel scheduler.
+- Studio MCP (E10) intentionally uses `createCapabilityRegistry` and
+  `assertBinding` (frozen per-run offers, exact binding match, registration and
+  snapshot-generation recheck at scope and claim) but not `ResourceGrantPort`:
+  its resource authority is the saved single-use MCP execution facts rechecked
+  in the claim transaction and in the native service. This documented
+  divergence has equal registration/revocation guarantees (covered by
+  `tests/mcpAgentSurface.test.ts`) and no shared grant vocabulary.
 - This registry does not sandbox arbitrary JavaScript. Filesystem containment,
   process ownership, network/redirect checks and MCP server trust require
   concrete backend enforcement before those families are enabled. Todo deny
