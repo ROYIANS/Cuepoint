@@ -146,4 +146,11 @@ running browser. Unknown writes preserve the requested checkbox state until
 receipt/list evidence resolves it. See [repair evidence](./research/runtime-repair-review.md)
 for the actual Edge smoke, 14 UI cases under both source and emitted resolution,
 type/lint receipts and the existing aggregate TSX discovery limitation. This
-does not discharge the deferred batch acceptance or archive the task.
+does not discharge the deferred batch acceptance.
+
+## Owner-authorized archive — 2026-10-16
+
+The owner subsequently requested archive and the next delivery. Archive this
+source-complete task with its reviewed source checkpoints and repair intact;
+the parent epic explicitly owns the remaining full/packed/installed acceptance
+and aggregate TSX discovery review. Archival does not mark those checks passed.

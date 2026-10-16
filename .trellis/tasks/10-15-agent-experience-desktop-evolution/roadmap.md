@@ -15,8 +15,8 @@ State: planning. The owner authorized this epic and sequential task organization
 | [E06: Capabilities and resource grants](../archive/2026-10/10-15-agent-resource-capabilities/prd.md) | Explicit typed extension and resource-approval contracts reusable outside Studio. | No delivery prerequisite. | Committed as `d4c2c877` and archived: public core registration/binding/grant contracts with actual independent Todo SQLite authority; necessary source checks/review passed. OS/external backends unsupported; emitted/packed/native/full gates deferred. |
 | [E07: Jobs, results and artifacts](../archive/2026-10/10-15-agent-jobs-results/prd.md) | Owned progress/cancel/output and recoverable large-result references. | E06. | Committed as `c9fd6706` and archived: foreground project video availability and retained web extraction with owned paged reports. Necessary source checks/review passed (11 suites/208 tests); native/emitted/packed/full gates deferred. Persistence does not extend lifetime; actual process termination remains with E08. |
 | [E08: Native workspace/media](../10-15-desktop-workspace-media/prd.md) | Authorized input directory to verified media processing and project import. | E06, E07. | Source complete on `codex/desktop-workspace-media` in `52e584c7`, `2b00d8e5`, `ca2da1a5`: macOS + Windows source/native grants, decoder resources, atomic source+thumbnail import, inline library UI and Agent group. Necessary affected checks and independent reviews passed; task stays open for deferred actual Windows/installed and epic batch acceptance. |
-| [E09: Installable Skills](../10-15-agent-installable-skills/prd.md) | Discover and load reusable creative instructions on demand. | E06. | Three source stages complete and independently reviewed on 2026-10-16: portable contracts/immutable storage (`0c7b8b10`), native/browser import and retained management (`e7a5c8ff`), frozen run/progressive reads/shared preview and lifecycle (`0449ed6f`). Necessary affected source checks pass; E09 remains open for deferred full/emitted/packed and actual installed macOS/Windows acceptance. |
-| [E10: MCP integration](../10-15-agent-mcp-integration/prd.md) | Selected external server tools/resources share approval, lifecycle and result handling. | E06, E07. | Backlog; no implicit external server or Cordis adoption. |
+| [E09: Installable Skills](../archive/2026-10/10-15-agent-installable-skills/prd.md) | Discover and load reusable creative instructions on demand. | E06. | Three reviewed source stages (`0c7b8b10`, `e7a5c8ff`, `0449ed6f`) and runtime/uncertain-toggle repair (`1e74e0c8`) complete. Archived at the owner's request on 2026-10-16; deferred full/emitted/packed and actual installed macOS/Windows acceptance is retained by this epic below. |
+| [E10: MCP integration](../10-15-agent-mcp-integration/prd.md) | Selected external server tools/resources share approval, lifecycle and result handling. | E06, E07. | Next delivery in requirement/technical investigation; transport and initial server scope must converge before implementation. No implicit external server or Cordis adoption. |
 | [E11: Background Agent host](../10-15-agent-background-host/prd.md) | Continue across a selected UI detach case and reattach to authoritative state. | E06, E07. | Backlog; choose lifetime and runtime separately. |
 | [E12: Delegation/concurrency](../10-15-agent-delegation/prd.md) | Bounded child work, inherited grants, budgets and coordinated creative writes. | E06, E07, E11. | Backlog; may narrow E11 dependence only by explicit scoped design. |
 | [E13: Programmatic workflows](../10-15-agent-programmatic-workflows/prd.md) | Verified batches with nested calls through the same policy and scheduler. | E06, E07, E12. | Backlog; typed orchestration before choosing code execution. |
@@ -61,6 +61,26 @@ This is a proposed sequence, not a dependency scheduler. The same dependencies a
 Owner instruction on 2026-10-15: each task runs only necessary affected tests and scoped review. Full regression, production builds, packaging and native integration acceptance run once after the selected task batch is complete. Do not repeat these broad gates for every child; distinguish deferred acceptance from already passed focused checks.
 
 ## Cross-delivery acceptance
+
+### E09 acceptance carried forward from the archived source delivery
+
+The owner authorized archiving E09 and moving on on 2026-10-16. Preserve these
+unperformed checks in the epic's final batch; archival is source-delivery closure:
+
+- Full regression and formal quality/application build, including checking that
+  aggregate discovery includes the affected TSX UI suites (the default shared
+  Vitest profile currently discovers `.test.ts` only).
+- Isolated emitted-declaration and offline packed-consumer acceptance. The
+  repair's explicit library regeneration, entry checks and actual Edge Agent
+  smoke are narrower evidence, not completion of these isolation gates.
+- Actual installed macOS picker and retained skill management flow.
+- Windows cfg/native execution and installed picker/UI on fixed local NTFS.
+- E08 native/installed media acceptance stays under E08; no E09 check clears it.
+
+Source/check details remain in the [archived E09 record](../archive/2026-10/10-15-agent-installable-skills/task.json)
+and [repair review](../archive/2026-10/10-15-agent-installable-skills/research/runtime-repair-review.md).
+
+### Shared integration cases
 
 1. E01/E16 details continue working after E02/E03/E04 change draft, status and query handling; opening or editing a detail never changes the conversation's execution owner.
 2. Later native/external jobs use the same phase/cancellation truth introduced in early UX work rather than parallel success/approval systems.

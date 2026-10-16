@@ -56,10 +56,23 @@
     "firstCandidate": "10-15-agent-parallel-details",
     "narrowDetailMode": "full-width working-surface detail, retained running conversation, explicit return; no modal drawer",
     "shotDetailScope": "view and edit one shot with existing save/conflict/draft guarantees",
-    "activeDelivery": "10-15-agent-installable-skills",
+    "activeDelivery": "10-15-agent-mcp-integration",
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E09 three source stages complete and independently reviewed; preserve pending epic full/emitted/packed and actual installed macOS+Windows acceptance (including E08). Next development candidate is E10 MCP integration, which still needs its concrete scope/design review before activation."
+    "nextAction": "Owner authorized E09 source-delivery archive and next delivery on 2026-10-16. E10 MCP integration is in requirement/technical investigation; converge transport/server scope and concrete design before activation. Preserve E09 full/emitted/packed and actual installed macOS+Windows acceptance at epic end, plus E08's separate pending acceptance.",
+    "carriedAcceptance": {
+      "E09": {
+        "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",
+        "state": "pending-epic-batch",
+        "items": [
+          "full regression and formal quality/application build",
+          "aggregate discovery of affected TSX UI tests",
+          "isolated emitted declarations and offline packed consumer",
+          "actual macOS installed picker and retained management",
+          "Windows cfg/native execution and installed picker/UI on fixed local NTFS"
+        ]
+      }
+    }
   }
 }

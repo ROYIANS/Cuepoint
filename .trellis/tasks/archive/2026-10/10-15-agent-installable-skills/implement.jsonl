@@ -12,8 +12,8 @@
 {"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Immediate direct feedback, quiet success and owned failure/unknown recovery."}
 {"file": ".trellis/spec/frontend/monorepo-boundaries.md", "reason": "Public root imports and neutral source ownership."}
 {"file": ".trellis/spec/frontend/type-safety.md", "reason": "Untrusted YAML/DTO decoding and validated plain types."}
-{"file": ".trellis/tasks/10-15-agent-installable-skills/research/current-runtime.md", "reason": "Actual builtin/discovery/run owners and progressive-read integration."}
-{"file": ".trellis/tasks/10-15-agent-installable-skills/research/install-storage.md", "reason": "Finite import, device KV revision/pin accounting and project deletion retention."}
-{"file": ".trellis/tasks/10-15-agent-installable-skills/research/reference-skills.md", "reason": "Metadata/body separation without Cordis, live-body changes or executable plugins."}
-{"file": ".trellis/tasks/10-15-agent-installable-skills/research/format-and-interaction.md", "reason": "Portable format evidence, explicit text subset and retained-workspace UX."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-agent-installable-skills/research/current-runtime.md", "reason": "Actual builtin/discovery/run owners and progressive-read integration."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-agent-installable-skills/research/install-storage.md", "reason": "Finite import, device KV revision/pin accounting and project deletion retention."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-agent-installable-skills/research/reference-skills.md", "reason": "Metadata/body separation without Cordis, live-body changes or executable plugins."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-agent-installable-skills/research/format-and-interaction.md", "reason": "Portable format evidence, explicit text subset and retained-workspace UX."}
 {"file": ".trellis/spec/frontend/agent-installable-skills.md", "reason": "Stage1 source contracts: strict parser, immutable storage CAS and unknown readback; extend native/UI/runtime contracts in later stages."}

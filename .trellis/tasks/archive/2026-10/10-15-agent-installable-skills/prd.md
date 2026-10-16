@@ -10,7 +10,7 @@ creative workflow instructions remains independent from tool execution authority
 
 ## Status and authorization
 
-Planning under [the evolution epic](../10-15-agent-experience-desktop-evolution/prd.md).
+Planning under [the evolution epic](../../../10-15-agent-experience-desktop-evolution/prd.md).
 On 2026-10-16 the owner accepted the E09 outline: metadata/body/resource separation,
 local-directory installation and management, unchanged execution authority,
 immutable active-run behavior and neutral reusable ownership. The owner approved this concrete PRD/design/implementation plan and requested
@@ -33,11 +33,11 @@ commits and necessary affected tests continues to apply after activation.
 - `deviceSettings` is the existing device-local ProductStore owner, with a 2 MiB
   limit per serialized value; new device state adds keys rather than tables.
   Evidence: `packages/studio/src/features/settings/commands/deviceSettings.ts:5`
-  and [shared storage](../../spec/frontend/shared-product-storage.md).
+  and [shared storage](../../../../spec/frontend/shared-product-storage.md).
 - The existing skill entry and ContextPanel allow management without leaving
   chat: `packages/studio/src/features/agent/ui/AgentControls.tsx:275`,
   `packages/studio/src/app/layout/context-panel.tsx:36`.
-- Prerequisite E06 is delivered: [capability/resource contracts](../archive/2026-10/10-15-agent-resource-capabilities/prd.md).
+- Prerequisite E06 is delivered: [capability/resource contracts](../10-15-agent-resource-capabilities/prd.md).
   E08's video workflow provides an optional example integration, not a prerequisite
   for importing instruction-only skills or authority to extend its media grants.
 
@@ -152,7 +152,7 @@ behavior. All three implementation stages are source-complete and have passed th
   [install/storage](./research/install-storage.md),
   [reference comparison](./research/reference-skills.md),
   [format/interaction](./research/format-and-interaction.md).
-- [Original capability comparison](../10-15-desktop-agent-capability-research/research/capability-comparison.md).
+- [Original capability comparison](../../../10-15-desktop-agent-capability-research/research/capability-comparison.md).
 
 ## Source acceptance coverage — 2026-10-16
 
