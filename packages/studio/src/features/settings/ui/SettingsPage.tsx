@@ -2,13 +2,14 @@ import {useCallback, useRef, useState} from "react";
 import {ModuleLayout, useModuleNavigation} from "../../../app/layout/ModuleLayout";
 import {PageContent, PageHeader} from "../../../app/layout/PageLayout";
 import {Search} from "../../../ui/icons";
+import {InstalledSkillsSettings} from "../../agent/ui/InstalledSkillsSettings";
 import {McpConnectionsSettings} from "../../agent/mcp/ui/McpConnectionsSettings";
 import {ConnectorsSection} from "./ConnectorsPage";
 import {AppearanceSection} from "./sections/AppearanceSection";
 import {GeneralSection} from "./sections/GeneralSection";
 import {StorageSection} from "./sections/StorageSection";
 import {UpdateSection} from "./sections/UpdateSection";
-import {filterSettings, isSettingsSectionId, SETTINGS_SECTIONS, type SettingsSectionId} from "./settingsModel";
+import {filterSettings, normalizeSettingsSection, SETTINGS_SECTIONS, type SettingsSectionId} from "./settingsModel";
 
 export function SettingsPage({section, onSectionChange}: {
     section?: string;
@@ -31,7 +32,7 @@ export function SettingsPage({section, onSectionChange}: {
         setEditingConnection(editingConnectionRef.current);
     }, []);
     const navigation = useModuleNavigation();
-    const active: SettingsSectionId = isSettingsSectionId(section) ? section : "general";
+    const active: SettingsSectionId = normalizeSettingsSection(section) ?? "general";
 
     const filtered = filterSettings(SETTINGS_SECTIONS, query);
     const visible = filtered.some(item => item.id === active) ? active : filtered[0]?.id;
@@ -81,9 +82,9 @@ export function SettingsPage({section, onSectionChange}: {
             <div className="settings-body">
                 {visible === "general" ? <GeneralSection visibleRowIds={visibleRowIds}/> : null}
                 {visible === "appearance" ? <AppearanceSection visibleRowIds={visibleRowIds}/> : null}
-                {visible === "connections" ?
-                    <><ConnectorsSection visibleRowIds={visibleRowIds} onEditorOpenChange={onEditorOpenChange}/>
-                        {(!visibleRowIds || visibleRowIds.includes("mcp")) && <McpConnectionsSettings onEditorOpenChange={onMcpEditorOpenChange}/>}</> : null}
+                {visible === "models" ? <ConnectorsSection visibleRowIds={visibleRowIds} onEditorOpenChange={onEditorOpenChange}/> : null}
+                {visible === "mcp" ? <McpConnectionsSettings onEditorOpenChange={onMcpEditorOpenChange}/> : null}
+                {visible === "skills" ? <InstalledSkillsSettings/> : null}
                 {visible === "storage" ? <StorageSection visibleRowIds={visibleRowIds}/> : null}
                 {visible === "update" ? <UpdateSection visibleRowIds={visibleRowIds}/> : null}
                 {!visible ? <div role="status" className="settings-empty-state">

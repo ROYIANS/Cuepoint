@@ -58,7 +58,7 @@ describe("settings search", () => {
 });
 
 describe("settings section identifiers", () => {
-    it.each(["general", "appearance", "connections", "storage", "update"])("accepts %s", value => {
+    it.each(["general", "appearance", "models", "mcp", "skills", "storage", "update"])("accepts %s", value => {
         expect(isSettingsSectionId(value)).toBe(true);
     });
 

@@ -1,10 +1,10 @@
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
 import {SettingsPage} from "../../features/settings/ui/SettingsPage";
-import {isSettingsSectionId, type SettingsSectionId} from "../../features/settings/ui/settingsModel";
+import {normalizeSettingsSection, type SettingsSectionId} from "../../features/settings/ui/settingsModel";
 
 export const Route = createFileRoute("/_studio/settings")({
     validateSearch: (search: Record<string, unknown>): { section?: SettingsSectionId } =>
-        isSettingsSectionId(search.section) ? {section: search.section} : {},
+        normalizeSettingsSection(search.section) ? {section: normalizeSettingsSection(search.section)} : {},
     component: SettingsRoute,
 });
 

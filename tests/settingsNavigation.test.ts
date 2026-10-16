@@ -51,6 +51,8 @@ import {PageContent, PageHeader} from "@/app/layout/PageLayout";
 import {SettingsPage} from "@/features/settings/ui/SettingsPage";
 import {AppearanceSection} from "@/features/settings/ui/sections/AppearanceSection";
 import {ConnectorsSection} from "@/features/settings/ui/ConnectorsPage";
+import {McpConnectionsSettings} from "@/features/agent/mcp/ui/McpConnectionsSettings";
+import {InstalledSkillsSettings} from "@/features/agent/ui/InstalledSkillsSettings";
 import {GeneralSection} from "@/features/settings/ui/sections/GeneralSection";
 import {UpdateSection} from "@/features/settings/ui/sections/UpdateSection";
 import {AboutPage} from "@/features/settings/ui/AboutPage";
@@ -104,13 +106,18 @@ describe("settings route compatibility", () => {
         const tree = draw(() => (SettingsRoute.options.component as () => unknown)());
         const page = tree.find(node => node.type === SettingsPage);
         expect(page?.props.section).toBe("update");
-        (page!.props.onSectionChange as (section: string) => void)("connections");
-        expect(host.navigate).toHaveBeenCalledWith({to: "/settings", search: {section: "connections"}, replace: true});
+        (page!.props.onSectionChange as (section: string) => void)("models");
+        expect(host.navigate).toHaveBeenCalledWith({to: "/settings", search: {section: "models"}, replace: true});
     });
 
-    it.each(["general", "appearance", "connections", "storage", "update"])("accepts the %s deep link", section => {
+    it.each(["general", "appearance", "models", "mcp", "skills", "storage", "update"])("accepts the %s deep link", section => {
         const validate = SettingsRoute.options.validateSearch as (search: Record<string, unknown>) => unknown;
         expect(validate({section, irrelevant: "discard"})).toEqual({section});
+    });
+
+    it("maps the former connections deep link to the models section", () => {
+        const validate = SettingsRoute.options.validateSearch as (search: Record<string, unknown>) => unknown;
+        expect(validate({section: "connections"})).toEqual({section: "models"});
     });
 
     it.each([undefined, null, "", "updates", "General", ["update"], {}, 1])("ignores invalid section %j", section => {
@@ -118,12 +125,12 @@ describe("settings route compatibility", () => {
         expect(validate({section, irrelevant: "discard"})).toEqual({});
     });
 
-    it("redirects the old connectors path to the connections section with replacement history", () => {
+    it("redirects the old connectors path to the models section with replacement history", () => {
         let cause: unknown;
         try {(ConnectorsRoute.options.beforeLoad as () => void)();} catch (error) {cause = error;}
         expect(isRedirect(cause)).toBe(true);
         if (!isRedirect(cause)) throw new Error("Expected the production redirect");
-        expect(cause.options).toMatchObject({to: "/settings", search: {section: "connections"}, replace: true});
+        expect(cause.options).toMatchObject({to: "/settings", search: {section: "models"}, replace: true});
     });
 
     it("retains the independent About page", () => {
@@ -133,19 +140,21 @@ describe("settings route compatibility", () => {
 });
 
 describe("rendered settings navigation and search", () => {
-    it("opens general by default and executes real navigation callbacks for all five sections", () => {
+    it("opens general by default and executes real navigation callbacks for all seven sections", () => {
         const onSectionChange = vi.fn();
         const tree = draw(() => SettingsPage({onSectionChange}));
         const buttons = navigationButtons(tree);
-        expect(buttons.map(label)).toEqual(["通用", "外观", "连接与模型", "存储", "关于与更新"]);
+        expect(buttons.map(label)).toEqual(["通用", "外观", "模型", "MCP", "技能", "存储", "关于与更新"]);
         expect(buttons.filter(node => node.props["aria-current"] === "page").map(label)).toEqual(["通用"]);
         expect(tree.some(node => node.type === GeneralSection)).toBe(true);
         buttons.forEach(button => (button.props.onClick as () => void)());
-        expect(onSectionChange.mock.calls.map(([section]) => section)).toEqual(["general", "appearance", "connections", "storage", "update"]);
+        expect(onSectionChange.mock.calls.map(([section]) => section)).toEqual(["general", "appearance", "models", "mcp", "skills", "storage", "update"]);
     });
 
     it.each([
-        ["connections", ConnectorsSection, "连接与模型"],
+        ["models", ConnectorsSection, "模型"],
+        ["mcp", McpConnectionsSettings, "MCP"],
+        ["skills", InstalledSkillsSettings, "技能"],
         ["appearance", AppearanceSection, "外观"],
         ["update", UpdateSection, "关于与更新"],
     ] as const)("renders the %s deep-linked section and its selected navigation", (section, component, title) => {
@@ -177,7 +186,7 @@ describe("rendered settings navigation and search", () => {
         expect(navigationButtons(tree).some(button => label(button) === "关于与更新")).toBe(true);
         search(tree, "");
         tree = draw(render);
-        expect(navigationButtons(tree)).toHaveLength(5);
+        expect(navigationButtons(tree)).toHaveLength(7);
         expect(tree.some(node => node.type === AppearanceSection)).toBe(true);
         expect(navigationButtons(tree).filter(node => node.props["aria-current"] === "page").map(label)).toEqual(["外观"]);
     });
@@ -196,14 +205,14 @@ describe("rendered settings navigation and search", () => {
         host.narrow = true;
         const onSectionChange = vi.fn();
         const tree = draw(() => SettingsPage({onSectionChange}));
-        const connections = navigationButtons(tree).find(button => label(button) === "连接与模型")!;
+        const connections = navigationButtons(tree).find(button => label(button) === "模型")!;
         (connections.props.onClick as () => void)();
-        expect(onSectionChange).toHaveBeenCalledExactlyOnceWith("connections");
+        expect(onSectionChange).toHaveBeenCalledExactlyOnceWith("models");
         expect(host.setNavigationOpen).toHaveBeenCalledExactlyOnceWith(false);
     });
 
     it.each([
-        ["general", "通用"], ["appearance", "外观"], ["connections", "连接与模型"], ["storage", "存储"], ["update", "关于与更新"],
+        ["general", "通用"], ["appearance", "外观"], ["models", "模型"], ["mcp", "MCP"], ["skills", "技能"], ["storage", "存储"], ["update", "关于与更新"],
     ])("places the %s title once in the common page wrapper", (section, title) => {
         const tree = draw(() => SettingsPage({section, onSectionChange: vi.fn()}));
         const headers = tree.filter(node => node.type === PageHeader);
@@ -248,6 +257,17 @@ describe("application rail settings highlight", () => {
         expect(links.filter(link => link.props["aria-current"] === "page").map(link => link.props.to)).toEqual(["/settings"]);
         expect(links.find(link => link.props.to === "/settings")?.props["aria-label"]).toBe("设置");
         expect(links.some(link => link.props.to === "/connectors")).toBe(false);
+    });
+
+    it("exposes exactly one settings entry, pinned as the last rail item", () => {
+        const tree = draw(() => AppFrame({children: null}));
+        const navigation = tree.find(node => node.type === "nav" && node.props["aria-label"] === "应用导航");
+        const links = nodes(navigation).filter(node => node.type === Link);
+        expect(links.filter(link => link.props.to === "/settings")).toHaveLength(1);
+        expect(links.at(-1)?.props.to).toBe("/settings");
+        // The topbar brand opens About, never settings.
+        const header = tree.find(node => node.type === "header")!;
+        expect(nodes(header).filter(node => node.type === Link).map(node => node.props.to)).toEqual(["/about"]);
     });
 
     it("does not leave settings selected in the project workspace", () => {

@@ -126,24 +126,28 @@ export function AppFrame({children, onImport, contentScroll = "auto"}: {
     const section = NAV.find(item => item.active(pathname));
 
     function renderNavigation(mobile: boolean) {
+        const item = (entry: typeof NAV[number]) => {
+            const selected = entry.active(pathname), Icon = entry.icon;
+            const link = <Link to={entry.to} activeOptions={{exact: true}} aria-label={entry.label}
+                               aria-current={selected ? "page" : undefined}
+                               onClick={mobile ? () => setNavOpen(false) : undefined}
+                               className={cn("app-nav-item", FOCUS)}>
+                <Icon weight={selected ? "fill" : "regular"} className="size-4 shrink-0" aria-hidden/><span
+                className="app-nav-label">{entry.label}</span>
+            </Link>;
+            return mobile ? <div key={entry.to}>{link}</div>
+                : <Tooltip key={entry.to}><TooltipTrigger asChild>{link}</TooltipTrigger><TooltipContent
+                    side="right">{entry.label}</TooltipContent></Tooltip>;
+        };
+        // Settings is the single, bottom-pinned entry; import sits just above it.
         return <nav aria-label="应用导航" className={cn("app-navigation-list", mobile && "app-mobile-nav p-3")}>
-            {NAV.map((item, index) => {
-                const selected = item.active(pathname), Icon = item.icon;
-                const link = <Link to={item.to} activeOptions={{exact: true}} aria-label={item.label}
-                                   aria-current={selected ? "page" : undefined}
-                                   onClick={mobile ? () => setNavOpen(false) : undefined}
-                                   className={cn("app-nav-item", FOCUS, index === 6 && "app-nav-utility-first")}>
-                    <Icon weight={selected ? "fill" : "regular"} className="size-4 shrink-0" aria-hidden/><span
-                    className="app-nav-label">{item.label}</span>
-                </Link>;
-                return mobile ? <div className={index === 6 ? "mt-auto" : undefined}
-                                     key={item.to}>{index === 6 && importButton(true)}{link}</div>
-                    : <div key={item.to} className={index === 6 ? "mt-auto" : undefined}>{index === 6 && onImport &&
-                        <Tooltip><TooltipTrigger asChild>{importButton(false)}</TooltipTrigger><TooltipContent
-                            side="right">从备份导入项目</TooltipContent></Tooltip>}<Tooltip><TooltipTrigger
-                        asChild>{link}</TooltipTrigger><TooltipContent
-                        side="right">{item.label}</TooltipContent></Tooltip></div>;
-            })}
+            {NAV.filter(entry => entry.to !== "/settings").map(item)}
+            <div className="app-nav-utility-first flex flex-col gap-1.5">
+                {onImport && (mobile ? importButton(true)
+                    : <Tooltip><TooltipTrigger asChild>{importButton(false)}</TooltipTrigger><TooltipContent
+                        side="right">从备份导入项目</TooltipContent></Tooltip>)}
+                {NAV.filter(entry => entry.to === "/settings").map(item)}
+            </div>
         </nav>;
     }
 

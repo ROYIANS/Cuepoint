@@ -68,7 +68,7 @@ describe("settings search while editing connection credentials", () => {
         expect(dialog()!.querySelector('input[type="password"]')).toBe(key);
         expect(key.value).toBe("tvly-local-draft-for-regression");
         expect(search().value).toBe("");
-        expect(container.querySelector("h1")?.textContent).toBe("连接与模型");
+        expect(container.querySelector("h1")?.textContent).toBe("模型");
         expect(container.textContent).not.toContain("browser-autofilled-login-name");
         expect(search().autocomplete).toBe("off");
         expect(key.autocomplete).toBe("new-password");
@@ -81,7 +81,7 @@ describe("settings search while editing connection credentials", () => {
         expect(container.querySelector("h1")?.textContent).toBe("外观");
         expect(container.textContent).toContain("界面语言");
         await input(search(), "");
-        expect(container.querySelector("h1")?.textContent).toBe("连接与模型");
+        expect(container.querySelector("h1")?.textContent).toBe("模型");
     });
 
     it("guards the existing search handler immediately when Tavily opens in the same DOM turn", async () => {
@@ -95,7 +95,7 @@ describe("settings search while editing connection credentials", () => {
         expect(dialog()).not.toBeNull();
         expect(dialog()!.textContent).toContain("Tavily 联网搜索");
         expect(search().value).toBe("");
-        expect(container.querySelector("h1")?.textContent).toBe("连接与模型");
+        expect(container.querySelector("h1")?.textContent).toBe("模型");
     });
 
     it("renders the network-search subgroup with the same decorative icon structure", () => {
@@ -137,7 +137,7 @@ describe("settings search while editing connection credentials", () => {
         expect(dialog()!.querySelector('input[type="password"]')).toBe(newKey);
         expect(newKey.value).toBe("tvly-new-editor-draft");
         expect(search().value).toBe("");
-        expect(container.querySelector("h1")?.textContent).toBe("连接与模型");
+        expect(container.querySelector("h1")?.textContent).toBe("模型");
     });
 
     it("does not dismiss a Tavily dialog in the same DOM turn that its save starts", async () => {

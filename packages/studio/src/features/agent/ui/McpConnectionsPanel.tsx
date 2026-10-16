@@ -5,7 +5,7 @@ import {useMcpManagement} from "../mcp/ui/management";
 import {McpManagementBody} from "../mcp/ui/McpManagementBody";
 import "../mcp/ui/mcpConnections.css";
 
-export function McpConnectionsPanel({open, onOpenChange, returnFocus, returnLabel = "返回对话"}: {open: boolean; onOpenChange: (open: boolean) => void; returnFocus?: RefObject<HTMLButtonElement | null>; returnLabel?: string}) {
+export function McpConnectionsPanel({open, onOpenChange, returnFocus, returnLabel = "返回对话", inline = false}: {inline?: boolean; open: boolean; onOpenChange: (open: boolean) => void; returnFocus?: RefObject<HTMLButtonElement | null>; returnLabel?: string}) {
     const {owner, state} = useMcpManagement();
     const currentOpen = useRef(open); currentOpen.current = open;
     const discard = useCallback(() => owner?.discardDraft(), [owner]);
@@ -35,6 +35,9 @@ export function McpConnectionsPanel({open, onOpenChange, returnFocus, returnLabe
         observer.observe(document.body, {childList: true, subtree: true, attributes: true, attributeFilter: ["inert"]});
         queueMicrotask(restore);
     };
+    const content = <div className="mcp-scroll app-scroll">{owner ? <McpManagementBody owner={owner} state={state} onBack={back}/>
+        : <p className="mcp-hint" role="alert">当前运行环境未提供 MCP 服务。请使用桌面端，或重新打开支持远程连接的浏览器工作区。</p>}</div>;
+    if (inline) return <><div className="mcp-panel mcp-inline" data-mcp-management>{content}</div>{departure.confirmation}</>;
     return <><ContextPanel open={open} width={520} onOpenChange={(next, reason) => {
         if (!next && reason !== "guard-refused" && reason !== "busy") owner?.discardDraft();
         onOpenChange(next);
@@ -42,8 +45,7 @@ export function McpConnectionsPanel({open, onOpenChange, returnFocus, returnLabe
         <ContextPanelContent className="mcp-panel" data-mcp-management returnLabel={returnLabel} onCloseAutoFocus={restoreFocus}>
             <ContextPanelHeader><ContextPanelTitle>{title}</ContextPanelTitle>
                 <ContextPanelDescription>管理当前设备的外部工具与资源。连接变化对新执行生效。</ContextPanelDescription></ContextPanelHeader>
-            <div className="mcp-scroll app-scroll">{owner ? <McpManagementBody owner={owner} state={state} onBack={back}/>
-                : <p className="mcp-hint" role="alert">当前运行环境未提供 MCP 服务。请使用桌面端，或重新打开支持远程连接的浏览器工作区。</p>}</div>
+            {content}
         </ContextPanelContent>
     </ContextPanel>{departure.confirmation}</>;
 }

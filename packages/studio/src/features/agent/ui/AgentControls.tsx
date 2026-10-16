@@ -26,8 +26,7 @@ import {getGeneralAgentConfig, updateGeneralAgentConfig} from "../commands/agent
 import {AGENT_SKILLS} from "../runtime/skills";
 import {StorageError} from "../../../platform/storage/errors";
 import {useInstalledSkills} from "./useInstalledSkills";
-import {McpConnectionsPanel} from "./McpConnectionsPanel";
-import {InstalledSkillMutationNotice, InstalledSkillsPanel} from "./InstalledSkillsPanel";
+import {InstalledSkillMutationNotice} from "./InstalledSkillsPanel";
 
 const PERMISSIONS = [
     {id: "ask", title: "请求批准", description: "编辑业务数据或使用互联网工具前询问", icon: Hand},
@@ -143,8 +142,11 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
     };
     const {config, enabledSkills: savedBuiltinSkills} = useAgentSettings();
     const installed = useInstalledSkills();
-    const [managementOpen, setManagementOpen] = useState(false);
-    const [mcpOpen, setMcpOpen] = useState(false);
+    // Management lives in Settings; the composer only links to it.
+    const openSettings = (section: "mcp" | "skills") => {
+        setOpen(false);
+        void navigate({to: "/settings", search: {section}});
+    };
     const [builtinPending, setBuiltinPending] = useState(false);
     const [builtinError, setBuiltinError] = useState<string>();
     const [builtinUnknown, setBuiltinUnknown] = useState(false);
@@ -256,7 +258,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                 },
             ] : [],
             onClick: ({key}) => {
-                if (key === "mcp") {setOpen(false); setMcpOpen(true); return;}
+                if (key === "mcp") {openSettings("mcp"); return;}
                 if (key === "import" || key === "library") {
                     setOpen(false);
                     if (key === "import") onImport?.(); else onLibrary?.();
@@ -285,7 +287,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                                                            allowClear/></div>
                 <div className="agent-control-panel-heading">创作能力</div>
                 {search.trim() ?
-                    <div className="agent-skill-list">{/mcp|连接|外部|工具|资源/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => {setOpen(false); setMcpOpen(true);}}><Plug size={16}/>MCP 连接<ChevronRight size={14}/></button>}{/导入|上传|图片|文档|文件|upload|import/i.test(search) &&
+                    <div className="agent-skill-list">{/mcp|连接|外部|工具|资源/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => openSettings("mcp")}><Plug size={16}/>MCP 连接<ChevronRight size={14}/></button>}{/导入|上传|图片|文档|文件|upload|import/i.test(search) &&
                         <button type="button" className="agent-plus-search-result" onClick={() => {
                             setOpen(false);
                             onImport?.();
@@ -341,7 +343,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                 </div>
                 {builtinError && <p className="agent-control-panel-note" role="alert">{builtinError}</p>}
                 <InstalledSkillMutationNotice controller={installed}/>
-                <button type="button" className="agent-skill-manage" onClick={() => {setOpen(false); setManagementOpen(true);}}>管理技能<ChevronRight size={14}/></button>
+                <button type="button" className="agent-skill-manage" onClick={() => openSettings("skills")}>管理技能<ChevronRight size={14}/></button>
                 <p className="agent-control-panel-note">对新执行生效，已开始的执行保留原设置。</p>
             </div>}</div>}
     >
@@ -351,5 +353,5 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                     aria-label="更多选项" aria-haspopup="menu" aria-expanded={open}><Plus size={18} aria-hidden/>
             </button>
         </Tooltip>
-    </Dropdown><InstalledSkillsPanel open={managementOpen} onOpenChange={setManagementOpen} controller={installed} returnFocus={triggerRef}/><McpConnectionsPanel open={mcpOpen} onOpenChange={setMcpOpen} returnFocus={triggerRef}/></>;
+    </Dropdown></>;
 }

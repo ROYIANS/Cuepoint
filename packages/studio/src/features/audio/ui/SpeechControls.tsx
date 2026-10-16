@@ -94,7 +94,7 @@ export function SpeechControls({segment, speaker, speakers, onVoices}: {
         {connections === undefined ? <p className="as-help">加载配音连接…</p> : !connector ? profile.mimo ?
                 <MimoConnection existing={connections.find(row => row.definitionId === "mimo")}/> :
                 <p className="as-help">这个旧音色需要 APIMart 连接。可从上方选择 MiMo
-                    默认音色，或前往“连接与模型”恢复原连接。</p> :
+                    默认音色，或前往设置的“模型”恢复原连接。</p> :
             <p className="text-xs text-muted-foreground">{profile.mimo ? "MiMo" : "APIMart · 原有音色"} ·
                 生成一个新版本，保留当前声音</p>}
         {notice && <p className="as-help" role="status">{notice}</p>}{error &&

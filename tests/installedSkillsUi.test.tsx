@@ -15,10 +15,10 @@ import {getInstalledSkillCatalogue} from "@/features/agent/skills/queries/instal
 import {StorageError} from "@/platform/storage/errors";
 import type {SkillDirectorySnapshot} from "@/platform/runtime/skillImport";
 
-const {pick, runtime} = vi.hoisted(() => ({pick: vi.fn<(operationId: string) => Promise<SkillDirectorySnapshot>>(), runtime: {native: true}}));
+const {pick, runtime, navigate} = vi.hoisted(() => ({pick: vi.fn<(operationId: string) => Promise<SkillDirectorySnapshot>>(), runtime: {native: true}, navigate: vi.fn()}));
 vi.mock("@/platform/runtime/skillImport", () => ({skillDirectoryImportServices: () => runtime.native ? {pickDirectory: pick} : undefined}));
 vi.mock("@/features/agent/ui/ContextParameters", () => ({ContextParameters: () => null}));
-vi.mock("@tanstack/react-router", () => ({useNavigate: () => vi.fn(), useBlocker: () => ({status: "idle", proceed: vi.fn(), reset: vi.fn()})}));
+vi.mock("@tanstack/react-router", () => ({useNavigate: () => navigate, useBlocker: () => ({status: "idle", proceed: vi.fn(), reset: vi.fn()})}));
 
 let root: Root, container: HTMLDivElement, portal: HTMLDivElement;
 function Fixture({width = 1440}: {width?: number}) {
@@ -152,17 +152,14 @@ describe("installed skill management in the retained workspace", () => {
         await click("重新查看当前列表"); await settle(() => expect(button("确认安装").disabled).toBe(false));
         expect(install).toHaveBeenCalledTimes(1);
     });
-    it("retains an uncertain toggle across menu and panel views, failed and unresolved readback, without replay", async () => {
+    it("retains an uncertain toggle in the composer menu and links to the skills settings section instead of managing inline", async () => {
         await review(); await click("确认安装");
         await settle(() => expect(portal.textContent).toContain("技能管理"));
         await act(async () => root.render(<ContextPanelHostProvider target={portal} surfaceWidth={1440} navigationWidth={260}><ComposerPlusMenu/></ContextPanelHostProvider>));
         await openSkillQuickMenu();
         const findQuickToggle = () => globalThis.document.querySelector<HTMLButtonElement>('[role="switch"][aria-label="启用 portable"]')!;
         await settle(() => expect(findQuickToggle()?.disabled).toBe(false));
-        const original = commands.setInstalledSkillEnabled;
-        let input!: Parameters<typeof original>[0];
-        const command = vi.spyOn(commands, "setInstalledSkillEnabled").mockImplementationOnce(async captured => {
-            input = captured;
+        const command = vi.spyOn(commands, "setInstalledSkillEnabled").mockImplementationOnce(async () => {
             throw new StorageError("unknownCommit", "unknown", "unknown");
         });
         await act(async () => findQuickToggle().click());
@@ -171,9 +168,25 @@ describe("installed skill management in the retained workspace", () => {
         await click("更多选项"); await openSkillQuickMenu();
         expect(findQuickToggle().getAttribute("aria-checked")).toBe("true"); expect(findQuickToggle().disabled).toBe(true);
         await act(async () => findQuickToggle().click()); expect(command).toHaveBeenCalledTimes(1);
+        navigate.mockClear();
         await click("管理技能");
+        expect(navigate).toHaveBeenCalledExactlyOnceWith({to: "/settings", search: {section: "skills"}});
+        expect(globalThis.document.querySelector("[data-installed-skills]")).toBeNull();
+    });
+    it("retains an uncertain toggle in the management view across failed and unresolved readback, without replay", async () => {
+        await review(); await click("确认安装");
+        await settle(() => expect(portal.textContent).toContain("技能管理"));
+        const original = commands.setInstalledSkillEnabled;
+        let input!: Parameters<typeof original>[0];
+        const command = vi.spyOn(commands, "setInstalledSkillEnabled").mockImplementationOnce(async captured => {
+            input = captured;
+            throw new StorageError("unknownCommit", "unknown", "unknown");
+        });
         const findPanelToggle = () => portal.querySelector<HTMLInputElement>('[role="switch"][aria-label="启用 portable"]')!;
-        await settle(() => expect(findPanelToggle()?.checked).toBe(true));
+        await settle(() => expect(findPanelToggle()?.disabled).toBe(false));
+        await act(async () => findPanelToggle().click());
+        await settle(() => expect(portal.textContent).toContain("保存结果尚未确认"));
+        expect(findPanelToggle().checked).toBe(true);
         expect(findPanelToggle().disabled).toBe(true);
         const held = deferred<Awaited<ReturnType<typeof commands.reconcileSkillMutation>>>();
         const reconcile = vi.spyOn(commands, "reconcileSkillMutation").mockImplementationOnce(() => held.promise)
@@ -366,5 +379,19 @@ describe("builtin skill quick switches", () => {
         expect((await originalRead()).enabledSkillIds).toEqual([key, other]);
         await settle(() => expect(toggle.disabled).toBe(false));
         expect(toggle.getAttribute("aria-checked")).toBe("true");
+    });
+});
+
+describe("installed skill management in the settings section", () => {
+    it("renders the same management content inline and imports through the shared review without a context panel", async () => {
+        const {InstalledSkillsSettings} = await import("@/features/agent/ui/InstalledSkillsSettings");
+        await act(async () => root.render(<InstalledSkillsSettings/>));
+        await settle(() => expect(button("导入技能").disabled).toBe(false));
+        expect(document.querySelector("[data-installed-skills].installed-skills-inline")).not.toBeNull();
+        expect(document.querySelector('[data-slot="context-panel-content"]')).toBeNull();
+        await click("导入技能");
+        await settle(() => expect(document.body.textContent).toContain("确认安装"));
+        expect(document.body.textContent).toContain("portable");
+        expect(button("确认安装").disabled).toBe(false);
     });
 });

@@ -190,16 +190,25 @@ describe("actual shared MCP management controls", () => {
         await click("断开连接"); expect(mcpManagementOwner()!.getSnapshot().generations).toEqual([]); await click("连接"); expect(connect).toHaveBeenCalledTimes(1); expect(host.retireServer).toHaveBeenCalledTimes(before + 1);
         await act(async () => retired.resolve({status: "drained"})); await settle(() => expect(button("连接").disabled).toBe(false));
     });
-    it("guards settings search and navigation before the edit/autofill event finishes, with independent model-editor locks", async () => {
+    it("guards settings search and navigation before the edit/autofill event finishes while an MCP connection is edited inline", async () => {
         const change = vi.fn();
-        await act(async () => root.render(<ContextPanelHostProvider target={portal} surfaceWidth={1440} navigationWidth={260}><SettingsPage section="connections" onSectionChange={change}/></ContextPanelHostProvider>));
-        await click("管理 MCP 连接"); await settle(() => expect(button("添加连接").disabled).toBe(false));
+        await act(async () => root.render(<ContextPanelHostProvider target={portal} surfaceWidth={1440} navigationWidth={260}><SettingsPage section="mcp" onSectionChange={change}/></ContextPanelHostProvider>));
+        expect(container.querySelector("h1")?.textContent).toBe("MCP");
+        await settle(() => expect(button("添加连接").disabled).toBe(false));
         const search = control("搜索设置");
         await act(async () => {button("添加连接").click(); inputNow(search, "autofill-before-render");});
         expect(search.value).toBe(""); expect(search.disabled).toBe(true); expect(control("连接名称")).toBeTruthy();
         await click("通用"); expect(change).not.toHaveBeenCalled();
-        await click("打开模型配置"); await click("关闭模型配置"); expect(search.disabled).toBe(true);
-        await click("关闭"); await settle(() => expect(search.disabled).toBe(false));
-        await input("搜索设置", "MCP"); expect(container.textContent).toContain("管理 MCP 连接"); expect(container.querySelector("h1")?.textContent).toBe("连接与模型");
+        await click("全部连接"); await settle(() => expect(search.disabled).toBe(false));
+        await input("搜索设置", "MCP"); expect(container.textContent).toContain("添加连接");
+    });
+    it("keeps the model-editor lock independent of the MCP section", async () => {
+        const change = vi.fn();
+        await act(async () => root.render(<ContextPanelHostProvider target={portal} surfaceWidth={1440} navigationWidth={260}><SettingsPage section="models" onSectionChange={change}/></ContextPanelHostProvider>));
+        expect(container.querySelector("h1")?.textContent).toBe("模型");
+        expect(container.textContent).not.toContain("添加连接");
+        const search = control("搜索设置");
+        await click("打开模型配置"); expect(search.disabled).toBe(true);
+        await click("关闭模型配置"); await settle(() => expect(search.disabled).toBe(false));
     });
 });

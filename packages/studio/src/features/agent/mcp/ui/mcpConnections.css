@@ -31,3 +31,4 @@
 .mcp-resource strong { font-size: 14px; font-weight: 500; }
 .mcp-resource code { color: var(--muted-foreground); }
 .mcp-settings-entry { padding-block: 20px; border-top: 1px solid var(--border); }
+.mcp-inline .mcp-scroll {overflow-y:visible;padding:0}

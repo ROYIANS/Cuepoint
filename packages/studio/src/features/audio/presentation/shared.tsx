@@ -88,7 +88,7 @@ export function ConnectionSelect({value, onChange, usage = "music", disabled = f
         <SelectOption value={item.id}
                       key={item.id}>{item.label || (item.definitionId === "mimo" ? "MiMo" : "APIMart")}</SelectOption>)}
     </WorkspaceSelect>{choices.length === 0 &&
-        <small>请在连接与模型中添加{usage === "speech" ? " MiMo 或 APIMart " : " APIMart "}连接后生成。</small>}</Field>;
+        <small>请在设置的“模型”中添加{usage === "speech" ? " MiMo 或 APIMart " : " APIMart "}连接后生成。</small>}</Field>;
 }
 
 export function AudioPlayer({mediaId, title, compact = false, autoplay = false, ...playback}: {
@@ -166,7 +166,7 @@ export function GenerationJobs({projectId, mode = "disclosure"}: {
                 <small>{observation.detail}</small>}{observation.checkedAt && <small>最近查询：
                 <time dateTime={observation.checkedAt}>{new Date(observation.checkedAt).toLocaleString()}</time>
             </small>}{job.error && <p className="aw-error">{job.error}</p>}{job.status === "uncertain" &&
-                <p className="aw-muted">请在服务商侧确认提交状态。系统不会重复提交此请求。</p>}</div>
+                <p className="aw-muted">未确认是否已提交，请到服务商处查看；不会重复提交。</p>}</div>
             {(job.taskIds.length > 0 || job.results.length > 0 || ["uncertain", "submitting"].includes(job.status)) && job.status !== "saved" && !job.dormant &&
                 <Button disabled={busy === job.id} size="icon-sm" variant="ghost" aria-label="刷新任务或重试下载"
                         onClick={() => {

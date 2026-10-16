@@ -1,8 +1,8 @@
 import type {Icon} from "@phosphor-icons/react/lib";
-import {Database, Info, Palette, Plug, Settings as SettingsIcon} from "../../../ui/icons";
+import {Boxes, Database, Info, Palette, Plug, Settings as SettingsIcon, Sparkles} from "../../../ui/icons";
 
 /** Sections are the single source of truth for both the rail and the search filter. */
-export type SettingsSectionId = "general" | "appearance" | "connections" | "storage" | "update";
+export type SettingsSectionId = "general" | "appearance" | "models" | "mcp" | "skills" | "storage" | "update";
 
 type SettingsRow = { id: string; title: string; description?: string; keywords?: string };
 export type SettingsSection = { id: SettingsSectionId; title: string; rows: SettingsRow[] };
@@ -26,16 +26,25 @@ export const SETTINGS_SECTIONS: (SettingsSection & { icon: Icon })[] = [
         ]
     },
     {
-        id: "connections", title: "连接与模型", icon: Plug, rows: [
+        id: "models", title: "模型", icon: Sparkles, rows: [
             {
                 id: "models",
                 title: "模型连接",
                 description: "API Key 密钥与服务商配置",
-                keywords: "provider OpenAI AIHubMix APIMart MiMo base URL"
+                keywords: "provider OpenAI AIHubMix APIMart MiMo base URL 连接"
             },
-            {id: "mcp", title: "MCP 外部工具连接", description: "本地程序与远程服务、授权和连接管理", keywords: "stdio Streamable HTTP OAuth Token 请求头 外部工具 资源"},
             {id: "search", title: "网络搜索连接", description: "Tavily 搜索密钥"},
             {id: "catalog", title: "模型目录", description: "Models.dev 价格与模型清单", keywords: "pricing 同步"},
+        ]
+    },
+    {
+        id: "mcp", title: "MCP", icon: Plug, rows: [
+            {id: "mcp", title: "MCP 外部工具连接", description: "本地程序与远程服务、授权和连接管理", keywords: "stdio Streamable HTTP OAuth Token 请求头 外部工具 资源 连接"},
+        ]
+    },
+    {
+        id: "skills", title: "技能", icon: Boxes, rows: [
+            {id: "skills", title: "已安装技能", description: "导入、启用、更新与卸载文本技能，释放历史版本", keywords: "skill SKILL.md 导入 启用 卸载 历史版本"},
         ]
     },
     {
@@ -65,6 +74,12 @@ export const SETTINGS_SECTIONS: (SettingsSection & { icon: Icon })[] = [
         ]
     },
 ];
+
+/** Former "connections" deep links (settings and /connectors) now land on the models section. */
+export function normalizeSettingsSection(value: unknown): SettingsSectionId | undefined {
+    if (value === "connections") return "models";
+    return isSettingsSectionId(value) ? value : undefined;
+}
 
 export function isSettingsSectionId(value: unknown): value is SettingsSectionId {
     return typeof value === "string" && SETTINGS_SECTIONS.some(section => section.id === value);

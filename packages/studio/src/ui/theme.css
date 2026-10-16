@@ -56,6 +56,9 @@
     --surface-app: #101010;
     --surface-panel: #151515;
     --surface-elevated: #202020;
+    /* One selected-state style: soft tint + stronger text; never a side bar. */
+    --surface-selected: rgba(255, 255, 255, 0.08);
+    --foreground-secondary: oklch(0.78 0 0);
     --background: var(--surface-app);
     --foreground: oklch(0.97 0 0);
     --card: var(--surface-panel);

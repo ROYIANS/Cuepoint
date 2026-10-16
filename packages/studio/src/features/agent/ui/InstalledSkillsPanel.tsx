@@ -26,9 +26,11 @@ export function InstalledSkillMutationNotice({controller}: {controller: Installe
 }
 
 /** The panel owns only its ephemeral review. Catalogue mutations keep one owner. */
-export function InstalledSkillsPanel({open, onOpenChange, controller, returnFocus}: {
+export function InstalledSkillsPanel({open, onOpenChange, controller, returnFocus, inline = false}: {
     open: boolean; onOpenChange: (open: boolean) => void; controller: InstalledSkillsController;
     returnFocus?: RefObject<HTMLButtonElement | null>;
+    /** Settings renders the same management content in the page instead of a context panel. */
+    inline?: boolean;
 }) {
     const [selected, setSelected] = useState<InstalledSkill>();
     const [review, setReview] = useState<Review>();
@@ -109,18 +111,11 @@ export function InstalledSkillsPanel({open, onOpenChange, controller, returnFocu
         setReview(undefined);
         setSelected(undefined);
     }
-    return <><ContextPanel open={open} width={520} onOpenChange={(next, reason) => {
-        if (next) return;
-        if (reason === "guard-refused" || reason === "busy") {onOpenChange(false); return;}
-        close();
-    }} onRequestDeparture={(proceed, cancel) => departure.requestDeparture(proceed, discard, cancel)}>
-        <ContextPanelContent returnLabel="返回对话" className="installed-skills-panel" data-installed-skills
-            onCloseAutoFocus={() => {
-                const active = document.activeElement;
-                if (!active || active === document.body || !active.isConnected) returnFocus?.current?.focus({preventScroll: true});
-            }}>
-            <ContextPanelHeader><ContextPanelTitle>{review ? review.target ? "审阅技能更新" : "审阅新技能" : selected ? "技能详情" : "技能管理"}</ContextPanelTitle>
-                <ContextPanelDescription>技能保存在当前设备。启用和更新对新执行生效。</ContextPanelDescription></ContextPanelHeader>
+    const header = inline ? null
+        : <ContextPanelHeader><ContextPanelTitle>{review ? review.target ? "审阅技能更新" : "审阅新技能" : selected ? "技能详情" : "技能管理"}</ContextPanelTitle>
+            <ContextPanelDescription>技能保存在当前设备。启用和更新对新执行生效。</ContextPanelDescription></ContextPanelHeader>;
+    const body = <>
+            {header}
             <div className="installed-skills-scroll app-scroll">
                 <InstalledSkillMutationNotice controller={controller}/>
                 {pickerError && <p className="installed-skills-error" role="alert">{pickerError}</p>}
@@ -168,6 +163,17 @@ export function InstalledSkillsPanel({open, onOpenChange, controller, returnFocu
                         setPickerError(cause instanceof Error ? cause.message : "技能文件夹读取失败");
                     });
                 }}/>
-        </ContextPanelContent>
+    </>;
+    if (inline) return <><div className="installed-skills-panel installed-skills-inline" data-installed-skills>{body}</div>{departure.confirmation}</>;
+    return <><ContextPanel open={open} width={520} onOpenChange={(next, reason) => {
+        if (next) return;
+        if (reason === "guard-refused" || reason === "busy") {onOpenChange(false); return;}
+        close();
+    }} onRequestDeparture={(proceed, cancel) => departure.requestDeparture(proceed, discard, cancel)}>
+        <ContextPanelContent returnLabel="返回对话" className="installed-skills-panel" data-installed-skills
+            onCloseAutoFocus={() => {
+                const active = document.activeElement;
+                if (!active || active === document.body || !active.isConnected) returnFocus?.current?.focus({preventScroll: true});
+            }}>{body}</ContextPanelContent>
     </ContextPanel>{departure.confirmation}</>;
 }
