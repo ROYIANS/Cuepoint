@@ -28,14 +28,14 @@ Gate: service behavior must be exercised with the actual Studio execution bindin
 
 Ownership: Agent UI/adapters, the small feature-owned scoped draft model, existing video/audio Agent generation runtimes and their intentional public lifecycle exports; app bootstrap only as composition. Avoid an unrelated audio workflow rewrite.
 
-- [ ] Connect the real Agent page to the single service; move scoped draft/reference-import ownership to a retained model while preserving whole-draft exact-revision restore.
-- [ ] Detach first-thread creation navigation from service completion. Late A receipt/error cannot select A over B or consume/restore B's draft. Unsubscribe cannot abort work.
-- [ ] Register existing model/video/audio and narrowly named AI task-wrapup preparation owners with exact requestStop/original done handles without recursive same-thread locking. Remove TaskWrapup's AI-only unmount abort/pending-departure prohibition while preserving real manual editing/saving/conflict guards and existing summary semantics. Preserve current approval/start policy and mutual exclusion.
-- [ ] Remove all execution-only leave blocker/modal, thread/new-topic abort and route-unmount Agent batch pauses, including project audio teardown's Agent-owned case. Keep manual draft/conflict/pending-mutation and deletion/clear protections.
-- [ ] Reattach uses current snapshots and saved state without a fresh store open, model request, retry, auto approval or duplicate effects. Keep startup recovery local and once per real service session.
-- [ ] Exercise actual retained Agent UI through A/B/new/settings/project/Back/Forward during preparation, streaming, approval, task-wrapup preparation and generation. Check independent Stop, drafts/optimistic identity, explicit retry and no route stealing. Summary preparation in A excludes competing same-thread Send while B continues.
-- [ ] Extend existing requested-topic/manual editor tests; update superseded execution-departure assertions rather than deleting their unrelated stale-read coverage. Update cross-feature architecture/export ownership policy only for actual new edges.
-- [ ] Update reading/business-details/jobs/batch/component specs where E11 intentionally replaces old page-bound execution statements; check and commit.
+- [x] Connect the real Agent page to the single service; move scoped draft/reference-import ownership to a retained model while preserving whole-draft exact-revision restore.
+- [x] Detach first-thread creation navigation from service completion. Late A receipt/error cannot select A over B or consume/restore B's draft. Unsubscribe cannot abort work.
+- [x] Register existing model/video/audio and narrowly named AI task-wrapup preparation owners with exact requestStop/original done handles without recursive same-thread locking. Remove TaskWrapup's AI-only unmount abort/pending-departure prohibition while preserving real manual editing/saving/conflict guards and existing summary semantics. Preserve current approval/start policy and mutual exclusion.
+- [x] Remove all execution-only leave blocker/modal, thread/new-topic abort and route-unmount Agent batch pauses, including project audio teardown's Agent-owned case. Keep manual draft/conflict/pending-mutation and deletion/clear protections.
+- [x] Reattach uses current snapshots and saved state without a fresh store open, model request, retry, auto approval or duplicate effects. Keep startup recovery local and once per real service session.
+- [x] Exercise actual retained Agent UI through A/B/new/settings/project/Back/Forward during preparation, streaming, approval, task-wrapup preparation and generation. Check independent Stop, drafts/optimistic identity, explicit retry and no route stealing. Summary preparation in A excludes competing same-thread Send while B continues.
+- [x] Extend existing requested-topic/manual editor tests; update superseded execution-departure assertions rather than deleting their unrelated stale-read coverage. Update cross-feature architecture/export ownership policy only for actual new edges.
+- [x] Update reading/business-details/jobs/batch/component specs where E11 intentionally replaces old page-bound execution statements; check and commit.
 
 Gate: at least one real browser UI fixture proves two independent requests alive and view departure without cancellation, plus an actual Agent-owned generation path. Rollback Stage 2 as a whole if integration fails; do not leave the dialog removed while page teardown still aborts.
 

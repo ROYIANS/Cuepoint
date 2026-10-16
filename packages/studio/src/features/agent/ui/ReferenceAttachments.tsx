@@ -104,7 +104,7 @@ export function ReferenceSourceLink({projectId, attachment, label, chunkIndex}: 
 
 export function ReferenceAttachments({projectId, attachments, onRemove}: {
     projectId?: string;
-    attachments: ReferenceAttachment[];
+    attachments: readonly Readonly<ReferenceAttachment>[];
     onRemove?: (attachment: ReferenceAttachment) => void
 }) {
     if (!attachments.length) return null;

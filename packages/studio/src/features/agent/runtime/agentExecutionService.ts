@@ -1,3 +1,6 @@
+import {currentAgentThreadWork, reserveAgentThreadWork, subscribeAgentThreadWork, shutdownAgentThreadWork} from "./threadWork";
+import {recoverTaskWrapups, prepareTaskWrapup} from "./taskWrapup";
+import type {AgentReasoningEffort} from "../models/agent";
 import {createId} from "../../../platform/identity";
 import {StorageError} from "../../../platform/storage/errors";
 import {resolveConnector} from "../../settings/commands/connectors";
@@ -23,10 +26,12 @@ export interface AgentExecutionSnapshot {
     readonly active: boolean;
     readonly stopping: boolean;
     readonly token?: AgentExecutionToken;
-    readonly kind?: "submit" | "retry" | "decision" | "check" | "recovery";
+    readonly kind?: "submit" | "retry" | "decision" | "check" | "recovery" | "taskWrapup" | "videoBatch" | "audioBatch";
     readonly feedback?: Readonly<ExecutionFeedbackSnapshot>;
     readonly attempts: readonly ChatSubmissionAttempt[];
     readonly error?: string;
+    readonly wrapupId?: string;
+    readonly work?: import("./threadWork").AgentThreadWork;
 }
 interface Invocation {
     token: AgentExecutionToken;
@@ -34,6 +39,7 @@ interface Invocation {
     feedback: ExecutionFeedbackInvocation;
     done: Promise<void>;
     stopping: boolean;
+    wrapupId?: string;
     kind: NonNullable<AgentExecutionSnapshot["kind"]>;
 }
 interface ThreadState {
@@ -74,6 +80,8 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
     let admissionOpen = true;
     let initialized: Promise<void> | undefined;
     let shutdownPromise: Promise<void> | undefined;
+    const scopeListeners = new Map<string, Set<() => void>>();
+    const scopeSnapshots = new Map<string, readonly ChatSubmissionAttempt[]>();
 
     function state(threadId: string): ThreadState {
         let current = threads.get(threadId);
@@ -84,16 +92,28 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             owner.feedback = feedback ? Object.freeze({...feedback}) : undefined;
             if (owner.invocation) publish(threadId, owner);
         }});
+        const work = currentAgentThreadWork(binding.store, threadId);
         current = {feedbackOwner, attempts: [], listeners: new Set(),
-            snapshot: Object.freeze({threadId, active: false, stopping: false, attempts: Object.freeze([])})};
+            snapshot: Object.freeze({threadId, active: !!work, stopping: work?.controller.signal.aborted ?? false, work,
+                kind: work?.identity.kind === "model" ? undefined : work?.identity.kind, attempts: Object.freeze([])})};
         threads.set(threadId, current);
         return current;
     }
     function publish(threadId: string, owner: ThreadState) {
         const invocation = owner.invocation;
-        owner.snapshot = Object.freeze({threadId, active: !!invocation, stopping: invocation?.stopping ?? false,
-            token: invocation?.token, kind: invocation?.kind, feedback: owner.feedback,
+        const work = currentAgentThreadWork(binding.store, threadId);
+        owner.snapshot = Object.freeze({threadId, active: !!invocation || !!work, stopping: invocation?.stopping ?? work?.controller.signal.aborted ?? false,
+            wrapupId: invocation?.wrapupId, token: invocation?.token ?? owner.lastFeedback?.token, kind: invocation?.kind ?? (work?.identity.kind === "model" ? undefined : work?.identity.kind), work, feedback: owner.feedback,
             attempts: Object.freeze([...owner.attempts]), error: owner.error});
+        for (const scope of new Set([...scopeSnapshots.keys(), ...scopeListeners.keys()])) {
+            const listeners = scopeListeners.get(scope) ?? [];
+            const previous = scopeSnapshots.get(scope);
+            const next = [...threads.values()].flatMap(entry => entry.attempts).filter(attempt => attempt.submitted.scope === scope);
+            if (!previous || previous.length !== next.length || next.some((item, index) => item !== previous[index])) {
+                scopeSnapshots.set(scope, Object.freeze(next));
+                for (const listener of [...listeners]) {try {listener();} catch { /* Detached view. */ }}
+            }
+        }
         for (const listener of [...owner.listeners]) {
             try {listener();} catch { /* A detached/broken view cannot own execution. */ }
         }
@@ -113,16 +133,22 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             model: attempt.model, projectId: attempt.projectId, content: attempt.submitted.text.trim(), attachments: attempt.submitted.attachments};
     }
     function initialize(): Promise<void> {
-        initialized ??= recoverAbandonedRuns(binding.locks, binding.store);
+        initialized ??= (async () => {
+            await recoverAbandonedRuns(binding.locks, binding.store);
+            const rows = await binding.store.agentTaskWrapups.filter(row => row.status === "preparing").toArray();
+            for (const threadId of new Set(rows.map(row => row.threadId))) await recoverTaskWrapups(threadId, binding.locks, binding.store);
+        })();
         return initialized;
     }
     function claim(threadId: string, kind: Invocation["kind"], operation: (entry: Invocation) => Promise<void>,
-                   submitted?: ChatSubmissionAttempt): AgentExecutionHandle {
+                   submitted?: ChatSubmissionAttempt, taskId?: string): AgentExecutionHandle {
         if (!admissionOpen) throw new Error("应用正在退出，暂时无法开始执行");
         const owner = state(threadId);
         if (owner.invocation) throw new Error("当前对话尚有执行未结束，请等待完成或先停止");
         const token: AgentExecutionToken = Object.freeze({[invocationBrand]: true as const, id: createId("invocation")});
         const controller = new AbortController();
+        const reservation = reserveAgentThreadWork(binding.store, kind === "taskWrapup" ? {kind, threadId, taskId: taskId!} :
+            {kind: "model", threadId, invocationId: token.id}, controller);
         // Feedback initialization is private until the complete reservation is published.
         let resolveDone!: () => void;
         let rejectDone!: (cause: unknown) => void;
@@ -158,8 +184,9 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
                 }
             }
         })();
+        reservation.follow(done);
         void done.catch(() => undefined);
-        return Object.freeze({threadId, token, done});
+        return Object.freeze({threadId, token, done: reservation.work.done});
     }
     async function checkAttempt(attempt: ChatSubmissionAttempt, feedback?: ExecutionFeedbackInvocation) {
         const status = await readAgentAdmission(admissionInput(attempt), binding.store);
@@ -215,11 +242,15 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             throw cause;
         }
     }
-    function submit(input: {attempt: ChatSubmissionAttempt; modelMetadata?: ChatModelMetadata}) {
+    function submit(input: {attempt: ChatSubmissionAttempt; modelMetadata?: ChatModelMetadata; afterOptimisticPaint?: Promise<void>}) {
         const attempt = freezeAttempt({...input.attempt, phase: "preparing", error: undefined});
         if (state(attempt.threadId).attempts.some(item => item.admission.userMessageId === attempt.admission.userMessageId)) throw new Error("发送内容已提交，请使用原发送记录");
         const modelMetadata = input.modelMetadata ? structuredClone(input.modelMetadata) : undefined;
-        return claim(attempt.threadId, "submit", entry => send(attempt, entry, modelMetadata), attempt);
+        return claim(attempt.threadId, "submit", async entry => {
+            await input.afterOptimisticPaint;
+            if (entry.controller.signal.aborted) {patchAttempt(attempt.threadId, attempt.admission.userMessageId, {phase: "failed", error: "发送已停止，可重试或恢复草稿"}); return;}
+            await send(attempt, entry, modelMetadata);
+        }, attempt);
     }
     function retrySubmission(input: {threadId: string; userMessageId: string; modelMetadata?: ChatModelMetadata}) {
         const attempt = attemptFor(input.threadId, input.userMessageId);
@@ -237,13 +268,44 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             if (checked && !checked.ok && !checked.aborted) state(input.threadId).error = checked.message;
         });
     }
+    subscribeAgentThreadWork(binding.store, () => {
+        for (const [threadId, owner] of threads) publish(threadId, owner);
+    });
     return {
         initialize,
+        prepareTaskWrapup(input: {threadId: string; taskId: string; connectorId: string; model: string;
+            reasoningEffort?: AgentReasoningEffort; modelMetadata?: ChatModelMetadata}) {
+            const captured = {...input, modelMetadata: input.modelMetadata ? structuredClone(input.modelMetadata) : undefined};
+            return claim(input.threadId, "taskWrapup", async entry => {
+                const task = await binding.store.agentTasks.get(captured.taskId);
+                if (!task || task.threadId !== captured.threadId) throw new Error("任务归属已变化");
+                const connector = await resolveConnector(captured.connectorId, binding.store);
+                if (!connector) throw new Error("连接不存在，请重新配置");
+                if (entry.controller.signal.aborted) return;
+                await prepareTaskWrapup(captured.taskId, connector, captured.model, entry.controller, binding.fetchImpl,
+                    captured.reasoningEffort, captured.modelMetadata, binding.locks, binding.store, id => {
+                        entry.wrapupId = id; publish(input.threadId, state(input.threadId));
+                    });
+            }, undefined, input.taskId);
+        },
         snapshot: (threadId: string): AgentExecutionSnapshot => state(threadId).snapshot,
         subscribe(threadId: string, listener: () => void) {
             const owner = state(threadId);
             owner.listeners.add(listener);
             return () => {owner.listeners.delete(listener);};
+        },
+        attemptsForScope(scope: string) {
+            let snapshot = scopeSnapshots.get(scope);
+            if (!snapshot) {
+                snapshot = Object.freeze([...threads.values()].flatMap(entry => entry.attempts).filter(attempt => attempt.submitted.scope === scope));
+                scopeSnapshots.set(scope, snapshot);
+            }
+            return snapshot;
+        },
+        subscribeScope(scope: string, listener: () => void) {
+            let listeners = scopeListeners.get(scope);
+            if (!listeners) {listeners = new Set(); scopeListeners.set(scope, listeners);}
+            listeners.add(listener); return () => {listeners.delete(listener);};
         },
         submit, retrySubmission,
         retry(input: {threadId: string; runId: string}) {
@@ -276,10 +338,11 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             if (attempt.phase !== "accepted" || !attempt.recoveryRequired) throw new Error("此发送记录不需要恢复状态");
             return claim(input.threadId, "recovery", async entry => {
                 // Real lock-aware local recovery only. Never model/tool dispatch.
-                await withThreadRunLock(input.threadId, () => {
+                try {await withThreadRunLock(input.threadId, () => {
                     if (!entry.controller.signal.aborted) patchAttempt(input.threadId, input.userMessageId, {recoveryRequired: false, error: undefined});
                     return Promise.resolve();
                 }, binding.locks, binding.store);
+                } catch (cause) {patchAttempt(input.threadId, input.userMessageId, {error: "暂时无法恢复对话，请稍后重试"}); throw cause;}
             });
         },
         requestStop(input: {threadId: string; token: AgentExecutionToken}): boolean {
@@ -289,6 +352,12 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             entry.feedback.requestStop();
             publish(input.threadId, owner);
             entry.controller.abort();
+            return true;
+        },
+        requestWorkStop(input: {threadId: string; work: import("./threadWork").AgentThreadWork}): boolean {
+            if (currentAgentThreadWork(binding.store, input.threadId) !== input.work || input.work.controller.signal.aborted) return false;
+            input.work.controller.abort();
+            publish(input.threadId, state(input.threadId));
             return true;
         },
         feedback(threadId: string, token: AgentExecutionToken): ExecutionFeedbackInvocation | undefined {
@@ -318,7 +387,7 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
                     entry.controller.abort();
                 }
             }
-            void Promise.allSettled(current.map(({entry}) => entry.done)).then(resolveShutdown);
+            void Promise.allSettled([...current.map(({entry}) => entry.done), shutdownAgentThreadWork(binding.store)]).then(resolveShutdown);
             return shutdownPromise;
         }
     };

@@ -8,15 +8,13 @@ Read before changing Agent topic query loading, departure eligibility, following
 
 AgentChatPage keeps inline readonly ProductStore queries with explicit requested identity: message reads return `{forThreadId: string | null, messages: ChatMessage[]}`, run reads `{forThreadId: string | null, runs: AgentRun[]}` and current-topic compaction reads the corresponding `{forThreadId, compactions}` envelope. The querier captures the requested ID in the same invocation as its actual read. No generic query-hook retention policy changes.
 
-`useThreadDeparture(threadId, runs)` filters exact current-thread rows before both blocking and executing predicates. `MessageList` receives explicit topic identity through ChatWorkspace and owns its viewport/following refs plus a local paused boolean. Reading does not acquire or release runtime ownership.
+E11 removes the execution-only `useThreadDeparture` owner. Requested-thread rows still govern retry/current-run/task actions; ordinary navigation does not block or cancel execution. `MessageList` receives explicit topic identity through ChatWorkspace and owns its viewport/following refs plus a local paused boolean. Reading does not acquire or release runtime ownership.
 
 ## 3. Contracts
 
 Treat an unmatched retained result as undefined/loading, including a retained empty array. Only a matching successful empty result means an empty topic. Match requested identity and then filter returned rows by thread. Use those owned values for all parent consumers: departure, retry, current run, project locks, attention/task state, transcript and inspector. A matching messages result may render while runs are pending. Never attach today's active ID to yesterday's result after the query, turn errors into empty success or remount the execution owner to clear data.
 
-Keep real current running/approval/resumable-tool departure confirmation and its existing cancel/confirm/single-use bypass. Foreign rows do not produce a current-thread block or reset its leaving state. Returning from an in-workspace detail or to the latest output is local reading and never requests departure or abort.
-
-A confirmation's armed bypass belongs to that topic and the work it covered. Clear it on actual topic change so a previously confirmed A departure cannot silently approve the first B departure. When an owned topic starts executing again after the confirmed work stopped, reset both old leaving and armed state; a failed navigation/create/delete cannot leave permission for the new execution. A repeated router callback for the same confirmed navigation must still avoid asking twice; test these cases through the real hook.
+Running, parked approval and resumable tool history cannot require stopping before ordinary departure. Their existing same-thread admission and explicit resume/end actions remain authoritative. Preserve manual editor dirty/pending/conflict and destructive safeguards. Returning from an in-workspace detail or to the latest output remains local reading and never requests an execution Stop. See [execution ownership](./agent-execution.md) for retained work and exact attachment generation.
 
 Keep the existing 300px bottom threshold, instant `scrollTop = scrollHeight`, content ResizeObserver and bounded initial animation frame. Refs decide following synchronously. React stores only a transition boolean local to the transcript; no root scroll offsets or per-token effects. Manual rail/activity/disclosure pauses following, streaming/resize while paused does not move the reader, and returning within the existing threshold can resume. New user message identity resumes following; observation replacing an optimistic user row with the same reserved ID does not.
 
@@ -34,7 +32,7 @@ Show one native icon button only while paused, horizontally centered within the 
 | B empty read successfully observed | Real empty B presentation |
 | Retired A observer publishes late | Existing query cleanup and envelope keep B unchanged |
 | Foreign running row supplied to departure for B | No fabricated B confirmation |
-| Actual B running/approval/resumable tool work | Existing explicit departure confirmation and bypass preserved |
+| Actual B running/approval/resumable tool work | Ordinary departure continues without execution dialog/abort; explicit owned controls remain |
 | Reader scrolls outside bottom threshold / uses rail | Pause, show one return action, preserve position during content growth |
 | Return action activated | Immediate snap, renewed follow and deliberate viewport focus |
 | Same reserved user ID becomes durable | No new-turn scroll reset or duplicate bubble |
@@ -47,7 +45,7 @@ Good: switching from empty A to held B shows B loading, while the still-mounted 
 
 ## 6. Necessary verification
 
-Use actual supplied ProductStore observer queries with controlled delivery outside transactions. Cover A-to-B held, empty A-to-pending B, observed empty B and stale A completion. Exercise parent action consumers and the real departure hook, including genuine confirmation/cancel/bypass and resumable work.
+Use actual supplied ProductStore observer queries with controlled delivery outside transactions. Cover A-to-B held, empty A-to-pending B, observed empty B and stale A completion. Exercise parent action consumers and real routed departure, including active/approval/resumable work continuing without a stop dialog. Preserve unrelated manual editor confirmation/cancel behavior.
 
 Use actual MessageList ReactDOM with controlled geometry and ResizeObserver for paused growth, rail/activity pause, return activation/focus/renewed following, same-ID acknowledgement and explicit topic changes. Preserve E01 mounted detail, E02 quiet fallback/canonical IDs and E03 Stop/DOM probes. Controlled DOM geometry is not a browser layout claim. Run only necessary affected tests/types/lint/architecture under the owner's batch cadence; broad/native/build acceptance stays distinct.
 
@@ -55,4 +53,4 @@ Use actual MessageList ReactDOM with controlled geometry and ResizeObserver for 
 
 Wrong: infer requested identity from the first result row, or pass cached A arrays into B action guards and rely on child filtering. Reset reading from every message-array or assistant-text update.
 
-Correct: capture requested identity inside each query, derive owned data once before all consumers, enforce thread ownership again at departure, and keep reading intent in local synchronous refs with a single actionable return control.
+Correct: capture requested identity inside each query, derive owned data once before all consumers, enforce exact thread ownership at mutation/Stop boundaries, and keep reading intent in local synchronous refs with a single actionable return control.

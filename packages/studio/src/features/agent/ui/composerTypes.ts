@@ -13,8 +13,8 @@ export type {AgentInteractionMode} from "../models/agent";
 
 export type ComposerProps = {
     threadId?: string;
-    attachments?: ReferenceAttachment[];
-    referenceImports?: ReferenceImportDraft[];
+    attachments?: readonly Readonly<ReferenceAttachment>[];
+    referenceImports?: readonly Readonly<ReferenceImportDraft>[];
     onAttachReference?: (attachment: ReferenceAttachment) => void;
     onRemoveReference?: (attachment: ReferenceAttachment) => void;
     onImportReferences?: (files: File[]) => void;

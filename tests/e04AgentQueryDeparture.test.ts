@@ -54,7 +54,6 @@ vi.mock("@/features/audio/generation/batchRuntime", () => ({pauseAudioGeneration
 vi.mock("@/features/settings/models/connectors", () => ({discoverConnectorChatModels: vi.fn().mockResolvedValue({ok: true, models: ["model"]}), runWithCompatibleChatModel: vi.fn()}));
 
 import {AgentChatPage} from "@/features/agent/ui/AgentChatPage";
-import {useThreadDeparture} from "@/features/agent/ui/useThreadDeparture";
 
 type Read = {query: (tx: StoreTx) => unknown | Promise<unknown>; observer: StoreObserver<unknown>; stopped: boolean};
 let root: Root, container: HTMLDivElement;
@@ -73,10 +72,6 @@ async function publish(read: Read, value?: unknown) {
 }
 async function draw(threadId: string | undefined) {await act(async () => root.render(h(AgentChatPage, {threadId})));}
 const workspace = () => container.querySelector("[data-workspace]")!;
-async function click(text: string) {
-    const button = [...container.querySelectorAll("button")].find(button => button.textContent === text)!;
-    expect(button, text).toBeTruthy(); await act(async () => button.click());
-}
 beforeEach(async () => {
     router.status = "idle"; vi.clearAllMocks();
     vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
@@ -127,7 +122,7 @@ describe("actual Agent query observation ownership", () => {
             coverage: [], input: [], policy: DEFAULT_CONTEXT_POLICY, connector: run("A").connector, model: "model",
             content: "", beforeTokens: 1, createdAt: timestamp, updatedAt: timestamp});
         const initial = await mountA();
-        expect(container.textContent).toContain("A private text"); expect(router.shouldBlock()).toBe(true);
+        expect(container.textContent).toContain("A private text"); expect(router.shouldBlock()).toBe(false);
         expect(container.textContent).toContain("正在整理较早的对话…");
         const oldMessages = await query(initial[6]), oldRuns = await query(initial[8]);
         await draw("B"); await publish(reads[9]);
@@ -140,7 +135,7 @@ describe("actual Agent query observation ownership", () => {
         expect(workspace().getAttribute("data-message-state")).toBe("loading"); expect(router.shouldBlock()).toBe(false);
         await db.agentRuns.add(run("B", "waiting_approval"));
         await publish(reads[12]);
-        expect(workspace().getAttribute("data-run-state")).toBe("run-B"); expect(router.shouldBlock()).toBe(true);
+        expect(workspace().getAttribute("data-run-state")).toBe("run-B"); expect(router.shouldBlock()).toBe(false);
         expect(container.textContent).not.toContain("正在整理较早的对话");
         await db.agentRuns.update("run-B", {status: "running"}); await publish(reads[12]);
         expect(container.textContent).toContain("正在执行");
@@ -158,58 +153,11 @@ describe("actual Agent query observation ownership", () => {
     });
 });
 
-describe("departure hook's own thread boundary", () => {
-    let departure: ReturnType<typeof useThreadDeparture>;
-    function Fixture({threadId, runs}: {threadId?: string; runs: AgentRun[]}) {
-        departure = useThreadDeparture(threadId, runs); return departure.confirmation;
-    }
-    async function render(threadId: string | undefined, runs: AgentRun[]) {await act(async () => root.render(h(Fixture, {threadId, runs})));}
-    it("ignores foreign and home runs, keeps cancel and confirms a true owned departure once", async () => {
-        const leave = vi.fn(); await render("B", [run("A")]);
-        expect(router.shouldBlock()).toBe(false); await act(async () => departure.request(leave)); expect(leave).toHaveBeenCalledTimes(1);
-        await render(undefined, [run("A")]); expect(router.shouldBlock()).toBe(false);
-        await render("B", [run("B")]); expect(router.shouldBlock()).toBe(true);
-        leave.mockClear(); await act(async () => {departure.request(leave); departure.request(leave);});
-        expect(leave).not.toHaveBeenCalled(); expect(container.textContent).toContain("当前话题仍在执行");
-        await click("留在当前话题"); expect(leave).not.toHaveBeenCalled(); expect(router.shouldBlock()).toBe(true);
-        await act(async () => departure.request(leave)); await click("停止并离开");
-        expect(leave).toHaveBeenCalledTimes(1); expect(router.shouldBlock()).toBe(false);
-        await render("A", [run("A")]); expect(router.shouldBlock()).toBe(true);
-    });
-    it("drops a previous topic's pending local confirmation instead of running its callback under the new owner", async () => {
-        const oldLeave = vi.fn(), newLeave = vi.fn();
-        await render("A", [run("A")]); await act(async () => departure.request(oldLeave));
-        expect(container.textContent).toContain("当前话题仍在执行");
-        await render("B", [run("B")]);
-        expect(container.querySelector("[data-departure-confirmation]")).toBeNull();
-        expect(router.shouldBlock()).toBe(true);
-        await act(async () => departure.request(newLeave)); await click("停止并离开");
-        expect(newLeave).toHaveBeenCalledTimes(1); expect(oldLeave).not.toHaveBeenCalled();
-    });
-    it("requires a fresh confirmation when the same topic executes again after a confirmed departure stays local", async () => {
-        const leave = vi.fn();
-        await render("B", [run("B")]); await act(async () => departure.request(leave));
-        await click("停止并离开"); expect(leave).toHaveBeenCalledTimes(1);
-        expect(router.shouldBlock()).toBe(false);
-        expect(router.shouldBlock()).toBe(false);
-        await render("B", [run("B", "interrupted", true)]);
-        expect(router.shouldBlock()).toBe(false);
-        await render("B", [run("B")]);
-        expect(router.shouldBlock()).toBe(true);
-        await act(async () => departure.request(leave));
-        expect(container.querySelector("[data-departure-confirmation]")).toBeTruthy();
-        expect(leave).toHaveBeenCalledTimes(1);
-    });
-    it.each(["waiting_approval", "interrupted", "failed"] as const)("preserves owned %s confirmation and one-use bypass", async status => {
-        await render("B", [run("B", status, true)]); expect(router.shouldBlock()).toBe(true);
-        departure.armOnce(); expect(router.shouldBlock()).toBe(false); expect(router.shouldBlock()).toBe(true);
-        const leave = vi.fn(); await act(async () => departure.request(leave));
-        expect(leave).not.toHaveBeenCalled(); await click("停止并离开"); expect(leave).toHaveBeenCalledTimes(1);
-    });
-    it("resolves a blocked browser departure through the same confirmation and leaves cancellation in place", async () => {
-        router.status = "blocked"; await render("B", [run("B")]);
-        await click("留在当前话题"); expect(router.reset).toHaveBeenCalledTimes(1); expect(router.proceed).not.toHaveBeenCalled();
-        await render("B", [run("B")]); await click("停止并离开");
-        expect(router.proceed).toHaveBeenCalledTimes(1);
-    });
+it("running and parked owned runs do not install an execution-only departure blocker", async () => {
+    await db.agentRuns.add(run("A", "waiting_approval", true));
+    await draw("A"); for (const read of [...reads]) await publish(read);
+    expect(router.shouldBlock()).toBe(false);
+    expect(container.querySelector("[data-departure-confirmation]")).toBeNull();
+    await db.agentRuns.update("run-A", {status: "running"}); await publish(reads[8]);
+    expect(router.shouldBlock()).toBe(false);
 });

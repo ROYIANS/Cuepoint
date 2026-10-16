@@ -32,7 +32,8 @@ async function attempt(config: ConnectorConfig, threadId?: string): Promise<Chat
 }
 const tracked: ReturnType<typeof createAgentExecutionService>[] = [];
 function service(options: Parameters<typeof createAgentExecutionService>[0]) {
-    const owner = createAgentExecutionService(options); tracked.push(owner); return owner;
+    const store = options.store === db ? new Proxy(db, {}) : options.store;
+    const owner = createAgentExecutionService({...options, store}); tracked.push(owner); return owner;
 }
 afterEach(async () => {for (const owner of tracked.splice(0)) await owner.shutdown(); vi.restoreAllMocks();});
 

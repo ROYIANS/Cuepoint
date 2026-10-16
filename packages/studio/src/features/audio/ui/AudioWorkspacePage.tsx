@@ -40,7 +40,7 @@ import "./story-workspace.css";
 export function AudioWorkspacePage({projectId}: { projectId: string }) {
     useProjectAudioJobs(projectId);
     useEffect(() => {
-        const pause = () => pauseAudioGenerationBatches({projectId});
+        const pause = () => pauseAudioGenerationBatches({projectId, projectOnly: true});
         window.addEventListener("pagehide", pause);
         return () => {
             window.removeEventListener("pagehide", pause);

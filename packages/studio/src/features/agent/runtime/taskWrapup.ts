@@ -1,3 +1,4 @@
+import {resolveConnector} from "../../settings/commands/connectors";
 import type {ProductStore} from "../../../platform/storage/types";
 import {db as productDb} from "../../../platform/product/store";
 import {publishTaskWrapup, startTaskWrapup, stopTaskWrapup} from "../commands/agentTaskWrapups";
@@ -21,9 +22,11 @@ function redact(text: string, key: string) {
 }
 
 /** Explicit, one request, no tools. The persisted preparing row also protects direct repository callers. */
-export async function prepareTaskWrapup(taskId: string, connector: ConnectorConfig, model: string, controller: AbortController, fetchImpl?: typeof fetch, reasoningEffort?: AgentReasoningEffort, modelMetadata?: ChatModelMetadata, locks?: ThreadLockManager, store?: ProductStore) {
+export async function prepareTaskWrapup(taskId: string, connector: ConnectorConfig, model: string, controller: AbortController, fetchImpl?: typeof fetch, reasoningEffort?: AgentReasoningEffort, modelMetadata?: ChatModelMetadata, locks?: ThreadLockManager, store?: ProductStore, onPrepared?: (id: string) => void) {
     const db = store ?? productDb;
     const identity = connectorRunIdentity(connector);
+    const usedKeys = new Set([connector.apiKey]);
+    const safe = (text: string) => [...usedKeys].reduce((value, key) => redact(value, key), text);
     if (!connector.apiKey.trim() || !model.trim()) throw new Error('请选择模型并配置连接');
     assertReasoningEffort(identity, model, reasoningEffort);
     const task = await db.agentTasks.get(taskId);
@@ -31,12 +34,13 @@ export async function prepareTaskWrapup(taskId: string, connector: ConnectorConf
     return withThreadRunLock(task.threadId, async () => {
         controller.signal.throwIfAborted();
         const record = await startTaskWrapup(taskId, 'ai', db);
+        onPrepared?.(record.id);
         try {
             const currentTask = await db.agentTasks.get(taskId);
             if (!currentTask) throw new Error("任务不存在");
             const messages: AgentRequestMessage[] = [{role: 'system', content: instructions}, {
                 role: 'user',
-                content: redact(JSON.stringify({
+                content: safe(JSON.stringify({
                     task: {
                         title: currentTask.title,
                         goal: currentTask.goal,
@@ -45,18 +49,24 @@ export async function prepareTaskWrapup(taskId: string, connector: ConnectorConf
                     criteria: record.snapshot.criteria,
                     coverage: record.snapshot.coverage,
                     evidence: record.snapshot.evidence
-                }), connector.apiKey)
+                }))
             }];
             const thread = await db.chatThreads.get(record.threadId);
             const capacity = resolveContextCapacity(model, modelMetadata, identity.definitionId, normalizeContextPolicy(thread?.contextPolicy)).capacity;
             const budget = budgetContext(messages, [], capacity);
             if (budget.overBudget) throw new Error('当前资料超过所选模型的安全输入预算，请选择更大上下文模型或手动整理总结');
             controller.signal.throwIfAborted();
+            const current = await resolveConnector(identity.id, db);
+            if (!current || !current.apiKey.trim()) throw new Error("原连接不可用，请重新配置后整理");
+            usedKeys.add(current.apiKey);
+            const refreshed = connectorRunIdentity(current);
+            if (refreshed.id !== identity.id || refreshed.definitionId !== identity.definitionId || refreshed.baseUrl !== identity.baseUrl) throw new Error("原连接已变化，请重新选择后整理");
+            controller.signal.throwIfAborted();
             const protocol = selectAgentProtocol(identity, model, reasoningEffort, false),
                 transport = protocol === 'responses' ? streamResponses : streamChatCompletions;
             const result = await transport({
                 baseUrl: identity.baseUrl,
-                apiKey: connector.apiKey,
+                apiKey: current.apiKey,
                 connectorDefinitionId: identity.definitionId,
                 model,
                 reasoningEffort,
@@ -67,13 +77,14 @@ export async function prepareTaskWrapup(taskId: string, connector: ConnectorConf
             if (!result.ok) throw new Error(result.message);
             if (result.toolCalls?.length || result.content.length > 100000) throw new Error('总结响应无效');
             const raw = result.content.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
-            return await publishTaskWrapup(record.id, JSON.parse(redact(raw, connector.apiKey)), controller.signal, db);
+            return await publishTaskWrapup(record.id, JSON.parse(safe(raw)), controller.signal, db);
         } catch (error) {
-            const message = controller.signal.aborted ? '整理已停止，原有总结保留。' : redact(error instanceof Error ? error.message : '总结整理失败', connector.apiKey).slice(0, 300);
+            const message = controller.signal.aborted ? '整理已停止，原有总结保留。' : safe(error instanceof Error ? error.message : '总结整理失败').slice(0, 300);
             await stopTaskWrapup(taskId, record.id, controller.signal.aborted ? 'interrupted' : 'failed', message, db);
+            // eslint-disable-next-line preserve-caught-error -- Transport causes can contain credentials; only redacted text crosses this boundary.
             throw new Error(message);
         }
-    }, locks);
+    }, locks, db);
 }
 
 /** Recovery probes ownership, never sends another request or cancels a live tab. */

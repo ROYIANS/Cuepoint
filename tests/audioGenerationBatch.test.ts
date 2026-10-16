@@ -10,9 +10,10 @@ import {
     confirmAudioGenerationBatch, controlAudioGenerationBatch, includeAudioBatchItem, prepareAudioGenerationBatch,
     readAudioGenerationBatch, retryFailedAudioBatch
 } from "@/features/audio/commands/batches";
-import {audioBatchUserAction, reconcileAudioBatchHistory, recoverAudioGenerationBatch, startAudioGenerationBatch, stopAudioGenerationBatch} from "@/features/audio/generation/batchRuntime";
+import {audioBatchUserAction, pauseAudioGenerationBatches, reconcileAudioBatchHistory, recoverAudioGenerationBatch, startAudioGenerationBatch, stopAudioGenerationBatch} from "@/features/audio/generation/batchRuntime";
 import {collectMediaIds, deleteMediaIfOrphan} from "@/features/library/commands/media";
 import {exportProjectZip, importProjectZip} from "@/app/workflows/packages/projectPackage";
+import {createAgentExecutionService} from "@/features/agent/runtime/agentExecutionService";
 import {createChatThread} from "@/features/agent/commands/chat";
 import {beginAgentRun, finishAgentRun} from "@/features/agent/commands/agentRuns";
 import {transitionToolCall} from "@/features/agent/commands/agentTools";
@@ -28,7 +29,7 @@ import type {ThreadLockManager} from "@/features/agent/runtime/runOwnership";
 import type {AgentToolContext} from "@/features/agent/runtime/tools";
 import {encodePcm16Wav} from "@/features/audio/engine/wav";
 
-const connector: ConnectorConfig = {id: "batch-apimart", definitionId: "apimart", apiKey: "batch-private-key", baseUrl: "https://audio.example/v1", updatedAt: "2026-10-10"};
+const connector: ConnectorConfig = {id: "batch-apimart", definitionId: "apimart", protocol: "openai-compatible", apiKey: "batch-private-key", baseUrl: "https://audio.example/v1", updatedAt: "2026-10-10"};
 const decode = async () => ({durationSec: 2.5, sampleRate: 48000, channels: 1});
 const binary = () => new Response(new Uint8Array([82, 73, 70, 70]), {headers: {"Content-Type": "audio/wav"}});
 function locks(): ThreadLockManager {
@@ -237,7 +238,7 @@ describe("durable reviewed audio batches", () => {
     it("freezes real clone bytes, retains references in cancelled history and fails a changed clone before confirmation", async () => {
         const f = await fixture(1);
         const blob = encodePcm16Wav({length: 16, sampleRate: 48000, numberOfChannels: 1, getChannelData: () => new Float32Array(16)}).blob;
-        await db.connectors.put({id: "batch-mimo", definitionId: "mimo", apiKey: "private-mimo", baseUrl: "https://mimo.example/v1", updatedAt: "now"});
+        await db.connectors.put({id: "batch-mimo", definitionId: "mimo", protocol: "openai-compatible", apiKey: "private-mimo", baseUrl: "https://mimo.example/v1", updatedAt: "now"});
         await db.media.add({id: "reference", projectId: f.project.id, blob, mimeType: "audio/wav", filename: "reference.wav"});
         await patchAudioSpeaker(f.project.id, f.speaker.id, f.speaker.revision, {voice: "mimo_default", mimo: {mode: "clone", instruction: "", referenceMediaId: "reference"}});
         const draft = await prepareAudioGenerationBatch(f.args); const before = await readAudioGenerationBatch(f.project.id, draft.id);
@@ -324,6 +325,22 @@ describe("durable reviewed audio batches", () => {
 });
 
 describe("Agent batch preparation, evidence and completion", () => {
+    it("retains Agent-owned audio through project teardown and admits the first service observer", async () => {
+        const f = await agentFixture(1), draft = (await readAudioGenerationBatch(f.project.id, f.id)).batch;
+        await confirmAudioGenerationBatch(f.project.id, f.id, draft.revision);
+        let enter!: () => void, release!: () => void, signal!: AbortSignal;
+        const entered = new Promise<void>(resolve => {enter = resolve;}), held = new Promise<void>(resolve => {release = resolve;});
+        const fetchImpl = vi.fn<typeof fetch>(async (_url, init) => {signal = init!.signal!; enter(); await held; return binary();});
+        const running = startAudioGenerationBatch(f.project.id, f.id, {agentThreadId: f.thread.id, locks: f.locks, fetchImpl, decode});
+        const owner = createAgentExecutionService({store: db});
+        expect(owner.snapshot(f.thread.id)).toMatchObject({active: true, kind: "audioBatch"});
+        await entered;
+        pauseAudioGenerationBatches({projectId: f.project.id, projectOnly: true});
+        expect(signal.aborted).toBe(false);
+        release(); await running;
+        expect((await readAudioGenerationBatch(f.project.id, f.id)).counts.saved).toBe(1);
+        expect(owner.snapshot(f.thread.id).active).toBe(false); expect(fetchImpl).toHaveBeenCalledOnce();
+    });
     it("writes preparation and its real ledger result atomically, without granting paid approval", async () => {
         const f = await agentFixture(); const call = await db.agentToolCalls.get(f.call.id);
         expect(call?.status).toBe("completed"); expect(JSON.parse(call!.result!)).toMatchObject({batchId: f.id, submitted: false, confirmed: false});

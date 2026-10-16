@@ -33,14 +33,14 @@
   "notes": "Final E11 plan approved on 2026-10-16: 进入开发吧. Six owner outcomes and four source stages are authorized. Stage commits preauthorized; no push. Full/installed gates remain epic batch.",
   "meta": {
     "epicCode": "E11",
-    "deliveryState": "stage-1-reviewed-stage-2-next",
+    "deliveryState": "stage-2-reviewed",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Stage 1 source implementation and independent review passed; commit locally then integrate retained views/drafts/generation in Stage 2.",
+    "readiness": "Stages 1 and 2 reviewed; commit Stage 2, then native single-instance/background/Quit implementation.",
     "ownerRequirements20261016": [
       "Sidebar per-conversation loading/in-progress icon",
       "Sidebar per-conversation unread indicator",
@@ -83,7 +83,26 @@
         },
         "lint": "0 errors; 30 existing UI warnings",
         "evidence": "results.md",
-        "nativeInstalledAcceptance": "not performed; later stage/final batch"
+        "nativeInstalledAcceptance": "not performed; later stage/final batch",
+        "commit": "7f602119"
+      },
+      "stage2": {
+        "status": "reviewed-passed",
+        "date": "2026-10-16",
+        "sourceTests": {
+          "files": 16,
+          "passed": 200
+        },
+        "browserCases": 7,
+        "finiteTypecheck": "passed; 28 changed extant TS inputs included; zero omitted",
+        "architecture": {
+          "sources": 731,
+          "failures": 0,
+          "cycles": 0
+        },
+        "lint": "18 changed product files; 0 errors; 35 existing warnings",
+        "evidence": "results.md",
+        "nativeInstalledAcceptance": "not performed; Stage 3/final batch"
       }
     }
   }

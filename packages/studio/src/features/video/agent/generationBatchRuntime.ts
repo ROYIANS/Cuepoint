@@ -1,3 +1,4 @@
+import {reserveAgentThreadWork} from "../../agent/runtime/threadWork";
 import type {ProductStore} from "../../../platform/storage/types";
 import {resolveConnector} from "../../settings/commands/connectors";
 import {db as productDb} from '../../../platform/product/store';
@@ -48,6 +49,7 @@ export async function startGenerationBatch(id: string, threadId: string, options
 } = {}) {
     if (workers.has(threadId)) throw new Error('此对话已有批次正在执行');
     const controller = new AbortController();
+    const reservation = reserveAgentThreadWork(productDb, {kind: "videoBatch", threadId, batchId: id}, controller);
     const abort = () => controller.abort();
     options.signal?.addEventListener('abort', abort, {once: true});
     if (options.signal?.aborted) controller.abort();
@@ -63,6 +65,7 @@ export async function startGenerationBatch(id: string, threadId: string, options
     worker.done = withThreadRunLock(threadId, async () => {
         worker.ownsLock = true;
         const context = {threadId, signal: controller.signal};
+        controller.signal.throwIfAborted();
         await ownedGenerationBatch(id, threadId);
         await controlGenerationBatch(id, threadId, 'run');
         // Storage may be the reason execution stopped. Do not rely solely on a
@@ -76,7 +79,7 @@ export async function startGenerationBatch(id: string, threadId: string, options
         const settleWorkers = async (execute: () => Promise<void>) => {
             const outcomes = await Promise.allSettled(Array.from({length: BATCH_CONCURRENCY}, execute));
             const failed = outcomes.find(outcome => outcome.status === 'rejected');
-            if (failed?.status === 'rejected') throw failed.reason;
+            if (failed?.status === 'rejected') throw failed.reason instanceof Error ? failed.reason : new Error("批次子任务失败", {cause: failed.reason});
         };
         try {
             // Retrieval comes first; a saved accepted job is never submitted a second time.
@@ -146,6 +149,7 @@ export async function startGenerationBatch(id: string, threadId: string, options
         workers.delete(threadId);
         options.signal?.removeEventListener('abort', abort);
     });
+    reservation.follow(worker.done);
     return worker.done;
 }
 
@@ -159,7 +163,7 @@ export async function stopGenerationBatch(id: string, threadId: string, action: 
     await batchUserAction(threadId, () => controlGenerationBatch(id, threadId, action), locks);
 }
 
-/** Page teardown stops local waits only; persisted jobs remain available for explicit continuation. */
+/** Explicit scoped Stop; ordinary view departure does not invoke this. */
 export function pauseThreadGeneration(threadId: string) {
     workers.get(threadId)?.controller.abort();
 }

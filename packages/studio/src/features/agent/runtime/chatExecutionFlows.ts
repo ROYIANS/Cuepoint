@@ -44,8 +44,6 @@ export interface NewChatMessage {
     feedback?: ExecutionFeedbackInvocation;
     onThreadReady?: (thread: ChatThread) => void;
     onAdmitted?: (run: AgentRun) => void;
-    /** Foreground handoff adapter only; retained service never supplies a view callback. */
-    beforeAdmission?: (thread: ChatThread) => Promise<void>;
 }
 
 export async function executeNewChatMessage(input: NewChatMessage, binding: ChatExecutionBinding) {
@@ -66,8 +64,6 @@ export async function executeNewChatMessage(input: NewChatMessage, binding: Chat
         if (controller.signal.aborted) return;
         const target = thread;
         await withThreadRunLock(target.id, async ownership => {
-            if (controller.signal.aborted) return;
-            await input.beforeAdmission?.(target);
             if (controller.signal.aborted) return;
             await store.transaction("rw", [store.chatThreads], async tx => {
                 const current = await tx.chatThreads.get(target.id);

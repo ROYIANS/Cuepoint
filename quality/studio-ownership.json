@@ -367,14 +367,6 @@
       "publicTypes": []
     },
     {
-      "original": "packages/studio/src/components/agent/chatExecutionFlows.ts",
-      "file": "packages/studio/src/features/agent/ui/chatExecutionFlows.ts",
-      "target": "packages/studio/src/features/agent/ui/chatExecutionFlows.ts",
-      "owner": "features/agent",
-      "public": false,
-      "publicTypes": []
-    },
-    {
       "original": "packages/studio/src/components/agent/composerAttention.css",
       "file": "packages/studio/src/features/agent/ui/composerAttention.css",
       "target": "packages/studio/src/features/agent/ui/composerAttention.css",
@@ -504,14 +496,6 @@
       "original": "packages/studio/src/components/agent/useReferenceDraft.ts",
       "file": "packages/studio/src/features/agent/ui/useReferenceDraft.ts",
       "target": "packages/studio/src/features/agent/ui/useReferenceDraft.ts",
-      "owner": "features/agent",
-      "public": false,
-      "publicTypes": []
-    },
-    {
-      "original": "packages/studio/src/components/agent/useThreadDeparture.tsx",
-      "file": "packages/studio/src/features/agent/ui/useThreadDeparture.tsx",
-      "target": "packages/studio/src/features/agent/ui/useThreadDeparture.tsx",
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
@@ -6556,6 +6540,25 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/runtime/chatDraftStore.ts",
+      "file": "packages/studio/src/features/agent/runtime/chatDraftStore.ts",
+      "target": "packages/studio/src/features/agent/runtime/chatDraftStore.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/runtime/threadWork.ts",
+      "file": "packages/studio/src/features/agent/runtime/threadWork.ts",
+      "target": "packages/studio/src/features/agent/runtime/threadWork.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "reserveAgentThreadWork"
+      ]
     }
   ],
   "featureUiAppEntries": [

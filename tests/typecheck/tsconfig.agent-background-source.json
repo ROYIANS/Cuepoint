@@ -3,7 +3,6 @@
   "include": [
     "../../packages/studio/src/features/agent/runtime/agentExecution.ts",
     "../../packages/studio/src/features/agent/runtime/agentExecutionService.ts",
-    "../../packages/studio/src/features/agent/ui/chatExecutionFlows.ts",
     "../../packages/studio/src/features/agent/ui/AgentChatPage.tsx",
     "../../packages/agent-core/src/**/*.ts",
     "../../packages/agent-providers/src/**/*.ts",
@@ -14,6 +13,14 @@
     "../../packages/studio/src/app/vite-env.d.ts",
     "../e04ReadingNavigation.test.ts",
     "../../packages/studio/src/app/bootstrap.tsx",
-    "../../vitest.agent-background-source.config.ts"
+    "../../vitest.agent-background-source.config.ts",
+    "../e04AgentQueryDeparture.test.ts",
+    "../e11RetainedWork.test.ts",
+    "../agentTaskWrapup.test.ts",
+    "../e01ManualDraftDeparture.test.ts",
+    "../fixtures/e11-background/harness.tsx",
+    "../d03ChatOwners.test.ts",
+    "../fixtures/d03/harness.tsx",
+    "../audioGenerationBatch.test.ts"
   ]
 }

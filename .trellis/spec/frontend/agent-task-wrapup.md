@@ -81,10 +81,14 @@ criteria met, all Todo completed, no unresolved summary items and no active/unkn
 execution outcomes. Past resolved failures remain evidence/lessons, not permanent
 completion blockers. No automatic completion on an AI response or summary save.
 
-On route mount/window focus, lock-aware recovery changes abandoned preparation to
-interrupted even if the inspector is closed. A live owner in another tab is not
-interrupted. Failed/stopped preparation preserves prior confirmed/manual history;
+On actual application-service initialization, one lock-aware recovery changes abandoned preparation to
+interrupted even if the inspector is closed. View mount, focus and reattachment do not repeat it. A live owner in another tab is not
+interrupted. The named service `prepareTaskWrapup({threadId, taskId, connectorId, model, reasoningEffort?, modelMetadata?})` captures the real task/thread and uses its finite synchronous reservation before asynchronous preparation. Inspector cleanup does not abort it. AI-only preparing is not a manual pending mutation that blocks navigation; real manual saves/dirty/conflict guards remain. Its original completion and Stop belong to the application, and preparation never manufactures a chat result/unread message.
+
+Failed/stopped preparation preserves prior confirmed/manual history;
 retry is an explicit user action. Reopening requires a fresh acceptance review.
+
+The inspector's Stop matches the live task-wrapup kind, task identity and actual prepared row identity; a stale summary row cannot stop a later model invocation. Resolve current credentials again immediately before the real model dispatch after evidence preparation, compare the captured keyless connector identity, and redact both previously captured and current keys from failures. Rotating a key on the same connector uses the current key; replacing the connector identity refuses dispatch.
 
 ## 4. Validation & Error Matrix
 | State | Behavior |

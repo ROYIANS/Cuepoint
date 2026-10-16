@@ -13,7 +13,7 @@ import type {ThreadLockManager} from '@/features/agent/runtime/runOwnership';
 import type {ConnectorConfig} from "@/features/settings/models/connector";
 import type {AgentGenerationJob} from '@/features/agent/models/agentGeneration';
 import type {AgentToolCall} from '@/features/agent/models/agent';
-const connector:ConnectorConfig={id:'cx',name:'test',definitionId:'openai-compatible',baseUrl:'https://example.test/v1',apiKey:'secret-fixture',updatedAt:'2026-09-19'};
+const connector:ConnectorConfig={id:'cx',definitionId:'openai-compatible',protocol:'openai-compatible',baseUrl:'https://example.test/v1',apiKey:'secret-fixture',updatedAt:'2026-09-19'};
 const locks:ThreadLockManager={async request(_name,_options,callback){return callback({});}};
 async function task(criteria=['角色名称准确']){return createAgentTask({projectId:(await createBoundTestProject("测试项目")).id,title:'创作任务',goal:'完成角色创作',acceptanceCriteria:criteria,plan:[]});}
 async function confirmed(taskId:string){const wrap=await createManualWrapup(taskId);const saved=await saveWrapup(taskId,wrap.id,{...wrap.content,overview:'用户核实了实际结果',acceptance:wrap.content.acceptance.map(a=>({...a,status:'met'}))},wrap.revision);return confirmWrapup(taskId,saved.id,saved.revision);}
@@ -95,13 +95,13 @@ describe('task verification and durable wrapup',()=>{
   await expect(publishTaskWrapup(record.id,record.content,new AbortController().signal)).rejects.toThrow('停止');
  });
  it('preserves earlier confirmed summary on model error/cancellation, redacts credentials and rejects late deleted results',async()=>{
-  const current=await task(),review=await confirmed(current.id);const failing=vi.fn(async()=>new Response(`Bearer secret-fixture ${connector.apiKey}`,{status:400}));
+  const current=await task(),review=await confirmed(current.id);await db.connectors.put(connector);const failing=vi.fn(async()=>new Response(`Bearer secret-fixture ${connector.apiKey}`,{status:400}));
   await expect(prepareTaskWrapup(current.id,connector,'model',new AbortController(),failing,undefined,undefined,locks)).rejects.toThrow('已隐藏');
   const state=await getTaskWrapupState(current.id);expect(state.confirmed?.id).toBe(review.id);expect(state.latest?.error).not.toContain(connector.apiKey);expect(failing).toHaveBeenCalledTimes(1);
   const late=await startTaskWrapup(current.id,'ai');await deleteChatThread(current.threadId);await expect(publishTaskWrapup(late.id,late.content,new AbortController().signal)).rejects.toThrow('删除');expect(await db.agentTaskWrapups.count()).toBe(0);expect(await db.agentTaskWrapupVersions.count()).toBe(0);
  });
  it('uses read-only existing transport with no tools and exactly one explicit POST',async()=>{
-  const current=await task();const fetcher=vi.fn(async(_url:RequestInfo|URL,init?:RequestInit)=>{
+  const current=await task();await db.connectors.put(connector);const fetcher=vi.fn(async(_url:RequestInfo|URL,init?:RequestInit)=>{
    const input=JSON.parse(String(init?.body));expect(input.tools).toBeUndefined();expect(input.max_tokens ?? input.max_completion_tokens).toBe(8192);const data=JSON.parse(input.messages[1].content);
    return Response.json({choices:[{message:{content:JSON.stringify({overview:'等待人工验收',results:[],acceptance:data.criteria.map((criterion:string,criterionIndex:number)=>({criterion,criterionIndex,status:'review',note:'请用户检查',sourceIds:[]})),decisions:[],lessons:[],unresolved:[]})},finish_reason:'stop'}]});});
   const record=await prepareTaskWrapup(current.id,connector,'model',new AbortController(),fetcher,undefined,undefined,locks);expect(record.status).toBe('draft');expect(fetcher).toHaveBeenCalledTimes(1);expect(await db.agentRuns.count()).toBe(0);expect(await db.agentToolCalls.count()).toBe(0);expect((await db.agentTasks.get(current.id))?.lifecycle).toBe('open');
@@ -143,7 +143,7 @@ describe('task verification and durable wrapup',()=>{
   expect(saved.content.lessons).toHaveLength(1);expect(saved.status).toBe('draft');
  });
  it('distinguishes downloaded output from applied slot and notices deleted target/media',async()=>{
-  const {current,run,character}=await evidenceTask();await db.media.add({id:'img',projectId:current.projectId,mimeType:'image/png',filename:'image.png',blob:new Blob(['image']),createdAt:run.createdAt});
+  const {current,run,character}=await evidenceTask();await db.media.add({id:'img',projectId:current.projectId,mimeType:'image/png',filename:'image.png',blob:new Blob(['image'])});
   const job:AgentGenerationJob={version:1,id:'job',runId:run.id,threadId:run.threadId,callId:'effect',projectId:current.projectId,connectorId:'cx',provider:'apimart',baseUrl:'https://example.test',model:'gpt-image-2',kind:'image',target:{kind:'character',projectId:current.projectId,entityId:character.id,slot:'front'},baseRevision:'base',sourceRevisions:[],parameters:{},inputs:[],fingerprint:'fingerprint',status:'downloaded',result:{mediaId:'img',kind:'image'},createdAt:run.createdAt,updatedAt:run.createdAt};
   await db.agentGenerationJobs.add(job);let draft=await createManualWrapup(current.id);expect(draft.snapshot.evidence.find(e=>e.id==='generation:job')?.outcome).toBe('downloaded');
   await db.characters.update(character.id,{slots:{front:{prompt:'',referenceImageIds:[],referenceVideoIds:[],result:{mediaId:'img',kind:'image'}}}});await db.agentGenerationJobs.update(job.id,{status:'applied'});

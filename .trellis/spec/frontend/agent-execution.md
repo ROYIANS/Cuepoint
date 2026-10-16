@@ -29,7 +29,7 @@ Batch queue, selection and genuine generation-source evidence extend these contr
 - Checkpoints use monotonically increasing sequence numbers. Writes coalesce and serialize; final transition awaits flush. Terminal executions cannot return to streaming. Local write failure aborts transport and is surfaced.
 - Explicit retry creates a new run/assistant message and references its predecessor, while reusing the original user message and frozen request snapshot. Only the latest unsuccessful text-only attempt without later user turns can retry. Runs with tool calls use durable continuation instead; see [Agent Tools](./agent-tools.md). Connector ID/provider/base URL and model must match; current credentials may rotate. No startup network resubmission.
 - Resolve the current saved connector/key at every actual main and auxiliary summary dispatch while preserving frozen identity. The entry-point key argument cannot freeze credentials for the whole run. Keep secrets out of snapshots/events and redact every credential used during that invocation before storing an error.
-- Route changes (including browser back/forward) abort the execution associated with the old thread. Bind newly created thread identity before navigation so the first send does not cancel itself; keep sending locked until final persistence settles.
+- Ordinary route/thread changes, browser Back/Forward and React cleanup detach the view while the application-owned operation continues. Only exact explicit Stop, intentional destructive owner actions and application shutdown signal cancellation. Keep the per-thread reservation and actual Web Lock until final persistence settles.
 - The first new user message derives default thread titles in the begin transaction. Custom titles and retry titles remain unchanged.
 - Thread deletion cascades executions; late writes cannot resurrect records. Legacy v7 pending/streaming messages become interrupted, retain partial text, and instruct the user to resend (they lack a request snapshot).
 - Transport makes at most one POST. Original-response JSON is supported; invalid responses/HTTP rejection do not trigger an implicit non-stream request. SSE requires protocol completion and usable answer text; malformed/truncated output and length/filter termination fail explicitly, retaining partial deltas.
@@ -50,7 +50,7 @@ Batch queue, selection and genuine generation-source evidence extend these contr
 | Stream lacks completion | Failed with partial content retained |
 | Model names a tool this request never offered | One failed call recorded, failure fed back to the model, run continues; no approval, no execution |
 | Empty final attempt after a completed text step | Preserve the already-visible answer text instead of clearing it |
-| Leaving a topic with an active run | Confirm first; confirm stops it under the existing semantics and keeps saved steps resumable or endable |
+| Leaving a topic with an active run | Detach without execution confirmation/abort; preserve the original owner, saved output and explicit Stop |
 
 ## 5. Good / Base / Bad
 Good: reopen an abandoned reply, see preserved partial text and a separate interruption notice, explicitly regenerate once.
@@ -80,28 +80,49 @@ Every path that ends an Agent execution: normal completion, model/transport fail
 ### 5. Good / Base / Bad
 Good: Stop, budget pause and explicit cancel all leave the same fields consistent and keep saved steps resumable. Base: a completed run ignores a later settle attempt. Bad: a second hand-written writer that sets run status without the message, or a new terminal path that forgets to clear `pauseReason`.
 
-## Leaving an active topic is confirmed (2026-10-13)
+## E11 retained views and finite work owners (2026-10-16)
 
 ### 1. Scope / Trigger
-Clicking another topic, creating a new one, deleting the current one, or browser Back while the current topic's execution is active.
+
+Agent thread/page/history navigation and model, video batch, audio batch or AI task-wrapup ownership. This supersedes the earlier execution-only stop-before-leaving dialog and route-unmount abort. Manual dirty/pending/conflict and destructive deletion/clear protections remain independent.
 
 ### 2. Signatures
-`useThreadDeparture(threadId, runs)` returns `{request(leave), confirmation, armOnce()}`; `runBlocksThread(run)` in `features/agent/models/agentToolSelection` is the shared predicate.
+
+`runtime/threadWork.ts` defines the finite `AgentWorkIdentity` union (`model`, `videoBatch`, `audioBatch`, `taskWrapup`) and `reserveAgentThreadWork(store, identity, controller)`, `currentAgentThreadWork(store, threadId)`, `subscribeAgentThreadWork(store, listener)` and `shutdownAgentThreadWork(store)`. A reservation follows the actual operation completion and exposes its exact owner, controller and `done`; it grants no durable execution capability.
+
+`useChatExecutionSession(threadId, scope)` is a view adapter over the singleton's snapshots/attempt subscriptions. Named model/decision/recovery actions go through the application service. Existing generation runtimes retain their actual Web Lock and dispatch algorithms; do not acquire a second same-thread lock around them.
 
 ### 3. Contracts
-Confirm before aborting: the dialog states that leaving stops the execution and that completed steps and received content are preserved. The same predicate `runBlocksThread` decides both the composer's status strip and `beginAgentRun`'s admission check, so the UI and the DB cannot disagree. A confirmed decision arms exactly one navigation so the route blocker does not ask a second time for the same choice; a declined ask leaves the run and the route untouched. A blocked topic does not permanently block sending: the composer keeps offering resume/end, and the earlier `已有执行` refusal only applies while the run actually holds the thread.
+
+Reserve a concrete thread before asynchronous preparation so different kinds of work cannot race within it. Different threads remain independent. Publish only a complete observable owner; exact Stop targets its original handle and cannot stop a newer operation. The original completion must include every worker, pending action and terminal publication; remove/publish the exact reservation before exposing completion to a next-command observer.
+
+View cleanup only unsubscribes. Switching topics, opening settings/projects, new-topic creation and Back/Forward do not abort models, pause Agent batches, repeat startup recovery, approve work or dispatch a continuation. Project audio teardown pauses project-owned work only; it cannot adopt an Agent-owned batch. AI task-wrapup preparation belongs to the service rather than a mounted inspector; real manual edits and saves retain their existing guards.
+
+First-thread creation records a receipt in the service. Navigation belongs to a still-matching view scope/attachment generation, never the service callback. A late A result may publish to A but cannot select it over B or restore/consume B's draft. A remount observes existing state without re-dispatch. Foreground optimistic presentation remains immediate and bounded; hidden work never waits for DOM/rAF acknowledgement.
 
 ### 4. Validation & Error Matrix
-| Condition | Result |
-| --- | --- |
-| No active run | Leave immediately, no dialog |
-| Active run, user cancels | Stay; run, route and draft unchanged |
-| Active run, user confirms | Abort once, navigate once, saved steps retained |
-| Route attempt during an already confirmed departure | Superseded by the confirmation; no second dialog |
-| Text-only finished reply | Not "active"; leaving is immediate |
 
-### 5. Good / Base / Bad
-Good: switching topics mid-answer asks once, and confirming preserves the partial answer for an explicit continue. Base: switching between idle topics never prompts. Bad: silently aborting the run on click, or arming the blocker so a later unrelated navigation skips its own confirmation.
+| Event | Required result |
+| --- | --- |
+| Navigate A to B/settings/project/history | A continues under the same original operation; B remains independent. |
+| Stop A while B is active | Only exact A signalled; original A settlement awaited. |
+| Model/wrapup/batch compete within A | Synchronous local refusal plus real held-lock exclusion; no second dispatch. |
+| Agent audio batch while audio page unmounts | Agent owner continues; unrelated project-owned teardown remains. |
+| AI preparation while inspector unmounts | Original request continues; no fake manual-pending navigation block. |
+| Dirty/manual save/conflict on departure | Existing editor guard and original pending mutation remain authoritative. |
+| Late first-thread receipt after attachment changes | Persist original receipt/output; no route or draft change in the new view. |
+
+### 5. Good / Base / Bad Cases
+
+Good: A's confirmed generation queue continues while B streams and the user edits settings; returning observes original identities. Base: an idle topic leaves without a prompt. Bad: hide the stop dialog while keeping a cleanup abort, recursively acquire the same Web Lock, or reconstruct a live Stop handle from saved IDs.
+
+### 6. Tests Required
+
+Retain requested-topic stale-read, optimistic canonical identity, whole-draft revision and manual editor tests. Exercise actual retained service/UI, held A/B model/tool operations, named wrapup/batch exclusion, exact Stop/original done and real generation runtimes. A finite real routed browser fixture must cover settings/project/Back/Forward and late creation without route stealing. Source callbacks are not proof of native background scheduling or installed OS behavior.
+
+### 7. Wrong vs Correct
+
+Wrong: an effect cleanup aborts `abortRef.current` or pauses all project batches when a view leaves. Correct: the view detaches; the finite original application owner keeps executing until explicit Stop/shutdown and actual settlement.
 
 ## 6. Tests Required
 `agentRuns.test.ts`: atomic creation, no key snapshots, deterministic ordering, stale checkpoints, immutable retry context, incomplete history exclusion, deletion, exclusive ownership and abandoned recovery, v7 migration, write coalescing/failure and runtime terminal states.
@@ -123,7 +144,7 @@ Correct: probe the thread's Web Lock; if unavailable leave it alone; if availabl
 
 ### 1. Scope / Trigger
 
-The headless service foundation is implemented before the foreground page is connected in Stage 2. The earlier page-bound departure contract remains the foreground behavior during this intermediate stage; do not remove its guards independently of the retained-page integration.
+Stage 1 introduced the headless service foundation. Stage 2 connects the foreground page and finite work owners under the retained-view contract above; navigation cancellation is removed together with actual ownership integration.
 
 ### 2. Signatures
 

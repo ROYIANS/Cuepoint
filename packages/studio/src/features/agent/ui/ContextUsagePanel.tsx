@@ -26,7 +26,7 @@ import {popupCollisionPadding} from "../../../ui/popupCollision";
 const EMPTY_ATTACHMENTS: ReferenceAttachment[] = [];
 
 type ContextProps = {
-    attachments?: ReferenceAttachment[];
+    attachments?: readonly Readonly<ReferenceAttachment>[];
     threadId?: string;
     projectId?: string;
     interactionMode?: AgentInteractionMode;
@@ -49,7 +49,7 @@ function useContextUsage(props: ContextProps) {
     } = props;
     const requestDraft = draft.trim() || (attachments.length ? "请结合附加的参考资料协助我。" : "");
     const input = useMemo(() => ({
-            threadId, projectId, interactionMode, draft: requestDraft, attachments,
+            threadId, projectId, interactionMode, draft: requestDraft, attachments: attachments.map(item => ({...item})),
             model, providerId: connector?.definitionId, metadata: modelMetadata?.[model]
         }),
         [threadId, projectId, interactionMode, requestDraft, attachments, model, connector?.definitionId, modelMetadata]);

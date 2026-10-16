@@ -49,7 +49,7 @@ Hold the existing thread Web Lock throughout dispatch, settling and pending UI a
 
 Known failure may release a worker for independent work. Unknown acceptance pauses new dispatch. Set an in-memory pause latch before persisting the pause, so storage failure cannot permit further sends. Drain both workers with `Promise.allSettled` before releasing the lock; a rejected worker cannot abandon a sibling request. Once shared transport has been entered, a missing persisted provider ID is not proof of no POST. Never convert storage/transport ambiguity into a safe paid retry.
 
-Reload/mount performs local reads and lock-aware recovery only. Explicit continuation queries/downloads known job IDs and dispatches only eligible saved unsent identities. Unknown attempts never POST again. Pause/navigation retains the queue; cancel marks unsent items cancelled while accepted/unknown jobs remain truthful. Retry definitively failed jobs into a new reviewed draft. No remote-cancel or refund promise.
+Reload/mount performs local reads and lock-aware recovery only. Explicit continuation queries/downloads known job IDs and dispatches only eligible saved unsent identities. Unknown attempts never POST again. Explicit pause retains the queue. E11 ordinary navigation detaches the view without pausing the application-owned queue; cancel marks unsent items cancelled while accepted/unknown jobs remain truthful. Retry definitively failed jobs into a new reviewed draft. No remote-cancel or refund promise.
 
 ### Selection, ownership and evidence
 Selecting a candidate is local review, separate from writing it. Apply each entity's selected sibling slots in one transaction, recording previous/new result and before/after entity revisions. Trust only a continuous chain of this batch's own application writes. A→B→A and repeated same selection are supported; manual edits/deletion break the chain and block overwrite. Independent entity groups report separate outcomes. Single `apply_generation` and generic Agent result writes cannot bypass batch selection.
@@ -107,3 +107,9 @@ Unsaved batch review edits and pending saves block SPA navigation as well as bro
 
 
 Audio voice batches use [their separate v24 contract](./audio-batch-arrangement.md), including the bounded existing clone-reference `Dexie.waitFor` check. This image/video spec retains outside-write Blob preparation.
+
+## E11 retained Agent batch lifecycle (2026-10-16)
+
+Use the finite thread-work reservation from [execution ownership](./agent-execution.md) for actual video/audio Agent workers. It is a synchronous local admission guard in addition to the runtime's existing real Web Lock; it is not a second lock or authority reconstructed from a batch ID. Bind Stop and completion to the existing original worker/drain. Removing a subscriber, switching topics, unmounting Agent review and project-audio teardown cannot pause Agent-owned work. Project-owned audio keeps its existing separate teardown behavior.
+
+Keep explicit confirmation/start/pause/cancel and existing original approval identity. Reattaching only reads current rows/owner state. Model, task-wrapup and Agent batch operations compete within one thread while independent threads can proceed. The exposed completion cannot settle before siblings, pending review actions and final writes are finished and the exact reservation is removed. Actual generation/source and routed browser cases must prove these boundaries; native hidden-window scheduling remains a separate Stage 3 gate.

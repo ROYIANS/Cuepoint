@@ -1,3 +1,6 @@
+import {withThreadRunLock} from "../runtime/runOwnership";
+import {agentExecution} from "../runtime/agentExecution";
+import {useChatExecutionSession} from "./useChatExecutionSession";
 import {ShotDetailLink} from "../../../app/details/ShotDetails";
 import {Link} from "@tanstack/react-router";
 import {ReferenceSourceLink} from "./ReferenceAttachments";
@@ -28,7 +31,7 @@ import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
 import type {AgentTaskWrapup, TaskWrapupState, WrapupContent, WrapupEvidence} from "../models/agentTaskWrapup";
 import {confirmWrapup, createManualWrapup, getTaskWrapupState, saveWrapup} from "../commands/agentTaskWrapups";
 import {setAgentTaskLifecycle} from "../commands/agentTasks";
-import {cancelTaskWrapup, prepareTaskWrapup, recoverTaskWrapups} from "../runtime/taskWrapup";
+import {cancelTaskWrapup} from "../runtime/taskWrapup";
 import {Button} from "../../../ui/button";
 import {Textarea} from "../../../ui/textarea";
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "../../../ui/dialog";
@@ -247,14 +250,14 @@ export function TaskWrapup({
     const [historyOpen, setHistoryOpen] = useState(false);
     const [error, setError] = useState("");
     const lock = useRef(false);
-    const controller = useRef<AbortController | null>(null);
+    const {snapshot: execution} = useChatExecutionSession(task.threadId, JSON.stringify([task.threadId, task.projectId]));
     const latest = state?.latest ?? draft?.record;
     const preparing = latest?.status === "preparing";
     const editable = !!currentRead?.data && !busy && !pending && !preparing && task.lifecycle === "open";
     const canGenerate = !!modelSelection?.connector.apiKey.trim() && !!modelSelection.model.trim();
     const draftState = useCallback((): ManualDraftState => {
         const dirty = !!draftRef.current && JSON.stringify(draftRef.current.content) !== draftRef.current.baseline;
-        const pending = lock.current || !!preparing || promotion.current.phase === "preparing";
+        const pending = lock.current || promotion.current.phase === "preparing";
         // MemoryEditor owns its existing route blocker; local inspector departure still owns the candidate.
         return {
             dirty: dirty || promotion.current.phase === "editing",
@@ -262,10 +265,7 @@ export function TaskWrapup({
             routeDirty: dirty,
             routePending: pending
         };
-    }, [preparing, memoryPending, candidatePending]);
-    useEffect(() => {
-        void recoverTaskWrapups(task.threadId).catch((failure: unknown) => setError(failure instanceof Error ? failure.message : "无法读取整理状态"));
-    }, [task.threadId]);
+    }, [memoryPending, candidatePending]);
     const hasDraft = !!draft;
     const hasCandidate = !!candidate;
     useEffect(() => {
@@ -273,11 +273,10 @@ export function TaskWrapup({
         return () => onEditingChange(false);
     }, [hasDraft, hasCandidate, onEditingChange]);
     useEffect(() => {
-        onPendingChange(pending || preparing || memoryPending || candidatePending);
+        onPendingChange(pending || memoryPending || candidatePending);
         onDraftStateChange?.(draftState());
         return () => onPendingChange(false);
-    }, [pending, preparing, memoryPending, candidatePending, onPendingChange, onDraftStateChange, draftState]);
-    useEffect(() => () => controller.current?.abort(), []);
+    }, [pending, memoryPending, candidatePending, onPendingChange, onDraftStateChange, draftState]);
 
     function publishDraft(next: typeof draft) {
         draftRef.current = next;
@@ -339,17 +338,13 @@ export function TaskWrapup({
         });
     }
 
-    async function generate() {
-        if (!modelSelection || !canGenerate) return;
-        await act(async () => {
-            const abort = new AbortController();
-            controller.current = abort;
-            try {
-                await prepareTaskWrapup(task.id, modelSelection.connector, modelSelection.model, abort, undefined, modelSelection.reasoningEffort, modelSelection.modelMetadata);
-            } finally {
-                if (controller.current === abort) controller.current = null;
-            }
-        }, "总结草稿已准备好，请检查并确认");
+    function generate() {
+        if (!modelSelection || !canGenerate || draftRef.current || lock.current) return;
+        try {
+            agentExecution.prepareTaskWrapup({threadId: task.threadId, taskId: task.id,
+                connectorId: modelSelection.connector.id, model: modelSelection.model,
+                reasoningEffort: modelSelection.reasoningEffort, modelMetadata: modelSelection.modelMetadata});
+        } catch (failure) {setError(failure instanceof Error ? failure.message : "无法整理总结");}
     }
 
     function edit() {
@@ -414,8 +409,10 @@ export function TaskWrapup({
                     <div className="task-review-notice" role="status"><LoaderCircle className="task-review-spinner"
                                                                                     size={16}/><span>正在整理已有记录…<small>不会执行创作工具，之前的总结会保留。</small></span><Button
                         variant="ghost" size="sm" onClick={() => {
-                        controller.current?.abort();
-                        void cancelTaskWrapup(task.id, latest.id).catch((failure: Error) => setError(failure.message));
+                        if (execution.token && execution.kind === "taskWrapup" && execution.wrapupId === latest.id &&
+                            execution.work?.identity.kind === "taskWrapup" && execution.work.identity.taskId === task.id &&
+                            agentExecution.requestStop({threadId: task.threadId, token: execution.token})) return;
+                        void withThreadRunLock(task.threadId, () => cancelTaskWrapup(task.id, latest.id)).catch((failure: Error) => setError(failure.message));
                     }}>停止</Button></div>}
                 {state.stale && <div className="task-review-notice"><RefreshCw
                     size={16}/><span>任务或来源已有变化<small>当前总结作为历史保留。请基于最新记录重新整理，再确认完成。</small></span>
@@ -549,7 +546,7 @@ export function TaskWrapup({
                     </div>}
                 </>}
             </>}
-            {error && <p className="task-review-error" role="alert">{error}{draft ? "。编辑内容仍保留。" : ""}</p>}
+            {(error || execution.error) && <p className="task-review-error" role="alert">{error || execution.error}{draft ? "。编辑内容仍保留。" : ""}</p>}
         </>}
         {savedMemory && <p className="task-review-coverage">已保存在项目记忆中。<Link to="/p/$projectId/memory"
                                                                                      params={{projectId: task.projectId}}

@@ -13,5 +13,13 @@ export default createStudioVitestConfig({
         "tests/e03ExecutionPresentation.test.ts",
         "tests/b07ComposeSessions.test.ts",
         "tests/e04ReadingNavigation.test.ts",
+        "tests/e04AgentQueryDeparture.test.ts",
+        "tests/e11RetainedWork.test.ts",
+        "tests/d03ChatOwners.test.ts",
+        "tests/audioGenerationBatch.test.ts",
+        "tests/agentGenerationBatch.test.ts",
+        "tests/agentGenerationBatchSafety.test.ts",
+        "tests/agentTaskWrapup.test.ts",
+        "tests/e01ManualDraftDeparture.test.ts",
     ],
 });

@@ -27,7 +27,8 @@
         "tooling/studio.test.mjs",
         "tooling/workspace.test.mjs",
         "tooling/agent-packages.test.mjs",
-        "tooling/agent-example-check.mjs"
+        "tooling/agent-example-check.mjs",
+        "tooling/e11-background-browser.mjs"
       ],
       "project": [
         "tooling/**/*.{mjs,mts,ts}"

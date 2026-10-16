@@ -60,7 +60,7 @@
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E11 Stage 1 execution foundation reviewed (96 source tests, finite types and architecture passed); commit and continue Stage 2 retained page/draft/generation integration. Desktop lifecycle and sidebar remain subsequent stages; full/installed acceptance stays epic batch.",
+    "nextAction": "E11 Stage 1 committed 7f602119. Stage 2 retained page/draft/generation integration is completing focused checks and independent review before its local commit; native lifetime and sidebar follow sequentially. Full/installed acceptance remains epic batch.",
     "carriedAcceptance": {
       "E09": {
         "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",
@@ -89,7 +89,7 @@
       },
       "E11": {
         "record": "../10-15-agent-background-host/task.json",
-        "state": "planned-not-yet-implemented",
+        "state": "in-progress-source-stages",
         "items": [
           "full formal quality/regression/whole-app builds and affected TSX aggregate discovery",
           "isolated emitted/declaration/offline packed consumer if applicable",

@@ -14,7 +14,7 @@ Read before changing invocation phases, Stop acknowledgement, Studio runtime obs
 
 Studio's `executeChatRun(..., ownership?, feedback?)` and `resumeChatRun(..., ownership?, feedback?)` accept the feature-private optional eighth `RuntimeExecutionFeedback` argument. Legacy callers remain unchanged. Studio adapts existing core output/checkpoint/tool/approval/settled events and its own actual preparation/main-request boundaries; no core or provider protocol is added.
 
-E11 Stage 1's application service owns a separate feedback controller for each thread and begins feedback using that exact service invocation token. Feedback is prepared privately; only a fully initialized service reservation is published to synchronous subscribers. Unsubscribing a view neither disposes the controller nor requests Stop; application shutdown and exact explicit Stop are the lifetime owners. The original foreground hook remains in place until Stage 2 connects it; its legacy cleanup behavior must not be mistaken for the service's contract.
+E11 Stage 1's application service owns a separate feedback controller for each thread and begins feedback using that exact service invocation token. Feedback is prepared privately; only a fully initialized service reservation is published to synchronous subscribers. Unsubscribing a view neither disposes the controller nor requests Stop; application shutdown and exact explicit Stop are the lifetime owners. The foreground hook subscribes to the service. Keep its last exact feedback lineage available after release until replaced, so a delayed visible DOM acknowledgement is possible without another execution.
 
 ## 3. Contracts
 
@@ -52,7 +52,7 @@ Keep lightweight context/probe code free of eager rich Markdown dependencies. De
 | Folded/inert/hidden public subtree | No display mark until actually eligible |
 | Diagnostic clock/sink/observer fails | Execution and existing error handling continue unchanged |
 | Another token/run/thread or stale sequence | Ignore diagnostic callback; never overwrite current feedback |
-| Owner unmount or StrictMode effect replay | Abort original owned flow, dispose entries, reject old callbacks; later valid begin still works |
+| View unmount or StrictMode effect replay | Detach observation only; original service flow and feedback remain owned. Only true owner disposal invalidates its handles |
 
 ## 5. Good / Base / Bad Cases
 

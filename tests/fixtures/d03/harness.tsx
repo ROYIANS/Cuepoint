@@ -2,6 +2,7 @@ import {createRoot} from "react-dom/client";
 import {useState} from "react";
 import Dexie from "dexie";
 import JSZip from "jszip";
+import {readBinaryBlob} from "@/platform/storage/binary";
 import {db} from "@/platform/product/store";
 import {createProject, createAudioMusicProject} from "@/features/projects/commands/projects";
 import {addShot, setShotSlot} from "@/features/video/commands/shots";
@@ -23,12 +24,13 @@ import {encodePcm16Wav} from "@/features/audio/engine/wav";
 import {getAudioExportFreshness} from "@/features/audio/engine/fingerprint";
 import {registerPendingDraft} from "@/platform/product/drafts";
 import {useChatExecutionSession} from "@/features/agent/ui/useChatExecutionSession";
-import {retryFrozenChatRun, resolveChatRunAction} from "@/features/agent/ui/chatExecutionFlows";
+import {agentExecution} from "@/features/agent/runtime/agentExecution";
+import {reserveAgentThreadWork, currentAgentThreadWork} from "@/features/agent/runtime/threadWork";
 import type {ConnectorConfig} from "@/features/settings/models/connector";
 
 function check(value: unknown, message: string): asserts value {if (!value) throw new Error(message);}
 await db.delete(); await db.open();
-const connector: ConnectorConfig = {id: "d03-native", definitionId: "openai-compatible", name: "isolated", baseUrl: "https://no-provider.invalid/v1", apiKey: "fixture", updatedAt: new Date().toISOString()};
+const connector: ConnectorConfig = {id: "d03-native", definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://no-provider.invalid/v1", apiKey: "fixture", updatedAt: new Date().toISOString()};
 const gates = new Map<string, {promise: Promise<void>; release(): void}>();
 const transport: Array<{model: string; aborted: boolean; status: string}> = [];
 let session: ReturnType<typeof useChatExecutionSession>;
@@ -36,7 +38,7 @@ let changeThread: (id?: string) => void;
 let routeId: string | undefined;
 let observeProject: (id: string) => void;
 function JobObserver({projectId}: {projectId: string}) {useProjectAudioJobs(projectId); return <span data-observed-project={projectId}/>;}
-const tokens = new Map<string, NonNullable<ReturnType<ReturnType<typeof useChatExecutionSession>["acquire"]>>>();
+const reservations = new Map<string, {threadId: string; finish(): void}>();
 let pending: Promise<void> | undefined;
 function App() {
     const [id, setId] = useState<string>();
@@ -44,7 +46,7 @@ function App() {
     observeProject = setObservedProject;
     routeId = id;
     changeThread = setId;
-    session = useChatExecutionSession(id);
+    session = useChatExecutionSession(id, id ?? "home");
     return <><output data-sending={session.sending} data-thread={id ?? "home"}/>{observedProject && <JobObserver projectId={observedProject}/>}</>;
 }
 const root = createRoot(document.getElementById("root")!);
@@ -54,21 +56,25 @@ function release(name: string) {gates.get(name)?.release(); gates.delete(name);}
 async function wait(name: string) {await gates.get(name)?.promise;}
 async function durableSnapshot() {
     return JSON.stringify(await Promise.all(db.tables.map(async table => [table.name, await Promise.all((await table.toArray()).map(async row => ({...row,
-        ...(row.blob instanceof Blob ? {blob: [...new Uint8Array(await row.blob.arrayBuffer())]} : {})
+        ...("blob" in row && row.blob instanceof Blob ? {blob: [...new Uint8Array(await row.blob.arrayBuffer())]} : {})
     })))])));
 }
 const fixture = {
     transport, hold, release, wait,
     changeThread: (id?: string) => changeThread(id),
     observeProject: (id: string) => observeProject(id),
-    state: () => ({threadId: routeId, sending: session.sending, locked: session.sendLockRef.current, aborted: session.abortRef.current?.signal.aborted}),
-    acquire: (key: string) => {const token = session.acquire(); if (!token) return false; tokens.set(key, token); return true;},
-    releaseToken: (key: string) => session.release(tokens.get(key)!),
-    bind: (id: string) => {session.executionThreadRef.current = id;},
+    state: () => {const work = currentAgentThreadWork(db, routeId ?? "home"); return {threadId: routeId, sending: session.sending, locked: !!work, aborted: work?.controller.signal.aborted};},
+    reserve: (key: string, threadId = routeId ?? "home") => {
+        if (currentAgentThreadWork(db, threadId)) return false;
+        let finish!: () => void;
+        const original = new Promise<void>(resolve => {finish = resolve;});
+        const reservation = reserveAgentThreadWork(db, {kind: "model", threadId, invocationId: key}, new AbortController());
+        reservations.set(key, {threadId, finish}); reservation.follow(original); return true;
+    },
+    finish: async (key: string) => {const held = reservations.get(key); if (!held) return; const original = currentAgentThreadWork(db, held.threadId)?.done; held.finish(); await original;},
     startRetry: (runId: string) => {
-        const token = session.acquire(); check(token, "retry not acquired");
-        pending = retryFrozenChatRun({runId, activeThreadId: routeId, controller: token.controller, isThreadCurrent: id => routeId === id})
-            .then(result => {check(result.ok, "retry compatibility failed");}).finally(() => session.release(token));
+        check(routeId, "retry thread missing");
+        pending = agentExecution.retry({runId, threadId: routeId}).done;
     },
     settle: async () => {await pending;},
     seedRetry: async () => {
@@ -89,10 +95,10 @@ const fixture = {
         await pauseForApproval(run.id);
         await db.connectors.delete(connector.id);
         let error = "";
-        try {await resolveChatRunAction({runId: run.id, callId: call.id, action: "approve", activeThreadId: thread.id, controller: new AbortController(), isThreadCurrent: () => true});} catch (reason) {error = (reason as Error).message;}
+        try {await agentExecution.resolveApproval({runId: run.id, callId: call.id, decision: "approve", threadId: thread.id}).done;} catch (reason) {error = (reason as Error).message;}
         check(error.includes("决定已保存"), "missing credentials did not report saved decision");
         check((await db.agentToolCalls.get(call.id))?.status === "approved", "approval lost on connector failure");
-        await resolveChatRunAction({runId: run.id, action: "cancel", activeThreadId: thread.id, controller: new AbortController(), isThreadCurrent: () => true});
+        await agentExecution.cancelSavedRun({runId: run.id, threadId: thread.id}).done;
         check((await db.agentRuns.get(run.id))?.status === "cancelled", "connector-free cancellation failed");
         return {approvalSaved: true, cancelWithoutConnector: true};
     },
@@ -125,7 +131,7 @@ const fixture = {
             check(entries.length === 1 && await entries[0].async("string") === `${kind} original bytes`, "ZIP bytes changed");
             const imported = await importProjectZip(zipBlob);
             const records = await db.media.where("projectId").equals(imported.id).toArray();
-            check(records.length === 1 && await records[0].blob.text() === `${kind} original bytes`, "import bytes changed");
+            check(records.length === 1 && await readBinaryBlob(records[0].blob).then(blob => blob.text()) === `${kind} original bytes`, "import bytes changed");
             if (kind === "audio") {
                 importedHistoryProject = imported.id;
                 const importedJob = await db.audioGenerationJobs.where("projectId").equals(imported.id).first();
@@ -176,7 +182,7 @@ const fixture = {
             const row = await db.audioExports.where("projectId").equals(project.id).first();
             check(row && getAudioExportFreshness(row, await getAudioProjectSnapshot(project.id)) === "current", "native export evidence is stale");
             const saved = await db.media.get(row.mediaId);
-            check(saved && saved.blob.size === result.blob.size, "native rendered WAV not saved");
+            check(saved && (await readBinaryBlob(saved.blob)).size === result.blob.size, "native rendered WAV not saved");
             const header = new TextDecoder().decode((await result.blob.arrayBuffer()).slice(0, 4));
             check(header === "RIFF", "native export is not WAV");
             return {nativeDecodeRender: true, sharedPlaybackExportBuffer: true, savedWavBytes: result.blob.size};

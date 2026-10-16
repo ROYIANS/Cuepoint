@@ -3,14 +3,13 @@ import {ShotDetailsProvider} from "../../../app/details/ShotDetails";
 import {TopicSidebar} from "./TopicSidebar";
 import {useChatSelection} from "./useChatSelection";
 import {useChatExecutionSession} from "./useChatExecutionSession";
+import {yieldSubmissionPaint} from "./chatSubmissionAttempts";
+import {agentExecution} from "../runtime/agentExecution";
+import {chatDrafts} from "../runtime/chatDraftStore";
 import {ExecutionFeedbackContext} from "./ExecutionFeedback";
-import {executeNewChatMessage, resolveChatRunAction, retryFrozenChatRun} from "./chatExecutionFlows";
 import {createChatThread, updateChatThread} from "../commands/chat";
 import {deleteChatThread} from "./../commands/lifecycle";
-import {pauseThreadGeneration} from "../../video/agent/generationBatchRuntime";
-import {pauseAudioGenerationBatches} from "../../audio/generation/batchRuntime";
 import {useReferenceDraft} from "./useReferenceDraft";
-import {useThreadDeparture} from "./useThreadDeparture";
 import {runBlocksThread} from "../models/agentToolSelection";
 import {TaskBoard} from "./TaskBoard";
 import {TaskInspector} from "./TaskInspector";
@@ -29,11 +28,7 @@ import {useCallback, useEffect, useMemo, useRef, useState,} from "react";
 import {toast} from "sonner";
 import {showError} from "../../../app/errors/showError";
 import {ChatWorkspace} from "./ChatWorkspace";
-import {createSubmissionAttempt, type ChatSubmissionAttempt} from "../models/chatSubmissionAttempt";
-import {yieldSubmissionPaint} from "./chatSubmissionAttempts";
-import {readAgentAdmission} from "../queries/agentAdmission";
-import {resolveConnector} from "../../settings/commands/connectors";
-import {StorageError} from "../../../platform/storage/errors";
+import {createSubmissionAttempt} from "../models/chatSubmissionAttempt";
 import type {ComposerProps} from "./composerTypes";
 import {HomeWelcome} from "./HomeWelcome";
 import {
@@ -53,9 +48,7 @@ import {type ChatThread} from "../models/chat";
 import {type Id} from "../../../platform/identity";
 import {STUDIO_LIBRARY_ID} from "../../library/models/ownership";
 import {canRetryRun} from "../commands/agentRuns";
-import {recoverAbandonedRuns, withThreadRunLock} from "../runtime/runOwnership";
 import type {SubmissionAction} from "./SubmissionMessage";
-import {recoverTaskWrapups} from "../runtime/taskWrapup";
 import {discoverConnectorChatModels} from "../../settings/models/connectors";
 import {
     buildChatModelOptions,
@@ -100,54 +93,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const currentThread = useRef(threadId);
     currentThread.current = threadId;
     const mounted = useRef(true);
-    const [submissionAttempts, setSubmissionAttempts] = useState<ChatSubmissionAttempt[]>([]);
-    const attemptsRef = useRef(submissionAttempts);
     const presentation = useRef<{threadId: string; key: string} | undefined>(undefined);
-    const updateAttempt = useCallback((id: string, patch: Partial<ChatSubmissionAttempt>) => {
-        if (!mounted.current) return;
-        attemptsRef.current = attemptsRef.current.map(attempt => attempt.admission.userMessageId === id ? {...attempt, ...patch} : attempt);
-        setSubmissionAttempts(attemptsRef.current);
-    }, []);
-    const removeAttempt = useCallback((id: string) => {
-        if (!mounted.current) return;
-        if (attemptsRef.current.some(attempt => attempt.admission.userMessageId === id && attempt.recoveryRequired)) return;
-        attemptsRef.current = attemptsRef.current.filter(attempt => attempt.admission.userMessageId !== id);
-        setSubmissionAttempts(attemptsRef.current);
-    }, []);
-    useEffect(() => {
-        mounted.current = true;
-        return () => {
-            mounted.current = false;
-        };
-    }, []);
-    const {
-        sending,
-        stopping,
-        requestStop,
-        feedback,
-        feedbackSnapshot,
-        provisionalMessageId,
-        abortRef,
-        executionThreadRef,
-        sendLockRef,
-        acquire: acquireExecution,
-        release: releaseExecution
-    } = useChatExecutionSession(activeThreadId);
-    const feedbackContext = useMemo(() => ({invocation: feedback, snapshot: feedbackSnapshot, provisionalMessageId}),
-        [feedback, feedbackSnapshot, provisionalMessageId]);
-
-    useEffect(() => {
-        if (!activeThreadId) return;
-        const pause = () => {
-            pauseThreadGeneration(activeThreadId);
-            pauseAudioGenerationBatches({threadId: activeThreadId});
-        };
-        window.addEventListener('pagehide', pause);
-        return () => {
-            window.removeEventListener('pagehide', pause);
-            pause();
-        };
-    }, [activeThreadId]);
+    const creationAttachment = useRef<{threadId: string; scope: string; generation: number} | undefined>(undefined);
+    const attachment = useRef({scope: "", generation: 0});
+    useEffect(() => {mounted.current = true; return () => {mounted.current = false;};}, []);
 
     const loaded = threads !== undefined && connectors !== undefined && projects !== undefined;
     const threadList = useMemo(() => threads ?? [], [threads]);
@@ -188,10 +137,10 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         // Only a positively created first-send receipt can bridge query hydration.
         // A matching null remains a genuine deletion/missing result.
         if (activeThreadId && routedThread?.forId !== activeThreadId) {
-            return submissionAttempts.find(attempt => attempt.createdThread?.id === activeThreadId)?.createdThread;
+            return agentExecution.snapshot(activeThreadId).attempts.find(attempt => attempt.createdThread?.id === activeThreadId)?.createdThread;
         }
         return undefined;
-    }, [threadList, activeThreadId, routedThread, submissionAttempts]);
+    }, [threadList, activeThreadId, routedThread]);
 
     const messageRead = useProductQuery(
         async (db) => {
@@ -218,51 +167,13 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const runs = runRead?.forThreadId === (activeThreadId ?? null)
         ? runRead.runs.filter(run => run.threadId === activeThreadId) : undefined;
 
-    const {
-        request: requestDeparture,
-        confirmation: departureConfirmation,
-        armOnce: armConfirmedDeparture
-    } = useThreadDeparture(activeThreadId, runs);
-
-    const openThread = useCallback(
-        (id: Id) => {
-            if (id === activeThreadId) return;
-            // Topic confirmation first, then the task inspector's own draft guard: the
-            // run keeps its saved steps either way, and a declined guard must not
-            // silently consume the user's leave request.
-            requestDeparture(() => leaveTask(() => {
-                if (executionThreadRef.current !== id) abortRef.current?.abort();
-                // The decision was already confirmed; the route blocker must not ask again.
-                armConfirmedDeparture();
-                void navigate({to: "/agent/$threadId", params: {threadId: id}});
-            }));
-        },
-        [abortRef, executionThreadRef, navigate, leaveTask, activeThreadId, requestDeparture, armConfirmedDeparture],
-    );
-
-
-    useEffect(() => {
-        const recover = () => void recoverAbandonedRuns().catch((error: unknown) => {
-            toast.error(error instanceof Error ? error.message : "恢复执行状态失败");
-        });
-        recover();
-        window.addEventListener("focus", recover);
-        return () => window.removeEventListener("focus", recover);
-    }, []);
-
-    useEffect(() => {
-        if (!activeThreadId) return;
-        const recover = () => void recoverTaskWrapups(activeThreadId).catch((error: unknown) => {
-            toast.error(error instanceof Error ? error.message : "恢复总结状态失败");
-        });
-        recover();
-        window.addEventListener("focus", recover);
-        return () => window.removeEventListener("focus", recover);
-    }, [activeThreadId]);
+    const openThread = useCallback((id: Id) => {
+        if (id !== activeThreadId) leaveTask(() => {void navigate({to: "/agent/$threadId", params: {threadId: id}});});
+    }, [navigate, leaveTask, activeThreadId]);
 
     const selection = useChatSelection({loaded, activeThread, activeThreadId, connectorList, modelCatalog});
     const {
-        chatMode, selectionRef, selectionRevisionRef, modelPolicy, catalogMatches, setComposerProjectId,
+        chatMode, modelPolicy, catalogMatches, setComposerProjectId,
         handleConnectorChange, handleModelChange, handleProjectChange, handleReasoningEffortChange,
         handleChatModeChange, handleInteractionModeChange
     } = selection;
@@ -274,12 +185,35 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         interactionMode,
         reasoningEffort
     } = selection.snapshot;
-    const references = useReferenceDraft(JSON.stringify([activeThreadId ?? "home", projectId]), projectId);
+    const composeScope = JSON.stringify([activeThreadId ?? "home", projectId]);
+    const viewScope = JSON.stringify([composeScope, view ?? "chat"]);
+    if (attachment.current.scope !== viewScope) attachment.current = {scope: viewScope, generation: attachment.current.generation + 1};
+    const references = useReferenceDraft(composeScope, projectId);
+    const {snapshot: execution, sending, stopping, feedback, feedbackSnapshot, provisionalMessageId,
+        attempts: submissionAttempts} = useChatExecutionSession(activeThreadId, composeScope);
+    const feedbackContext = useMemo(() => ({invocation: feedback, snapshot: feedbackSnapshot, provisionalMessageId}),
+        [feedback, feedbackSnapshot, provisionalMessageId]);
+    const sendLocked = () => {
+        const id = activeThreadId ?? [...agentExecution.attemptsForScope(composeScope)].reverse().find(attempt => attempt.phase === "preparing")?.threadId;
+        return id ? agentExecution.snapshot(id).active : false;
+    };
+    const removeAttempt = useCallback((id: string) => {
+        const attempt = submissionAttempts.find(item => item.admission.userMessageId === id);
+        if (attempt) agentExecution.dismissAttempt({threadId: attempt.threadId, userMessageId: id});
+    }, [submissionAttempts]);
+    useEffect(() => {
+        const target = creationAttachment.current;
+        if (!target || !mounted.current || attachment.current.scope !== target.scope || attachment.current.generation !== target.generation) return;
+        const receipt = submissionAttempts.find(attempt => attempt.threadId === target.threadId)?.createdThread;
+        if (!receipt) return;
+        creationAttachment.current = undefined;
+        void navigate({to: "/agent/$threadId", params: {threadId: receipt.id}}).catch(() => undefined);
+    }, [submissionAttempts, navigate]);
     const {text: draft, setText: setDraft} = references;
     const projectRequired = taskMode && !projectId;
     const projectUnavailable = Boolean(projectId && projects && !projects.some((project) => project.id === projectId));
     const visibleAttempts = submissionAttempts.filter(attempt => activeThreadId ? attempt.threadId === activeThreadId :
-        attempt.phase !== "accepted" && attempt.submitted.scope === JSON.stringify(["home", projectId]));
+        (attempt.phase !== "accepted" || !!attempt.createdThread) && attempt.submitted.scope === JSON.stringify(["home", projectId]));
     const showHome = !activeThreadId && view !== "tasks" && visibleAttempts.length === 0;
     const provisionalHome = !activeThreadId && visibleAttempts.length > 0;
     if (presentation.current && activeThreadId && presentation.current.threadId !== activeThreadId) presentation.current = undefined;
@@ -337,25 +271,12 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
 
     const createTopic = useCallback((projectOverride?: Id) => leaveTask(() => {
         if (deleteLock.current) return;
-        // One confirmation covers the whole action, including the navigation it causes.
-        requestDeparture(() => {
-            abortRef.current?.abort();
-            void (async () => {
-                const thread = await createChatThread({
-                    connectorId: selectedConnector?.id,
-                    model: modelValue || undefined,
-                    projectId: projectOverride ?? projectId,
-                    taskMode,
-                });
-                armConfirmedDeparture();
-                void navigate({to: "/agent/$threadId", params: {threadId: thread.id}});
-            })().catch((error: unknown) => showError({
-                title: "创建对话失败",
-                cause: error,
-                actionName: "create-thread"
-            }));
-        });
-    }), [abortRef, navigate, selectedConnector?.id, modelValue, projectId, taskMode, leaveTask, requestDeparture, armConfirmedDeparture]);
+        const generation = attachment.current.generation;
+        void createChatThread({connectorId: selectedConnector?.id, model: modelValue || undefined,
+            projectId: projectOverride ?? projectId, taskMode}).then(thread => {
+            if (mounted.current && attachment.current.generation === generation) void navigate({to: "/agent/$threadId", params: {threadId: thread.id}});
+        }).catch((cause: unknown) => showError({title: "创建对话失败", cause, actionName: "create-thread"}));
+    }), [navigate, selectedConnector?.id, modelValue, projectId, taskMode, leaveTask]);
     const handleNewTopic = useCallback(() => createTopic(), [createTopic]);
     const handleNewTopicInProject = useCallback((id: Id) => createTopic(id), [createTopic]);
 
@@ -396,11 +317,13 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             setDeleting(true);
             void (async () => {
                 try {
-                    if (abortRef.current && executionThreadRef.current === target.id) abortRef.current.abort();
+                    const owner = agentExecution.snapshot(target.id);
+                    if (owner.token) agentExecution.requestStop({threadId: target.id, token: owner.token});
+                    if (owner.work) agentExecution.requestWorkStop({threadId: target.id, work: owner.work});
+                    await owner.work?.done.catch(() => undefined);
                     await deleteChatThread(target.id);
                     if (!mounted.current) return;
                     if (currentThread.current === target.id) {
-                        armConfirmedDeparture();
                         void navigate({to: "/agent", replace: true});
                     }
                     setDeleteTarget(current => current?.id === target.id ? undefined : current);
@@ -418,228 +341,66 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             remove();
             return;
         }
-        leaveTask(() => requestDeparture(remove));
-    }, [abortRef, deleteTarget, executionThreadRef, navigate, leaveTask, requestDeparture, armConfirmedDeparture]);
+        leaveTask(remove);
+    }, [deleteTarget, navigate, leaveTask]);
 
     const handleStop = useCallback(() => {
-        if (!requestStop()) return;
-        if (activeThreadId) pauseAudioGenerationBatches({threadId: activeThreadId});
-    }, [requestStop, activeThreadId]);
+        if (execution.token && agentExecution.requestStop({threadId: execution.threadId, token: execution.token})) return;
+        if (execution.work) agentExecution.requestWorkStop({threadId: execution.threadId, work: execution.work});
+    }, [execution]);
 
-    const runSubmission = useCallback(async (attempt: ChatSubmissionAttempt, connector: NonNullable<typeof selectedConnector>, retry = false) => {
-        const token = acquireExecution(attempt.admission.userMessageId);
-        if (!token) return;
-        const id = attempt.admission.userMessageId;
-        const selectionRevision = selectionRevisionRef.current;
-        let admitted = attempt.phase === "accepted";
-        updateAttempt(id, {phase: "preparing", error: undefined});
-        try {
-            // The provisional row/composer are already registered before this yield.
-            await yieldSubmissionPaint();
-            if (token.controller.signal.aborted) throw new Error("发送已停止");
-            if (retry) {
-                const status = await readAgentAdmission({threadId: attempt.threadId, admission: attempt.admission,
-                    connector: attempt.connector, model: attempt.model, projectId: attempt.projectId,
-                    content: attempt.submitted.text.trim(), attachments: attempt.submitted.attachments});
-                if (status.status === "accepted") {
-                    admitted = true;
-                    token.feedback.admitted(status.run);
-                    updateAttempt(id, {phase: "accepted", recoveryRequired: status.run.status === "running", error: undefined});
-                    return; // Accepted evidence never authorizes another model request.
-                }
-                if (status.status !== "absent") {
-                    updateAttempt(id, {phase: "uncertain", error: "发送记录不一致，请核对话题记录"});
-                    return;
-                }
-                if (token.controller.signal.aborted) throw new Error("发送已停止");
-            }
-            const checked = await executeNewChatMessage({
-                submitted: attempt.submitted, content: attempt.submitted.text.trim(), attachments: attempt.submitted.attachments,
-                references, activeThread: attempt.createdThread ?? (activeThread?.id === attempt.threadId ? activeThread : undefined),
-                activeThreadId: attempt.originThreadId, connector, model: attempt.model,
-                taskMode: attempt.taskMode, projectId: attempt.projectId, interactionMode: attempt.interactionMode,
-                reasoningEffort: attempt.reasoningEffort, catalogMatches, modelCatalog,
-                controller: token.controller, navigate, threadId: attempt.threadId, admission: attempt.admission,
-                navigateToThread: !attempt.originThreadId && currentThread.current !== attempt.threadId,
-                destinationReserved: attempt.destinationReserved,
-                onDestinationReady: () => updateAttempt(id, {destinationReserved: true}),
-                bindThread: target => {executionThreadRef.current = target; token.feedback.bindThread(target);},
-                onThreadReady: thread => updateAttempt(id, {createdThread: thread}),
-                onAdmitted: () => {admitted = true; updateAttempt(id, {phase: "accepted", error: undefined});},
-                feedback: token.feedback,
-                isCurrent: () => selectionRevisionRef.current === selectionRevision &&
-                    sameChatModelConnector(selectionRef.current.connector, connector) &&
-                    selectionRef.current.model === attempt.model && selectionRef.current.threadId === activeThreadId
-            });
-            if (!admitted) updateAttempt(id, {phase: "failed", error: checked && !checked.ok && !checked.aborted ? checked.message : "发送已停止，可重试或恢复草稿"});
-        } catch (error) {
-            const uncertain = !admitted && error instanceof StorageError && error.certainty === "unknown";
-            if (!admitted) {
-                updateAttempt(id, {phase: uncertain ? "uncertain" : "failed", error: uncertain ?
-                    "尚无法确认发送结果，请核对状态" : "发送未完成，可重试或恢复草稿"});
-                if (uncertain) {
-                    try {
-                        const status = await readAgentAdmission({threadId: attempt.threadId, admission: attempt.admission,
-                            connector: attempt.connector, model: attempt.model, projectId: attempt.projectId,
-                            content: attempt.submitted.text.trim(), attachments: attempt.submitted.attachments});
-                        if (status.status === "accepted") {
-                            token.feedback.admitted(status.run);
-                            updateAttempt(id, {phase: "accepted", recoveryRequired: status.run.status === "running", error: undefined});
-                        }
-                    } catch { /* An unavailable read never proves rollback. */ }
-                }
-            }
-            showError({title: uncertain ? "发送状态待确认" : "发送失败", cause: error, actionName: "send-message",
-                ...(error instanceof Error ? {detail: error.message.replaceAll(connector.apiKey, "[已隐藏]")} : {})});
-        } finally {
-            releaseExecution(token);
-        }
-    }, [acquireExecution, releaseExecution, updateAttempt, references, activeThread, activeThreadId, catalogMatches,
-        modelCatalog, navigate, executionThreadRef, selectionRevisionRef, selectionRef]);
-
-    const handleSend = useCallback(async () => {
+    const handleSend = () => {
         const submitted = references.capture();
-        if (!mounted.current || (!submitted.text.trim() && !submitted.attachments.length) || submitted.imports.length || sendLockRef.current) return;
-        if (projectRequired || projectUnavailable) {
-            toast.error(projectRequired ? "任务模式请先选择项目" : "项目已不可用，请选择其他项目开启新对话");
-            return;
-        }
+        if (!mounted.current || (!submitted.text.trim() && !submitted.attachments.length) || submitted.imports.length || sendLocked()) return;
+        if (projectRequired || projectUnavailable) {toast.error(projectRequired ? "任务模式请先选择项目" : "项目已不可用，请选择其他项目开启新对话"); return;}
         if (!selectedConnector) {toast.error("请先配置连接"); return;}
-        // Calling runSubmission claims its ref lock synchronously, before yielding.
-        const attempt = createSubmissionAttempt({originThreadId: activeThreadId, projectId, submitted,
-            recovery: references.consume(submitted), connector: {id: selectedConnector.id,
-                definitionId: selectedConnector.definitionId, baseUrl: selectedConnector.baseUrl},
-            model: modelValue, taskMode: chatMode === "task", interactionMode, reasoningEffort});
-        attemptsRef.current = [...attemptsRef.current, attempt];
-        setSubmissionAttempts(attemptsRef.current);
-        if (!activeThreadId) presentation.current = {threadId: attempt.threadId, key: attempt.admission.userMessageId};
-        await runSubmission(attempt, {...selectedConnector});
-    }, [references, sendLockRef, projectRequired, projectUnavailable, selectedConnector, activeThreadId, projectId,
-        modelValue, chatMode, interactionMode, reasoningEffort, runSubmission]);
-
-    const handleSubmissionAction = useCallback(async (id: string, action: SubmissionAction) => {
-        if (sendLockRef.current) return;
-        const attempt = attemptsRef.current.find(item => item.admission.userMessageId === id);
-        if (!attempt) return;
-        if (action === "recover") {
-            if (attempt.phase !== "accepted" || !attempt.recoveryRequired || currentThread.current !== attempt.threadId) return;
-            const token = acquireExecution();
-            if (!token) return;
-            try {
-                // Explicit state recovery takes the existing thread lock, never dispatches a model.
-                await withThreadRunLock(attempt.threadId, () => Promise.resolve());
-                updateAttempt(id, {recoveryRequired: false, error: undefined});
-            } catch (error) {
-                updateAttempt(id, {error: "暂时无法恢复对话，请稍后重试"});
-                showError({title: "暂时无法恢复对话", cause: error, actionName: "recover-submission"});
-            } finally {releaseExecution(token);}
-            return;
-        }
-        if (currentThread.current ? attempt.threadId !== currentThread.current :
-            attempt.submitted.scope !== references.capture().scope) return;
-        if (action === "restore") {
-            if (attempt.phase !== "failed") return;
-            if (references.restore(attempt.submitted, attempt.recovery)) removeAttempt(id);
-            else toast.error("当前草稿已有改动，发送内容仍保留在消息中");
-            return;
-        }
-        if (action === "check") {
-            if (attempt.phase !== "uncertain") return;
-            updateAttempt(id, {phase: "checking"});
-            try {
-                const status = await readAgentAdmission({threadId: attempt.threadId, admission: attempt.admission,
-                    connector: attempt.connector, model: attempt.model, projectId: attempt.projectId,
-                    content: attempt.submitted.text.trim(), attachments: attempt.submitted.attachments});
-                updateAttempt(id, status.status === "accepted" ? {phase: "accepted", recoveryRequired: status.run.status === "running", error: undefined} :
-                    {phase: "uncertain", error: "仍无法确认发送结果，请稍后核对状态"});
-            } catch {updateAttempt(id, {phase: "uncertain", error: "读取发送状态失败，请稍后重试核对"});}
-            return;
-        }
-        if (attempt.phase !== "failed") return;
-        // Claim synchronously while resolving credentials, blocking duplicate recovery gestures.
-        const token = acquireExecution();
-        if (!token) return;
-        const recoveryScope = currentThread.current;
+        let recovery: ReturnType<typeof references.consume> | undefined;
         try {
-            const connector = await resolveConnector(attempt.connector.id);
-            if (!connector || connector.id !== attempt.connector.id || connector.definitionId !== attempt.connector.definitionId ||
-                connector.baseUrl.replace(/\/+$/, "") !== attempt.connector.baseUrl.replace(/\/+$/, "")) {
-                updateAttempt(id, {phase: "failed", error: "原连接已变更，请恢复草稿后重新发送"});
-                return;
+            recovery = references.consume(submitted);
+            const attempt = createSubmissionAttempt({originThreadId: activeThreadId, projectId, submitted,
+                recovery, connector: {id: selectedConnector.id, definitionId: selectedConnector.definitionId, baseUrl: selectedConnector.baseUrl},
+                model: modelValue, taskMode: chatMode === "task", interactionMode, reasoningEffort});
+            if (!activeThreadId) {
+                chatDrafts.session(submitted.scope, projectId).reserveDestination(JSON.stringify([attempt.threadId, projectId]));
+                creationAttachment.current = {threadId: attempt.threadId, ...attachment.current};
+                presentation.current = {threadId: attempt.threadId, key: attempt.admission.userMessageId};
             }
-            if (token.controller.signal.aborted || currentThread.current !== recoveryScope) return;
-            releaseExecution(token);
-            await runSubmission(attempt, connector, true);
-        } catch {updateAttempt(id, {phase: "failed", error: "读取连接失败，请重试"});}
-        finally {releaseExecution(token);}
-    }, [sendLockRef, references, removeAttempt, updateAttempt, acquireExecution, releaseExecution, runSubmission]);
-
-    const handleRetry = useCallback(async (runId: string) => {
-        // A click during an in-flight send must say why it cannot run yet.
-        if (sendLockRef.current) {
-            toast.info("当前执行尚未结束，请等待完成或先停止。");
-            return;
+            agentExecution.submit({attempt, afterOptimisticPaint: yieldSubmissionPaint(), modelMetadata: catalogMatches ? modelCatalog?.metadata?.[modelValue] : undefined});
+        } catch (cause) {
+            if (recovery) references.restore(submitted, recovery);
+            showError({title: "暂时无法发送", cause, actionName: "send-message"});
         }
-        const token = acquireExecution();
-        if (!token) return;
-        const {controller} = token;
+    };
+    const handleSubmissionAction = (id: string, action: SubmissionAction) => {
+        const attempt = submissionAttempts.find(item => item.admission.userMessageId === id);
+        if (!attempt || sendLocked()) return;
         try {
-            const checked = await retryFrozenChatRun({
-                runId, activeThreadId, controller,
-                feedback: token.feedback,
-                isThreadCurrent: id => selectionRef.current.threadId === id
-            });
-            if (checked && !checked.ok && !checked.aborted) showError({
-                title: "重新生成失败",
-                cause: new Error(checked.message),
-                actionName: "retry-run",
-                detail: checked.message
-            });
-        } catch (error) {
-            showError({
-                title: "重新生成失败",
-                cause: error,
-                actionName: "retry-run", ...(error instanceof Error ? {detail: error.message} : {})
-            });
-        } finally {
-            releaseExecution(token);
-        }
-    }, [acquireExecution, releaseExecution, activeThreadId, selectionRef, sendLockRef]);
-
-    const handleRunAction = useCallback(async (runId: string, action: RunAction, callId?: string) => {
-        // Approval, rejection and cancel decisions are never silently dropped.
-        if (sendLockRef.current) {
-            toast.info("当前执行尚未结束，请等待完成后再处理这次操作。");
-            return;
-        }
-        const token = acquireExecution();
-        if (!token) return;
-        const {controller} = token;
-        try {
-            const checked = await resolveChatRunAction({
-                runId, action, callId, activeThreadId, controller,
-                feedback: token.feedback,
-                isThreadCurrent: id => selectionRef.current.threadId === id
-            });
-            if (checked && !checked.ok && !checked.aborted) showError({
-                title: "处理执行失败",
-                cause: new Error(checked.message),
-                actionName: "run-action",
-                detail: checked.message
-            });
-        } catch (error) {
-            showError({
-                title: "处理执行失败",
-                cause: error,
-                actionName: "run-action", ...(error instanceof Error ? {detail: error.message} : {})
-            });
-        } finally {
-            releaseExecution(token);
-        }
-    }, [acquireExecution, releaseExecution, activeThreadId, selectionRef, sendLockRef]);
+            const identity = {threadId: attempt.threadId, userMessageId: id};
+            if (action === "restore") {
+                if (attempt.phase !== "failed") return;
+                if (chatDrafts.session(attempt.submitted.scope, attempt.projectId).restore(attempt.submitted, attempt.recovery)) removeAttempt(id);
+                else toast.error("当前草稿已有改动，发送内容仍保留在消息中");
+            } else if (action === "recover") agentExecution.recoverAdmissionState(identity);
+            else if (action === "check") agentExecution.checkAdmission(identity);
+            else agentExecution.retrySubmission(identity);
+        } catch (cause) {showError({title: "无法处理发送记录", cause, actionName: "submission-action"});}
+    };
+    const handleRetry = useCallback((runId: string) => {
+        if (!activeThreadId) return;
+        try {agentExecution.retry({threadId: activeThreadId, runId});}
+        catch (cause) {showError({title: "重新生成失败", cause, actionName: "retry-run"});}
+    }, [activeThreadId]);
     const onRunAction = useCallback((runId: string, action: RunAction, callId?: string) => {
-        void handleRunAction(runId, action, callId);
-    }, [handleRunAction]);
+        if (!activeThreadId) return;
+        try {
+            const identity = {threadId: activeThreadId, runId};
+            if (action === "approve" || action === "reject") {
+                if (!callId) return;
+                agentExecution.resolveApproval({...identity, callId, decision: action});
+            } else if (action === "cancel") agentExecution.cancelSavedRun(identity);
+            else agentExecution.resume(identity);
+        } catch (cause) {showError({title: "处理执行失败", cause, actionName: "run-action"});}
+    }, [activeThreadId]);
 
     const retryableRunId = useMemo(() => {
         const latest = runs?.at(-1);
@@ -728,19 +489,19 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         attachments: references.attachments,
         referenceImports: references.imports,
         onAttachReference: (attachment) => {
-            if (!sendLockRef.current) references.attach(attachment);
+            if (!sendLocked()) references.attach(attachment);
         },
         onRemoveReference: (attachment) => {
-            if (!sendLockRef.current) references.remove(attachment);
+            if (!sendLocked()) references.remove(attachment);
         },
         onImportReferences: (files) => {
-            if (!sendLockRef.current) void references.importFiles(files);
+            if (!sendLocked()) void references.importFiles(files).catch((cause: unknown) => showError({title: "导入资料失败", cause, actionName: "import-reference"}));
         },
         onCancelReferenceImport: (id) => {
-            if (!sendLockRef.current) references.cancel(id);
+            if (!sendLocked()) references.cancel(id);
         },
         onRetryReferenceImport: (job) => {
-            if (!sendLockRef.current) references.retry(job);
+            if (!sendLocked()) void references.retry(job).catch((cause: unknown) => showError({title: "导入资料失败", cause, actionName: "import-reference"}));
         },
         threadId: activeThreadId,
         projects: projects ?? [],
@@ -751,7 +512,8 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         blocked: projectUnavailable || Boolean(activeTask && activeTask.lifecycle !== "open"),
         readOnly: projectUnavailable,
         blockedReason: projectUnavailable ? "项目不可用 · 历史仍可查看，请新开项目对话" : undefined,
-        status: projectUnavailable || activeTask || activeThread?.taskMode || showRunStatus || activeThreadId || executionStatus ? <>
+        status: execution.error || projectUnavailable || activeTask || activeThread?.taskMode || showRunStatus || activeThreadId || executionStatus ? <>
+            {execution.error && <div className="agent-composer-run-status" role="alert">{execution.error}</div>}
             {activeThreadId &&
                 <AgentComposerAttention threadId={activeThreadId} runs={runs ?? []} messages={messages ?? []}
                                         task={activeTask} projectUnavailable={projectUnavailable}
@@ -954,7 +716,6 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 </AlertDialogContent>
             </AlertDialog>
 
-            {departureConfirmation}
         </>
     );
 }

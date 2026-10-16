@@ -11,6 +11,7 @@ const runtime = vi.hoisted(() => ({active: undefined as Host | undefined}));
 vi.mock("react", async original => {
     const react = await original<typeof import("react")>();
     return {...react,
+        useSyncExternalStore: (_subscribe: unknown, snapshot: () => unknown) => {runtime.active!.cursor++; return snapshot();},
         useState: (initial: unknown) => {
             const host = runtime.active!; const index = host.cursor++;
             if (!(index in host.cells)) host.cells[index] = typeof initial === "function" ? initial() : initial;
@@ -79,13 +80,21 @@ vi.mock("@/features/agent/ui/AgentComposerAttention", () => ({AgentComposerAtten
 vi.mock("@/features/agent/ui/ContextUsagePanel", () => ({ContextUsageTrigger: "context"}));
 vi.mock("@lobehub/ui", () => ({Button: "button", Empty: "empty", Flexbox: "div"}));
 
+
+const retained = vi.hoisted(() => ({execution: undefined as import("@/features/agent/runtime/agentExecutionService").AgentExecutionService | undefined,
+    drafts: undefined as ReturnType<typeof import("@/features/agent/runtime/chatDraftStore").createChatDraftStore> | undefined}));
+vi.mock("@/features/agent/runtime/agentExecution", () => ({get agentExecution() {return retained.execution!;}}));
+vi.mock("@/features/agent/runtime/chatDraftStore", async original => ({...await original<typeof import("@/features/agent/runtime/chatDraftStore")>(),
+    get chatDrafts() {return retained.drafts!;}}));
+
 import {toast} from "sonner";
 import {db} from "@/platform/product/store";
 import {UnknownCommitError} from "@/platform/storage/errors";
 import {resetReportedErrorsForTests} from "@/platform/diagnostics/reportError";
 import {AgentChatPage} from "@/features/agent/ui/AgentChatPage";
 import {useReferenceDraft} from "@/features/agent/ui/useReferenceDraft";
-import {useChatExecutionSession} from "@/features/agent/ui/useChatExecutionSession";
+import {createAgentExecutionService} from "@/features/agent/runtime/agentExecutionService";
+import {createChatDraftStore} from "@/features/agent/runtime/chatDraftStore";
 import type {ComposerProps} from "@/features/agent/ui/composerTypes";
 import type {ChatThread} from "@/features/agent/models/chat";
 import type {ConnectorConfig} from "@/features/settings/models/connector";
@@ -141,7 +150,7 @@ function page(initial?: string, connection = connector) {
             return (child.type as (props: unknown) => unknown)(child.props);
         });
     };
-    const surface = () => render().find(node => node.type === "home" || node.type === "workspace")!;
+    const surface = () => {render(); return render().find(node => node.type === "home" || node.type === "workspace")!;};
     const composer = () => surface().props.composer as ComposerProps;
     const select = (id?: string) => {active = id; render(); render();};
     io.navigate.mockImplementation(async (options: {params?: {threadId: string}}) => {select(options.params?.threadId);});
@@ -153,7 +162,7 @@ function page(initial?: string, connection = connector) {
     return {host, threads, render, surface, composer, select, attempts, action, runs: (value: unknown[]) => {runResults = value; render();}, pendingOwnership: () => {pendingOwnership = true; active = "unknown";}, active: () => active, type: (value: string) => composer().onChange(value),
         attach: (id: string) => composer().onAttachReference!({referenceId: id, revision: 1}),
         // The UI deliberately discards handleSend's promise. Drain callbacks explicitly.
-        send: async () => {composer().onSend(); await settle();}};
+        send: async () => {composer().onSend(); await settle(); render(); await settle();}};
 }
 function reference(id: string, status: ProjectReference["status"] = "ready"): ProjectReference {
     return {id, projectId: "p", mediaId: `media-${id}`, digest: "digest", kind: "text", filename: "file.txt", mimeType: "text/plain",
@@ -161,6 +170,8 @@ function reference(id: string, status: ProjectReference["status"] = "ready"): Pr
         warnings: [], createdAt: "2026-09-30", updatedAt: "2026-09-30"};
 }
 beforeEach(async () => {
+    retained.execution = createAgentExecutionService({store: new Proxy(db, {})});
+    retained.drafts = createChatDraftStore();
     await db.chatThreads.bulkPut([thread("A"), thread("B"), thread("created")]);
     hosts.length = 0; vi.clearAllMocks(); resetReportedErrorsForTests(); Object.values(io).forEach(mock => mock.mockReset());
     vi.stubGlobal("window", {addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn()});
@@ -227,7 +238,6 @@ describe("B07 first send and ownership boundaries", () => {
             expect(ui.composer().value).toBe("");
             expect(ui.composer().attachments).toEqual([]);
             expect(ui.attempts()[0].submitted.text).toBe(" submitted ");
-            expect(io.begin).not.toHaveBeenCalled();
         });
         creation.resolve(created); await settle();
         expect(io.begin.mock.calls[0][0]).toMatchObject({threadId: created.id, content: "submitted",
@@ -263,31 +273,31 @@ describe("B07 first send and ownership boundaries", () => {
         expect(ui.composer().attachments).toEqual([]); expect(ui.attempts()[0].submitted.attachments).toHaveLength(1); expect(io.begin).not.toHaveBeenCalled();
         expect(io.execute).not.toHaveBeenCalled();
     });
-    it("failed Web Lock acquisition preserves the origin before any transfer or navigation", async () => {
+    it("failed Web Lock acquisition retains the attempt in its created thread without dispatch", async () => {
         const {ui, created} = home(); io.create.mockResolvedValue(created);
         io.lock.mockRejectedValue(new Error("thread already running"));
         await ui.send();
-        expect(ui.active()).toBeUndefined(); expect(ui.composer().value).toBe("");
+        expect(ui.active()).toBe(created.id); expect(ui.composer().value).toBe("");
         expect(ui.attempts()[0].submitted.text).toBe(" submitted ");
         expect(ui.composer().attachments).toEqual([]);
         expect(ui.attempts()[0].submitted.attachments).toEqual([{referenceId: "submitted-ref", revision: 1}]);
-        expect(ui.composer().sending).toBe(false); expect(io.navigate).not.toHaveBeenCalled();
+        expect(ui.composer().sending).toBe(false); expect(io.navigate).toHaveBeenCalledTimes(1);
         expect(io.begin).not.toHaveBeenCalled(); expect(io.execute).not.toHaveBeenCalled();
-        expect(toast.error).toHaveBeenCalledWith("发送失败", expect.objectContaining({description: "thread already running"}));
+        expect(retained.execution!.snapshot(created.id).error).toBeTruthy();
     });
-    it("failed navigation retains the attempt and explicit restoration recovers unchanged origin and no run begins", async () => {
+    it("failed navigation retains the submitted attempt and original execution independently", async () => {
         const {ui, created} = home(); io.create.mockResolvedValue(created); io.navigate.mockRejectedValue(new Error("navigation failed"));
         await ui.send(); expect(ui.active()).toBeUndefined(); expect(ui.composer().value).toBe("");
         expect(ui.attempts()[0].submitted.text).toBe(" submitted ");
-        expect(ui.composer().attachments).toEqual([]); expect(ui.attempts()[0].submitted.attachments).toHaveLength(1); expect(io.begin).not.toHaveBeenCalled();
+        expect(ui.composer().attachments).toEqual([]); expect(ui.attempts()[0].submitted.attachments).toHaveLength(1); expect(io.begin).toHaveBeenCalledTimes(1);
         ui.select(created.id); expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
     });
     it("failed navigation keeps newer home edits and exposes preserved submitted payload in the created topic", async () => {
         const {ui, created} = home(); const gate = deferred<ChatThread>(); io.create.mockReturnValue(gate.promise);
         const pending = ui.send(); await settle(); ui.type("new home");
         io.navigate.mockRejectedValue(new Error("navigation failed")); gate.resolve(created); await pending; await settle();
-        expect(ui.composer().value).toBe("new home"); expect(io.begin).not.toHaveBeenCalled();
-        expect(toast.error).toHaveBeenCalledWith("发送失败", expect.objectContaining({description: "navigation failed"}));
+        expect(ui.composer().value).toBe("new home"); expect(io.begin).toHaveBeenCalledTimes(1);
+        expect(io.execute).toHaveBeenCalledTimes(1);
         ui.select(created.id); expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
         expect(ui.attempts()[0].submitted).toMatchObject({text: " submitted ", attachments: [{referenceId: "submitted-ref", revision: 1}]});
     });
@@ -302,39 +312,39 @@ describe("B07 first send and ownership boundaries", () => {
     it("failed navigation cannot restore after target edits then reverts to the submitted text", async () => {
         const {ui, created} = home(); io.create.mockResolvedValue(created); const nav = deferred<void>();
         io.navigate.mockImplementation(() => {ui.select(created.id); return nav.promise;});
-        const pending = ui.send(); await settle();
+        const pending = ui.send(); await settle(); ui.render();
         expect(ui.composer().value).toBe(""); ui.type("edited target"); ui.type(" submitted ");
         nav.reject(new Error("navigation failed")); await pending; await settle();
         expect(ui.composer().value).toBe(" submitted ");
         expect(ui.composer().attachments).toEqual([]);
         expect(ui.attempts()[0].submitted.attachments).toEqual([{referenceId: "submitted-ref", revision: 1}]);
-        expect(toast.error).toHaveBeenCalledWith("发送失败", expect.objectContaining({description: "navigation failed"}));
-        expect(io.begin).not.toHaveBeenCalled(); expect(io.execute).not.toHaveBeenCalled();
+        expect(io.begin).toHaveBeenCalledTimes(1); expect(io.execute).toHaveBeenCalledTimes(1);
         ui.select(); expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
     });
     it("existing destination draft is never overwritten and origin stays intact", async () => {
         const {ui, created} = home(); ui.select(created.id); ui.type("existing target"); ui.attach("target-ref"); ui.select();
         io.create.mockResolvedValue(created); await ui.send();
         expect(io.navigate).not.toHaveBeenCalled(); expect(io.begin).not.toHaveBeenCalled();
-        expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
-        expect(ui.attempts()[0].submitted).toMatchObject({text: " submitted ", attachments: [{referenceId: "submitted-ref", revision: 1}]});
+        expect(ui.composer().value).toBe(" submitted "); expect(ui.composer().attachments).toEqual([{referenceId: "submitted-ref", revision: 1}]);
+        expect(ui.attempts()).toEqual([]);
         ui.select(created.id); expect(ui.composer().value).toBe("existing target");
         expect(ui.composer().attachments).toEqual([{referenceId: "target-ref", revision: 1}]);
     });
-    it("switching during creation aborts old send before transfer/navigation", async () => {
+    it("switching during creation retains old send without late route stealing", async () => {
         const {ui, created} = home(); const gate = deferred<ChatThread>(); io.create.mockReturnValue(gate.promise);
         const pending = ui.send(); await settle(); ui.select("B"); ui.type("other draft"); gate.resolve(created); await pending; await settle();
-        expect(io.navigate).not.toHaveBeenCalled(); expect(io.begin).not.toHaveBeenCalled();
+        expect(io.navigate).not.toHaveBeenCalled(); expect(io.begin).toHaveBeenCalledTimes(1);
+        expect(io.execute.mock.calls[0][2].signal.aborted).toBe(false);
         expect(ui.composer().value).toBe("other draft"); ui.select();
         expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
         expect(ui.attempts()[0].submitted).toMatchObject({text: " submitted ", attachments: [{referenceId: "submitted-ref", revision: 1}]});
     });
-    it("late successful begin clears only its submitted owner and aborts execution after route switch", async () => {
+    it("late successful begin clears only its submitted owner and continues after route switch", async () => {
         const ui = page("B"); ui.type("same"); ui.attach("refB"); ui.select("A"); ui.type("same"); ui.attach("refA"); const gate = deferred<{id: string}>(); io.begin.mockReturnValue(gate.promise);
         const pending = ui.send(); await settle(); ui.select("B"); ui.type("same");
         gate.resolve({id: "run"}); await pending; await settle();
         expect(ui.composer().value).toBe("same"); expect(ui.composer().attachments).toEqual([{referenceId: "refB", revision: 1}]);
-        expect(io.execute.mock.calls[0][2].signal.aborted).toBe(true);
+        expect(io.execute.mock.calls[0][2].signal.aborted).toBe(false);
         ui.select("A"); expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
     });
     it("existing-thread payload is consumed immediately and next edits survive execution completion", async () => {
@@ -389,16 +399,16 @@ describe("B07 first send and ownership boundaries", () => {
     it("an existing destination edited back to empty still rejects transfer", async () => {
         const {ui, created} = home(); ui.select(created.id); ui.type("draft"); ui.type(""); ui.select();
         io.create.mockResolvedValue(created); await ui.send();
-        expect(io.begin).not.toHaveBeenCalled(); expect(ui.composer().value).toBe("");
-        expect(ui.attempts()[0].submitted.text).toBe(" submitted ");
-        expect(ui.composer().attachments).toEqual([]);
+        expect(io.begin).not.toHaveBeenCalled(); expect(ui.composer().value).toBe(" submitted ");
+        expect(ui.attempts()).toEqual([]);
+        expect(ui.composer().attachments).toEqual([{referenceId: "submitted-ref", revision: 1}]);
     });
     it("execution failure after committed begin retains next edits and does not restore submitted draft", async () => {
         const {ui, created} = home(); io.create.mockResolvedValue(created); const gate = deferred<void>(); io.execute.mockReturnValue(gate.promise);
         const pending = ui.send(); await settle(); expect(ui.composer().value).toBe(""); ui.type("next");
         gate.reject(new Error("execution failed")); await pending; await settle();
         expect(ui.composer().value).toBe("next"); expect(ui.composer().attachments).toEqual([]);
-        expect(toast.error).toHaveBeenCalledWith("发送失败", expect.objectContaining({description: "execution failed"})); expect(io.begin).toHaveBeenCalledTimes(1);
+        expect(retained.execution!.snapshot(created.id).error).toBeTruthy(); expect(io.begin).toHaveBeenCalledTimes(1);
     });
     it("preserves composer loading gate when routed ownership is pending", () => {
         const ui = page(); ui.pendingOwnership();
@@ -502,21 +512,17 @@ describe("E03 owned execution feedback", () => {
         expect(statusText(ui.composer())).toContain("正在执行");
         flush.resolve(); await settle();
     });
-    it("reuses its controller after effect replay and stale release cannot unlock another invocation", () => {
-        const host = mount(); const drawSession = () => {
-            let result!: ReturnType<typeof useChatExecutionSession>;
-            draw(host, () => {result = useChatExecutionSession("A");}); return result;
-        };
-        let session = drawSession(); const first = session.acquire()!;
-        replay(host); session = drawSession();
-        expect(first.controller.signal.aborted).toBe(true);
-        expect(session.acquire()).toBeUndefined();
-        session.release(first); session = drawSession();
-        const second = session.acquire()!; session.release(first);
-        expect(session.sendLockRef.current).toBe(true);
-        expect(second.feedback.requestStop()).toBe(true);
-        expect(second.feedback.requestStop()).toBe(false);
-        session.release(second); expect(session.sendLockRef.current).toBe(false);
+    it("effect replay and unmount detach only; exact Stop retains final flush ownership", async () => {
+        const ui = page("A"); ui.type("retained"); const final = deferred<void>(); io.execute.mockReturnValue(final.promise);
+        await ui.send(); const before = retained.execution!.snapshot("A");
+        replay(ui.host); ui.render();
+        expect(before.work!.controller.signal.aborted).toBe(false);
+        unmount(ui.host);
+        expect(before.work!.controller.signal.aborted).toBe(false);
+        expect(retained.execution!.requestStop({threadId: "A", token: before.token!})).toBe(true);
+        expect(retained.execution!.snapshot("A").active).toBe(true);
+        final.resolve(); await settle(); expect(retained.execution!.snapshot("A").active).toBe(false);
+        expect(ui.host.lateWrites).toBe(0);
     });
 });
 
@@ -642,12 +648,12 @@ describe("E02 immediate submission recovery", () => {
         expect(ui.attempts()[0].phase).toBe("failed"); await ui.action("restore");
         expect(ui.composer().value).toBe("stop before begin");
     });
-    it("switching while retry credentials resolve cannot restart old work", async () => {
+    it("switching while explicit retry credentials resolve retains original authorized work", async () => {
         const ui = page("A"); ui.type("old"); io.begin.mockRejectedValueOnce(new Error("rollback")); await ui.send();
         const gate = deferred<ConnectorConfig>(); io.resolveConnector.mockReturnValue(gate.promise);
         const pending = ui.action("retry"); await settle(); ui.select("B"); ui.type("new owner");
-        gate.resolve(connector); await pending; await settle(); expect(io.begin).toHaveBeenCalledTimes(1);
-        expect(io.execute).not.toHaveBeenCalled(); expect(ui.composer().value).toBe("new owner");
+        gate.resolve(connector); await pending; await settle(); expect(io.begin).toHaveBeenCalledTimes(2);
+        expect(io.execute).toHaveBeenCalledTimes(1); expect(ui.composer().value).toBe("new owner");
         ui.select("A"); expect(ui.attempts()[0].submitted.text).toBe("old");
     });
 });
@@ -681,15 +687,16 @@ describe("B07 actual reference import callbacks", () => {
         expect(ui.composer().value).toBe("after retry started"); expect(ui.composer().referenceImports).toEqual([]);
         expect(ui.composer().attachments).toEqual([{referenceId: "allocated-reference", revision: 1}]);
     });
-    it("cancellation and unmount abort import and prevent late publish", async () => {
+    it("explicit cancellation aborts import; unmount retains original import and scope", async () => {
         const ui = page("A"); ui.type("keep"); const first = deferred<ProjectReference>(); io.importFile.mockReturnValueOnce(first.promise);
         ui.composer().onImportReferences!([new File(["x"], "file.txt")]); const firstSignal = io.importFile.mock.calls[0][2].signal as AbortSignal;
         ui.composer().onCancelReferenceImport!(ui.composer().referenceImports![0].id); first.resolve(reference("cancelled")); await settle();
         expect(firstSignal.aborted).toBe(true); expect(ui.composer().attachments).toEqual([]); expect(ui.composer().value).toBe("keep");
         const second = deferred<ProjectReference>(); io.importFile.mockReturnValueOnce(second.promise);
         ui.composer().onImportReferences!([new File(["x"], "file.txt")]); const secondSignal = io.importFile.mock.calls[1][2].signal as AbortSignal;
-        unmount(ui.host); expect(secondSignal.aborted).toBe(true); second.resolve(reference("late")); await settle();
+        unmount(ui.host); expect(secondSignal.aborted).toBe(false); second.resolve(reference("late")); await settle();
         expect(ui.host.lateWrites).toBe(0);
+        expect(retained.drafts!.snapshot(JSON.stringify(["A", "p"])).attachments).toEqual([{referenceId: "late", revision: 1}]);
     });
     it("active import blocks send until ready; async success preserves page text", async () => {
         const ui = page("A"); ui.type("original"); const gate = deferred<ProjectReference>(); io.importFile.mockReturnValue(gate.promise);

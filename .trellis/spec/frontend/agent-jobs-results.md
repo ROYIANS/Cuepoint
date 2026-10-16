@@ -1,12 +1,12 @@
-# Agent foreground jobs and retained reports
+# Agent jobs and retained reports
 
 ## 1. Scope / Trigger
 
 Read when changing foreground work, retained tool text, report paging/cleanup or
 their parent lifecycles. Studio owns these product bindings; the reusable core
 keeps its existing serial loop, result guard and compaction. Actual first
-producers are `web_read` and `project_media_check`. A saved job does not extend
-execution beyond the existing held foreground invocation. Native directory,
+producers are `web_read` and `project_media_check`. A saved job does not create its own execution owner. E11 retains the actual
+application-service invocation across view navigation, including its original tool/report completion. Native directory,
 process and thumbnail work and any changed background lifetime require their
 own implementation and runtime acceptance.
 

@@ -17,3 +17,9 @@ export type DraftState = {
 };
 export type SubmittedDraft = Pick<DraftState, "text" | "textRevision" | "attachments" | "imports"> & { scope: string };
 export type DraftRecovery = {scope: string; revision: number};
+
+/** Published compose state is immutable; capture creates an independent submission DTO. */
+export type DraftSnapshot = Omit<Readonly<DraftState>, "attachments" | "imports"> & {
+    readonly attachments: readonly Readonly<ReferenceAttachment>[];
+    readonly imports: readonly Readonly<ReferenceImportDraft>[];
+};

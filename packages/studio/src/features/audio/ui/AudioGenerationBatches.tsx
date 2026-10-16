@@ -70,7 +70,7 @@ function AudioBatchPanel({projectId, batchId}: { projectId: string; batchId: str
     const included = rows.filter(row => row.item.included);
     const retryable = rows.filter(row => row.job?.status === "failed" && row.job.failureStage === "provider" && !row.job.results.length);
     const start = () => {
-        void startAudioGenerationBatch(projectId, batchId).catch(cause => setError(message(cause)));
+        void startAudioGenerationBatch(projectId, batchId, batch.owner.kind === "agent" ? {agentThreadId: batch.owner.threadId} : {}).catch(cause => setError(message(cause)));
     };
     return <section className="min-w-0 border-t py-4 text-sm" aria-label="批量配音进度">
         <div className="flex flex-wrap items-center gap-2"><strong

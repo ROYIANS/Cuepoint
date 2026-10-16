@@ -24,7 +24,7 @@ export function ReferenceLibrary({projectId, open, onOpenChange, selected, onSel
     projectId: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    selected: ReferenceAttachment[];
+    selected: readonly Readonly<ReferenceAttachment>[];
     onSelect: (attachment: ReferenceAttachment) => void;
     onImport: () => void
 }) {

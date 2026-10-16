@@ -13,9 +13,12 @@ vi.mock("react", async original => ({...await original<typeof import("react")>()
             host.effects.push(() => {host.cleanups.get(index)?.(); const cleanup = setup(); if (cleanup) host.cleanups.set(index, cleanup);});
         }
     },
+    useSyncExternalStore: (_subscribe: unknown, snapshot: () => unknown) => snapshot(),
     useMemo: (compute: () => unknown) => compute(), useCallback: (fn: unknown) => fn,
 }));
 
+import {reserveAgentThreadWork, currentAgentThreadWork} from "@/features/agent/runtime/threadWork";
+import {agentExecution} from "@/features/agent/runtime/agentExecution";
 import {useChatExecutionSession} from "@/features/agent/ui/useChatExecutionSession";
 import {useChatSelection} from "@/features/agent/ui/useChatSelection";
 import {createChatThread, updateChatThread} from "@/features/agent/commands/chat";
@@ -24,49 +27,40 @@ import {db} from "@/platform/product/store";
 function render<T>(run: () => T): T {host.cursor = 0; const value = run(); host.effects.splice(0).forEach(fn => fn()); return value;}
 beforeEach(() => {host.cells = []; host.cursor = 0; host.effects = []; host.cleanups.clear();});
 afterEach(() => {for (const cleanup of host.cleanups.values()) cleanup();});
-const connector: ConnectorConfig = {id: "d03-connector", name: "test", definitionId: "openai-compatible", baseUrl: "https://d03.invalid/v1", apiKey: "local", updatedAt: "2026-10-08"};
+const connector: ConnectorConfig = {id: "d03-connector", definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://d03.invalid/v1", apiKey: "local", updatedAt: "2026-10-08"};
 
 describe("D03 execution and selection owners", () => {
-    it("locks synchronously until final release, aborts old route and refuses old finally in a new epoch", () => {
-        let session = render(() => useChatExecutionSession("A"));
-        const first = session.acquire()!;
-        expect(session.acquire()).toBeUndefined();
-        session = render(() => useChatExecutionSession("B"));
-        expect(first.controller.signal.aborted).toBe(true);
-        expect(session.sendLockRef.current).toBe(true);
-        session.release(first);
-        const second = session.acquire()!;
-        session.release(first);
-        expect(session.sendLockRef.current).toBe(true);
-        expect(session.abortRef.current).toBe(second.controller);
-        session.release(second);
-        expect(session.sendLockRef.current).toBe(false);
+    it("reserves synchronously per thread, retains A across route switches and ignores a stale release", async () => {
+        let finishA!: () => void, finishB!: () => void;
+        const a = reserveAgentThreadWork(db, {kind: "model", threadId: "A", invocationId: "A"}, new AbortController());
+        a.follow(new Promise<void>(resolve => {finishA = resolve;}));
+        expect(render(() => useChatExecutionSession("A", "A")).sending).toBe(true);
+        expect(() => reserveAgentThreadWork(db, {kind: "model", threadId: "A", invocationId: "duplicate"}, new AbortController())).toThrow("尚有执行");
+        expect(render(() => useChatExecutionSession("B", "B")).sending).toBe(false);
+        expect(a.work.controller.signal.aborted).toBe(false);
+        const b = reserveAgentThreadWork(db, {kind: "model", threadId: "B", invocationId: "B"}, new AbortController());
+        b.follow(new Promise<void>(resolve => {finishB = resolve;}));
+        finishA(); await a.work.done;
+        expect(currentAgentThreadWork(db, "B")).toBe(b.work);
+        expect(agentExecution.requestWorkStop({threadId: "B", work: a.work})).toBe(false);
+        expect(b.work.controller.signal.aborted).toBe(false);
+        finishB(); await b.work.done;
     });
-    it("binds new-topic identity before navigation and unmount aborts without allowing late acquire", () => {
-        let session = render(() => useChatExecutionSession());
-        const token = session.acquire()!;
-        session.executionThreadRef.current = "created";
-        session = render(() => useChatExecutionSession("created"));
-        expect(token.controller.signal.aborted).toBe(false);
+    it("view cleanup/setup replay retains the captured original work and explicit Stop waits final flush", async () => {
+        let finish!: () => void;
+        const reservation = reserveAgentThreadWork(db, {kind: "model", threadId: "created", invocationId: "original"}, new AbortController());
+        reservation.follow(new Promise<void>(resolve => {finish = resolve;}));
+        render(() => useChatExecutionSession(undefined, "home"));
         for (const cleanup of host.cleanups.values()) cleanup();
-        expect(token.controller.signal.aborted).toBe(true);
-        expect(session.acquire()).toBeUndefined();
-        session.release(token);
-    });
-    it("effect cleanup/setup replay keeps an aborted execution locked until its final flush releases it", () => {
-        let session = render(() => useChatExecutionSession("A"));
-        const token = session.acquire()!;
-        host.cleanups.get(6)!();
-        host.cells[6] = undefined;
-        session = render(() => useChatExecutionSession("A"));
-        expect(token.controller.signal.aborted).toBe(true);
-        expect(session.sendLockRef.current).toBe(true);
-        expect(session.acquire()).toBeUndefined();
-        session.release(token);
-        expect(session.sendLockRef.current).toBe(false);
+        expect(reservation.work.controller.signal.aborted).toBe(false);
+        expect(render(() => useChatExecutionSession("created", "created")).sending).toBe(true);
+        expect(agentExecution.requestWorkStop({threadId: "created", work: reservation.work})).toBe(true);
+        expect(currentAgentThreadWork(db, "created")).toBe(reservation.work);
+        finish(); await reservation.work.done;
+        expect(render(() => useChatExecutionSession("created", "created")).sending).toBe(false);
     });
     it("scopes interaction to thread and effort to connector/base/model, updates revision before persistence settles", async () => {
-        let activeThread: ChatThread | undefined = await createChatThread({connectorId: connector.id, model: " original ", interactionMode: "conversation"});
+        let activeThread: ChatThread | undefined = await createChatThread({connectorId: connector.id, model: " original "});
         await updateChatThread(activeThread!.id, {interactionMode: "conversation"});
         activeThread = await db.chatThreads.get(activeThread!.id);
         const read = () => useChatSelection({loaded: true, activeThread, activeThreadId: activeThread?.id, connectorList: [connector]});
@@ -79,7 +73,7 @@ describe("D03 execution and selection owners", () => {
         await pending;
         expect((await db.chatThreads.get(activeThread!.id))?.interactionMode).toBe("smart");
         const firstId = activeThread!.id;
-        activeThread = await createChatThread({connectorId: connector.id, model: "other", interactionMode: "conversation"});
+        activeThread = await createChatThread({connectorId: connector.id, model: "other"});
         await updateChatThread(activeThread!.id, {interactionMode: "conversation"});
         activeThread = await db.chatThreads.get(activeThread!.id);
         render(read); selection = render(read);
