@@ -7,10 +7,10 @@ import {executeChatRun} from '@/features/agent/runtime/runChat';
 import {updateGeneralAgentConfig} from '@/features/agent/commands/agentSettings';
 import {BUILTIN_TOOLS} from '@/features/agent/runtime/tools';
 import type {ConnectorConfig} from '@/features/settings/models/connector';
-const connector:ConnectorConfig={id:'cx',definitionId:'openai-compatible',baseUrl:'https://example.test/v1',apiKey:'key',updatedAt:'2026-10-15'};
+const connector:ConnectorConfig={id:'cx',definitionId:'openai-compatible',protocol:'openai-compatible',baseUrl:'https://example.test/v1',apiKey:'key',updatedAt:'2026-10-15'};
 
 describe('actual transactional claim revalidation',()=>{
-    for (const mutation of ['arguments','offered','approval'] as const) it(`rejects ${mutation} changes after fresh read and before the claim transaction`,async()=>{
+    for (const mutation of ['arguments','offered','approval','binding'] as const) it(`rejects ${mutation} changes after fresh read and before the claim transaction`,async()=>{
         await updateGeneralAgentConfig({permissionMode:'full',enabledSkillIds:['workspace']});
         const run=await beginAgentRun({threadId:(await createChatThread()).id,connector,model:'test',content:'hello'});
         const execute=vi.fn(async()=>({changed:true}));
@@ -32,7 +32,8 @@ describe('actual transactional claim revalidation',()=>{
             if (mutation !== 'arguments' && !changed && args[3] === 'running') {
                 changed=true;
                 if (mutation === 'offered') await db.agentRuns.update(run.id,{enabledToolNames:[]});
-                else await db.agentToolCalls.update(args[1],{decision:'reject'});
+                else if (mutation === 'approval') await db.agentToolCalls.update(args[1],{decision:'reject'});
+                else await db.agentToolCalls.update(args[1],{binding:{capabilityId:'tampered',version:'new',registrationId:'other'}});
             }
             return transition(...args);
         });

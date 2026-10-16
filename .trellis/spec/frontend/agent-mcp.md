@@ -5,8 +5,9 @@
 E10 adds desktop-first MCP support to the existing Agent and ProductStore.
 Stage 1 establishes strict device configuration, immutable discovery and bounded
 native SDK adapters. Stage 2 adds the finite desktop port, connection/configuration
-owners and native OAuth/service lifecycle. Agent execution and management UI are
-separate later stages. Review each stage against actual executed evidence. Keep macOS/Windows
+owners and native OAuth/service lifecycle. Stage 3 connects the actual Agent
+surface and E07 retention; management remains Stage 4. Review each stage against
+actual executed evidence. Keep macOS/Windows
 evidence separate; practical browser remote support must not require a proxy
 or block desktop delivery.
 
@@ -242,6 +243,66 @@ Correct: safe catalogue plus host-private revision; preserve separate immutable
 identities and obtain credentials before a single authorized dispatch.
 
 Wrong: report a saved unknown-effect report as completed or discard an established
-original reply after reconnect. Correct: later Agent integration must retain the
+original reply after reconnect. Correct: Agent integration must retain the
 unknown barrier, and verified late evidence may settle only surviving original
 invocation/job/call owners. It cannot write into a replacement or resurrect deletion.
+
+## 8. Agent surface and retained execution
+
+New-send admission and next-context preview use one pure surface composer. Capture
+already-connected generations before the ProductStore transaction; inside the
+final transaction check the actual public catalogue and synchronous local owner
+identity without host IO. Connection state is not a durable store mutation:
+subscribe to the concrete connection owner's revision so an opened preview and
+management surface update after connect, login retirement or disconnect.
+
+Persist an optional secret-free AgentRun MCP snapshot. Conversation mode has none.
+Retry/resume uses the saved capture; absent legacy snapshots cannot acquire live
+connections. Materialize exact per-run tools with core createCapabilityRegistry
+and its immutable/current-binding checks. Advertised schema construction remains
+possible offline; prepare and execute require actual current host authority.
+The model request uses core's supplied offeredDefinitions, including the matching
+context budget, rather than reconstructing another registry view.
+
+Count loader, task, installed-skill, read_job_result and per-server resource helpers
+in the real foundation before partitioning server tools. Preserve 36 total tools,
+two requested groups, pending-call pins and next-request group activation. A tool
+named before that request offered it cannot execute in the same round.
+If the final resource/helper foundation makes an existing business group too
+large, partition it deterministically by that capacity as well. Preserve its
+ordinary identifier when it fits; never advertise a permanently unloadable group.
+
+Round records explicitly preserve binding; durable claim and E07 call revisions
+include it. Safe preview facts capture exact binding, normalized manifest digest,
+public name and finite target/operation. Ephemeral prepared bearer authority is
+never a saved preview/run/export field. Approved continuation can prepare again
+only against the same facts; it cannot retarget to a replacement generation.
+External tools remain network/high-risk/non-atomic with no automatic recovery
+marker, using existing ask/assist/full policy.
+
+E07 owns the finite MCP tool/resource job variant, admission, local publication,
+readback, paging and clear. Admit before producer IO and never repeat an already
+admitted original to reconcile it. Retained unknown evidence leaves the original
+call unknown and raises the typed pending/unresolved outcome, so core cannot
+complete it or continue the model merely because text was saved. Readable evidence
+is separate from established external effect certainty.
+
+The foreground execution owner can retain a bounded original host receipt in
+memory for a readback-only report action after the loop returns. It holds only
+the original authority, job/revision and minimal owner context; no arguments,
+factory, preview or AbortSignal. Query invocationStatus and use original E07
+publication, never call execute/invoke to reconcile an unknown. Reload/host
+release cannot recover authority from saved IDs. Repeated report queries must
+share their pending operation and keep a still-unknown effect unresolved.
+
+A verified original reply after Stop/disconnect may settle only surviving exact
+job/call owners even if the run is now interrupted; do not require a currently
+running replacement to publish that original evidence. Current reader authority
+and historical original-row authority remain separate. Parent deletion wins and
+late replies cannot recreate deleted rows. Resource reads accept only captured
+opaque handles; binary/link payloads stay explicitly unsupported and never cause
+an implicit fetch. Text/JSON is bounded attributed untrusted content retained
+through E07, available for scoped offline readback.
+List frozen resource descriptors in explicit four-entry pages, preserving a
+continuation. Maximum JSON escaping must fit core's smaller result envelope;
+the larger discovery-generation cap is not an inline result allowance.

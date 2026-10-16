@@ -48,6 +48,34 @@ describe("MCP configuration and connection owner with actual ProductStore", () =
         expect(await owner.connected()).toEqual([generation]);
     });
 
+    it("notifies pure surface readers before awaiting replacement disconnect and on final disposal", async () => {
+        const {host, owner} = fixture();
+        const listener = vi.fn(), unsubscribe = owner.subscribe(listener);
+        await owner.save(save());
+        const generation = await owner.connect({operationId: "connect_one", serverId: "server_one", configRevision: 1});
+        expect(owner.capture()).toEqual([generation]);
+        expect(owner.isCurrent(generation.binding)).toBe(true);
+        const revision = owner.revision, held = deferred<{status: "drained"}>(), started = deferred<void>();
+        vi.spyOn(host, "disconnect").mockImplementationOnce(async () => {started.resolve(); return held.promise;});
+        const replacement = owner.connect({operationId: "connect_two", serverId: "server_one", configRevision: 1});
+        await started.promise;
+        expect(owner.revision).toBeGreaterThan(revision);
+        expect(listener).toHaveBeenCalled();
+        expect(owner.capture()).toEqual([]);
+        expect(owner.isCurrent(generation.binding)).toBe(false);
+        held.resolve({status: "drained"});
+        await replacement;
+        expect(owner.capture()).toHaveLength(1);
+        const reads = vi.spyOn(db, "transaction");
+        owner.capture(); owner.isCurrent(generation.binding);
+        expect(reads).not.toHaveBeenCalled();
+        const afterReplacement = owner.revision;
+        await owner.dispose();
+        expect(owner.revision).toBeGreaterThan(afterReplacement);
+        expect(owner.capture()).toEqual([]);
+        unsubscribe();
+    });
+
     it("rejects malformed private configuration before vault creation or retirement", async () => {
         const {host, owner} = fixture();
         expect(() => owner.save(save({privateConfig: {transport: "streamable_http", endpoint: "https://user:SECRET@example.com", auth: {kind: "none"}}}))).toThrow();

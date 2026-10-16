@@ -14,12 +14,12 @@ import {
 import {continuationExtraTokens} from "../runtime/contextCompaction";
 import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
 import type {ConnectorConfig} from "../../settings/models/connector";
-import {useMemo, useState} from "react";
+import {useMemo, useState, useSyncExternalStore} from "react";
 import {contextPreviewIdentity, readAgentContextPreview} from "../commands/agentContextPreview";
 import {useProductQuery} from "../../../platform/product/queries";
 import * as Popover from "@radix-ui/react-popover";
 import {X} from "../../../ui/icons";
-import {toolSchemas} from "../runtime/tools";
+import {mcpRuntimeOwner} from "../mcp/runtime/owner";
 import {estimateContextUsage, formatTokenCount,} from "../runtime/contextUsage";
 import {popupCollisionPadding} from "../../../ui/popupCollision";
 
@@ -54,7 +54,10 @@ function useContextUsage(props: ContextProps) {
         }),
         [threadId, projectId, interactionMode, requestDraft, attachments, model, connector?.definitionId, modelMetadata]);
     const identity = contextPreviewIdentity(input);
-    const loaded = useProductQuery((db) => readAgentContextPreview(input, db), [input]);
+    const connections = mcpRuntimeOwner()?.connections;
+    const connectionRevision = useSyncExternalStore(connections ? listener => connections.subscribe(listener) : () => () => undefined,
+        () => connections?.revision ?? 0, () => 0);
+    const loaded = useProductQuery((db) => readAgentContextPreview(input, db), [input, connectionRevision]);
     const snapshot = loaded?.identity === identity ? loaded : undefined;
     return useMemo(() => {
         if (!snapshot || snapshot.status !== "ready") {
@@ -111,7 +114,7 @@ function useContextUsage(props: ContextProps) {
                 ),
                 memorySelection,
             );
-        const tools = toolSchemas(offeredNames);
+        const tools = snapshot.facts.toolSchemas;
         const budget = budgetContext(
             request,
             tools,

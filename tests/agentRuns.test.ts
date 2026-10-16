@@ -11,7 +11,7 @@ import {executeChatRun} from "@/features/agent/runtime/runChat";
 import {createRunWriter} from "@cuepoint/agent-core";
 import { recoverAbandonedRuns, withThreadRunLock, type ThreadLockManager } from "@/features/agent/runtime/runOwnership";
 
-const connector: ConnectorConfig = { id: "cx", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.com/v1", apiKey: "secret-test-key", updatedAt: "2026-09-18T00:00:00Z" };
+const connector: ConnectorConfig = { id: "cx", protocol: "openai-compatible", definitionId: "openai-compatible", baseUrl: "https://example.com/v1", apiKey: "secret-test-key", updatedAt: "2026-09-18T00:00:00Z" };
 async function begin(content = "hello") {
   const thread = await createChatThread();
   return beginAgentRun({ threadId: thread.id, connector, model: "test", content });

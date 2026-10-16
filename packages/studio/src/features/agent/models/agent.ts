@@ -1,3 +1,5 @@
+import type {McpRunSnapshot} from "../mcp/models/manifest";
+import type {McpToolPreviewFacts} from "../mcp/models/execution";
 import type {AgentReasoningEffort, AgentRunStatus, AgentPermissionMode, AgentInteractionMode, AgentToolCallStatus, ToolMetadata, AgentModelMetrics, AgentActivityStep, AgentToolLoading, AgentTokenUsage} from "@cuepoint/agent-core";
 import type {ChatMessage, ResponseItem} from '@cuepoint/agent-providers';
 export type {AgentReasoningEffort, AgentRunStatus, AgentPermissionMode, AgentInteractionMode, AgentWireToolCall, AgentToolSchema, AgentToolCallStatus, AgentToolEffect, AgentModelMetrics, AgentActivityStep, AgentToolLoading, AgentTokenUsage, AgentRunOutput} from "@cuepoint/agent-core";
@@ -47,6 +49,7 @@ export interface MusicGenerationReviewSnapshot {
 }
 
 export interface AgentToolPreview {
+    mcp?: McpToolPreviewFacts;
     music?: MusicGenerationReviewSnapshot;
     summary: string;
     changes: string[];
@@ -144,6 +147,8 @@ export interface AgentRun {
     enabledToolNames?: string[];
     /** Immutable installed guidance and retained content revisions, separate from tool authority. */
     installedSkills?: InstalledSkillsSnapshot;
+    /** Frozen external catalogue; absent legacy runs never acquire live connections. */
+    mcpSnapshot?: McpRunSnapshot;
     /** Absent on legacy runs: retain their original full-tool surface. */
     toolLoading?: AgentToolLoading;
     offeredTools?: Array<{ step: number; names: string[] }>;

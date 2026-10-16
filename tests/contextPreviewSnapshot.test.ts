@@ -6,7 +6,7 @@ import {MemoryContextDetails} from "@/features/agent/ui/MemoryContextDetails";
 
 const host = vi.hoisted(() => ({result: undefined as unknown, queries: [] as Array<() => Promise<unknown>>}));
 vi.mock("react", async () => ({...await vi.importActual<typeof import("react")>("react"),
-    useMemo: (compute: () => unknown) => compute(), useState: (initial: unknown) => [initial, vi.fn()],
+    useMemo: (compute: () => unknown) => compute(), useSyncExternalStore: (_subscribe: unknown, getSnapshot: () => unknown) => getSnapshot(), useState: (initial: unknown) => [initial, vi.fn()],
 }));
 vi.mock("@/platform/product/queries", () => ({useProductQuery: (query: (tx: typeof db) => Promise<unknown>) => {
     host.queries.push(() => query(db)); return host.result;
@@ -31,7 +31,7 @@ import {getMemorySelection} from "@/features/memory/queries/memoryRetrieval";
 import {selectReferenceContext, referenceSelectionCharacterBudget} from "@/features/references/agent/referenceContext";
 import {DEFAULT_CONTEXT_POLICY} from "@/features/agent/runtime/contextPolicy";
 
-const connector = {id: "cx", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "fixture", updatedAt: "2026-10-08"};
+const connector = {id: "cx", definitionId: "openai-compatible" as const, protocol: "openai-compatible" as const, baseUrl: "https://example.test/v1", apiKey: "fixture", updatedAt: "2026-10-08"};
 const input: ContextPreviewInput = {draft: "test preview", model: "unknown", attachments: [], metadata: {source: "provider", vision: true}};
 function ready(value: Awaited<ReturnType<typeof readAgentContextPreview>>) {
     expect(value.status).toBe("ready");
@@ -187,7 +187,7 @@ describe("actual context trigger and presentational panel", () => {
             connector: run.connector, model: request.model, content: "Later live summary", beforeTokens: 99,
             createdAt: "2026-10-08", updatedAt: "2026-10-08", activatedAt: "2026-10-08"});
         host.result = await readAgentContextPreview(request); host.queries = [];
-        const tree = nodes(ContextUsageTrigger({...request, modelMetadata: {unknown: request.metadata}, open: true, onOpenChange: vi.fn()}));
+        const tree = nodes(ContextUsageTrigger({...request, modelMetadata: {unknown: request.metadata ?? {source: "provider" as const, vision: true}}, open: true, onOpenChange: vi.fn()}));
         const panel = tree.find(node => isValidElement(node) && node.type === ContextUsagePanel);
         if (!isValidElement<Parameters<typeof ContextUsagePanel>[0]>(panel)) throw new Error("actual saved panel absent");
         const snapshot = panel.props.snapshot;
@@ -202,7 +202,7 @@ describe("actual context trigger and presentational panel", () => {
         const {request} = await fixture();
         const read = await readAgentContextPreview(request);
         host.result = read; host.queries = [];
-        const props = {...request, modelMetadata: {unknown: request.metadata}, open: true, onOpenChange: vi.fn()};
+        const props = {...request, modelMetadata: {unknown: request.metadata ?? {source: "provider" as const, vision: true}}, open: true, onOpenChange: vi.fn()};
         const tree = nodes(ContextUsageTrigger(props));
         const panel = tree.find(node => isValidElement(node) && node.type === ContextUsagePanel);
         if (!isValidElement<Parameters<typeof ContextUsagePanel>[0]>(panel)) throw new Error("actual panel absent");

@@ -1,5 +1,7 @@
 import type {ProductStore} from "../../../platform/storage/types";
-import {composeRunSkills} from "../runtime/runSkills";
+import {mcpRuntimeOwner} from "../mcp/runtime/owner";
+import {assertMcpSnapshotCurrent} from "../mcp/runtime/surface";
+import {composeRunSkills, type RunSkillSurface} from "../runtime/runSkills";
 import {retainInstalledSkills} from "../skills/commands/retention";
 import {settleRun} from "./agentRunTerminalState";
 import {runBlocksThread} from "../models/agentToolSelection";
@@ -84,6 +86,8 @@ export async function beginAgentRun(input: {
     // while the lookups inside the transaction below only read memory.
     await initModelCatalog();
     const visionCapability = await resolveVisionCapability(input.model, identity.definitionId, input.modelMetadata);
+    const mcpOwner = input.retryOfRunId ? undefined : mcpRuntimeOwner()?.connections;
+    const mcpGenerations = mcpOwner?.capture() ?? [];
     const modelPricing = snapshotModelPricing(identity, input.model.trim(), nowIso());
     return db.transaction("rw", db.tables, async (db) => {
         const thread = await db.chatThreads.get(input.threadId);
@@ -130,13 +134,14 @@ export async function beginAgentRun(input: {
         // A retry with no installed snapshot stays legacy; it never discovers today's catalogue.
         const installedSkills = interactionMode === "conversation" || (previous && previous.installedSkills === undefined)
             ? undefined : await retainInstalledSkills(db, previous?.installedSkills);
-        const surface = previous ? {
+        const surface: RunSkillSurface = previous ? {
+            mcpSnapshot: interactionMode === "conversation" ? undefined : previous.mcpSnapshot,
             enabledToolNames: interactionMode === "conversation" ? [] : previous.enabledToolNames ?? [],
             toolLoading: interactionMode === "conversation" ? undefined : previous.toolLoading,
             skillInstructions: interactionMode === "conversation" ? "" : previous.skillInstructions ?? "",
         } : composeRunSkills({enabledSkillIds: agent.enabledSkillIds ?? [], taskToolNames: taskContext.taskToolNames,
-            projectId: thread.projectId, projectKind: taskContext.projectKind, interactionMode, installedSkills});
-        const {enabledToolNames, toolLoading, skillInstructions} = surface;
+            projectId: thread.projectId, projectKind: taskContext.projectKind, interactionMode, installedSkills, mcpGenerations});
+        const {enabledToolNames, toolLoading, skillInstructions, mcpSnapshot} = surface;
         const policy = normalizeContextPolicy(thread.contextPolicy);
         const selectedHistory = selectContextHistory(history, policy);
         const summary = policy.autoCompress ? findApplicableSummary(selectedHistory, await db.contextCompactions.where("threadId").equals(thread.id).toArray()) : undefined;
@@ -193,6 +198,7 @@ export async function beginAgentRun(input: {
             taskMode,
             enabledToolNames,
             ...(installedSkills ? {installedSkills} : {}),
+            ...(mcpSnapshot ? {mcpSnapshot} : {}),
             toolLoading,
             skillInstructions,
             status: "running",
@@ -227,6 +233,9 @@ export async function beginAgentRun(input: {
             ...(!previous && (thread.title === "新话题" || thread.title === "新对话")
                 ? {title: deriveChatTitle(content)} : {}),
         });
+        // Final transaction check after all awaited preparation/writes. Retry
+        // preserves historical facts and never grants today's generation.
+        if (!previous) await assertMcpSnapshotCurrent(mcpSnapshot, mcpOwner, db);
         return run;
     });
 }

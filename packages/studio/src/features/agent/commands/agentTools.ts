@@ -45,7 +45,7 @@ async function requireProject(run: AgentRun, store?: ProductStore) {
     if (thread?.projectId !== run.projectId || run.projectId && !await db.projects.get(run.projectId)) throw new Error("关联项目已不存在或归属不匹配");
 }
 
-const tables = (store?: ProductStore) => (db => [db.projects, db.agentRuns, db.agentToolCalls, db.agentJobs, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentGenerationBatches, db.agentGenerationBatchItems])(store ?? productDb);
+const tables = (store?: ProductStore) => (db => [db.deviceSettings, db.projects, db.agentRuns, db.agentToolCalls, db.agentJobs, db.chatThreads, db.chatMessages, db.agentTasks, db.agentGenerationJobs, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentGenerationBatches, db.agentGenerationBatchItems])(store ?? productDb);
 
 async function requireLatestRun(run: AgentRun, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
@@ -74,7 +74,7 @@ export async function pauseAtModelStepLimit(runId: string, store?: ProductStore)
     });
 }
 
-export async function startModelStep(runId: string, limit: number, store?: ProductStore): Promise<AgentRun> {
+export async function startModelStep(runId: string, limit: number, store?: ProductStore, registryOrder?: readonly string[]): Promise<AgentRun> {
     const db = store ?? productDb;
     return db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
@@ -82,11 +82,14 @@ export async function startModelStep(runId: string, limit: number, store?: Produ
         if (run.status !== "running") throw new Error("执行已停止");
         if (modelStepLimitReached(run,limit)) throw new Error("本段模型请求额度已用完，请继续下一段执行");
         if (run.projectId && !run.memorySelection) throw new Error("项目记忆尚未准备，不能提交请求");
+        const selected = getOfferedToolNames(run);
+        const names = registryOrder ? registryOrder.filter(name => selected.includes(name)) : selected;
+        if (names.length !== selected.length) throw new Error("本轮工具定义与执行快照不一致");
         const next = {
             ...run, ...(run.toolLoading ? {
                 offeredTools: [...(run.offeredTools ?? []), {
                     step: (run.modelStep ?? 0) + 1,
-                    names: getOfferedToolNames(run)
+                    names
                 }]
             } : {}),
             referenceAudit: [...(run.referenceAudit ?? []), {
@@ -111,7 +114,7 @@ export async function startModelStep(runId: string, limit: number, store?: Produ
 
 /** A round detail may carry its own already-failed outcome for a model-named unavailable tool. */
 export type AgentToolRoundDetail =
-    Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation">
+    Pick<AgentToolCall, "title" | "effect" | "highRisk" | "atomic" | "recovery" | "requiresConfirmation" | "binding">
     & {
     failure?: { error: string; result: string }
 };

@@ -7,12 +7,17 @@ import type {McpConfigurationOutcome, McpSaveIntent} from "../models/operations"
 import {getMcpCatalogue} from "../queries/catalogue";
 import {createMcpConfigurationOwner} from "./configuration";
 import {MCP_LIMITS} from "./limits";
-import {normalizeMcpManifest, parseMcpBinding} from "./manifest";
+import {mcpBindingMatches, normalizeMcpManifest, parseMcpBinding} from "./manifest";
 import {freezeMcp, mcpId} from "./validation";
 
 interface PendingConnection {readonly token: object; readonly controller: AbortController}
 interface Login {readonly serverId: string; readonly configRevision: number; readonly epoch: number; readonly attempt: McpOAuthAttempt}
 export interface McpConnectionOwner {
+    readonly revision: number;
+    subscribe(listener: () => void): () => void;
+    /** Pure live-owner check; final ProductStore claim also validates the catalogue. */
+    isCurrent(binding: McpHostBinding): boolean;
+    capture(): readonly McpRunGeneration[];
     save(input: McpSaveIntent): Promise<McpConfigurationOutcome>;
     mutate(input: Exclude<McpCatalogueMutation, {readonly kind: "save"}>): Promise<McpConfigurationOutcome>;
     reconcile(operationId: string): Promise<McpConfigurationOutcome>;
@@ -27,7 +32,12 @@ export interface McpConnectionOwner {
 
 /** Explicit connection owner. Product configuration is never itself launch authority. */
 export function createMcpConnectionOwner(store: ProductStore, host: McpHostServices): McpConnectionOwner {
-    let closed = false;
+    let closed = false, revision = 0;
+    const listeners = new Set<() => void>();
+    function changed(): void {
+        revision++;
+        for (const listener of listeners) {try {listener();} catch { /* Observation cannot control authority. */ }}
+    }
     let disposal: Promise<{readonly status: "drained" | "draining"}> | undefined;
     const generations = new Map<string, McpRunGeneration>();
     const pending = new Map<string, PendingConnection>();
@@ -45,6 +55,7 @@ export function createMcpConnectionOwner(store: ProductStore, host: McpHostServi
         pending.delete(serverId);
         if (pendingLogins.get(serverId)?.token !== preservedLogin) pendingLogins.delete(serverId);
         for (const [attemptId, login] of logins) if (login.serverId === serverId) logins.delete(attemptId);
+        changed();
     }
     async function retire(serverId: string): Promise<{readonly status: "drained" | "draining"}> {
         mcpId(serverId);
@@ -75,9 +86,16 @@ export function createMcpConnectionOwner(store: ProductStore, host: McpHostServi
         return login;
     }
     const owner: McpConnectionOwner = {
-        save(input) {assertActive(input.operationId); return configuration.save(input);},
-        mutate(input) {assertActive(input.operationId); return configuration.mutate(input);},
-        reconcile(operationId) {assertActive(operationId); return configuration.reconcile(operationId);},
+        get revision() {return revision;},
+        subscribe(listener) {listeners.add(listener); return () => listeners.delete(listener);},
+        isCurrent(binding) {
+            const current = generations.get(binding.serverId);
+            return !closed && host.active && !configuration.hasUnresolved(binding.serverId) && !!current && mcpBindingMatches(current.binding, binding);
+        },
+        capture() {return closed || !host.active ? [] : Object.freeze([...generations.values()].filter(item => !configuration.hasUnresolved(item.binding.serverId)));},
+        save(input) {assertActive(input.operationId); return configuration.save(input).finally(changed);},
+        mutate(input) {assertActive(input.operationId); return configuration.mutate(input).finally(changed);},
+        reconcile(operationId) {assertActive(operationId); return configuration.reconcile(operationId).finally(changed);},
         async connect(input, signal) {
             const operationId = mcpId(input.operationId), serverId = mcpId(input.serverId), revision = input.configRevision;
             assertActive(operationId);
@@ -94,6 +112,7 @@ export function createMcpConnectionOwner(store: ProductStore, host: McpHostServi
                 assertEpoch(serverId, initialEpoch, controller.signal, operationId, "not_started");
                 const old = generations.get(serverId);
                 generations.delete(serverId);
+                if (old) changed();
                 if (old) await host.disconnect(old.binding);
                 const connection = await host.connect({operationId, serverId, configRevision: revision, privateRevision: row.privateRevision}, controller.signal);
                 admitted = parseMcpBinding(connection.binding);
@@ -103,6 +122,7 @@ export function createMcpConnectionOwner(store: ProductStore, host: McpHostServi
                 if (!sameReference(latest, row)) throw new McpHostError("retired", "unknown", operationId);
                 const generation = freezeMcp({binding: admitted, label: latest.label, manifest: normalizeMcpManifest(serverId, connection.discovery)});
                 generations.set(serverId, generation);
+                changed();
                 return generation;
             } catch (error) {
                 if (admitted) await disconnectBinding(admitted);
@@ -168,6 +188,7 @@ export function createMcpConnectionOwner(store: ProductStore, host: McpHostServi
         async oauthCancel(attemptId) {await loginCurrent(attemptId); logins.delete(attemptId); await host.oauthCancel(attemptId);},
         dispose() {
             closed = true;
+            changed();
             for (const serverId of new Set([...generations.keys(), ...pending.keys(), ...pendingLogins.keys(), ...[...logins.values()].map(login => login.serverId)])) fence(serverId);
             disposal ??= host.dispose().catch(() => ({status: "draining" as const})).then(result => {
                 if (result.status === "draining") disposal = undefined;

@@ -20,7 +20,7 @@ import schema from '@/platform/storage/schema.json';
 import {browserDatabase} from '@/platform/storage/browserDatabase';
 
 const connector: ConnectorConfig = {id: 'cx', definitionId: 'openai-compatible', label: 'test', protocol: 'openai-compatible', baseUrl: 'https://model.test/v1', apiKey: 'private-key', updatedAt: 'now'};
-async function fixture(kind: AgentJobSelection['kind'] = 'web_read', project = false) {
+async function fixture(kind: Exclude<AgentJobSelection['kind'], 'mcp'> = 'web_read', project = false) {
     const ownerProject = project ? await createProject('Job project') : undefined;
     const thread = await createChatThread({projectId: ownerProject?.id});
     await db.connectors.put(connector);

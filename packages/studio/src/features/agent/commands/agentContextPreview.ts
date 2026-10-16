@@ -1,3 +1,9 @@
+import {mcpRuntimeOwner} from "../mcp/runtime/owner";
+import {assertMcpSnapshotCurrent} from "../mcp/runtime/surface";
+import type {McpRunGeneration} from "../mcp/models/manifest";
+import {createMcpRunRegistry} from "../mcp/runtime/runRegistry";
+import {toolSchemas} from "../runtime/tools";
+import {getOfferedToolNames} from "../models/agentToolSelection";
 import type {ProductStore} from "../../../platform/storage/types";
 import {db as productDb} from "../../../platform/product/store";
 import {getMemorySelection} from "../../memory/queries/memoryRetrieval";
@@ -67,7 +73,7 @@ function currentSavedRun(runs: Awaited<ReturnType<typeof readScopedRows>>["runs"
 
 async function selectPreviewMaterials(input: ContextPreviewInput, rows: Awaited<ReturnType<typeof readScopedRows>>,
                                       thread: import("../models/chat").ChatThread | undefined, projectId: string | undefined,
-                                      vision: Awaited<ReturnType<typeof resolveVisionCapability>>, activeRun: AgentRun | undefined, store?: ProductStore) {
+                                      vision: Awaited<ReturnType<typeof resolveVisionCapability>>, activeRun: AgentRun | undefined, mcpGenerations: readonly McpRunGeneration[], store?: ProductStore) {
     const db = store ?? productDb;
     // Optional saved fields remain absent, rather than acquiring new live selections.
     if (activeRun) return {
@@ -75,7 +81,7 @@ async function selectPreviewMaterials(input: ContextPreviewInput, rows: Awaited<
         taskContext: undefined, memorySelection: undefined, selectedReferences: undefined,
         installedSkills: activeRun.installedSkills,
         skillSurface: {enabledToolNames: activeRun.enabledToolNames ?? [], toolLoading: activeRun.toolLoading,
-            skillInstructions: activeRun.skillInstructions ?? ""} satisfies RunSkillSurface,
+            skillInstructions: activeRun.skillInstructions ?? "", ...(activeRun.mcpSnapshot ? {mcpSnapshot: activeRun.mcpSnapshot} : {})} satisfies RunSkillSurface,
     };
     const previewPolicy = normalizeContextPolicy(thread ? thread.contextPolicy : rows.config?.contextPolicy);
     const interactionMode = input.interactionMode ?? thread?.interactionMode ?? "smart";
@@ -85,7 +91,7 @@ async function selectPreviewMaterials(input: ContextPreviewInput, rows: Awaited<
     const installedSkills: InstalledSkillsSnapshot | undefined = catalogue ? {version: 1, entries: catalogue.entries.filter(entry => entry.enabled)
         .map(({skillId, revision, metadata}) => ({skillId, revision, metadata}))} : undefined;
     const skillSurface = composeRunSkills({enabledSkillIds: rows.config?.enabledSkillIds ?? DEFAULT_SKILL_IDS,
-        taskToolNames: taskContext.taskToolNames, projectId, projectKind: taskContext.projectKind, interactionMode, installedSkills});
+        taskToolNames: taskContext.taskToolNames, projectId, projectKind: taskContext.projectKind, interactionMode, installedSkills, mcpGenerations});
     const capacity = resolveContextCapacity(input.model, input.metadata, input.providerId, previewPolicy).capacity;
     const memorySelection = taskContext.projectContext ? await getMemorySelection({
         projectId: taskContext.projectContext.projectId, threadId: input.threadId, draft: input.draft,
@@ -99,6 +105,8 @@ async function selectPreviewMaterials(input: ContextPreviewInput, rows: Awaited<
 
 async function readFacts(input: ContextPreviewInput, identity: string, vision: Awaited<ReturnType<typeof resolveVisionCapability>>, store?: ProductStore) {
     const db = store ?? productDb;
+    const owner = mcpRuntimeOwner()?.connections;
+    const captured = owner?.capture() ?? [];
     return db.transaction("r", [contextPreviewTables(db)].flat(), async (db) => {
         const thread = input.threadId ? await db.chatThreads.get(input.threadId) : undefined;
         if (input.threadId && !thread) return {identity, status: "missing", entity: "thread"} satisfies Missing;
@@ -112,11 +120,15 @@ async function readFacts(input: ContextPreviewInput, identity: string, vision: A
         const projectAvailable = !projectId || (!!rows.project && projectId !== "studio");
         if (!activeRun && !rows.config) return {identity, status: "missing", entity: "agent"} satisfies Missing;
         if (!activeRun && !projectAvailable) return {identity, status: "missing", entity: "project"} satisfies Missing;
-        const selected = await selectPreviewMaterials(input, rows, thread, projectId, vision, activeRun, db);
+        const selected = await selectPreviewMaterials(input, rows, thread, projectId, vision, activeRun, captured, db);
+        if (!activeRun) await assertMcpSnapshotCurrent(selected.skillSurface.mcpSnapshot, owner, db);
+        const definitions = createMcpRunRegistry(selected.skillSurface.mcpSnapshot).definitions;
+        const offered = new Set(getOfferedToolNames(selected.skillSurface));
+        const schemas = toolSchemas(definitions.filter(tool => offered.has(tool.name)).map(tool => tool.name), definitions);
         return {
             identity, status: "ready" as const, facts: {
                 config: rows.config, thread, projectId, available: projectAvailable && !!rows.config,
-                messages: rows.messages, records: rows.records, activeRun, ...selected,
+                messages: rows.messages, records: rows.records, activeRun, toolSchemas: schemas, ...selected,
             }
         };
     });

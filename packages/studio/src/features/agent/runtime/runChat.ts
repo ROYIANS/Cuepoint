@@ -1,3 +1,4 @@
+import {createMcpRunRegistry} from "../mcp/runtime/runRegistry";
 import {createId} from '../../../platform/identity';
 import {executeRun,toolMetadataMatches,type RuntimeHost,type RoundDetail} from '@cuepoint/agent-core';
 import type {ProductStore,StoreTx,TableScope} from '../../../platform/storage/types';
@@ -32,7 +33,8 @@ function effectiveToolInput(call:AgentToolCall) {
 }
 
 /** Product integration owns transactions and predicates, while core owns every execution transition. */
-function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKey:string,fetchImpl:typeof fetch|undefined,registry:readonly AgentToolDefinition[],signal:AbortSignal,run:AgentRun,feedback?:RuntimeExecutionFeedback):RuntimeHost<AgentRun,AgentToolCall,AgentToolContext,AgentToolPreview,AgentResponseItem[]> {
+function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKey:string,fetchImpl:typeof fetch|undefined,materialized:ReturnType<typeof createMcpRunRegistry>,signal:AbortSignal,run:AgentRun,feedback?:RuntimeExecutionFeedback):RuntimeHost<AgentRun,AgentToolCall,AgentToolContext,AgentToolPreview,AgentResponseItem[]> {
+    const registry = materialized.definitions;
     assertThreadOwnership(ownership,ownership.threadId);
     const executionId=createId('exec');
     const observe:RuntimeExecutionFeedback=event=>{
@@ -42,7 +44,7 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
     observe({...feedbackIdentity,type:'started',threadId:run.threadId,assistantMessageId:run.assistantMessageId});
     // This must use the original explicit transport, not the observation wrapper below.
     const credentials=createRunCredentials(db,apiKey,!!fetchImpl);
-    const scope:TableScope=[db.projects,db.agentRuns,db.agentToolCalls,db.agentJobs,db.chatThreads,db.chatMessages,db.agentTasks,db.agentGenerationJobs,db.agentTaskRecords,db.agentTaskRecordVersions,db.agentGenerationBatches,db.agentGenerationBatchItems];
+    const scope:TableScope=[db.deviceSettings,db.projects,db.agentRuns,db.agentToolCalls,db.agentJobs,db.chatThreads,db.chatMessages,db.agentTasks,db.agentGenerationJobs,db.agentTaskRecords,db.agentTaskRecordVersions,db.agentGenerationBatches,db.agentGenerationBatchItems];
     const guard=async<T>(run:AgentRun,operation:(tx:StoreTx)=>Promise<T>,tables:TableScope=scope):Promise<T>=>db.transaction('rw',tables,async tx=>{
         assertThreadOwnership(ownership,run.threadId);
         if (ownership.threadId !== run.threadId) throw new Error('执行锁与对话归属不匹配');
@@ -76,8 +78,8 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
             if (budgetContext(run.continuationMessages ?? run.requestMessages,toolSchemas(getOfferedToolNames(run),registry),run.context?.capacity,!!run.context?.summaryId,continuationExtraTokens(run)).overBudget) throw new Error('记忆更新后上下文超出安全预算，请减少历史或调整输入后继续');
             return run;
         },
-        admitModelStep:(run,limit)=>guard(run,tx=>startModelStep(run.id,limit,tx)),
-        async request(run,signal,onDelta) {
+        admitModelStep:(run,limit)=>guard(run,tx=>startModelStep(run.id,limit,tx,registry.map(tool=>tool.name))),
+        async request(run,signal,onDelta,offeredDefinitions) {
             ownership.assertHeld();
             const currentKey=await credentials.resolve(run);
             signal.throwIfAborted();
@@ -87,7 +89,7 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
                 observe({...feedbackIdentity,type:'requestInvoked'});
                 return selectedFetch(input,init);
             };
-            const result:ResponsesResult=await transport({projectId:run.projectId,runId:run.id,visionCapability:run.visionCapability,responseItems:run.responseItems,baseUrl:run.connector.baseUrl,apiKey:currentKey,model:run.model,connectorDefinitionId:run.connector.definitionId,reasoningEffort:run.reasoningEffort,messages:run.continuationMessages ?? run.requestMessages,tools:toolSchemas(getOfferedToolNames(run),registry)},{signal,fetchImpl:feedback ? observedFetch : fetchImpl,onDelta:content=>{
+            const result:ResponsesResult=await transport({projectId:run.projectId,runId:run.id,visionCapability:run.visionCapability,responseItems:run.responseItems,baseUrl:run.connector.baseUrl,apiKey:currentKey,model:run.model,connectorDefinitionId:run.connector.definitionId,reasoningEffort:run.reasoningEffort,messages:run.continuationMessages ?? run.requestMessages,tools:offeredDefinitions.map(tool=>({type:"function",function:{name:tool.name,description:tool.description,parameters:tool.parameters}}))},{signal,fetchImpl:feedback ? observedFetch : fetchImpl,onDelta:content=>{
                 if (content && !signal.aborted) observe({...feedbackIdentity,type:'publicReceived',kind:'content'});
                 onDelta({content});
             },onReasoning:reasoning=>{
@@ -112,7 +114,10 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
                 if (!responseRoundMatches(run.responseItems,calls.map(call=>({id:call.providerCallId,type:'function',function:{name:call.name,arguments:call.arguments}})),false)) throw new Error('Responses 调用信封与执行记录不匹配，已阻止继续执行');
             },
             readCall:(_run,id)=>{ownership.assertHeld();return db.agentToolCalls.get(id);},
-            assertScope:(run,call,signal)=>frozenProjectScope({runId:run.id,threadId:run.threadId,callId:call.id,signal,projectId:run.projectId},db).then(()=>undefined),
+            async assertScope(run,call,signal) {
+                await frozenProjectScope({runId:run.id,threadId:run.threadId,callId:call.id,signal,projectId:run.projectId},db);
+                await materialized.assertBinding(call.binding);
+            },
             input:effectiveToolInput,
             validate:(name,raw,offered)=>validateToolCall(name,raw,offered,registry),
             context:(run,call,signal,preview)=>({projectId:run.projectId,runId:run.id,threadId:run.threadId,callId:call.id,signal,preview,store:db}),
@@ -124,6 +129,7 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
                 const {tool,args}=validateToolCall(saved.name,effectiveToolInput(saved).arguments,toolNamesForCall(current,saved.step),registry);
                 if (!toolMetadataMatches(tool,args,saved) || requiresToolApproval(current.permissionMode ?? 'ask',tool,args) && saved.status !== 'approved') throw new Error('工具定义、权限或审批在领取前已经变化');
                 await frozenProjectScope({runId:current.id,threadId:current.threadId,callId:saved.id,signal,projectId:current.projectId},tx);
+                await materialized.assertBinding(saved.binding,tx);
             }),
             park:run=>guard(run,tx=>pauseForApproval(run.id,tx)),
             appendResults:run=>guard(run,tx=>appendToolResults(run.id,tx)),
@@ -134,7 +140,7 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
     return host;
 }
 function claimFingerprint(call:AgentToolCall):string {
-    return JSON.stringify({runId:call.runId,threadId:call.threadId,providerCallId:call.providerCallId,name:call.name,arguments:call.arguments,step:call.step,order:call.order,title:call.title,status:call.status,effect:call.effect,highRisk:call.highRisk,atomic:call.atomic,requiresConfirmation:call.requiresConfirmation,recovery:call.recovery,decision:call.decision,preview:call.preview,generationOverride:call.generationOverride});
+    return JSON.stringify({runId:call.runId,threadId:call.threadId,providerCallId:call.providerCallId,name:call.name,arguments:call.arguments,step:call.step,order:call.order,title:call.title,status:call.status,effect:call.effect,highRisk:call.highRisk,atomic:call.atomic,requiresConfirmation:call.requiresConfirmation,binding:call.binding ? {capabilityId:call.binding.capabilityId,version:call.binding.version,registrationId:call.binding.registrationId} : undefined,recovery:call.recovery,decision:call.decision,preview:call.preview,generationOverride:call.generationOverride});
 }
 function productRecovery(detail:RoundDetail):AgentToolCall['recovery'] {
     if (detail.recovery === undefined || detail.recovery === 'generation' || detail.recovery === 'repeatable') return detail.recovery;
@@ -143,7 +149,7 @@ function productRecovery(detail:RoundDetail):AgentToolCall['recovery'] {
 
 /** Direct typed consumers acquire the same execution lock without recovering their own new run. */
 export async function executeChatRun(run:AgentRun,apiKey:string,controller:AbortController,fetchImpl?:typeof fetch,registry:readonly AgentToolDefinition[]=BUILTIN_TOOLS,store:ProductStore=productDb,ownership?:ThreadOwnership,feedback?:RuntimeExecutionFeedback):Promise<void> {
-    const execute=(held:ThreadOwnership)=>withOwnedExecution(held,run.threadId,()=>executeRun(run,controller,createStudioRuntimeHost(store,held,apiKey,fetchImpl,registry,controller.signal,run,feedback)));
+    const execute=(held:ThreadOwnership)=>withOwnedExecution(held,run.threadId,()=>executeRun(run,controller,createStudioRuntimeHost(store,held,apiKey,fetchImpl,createMcpRunRegistry(run.mcpSnapshot,registry,store),controller.signal,run,feedback)));
     if (ownership) await execute(ownership);else await withExecutionOwnership(run.threadId,execute);
 }
 export async function resumeChatRun(runId:string,apiKey:string,controller:AbortController,fetchImpl?:typeof fetch,registry:readonly AgentToolDefinition[]=BUILTIN_TOOLS,store:ProductStore=productDb,ownership?:ThreadOwnership,feedback?:RuntimeExecutionFeedback):Promise<void> {
@@ -152,7 +158,7 @@ export async function resumeChatRun(runId:string,apiKey:string,controller:AbortC
     const execute=(held:ThreadOwnership)=>withOwnedExecution(held,saved.threadId,async()=>{
         controller.signal.throwIfAborted();
         const run=await resumeAgentRun(runId,store);
-        await executeRun(run,controller,createStudioRuntimeHost(store,held,apiKey,fetchImpl,registry,controller.signal,run,feedback));
+        await executeRun(run,controller,createStudioRuntimeHost(store,held,apiKey,fetchImpl,createMcpRunRegistry(run.mcpSnapshot,registry,store),controller.signal,run,feedback));
     });
     if (ownership) await execute(ownership);else await withExecutionOwnership(saved.threadId,execute);
 }

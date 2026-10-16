@@ -1,8 +1,9 @@
-export type AgentJobKind = 'web_read' | 'project_media_check';
+import type {McpJobSelection} from '../mcp/models/execution';
+export type AgentJobKind = 'web_read' | 'project_media_check' | 'mcp';
 export type AgentJobStatus = 'accepted' | 'running' | 'stopping' | 'stopped' | 'completed' | 'failed' | 'unknown';
 export interface AgentJobMediaSelection {id: string; name: string; mimeType: string; size: number; revision: string}
 export type AgentJobSelection = {kind: 'web_read'; urls: readonly string[]} |
-    {kind: 'project_media_check'; media: readonly AgentJobMediaSelection[]};
+    {kind: 'project_media_check'; media: readonly AgentJobMediaSelection[]} | McpJobSelection;
 export interface AgentJobObservation {
     mediaId: string;
     status: 'ready' | 'missing' | 'corrupt' | 'read_error' | 'changed';

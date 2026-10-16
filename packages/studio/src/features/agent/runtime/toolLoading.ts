@@ -1,4 +1,4 @@
-import {createCapabilityLoading,selectCapabilityGroups} from '@cuepoint/agent-core';
+import {createCapabilityLoading,selectCapabilityGroups,MAX_LOADED_TOOLS} from '@cuepoint/agent-core';
 import type {ProductStore} from "../../../platform/storage/types";
 import {defineTool} from './toolDefinition';
 import {DISCOVERY_TOOL_NAME, toolNamesForCall} from "../models/agentToolSelection";
@@ -24,6 +24,24 @@ export function createToolLoading(skillIds: readonly string[], allowedNames: rea
     const groups=AGENT_SKILLS.filter(skill=>skillIds.includes(skill.id));
     const preferred=projectKind === 'audio' ? 'audio-production' : projectKind === 'music' ? 'music-creation' : undefined;
     return createCapabilityLoading(groups,allowedNames,foundation,DISCOVERY_TOOL_NAME,preferred);
+}
+
+/** New-run composition knows the final foundation, including all MCP resource helpers. */
+export function fitToolLoadingFoundation(state: AgentToolLoading, foundationToolNames: readonly string[]): AgentToolLoading {
+    const fixed = new Set(foundationToolNames), capacity = MAX_LOADED_TOOLS - fixed.size;
+    const groups = state.groups.flatMap(group => {
+        const optional = group.toolNames.filter(name => !fixed.has(name));
+        if (optional.length <= capacity) return [group];
+        if (capacity <= 0) throw new Error("基础工具已达到 36 个上限，无法加载业务能力");
+        return Array.from({length: Math.ceil(optional.length / capacity)}, (_, index) => ({
+            ...group, id: `${group.id}-part-${capacity}-${index + 1}`, name: `${group.name} ${index + 1}`,
+            toolNames: optional.slice(index * capacity, (index + 1) * capacity),
+        }));
+    });
+    let loadedGroupIds = state.loadedGroupIds.filter(id => groups.some(group => group.id === id));
+    let loadedToolNames = [...new Set(groups.filter(group => loadedGroupIds.includes(group.id)).flatMap(group => group.toolNames))];
+    if (new Set([...foundationToolNames, ...loadedToolNames]).size > MAX_LOADED_TOOLS) {loadedGroupIds = []; loadedToolNames = [];}
+    return {...state, foundationToolNames: [...foundationToolNames], groups, loadedGroupIds, loadedToolNames};
 }
 
 export function toolLoadingInstructions(state: AgentToolLoading): string {

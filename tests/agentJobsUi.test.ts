@@ -3,6 +3,9 @@ import {Blob as NodeBlob} from "node:buffer";
 import {act, createElement as h, StrictMode, type ReactNode} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, expect, it, vi} from "vitest";
+import {retainMcpOriginalInvocation} from "@/features/agent/mcp/runtime/executionOwner";
+import {installMcpHostServices, clearMcpHostServices} from "@/platform/runtime/mcpServices";
+import type {McpHostServices} from "@/platform/runtime/mcp";
 import {AgentJobReport} from "@/features/agent/ui/AgentJobReport";
 import {AgentRunDetails} from "@/features/agent/ui/AgentRunDetails";
 import {admitAgentJob, checkpointAgentJob, clearAgentJobResult, markAgentJobRunning, publishAgentJob, stopAgentJob} from "@/features/agent/commands/agentJobs";
@@ -41,7 +44,7 @@ beforeEach(() => {
     container.style.width = "390px"; document.body.append(container); root = createRoot(container);
 });
 afterEach(async () => {await act(async () => root.unmount()); container.remove(); vi.restoreAllMocks(); vi.unstubAllGlobals();});
-async function seed(suffix: string, kind: AgentJob["kind"] = "project_media_check"): Promise<Owner> {
+async function seed(suffix: string, kind: Exclude<AgentJob["kind"], "mcp"> = "project_media_check"): Promise<Owner> {
     const projectId = (await createProject(`Report ${suffix}`)).id, threadId = `thread-${suffix}`;
     const run: AgentRun = {id: `run-${suffix}`, threadId, projectId, userMessageId: `user-${suffix}`, assistantMessageId: `assistant-${suffix}`,
         agentId: "agent", agentSnapshot: {name: "Agent", instructions: ""}, connector: {id: "connector", definitionId: "openai-compatible", baseUrl: "https://unused.invalid"},
@@ -225,4 +228,46 @@ it("distinguishes unpublished unknown, cleared and deleted output without accept
     await clearAgentJobResult(reader(owner), owner.job.id); await publish(); expect(container.textContent).toContain("保留结果已清理");
     owner.call = {...owner.call, status: "completed", result: JSON.stringify({jobId: "foreign-display-id"})};
     await db.agentJobs.delete(owner.job.id); await draw(owner); await publish(); expect(container.textContent).toContain("保留报告不可用"); expect(network).not.toHaveBeenCalled();
+});
+
+
+it("keeps MCP unknown evidence readable in its original report while preserving the unresolved call", async () => {
+    const owner = await seed("mcp-unknown", "web_read");
+    await db.agentJobs.delete(owner.job.id);
+    const publicName = "mcp_captured_resource";
+    const facts = {version: 1 as const, binding: {serverId: "server_ui", configRevision: 1, manifestRevision: "raw_one", registrationId: "registration_one", hostSessionId: "host_one", principalRevision: "principal_one"},
+        manifestDigest: "normalized_one", publicName, operation: "resource_read" as const, target: {kind: "resource" as const, handleId: "resource_one"}};
+    const toolBinding = {capabilityId: "mcp/server_ui", version: facts.manifestDigest, registrationId: facts.binding.registrationId};
+    await db.agentRuns.update(owner.run.id, {enabledToolNames: [publicName], offeredTools: [{step: 1, names: [publicName]}]});
+    await db.agentToolCalls.update(owner.call.id, {name: publicName, binding: toolBinding, preview: {summary: "读取外部资源", changes: [], mcp: facts}, effect: "network", highRisk: true});
+    owner.run = (await db.agentRuns.get(owner.run.id))!;
+    const initial = await admitAgentJob(owner.context, {kind: "mcp", execution: facts, operationId: owner.call.id});
+    const job = await markAgentJobRunning(owner.context, initial.job.id, initial.job.revision, {serviceMayHaveRun: true});
+    await publishAgentJob(owner.context, job.id, job.revision, {status: "unknown", text: "原调用的核实记录，不代表已完成。", serviceMayHaveRun: true}, true);
+    owner.call = (await db.agentToolCalls.get(owner.call.id))!;
+    owner.job = (await db.agentJobs.get(job.id))!;
+    await draw(owner); await publish();
+    expect(container.querySelector('[aria-label="MCP 服务报告"]')).toBeTruthy();
+    expect(container.textContent).toContain("外部操作结果待核实");
+    await click("查看报告"); await publish();
+    expect(container.querySelector("pre")?.textContent).toBe("原调用的核实记录，不代表已完成。");
+    expect((await db.agentToolCalls.get(owner.call.id))!.status).toBe("unknown");
+    const unused = async () => {throw new Error("Unexpected host action");};
+    const host: McpHostServices = {active: true, capabilities: {host: "desktop", stdio: true, streamableHttp: true, oauth: true, rememberedCredentials: true},
+        initialize: unused, preparePrivateRevision: unused, privateRevisionStatus: unused, discardPrivateRevision: unused, confirmPrivateRevision: unused,
+        retireServer: unused, oauthBegin: unused, oauthStatus: unused, oauthCancel: unused, connect: unused, disconnect: unused, prepare: unused,
+        invoke: vi.fn(unused), stop: unused, dispose: async () => ({status: "drained"}),
+        invocationStatus: vi.fn(async identity => ({status: "completed", operationId: identity.operationId, result: {contents: [{uri: "fixture://one", text: "已核实的原回复"}]}}))};
+    installMcpHostServices(host);
+    try {
+        retainMcpOriginalInvocation(host, {identity: {operationId: owner.call.id, authority: {authorityId: "authority_ui", binding: facts.binding,
+            scope: {runId: owner.run.id, callId: owner.call.id, scopeId: owner.run.threadId}, target: facts.target, argumentsDigest: "digest_one"}},
+            jobId: job.id, revision: job.revision, context: owner.context});
+        await draw(owner); await publish();
+        await click("核实原调用结果");
+        await publish();
+        expect((await db.agentToolCalls.get(owner.call.id))!.status).toBe("completed");
+        expect(host.invocationStatus).toHaveBeenCalledTimes(1); expect(host.invoke).not.toHaveBeenCalled();
+    } finally {await clearMcpHostServices(host);}
+    expect(network).not.toHaveBeenCalled();
 });

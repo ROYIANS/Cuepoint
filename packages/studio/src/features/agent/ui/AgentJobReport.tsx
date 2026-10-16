@@ -4,7 +4,8 @@ import {useProductQueryState} from "../../../platform/product/queries";
 import {StorageError} from "../../../platform/storage/errors";
 import {Button} from "../../../ui/button";
 import {ChevronDown} from "../../../ui/icons";
-import {AGENT_JOB_LIMITS, clearAgentJobResult, readAgentJob, readAgentJobPage} from "../commands/agentJobs";
+import {AGENT_JOB_LIMITS, clearAgentJobResult, readAgentJob, readAgentJobPage, selectionMatchesCall} from "../commands/agentJobs";
+import {canReconcileOriginalMcpInvocation, reconcileOriginalMcpInvocation} from "../mcp/runtime/executionOwner";
 import type {AgentRun, AgentToolCall} from "../models/agent";
 import type {AgentJob, AgentJobObservation, AgentJobReader} from "../models/agentJob";
 
@@ -29,10 +30,10 @@ function jobNotice(job: AgentJob): string | undefined {
         case "accepted":
         case "running":
         case "completed": return undefined;
-        case "stopping": return job.kind === "project_media_check" ? "等待当前检查结束，不再开始下一项。" : "正在结束本地网页读取。";
-        case "stopped": return job.kind === "project_media_check" ? "已停止，保留已检查的结果。" : "已停止本地网页读取。";
+        case "stopping": if (job.kind === "mcp") return "正在停止原 MCP 调用，外部操作结果仍需核实。"; return job.kind === "project_media_check" ? "等待当前检查结束，不再开始下一项。" : "正在结束本地网页读取。";
+        case "stopped": if (job.kind === "mcp") return "原 MCP 调用已停止，保留已确认的资料。"; return job.kind === "project_media_check" ? "已停止，保留已检查的结果。" : "已停止本地网页读取。";
         case "failed": return job.error ?? "未能完成，请查看已保留的结果。";
-        case "unknown": return "结果待核实，未确认的内容暂不可读取。";
+        case "unknown": return job.kind === "mcp" ? "外部操作结果待核实。可查看已保留的记录，不会自动重新执行。" : "结果待核实，未确认的内容暂不可读取。";
     }
 }
 
@@ -41,14 +42,14 @@ function JobProgress({job}: {job: AgentJob}) {
     const notice = jobNotice(job);
     const selectedMedia = job.selection.kind === "project_media_check" ? job.selection.media : [];
     const remaining = job.selected - job.completed;
-    if (job.kind === "web_read" && !notice) return null;
+    if (job.kind !== "project_media_check" && !notice) return null;
     return <div className="agent-job-progress">
         {job.kind === "project_media_check" && <p>已检查 {job.completed} / {job.selected} 项</p>}
         {job.kind === "project_media_check" && job.selected === 0 && <p>没有可检查的视频。</p>}
         {notice && <p role={job.status === "failed" || job.status === "unknown" ? "alert" : undefined}>{notice}</p>}
         {job.kind === "project_media_check" && (job.status === "stopped" || job.status === "failed" || job.status === "unknown") && remaining > 0 &&
             <p>还有 {remaining} 项未检查。</p>}
-        {job.kind === "web_read" && job.serviceMayHaveRun && job.status !== "completed" &&
+        {(job.kind === "web_read" || job.kind === "mcp") && job.serviceMayHaveRun && job.status !== "completed" &&
             <p>服务可能已经执行，不会自动重新请求。</p>}
         {job.observations.length > 0 && <ul aria-label="最近检查结果">
             {job.observations.slice(-3).map(item => <li key={item.mediaId}>
@@ -88,10 +89,15 @@ function ReportPage({reader, job}: {reader: AgentJobReader; job: AgentJob}) {
     </div>;
 }
 
+function reportTitle(job: AgentJob) {
+    if (job.kind === "mcp") return "MCP 服务报告";
+    return job.kind === "project_media_check" ? "视频检查报告" : "网页提取报告";
+}
 function OwnedJobReport({run, call, readOnly}: {run: AgentRun; call: AgentToolCall; readOnly?: boolean}) {
     const [retry, setRetry] = useState(0);
     const [open, setOpen] = useState(false);
     const [busy, setBusy] = useState(false);
+    const [reconcileError, setReconcileError] = useState(false);
     const [clearError, setClearError] = useState<"failed" | "unknown">();
     const pending = useRef(false);
     const mounted = useRef(true);
@@ -102,6 +108,7 @@ function OwnedJobReport({run, call, readOnly}: {run: AgentRun; call: AgentToolCa
     const callId = call.id;
     const key = JSON.stringify([threadId, projectId, runId, callId]);
     const reader: AgentJobReader = {threadId, projectId, original: {runId, callId}};
+    const originalContext = {threadId, projectId, runId, callId};
     useEffect(() => {mounted.current = true; return () => {mounted.current = false;};}, []);
     const state = useProductQueryState(async tx => {
         const admitted = await tx.agentJobs.where("callId").equals(callId).first();
@@ -109,7 +116,7 @@ function OwnedJobReport({run, call, readOnly}: {run: AgentRun; call: AgentToolCa
     }, [key, retry]);
     const value = state.value?.key === key ? state.value.job : undefined;
     const job = value && value.threadId === threadId && value.projectId === projectId && value.runId === runId &&
-        value.callId === callId && value.kind === call.name ? value : null;
+        value.callId === callId && selectionMatchesCall(value.selection, call) ? value : null;
     const cleared = job?.output?.retention === "cleared";
     const terminal = job && ["completed", "stopped", "failed", "unknown"].includes(job.status);
 
@@ -128,6 +135,14 @@ function OwnedJobReport({run, call, readOnly}: {run: AgentRun; call: AgentToolCa
         }
     }
 
+    async function reconcile() {
+        if (pending.current || readonlyRef.current) return;
+        pending.current = true; setBusy(true); setReconcileError(false);
+        try {await reconcileOriginalMcpInvocation(originalContext);}
+        catch {if (mounted.current) setReconcileError(true);}
+        finally {pending.current = false; if (mounted.current) {setBusy(false); setRetry(value => value + 1);}}
+    }
+
     if (state.error) return <section className="agent-job-report" aria-label="保留报告" role="alert">
         <p>任务进度与报告读取失败。</p>
         <Button size="sm" variant="ghost" onClick={() => setRetry(value => value + 1)}>重试读取任务</Button>
@@ -138,9 +153,12 @@ function OwnedJobReport({run, call, readOnly}: {run: AgentRun; call: AgentToolCa
         return call.status === "completed" || call.status === "unknown"
             ? <p className="agent-job-report">{value === undefined ? "正在读取报告…" : "保留报告不可用。"}</p> : null;
     }
-    return <section className="agent-job-report" aria-label={job.kind === "project_media_check" ? "视频检查报告" : "网页提取报告"}
+    return <section className="agent-job-report" aria-label={reportTitle(job)}
                     data-agent-job={job.id}>
         <JobProgress job={job}/>
+        {job.kind === "mcp" && job.status === "unknown" && !cleared && !readOnly && canReconcileOriginalMcpInvocation(originalContext) &&
+            <Button size="sm" variant="ghost" disabled={busy} aria-busy={busy} onClick={() => void reconcile()}>核实原调用结果</Button>}
+        {reconcileError && <p role="alert">未能核实原调用，请核对外部服务；不会重新执行。</p>}
         {cleared ? <p>保留结果已清理，原始调用记录仍可查看。</p> : <>
             {job.output?.retention === "retained" && <>
                 <button type="button" className="agent-quiet-toggle" aria-expanded={open} aria-controls={panelId}
@@ -165,6 +183,6 @@ function OwnedJobReport({run, call, readOnly}: {run: AgentRun; call: AgentToolCa
 /** Historical reads use the original durable call identity; display JSON never supplies authority. */
 export function AgentJobReport(props: {run: AgentRun; call: AgentToolCall; readOnly?: boolean}) {
     const {run, call} = props;
-    if (call.runId !== run.id || call.threadId !== run.threadId || !["web_read", "project_media_check"].includes(call.name)) return null;
+    if (call.runId !== run.id || call.threadId !== run.threadId || !["web_read", "project_media_check"].includes(call.name) && !call.preview?.mcp) return null;
     return <OwnedJobReport key={JSON.stringify([run.threadId, run.projectId, run.id, call.id])} {...props}/>;
 }

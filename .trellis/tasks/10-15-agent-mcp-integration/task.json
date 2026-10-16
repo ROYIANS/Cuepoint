@@ -27,12 +27,14 @@
     "implement.jsonl",
     "check.jsonl",
     "research/stage-1-results.md",
-    "research/stage-2-results.md"
+    "research/stage-2-results.md",
+    "research/stage-3-results.md",
+    "research/stage-3-review-notes.md"
   ],
   "notes": "Owner explicitly approved the final four-stage desktop-first plan with 开始吧 on 2026-10-16. E10 is active; execute necessary scoped checks and review/commit each stage, then continue. Full build/packaging/installed macOS+Windows remain epic-end gates.",
   "meta": {
     "epicCode": "E10",
-    "deliveryState": "stage-3-in-progress",
+    "deliveryState": "stage-4-in-progress",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
@@ -65,7 +67,7 @@
     "authenticationScopeConfirmedAt": "2026-10-16",
     "platformPriority": "desktop macOS/Windows required; Web remote/OAuth where practical without proxy/backend or desktop delivery delay; stdio desktop-only",
     "platformPriorityConfirmedAt": "2026-10-16",
-    "nextAction": "Stage 2 desktop service/authentication independently reviewed; commit this checkpoint, then implement actual Agent offers/approval/retained certainty under the existing authorization.",
+    "nextAction": "Stage 3 independent source review passed. Commit Agent offers/approval/original E07 certainty and continue shared management/practical Web; full gates remain deferred.",
     "planningArtifactsCompletedAt": "2026-10-16",
     "plannedStages": [
       "contracts and bounded SDK spike",
@@ -80,7 +82,7 @@
     },
     "implementationApprovedAt": "2026-10-16",
     "approvalEvidence": "User: 开始吧 after final planning summary at 557c73db",
-    "activeStage": 3,
+    "activeStage": 4,
     "stage1": {
       "state": "source-committed",
       "result": "research/stage-1-results.md",
@@ -96,7 +98,7 @@
       "commit": "45bffe3c"
     },
     "stage2": {
-      "state": "source-reviewed",
+      "state": "source-committed",
       "result": "research/stage-2-results.md",
       "studioTests": 45,
       "nativeCombinedPassed": 39,
@@ -107,6 +109,17 @@
         "actual Keychain authorization and Windows execution",
         "installed system-browser/loopback/launch acceptance",
         "epic full/emitted/packed/installed acceptance"
+      ],
+      "commit": "9d2d2de6"
+    },
+    "stage3": {
+      "state": "source-reviewed",
+      "result": "research/stage-3-results.md",
+      "studioTests": 138,
+      "studioSuites": 12,
+      "deferred": [
+        "browser UI/transport evidence belongs to Stage 4",
+        "actual Keychain/Windows/installed and epic full gates"
       ]
     }
   }

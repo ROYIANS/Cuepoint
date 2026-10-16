@@ -86,32 +86,32 @@ Stage 2 source evidence: [reviewed results](./research/stage-2-results.md).
 Ownership: MCP tool adapter and existing admission/preview/run/job lifecycle
 owners. Avoid concurrent ownership of these shared command/runtime files.
 
-- [ ] Add the same pure connected-snapshot composer to admission and new-context
+- [x] Add the same pure connected-snapshot composer to admission and new-context
   preview, with no network inside ProductStore transactions. Conversation mode
   and runs without an MCP snapshot acquire no current connection on retry/resume.
-- [ ] Materialize the per-run exact registry in send/retry/resume; use core's
+- [x] Materialize the per-run exact registry in send/retry/resume; use core's
   immutable registration/current checks. Update Studio request() to use the
   offeredDefinitions passed by core rather than recalculating wire definitions.
-- [ ] Persist binding explicitly in rounds, claimFingerprint and E07 job/call
+- [x] Persist binding explicitly in rounds, claimFingerprint and E07 job/call
   revision. Exercise actual load_tool_groups, 36-tool/two-group limits, helper
   counting, >one-group manifests and never-offered same-round calls.
-- [ ] Add typed prepared authority, bounded previews and final native generation/
+- [x] Add typed prepared authority, bounded previews and final native generation/
   configuration/arguments/credential checks. Existing ask/assist/full behavior
   remains the permission owner; server annotations do not lower risk.
-- [ ] Add the finite MCP job selection/source variant to E07 publication, paging,
+- [x] Add the finite MCP job selection/source variant to E07 publication, paging,
   clear/recovery and UI switches. Keep remote IO outside store transactions and
   give external effects no automatic replay recovery marker.
-- [ ] Preserve unknown external call status even when its evidence/report was
+- [x] Preserve unknown external call status even when its evidence/report was
   retained. Raise the typed unresolved/pending outcome rather than return a
   success-shaped descriptor into core's completion branch. Extend original
   savedResult/publication reconciliation for unknown evidence explicitly.
-- [ ] Exercise original-operation readback and late acknowledged completion
+- [x] Exercise original-operation readback and late acknowledged completion
   after Stop/disconnect/catalogue replacement. Settle only the surviving original
   invocation/job/call, never a replacement; no blanket postflight stale check
   may discard established evidence, and deleted owners must not resurrect.
-- [ ] Verify tools and resource handles, no link dereference, bounded text/JSON,
+- [x] Verify tools and resource handles, no link dereference, bounded text/JSON,
   retained offline readback and actual thread/project authority/deletion.
-- [ ] Run necessary actual-store/runtime/job/protocol tests and independent review;
+- [x] Run necessary actual-store/runtime/job/protocol tests and independent review;
   fix, capture durable contracts and commit.
 
 Outcome: real model offers and approvals reach both host transports through the

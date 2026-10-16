@@ -16,7 +16,7 @@ import { createToolLoading, DISCOVERY_TOOL_NAME, getOfferedToolNames, refreshRun
 import type { AgentRun, AgentWireToolCall } from "@/features/agent/models/agent";
 import type {ConnectorConfig} from "@/features/settings/models/connector";
 
-const connector: ConnectorConfig = { id: "loading-cx", name: "loading", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret", updatedAt: "2026-09-21" };
+const connector: ConnectorConfig = { id: "loading-cx", protocol: "openai-compatible", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret", updatedAt: "2026-09-21" };
 async function begin(protocol: "chat-completions" | "responses" = "chat-completions", permissionMode: "full" | "ask" = "full") {
   await updateGeneralAgentConfig({ permissionMode, enabledSkillIds: ["workspace", "planning", "business-read", "story-edit", "asset-edit"] });
   const thread = await createChatThread();

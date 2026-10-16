@@ -9,6 +9,12 @@
     "../mcpManifest.test.ts",
     "../mcpNativePort.test.ts",
     "../mcpConnections.test.ts",
+    "../mcpAgentSurface.test.ts",
+    "../mcpAgentExecution.test.ts",
+    "../agentRuns.test.ts",
+    "../toolLoading.test.ts",
+    "../contextPreviewSnapshot.test.ts",
+    "../agentRuntimeClaimRaces.test.ts",
     "../mcp*.test.tsx"
   ]
 }
