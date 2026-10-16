@@ -42,8 +42,9 @@ describe("composer activity attention", () => {
     expect(selectActivityAttention(input({ batches: [{ ...batch, status: "paused" }], items: [{ batchId: "batch", threadId: "thread", state: "queued" }] }))).toMatchObject([{ label: "批次已暂停" }]);
     expect(selectActivityAttention(input({ batches: [{ ...batch, status: "ready" }], jobs: [{ id: "job", threadId: "thread", runId: "run", batchId: "batch", status: "submitted" }] }))).toMatchObject([{ label: "批次等待开始" }]);
   });
-  it("offers saved progress navigation only for the recoverable latest run", () => {
-    expect(selectActivityAttention(input({ runs: [{ ...run, status: "interrupted", pauseReason: "model_step_limit" }] }))).toMatchObject([{ kind: "resume", label: "阶段已暂停" }]);
+  it("leaves interrupted/paused/failed runs to the turn-problem bubble instead of the queue", () => {
+    expect(selectActivityAttention(input({ runs: [{ ...run, status: "interrupted", pauseReason: "model_step_limit" }] }))).toEqual([]);
+    expect(selectActivityAttention(input({ runs: [{ ...run, status: "failed" }] }))).toEqual([]);
     expect(selectActivityAttention(input({ runs: [{ ...run, status: "interrupted", hasToolCalls: false }] }))).toEqual([]);
   });
   it("deduplicates a single unknown generation job with its unknown call", () => {

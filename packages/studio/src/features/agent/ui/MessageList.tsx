@@ -9,30 +9,25 @@ import type {RunAction} from "../models/chatRunAction";
 import type {AgentRun, AgentToolCall} from "../models/agent";
 import {isPersistedToolRound} from "../runtime/runPresentation";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
-import {Button} from "../../../ui/button";
 import {CopyButton, Text} from "@lobehub/ui";
-import {Fragment, memo, useCallback, useLayoutEffect, useRef, useState} from "react";
+import {Fragment, memo, type ReactNode, useCallback, useLayoutEffect, useRef, useState} from "react";
 import type {ChatMessage} from "../models/chat";
 import {isChatNearBottom, snapChatToBottom} from "../presentation/chatScroll";
 import {ThinkingMatrix} from "./ThinkingMatrix";
 import {ThinkingPanel} from "./ThinkingPanel";
 import {MemoryRunHistory} from "./MemoryContextDetails";
 import {TurnNavigation} from "./TurnNavigation";
-import {SubmissionMessage, SubmissionStatus, type SubmissionAction} from "./SubmissionMessage";
+import {SubmissionMessage} from "./SubmissionMessage";
 import {submissionTranscript, type ChatSubmissionAttempt} from "../models/chatSubmissionAttempt";
 import {PublicOutputCommit} from "./ExecutionFeedback";
 
-/** One quiet status line, only for outcomes the reader must notice. */
-export function presentMessageStatus(message: Pick<ChatMessage, "status" | "error">, run?: Pick<AgentRun, "pauseReason">): {
-    text: string;
-    tone: "error" | "muted"
-} | undefined {
-    if (message.status === "error") return {text: message.error || "生成失败", tone: "error"};
+/**
+ * Failed/interrupted turns are told once, by the bubble above the composer. The stream keeps only a deliberate
+ * stop, plus a bare marker when a failed turn left nothing else to read, so the reader can still acknowledge it.
+ */
+export function presentMessageStatus(message: Pick<ChatMessage, "status" | "content">): {text: string; tone: "muted"} | undefined {
     if (message.status === "aborted") return {text: "已停止", tone: "muted"};
-    if (message.status === "interrupted") return {
-        text: message.error || (run?.pauseReason === "model_step_limit" ? "执行已暂停" : "生成中断"),
-        tone: "muted"
-    };
+    if ((message.status === "error" || message.status === "interrupted") && !message.content.trim()) return {text: "未完成", tone: "muted"};
     return undefined;
 }
 
@@ -44,7 +39,7 @@ const MARKDOWN_PROPS = {variant: "chat"} as const;
  * Stick with `scrollTop` on this element (not `scrollIntoView` smooth).
  * History rows are memoized so Dexie liveQuery ticks only paint the streaming item.
  */
-export function MessageList({threadId, messages, runs, calls = EMPTY_CALLS, observedRevision = 0, retryableRunId, onRetryRun, busy, readOnly, onRunAction, submissions = [], onSubmissionAction, onSubmissionObserved}: {
+export function MessageList({threadId, messages, runs, calls = EMPTY_CALLS, observedRevision = 0, busy, readOnly, onRunAction, submissions = [], footer, onSubmissionObserved}: {
     threadId: string | undefined;
     messages: ChatMessage[] | undefined;
     runs?: AgentRun[];
@@ -53,10 +48,9 @@ export function MessageList({threadId, messages, runs, calls = EMPTY_CALLS, obse
     busy: boolean;
     readOnly?: boolean;
     onRunAction: (runId: string, action: RunAction, callId?: string) => void;
-    retryableRunId?: string;
-    onRetryRun: (id: string) => void;
     submissions?: ChatSubmissionAttempt[];
-    onSubmissionAction?: (id: string, action: SubmissionAction) => void;
+    /** Turn footer: live run status or run error after the last message. */
+    footer?: ReactNode;
     onSubmissionObserved?: (id: string) => void;
 }) {
     const {request} = useAgentActivityNavigation();
@@ -155,22 +149,18 @@ export function MessageList({threadId, messages, runs, calls = EMPTY_CALLS, obse
                     ) : (
                         entries.map(entry => {
                             if (entry.kind === "attempt") return <SubmissionMessage key={entry.attempt.admission.userMessageId}
-                                attempt={entry.attempt} busy={busy} onAction={onSubmissionAction ?? (() => undefined)}/>;
+                                attempt={entry.attempt}/>;
                             const message = entry.message;
                             if (message.role === "system") return null;
-                            const unresolved = submissions.find(attempt => (attempt.phase === "uncertain" || attempt.phase === "checking" || attempt.recoveryRequired) &&
-                                message.role === "user" && message.id === attempt.admission.userMessageId && message.threadId === attempt.threadId);
                             return (
                                 <Fragment key={message.id}><div ref={message.role === "assistant" && message.publicRevision === observedRevision && observedRevision > 0 ? observedSurface : undefined}
                                     data-public-revision={message.publicRevision}><AgentChatMessageItem message={message}
                                                       run={runs?.find((run) => run.id === message.runId)} calls={calls.filter(call => call.runId === message.runId)} busy={busy}
-                                                      readOnly={readOnly} onRunAction={onRunAction}
-                                                      retryable={Boolean(message.runId && message.runId === retryableRunId)}
-                                                      onRetryRun={onRetryRun}/></div>{unresolved && <SubmissionStatus attempt={unresolved} busy={busy}
-                                    onAction={onSubmissionAction ?? (() => undefined)}/>}</Fragment>
+                                                      readOnly={readOnly} onRunAction={onRunAction}/></div></Fragment>
                             );
                         })
                     )}
+                    {footer}
                 </div>
             </div>
             <TurnNavigation messages={list} listRef={listRef} contentRef={contentRef} onNavigate={pauseFollowing}/>
@@ -190,8 +180,6 @@ const AgentChatMessageItem = memo(
                                       busy,
                                       readOnly,
                                       onRunAction,
-                                      retryable,
-                                      onRetryRun,
                                   }: {
         message: ChatMessage;
         run?: AgentRun;
@@ -199,8 +187,6 @@ const AgentChatMessageItem = memo(
         busy: boolean;
         readOnly?: boolean;
         onRunAction: (runId: string, action: RunAction, callId?: string) => void;
-        retryable: boolean;
-        onRetryRun: (id: string) => void;
     }) {
         const isUser = message.role === "user";
         const processOwnsContent = !isUser && !!run && (run.status === "running" || isPersistedToolRound(run, message, calls));
@@ -218,7 +204,7 @@ const AgentChatMessageItem = memo(
             !hasReasoning;
         const showCopy = !isUser && !processOwnsContent && Boolean(message.content) && message.status !== "streaming";
         const text = showMatrix || processOwnsContent ? "" : message.content;
-        const statusLine = presentMessageStatus(message, run);
+        const statusLine = presentMessageStatus(message);
         const time = new Date(message.createdAt);
         const timeLabel = Number.isNaN(time.getTime()) ? undefined : time.toLocaleString();
 
@@ -259,11 +245,8 @@ const AgentChatMessageItem = memo(
                                 size={12}/>{formatTokenCount(run.usage.totalTokens)}</span>}
                         </span>
                     </div>
-                    {(statusLine || (retryable && message.runId)) && <div className="agent-message-status">
-                        {statusLine && <span data-agent-public="true" role="status"
-                                             className={statusLine.tone === "error" ? "agent-message-error" : undefined}>{statusLine.text}</span>}
-                        {retryable && message.runId && <Button size="sm" variant="outline"
-                                                               onClick={() => onRetryRun(message.runId!)}>重新生成</Button>}
+                    {statusLine && <div className="agent-message-status">
+                        <span data-agent-public="true" role="status">{statusLine.text}</span>
                     </div>}
                 </div>
             </div>
@@ -283,8 +266,6 @@ const AgentChatMessageItem = memo(
         prev.busy === next.busy &&
         prev.readOnly === next.readOnly &&
         prev.onRunAction === next.onRunAction &&
-        prev.retryable === next.retryable &&
-        prev.onRetryRun === next.onRetryRun &&
         prev.run?.referenceAudit?.length === next.run?.referenceAudit?.length &&
         prev.run?.referenceAudit?.at(-1)?.preparedAt === next.run?.referenceAudit?.at(-1)?.preparedAt &&
         prev.message.error === next.message.error &&

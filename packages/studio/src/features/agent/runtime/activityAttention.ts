@@ -5,7 +5,7 @@ import type {ChatMessage} from "../models/chat";
 
 export interface ActivityAttention {
     id: string;
-    kind: "unknown" | "approval" | "batch" | "resume";
+    kind: "unknown" | "approval" | "batch";
     label: string;
     detail: string;
     action: string;
@@ -96,15 +96,8 @@ export function selectActivityAttention(input: AttentionInput): ActivityAttentio
             action: "查看",
             target: {runId: run.id, callId: call.id}
         });
-        if (!approvals.length) result.push({
-            id: `run:${run.id}`,
-            kind: "resume",
-            label: run.pauseReason === "model_step_limit" ? "阶段已暂停" : "执行已中断",
-            detail: "进度已保存",
-            action: "查看执行",
-            target: {runId: run.id}
-        });
     }
-    const order = {unknown: 0, approval: 1, batch: 2, resume: 3};
+    // Interrupted/failed runs without a pending approval are the turn-problem bubble's job, not this queue's.
+    const order = {unknown: 0, approval: 1, batch: 2};
     return result.sort((a, b) => order[a.kind] - order[b.kind]);
 }

@@ -34,7 +34,7 @@ import {MIMO_MODELS} from "../providers/mimoSpeech";
 
 const LABELS: Record<AudioBatchItemState, string> = {
     draft: "待确认", queued: "待发送", submitting: "正在提交", pending: "等待结果", saved: "已保存", failed: "失败",
-    uncertain: "提交待核实", cancelled: "已取消", recovery: "待恢复保存", unavailable: "成果不可用"
+    uncertain: "未确认提交", cancelled: "已取消", recovery: "待保存", unavailable: "不可用"
 };
 const message = (error: unknown) => error instanceof Error ? error.message : "操作未完成，请重试";
 
@@ -117,7 +117,7 @@ function AudioBatchPanel({projectId, batchId}: { projectId: string; batchId: str
                             setRetryIds([]);
                             toast.success("已准备失败项草稿，请核对并重新确认");
                         })}>为选中失败项准备新草稿</Button>}
-            <p className="mt-2 text-xs text-muted-foreground">暂停和取消只停止本地发送/等待，已受理任务与音频保留。未知提交不可重发；解码和下载恢复不会再次付费。</p>
+            <p className="mt-2 text-xs text-muted-foreground">暂停或取消不会删除已提交的任务和已有音频。</p>
         </details>
         <Dialog open={reviewOpen} onOpenChange={setReviewOpen}><DialogContent
             className="flex max-h-[calc(100dvh-32px)] flex-col overflow-hidden sm:max-w-xl"><DialogHeader
@@ -136,11 +136,10 @@ function AudioBatchPanel({projectId, batchId}: { projectId: string; batchId: str
                     <details className="text-xs text-muted-foreground"><summary>音色和连接详情</summary>
                         <p>模型 {row.item.snapshot.input.mimo ? MIMO_MODELS[row.item.snapshot.input.mimo.mode] : "gpt-4o-mini-tts"} · {row.item.snapshot.input.mimo?.mode === "clone" ? "克隆音色" : row.item.snapshot.input.mimo?.mode === "design" ? "设计音色" : "预置音色"}</p>
                         <p className="whitespace-pre-wrap break-words">音色或演绎说明：{row.item.snapshot.input.mimo?.instruction || "未添加说明，使用保存的音色配置"}</p>
-                        <p>段落版本 {row.item.snapshot.input.segmentRevision} · {row.item.snapshot.input.mimo?.optimizeTextPreview ? "已允许供应商优化文本" : "保留原始文本"}</p>
+                        <p>{row.item.snapshot.input.mimo?.optimizeTextPreview ? "已允许供应商优化文本" : "保留原始文本"}</p>
                         <p className="break-all">连接 {row.item.snapshot.connector.id} · {row.item.snapshot.connector.baseUrl}</p>
                         {row.item.snapshot.speakerId &&
-                            <p className="break-all">保存的角色音色 {row.item.snapshot.speakerId} ·
-                                版本 {row.item.snapshot.speakerRevision}</p>}
+                            <p className="break-all">保存的角色音色 {row.item.snapshot.speakerId}</p>}
                         {row.item.snapshot.input.mimo?.mode === "clone" && <div>
                             <p>克隆参考已冻结；确认前可在声音工作区检查对应参考文件。</p>
                             <p className="break-all">参考文件 {row.item.snapshot.input.mimo.referenceMediaId}</p>

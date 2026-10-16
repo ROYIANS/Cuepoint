@@ -90,7 +90,7 @@ it("actual React DOM keeps the eager echo through cold rich loading and accepted
         useEffect(() => {mounted(); return () => {unmounted();};}, []);
         reading.messages = messages;
         return h(ChatWorkspace, {threads: [], activeThreadId: "thread", ownerId: "thread", submissions: [{...captured, phase: accepted ? "accepted" : "preparing"}],
-            composer, onSubmissionObserved: observed, onRetryRun: vi.fn(), onRunAction: vi.fn(), onOpenTask: vi.fn(), onOpenTasks: vi.fn(), onSelectThread: vi.fn(),
+            composer, onSubmissionObserved: observed, onRunAction: vi.fn(), onOpenTask: vi.fn(), onOpenTasks: vi.fn(), onSelectThread: vi.fn(),
             onNewTopic: vi.fn(), onRenameThread: vi.fn(), onDeleteThread: vi.fn()});
     }
     await act(async () => root.render(h(Owner, {messages: []})));
@@ -111,18 +111,15 @@ it("actual React DOM keeps the eager echo through cold rich loading and accepted
     expect(container.querySelector("textarea")).toBe(input); expect(mounted).toHaveBeenCalledTimes(1); expect(unmounted).not.toHaveBeenCalled();
 });
 
-it("only actionable uncertainty and recovery display status beside a submitted bubble", async () => {
+it("the submitted echo never carries status text or buttons for any phase; the composer notice owns recovery", async () => {
     const captured = attempt("one sent message");
-    const action = vi.fn();
-    await act(async () => root.render(h(SubmissionMessage, {attempt: {...captured, phase: "uncertain"}, busy: false, onAction: action})));
-    expect(container.querySelector("button")?.textContent).toBe("核对发送状态");
-    await act(async () => root.render(h(SubmissionMessage, {attempt: {...captured, phase: "accepted", recoveryRequired: true}, busy: false, onAction: action})));
-    expect(container.querySelector("button")?.textContent).toBe("查看恢复选项");
-    await act(async () => container.querySelector("button")?.click());
-    expect(action).toHaveBeenCalledWith(captured.admission.userMessageId, "recover");
-    await act(async () => root.render(h(SubmissionMessage, {attempt: {...captured, phase: "accepted"}, busy: false, onAction: action})));
-    expect(container.querySelector(".agent-submission-status")).toBeNull();
-    expect(container.textContent).toContain("one sent message");
+    for (const phase of ["failed", "uncertain", "checking", "accepted"] as const) {
+        await act(async () => root.render(h(SubmissionMessage, {attempt: {...captured, phase, recoveryRequired: phase === "accepted", error: "未发送"}})));
+        expect(container.querySelector("button")).toBeNull();
+        expect(container.querySelector(".agent-submission-status")).toBeNull();
+        expect(container.textContent).toContain("one sent message");
+        expect(container.textContent).not.toMatch(/未发送|重试|恢复|检查|确认/);
+    }
 });
 
 it("render opportunity waits through two animation frames", async () => {

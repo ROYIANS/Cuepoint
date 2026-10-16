@@ -31,10 +31,10 @@ function jobNotice(job: AgentJob): string | undefined {
         case "accepted":
         case "running":
         case "completed": return undefined;
-        case "stopping": if (job.kind === "mcp") return "正在停止原 MCP 调用，外部操作结果仍需核实。"; return job.kind === "project_media_check" ? "等待当前检查结束，不再开始下一项。" : "正在结束本地网页读取。";
+        case "stopping": if (job.kind === "mcp") return "正在停止原 MCP 调用，外部结果未确认。"; return job.kind === "project_media_check" ? "等待当前检查结束，不再开始下一项。" : "正在结束本地网页读取。";
         case "stopped": if (job.kind === "mcp") return "原 MCP 调用已停止，保留已确认的资料。"; return job.kind === "project_media_check" ? "已停止，保留已检查的结果。" : "已停止本地网页读取。";
         case "failed": return job.error ?? "未能完成，请查看已保留的结果。";
-        case "unknown": return job.kind === "mcp" ? "外部操作结果待核实。可查看已保留的记录，不会自动重新执行。" : "结果待核实，未确认的内容暂不可读取。";
+        case "unknown": return job.kind === "mcp" ? "外部操作未确认。已保留记录，不会自动重新执行。" : "未确认，相关内容暂不可读取。";
     }
 }
 
@@ -163,8 +163,8 @@ function OwnedJobReport({run, call, readOnly}: {run: AgentRun; call: AgentToolCa
                     data-agent-job={job.id}>
         <JobProgress job={job}/>
         {job.kind === "mcp" && job.status === "unknown" && !cleared && !readOnly && canReconcileOriginalMcpInvocation(originalContext) &&
-            <Button size="sm" variant="ghost" disabled={busy} aria-busy={busy} onClick={() => void reconcile()}>核实原调用结果</Button>}
-        {reconcileError && <p role="alert">未能核实原调用，请核对外部服务；不会重新执行。</p>}
+            <Button size="sm" variant="ghost" disabled={busy} aria-busy={busy} onClick={() => void reconcile()}>检查结果</Button>}
+        {reconcileError && <p role="alert">无法检查结果，不会重新执行。</p>}
         {cleared ? <p>保留结果已清理，原始调用记录仍可查看。</p> : <>
             {job.output?.retention === "retained" && <>
                 <button type="button" className="agent-quiet-toggle" aria-expanded={open} aria-controls={panelId}

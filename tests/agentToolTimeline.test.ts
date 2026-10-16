@@ -8,7 +8,7 @@ import {ExecutionFeedbackContext} from "@/features/agent/ui/ExecutionFeedback";
 
 let attentionCalls: AgentToolCall[] = [];
 vi.mock("@/platform/product/queries", () => ({
-    useProductQuery: () => ({threadId: "t1", calls: attentionCalls, batches: [], items: [], jobs: [], tasks: []}),
+    useProductQuery: () => ({threadId: "t1", calls: attentionCalls, batches: [], items: [], jobs: [], tasks: [], runs: [run({status: "waiting_approval"})], messages: []}),
 }));
 vi.mock("@lobehub/ui", () => ({Markdown: ({children}: {children?: ReactNode}) => h("div", null, children)}));
 vi.mock("@/features/agent/ui/ThinkingPanel", () => ({ThinkingPanel: () => null}));
@@ -233,7 +233,7 @@ describe("tool timeline", () => {
 
     it("shows an unknown result once, on the call row, without a second banner", async () => {
         await renderDetails([call("c1", {status: "unknown"})], {status: "running"});
-        expect(text().match(/结果待核实/g)).toHaveLength(1);
+        expect(text().match(/未确认/g)).toHaveLength(1);
         expect(text()).not.toContain("已暂停自动接续");
     });
 });

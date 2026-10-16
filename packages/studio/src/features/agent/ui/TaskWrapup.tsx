@@ -546,7 +546,7 @@ export function TaskWrapup({
                     </div>}
                 </>}
             </>}
-            {(error || execution.error) && <p className="task-review-error" role="alert">{error || execution.error}{draft ? "。编辑内容仍保留。" : ""}</p>}
+            {error && <p className="task-review-error" role="alert">{error}{draft ? "。编辑内容仍保留。" : ""}</p>}
         </>}
         {savedMemory && <p className="task-review-coverage">已保存在项目记忆中。<Link to="/p/$projectId/memory"
                                                                                      params={{projectId: task.projectId}}

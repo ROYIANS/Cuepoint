@@ -226,7 +226,7 @@ it("retains a known failed clear and quarantines unknown acknowledgement until a
 it("distinguishes unpublished unknown, cleared and deleted output without accepting display JSON as authority", async () => {
     const owner = await seed("unknown", "web_read");
     await db.agentJobs.update(owner.job.id, {status: "unknown", serviceMayHaveRun: true});
-    await draw(owner); await publish(); expect(container.textContent).toContain("结果待核实"); expect(container.textContent).toContain("服务可能已经执行");
+    await draw(owner); await publish(); expect(container.textContent).toContain("未确认"); expect(container.textContent).toContain("服务可能已经执行");
     expect(container.textContent).toContain("完整报告暂不可读取"); expect(button("查看报告")).toBeUndefined();
     await clearAgentJobResult(reader(owner), owner.job.id); await publish(); expect(container.textContent).toContain("保留结果已清理");
     owner.call = {...owner.call, status: "completed", result: JSON.stringify({jobId: "foreign-display-id"})};
@@ -251,7 +251,7 @@ it("keeps MCP unknown evidence readable in its original report while preserving 
     owner.job = (await db.agentJobs.get(job.id))!;
     await draw(owner); await publish();
     expect(container.querySelector('[aria-label="MCP 服务报告"]')).toBeTruthy();
-    expect(container.textContent).toContain("外部操作结果待核实");
+    expect(container.textContent).toContain("外部操作未确认");
     await click("查看报告"); await publish();
     expect(container.querySelector("pre")?.textContent).toBe("原调用的核实记录，不代表已完成。");
     expect((await db.agentToolCalls.get(owner.call.id))!.status).toBe("unknown");
@@ -267,7 +267,7 @@ it("keeps MCP unknown evidence readable in its original report while preserving 
             scope: {runId: owner.run.id, callId: owner.call.id, scopeId: owner.run.threadId}, target: facts.target, argumentsDigest: "digest_one"}},
             jobId: job.id, revision: job.revision, context: owner.context});
         await draw(owner); await publish();
-        await click("核实原调用结果");
+        await click("检查结果");
         await publish();
         expect((await db.agentToolCalls.get(owner.call.id))!.status).toBe("completed");
         expect(host.invocationStatus).toHaveBeenCalledTimes(1); expect(host.invoke).not.toHaveBeenCalled();

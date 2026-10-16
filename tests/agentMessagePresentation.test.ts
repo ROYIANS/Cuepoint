@@ -54,9 +54,9 @@ function toolCall(id: string, patch: Partial<AgentToolCall> = {}): AgentToolCall
 }
 
 let root: Root, container: HTMLDivElement;
-async function render(messages: ChatMessage[], runs: AgentRun[], extra: {retryableRunId?: string} = {}) {
+async function render(messages: ChatMessage[], runs: AgentRun[]) {
     await act(async () => {
-        root.render(h(MessageList, {threadId: "t1", messages, runs, busy: false, onRunAction: vi.fn(), onRetryRun: vi.fn(), ...extra}));
+        root.render(h(MessageList, {threadId: "t1", messages, runs, busy: false, onRunAction: vi.fn()}));
     });
 }
 const text = () => container.textContent ?? "";
@@ -127,12 +127,18 @@ describe("quiet successful reply", () => {
 });
 
 describe("failure and stop", () => {
-    it("shows a failed turn only as one bottom error line plus regenerate", async () => {
+    it("tells a failed or interrupted turn only in the composer bubble, never in the stream", async () => {
         const failed = assistant({status: "error", error: "模型服务返回 500", content: ""});
-        await render([user, failed], [run({status: "failed"})], {retryableRunId: "r1"});
-        expect(text().match(/模型服务返回 500/g)).toHaveLength(1);
-        expect(container.querySelector(".agent-message-error")?.textContent).toBe("模型服务返回 500");
-        expect(text()).toContain("重新生成");
+        await render([user, failed], [run({status: "failed"})]);
+        expect(text()).not.toContain("模型服务返回 500");
+        expect(text()).not.toContain("重新生成");
+        // Only a bare marker remains so a content-less failed turn can still be read; no reason, no action.
+        expect(container.querySelector(".agent-message-error")).toBeNull();
+        expect(container.querySelector(".agent-message-status")?.textContent).toBe("未完成");
+        await render([user, assistant({status: "interrupted", error: "执行已中断。继续时将使用已保存的步骤与结果", content: ""})], [run({status: "interrupted"})]);
+        expect(text()).not.toContain("已保存的步骤");
+        await render([user, assistant({status: "error", error: "x", content: "已有部分内容"})], [run({status: "failed"})]);
+        expect(container.querySelector(".agent-message-status")).toBeNull();
         expect(container.querySelector(".agent-execution-summary")).toBeNull();
         for (const phrase of REMOVED_COPY) expect(text()).not.toContain(phrase);
     });
@@ -145,10 +151,10 @@ describe("failure and stop", () => {
     });
 
     it("maps statuses to one quiet line", () => {
-        expect(presentMessageStatus({status: "complete"})).toBeUndefined();
-        expect(presentMessageStatus({status: "aborted", error: "x"})).toEqual({text: "已停止", tone: "muted"});
-        expect(presentMessageStatus({status: "error"})).toEqual({text: "生成失败", tone: "error"});
-        expect(presentMessageStatus({status: "interrupted"}, {pauseReason: "model_step_limit"})?.text).toBe("执行已暂停");
+        expect(presentMessageStatus({status: "complete", content: "x"})).toBeUndefined();
+        expect(presentMessageStatus({status: "aborted", content: ""})).toEqual({text: "已停止", tone: "muted"});
+        expect(presentMessageStatus({status: "error", content: ""})).toEqual({text: "未完成", tone: "muted"});
+        expect(presentMessageStatus({status: "interrupted", content: "partial"})).toBeUndefined();
     });
 });
 

@@ -102,6 +102,7 @@ import {useReferenceDraft} from "@/features/agent/ui/useReferenceDraft";
 import {createAgentExecutionService} from "@/features/agent/runtime/agentExecutionService";
 import {createChatDraftStore} from "@/features/agent/runtime/chatDraftStore";
 import type {ComposerProps} from "@/features/agent/ui/composerTypes";
+import type {TurnProblem, TurnProblemActionKind} from "@/features/agent/models/turnProblem";
 import type {ChatThread} from "@/features/agent/models/chat";
 import type {ConnectorConfig} from "@/features/settings/models/connector";
 import type {Project} from "@/features/projects/models/project";
@@ -162,10 +163,19 @@ function page(initial?: string, connection = connector) {
     io.navigate.mockImplementation(async (options: {params?: {threadId: string}}) => {select(options.params?.threadId);});
     render(); render();
     const attempts = () => (surface().props.submissions ?? []) as import("@/features/agent/models/chatSubmissionAttempt").ChatSubmissionAttempt[];
-    const action = async (action: "retry" | "restore" | "check" | "recover", id = attempts()[0]?.admission.userMessageId) => {
-        (surface().props.onSubmissionAction as (id: string, action: string) => void)(id, action); await settle();
+    // The one bubble above the composer is the only recovery surface; drive its real action callbacks.
+    const noticeNode = () => composer().notice as Node | undefined;
+    const problem = () => noticeNode()?.props.problem as TurnProblem | undefined;
+    const action = async (kind: "retry" | "check" | "recover" | "confirm") => {
+        const node = noticeNode(); if (!node) throw new Error("no notice is shown");
+        (node.props.onAction as (problem: TurnProblem, kind: TurnProblemActionKind) => void)(node.props.problem as TurnProblem, kind === "retry" ? "retry-send" : kind);
+        await settle();
     };
-    return {host, threads, render, surface, composer, select, attempts, action, runs: (value: unknown[]) => {runResults = value; render();}, pendingOwnership: () => {pendingOwnership = true; active = "unknown";}, active: () => active, type: (value: string) => composer().onChange(value),
+    const dismiss = () => {const node = noticeNode()!; (node.props.onDismiss as (problem: TurnProblem) => void)(node.props.problem as TurnProblem);};
+    // Every frozen attempt of the owner, including a failed one whose text already returned to the composer.
+    const owned = (id = active ?? "") => retained.execution!.snapshot(id).attempts;
+    const turnStatus = () => surface().props.turnStatus;
+    return {host, threads, render, surface, composer, turnStatus, select, attempts, owned, problem, action, dismiss, runs: (value: unknown[]) => {runResults = value; render();}, pendingOwnership: () => {pendingOwnership = true; active = "unknown";}, active: () => active, type: (value: string) => composer().onChange(value),
         attach: (id: string) => composer().onAttachReference!({referenceId: id, revision: 1}),
         // The UI deliberately discards handleSend's promise. Drain callbacks explicitly.
         send: async () => {composer().onSend(); await settle(); render(); await settle();}};
@@ -267,6 +277,8 @@ describe("B07 first send and ownership boundaries", () => {
         expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
         expect(ui.attempts()[0].submitted).toMatchObject({text: " submitted ", attachments: [{referenceId: "submitted-ref", revision: 1}]});
         expect(io.execute).not.toHaveBeenCalled(); expect(ui.composer().sending).toBe(false);
+        // A topic created for the send keeps its echo (the text is not in the home composer), told once by the bubble.
+        expect(ui.problem()).toMatchObject({kind: "unsent", reason: "消息未发送", action: {kind: "retry-send"}});
         expect(io.begin).toHaveBeenCalledTimes(1); io.begin.mockResolvedValueOnce({id: "retry-run"});
         await ui.action("retry"); expect(io.begin).toHaveBeenCalledTimes(2);
         expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
@@ -359,12 +371,33 @@ describe("B07 first send and ownership boundaries", () => {
         expect(ui.composer().sending).toBe(true); ui.type("next draft"); gate.resolve(); await pending; await settle();
         expect(ui.composer().value).toBe("next draft"); expect(ui.composer().sending).toBe(false);
     });
-    it("failed existing-thread begin keeps attempted contents and run count and permits explicit retry", async () => {
+    it("failed existing-thread begin returns the contents to the composer and the notice retries the frozen attempt", async () => {
         const ui = page("A"); ui.type("submitted"); ui.attach("refA"); io.begin.mockRejectedValueOnce(new Error("begin failed"));
-        await ui.send(); expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
-        expect(ui.attempts()[0].submitted.text).toBe("submitted");
+        await ui.send(); await settle();
+        // No echo or status in the stream: the text is back in the composer and one bubble tells the failure.
+        expect(ui.composer().value).toBe("submitted"); expect(ui.composer().attachments).toEqual([{referenceId: "refA", revision: 1}]);
+        expect(ui.attempts()).toEqual([]); expect(ui.owned()[0]).toMatchObject({phase: "failed", submitted: {text: "submitted"}});
+        expect(ui.problem()).toMatchObject({kind: "unsent", reason: "消息未发送", action: {kind: "retry-send", label: "重试"}, dismissible: true});
         expect(io.execute).not.toHaveBeenCalled(); expect(io.begin).toHaveBeenCalledTimes(1);
-        await ui.action("retry"); expect(io.begin).toHaveBeenCalledTimes(2); expect(ui.composer().value).toBe("");
+        await ui.action("retry"); expect(io.begin).toHaveBeenCalledTimes(2);
+        // Retry sends the original once; the returned copy must not remain to be sent again.
+        expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
+        expect(io.execute).toHaveBeenCalledTimes(1);
+    });
+    it("sending the returned text again is the same retry: the original admission is read, no second message", async () => {
+        const ui = page("A"); ui.type("again"); io.begin.mockRejectedValueOnce(new Error("reply lost")); await ui.send(); await settle();
+        expect(ui.composer().value).toBe("again");
+        io.reconcile.mockResolvedValueOnce({status: "accepted", run: {status: "running"}}); await ui.send();
+        expect(io.reconcile).toHaveBeenCalled(); expect(io.begin).toHaveBeenCalledTimes(1); expect(io.execute).not.toHaveBeenCalled();
+        expect(ui.owned()).toHaveLength(1); expect(ui.composer().value).toBe("");
+    });
+    it("closing the bubble releases the failed send and leaves its returned text alone; different text supersedes it", async () => {
+        const ui = page("A"); ui.type("closing"); io.begin.mockRejectedValueOnce(new Error("rollback")); await ui.send(); await settle();
+        ui.dismiss(); expect(ui.problem()).toBeUndefined(); expect(ui.owned()).toEqual([]); expect(ui.composer().value).toBe("closing");
+        io.begin.mockRejectedValueOnce(new Error("rollback again")); await ui.send(); await settle();
+        expect(ui.problem()).toMatchObject({kind: "unsent"}); ui.type("something else"); await ui.send();
+        expect(ui.owned().map(attempt => attempt.submitted.text)).toEqual(["something else"]);
+        expect(ui.problem()).toBeUndefined();
     });
     it("new topic success preserves old unsent draft and new topic starts empty", async () => {
         const ui = page("A"); ui.type("old unsent"); ui.attach("refA"); const created = thread("new-topic"); ui.threads.push(created);
@@ -423,7 +456,8 @@ describe("B07 first send and ownership boundaries", () => {
 });
 
 describe("E03 owned execution feedback", () => {
-    const statusText = (composer: ComposerProps) => nodes(composer.status).flatMap(node =>
+    // Run status closes the message stream (turn footer); the composer strip only holds the attached queue.
+    const statusText = (ui: ReturnType<typeof page>) => nodes(ui.turnStatus()).flatMap(node =>
         typeof node.props.children === "string" ? [node.props.children] :
             Array.isArray(node.props.children) ? node.props.children.filter(child => typeof child === "string") : []).join(" ");
     it("keeps pending model verification quiet while retaining a real failed-compatibility warning", async () => {
@@ -439,14 +473,15 @@ describe("E03 owned execution feedback", () => {
         const ui = page("A"); ui.type("submitted");
         const gate = deferred<{ok: false; aborted: true}>(); io.compatible.mockReturnValue(gate.promise);
         await ui.send();
-        expect(statusText(ui.composer())).not.toContain("正在准备");
+        expect(statusText(ui)).not.toContain("正在准备");
         expect(ui.composer().modelWarning ?? "").not.toContain("正在确认");
         const stop = ui.composer().onStop;
         stop(); stop();
         expect(ui.composer()).toMatchObject({sending: true, stopping: true});
-        expect(statusText(ui.composer())).toContain("正在停止…");
-        expect(nodes(ui.composer().status).find(node => node.type === "button" && node.props["aria-label"] === "正在停止…")?.props.disabled).toBe(true);
-        expect(statusText(ui.composer()).match(/正在停止…/g)).toHaveLength(1);
+        expect(statusText(ui)).toContain("正在停止…");
+        // Stop is the send button; the composer strip carries no run status.
+        expect(nodes(ui.composer().status).some(node => node.type === "button")).toBe(false);
+        expect(statusText(ui).match(/正在停止…/g)).toHaveLength(1);
         ui.type("next draft"); await ui.send();
         expect(io.compatible).toHaveBeenCalledTimes(1); expect(ui.attempts()).toHaveLength(1);
         expect(io.compatible.mock.calls[0][3].signal.aborted).toBe(true);
@@ -480,13 +515,13 @@ describe("E03 owned execution feedback", () => {
         const observe = io.execute.mock.calls[0][7] as import("@/features/agent/runtime/executionFeedback").RuntimeExecutionFeedback;
         observe({type: "started", runId: "run", threadId: "A", assistantMessageId: "assistant", executionId: "exec"});
         observe({type: "requestInvoked", runId: "run", executionId: "exec"});
-        expect(statusText(ui.composer())).toContain("正在等待回复…");
+        expect(statusText(ui)).toContain("正在等待回复…");
         observe({type: "publicReceived", runId: "run", executionId: "exec", kind: "content"});
-        expect(statusText(ui.composer())).not.toContain("正在等待回复");
-        expect(statusText(ui.composer())).not.toContain("正在接收回复");
+        expect(statusText(ui)).not.toContain("正在等待回复");
+        expect(statusText(ui)).not.toContain("正在接收回复");
         ui.composer().onStop();
         observe({type: "preparing", runId: "run", executionId: "exec"});
-        expect(statusText(ui.composer())).toContain("正在停止…");
+        expect(statusText(ui)).toContain("正在停止…");
         flush.resolve(); await settle();
     });
     it("keeps an ordinary reply quiet through final flush and a retained running query after release", async () => {
@@ -496,16 +531,16 @@ describe("E03 owned execution feedback", () => {
         ui.runs([run]);
         const observe = io.execute.mock.calls[0][7] as import("@/features/agent/runtime/executionFeedback").RuntimeExecutionFeedback;
         observe({type: "started", runId: "run", threadId: "A", assistantMessageId: "assistant", executionId: "exec"});
-        expect(statusText(ui.composer())).not.toContain("正在执行");
+        expect(statusText(ui)).not.toContain("正在执行");
         observe({type: "requestInvoked", runId: "run", executionId: "exec"});
-        expect(statusText(ui.composer())).toContain("正在等待回复…");
+        expect(statusText(ui)).toContain("正在等待回复…");
         observe({type: "publicReceived", runId: "run", executionId: "exec", kind: "content"});
-        expect(statusText(ui.composer())).not.toContain("正在执行");
+        expect(statusText(ui)).not.toContain("正在执行");
         observe({type: "settled", runId: "run", executionId: "exec", sequence: 1, confirmed: true, status: "completed"});
         flush.resolve(); await settle();
         expect(ui.composer().sending).toBe(false);
-        expect(statusText(ui.composer())).not.toContain("正在执行");
-        expect(statusText(ui.composer())).not.toContain("正在等待回复");
+        expect(statusText(ui)).not.toContain("正在执行");
+        expect(statusText(ui)).not.toContain("正在等待回复");
     });
     it("retains the existing execution surface for actual tool work", async () => {
         const ui = page("A"); ui.type("submitted"); const flush = deferred<void>();
@@ -515,7 +550,7 @@ describe("E03 owned execution feedback", () => {
         const observe = io.execute.mock.calls[0][7] as import("@/features/agent/runtime/executionFeedback").RuntimeExecutionFeedback;
         observe({type: "started", runId: "run", threadId: "A", assistantMessageId: "assistant", executionId: "exec"});
         observe({type: "tool_round", runId: "run", executionId: "exec", confirmed: true, sequence: 1, step: 1});
-        expect(statusText(ui.composer())).toContain("正在执行");
+        expect(statusText(ui)).toContain("正在执行");
         flush.resolve(); await settle();
     });
     it("effect replay and unmount detach only; exact Stop retains final flush ownership", async () => {
@@ -548,24 +583,32 @@ describe("E02 immediate submission recovery", () => {
         expect(ui.composer().value).toBe("next draft"); expect(io.begin).not.toHaveBeenCalled();
         expect(io.execute).not.toHaveBeenCalled();
     });
-    it("restores exact failed text/references only into the unchanged consumed composer", async () => {
+    it("returns exact failed text/references automatically, and only into the unchanged consumed composer", async () => {
         const ui = page("A"); ui.type("  recover me  "); ui.attach("exact-ref");
-        io.begin.mockRejectedValueOnce(new Error("rollback")); await ui.send();
-        expect(ui.composer().value).toBe(""); expect(ui.attempts()[0].phase).toBe("failed");
-        await ui.action("restore"); expect(ui.composer().value).toBe("  recover me  ");
+        io.begin.mockRejectedValueOnce(new Error("rollback")); await ui.send(); await settle();
+        expect(ui.composer().value).toBe("  recover me  ");
         expect(ui.composer().attachments).toEqual([{referenceId: "exact-ref", revision: 1}]);
-        expect(ui.attempts()).toEqual([]);
+        // The frozen attempt stays for the admission-checked retry but is not echoed or described in the stream.
+        expect(ui.attempts()).toEqual([]); expect(ui.owned()[0].phase).toBe("failed");
     });
-    it("refuses restore after text edits back to empty or any attachment mutation", async () => {
-        const ui = page("A"); ui.type("first"); io.begin.mockRejectedValueOnce(new Error("rollback")); await ui.send();
-        ui.type("later"); ui.type(""); await ui.action("restore");
+    it("keeps the echo visible when text edits back to empty or any attachment mutation prevent the return", async () => {
+        const ui = page("A"); ui.type("first"); const gate = deferred<{id: string}>(); io.begin.mockReturnValue(gate.promise);
+        const pending = ui.send(); await settle(); ui.type("later"); ui.type("");
+        gate.reject(new Error("rollback")); await pending; await settle();
         expect(ui.composer().value).toBe(""); expect(ui.attempts()[0].submitted.text).toBe("first");
-        ui.attach("later-ref"); ui.composer().onRemoveReference!({referenceId: "later-ref", revision: 1});
-        await ui.action("restore"); expect(ui.composer().attachments).toEqual([]); expect(ui.attempts()).toHaveLength(1);
+        expect(ui.problem()).toMatchObject({kind: "unsent", action: {kind: "retry-send"}});
+        const second = deferred<{id: string}>(); io.begin.mockReturnValue(second.promise);
+        ui.type("second"); const next = ui.send(); await settle();
+        // Attachment edits are locked through the UI during a send; mutate the draft owner directly.
+        const draft = retained.drafts!.session(JSON.stringify(["A", "p"]), "p");
+        draft.attach({referenceId: "later-ref", revision: 1}); draft.remove({referenceId: "later-ref", revision: 1});
+        second.reject(new Error("rollback")); await next; await settle();
+        expect(ui.composer().attachments).toEqual([]); expect(ui.composer().value).toBe(""); expect(ui.attempts()).toHaveLength(2);
     });
     it("retains an earlier failed candidate when a later turn is submitted", async () => {
-        const ui = page("A"); ui.type("failed first"); io.begin.mockRejectedValueOnce(new Error("rollback")); await ui.send();
-        const first = ui.attempts()[0].admission.userMessageId;
+        const ui = page("A"); ui.type("failed first"); const gate = deferred<{id: string}>(); io.begin.mockReturnValue(gate.promise);
+        const pending = ui.send(); await settle(); ui.type("typed meanwhile"); gate.reject(new Error("rollback")); await pending; await settle();
+        const first = ui.attempts()[0].admission.userMessageId; io.begin.mockResolvedValue({id: "run"});
         ui.type("next turn"); await ui.send();
         expect(ui.attempts()).toHaveLength(2); expect(ui.attempts()[0]).toMatchObject({phase: "failed", admission: {userMessageId: first}});
         expect(ui.attempts()[1].phase).toBe("accepted"); expect(io.execute).toHaveBeenCalledTimes(1);
@@ -573,7 +616,9 @@ describe("E02 immediate submission recovery", () => {
     it("unknown absent/read failure never permits retry, restore or automatic paid dispatch", async () => {
         const ui = page("A"); ui.type("uncertain"); io.begin.mockRejectedValueOnce(new UnknownCommitError("op", "workspace"));
         await ui.send(); expect(ui.attempts()[0].phase).toBe("uncertain");
-        await ui.action("retry"); await ui.action("restore"); expect(io.begin).toHaveBeenCalledTimes(1);
+        // Only checking or an explicit "not sent" exit is offered: no retry, no returned text, nothing to close.
+        expect(ui.problem()).toMatchObject({reason: "发送未确认", action: {kind: "check"}, secondary: {kind: "confirm"}, dismissible: false});
+        expect(ui.composer().value).toBe(""); expect(io.begin).toHaveBeenCalledTimes(1);
         io.reconcile.mockRejectedValueOnce(new Error("read unavailable")); await ui.action("check");
         expect(ui.attempts()[0].phase).toBe("uncertain"); expect(ui.composer().value).toBe("");
         io.reconcile.mockResolvedValueOnce({status: "absent"}); await ui.action("check");
@@ -602,7 +647,7 @@ describe("E02 immediate submission recovery", () => {
         expect(ui.attempts()[0].recoveryRequired).toBe(true);
         (ui.surface().props.onSubmissionObserved as (id: string) => void)(admission.userMessageId);
         expect(ui.attempts()).toHaveLength(1);
-        await ui.action("retry"); await ui.action("restore"); await ui.action("check");
+        expect(ui.problem()).toMatchObject({kind: "interrupted", action: {kind: "recover"}, dismissible: false});
         expect(io.begin).toHaveBeenCalledTimes(1); expect(io.execute).not.toHaveBeenCalled();
         expect(ui.composer().value).toBe("");
         expect((await db.agentRuns.get(admission.runId))?.status).toBe("running");
@@ -612,7 +657,7 @@ describe("E02 immediate submission recovery", () => {
         await ui.action("recover");
         expect((await db.agentRuns.get(admission.runId))?.status).toBe("running");
         expect(ui.attempts()[0].recoveryRequired).toBe(true);
-        expect(ui.attempts()[0].error).toContain("暂时无法恢复");
+        expect(ui.attempts()[0].error).toContain("恢复失败");
         let recoveryDone: Promise<unknown> | undefined;
         io.lock.mockImplementation((id, operation) => {
             recoveryDone = ownership.withThreadRunLock(id, operation, {
@@ -645,13 +690,14 @@ describe("E02 immediate submission recovery", () => {
         const pending = ui.send(); await settle(); await db.chatThreads.update("A", {projectId: "foreign"});
         gate.resolve(); await pending; await settle();
         expect(io.update).not.toHaveBeenCalled(); expect(io.begin).not.toHaveBeenCalled(); expect(io.execute).not.toHaveBeenCalled();
-        expect(ui.attempts()[0].phase).toBe("failed"); expect((await db.chatThreads.get("A"))?.projectId).toBe("foreign");
+        expect(ui.owned()[0].phase).toBe("failed"); expect((await db.chatThreads.get("A"))?.projectId).toBe("foreign");
     });
     it("Stop during deferred update never begins a new durable run and leaves recovery", async () => {
         const ui = page("A"); ui.type("stop before begin"); const gate = deferred<void>(); io.update.mockReturnValue(gate.promise);
         const pending = ui.send(); await settle(); ui.composer().onStop(); gate.resolve(); await pending; await settle();
         expect(io.begin).not.toHaveBeenCalled(); expect(io.execute).not.toHaveBeenCalled();
-        expect(ui.attempts()[0].phase).toBe("failed"); await ui.action("restore");
+        expect(ui.owned()[0].phase).toBe("failed");
+        expect(ui.problem()).toMatchObject({kind: "unsent", reason: "消息未发送", action: {kind: "retry-send"}});
         expect(ui.composer().value).toBe("stop before begin");
     });
     it("switching while explicit retry credentials resolve retains original authorized work", async () => {

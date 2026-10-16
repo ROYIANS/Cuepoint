@@ -44,7 +44,7 @@ vi.mock("@/features/agent/ui/ChatWorkspace", async () => {
     const {useProductQueryState} = await import("@/platform/product/queries");
     const {readThreadTranscript} = await import("@/features/agent/queries/threadReading");
     const {prepareThreadActivityKey} = await import("@/features/agent/commands/threadActivity");
-    return {ChatWorkspace: ({activeThreadId, composer}: {activeThreadId?: string; composer: ComposerProps}) => {
+    return {ChatWorkspace: ({activeThreadId, composer, turnStatus}: {activeThreadId?: string; composer: ComposerProps; turnStatus?: unknown}) => {
         const identity = activeThreadId ? prepareThreadActivityKey(activeThreadId) : undefined;
         const state = useProductQueryState(tx => readThreadTranscript(identity, tx), [activeThreadId]);
         const reading = state.value?.threadId === activeThreadId ? state.value : undefined;
@@ -52,7 +52,7 @@ vi.mock("@/features/agent/ui/ChatWorkspace", async () => {
             "data-message-state": !reading ? "loading" : reading.messages.length ? "loaded" : "empty",
             "data-run-state": !reading ? "loading" : reading.runs.map(run => run.id).join(","),
             "data-project-locked": String(composer.projectLocked), "data-retry": reading?.retryableRunId ?? ""},
-            !reading ? "正在加载对话…" : reading.messages.map(message => h("p", {key: message.id}, message.content)), composer.status);
+            !reading ? "正在加载对话…" : reading.messages.map(message => h("p", {key: message.id}, message.content)), turnStatus as never, composer.status);
     }};
 });
 vi.mock("@/features/agent/runtime/runOwnership", () => ({recoverAbandonedRuns: vi.fn().mockResolvedValue(undefined), withThreadRunLock: vi.fn()}));

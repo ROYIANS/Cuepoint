@@ -9,7 +9,7 @@ import type {AgentGenerationStatus} from "../models/agentGeneration";
 import {MediaPreview} from "../../library/ui/MediaThumb";
 
 const LABELS: Record<AgentGenerationStatus, string> = {
-    submitting: "正在提交", unknown: "提交结果待核实", submitted: "已提交，等待生成", running: "正在生成",
+    submitting: "正在提交", unknown: "提交未确认", submitted: "已提交，等待生成", running: "正在生成",
     remote_completed: "生成完成，准备保存", downloading: "正在保存素材", downloaded: "素材已保存，等待写回",
     applied: "已写入目标", conflict: "目标已变化，素材已保留", failed: "生成失败",
 };
@@ -40,7 +40,7 @@ export function AgentGenerationResults({runId}: { runId: string }) {
                     {job.result && <MediaPreview mediaId={job.result.mediaId} inspect label="生成结果预览"
                                                  className="agent-generation-media"/>}
                     {job.error && <p className="agent-generation-error">{job.error}</p>}
-                    {job.status === "unknown" && <p>请先核实供应商任务记录，避免重复提交。</p>}
+                    {job.status === "unknown" && <p>请先在供应商处确认，避免重复提交。</p>}
                     <ShotDetailLink href={job.target.kind === "shot" ? shotDetailHref({projectId: job.target.projectId, episodeId: job.target.episodeId, shotId: job.target.entityId}) : generationTargetDestination(job.target).to}
                           target={job.target.kind === "shot" ? {projectId: job.target.projectId, episodeId: job.target.episodeId, shotId: job.target.entityId} : undefined}
                           className="agent-change-link">查看{TARGETS[job.target.kind]} ↗</ShotDetailLink>

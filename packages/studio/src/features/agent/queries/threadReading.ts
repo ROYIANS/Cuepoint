@@ -30,7 +30,7 @@ export async function readThreadTranscript(identity: ThreadActivityIdentity | un
         retryableRunId: latest && canRetryRun(latest, runs, messages) ? latest.id : undefined});
 }
 
-type ControlRun = Pick<AgentRun, "id" | "threadId" | "taskId" | "createdAt" | "status" | "hasToolCalls" | "pauseReason">;
+type ControlRun = Pick<AgentRun, "id" | "threadId" | "taskId" | "createdAt" | "status" | "hasToolCalls" | "pauseReason" | "error">;
 export interface ThreadControlSnapshot {
     readonly threadId?: string;
     readonly ready: boolean;
@@ -49,7 +49,8 @@ export function sameThreadControl(left: ThreadControlSnapshot, right: ThreadCont
     return left.runs.every((run, index) => {
         const other = right.runs[index];
         return run.id === other.id && run.threadId === other.threadId && run.taskId === other.taskId && run.createdAt === other.createdAt &&
-            run.status === other.status && run.hasToolCalls === other.hasToolCalls && run.pauseReason === other.pauseReason;
+            run.status === other.status && run.hasToolCalls === other.hasToolCalls && run.pauseReason === other.pauseReason &&
+            run.error === other.error;
     });
 }
 
@@ -75,8 +76,8 @@ function createThreadControl(threadId: string | undefined) {
                     tx.contextCompactions.where("threadId").equals(threadId).sortBy("createdAt"),
                 ]);
                 return {threadId, ready: true, hasMessages: messageCount > 0, hasRuns: runs.length > 0,
-                    runs: runs.map(({id, threadId, taskId, createdAt, status, hasToolCalls, pauseReason}) =>
-                        Object.freeze({id, threadId, taskId, createdAt, status, hasToolCalls, pauseReason})),
+                    runs: runs.map(({id, threadId, taskId, createdAt, status, hasToolCalls, pauseReason, error}) =>
+                        Object.freeze({id, threadId, taskId, createdAt, status, hasToolCalls, pauseReason, error})),
                     compacting: compactions.at(-1)?.status === "running"};
             }, {next: publish, error: () => publish({...snapshot, error: "对话状态读取失败"})});
             return () => {listeners.delete(listener); if (!listeners.size) {stop?.(); stop = undefined;}};

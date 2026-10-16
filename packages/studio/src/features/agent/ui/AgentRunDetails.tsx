@@ -31,7 +31,7 @@ import type {RunAction} from "../models/chatRunAction";
 // Success is shown by its icon only; every other state gets a short word.
 const STATUS: Partial<Record<AgentToolCall["status"], string>> = {
     pending: "准备执行", awaiting_approval: "等待批准", approved: "已批准，等待执行",
-    running: "执行中", rejected: "已拒绝", unknown: "结果待核实",
+    running: "执行中", rejected: "已拒绝", unknown: "未确认",
 };
 
 function StepIcon({status, soft}: { status: AgentToolCall["status"]; soft?: boolean }) {
@@ -46,7 +46,7 @@ function StepIcon({status, soft}: { status: AgentToolCall["status"]; soft?: bool
 /** Only an uncertain outcome keeps its own notice; certain failures fold into one error line. */
 function RecoveryFailureNotice({failure}: { failure: ToolRecoveryFailure }) {
     return <div className="agent-tool-failure" role="alert">
-        <strong>操作结果待核实</strong>
+        <strong>操作未确认</strong>
         <p>{failure.error}</p>
         <p className="agent-tool-failure-recovery">{failure.recovery}</p>
     </div>;

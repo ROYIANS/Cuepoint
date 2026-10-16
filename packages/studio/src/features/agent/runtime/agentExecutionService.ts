@@ -1,5 +1,6 @@
 import {currentAgentThreadWork, reserveAgentThreadWork, subscribeAgentThreadWork, shutdownAgentThreadWork} from "./threadWork";
 import {recoverTaskWrapups, prepareTaskWrapup} from "./taskWrapup";
+import {compactThreadNow, ManualCompactionError, recoverManualCompactions} from "./manualCompaction";
 import type {AgentReasoningEffort} from "../models/agent";
 import {createId} from "../../../platform/identity";
 import {StorageError} from "../../../platform/storage/errors";
@@ -26,7 +27,7 @@ export interface AgentExecutionSnapshot {
     readonly active: boolean;
     readonly stopping: boolean;
     readonly token?: AgentExecutionToken;
-    readonly kind?: "submit" | "retry" | "decision" | "check" | "recovery" | "taskWrapup" | "videoBatch" | "audioBatch";
+    readonly kind?: "submit" | "retry" | "decision" | "check" | "recovery" | "taskWrapup" | "videoBatch" | "audioBatch" | "contextCompaction";
     readonly feedback?: Readonly<ExecutionFeedbackSnapshot>;
     readonly attempts: readonly ChatSubmissionAttempt[];
     readonly error?: string;
@@ -137,6 +138,8 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             await recoverAbandonedRuns(binding.locks, binding.store);
             const rows = await binding.store.agentTaskWrapups.filter(row => row.status === "preparing").toArray();
             for (const threadId of new Set(rows.map(row => row.threadId))) await recoverTaskWrapups(threadId, binding.locks, binding.store);
+            const compactions = await binding.store.contextCompactions.filter(row => row.status === "running" && row.origin === "manual").toArray();
+            for (const threadId of new Set(compactions.map(row => row.threadId))) await recoverManualCompactions(threadId, binding.locks, binding.store);
         })();
         return initialized;
     }
@@ -148,6 +151,7 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
         const token: AgentExecutionToken = Object.freeze({[invocationBrand]: true as const, id: createId("invocation")});
         const controller = new AbortController();
         const reservation = reserveAgentThreadWork(binding.store, kind === "taskWrapup" ? {kind, threadId, taskId: taskId!} :
+            kind === "contextCompaction" ? {kind, threadId, invocationId: token.id} :
             {kind: "model", threadId, invocationId: token.id}, controller);
         // Feedback initialization is private until the complete reservation is published.
         let resolveDone!: () => void;
@@ -166,13 +170,13 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
                 // Closing admission or stopping a reserved preparation never dispatches later.
                 if (!controller.signal.aborted) await operation(entry);
                 else if (submitted) patchAttempt(threadId, submitted.admission.userMessageId,
-                    {phase: "failed", error: "发送已停止，可重试或恢复草稿"});
+                    {phase: "failed", error: "发送已停止"});
                 resolveDone();
             } catch (cause) {
                 // Error content is retained by the concrete operation/durable run, never by a toast callback.
-                owner.error ??= "执行未完成，请查看对话记录后处理";
+                owner.error ??= "执行未完成";
                 if (submitted && attemptFor(threadId, submitted.admission.userMessageId).phase === "preparing") {
-                    patchAttempt(threadId, submitted.admission.userMessageId, {phase: "failed", error: "发送未完成，可重试或恢复草稿"});
+                    patchAttempt(threadId, submitted.admission.userMessageId, {phase: "failed", error: "未发送"});
                 }
                 rejectDone(cause);
             } finally {
@@ -200,7 +204,7 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
     async function recordSubmissionFailure(attempt: ChatSubmissionAttempt, entry: Invocation, cause: unknown) {
         const uncertain = cause instanceof StorageError && cause.certainty === "unknown";
         patchAttempt(attempt.threadId, attempt.admission.userMessageId, {phase: uncertain ? "uncertain" : "failed",
-            error: uncertain ? "尚无法确认发送结果，请核对状态" : "发送未完成，可重试或恢复草稿"});
+            error: uncertain ? "发送未确认" : "未发送"});
         if (uncertain) {
             try {await checkAttempt(attempt, entry.feedback);} catch { /* Failed/absent reads never prove rollback. */ }
         }
@@ -214,7 +218,7 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
                 const receipt = await checkAttempt(attempt, entry.feedback);
                 if (receipt.status === "accepted") return; // Positive receipt is not dispatch permission.
                 if (receipt.status !== "absent") {
-                    patchAttempt(attempt.threadId, id, {phase: "uncertain", error: "发送记录不一致，请核对话题记录"});
+                    patchAttempt(attempt.threadId, id, {phase: "uncertain", error: "发送记录不一致"});
                     return;
                 }
             }
@@ -236,7 +240,7 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
                 onAdmitted: () => {admitted = true; patchAttempt(attempt.threadId, id, {phase: "accepted", error: undefined});}
             }, binding);
             if (!admitted) patchAttempt(attempt.threadId, id, {phase: "failed",
-                error: !checked.ok && !checked.aborted ? checked.message : "发送已停止，可重试或恢复草稿"});
+                error: !checked.ok && !checked.aborted ? checked.message : "发送已停止"});
         } catch (cause) {
             if (!admitted) await recordSubmissionFailure(attempt, entry, cause);
             // Do not expose a raw connector/provider/storage exception through the service snapshot.
@@ -249,7 +253,7 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
         if (state(attempt.threadId).attempts.some(item => item.admission.userMessageId === attempt.admission.userMessageId)) throw new Error("发送内容已提交，请使用原发送记录");
         return claim(attempt.threadId, "submit", async entry => {
             await input.afterOptimisticPaint;
-            if (entry.controller.signal.aborted) {patchAttempt(attempt.threadId, attempt.admission.userMessageId, {phase: "failed", error: "发送已停止，可重试或恢复草稿"}); return;}
+            if (entry.controller.signal.aborted) {patchAttempt(attempt.threadId, attempt.admission.userMessageId, {phase: "failed", error: "发送已停止"}); return;}
             await send(attempt, entry);
         }, attempt);
     }
@@ -287,6 +291,24 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
                         entry.wrapupId = id; publish(input.threadId, state(input.threadId));
                     });
             }, undefined, input.taskId);
+        },
+        /** Explicit "compact now"; typed failures surface as the snapshot error, the result is the saved record. */
+        compactContext(input: {threadId: string; connectorId: string; model: string; reasoningEffort?: AgentReasoningEffort;
+            modelMetadata?: ChatModelMetadata}) {
+            const captured = {...input, modelMetadata: input.modelMetadata ? structuredClone(input.modelMetadata) : undefined};
+            return claim(input.threadId, "contextCompaction", async entry => {
+                const connector = await resolveConnector(captured.connectorId, binding.store);
+                if (!connector) {state(input.threadId).error = "连接不存在，请重新配置"; return;}
+                if (entry.controller.signal.aborted) return;
+                try {
+                    await compactThreadNow({threadId: captured.threadId, connector, model: captured.model, reasoningEffort: captured.reasoningEffort,
+                        modelMetadata: captured.modelMetadata, controller: entry.controller, fetchImpl: binding.fetchImpl,
+                        locks: binding.locks, store: binding.store});
+                } catch (cause) {
+                    if (!(cause instanceof ManualCompactionError)) throw cause;
+                    if (cause.code !== "cancelled") state(input.threadId).error = cause.message;
+                }
+            });
         },
         snapshot: (threadId: string): AgentExecutionSnapshot => state(threadId).snapshot,
         subscribe(threadId: string, listener: () => void) {
@@ -327,9 +349,9 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
                 try {
                     const status = await checkAttempt(attempt);
                     if (status.status !== "accepted") patchAttempt(input.threadId, input.userMessageId,
-                        {phase: "uncertain", error: "仍无法确认发送结果，请稍后核对状态"});
+                        {phase: "uncertain", error: "仍未确认"});
                 } catch {
-                    patchAttempt(input.threadId, input.userMessageId, {phase: "uncertain", error: "读取发送状态失败，请稍后重试核对"});
+                    patchAttempt(input.threadId, input.userMessageId, {phase: "uncertain", error: "检查失败，请重试"});
                 }
             });
         },
@@ -342,7 +364,7 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             const owner = threads.get(input.threadId);
             const attempt = owner?.attempts.find(item => item.admission.userMessageId === input.userMessageId);
             if (!owner || !attempt || owner.invocation || attempt.phase !== "uncertain") return false;
-            patchAttempt(input.threadId, input.userMessageId, {phase: "failed", error: "已确认未发送，可重试或恢复草稿"});
+            patchAttempt(input.threadId, input.userMessageId, {phase: "failed", error: "未发送"});
             return true;
         },
         recoverAdmissionState(input: {threadId: string; userMessageId: string}) {
@@ -354,7 +376,7 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
                     if (!entry.controller.signal.aborted) patchAttempt(input.threadId, input.userMessageId, {recoveryRequired: false, error: undefined});
                     return Promise.resolve();
                 }, binding.locks, binding.store);
-                } catch (cause) {patchAttempt(input.threadId, input.userMessageId, {error: "暂时无法恢复对话，请稍后重试"}); throw cause;}
+                } catch (cause) {patchAttempt(input.threadId, input.userMessageId, {error: "恢复失败，请重试"}); throw cause;}
             });
         },
         requestStop(input: {threadId: string; token: AgentExecutionToken}): boolean {

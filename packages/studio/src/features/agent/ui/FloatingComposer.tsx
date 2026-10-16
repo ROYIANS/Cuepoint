@@ -2,7 +2,6 @@ import {ReferenceAttachments} from "./ReferenceAttachments";
 import {ReferenceLibrary} from "./ReferenceLibrary";
 import {REFERENCE_ACCEPT} from "../../references/models/references";
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "../../../ui/dialog";
-import {ModelSettingsMenu} from "./ModelSettingsMenu";
 import {ProjectPicker} from "./ProjectPicker";
 import {AgentControls, ComposerPlusMenu} from "./AgentControls";
 import {Dropdown, Input} from "antd";
@@ -180,6 +179,7 @@ export function FloatingComposer({
                                      large,
                                      contextUsage,
                                      status,
+                                     notice,
                                      surface = "home",
                                      expanded = false,
                                      onExpandedChange,
@@ -314,6 +314,7 @@ export function FloatingComposer({
 
     return (
         <div className={`agent-composer-stack${expanded ? " is-expanded" : ""}`}>
+            {notice ? <div className="agent-composer-notice-slot">{notice}</div> : null}
             {status ? <div className="agent-composer-status">{status}</div> : null}
             <div className={`agent-composer agent-composer-refined${dragging ? " reference-dragging" : ""}`}
                  onDragOver={(event) => {
@@ -412,11 +413,8 @@ export function FloatingComposer({
 
                     <div className="agent-composer-cluster agent-composer-cluster-right">
                         <ModelSelectTrigger
-                            trigger={model ?
-                                <ModelSettingsMenu connector={connectors.find((c) => c.id === selectedConnectorId)}
-                                                   model={model} effort={reasoningEffort}
-                                                   onChange={onReasoningEffortChange}
-                                                   onChooseModel={() => setModelOpen(true)}/> : undefined}
+                            reasoningEffort={reasoningEffort}
+                            onReasoningEffortChange={onReasoningEffortChange}
                             open={modelOpen}
                             onOpenChange={setModelOpen}
                             model={model}

@@ -10,35 +10,8 @@
     border-radius: 10px 10px 0 0;
 }
 
-.agent-chat-root .agent-composer-status .agent-composer-task-summary,
-.agent-chat-root .agent-composer-status .agent-composer-run-status {
-    min-height: 24px;
-    padding: 0 4px !important;
-    gap: 8px;
-    line-height: 20px;
-}
-
-.agent-chat-root .agent-composer-status .agent-composer-task-summary > button:first-child {
-    overflow: hidden;
-}
-
-.agent-chat-root .agent-composer-status .agent-composer-task-summary > button:first-child > span:last-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.agent-chat-root .agent-composer-status .agent-composer-run-status > span {
-    min-width: 0;
-    overflow-wrap: anywhere;
-}
-
 .agent-chat-root .agent-composer-status button {
     flex-shrink: 0;
-}
-
-.agent-chat-root .agent-composer-status .agent-composer-task-summary > button:first-child {
-    flex-shrink: 1;
 }
 
 .agent-chat-root .agent-composer-attention {
@@ -144,15 +117,4 @@
         gap: 8px;
     }
 
-    .agent-chat-root .agent-composer-status .agent-composer-task-summary {
-        gap: 4px;
-    }
-
-    .agent-chat-root .agent-composer-status .agent-composer-task-summary > button:first-child {
-        gap: 4px;
-    }
-
-    .agent-chat-root .agent-composer-status .agent-composer-task-summary > button:first-child > span:last-child {
-        max-width: 104px;
-    }
 }

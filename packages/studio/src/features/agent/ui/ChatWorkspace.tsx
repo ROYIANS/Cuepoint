@@ -2,7 +2,7 @@ import {ModuleLayout} from "../../../app/layout/ModuleLayout";
 import type {RunAction} from "../models/chatRunAction";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import {Flexbox} from "@lobehub/ui";
-import {type CSSProperties, useLayoutEffect, useRef, useState} from "react";
+import {type CSSProperties, type ReactNode, useLayoutEffect, useRef, useState} from "react";
 import {AgentHeader} from "./AgentHeader";
 import {useAgentTopicNavigation} from "./AgentTopicNavigation";
 import type {ComposerProps} from "./composerTypes";
@@ -10,7 +10,6 @@ import {FloatingComposer} from "./FloatingComposer";
 import {CHAT_COMPOSER_SAFE, CHAT_CONTENT_MAX, CHAT_SAFE_X,} from "./agentTheme";
 import type {ChatThread} from "../models/chat";
 import type {Id} from "../../../platform/identity";
-import {type SubmissionAction} from "./SubmissionMessage";
 import {type ChatSubmissionAttempt} from "../models/chatSubmissionAttempt";
 import {ThreadTranscript} from "./ThreadTranscript";
 
@@ -24,7 +23,6 @@ export function ChatWorkspace({
                                   activeThreadId,
                                   activeThread,
                                   ownerId,
-                                  onRetryRun,
                                   onRunAction,
                                   composer,
                                   onSelectThread,
@@ -35,21 +33,27 @@ export function ChatWorkspace({
                                   onOpenTasks,
                                   onOpenTask,
                                   taskTitle,
+                                  taskState,
                                   taskGoal,
-                                  submissions = [], onSubmissionAction, onSubmissionObserved,
+                                  turnStatus,
+                                  threadNotice,
+                                  submissions = [], onSubmissionObserved,
                               }: {
     onOpenTasks: () => void;
     onOpenTask: () => void;
     taskTitle?: string;
+    taskState?: string;
     taskGoal?: string;
+    /** Live run status / run error, drawn at the end of the message stream. */
+    turnStatus?: ReactNode;
+    /** Persistent thread-level notice (e.g. project unavailable), shown once above the stream. */
+    threadNotice?: ReactNode;
     threads: ChatThread[];
     activeThreadId?: Id;
     activeThread?: ChatThread;
     ownerId: string;
     submissions?: ChatSubmissionAttempt[];
-    onSubmissionAction?: (id: string, action: SubmissionAction) => void;
     onSubmissionObserved?: (id: string) => void;
-    onRetryRun: (id: string) => void;
     onRunAction: (runId: string, action: RunAction, callId?: string) => void;
     composer: ComposerProps;
     onSelectThread: (id: Id) => void;
@@ -98,15 +102,16 @@ export function ChatWorkspace({
         >
             <AgentHeader title={activeThread?.title ?? "对话"} thread={activeThread}
                          topicToggle={topics.toggle} onRename={onRenameThread} onDelete={onDeleteThread}
-                         taskTitle={taskTitle} onNewTopic={onNewTopic}
+                         taskTitle={taskTitle} taskState={taskState} onNewTopic={onNewTopic}
                          onOpenTask={taskTitle || (composer.projectId && !composer.blocked) ? onOpenTask : undefined}/>
             <ModuleLayout navigationLabel="话题导航" navigation={topics.navigation} mainClassName="agent-module-main">
                 <Flexbox flex={1} height="100%" className="agent-chat-column min-w-0">
+                    {threadNotice}
                     <div className="agent-transcript-container" inert={expanded}
                          style={expanded ? {visibility: "hidden"} : undefined}>
                         <ThreadTranscript threadId={activeThreadId} ownerId={ownerId} taskTitle={taskTitle} taskGoal={taskGoal}
-                            composer={composer} submissions={submissions} onOpenTask={onOpenTask} onRetryRun={onRetryRun}
-                            onRunAction={onRunAction} onSubmissionAction={onSubmissionAction} onSubmissionObserved={onSubmissionObserved}/>
+                            composer={composer} submissions={submissions} footer={turnStatus} onOpenTask={onOpenTask}
+                            onRunAction={onRunAction} onSubmissionObserved={onSubmissionObserved}/>
                     </div>
                     <div ref={dockRef} className={`agent-composer-dock${expanded ? " is-expanded" : ""}`}>
                         <div className="agent-content">

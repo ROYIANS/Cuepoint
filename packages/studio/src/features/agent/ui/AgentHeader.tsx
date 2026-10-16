@@ -20,6 +20,7 @@ export function AgentHeader({
                                 onDelete,
                                 onOpenTask,
                                 taskTitle,
+                                taskState,
                                 onNewTopic
                             }: {
     title: string;
@@ -29,6 +30,8 @@ export function AgentHeader({
     onDelete?: (thread: ChatThread) => void;
     onOpenTask?: () => void;
     taskTitle?: string;
+    /** Short state wording for the task chip, e.g. "进行中 · 2/5". */
+    taskState?: string;
     onNewTopic?: () => void;
 }) {
     const navigation = useModuleNavigation();
@@ -63,8 +66,13 @@ export function AgentHeader({
                 </Dropdown>}
             </div>
             <div className="agent-header-actions" data-tauri-drag-region="false">
-                {onOpenTask && <ActionIcon icon={ListTodo} title={taskTitle ? "任务详情" : "创建关联任务"}
-                                           aria-label={taskTitle ? "任务详情" : "创建关联任务"} onClick={onOpenTask}/>}
+                {onOpenTask && (taskTitle ?
+                    <button type="button" className="agent-header-task-chip" onClick={onOpenTask}
+                            title={`${taskTitle}${taskState ? ` · ${taskState}` : ""}`}
+                            aria-label={`任务详情：${taskTitle}${taskState ? `，${taskState}` : ""}`}>
+                        <ListTodo size={14} aria-hidden/><strong>{taskTitle}</strong>{taskState && <span>{taskState}</span>}
+                    </button> :
+                    <ActionIcon icon={ListTodo} title="创建关联任务" aria-label="创建关联任务" onClick={onOpenTask}/>)}
             </div>
             <div className="agent-header-popup-host" data-agent-header-popup="" data-tauri-drag-region="false"/>
         </div>

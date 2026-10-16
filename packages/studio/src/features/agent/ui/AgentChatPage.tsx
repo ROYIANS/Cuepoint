@@ -9,7 +9,7 @@ import {chatDrafts} from "../runtime/chatDraftStore";
 import {useThreadControl} from "../queries/threadReading";
 import {db} from "../../../platform/product/store";
 import {createChatThread, updateChatThread} from "../commands/chat";
-import {deleteChatThread, discardEmptyChatThread} from "./../commands/lifecycle";
+import {deleteChatThread} from "./../commands/lifecycle";
 import {useReferenceDraft} from "./useReferenceDraft";
 import {runBlocksThread} from "../models/agentToolSelection";
 import {TaskBoard} from "./TaskBoard";
@@ -17,7 +17,7 @@ import {TaskInspector} from "./TaskInspector";
 import type {ManualDraftDeparture} from "../../../app/drafts/useManualDraftGuard";
 import {AgentActivityNavigationProvider} from "./AgentActivityNavigation";
 import {AgentComposerAttention} from "./AgentComposerAttention";
-import {createAgentTaskForThread, setAgentTaskLifecycle} from "../commands/agentTasks";
+import {createAgentTaskForThread} from "../commands/agentTasks";
 import {getTaskDisplayState, TASK_STATE_LABELS} from "../runtime/taskState";
 import type {AgentRun} from "../models/agent";
 import {ContextUsageTrigger} from "./ContextUsagePanel";
@@ -49,6 +49,10 @@ import {type ChatThread} from "../models/chat";
 import {type Id} from "../../../platform/identity";
 import {STUDIO_LIBRARY_ID} from "../../library/models/ownership";
 import type {SubmissionAction} from "./SubmissionMessage";
+import {ComposerNotice} from "./ComposerNotice";
+import type {ChatSubmissionAttempt} from "../models/chatSubmissionAttempt";
+import type {SubmittedDraft} from "../models/chatDraft";
+import {deriveTurnProblem, type TurnProblem, type TurnProblemActionKind} from "../models/turnProblem";
 import {discoverConnectorChatModels} from "../../settings/models/connectors";
 import {
     buildChatModelOptions,
@@ -56,6 +60,10 @@ import {
     chatModelIssue,
     sameChatModelConnector,
 } from "../../settings/models/chatModelPolicy";
+
+function sameDraft(left: SubmittedDraft, right: SubmittedDraft) {
+    return left.text === right.text && JSON.stringify(left.attachments) === JSON.stringify(right.attachments);
+}
 
 export function AgentChatPage({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     return <ShotDetailsProvider scopeKey={threadId ?? "home"}><AgentActivityNavigationProvider threadId={threadId}><AgentChatInner threadId={threadId}
@@ -177,6 +185,31 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         const attempt = submissionAttempts.find(item => item.admission.userMessageId === id);
         if (attempt) agentExecution.dismissAttempt({threadId: attempt.threadId, userMessageId: id});
     }, [submissionAttempts]);
+    const [dismissed, setDismissed] = useState<ReadonlySet<string>>(() => new Set());
+    /** Failed sends whose text is back in the composer; the frozen attempt stays for an admission-checked retry. */
+    const [returned, setReturned] = useState<ReadonlySet<string>>(() => new Set());
+    const returnTried = useRef(new Set<string>());
+    const errorCounter = useRef(0);
+    // A new occurrence of an operation error is a new problem even when its text repeats.
+    const errorId = useMemo(() => execution.error ? `error:${++errorCounter.current}` : undefined, [execution.error]);
+    const forget = useCallback((id: string) => setReturned(previous => {
+        if (!previous.has(id)) return previous;
+        const next = new Set(previous);
+        next.delete(id);
+        return next;
+    }), []);
+    useEffect(() => {
+        // Only an unchanged composer accepts its text back; otherwise the attempt stays visible in the stream.
+        for (const attempt of submissionAttempts) {
+            const id = attempt.admission.userMessageId;
+            if (attempt.phase !== "failed" || !attempt.originThreadId) {returnTried.current.delete(id); continue;}
+            if (returnTried.current.has(id)) continue;
+            returnTried.current.add(id);
+            if (chatDrafts.session(attempt.submitted.scope, attempt.projectId).restore(attempt.submitted, attempt.recovery)) {
+                setReturned(previous => new Set(previous).add(id));
+            }
+        }
+    }, [submissionAttempts]);
     useEffect(() => {
         const target = creationAttachment.current;
         if (!target || !mounted.current || attachment.current.scope !== target.scope || attachment.current.generation !== target.generation) return;
@@ -190,6 +223,8 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const projectUnavailable = Boolean(projectId && projects && !projects.some((project) => project.id === projectId));
     const visibleAttempts = submissionAttempts.filter(attempt => activeThreadId ? attempt.threadId === activeThreadId :
         (attempt.phase !== "accepted" || !!attempt.createdThread) && attempt.submitted.scope === JSON.stringify(["home", projectId]));
+    // A failed send whose text returned to the composer is told by the notice, not echoed in the stream.
+    const streamAttempts = visibleAttempts.filter(attempt => !(attempt.phase === "failed" && returned.has(attempt.admission.userMessageId)));
     const showHome = !activeThreadId && view !== "tasks" && visibleAttempts.length === 0;
     const provisionalHome = !activeThreadId && visibleAttempts.length > 0;
     if (presentation.current && activeThreadId && presentation.current.threadId !== activeThreadId) presentation.current = undefined;
@@ -331,6 +366,14 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         if (projectRequired || projectUnavailable) {toast.error(projectRequired ? "任务模式请先选择项目" : "项目已不可用，请选择其他项目开启新对话"); return;}
         if (!selectedConnector) {toast.error("请先配置连接"); return;}
         let recovery: ReturnType<typeof references.consume> | undefined;
+        // Sending back exactly what a failed send returned is its retry: the original admission is re-read first.
+        const unchanged = submissionAttempts.find(item => item.phase === "failed" && returned.has(item.admission.userMessageId) &&
+            item.threadId === activeThreadId && sameDraft(item.submitted, submitted));
+        if (unchanged) {
+            references.consume(submitted);
+            retryReturned(unchanged);
+            return;
+        }
         try {
             recovery = references.consume(submitted);
             const attempt = createSubmissionAttempt({originThreadId: activeThreadId, projectId, submitted,
@@ -341,28 +384,25 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 creationAttachment.current = {threadId: attempt.threadId, ...attachment.current};
                 presentation.current = {threadId: attempt.threadId, key: attempt.admission.userMessageId};
             }
+            // Different content supersedes the failed sends whose text had returned to the composer.
+            for (const id of returned) removeAttempt(id);
+            if (returned.size) setReturned(new Set());
             agentExecution.submit({attempt, afterOptimisticPaint: yieldSubmissionPaint(), modelMetadata: catalogMatches ? modelCatalog?.metadata?.[modelValue] : undefined});
         } catch (cause) {
             if (recovery) references.restore(submitted, recovery);
             showError({title: "暂时无法发送", cause, actionName: "send-message"});
         }
     };
+    const retryReturned = (attempt: ChatSubmissionAttempt) => {
+        forget(attempt.admission.userMessageId);
+        handleSubmissionAction(attempt.admission.userMessageId, "retry");
+    };
     const handleSubmissionAction = (id: string, action: SubmissionAction) => {
         const attempt = submissionAttempts.find(item => item.admission.userMessageId === id);
         if (!attempt || sendLocked()) return;
         try {
             const identity = {threadId: attempt.threadId, userMessageId: id};
-            if (action === "restore") {
-                if (attempt.phase !== "failed") return;
-                if (chatDrafts.session(attempt.submitted.scope, attempt.projectId).restore(attempt.submitted, attempt.recovery)) {
-                    removeAttempt(id);
-                    const created = !attempt.originThreadId ? attempt.createdThread?.id : undefined;
-                    // A new topic created for a send that never produced a message must not linger after restore.
-                    if (created) void discardEmptyChatThread(created).then(removed => {
-                        if (removed && mounted.current && currentThread.current === created) void navigate({to: "/agent", replace: true});
-                    }).catch(() => undefined);
-                } else toast.error("当前草稿已有改动，发送内容仍保留在消息中");
-            } else if (action === "confirm") agentExecution.confirmNotSent(identity);
+            if (action === "confirm") agentExecution.confirmNotSent(identity);
             else if (action === "recover") agentExecution.recoverAdmissionState(identity);
             else if (action === "check") agentExecution.checkAdmission(identity);
             else agentExecution.retrySubmission(identity);
@@ -384,10 +424,6 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             else agentExecution.resume(identity);
         } catch (cause) {showError({title: "处理执行失败", cause, actionName: "run-action"});}
     }, [activeThreadId]);
-
-    const onRetryRun = useCallback((id: string) => {
-        void handleRetry(id);
-    }, [handleRetry]);
 
     const selectModelOptions = useMemo(() => buildChatModelOptions(
         catalogMatches ? modelCatalog?.models ?? [] : [], modelValue, "", modelPolicy,
@@ -469,6 +505,44 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             toast.error(error instanceof Error ? error.message : "关联任务失败");
         }
     };
+    const taskState = activeTask ? `${TASK_STATE_LABELS[getTaskDisplayState(activeTask, runs)]}${activeTask.plan.length > 0 ? ` · ${activeTask.plan.filter((item) => item.status === "completed").length}/${activeTask.plan.length}` : ""}` : undefined;
+    // The stream only carries live status; Stop is the send button. Problems live in one bubble above the composer.
+    const turnStatus = executionStatus ?
+        <div className="agent-turn-status" role="status"><i aria-hidden/>{executionStatus}</div> : undefined;
+    const readOnlyThread = projectUnavailable || Boolean(activeTask && activeTask.lifecycle !== "open");
+    const problem = deriveTurnProblem({
+        attempts: visibleAttempts,
+        run: activeThreadId ? currentRun : undefined,
+        executionError: execution.error, executionErrorId: errorId, active: sending, readOnly: readOnlyThread});
+    const shownProblem = problem && !dismissed.has(problem.id) ? problem : undefined;
+    const dismissProblem = (target: TurnProblem) => {
+        // The owner's generic "ended" error accompanies the same failure; closing the bubble closes both.
+        setDismissed(previous => new Set(previous).add(target.id).add(errorId ?? target.id));
+        const id = target.submissionId;
+        // Its text is already back in the composer, so closing releases the frozen attempt.
+        if (id && returned.has(id)) {removeAttempt(id); forget(id);}
+    };
+    const handleProblemAction = (target: TurnProblem, kind: TurnProblemActionKind) => {
+        const id = target.submissionId;
+        if (kind === "retry-send" && id) {
+            const attempt = submissionAttempts.find(item => item.admission.userMessageId === id);
+            if (!attempt || sendLocked()) return;
+            // The returned copy would otherwise be sent a second time next to the retried original.
+            const current = references.capture();
+            if (returned.has(id) && sameDraft(current, attempt.submitted)) references.consume(current);
+            retryReturned(attempt);
+        }
+        else if (kind === "retry-run" && target.runId) handleRetry(target.runId);
+        else if (kind === "continue" && target.runId) onRunAction(target.runId, "resume");
+        else if ((kind === "check" || kind === "recover" || kind === "confirm") && id) handleSubmissionAction(id, kind);
+    };
+    const threadNotice = projectUnavailable ? <div className="agent-thread-notice" role="status">
+        <span>项目不可用</span>
+        <button type="button" onClick={() => {
+            setComposerProjectId(undefined);
+            void navigate({to: "/agent"});
+        }}>新开项目对话</button>
+    </div> : undefined;
     const composerProps: ComposerProps = {
         attachments: references.attachments,
         referenceImports: references.imports,
@@ -495,42 +569,19 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         onProjectChange: handleProjectChange,
         blocked: projectUnavailable || Boolean(activeTask && activeTask.lifecycle !== "open"),
         readOnly: projectUnavailable,
-        blockedReason: projectUnavailable ? "项目不可用 · 历史仍可查看，请新开项目对话" : undefined,
-        status: execution.error || projectUnavailable || activeTask || activeThread?.taskMode || showRunStatus || activeThreadId || executionStatus ? <>
-            {execution.error && <div className="agent-composer-run-status" role="alert">{execution.error}</div>}
-            {activeThreadId &&
-                <AgentComposerAttention threadId={activeThreadId}
+        blockedReason: projectUnavailable ? "无法继续此对话" : undefined,
+        notice: shownProblem ? <ComposerNotice problem={shownProblem} busy={sending}
+                                               onAction={handleProblemAction} onDismiss={dismissProblem}/> : undefined,
+        // The strip holds only the composer-attached approval/confirmation queue.
+        status: activeThreadId ? <AgentComposerAttention threadId={activeThreadId}
                                         task={activeTask} projectUnavailable={projectUnavailable}
-                                        onOpenTask={() => setTaskInspectorOpen(true)}/>}
-            {projectUnavailable && <div className="agent-composer-run-status"><span>项目不可用 · 对话与记录仍保留</span>
-                <button type="button" onClick={() => {
-                    setComposerProjectId(undefined);
-                    void navigate({to: "/agent"});
-                }}>选择项目，开启新对话
-                </button>
-            </div>}
-            {activeThread?.taskMode && !activeTask &&
-                <div className="agent-composer-run-status"><span>需求沟通中 · 明确目标后，助手会建立任务</span></div>}
-            {activeTask && <div className="agent-composer-task-summary">
-                <button type="button" onClick={() => setTaskInspectorOpen(true)}>
-                    <span className="agent-task-summary-label">任务</span><strong>{activeTask.title}</strong>
-                    <span>{TASK_STATE_LABELS[getTaskDisplayState(activeTask, runs)]}{activeTask.plan.length > 0 ? ` · ${activeTask.plan.filter((item) => item.status === "completed").length}/${activeTask.plan.length}` : ""}</span>
-                </button>
-                {!projectUnavailable && activeTask.lifecycle !== "open" && <button type="button"
-                                                                                   onClick={() => void setAgentTaskLifecycle(activeTask.id, "open").catch((error: Error) => toast.error(error.message))}>重新打开</button>}
-            </div>}
-            {executionStatus ? (
-                <div className="agent-composer-run-status" role="status">
-                    <span><i/>{executionStatus}</span>
-                    <button type="button" onClick={handleStop} disabled={!sending || stopping}
-                            aria-label={stopping ? "正在停止…" : "停止"}>停止</button>
-                </div>
-            ) : null}</> : undefined,
+                                        onOpenTask={() => setTaskInspectorOpen(true)}/> : undefined,
         contextUsage: <ContextUsageTrigger attachments={references.attachments} projectId={projectId}
                                            threadId={activeThreadId} interactionMode={interactionMode}
                                            draft={draft}
                                            model={modelValue} connector={selectedConnector}
                                            modelMetadata={catalogMatches ? modelCatalog?.metadata : undefined}
+                                           reasoningEffort={reasoningEffort}
                                            open={contextOpen} onOpenChange={setContextOpen}/>,
 
         reasoningEffort,
@@ -606,16 +657,15 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
                 <ChatWorkspace
                     taskTitle={activeTask?.title}
                     taskGoal={activeTask?.goal}
+                    taskState={taskState} turnStatus={turnStatus} threadNotice={threadNotice}
                     onOpenTask={() => void openTask()}
                     onOpenTasks={openBoard}
                     threads={threadList}
                     activeThreadId={activeThreadId}
                     activeThread={activeThread}
                     ownerId={ownerId}
-                    submissions={visibleAttempts}
+                    submissions={streamAttempts}
                     onSubmissionObserved={removeAttempt}
-                    onSubmissionAction={(id, action) => void handleSubmissionAction(id, action)}
-                    onRetryRun={onRetryRun}
                     onRunAction={onRunAction}
                     composer={composerProps}
                     onSelectThread={openThread}

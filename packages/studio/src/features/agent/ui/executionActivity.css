@@ -59,16 +59,24 @@
     width: 100%;
     min-width: 0;
     text-align: left;
-    padding: 4px 0 !important;
+    padding: 3px 0 !important;
     color: var(--muted-foreground);
     cursor: pointer;
     font-size: 12px;
+    line-height: 1.4;
     border: 0;
     background: transparent;
     box-shadow: none;
 }
 
 .agent-chat-root .agent-tool-verb {
+    color: var(--foreground-secondary, var(--muted-foreground));
+}
+
+.agent-chat-root .agent-tool-call-toggle:hover .agent-tool-verb,
+.agent-chat-root .agent-tool-call-toggle[aria-expanded="true"] .agent-tool-verb,
+.agent-chat-root .agent-tool-call-toggle[data-status="awaiting_approval"] .agent-tool-verb,
+.agent-chat-root .agent-tool-call-toggle[data-status="running"] .agent-tool-verb {
     color: var(--foreground);
 }
 

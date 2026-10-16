@@ -1,5 +1,1 @@
 .agent-submission-text { white-space: pre-wrap; overflow-wrap: anywhere; }
-.agent-submission-status { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; color: var(--muted-foreground); font-size: 12px; line-height: 18px; margin-top: 8px; }
-.agent-submission-status button { min-height: 32px; padding: 4px 8px; border-radius: var(--radius); text-decoration: underline; text-underline-offset: 3px; }
-.agent-submission-status button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
-.agent-submission-status button:disabled { opacity: .5; cursor: default; }

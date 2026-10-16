@@ -140,7 +140,7 @@ const BATCH_LABELS = {
 };
 const JOB_LABELS: Record<AgentGenerationStatus, string> = {
     submitting: "正在提交",
-    submitted: "已受理，等待生成",
+    submitted: "等待生成",
     running: "正在生成",
     remote_completed: "准备保存",
     downloading: "正在保存",
@@ -148,7 +148,7 @@ const JOB_LABELS: Record<AgentGenerationStatus, string> = {
     applied: "已保存",
     conflict: "目标有变化，结果保留",
     failed: "生成失败",
-    unknown: "提交结果待核实",
+    unknown: "提交未确认",
 };
 const WORKING = new Set<AgentGenerationStatus>(["submitting", "submitted", "running", "remote_completed", "downloading"]);
 
@@ -190,8 +190,8 @@ export function AgentGenerationBatches({runId}: { runId: string }) {
     }, [runId, readAttempt]);
     if (!view || view.runId !== runId) return null;
     return <div className="agent-batches" aria-label="批量生成">
-        {view.error && <p className="agent-batch-error" role="alert">读取批次失败：{view.error}
-            <button type="button" onClick={() => setReadAttempt(value => value + 1)}>重新读取</button>
+        {view.error && <p className="agent-batch-error" role="alert">读取失败，当前内容已保留
+            <button type="button" title={view.error} onClick={() => setReadAttempt(value => value + 1)}>重试</button>
         </p>}
         {view.batches.map(batch => <BatchSurface key={batch.id} batch={batch} parentReadError={Boolean(view.error)}/>)}
     </div>;
@@ -427,8 +427,8 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                 size={14} aria-hidden/></button>
         </div>
         {retainedNotice && !open && <p className="agent-batch-error" role="status">{retainedNotice}</p>}
-        {view?.error && !open && <p className="agent-batch-error" role="alert">{view.error}
-            <button type="button" onClick={() => setReadAttempt(value => value + 1)}>重新读取</button>
+        {view?.error && !parentReadError && !open && <p className="agent-batch-error" role="alert">读取失败，当前内容已保留
+            <button type="button" title={view.error} onClick={() => setReadAttempt(value => value + 1)}>重试</button>
         </p>}
         <DialogPrimitive.Root open={open && !handoff} onOpenChange={onOpenChange}>
             <DialogPrimitive.Portal container={portalRoot}>
@@ -460,8 +460,8 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                     </header>
                     <div ref={bodyRef} className="agent-batch-body">
                         {(view?.error || parentReadError) &&
-                            <p role="alert" className="agent-batch-error">读取失败，当前视图与编辑已保留。{view?.error}
-                                <button type="button" onClick={() => setReadAttempt(value => value + 1)}>重新读取
+                            <p role="alert" className="agent-batch-error">读取失败，当前内容已保留
+                                <button type="button" title={view?.error} onClick={() => setReadAttempt(value => value + 1)}>重试
                                 </button>
                             </p>}
                         {view?.readOnly && !view.error &&
@@ -527,7 +527,7 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                                 <span><strong>{failed}</strong> 失败</span>}<span><strong>{appliedCount}</strong> 当前已写入</span>
                             </div>
                             {current.pauseReason && <p className="agent-batch-note">{current.pauseReason}</p>}
-                            {unknown && <p className="agent-batch-warning"><CircleAlert size={16} aria-hidden/>有请求的提交结果尚不明确，后续发送已暂停。请核实供应商记录；其他已受理任务可以继续查询，已保存结果仍可选用。
+                            {unknown && <p className="agent-batch-warning"><CircleAlert size={16} aria-hidden/>有请求提交未确认，已暂停后续发送。请先在供应商处确认；其他任务可继续查询。
                             </p>}
                             <div className="agent-batch-targets" aria-label="选择比较目标">{groups.map(key => {
                                 const group = items.filter(item => item.targetKey === key),
@@ -588,7 +588,7 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                                     key={outcome.targetKey}
                                     className={outcome.applied ? "" : "agent-batch-error"}>{items.find(item => item.targetKey === outcome.targetKey) ? targetLabel(items.find(item => item.targetKey === outcome.targetKey)!) : outcome.targetKey}：{outcome.applied ? "已写入" : outcome.error}</li>)}</ul>}
                         </>}
-                        {error && <p className="agent-batch-error" role="alert">{error}</p>}
+                        {error && blocker.status !== "blocked" && <p className="agent-batch-error" role="alert">{error}</p>}
                         {notice && <p className="agent-batch-note" role="status">{notice}</p>}
                     </div>
                     <footer className="agent-batch-footer">
@@ -621,7 +621,7 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                                     size={14} aria-hidden/>暂停队列</Button> : (queued > 0 || active > 0) &&
                                     <Button size="sm" variant="secondary" disabled={blocked} onClick={start}><Play
                                         size={14}
-                                        aria-hidden/>{unknown || current.status === "cancelled" ? "查询已受理任务" : "继续处理"}
+                                        aria-hidden/>{unknown || current.status === "cancelled" ? "查询进度" : "继续处理"}
                                     </Button>}
                                 {queued > 0 && <Button size="sm" variant="ghost" disabled={blocked}
                                                        onClick={() => void action(() => stopGenerationBatch(current.id, current.threadId, "cancel"))}>取消剩余 {queued} 份</Button>}

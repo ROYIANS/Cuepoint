@@ -53,4 +53,6 @@ export type ComposerProps = {
     large?: boolean;
     contextUsage?: ReactNode;
     status?: ReactNode;
+    /** The single turn-problem bubble, attached above the approval queue. */
+    notice?: ReactNode;
 };
