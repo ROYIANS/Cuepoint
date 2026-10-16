@@ -558,3 +558,41 @@ Completed native/browser bounded text capture, retained skill management and opt
 
 - Stage 3 actual run snapshots and retention, progressive read tools, shared preview/budget, protocol refresh/compaction and lifecycle integration.
 - Full regression/build/emitted/packed/native installed macOS+Windows remains pending at epic end; Windows cfg execution and real picker/installed UI not claimed.
+
+
+## Session 84: E09 stage 3 frozen skills and source delivery
+<!-- trellis-session: v=2 fp=d560097cbc42d620 -->
+
+**Date**: 2026-10-16
+**Task**: E09 stage 3 frozen skills and source delivery
+**Package**: studio
+**Branch**: `codex/agent-installable-skills`
+
+### Summary
+
+Completed E09 source delivery: immutable installed skill metadata is frozen and retained with runs, progressive body/resource tools use the existing ledger and permissions, preview/budget and both protocol continuations share the actual surface.
+
+### Main Changes
+
+- Run admission/retry/lifecycle preserve exact revisions atomically; conversation and legacy runs do not acquire new installed guidance; actual thread deletion releases pins while project deletion preserves surviving chats.
+- Two fixed bounded read tools, prior successful load proof and exact selected-row reads; no tool/native/network/MCP/paid authority from content. Added a portable media-intake example and executable specs.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `0449ed6f` | feat: load frozen installed skills on demand in agent runs |
+
+### Testing
+
+- [OK] 53 distinct new cases across necessary executions (16 run, 28 tool, final 9 protocol/example); independent original merged run 50 passed, final protocol 9 passed; 61 affected preexisting baselines passed.
+- [OK] Final source noEmit passed; full-rule scoped lint on 10 production files 0 errors/10 visible warnings; architecture 685 files/2699 static/14 dynamic/0 cycles/0 failures; staged whitespace passed.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Keep E09 active as source-complete-pending-batch. Full regression/build/emitted/packed and real installed macOS+Windows acceptance are deferred; Windows cfg source not executed/cross-compiled.
+- E08 actual platform/media acceptance remains independently pending. E10 MCP is the next candidate and needs concrete scope/design review before activation.

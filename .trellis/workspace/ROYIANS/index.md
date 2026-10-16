@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-2.md`
-- **Total Sessions**: 83
+- **Total Sessions**: 84
 - **Last Active**: 2026-10-16
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-2.md` | ~560 | Active |
+| `journal-2.md` | ~598 | Active |
 | `journal-1.md` | ~1968 | Archived |
 <!-- @@@/auto:active-documents -->
 
@@ -30,6 +30,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 84 | 2026-10-16 | E09 stage 3 frozen skills and source delivery | `0449ed6f` | `codex/agent-installable-skills` |
 | 83 | 2026-10-16 | E09 stage 2 local capture and retained management | `e7a5c8ff` | `codex/agent-installable-skills` |
 | 82 | 2026-10-16 | E09 stage 1 portable skills and immutable install owner | `0c7b8b10` | `codex/agent-installable-skills` |
 | 81 | 2026-10-16 | E09 installable skills planning and scope review | - | `codex/desktop-workspace-media` |

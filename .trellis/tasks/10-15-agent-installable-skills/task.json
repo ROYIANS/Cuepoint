@@ -15,7 +15,7 @@
   "branch": "codex/agent-installable-skills",
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "0449ed6f",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -90,7 +90,8 @@
     },
     "sourceCheckpoints": [
       "0c7b8b10",
-      "e7a5c8ff"
+      "e7a5c8ff",
+      "0449ed6f"
     ],
     "pendingAcceptance": [
       "epic full regression and formal quality/build",

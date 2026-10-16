@@ -127,8 +127,7 @@ rollback never erases installed or retained user data to make tests pass.
 ## Source delivery result — 2026-10-16
 
 All three implementation stages are source-complete and independently reviewed.
-Stage 1 was committed as `0c7b8b10`; Stage 2 as `e7a5c8ff`; Stage 3 is the
-current reviewed checkpoint. Necessary source checks pass; the task remains
+Stage 1 was committed as `0c7b8b10`; Stage 2 as `e7a5c8ff`; Stage 3 was committed as `0449ed6f`. Necessary source checks pass; the task remains
 active for the explicitly deferred epic batch and actual-host acceptance.
 No native Windows execution/cross-compilation, actual installed system picker,
 emitted/packed consumer or production packaging result is claimed.
