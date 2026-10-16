@@ -62,27 +62,28 @@ tool-call success.
 
 Prefer an existing maintained protocol/OAuth SDK after checking its exact
 version and callback/refresh seams. Do not hand-roll protocol framing or assume
-a successful login provides filesystem/network sandboxing. The pending browser
-scope determines whether a browser SDK/client port is also required alongside
-the native host. No SDK or credential dependency has been installed or selected.
+a successful login provides filesystem/network sandboxing. The owner has
+selected desktop-priority delivery with practical browser reuse. A browser
+SDK/client port is optional within the limits below. No SDK or credential
+dependency has been installed by this investigation.
 
-## Product scope still to select
+## Confirmed platform priority
 
-Opening the system browser to authorize Cuepoint desktop is already in scope.
-Providing MCP inside Cuepoint's browser edition is a separate compatibility
-decision:
+On 2026-10-16 the owner confirmed desktop is the priority; support Web where
+practical. Opening the external browser to authorize Cuepoint desktop remains
+part of the required native flow. Providing MCP inside Cuepoint's browser
+edition has the following boundary:
 
 | Option | Result | Additional work / limit |
 | --- | --- | --- |
-| Browser remote MCP + OAuth alongside desktop | Browser users can connect compatible remote services; local stdio remains desktop-only | Web callback/deployment routes, browser credential lifecycle and cross-origin endpoint compatibility need their own checks |
-| Desktop MCP first | Both desktop transports and OAuth ship for macOS/Windows; browser users continue existing Agent features | Browser remote MCP remains a later feature, even though the desktop login itself opens a browser |
+| Desktop macOS + Windows: required | Local stdio, remote HTTP, manual credentials and OAuth | Native lifecycle, credential storage and callback acceptance are required on both OSes |
+| Browser remote MCP: practical reuse | Compatible remote endpoints can use shared discovery, approval and result UI | Endpoint CORS, browser-public-client registration and callback deployment must be supported; credentials can remain session-only |
+| Browser local stdio: unavailable | Show the desktop requirement at the connection entry | Do not add a process bridge or proxy backend |
 
-Recommendation: include browser remote MCP and OAuth with explicit supported-
-endpoint/CORS behavior, while keeping stdio on desktop. This preserves the
-shared product experience where technically supported, at the cost of the
-extra web callback/transport validation. Owner selection is pending; do not
-silently include a proxy/backend, claim universal endpoint compatibility or
-narrow the already confirmed desktop scope.
+Web parity must not delay or weaken the desktop delivery. Do not add a
+proxy/backend, promise universal endpoint compatibility, or narrow the
+confirmed desktop scope. Record unsupported browser behavior at the connection
+entry, without adding send-time status text to chat.
 
 ## Candidate stage partition after scope convergence
 
@@ -90,7 +91,8 @@ narrow the already confirmed desktop scope.
    exact host capabilities and frozen registry contracts, including schema and
    output bounds.
 2. Native stdio/Streamable HTTP lifecycle and remote manual/OAuth authentication;
-   browser remote adapter/callback only if that compatibility scope is selected.
+   a bounded browser remote adapter/callback where endpoint/deployment
+   capabilities permit it.
 3. Shared connection management and explicit enablement, Agent discovery/
    approval/dispatch, attributed tools/resources and retained results; verify
    replacement/disconnect/Stop/no-replay end to end with deterministic servers.

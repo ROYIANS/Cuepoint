@@ -75,9 +75,10 @@ Checked primary sources on 2026-10-16:
 Owner decision on 2026-10-16: **support both desktop transport types across
 macOS/Windows**, delivered in stages under one task. The owner answered “都支持”
 to the explicit local-plus-remote scope question. This confirms the first row,
-without choosing a Node sidecar or a new background runtime. Browser availability
-still needs an explicit scope: browsers cannot spawn stdio processes, and remote
-compatibility also depends on endpoint/auth/CORS behavior.
+without choosing a Node sidecar or a new background runtime. The owner's later
+platform decision prioritizes desktop and allows practical Web reuse: browser
+stdio is unavailable, and remote compatibility depends on endpoint/auth/CORS
+behavior. No additional proxy/backend or universal browser parity is required.
 
 ## Authentication investigation after the transport decision
 
@@ -105,13 +106,14 @@ remain to be designed against the selected SDK and actual server acceptance
 target. Browser-based desktop authorization does not itself establish support
 in Cuepoint's separately deployed browser edition.
 
-## Remaining decisions and necessary validation shape
+## Resolved scope and necessary validation shape
 
-Transport and initial authentication scope are confirmed. Next converge browser-
-edition availability, real-server/use-case acceptance and explicit server/tool
-enablement UX. Keep
-the existing quiet UI, shared right-side workspace and unsaved-edit guards.
-Do not manufacture defaults for these product choices from current source alone.
+Transport, authentication and desktop priority are confirmed. Complete the
+technical connection/credential/lifecycle design and explicit enablement UX
+using deterministic fixture servers as the acceptance baseline. No specific
+third-party account or deployment is required. Preserve the existing quiet UI,
+shared right-side workspace and unsaved-edit guards. Web support is conditional
+on actual browser/endpoint capabilities and must not delay desktop delivery.
 
 Technical design must bind pending approvals to exact server configuration,
 connection generation and schema revision; retire old ownership on disconnect/

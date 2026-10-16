@@ -20,22 +20,31 @@
   "subtasks": [],
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
-  "relatedFiles": [],
-  "notes": "Owner requested E09 archive and next delivery on 2026-10-16, then explicitly selected both local stdio and remote Streamable HTTP across macOS/Windows, and OAuth browser login together with manual Token/request headers in the first remote delivery. Converge browser-edition availability, initial use case/UX and concrete design before implementation; standing stage-commit and necessary-check cadence remains in force.",
+  "relatedFiles": [
+    "prd.md",
+    "design.md",
+    "implement.md",
+    "implement.jsonl",
+    "check.jsonl"
+  ],
+  "notes": "Desktop macOS/Windows priority, both transports, OAuth/manual/no-auth and practical Web reuse are confirmed. Concrete PRD/design/four-stage plan and curated context are ready for final planning review; no product implementation or activation yet. Standing necessary-check/stage-commit cadence applies.",
   "meta": {
     "epicCode": "E10",
-    "deliveryState": "scope-research",
+    "deliveryState": "ready-for-final-planning-review",
     "implementationApproved": false,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Both desktop transports on macOS/Windows and initial OAuth plus manual remote credentials confirmed. Investigating browser-edition compatibility, credential/callback ownership and connection lifecycle before concrete design/implementation/validation review.",
+    "readiness": "Product scope resolved; converged PRD, concrete design, four-stage implementation/validation plan and 22-entry manifests prepared. Research-only consistency review findings incorporated; SDK source inspection is not execution evidence.",
     "investigationDate": "2026-10-16",
     "researchArtifacts": [
       "research/scope-and-host-options.md",
-      "research/oauth-host-and-browser-boundary.md"
+      "research/oauth-host-and-browser-boundary.md",
+      "research/sdk-and-oauth-design.md",
+      "research/product-integration-design.md",
+      "research/planning-review.md"
     ],
     "confirmedTransports": [
       "stdio",
@@ -52,6 +61,20 @@
       "OAuth browser login"
     ],
     "authenticationScopeConfirmedAt": "2026-10-16",
-    "nextDecision": "browser-edition remote MCP and OAuth alongside desktop vs desktop MCP first; browser remote support recommended for compatible endpoints, not selected"
+    "platformPriority": "desktop macOS/Windows required; Web remote/OAuth where practical without proxy/backend or desktop delivery delay; stdio desktop-only",
+    "platformPriorityConfirmedAt": "2026-10-16",
+    "nextAction": "Present final planning summary; subsequent explicit approval activates E10 Stage 1 under the local planning gate. Do not re-ask resolved transport/auth/platform scope.",
+    "planningArtifactsCompletedAt": "2026-10-16",
+    "plannedStages": [
+      "contracts and bounded SDK spike",
+      "native connections/authentication/cleanup",
+      "Agent offers/approval/retained certainty",
+      "shared management and practical Web"
+    ],
+    "sdkCandidates": {
+      "desktop": "rmcp =3.5.1",
+      "web": "@modelcontextprotocol/client 2.3.1 (opportunistic)",
+      "evidence": "published source/API inspection only; not installed or compiled"
+    }
   }
 }
