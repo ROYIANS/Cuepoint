@@ -2,7 +2,7 @@
   "id": "agent-experience-desktop-evolution",
   "name": "agent-experience-desktop-evolution",
   "title": "Agent 交互体验与桌面能力演进",
-  "description": "把桌面 Agent 调研发现组织成可独立验收的交付任务，优先改善发送与恢复、并排详情查看和共性交互，再扩展本地执行、Skills/MCP 与后台委派能力。",
+  "description": "已交付 E01–E11 与 E16 的 Agent 交互、本地媒体、Skills/MCP 和后台执行能力；E12–E15 按用户要求取消，最终检查交由用户，任务归档。",
   "status": "planning",
   "dev_type": null,
   "scope": null,
@@ -31,10 +31,6 @@
     "10-15-agent-installable-skills",
     "10-15-agent-mcp-integration",
     "10-15-agent-background-host",
-    "10-15-agent-delegation",
-    "10-15-agent-programmatic-workflows",
-    "10-15-agent-scheduled-followups",
-    "10-15-agent-browser-computer-study",
     "10-15-business-detail-link-rollout"
   ],
   "parent": null,
@@ -46,36 +42,37 @@
     "packages/agent-providers",
     "apps/desktop/src-tauri"
   ],
-  "notes": "Owner requested an epic for all findings and sequential deliveries; in-place detail must preserve chat. Confirmed narrow fallback: full-width detail in the working surface with Return to conversation, Agent retained/running. Confirmed first shot detail supports viewing and editing. Owner authorized continuing sequential scoped deliveries, with a commit after each completed stage; retain each child’s concrete design and acceptance review and resolve material product choices as they arise. Per-task checks are limited to necessary affected tests, with full regression/build/packaging/native integration at batch completion. Owner: “ok，继续，每个阶段完了就提交代码，然后再继续”; continue sequential deliveries and commit each completed stage without repeated approval.",
+  "notes": "Owner requested an epic for all findings and sequential deliveries; in-place detail must preserve chat. Confirmed narrow fallback: full-width detail in the working surface with Return to conversation, Agent retained/running. Confirmed first shot detail supports viewing and editing. Owner authorized continuing sequential scoped deliveries, with a commit after each completed stage; retain each child’s concrete design and acceptance review and resolve material product choices as they arise. Per-task checks are limited to necessary affected tests, with full regression/build/packaging/native integration at batch completion. Owner: “ok，继续，每个阶段完了就提交代码，然后再继续”; continue sequential deliveries and commit each completed stage without repeated approval.\n2026-10-16 final owner direction supersedes further sequential work and AI-run final acceptance: e12-e15就不做了，最终检查由我完成，你把不需要的trellis移除，以及归档任务即可。 Archive source deliveries and research; retain unperformed acceptance honestly for the owner.",
   "meta": {
     "kind": "epic",
     "implementationApproved": false,
     "authorization": "把此次发现的可以优化的点，做一个大任务，然后逐个攻破",
     "researchTask": "10-15-desktop-agent-capability-research",
-    "deliveryCount": 16,
+    "deliveryCount": 12,
     "firstCandidate": "10-15-agent-parallel-details",
     "narrowDetailMode": "full-width working-surface detail, retained running conversation, explicit return; no modal drawer",
     "shotDetailScope": "view and edit one shot with existing save/conflict/draft guarantees",
     "activeDelivery": null,
-    "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
+    "testingPolicy": "Necessary source checks already recorded per delivery. Owner explicitly takes over final regression/build/package/installed acceptance on 2026-10-16; no further AI-run final checks.",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
-    "sequentialExecutionAuthorized": true,
-    "nextAction": "E11 four source stages reviewed, final stage committed7fb1b3c0 and source delivery archived. Completed-background reentry crash and sidebar flash fixed with actual regressions. E12 is next planning candidate; do not skip its design review. Full/installed acceptance stays epic batch.",
+    "sequentialExecutionAuthorized": false,
+    "nextAction": "No remaining development task. Owner performs final checks; E12-E15 are cancelled and their unused planning directories removed.",
     "carriedAcceptance": {
       "E09": {
         "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",
-        "state": "pending-epic-batch",
+        "state": "handed-off-to-user",
         "items": [
           "full regression and formal quality/application build",
           "aggregate discovery of affected TSX UI tests",
           "isolated emitted declarations and offline packed consumer",
           "actual macOS installed picker and retained management",
           "Windows cfg/native execution and installed picker/UI on fixed local NTFS"
-        ]
+        ],
+        "owner": "user"
       },
       "E10": {
         "record": "../archive/2026-10/10-15-agent-mcp-integration/task.json",
-        "state": "pending-epic-batch",
+        "state": "handed-off-to-user",
         "sourceEvidence": "Stage 1/2 native fixtures, Stage 3 actual Agent/E07 integration, Stage 4 integrated232 + SDKChromium24 + retainedUI12; source evidence is not installed proof",
         "items": [
           "full formal quality/unused/regression/whole-app builds including affected TSX discovery",
@@ -85,11 +82,12 @@
           "installed system-browser OAuth, loopback/firewall, preregistration/DCR and window lifetime",
           "compatible Web deployment/third-party OAuth; no HTTP1/stringbody/proxy/persistent-secret fallback",
           "observe isolated pre-interaction Dexie PrematureCommit in broader integration runs"
-        ]
+        ],
+        "owner": "user"
       },
       "E11": {
         "record": "../archive/2026-10/10-15-agent-background-host/task.json",
-        "state": "pending-epic-batch",
+        "state": "handed-off-to-user",
         "items": [
           "full formal quality/regression/whole-app builds and affected TSX aggregate discovery",
           "isolated emitted/declaration/offline packed consumer if applicable",
@@ -98,8 +96,74 @@
           "actual final linked and installer footprint; no runtime binary is planned"
         ],
         "sourceEvidence": "Four independently reviewed source stages; Stage4 integrated40/524 plus separate finaldelta4/82, actual Chromium13, typed100/100 and architecture742/0/0. Stage3 native12 and actual macOS hidden370429ms same-session activation/one original tool effect. Source closure does not establish installed acceptance.",
-        "observedProbeAnomaly": "Earlier if5hwj attempt exited0 at hidden205s; cause unproven, failed evidence retained. Final nR0cpc passed but does not establish the earlier cause; inspect during installed lifecycle acceptance."
+        "observedProbeAnomaly": "Earlier if5hwj attempt exited0 at hidden205s; cause unproven, failed evidence retained. Final nR0cpc passed but does not establish the earlier cause; inspect during installed lifecycle acceptance.",
+        "owner": "user"
+      },
+      "E08": {
+        "record": "../10-15-desktop-workspace-media/task.json",
+        "state": "handed-off-to-user",
+        "owner": "user",
+        "items": [
+          "actual Windows fixed-NTFS/Unicode/picker/process workflow",
+          "Intel/macOS14 and installed media preview/Stop",
+          "packaged resource identity/signing",
+          "epic-end full regression/build/emitted/packed/native integration"
+        ],
+        "sourceEvidence": "Source checkpoints and focused reviews retained in the E08 implementation-validation record; no actual Windows/installed/batch proof is implied."
       }
+    },
+    "originalDeliveryCount": 16,
+    "deliveryState": "source-deliveries-closed-final-checks-handed-to-owner",
+    "scopeClosure": {
+      "date": "2026-10-16",
+      "authorization": "e12-e15就不做了，最终检查由我完成，你把不需要的trellis移除，以及归档任务即可。",
+      "delivered": [
+        "E01",
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E07",
+        "E08",
+        "E09",
+        "E10",
+        "E11",
+        "E16"
+      ],
+      "cancelled": [
+        {
+          "code": "E12",
+          "title": "子 Agent 委派与并发治理",
+          "formerTask": "10-15-agent-delegation",
+          "state": "cancelled-not-implemented"
+        },
+        {
+          "code": "E13",
+          "title": "程序化工具编排与批量工作流",
+          "formerTask": "10-15-agent-programmatic-workflows",
+          "state": "cancelled-not-implemented"
+        },
+        {
+          "code": "E14",
+          "title": "定时跟进与可核实投递",
+          "formerTask": "10-15-agent-scheduled-followups",
+          "state": "cancelled-not-implemented"
+        },
+        {
+          "code": "E15",
+          "title": "浏览器与电脑操作专项评估",
+          "formerTask": "10-15-agent-browser-computer-study",
+          "state": "cancelled-not-implemented"
+        }
+      ]
+    },
+    "finalVerification": {
+      "owner": "user",
+      "state": "handed-off-not-run",
+      "date": "2026-10-16",
+      "record": "roadmap.md#final-verification-handoff",
+      "archiveMeaning": "Source delivery and task bookkeeping closure; unperformed final checks are not marked passed."
     }
   }
 }

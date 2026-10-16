@@ -27,13 +27,13 @@
     "packages/studio/src/platform",
     "apps/desktop/src-tauri"
   ],
-  "notes": "Owner approved a research task and will choose development scope after investigation. Additional user requirement: audit optimistic updates and broader interaction responsiveness. Planning documents contain proposals, not an approved implementation.",
+  "notes": "Owner approved a research task and will choose development scope after investigation. Additional user requirement: audit optimistic updates and broader interaction responsiveness. Planning documents contain proposals, not an approved implementation.\n2026-10-16: Investigation and scope selection are complete. Owner requested archival, cancelled E12-E15 and took over final product checks. Keep source conclusions and pinned references.",
   "meta": {
     "kind": "research",
     "authorization": "创建调研任务，调查后再定开发范围",
     "implementationApproved": false,
     "researchDate": "2026-10-15",
-    "researchStatus": "Source investigation complete; findings presented for owner scope selection.",
+    "researchStatus": "Completed; findings used by delivered E01-E11/E16. E12-E15 cancelled by owner; research archived.",
     "researchArtifacts": [
       "research/capability-comparison.md",
       "research/interaction-audit.md",
@@ -43,6 +43,11 @@
     "cuepointRevision": "9d1a41739b17be27cf832326de15a9489017825a",
     "referencePath": "/Users/xiaomengdao/WebstormProjects/deepseek-harness",
     "referenceRevision": "571902028a75c64c1d767f4ae5fd099485f0ddf0",
-    "evidenceMode": "Local source, configuration, documentation and test definitions; no runtime or latency measurements."
+    "evidenceMode": "Local source, configuration, documentation and test definitions; no runtime or latency measurements.",
+    "closure": {
+      "date": "2026-10-16",
+      "authorization": "e12-e15就不做了，最终检查由我完成，你把不需要的trellis移除，以及归档任务即可。",
+      "state": "research-complete"
+    }
   }
 }

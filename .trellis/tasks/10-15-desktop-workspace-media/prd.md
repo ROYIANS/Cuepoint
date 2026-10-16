@@ -1,5 +1,9 @@
 # E08: 本地工作区与媒体自动化
 
+## Closure (2026-10-16)
+
+Source delivery is complete. On 2026-10-16 the owner took over final checks and requested archival. Actual Windows/installed and full batch acceptance remain unperformed owner checks, listed in task.json and the parent roadmap.
+
 ## Goal
 
 Deliver a complete authorized-directory-to-verified-media-import workflow through owned native tools.

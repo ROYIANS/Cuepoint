@@ -1,5 +1,9 @@
 # E08 staged implementation plan
 
+## Closure (2026-10-16)
+
+Source delivery is complete. On 2026-10-16 the owner took over final checks and requested archival. Actual Windows/installed and full batch acceptance remain unperformed owner checks, listed in task.json and the parent roadmap.
+
 Status: approved and active after the 2026-10-16 platform decision. Keep stages
 small enough to checkpoint and commit independently; do not run the full package or
 installer gate until the entire selected epic batch is complete.
@@ -80,7 +84,7 @@ ran separately. Whole changed-scope architecture had **669 files**, **2,635 stat
 and 14 dynamic edges**, **0 static cycles and 0 failures**. Strict E08 source and
 Node typechecks passed. Final implementation evidence is consolidated in
 `research/implementation-validation.md`; actual other-host/installed acceptance
-remains deferred, so the task remains open for the epic batch gate.
+remains deferred to the owner; the source delivery is archived at their request.
 
 ## Validation commands
 
@@ -95,8 +99,8 @@ tests and scoped type/lint checks, for example:
 ```
 
 The exact native command must use the repository tool resolver and a bounded target;
-do not claim Windows execution from a macOS run. The final epic batch gate will add full
-build/package/emitted checks only after all requested tasks are done.
+do not claim Windows execution from a macOS run. The owner now performs final
+build/package/emitted checks; this archival does not run or satisfy them.
 
 ## Review and rollback gates
 

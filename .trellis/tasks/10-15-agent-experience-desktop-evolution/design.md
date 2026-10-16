@@ -1,6 +1,6 @@
 # Epic design and integration boundaries
 
-Status: planning. This epic organizes delivery; child-specific technical design and final review are still required. No host language, sidecar, framework migration, permission default or optional automation is selected here.
+Status: closed for archival on 2026-10-16. E01–E11/E16 source deliveries are complete; E12–E15 are cancelled by the owner. Final integration and installed acceptance are handed to the owner. The sections below retain the original design constraints and decisions; they do not activate further implementation.
 
 ## Ownership
 
@@ -37,4 +37,4 @@ External file/process/browser effects cannot participate in local database rollb
 
 Deliver sequentially, checkpoint each independently accepted slice, and avoid wide changes to unrelated owners. Prefer reversible changes in the existing shared app rather than parallel products or duplicate editors/stores. Each child records its own rollout/rollback and validation commands once scope is concrete. A rollback must not discard confirmed user drafts, business writes or remote job identities.
 
-Before completing the parent, exercise running-chat details together with send/retry/stop, delayed query transitions, approvals, concurrent detail edits and real native storage. Optional later capabilities may be explicitly deferred rather than falsely marked delivered.
+Final integration cases retained for the owner: running-chat details together with send/retry/stop, delayed query transitions, approvals, concurrent detail edits and real native storage. The owner took over these checks and requested archival; E12–E15 were explicitly cancelled, not marked delivered.

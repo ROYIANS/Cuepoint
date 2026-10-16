@@ -1,6 +1,10 @@
 # Desktop Agent evolution — options, not an approved implementation
 
-Status: planning. The owner authorized investigation and will choose development
+## Closure (2026-10-16)
+
+Investigation and scope handoff are complete. On 2026-10-16 the owner requested archival and cancelled E12–E15. Original proposals below remain research evidence; no further development is activated by this record.
+
+Status: research complete. The owner authorized investigation and will choose development
 scope afterward. This file records alternatives; no package, host language,
 permission default or milestone has been approved.
 

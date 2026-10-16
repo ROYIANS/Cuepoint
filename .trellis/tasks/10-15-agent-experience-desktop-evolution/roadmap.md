@@ -1,6 +1,6 @@
 # Delivery roadmap and source coverage
 
-State: planning. The owner authorized this epic and sequential task organization on 2026-10-15. Creating these records does not enable every capability or approve a host/runtime choice. The owner subsequently authorized sequential implementation and stage commits. Complete each child's concrete scope/design review before activation, using that standing authorization for established requirements and clarifying material new product choices.
+State: closed for archival on 2026-10-16 at the owner’s request. E01–E11 and E16 have source deliveries; E12–E15 are cancelled and their unused planning records removed. Final checks belong to the owner (see Final verification handoff below). No further sequential implementation is scheduled.
 
 ## Delivery order
 
@@ -14,16 +14,21 @@ State: planning. The owner authorized this epic and sequential task organization
 | [E16: Remaining entity links/review handoff](../archive/2026-10/10-15-business-detail-link-rollout/prd.md) | Expand existing business editors and accessible detail/return from retained batch review. | E01; recommended after E02-E05 UX work. | Committed as `8ac73652` and archived: shots + four project/Studio asset kinds, real editor reuse and retained batch-review handoff. Necessary checks, actual scoped browser paths and independent review passed. Other families retain explicit navigation/follow-up scope. |
 | [E06: Capabilities and resource grants](../archive/2026-10/10-15-agent-resource-capabilities/prd.md) | Explicit typed extension and resource-approval contracts reusable outside Studio. | No delivery prerequisite. | Committed as `d4c2c877` and archived: public core registration/binding/grant contracts with actual independent Todo SQLite authority; necessary source checks/review passed. OS/external backends unsupported; emitted/packed/native/full gates deferred. |
 | [E07: Jobs, results and artifacts](../archive/2026-10/10-15-agent-jobs-results/prd.md) | Owned progress/cancel/output and recoverable large-result references. | E06. | Committed as `c9fd6706` and archived: foreground project video availability and retained web extraction with owned paged reports. Necessary source checks/review passed (11 suites/208 tests); native/emitted/packed/full gates deferred. Persistence does not extend lifetime; actual process termination remains with E08. |
-| [E08: Native workspace/media](../10-15-desktop-workspace-media/prd.md) | Authorized input directory to verified media processing and project import. | E06, E07. | Source complete on `codex/desktop-workspace-media` in `52e584c7`, `2b00d8e5`, `ca2da1a5`: macOS + Windows source/native grants, decoder resources, atomic source+thumbnail import, inline library UI and Agent group. Necessary affected checks and independent reviews passed; task stays open for deferred actual Windows/installed and epic batch acceptance. |
+| [E08: Native workspace/media](../10-15-desktop-workspace-media/prd.md) | Authorized input directory to verified media processing and project import. | E06, E07. | Source complete on `codex/desktop-workspace-media` in `52e584c7`, `2b00d8e5`, `ca2da1a5`: macOS + Windows source/native grants, decoder resources, atomic source+thumbnail import, inline library UI and Agent group. Necessary affected checks and independent reviews passed; archived at the owner’s request with actual Windows/installed and final batch checks handed to the owner. |
 | [E09: Installable Skills](../archive/2026-10/10-15-agent-installable-skills/prd.md) | Discover and load reusable creative instructions on demand. | E06. | Three reviewed source stages (`0c7b8b10`, `e7a5c8ff`, `0449ed6f`) and runtime/uncertain-toggle repair (`1e74e0c8`) complete. Archived at the owner's request on 2026-10-16; deferred full/emitted/packed and actual installed macOS/Windows acceptance is retained by this epic below. |
 | [E10: MCP integration](../archive/2026-10/10-15-agent-mcp-integration/prd.md) | Selected external server tools/resources share approval, lifecycle and result handling. | E06, E07. | Four source stages independently reviewed on codex/agent-mcp-integration: `45bffe3c` contracts/SDK, `9d2d2de6` desktop transports/OAuth, `80513428` Agent approval/E07, followed by shared retained management and compatible Web. Final 19 suites/232 tests, actual SDK Chromium24 and retained UI12 passed. Source delivery is archived after its final checkpoint; exact Stage 4 commit is in the archived task. Both desktop transports/OAuth implemented; Web requires request-stream + HTTP/2/3 + CORS, no proxy. Full/installed gates remain carried below. |
 | [E11: Background Agent host](../archive/2026-10/10-15-agent-background-host/prd.md) | Independent concurrent conversations continue across in-app navigation, with per-conversation sidebar running/unread icons and no stop-before-leaving dialog. Reattach to authoritative state. | E06, E07; preserve delivered E10 session/authority integration. | Six owner outcomes and four-stage plan approved 2026-10-16 (进入开发吧). All four source stages independently reviewed on codex/agent-background-host: retained execution/drafts, native single-window lifetime and viewed-only sidebar activity. Chromium13, integrated40/524 plus finaldelta4/82 and actual macOS hidden370429ms passed. Final source stage committed as `7fb1b3c0` and source delivery archived; installed macOS/Windows and full/build acceptance stays in the final batch. |
-| [E12: Delegation/concurrency](../10-15-agent-delegation/prd.md) | Bounded child work, inherited grants, budgets and coordinated creative writes. | E06, E07, E11. | Backlog; may narrow E11 dependence only by explicit scoped design. |
-| [E13: Programmatic workflows](../10-15-agent-programmatic-workflows/prd.md) | Verified batches with nested calls through the same policy and scheduler. | E06, E07, E12. | Backlog; typed orchestration before choosing code execution. |
-| [E14: Scheduled follow-ups](../10-15-agent-scheduled-followups/prd.md) | Manage reminders with honest online/offline, delivery and duplicate semantics. | E07, E11. | Backlog; no app-exit/daemon promise. |
-| [E15: Browser/computer study](../10-15-agent-browser-computer-study/prd.md) | Decide a justified bounded workflow, permissions and prototype acceptance. | E06, E07, E11. | Optional evaluation; prototype/product implementation requires its own approval. |
 
-This is a proposed sequence, not a dependency scheduler. The same dependencies are written in the owning child PRDs and metadata. The owner may reorder independent deliveries; changes affecting acceptance or host lifetime must update both places.
+### Cancelled scope
+
+| Former delivery | Disposition on 2026-10-16 |
+| --- | --- |
+| E12: Delegation/concurrency | Cancelled by the owner; not implemented. Unused task directory removed. |
+| E13: Programmatic workflows | Cancelled by the owner; not implemented. Unused task directory removed. |
+| E14: Scheduled follow-ups | Cancelled by the owner; not implemented. Unused task directory removed. |
+| E15: Browser/computer study | Cancelled by the owner; not implemented. Unused task directory removed. |
+
+The delivery order and dependencies above document the completed source work. Cancelled scope is excluded from the delivered count; earlier research proposals remain historical evidence.
 
 ## Full finding coverage
 
@@ -44,24 +49,43 @@ This is a proposed sequence, not a dependency scheduler. The same dependencies a
 | Filesystem Skills, metadata/body separation and distribution | E09 | On-demand instructions/resources; no implicit execution grants. |
 | MCP tools/resources, transport/credentials, reconnect/process ownership | E10 | Test server and late-response/disconnect/approval identity cases. |
 | Current UI-bound loop, actual host ownership, product bridge and packaged lifetime | E11 | Chosen lifecycle in actual package; one ProductStore and run owner. |
-| Owner request on 2026-10-16: sidebar loading/unread icons, concurrent conversations, no stop-before-leaving, desktop background and one application window | E11 | Two conversations progress independently; row icons/read cursors remain truthful, navigation does not cancel, and manual drafts remain protected. Window close retains the host; reopen/repeated launch reuses it; explicit Quit ends it without replay. macOS and Windows source plus actual platform acceptance are distinct. Child Agents remain E12. |
-| Spawn/Fork, role contexts, messages, budgets and child scope | E12 | Managed child lineage, cancellation, bounded read concurrency and exclusive effects. |
-| PTC/programmatic batches and nested-tool concurrency | E13 | Verified outputs and preserved nested policies, cancellation and ledger. |
-| Timers, cold follow-up, missed runs and acknowledgement windows | E14 | Host availability plus duplicate/crash admission tests. |
-| Browser/CUA and experimental-provider boundaries | E15 | Decision evidence before enabling capability; state verification after actions. |
-| Framework adoption versus mechanisms/protocol SDK; SDK control limits | E06, E10, E11, E15 as applicable | Preserve reviewed option comparison; no global decision to replace Cuepoint core. |
+| Owner request on 2026-10-16: sidebar loading/unread icons, concurrent conversations, no stop-before-leaving, desktop background and one application window | E11 | Two conversations progress independently; row icons/read cursors remain truthful, navigation does not cancel, and manual drafts remain protected. Window close retains the host; reopen/repeated launch reuses it; explicit Quit ends it without replay. macOS and Windows source plus actual platform acceptance are distinct. Child Agents were excluded when the owner cancelled E12. |
+| Spawn/Fork, role contexts, messages, budgets and child scope | E12 (cancelled) | Not implemented; owner cancelled this scope on 2026-10-16. Historical proposed acceptance: Managed child lineage, cancellation, bounded read concurrency and exclusive effects. |
+| PTC/programmatic batches and nested-tool concurrency | E13 (cancelled) | Not implemented; owner cancelled this scope on 2026-10-16. Historical proposed acceptance: Verified outputs and preserved nested policies, cancellation and ledger. |
+| Timers, cold follow-up, missed runs and acknowledgement windows | E14 (cancelled) | Not implemented; owner cancelled this scope on 2026-10-16. Historical proposed acceptance: Host availability plus duplicate/crash admission tests. |
+| Browser/CUA and experimental-provider boundaries | E15 (cancelled) | Not implemented; owner cancelled this scope on 2026-10-16. Historical proposed acceptance: Decision evidence before enabling capability; state verification after actions. |
+| Framework adoption versus mechanisms/protocol SDK; SDK control limits | E06, E10, E11 (E15 cancelled) | Preserve reviewed option comparison; no global decision to replace Cuepoint core. |
 | Business atomicity, exact paid confirmation, reviewed memory/current credentials | Every delivery; parent final integration | Existing guarantees stay executable; a dispatched request or external worker result cannot forge product completion. |
 | Runtime evidence, not unexecuted reference assertions | Every delivery | Record source/static, deterministic tests, real UI, native/package and live-service evidence distinctly. |
 
 ## Research record
 
-[Original investigation](../10-15-desktop-agent-capability-research/prd.md) remains a linked evidence child. Its source investigation is complete; it stays planning as recorded, and has no product implementation. Subsequent owner authorization covers sequential delivery commits and completed-child archive/journal bookkeeping; no remote push is included.
+[Original investigation](../10-15-desktop-agent-capability-research/prd.md) remains a linked evidence child. Its source investigation and scope handoff are complete; it is archived with the parent. The investigation itself has no product implementation. Subsequent owner authorization covers sequential delivery commits and completed-child archive/journal bookkeeping; no remote push is included.
 
 ## Validation cadence
 
-Owner instruction on 2026-10-15: each task runs only necessary affected tests and scoped review. Full regression, production builds, packaging and native integration acceptance run once after the selected task batch is complete. Do not repeat these broad gates for every child; distinguish deferred acceptance from already passed focused checks.
+During implementation the owner requested only necessary affected tests and scoped review per task. On 2026-10-16 the owner explicitly took over final checks and requested task closure. No further AI-run regression, production build, packaging or installed acceptance is scheduled by this epic. The items below are retained for the owner; none is marked passed by archival.
 
-## Cross-delivery acceptance
+## Final verification handoff
+
+Owner: **user**. State: **handed off; not run as part of this closure**.
+The 2026-10-16 request supersedes the earlier AI-run final-batch plan. Archive
+status means the selected source deliveries and bookkeeping are closed. Existing
+focused evidence stays valid; full regression, emitted/packed consumer, build,
+packaging and installed macOS/Windows checks remain for the owner. The retained
+acceptance below is a handoff reference, not an active Trellis development queue.
+
+### E08 media acceptance handed to the owner
+
+- Actual Windows fixed-NTFS, Unicode paths, picker and process workflow.
+- Intel/macOS 14 and installed media preview/Stop.
+- Packaged decoder resource identity and signing.
+- Final full regression/build/emitted/packed/native integration.
+
+Source/check details remain in the [E08 record](../10-15-desktop-workspace-media/task.json)
+and [implementation validation](../10-15-desktop-workspace-media/research/implementation-validation.md).
+
+## Cross-delivery acceptance (owner handoff)
 
 ### E09 acceptance carried forward from the archived source delivery
 
@@ -135,4 +159,4 @@ acceptance remains independent.
 2. Later native/external jobs use the same phase/cancellation truth introduced in early UX work rather than parallel success/approval systems.
 3. Future background execution revises actual departure semantics deliberately; E01's in-place details already avoid departure without depending on a background host.
 4. New package boundaries follow reusable consumers and platform ownership; keep a single neutral loop/providers plus the existing product transaction owner.
-5. The parent does not finish until selected delivery acceptance and the residual optional/deferred backlog have an explicit recorded disposition.
+5. Closure disposition: selected source deliveries archived; E12–E15 cancelled; all unperformed final acceptance handed to the owner on 2026-10-16.

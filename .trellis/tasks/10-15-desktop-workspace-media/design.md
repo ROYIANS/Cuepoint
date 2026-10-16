@@ -1,5 +1,9 @@
 # E08 technical design: granted media import on macOS and Windows
 
+## Closure (2026-10-16)
+
+Source delivery is complete. On 2026-10-16 the owner took over final checks and requested archival. Actual Windows/installed and full batch acceptance remain unperformed owner checks, listed in task.json and the parent roadmap.
+
 Status: approved for staged implementation on 2026-10-16. This document is the
 implementation contract for the existing E08 task; it does not claim packaged or
 other-host acceptance until those checks are run.

@@ -1,5 +1,9 @@
 # Desktop Agent capability research and evolution planning
 
+## Closure (2026-10-16)
+
+Investigation and scope handoff are complete. On 2026-10-16 the owner requested archival and cancelled E12–E15. Original proposals below remain research evidence; no further development is activated by this record.
+
 ## Goal
 
 Compare the local DeepSeek Harness implementation with Cuepoint and identify
@@ -13,7 +17,7 @@ On 2026-10-15 the owner requested investigation of
 `/Users/xiaomengdao/WebstormProjects/deepseek-harness`, then selected
 “创建调研任务，调查后再定开发范围”. This authorizes research and planning records.
 It does not select an implementation architecture, feature phase, dependency,
-platform rollout, permission default or migration. The task stays `planning`.
+platform rollout, permission default or migration. The original research authorization was planning-only; the completed investigation is now closed for archival.
 
 ## Source baseline
 

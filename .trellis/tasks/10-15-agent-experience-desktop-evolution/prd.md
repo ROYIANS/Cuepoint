@@ -1,5 +1,16 @@
 # Agent experience and desktop capability evolution
 
+## Closure and owner handoff (2026-10-16)
+
+The owner directed: “e12-e15就不做了，最终检查由我完成，你把不需要的trellis移除，以及归档任务即可。”
+
+E01–E11 and E16 have source deliveries with their recorded focused checks and reviews.
+E12–E15 are cancelled, not implemented; their unused planning task directories are removed.
+The original investigation, E08 source delivery and parent epic are closed for archival.
+Final regression, builds, packaging and actual installed macOS/Windows acceptance are
+handed to the owner. Unperformed checks remain unperformed; archive status records
+source/task closure. See [final verification handoff](roadmap.md#final-verification-handoff).
+
 ## Goal
 
 Turn the 2026-10-15 source investigation into one parent task and independently verifiable deliveries. Improve immediate feedback and creative continuity first, then expand native tools, external capabilities and background execution while retaining the reusable Agent libraries and current product guarantees.
@@ -27,7 +38,7 @@ Turn the 2026-10-15 source investigation into one parent task and independently 
 - EP2: Each child owns a bounded user outcome, acceptance, dependencies and scope. Child-specific technical/validation plans and final review precede its implementation.
 - EP3: Prioritize conversation continuity: parallel details, immediate Send/recovery, real waiting/stopping feedback, scoped thread loading and user-controlled reading.
 - EP4: Address the sampled create/delete/import/filter inconsistencies, then deliver native capability through a complete useful creative workflow.
-- EP5: Converge resource grants, result/job handling, Skills, MCP, background ownership, delegation and advanced automation in their own deliveries; an unselected runtime/profile/platform must not be presented as approved.
+- EP5: Converge resource grants, result/job handling, Skills, MCP and background ownership in their own deliveries. Delegation and advanced automation (E12–E15) were cancelled on 2026-10-16; they are not delivered or pending development.
 - EP6: Keep one real reusable loop/providers, one product transaction owner, exact generation approval, unknown-effect handling, reviewed memory/current credentials and shared browser/desktop business code.
 - EP7: Separate opening details from genuine route departure. No-drawer detail presentation does not remove legitimate confirmation dialogs, media-operation dialogs, file pickers or left navigation.
 
@@ -44,4 +55,4 @@ Turn the 2026-10-15 source investigation into one parent task and independently 
 
 The first detail delivery starts from single-shot viewing/editing and the shared presentation behavior; other entity editors are inventoried and assigned without promising all editors in the first slice. Do not replace the Agent core, adopt all Harness packages, choose Node by assumption, add a second store, disable real departure protection or remove unrelated dialogs.
 
-The parent is ready to organize sequential work. Later children retain local decision inventories for their own review; they do not block the already explicit early UX outcomes. No product source, branch, commit, remote or release is changed by task organization.
+The selected source deliveries are complete. The owner cancelled the remaining E12–E15 scope and accepted ownership of final checks; no further child is activated by this archived record.

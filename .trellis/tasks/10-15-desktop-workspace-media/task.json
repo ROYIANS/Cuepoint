@@ -21,10 +21,10 @@
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
   "relatedFiles": [],
-  "notes": "Owner approved macOS + Windows and implementation on 2026-10-16: “OK，我觉得还是win和mac都支持吧，开始开发”. Existing E08 task activated after concrete research/design/plan. Each completed stage is committed; only necessary affected checks now, full/package/native integration at the epic batch boundary. Source stages delivered in 52e584c7, 2b00d8e5 and ca2da1a5; independent source reviews passed. Keep this task in_progress for explicitly deferred actual Windows/installed and batch acceptance; do not mark those AC passed from macOS/source checks.",
+  "notes": "Owner approved macOS + Windows and implementation on 2026-10-16: “OK，我觉得还是win和mac都支持吧，开始开发”. Existing E08 task activated after concrete research/design/plan. Each completed stage is committed; only necessary affected checks now, full/package/native integration at the epic batch boundary. Source stages delivered in 52e584c7, 2b00d8e5 and ca2da1a5; independent source reviews passed. On 2026-10-16 the owner explicitly took over final checks and requested archival. Close the source delivery; retain actual Windows/installed/batch acceptance as unperformed owner checks, without marking those AC passed from macOS/source checks.",
   "meta": {
     "epicCode": "E08",
-    "deliveryState": "source-complete-awaiting-batch-acceptance",
+    "deliveryState": "source-complete-final-checks-handed-to-owner",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
@@ -50,6 +50,12 @@
       "Intel/macOS14 and installed media preview/Stop",
       "packaged resource identity/signing",
       "epic-end full regression/build/emitted/packed/native integration"
-    ]
+    ],
+    "finalVerification": {
+      "owner": "user",
+      "state": "handed-off-not-run",
+      "date": "2026-10-16",
+      "authorization": "e12-e15就不做了，最终检查由我完成，你把不需要的trellis移除，以及归档任务即可。"
+    }
   }
 }

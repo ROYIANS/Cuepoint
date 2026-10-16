@@ -1,6 +1,6 @@
 # Epic coordination plan
 
-## Current planning work
+## Original planning work
 
 - [x] Record owner authorization for one epic, sequential delivery and in-place details.
 - [x] Link the original investigation and create independently verifiable backlog children with explicit dependencies.
@@ -10,7 +10,7 @@
 - [x] Validate all task links, dependency records and context manifests (18 records; no context warnings after explicit full-reading guidance for large specs).
 - [x] Present the task tree and the selected first-delivery scope to the owner.
 
-## Sequential delivery protocol
+## Historical sequential delivery protocol
 
 1. Keep the parent planning; select E01 as the recommended first delivery and then E02-E05 as the early experience sequence. The owner may reorder independent children.
 2. Read the selected child's evidence and scope-specific specs, resolve its product decisions, and write reviewed `prd.md`, `design.md` and `implement.md` for complex work.
@@ -27,4 +27,10 @@ For future product children, use `/Users/xiaomengdao/.nvm/versions/node/v24.11.0
 
 ## Parent completion
 
-The parent owns integration review, not implementation of every child by itself. Confirm chosen delivery evidence, residual/deferred scope and current docs. Keep source findings and genuine runtime evidence distinguishable. No branch creation, commit, merge, push, release or archive is requested by the present task-organization action.
+- [x] Preserve E01–E11 and E16 source checkpoints and focused validation records.
+- [x] Record the owner’s 2026-10-16 cancellation of E12–E15 and remove their unused task directories and pending child references.
+- [x] Hand final integration/regression/build/package/installed checks to the owner without claiming them passed.
+- [x] Close the original investigation, E08 source delivery and parent for archival.
+
+The protocol above is historical. No next delivery is scheduled. Final checks are
+owned by the user; their handoff is recorded in [the roadmap](roadmap.md#final-verification-handoff).
