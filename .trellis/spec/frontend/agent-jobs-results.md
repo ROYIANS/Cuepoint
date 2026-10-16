@@ -212,6 +212,15 @@ progress, partial text, paging/reopen/clear, readOnly and error/pending behavior
 Register actual new suites/table anchors in permanent native discovery without
 claiming they were executed natively.
 
+Quota regressions keep the real `AGENT_JOB_LIMITS` and actual admission/clear
+commands. Seed counted rows directly under their intended thread: the shared
+ProductStore executes bulk writes and collection `modify` per row, so moving
+1,024 fixture descriptors adds another full write pass. Test a full live quota
+refusing admission before real clear releases its slot; test the independent
+descriptor cap at exactly the limit and immediately below it in a fresh case.
+Do not combine both fixture costs into one timeout or weaken the production
+limits to make the test faster.
+
 The owner-selected necessary-only source lane is described in
 [Quality Guidelines](./quality-guidelines.md). Full, emitted/packed, real Rust,
 native managed-file responsiveness, OS-process termination, packaged Web Locks

@@ -2,7 +2,7 @@ import {describe, expect, it, vi} from 'vitest';
 import {db} from '@/platform/product/store';
 import {createChatThread} from '@/features/agent/commands/chat';
 import {createProject} from '@/features/projects/commands/projects';
-import {beginAgentRun} from '@/features/agent/commands/agentRuns';
+import {beginAgentRun, finishAgentRun} from '@/features/agent/commands/agentRuns';
 import {transitionToolCall} from '@/features/agent/commands/agentTools';
 import {deleteChatThread} from '@/features/agent/commands/lifecycle';
 import {deleteProject} from '@/features/projects/commands/lifecycle';
@@ -13,6 +13,7 @@ import {withExecutionOwnership, type ThreadOwnership} from '@/features/agent/run
 import {UnknownCommitError} from '@/platform/storage/errors';
 import {failStoreTableOnce, interceptStoreTable} from './helpers/storeFaults';
 import type {ConnectorConfig} from '@/features/settings/models/connector';
+import type {ChatThread} from '@/features/agent/models/chat';
 import {saveFixtureToolRound} from './helpers/toolDispatch';
 import {putMedia} from '@/features/library/commands/media';
 import {PRODUCT_SCHEMA} from '@/platform/storage/schema';
@@ -20,9 +21,9 @@ import schema from '@/platform/storage/schema.json';
 import {browserDatabase} from '@/platform/storage/browserDatabase';
 
 const connector: ConnectorConfig = {id: 'cx', definitionId: 'openai-compatible', label: 'test', protocol: 'openai-compatible', baseUrl: 'https://model.test/v1', apiKey: 'private-key', updatedAt: 'now'};
-async function fixture(kind: Exclude<AgentJobSelection['kind'], 'mcp'> = 'web_read', project = false) {
+async function fixture(kind: Exclude<AgentJobSelection['kind'], 'mcp'> = 'web_read', project = false, existingThread?: ChatThread) {
     const ownerProject = project ? await createProject('Job project') : undefined;
-    const thread = await createChatThread({projectId: ownerProject?.id});
+    const thread = existingThread ?? await createChatThread({projectId: ownerProject?.id});
     await db.connectors.put(connector);
     const run = await beginAgentRun({threadId: thread.id, connector, model: 'test', content: 'report'});
     await db.agentRuns.update(run.id, {toolLoading: undefined, enabledToolNames: [...new Set([...(run.enabledToolNames ?? []), kind, 'read_job_result'])]});
@@ -105,23 +106,35 @@ describe('owned retained Agent jobs', () => {
         await expect(readAgentJobPage(f.reader, f.job.id, 0, 100)).resolves.toMatchObject({available: true});
         await expect(readAgentJobPage(f.reader, f.job.id, text.length - 100, 100)).resolves.toMatchObject({available: true});
     });
-    it('frees the record slot of a cleared report while keeping a bounded descriptor set', async () => {
-        for (const cleared of [false, true]) {
-            const f = await completedWeb('slot report');
-            if (cleared) await clearAgentJobResult(f.reader, f.job.id);
-            await db.agentJobs.bulkAdd(Array.from({length: 127}, (_, i): AgentJob => ({...f.job, id: `slot-${cleared}-${i}`, callId: `slot-call-${cleared}-${i}`, output: undefined, reservedBytes: 0, status: 'stopped'})));
-            const next = await fixture(); await db.agentJobs.where('threadId').equals(f.thread.id).modify({threadId: next.thread.id});
-            const attempt = admitAgentJob(next.context, next.selection);
-            if (cleared) await expect(attempt).resolves.toMatchObject({admitted: true});
-            else await expect(attempt).rejects.toMatchObject({kind: 'job_limit'});
-            await db.agentJobs.where('threadId').equals(next.thread.id).delete();
-        }
-        const g = await fixture(), {job} = await admitAgentJob(g.context, g.selection);
-        const descriptors = Array.from({length: AGENT_JOB_LIMITS.threadJobs * AGENT_JOB_LIMITS.clearedDescriptorFactor}, (_, i): AgentJob => ({...job, id: `cleared-${i}`, callId: `cleared-call-${i}`, reservedBytes: 0, status: 'stopped',
+    it('frees a full thread record slot only after its report is cleared', async () => {
+        const f = await completedWeb('slot report');
+        await finishAgentRun(f.run.id, 'completed');
+        const next = await fixture('web_read', false, f.thread);
+        await db.agentJobs.bulkAdd(Array.from({length: AGENT_JOB_LIMITS.threadJobs - 1}, (_, i): AgentJob => ({...f.job, id: `slot-${i}`, callId: `slot-call-${i}`, output: undefined, reservedBytes: 0, status: 'stopped'})));
+        expect(await db.agentJobs.where('threadId').equals(f.thread.id).count()).toBe(AGENT_JOB_LIMITS.threadJobs);
+        await expect(admitAgentJob(next.context, next.selection)).rejects.toMatchObject({kind: 'job_limit'});
+        expect(await db.agentJobs.where('callId').equals(next.call.id).count()).toBe(0);
+        await clearAgentJobResult(f.reader, f.job.id);
+        await expect(admitAgentJob(next.context, next.selection)).resolves.toMatchObject({admitted: true});
+        expect(await db.agentJobs.get(f.job.id)).toMatchObject({output: {retention: 'cleared'}});
+        expect(await db.agentJobs.where('threadId').equals(f.thread.id).count()).toBe(AGENT_JOB_LIMITS.threadJobs + 1);
+    });
+    it('bounds cleared descriptors at the exact thread cap and admits below it', async () => {
+        const f = await completedWeb('descriptor report');
+        await clearAgentJobResult(f.reader, f.job.id);
+        await finishAgentRun(f.run.id, 'completed');
+        const next = await fixture('web_read', false, f.thread);
+        const descriptorLimit = AGENT_JOB_LIMITS.threadJobs * AGENT_JOB_LIMITS.clearedDescriptorFactor;
+        // Seed the final owner directly; moving every descriptor adds a redundant per-row write pass.
+        const descriptors = Array.from({length: descriptorLimit - 1}, (_, i): AgentJob => ({...f.job, id: `cleared-${i}`, callId: `cleared-call-${i}`, reservedBytes: 0, status: 'stopped',
             output: {version: 1, jobId: `cleared-${i}`, revision: 2, retention: 'cleared', length: 0, byteLength: 0, preview: ''}}));
         await db.agentJobs.bulkAdd(descriptors);
-        const h = await fixture(); await db.agentJobs.where('threadId').equals(g.thread.id).modify({threadId: h.thread.id});
-        await expect(admitAgentJob(h.context, h.selection)).rejects.toMatchObject({kind: 'job_limit'});
+        expect(await db.agentJobs.where('threadId').equals(f.thread.id).count()).toBe(descriptorLimit);
+        await expect(admitAgentJob(next.context, next.selection)).rejects.toMatchObject({kind: 'job_limit'});
+        expect(await db.agentJobs.where('callId').equals(next.call.id).count()).toBe(0);
+        await db.agentJobs.delete(descriptors[0].id);
+        await expect(admitAgentJob(next.context, next.selection)).resolves.toMatchObject({admitted: true});
+        expect(await db.agentJobs.where('threadId').equals(f.thread.id).count()).toBe(descriptorLimit);
     });
     it('closes a stranded non-terminal job when its run or call is no longer running, without dispatch', async () => {
         for (const [callStatus, expected] of [['failed', 'stopped'], ['unknown', 'unknown']] as const) {
