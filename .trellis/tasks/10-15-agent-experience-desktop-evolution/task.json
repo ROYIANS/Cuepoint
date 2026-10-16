@@ -60,6 +60,6 @@
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E07 committed as c9fd6706 and archived; converge E08 selected directory scan/video thumbnail/project import, pending first supported desktop systems and concrete native backend/distribution. Retain batch-end full/native/emitted/packed/build gates."
+    "nextAction": "Implement active E08 directory scan → video thumbnails → verified project import on macOS + Windows, approved 2026-10-16. Checkpoint each source stage; retain necessary-only per-stage checks and defer full/native integration/emitted/packed/build gates to batch completion."
   }
 }

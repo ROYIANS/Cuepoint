@@ -3,16 +3,16 @@
   "name": "desktop-workspace-media",
   "title": "E08 · 本地工作区与媒体自动化",
   "description": "Deliver a complete authorized-directory-to-verified-media-import workflow through owned native tools.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
-  "scope": null,
+  "scope": "macOS + Windows directory scan, video thumbnail generation and verified project import",
   "package": "desktop",
   "priority": "P1",
   "creator": "ROYIANS",
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": null,
+  "branch": "codex/desktop-workspace-media",
   "base_branch": "main",
   "worktree_path": null,
   "commit": null,
@@ -21,16 +21,22 @@
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
   "relatedFiles": [],
-  "notes": "Planning backlog from the 2026-10-15 investigation. Task creation is authorized; delivery scope and implementation remain subject to this task review.",
+  "notes": "Owner approved macOS + Windows and implementation on 2026-10-16: “OK，我觉得还是win和mac都支持吧，开始开发”. Existing E08 task activated after concrete research/design/plan. Each completed stage is committed; only necessary affected checks now, full/package/native integration at the epic batch boundary.",
   "meta": {
     "epicCode": "E08",
-    "deliveryState": "planning-backlog",
-    "implementationApproved": false,
+    "deliveryState": "approved-active",
+    "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Needs child-specific requirement convergence, design, implementation/validation plan and review before start."
+    "readiness": "implementation-ready",
+    "approvedPlatforms": [
+      "macOS",
+      "Windows"
+    ],
+    "windowsSourceFilesystem": "local fixed NTFS",
+    "baseCheckpoint": "f0b1ae43"
   }
 }

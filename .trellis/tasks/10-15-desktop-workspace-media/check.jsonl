@@ -1,8 +1,13 @@
-{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/agent-core/library/runtime.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/agent-providers/library/protocols.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/capability-comparison.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
-{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/host-integration-review.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/tasks/10-15-desktop-workspace-media/prd.md", "reason": "Approved macOS + Windows workflow, NTFS baseline, acceptance criteria and resolved effects."}
+{"file": ".trellis/tasks/10-15-desktop-workspace-media/design.md", "reason": "Concrete native grant/process, managed claim, derivative media and Agent/UI ownership contract."}
+{"file": ".trellis/tasks/10-15-desktop-workspace-media/implement.md", "reason": "Ordered stage plan, checkpoint gates and necessary-only validation commands."}
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Studio package ownership and frontend quality entry point."}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Single ProductStore, binary claim, transaction and unknown commit contract."}
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Full-product native owner, runtime/storage and packaged acceptance boundaries."}
+{"file": ".trellis/spec/frontend/native-workspace.md", "reason": "Native IPC and reference-lane boundary; avoid adapting prototype import."}
+{"file": ".trellis/spec/frontend/agent-jobs-results.md", "reason": "Foreground job/result lifecycle and truthful stop/recovery semantics."}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Tool scope, confirmation, frozen preview and atomic-effect boundaries."}
+{"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Tauri handler, ACL, platform runtime and scoped native checks."}
+{"file": ".trellis/tasks/10-15-desktop-workspace-media/research/native-implementation-seams.md", "reason": "Actual ProductBridge, StorageWorker, grant, claim and process seams."}
+{"file": ".trellis/tasks/10-15-desktop-workspace-media/research/studio-implementation-seams.md", "reason": "Actual Studio media model, carrier and lifecycle closure requirements."}
+{"file": ".trellis/tasks/10-15-desktop-workspace-media/research/backend-distribution.md", "reason": "Candidate decoder resources, digest/provenance caveats and release mapping."}
