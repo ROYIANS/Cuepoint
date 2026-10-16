@@ -18,3 +18,6 @@ export {requiresToolApproval} from './tools.js';
 export {createCapabilityRegistry} from "./capabilityRegistry.js";
 export type {CapabilityRegistration, CapabilityRegistry} from "./capabilityRegistry.js";
 export type {ResourceGrantRef, ResourceGrantSubject, ResourceGrantRequest, ResourceGrantSnapshot, ResourceGrantPort} from "./resourceGrants.js";
+export {SKILL_LIMITS, splitSkillDocument, validateSkillMetadata, validateSkillResourcePath, validateSkillResourcePaths,
+    formatSkillCatalogue, readSkillTextRange} from './skills.js';
+export type {SkillDocumentParts, SkillMetadata, InstalledSkillDescriptor, SkillTextRange} from './skills.js';

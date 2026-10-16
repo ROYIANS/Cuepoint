@@ -1,41 +1,40 @@
 # E09 staged implementation and validation plan
 
-Status: planning; final scope review pending. No product implementation or task
-activation has occurred. After approval, each stage ends with scoped check/review,
+Status: approved and active on 2026-10-16. Each stage ends with scoped check/review,
 fixes, a commit and updated task/journal evidence. No remote push.
 
 ## Stage 0 — review and activate
 
-- [ ] Review the concrete PRD/design, especially text-only resources, device-wide
+- [x] Review the concrete PRD/design, especially text-only resources, device-wide
   scope, manual immutable updates and native Windows fixed-NTFS source baseline.
-- [ ] Confirm requirement convergence and all context entries resolve; read full
+- [x] Confirm requirement convergence and all context entries resolve; read full
   scoped native/storage specs, including tails beyond injection limits.
   Context validation warns that `native-product-runtime.md` and
   `quality-guidelines.md` exceed the per-file injection cap; dispatched agents
   must explicitly read their omitted tails rather than rely on injected excerpts.
-- [ ] Record implementation approval and activate E09 without marking E08's
+- [x] Record implementation approval and activate E09 without marking E08's
   deferred Windows/installed acceptance complete. Select a `codex/` branch suitable
   for continuing from the actual E08 source checkpoints; no base reset or lost work.
-- [ ] Load `trellis-before-dev` before editing each new package/layer.
+- [x] Load `trellis-before-dev` before editing each new package/layer.
 
 ## Stage 1 — portable document and installed version owner
 
-- [ ] Add pure neutral skill descriptors/validation/catalogue/resource contracts
+- [x] Add pure neutral skill descriptors/validation/catalogue/resource contracts
   behind the current core public root; preserve no-runtime-dependency boundary.
-- [ ] Add explicit Studio YAML dependency using the approved machine pnpm only;
+- [x] Add explicit Studio YAML dependency using the approved machine pnpm only;
   verify actual bounded parser options, including pre-conversion alias/tag/depth
   rejection. No handcrafted general YAML parser or undeclared transitive imports.
-- [ ] Add strict text candidate validation, deterministic byte identity and
+- [x] Add strict text candidate validation, deterministic byte identity and
   install/update/enable/disable/uninstall commands over deviceSettings keys.
-- [ ] Store manifest, body and each resource in separate immutable device-setting
+- [x] Store manifest, body and each resource in separate immutable device-setting
   rows so body loads do not hydrate unrelated resources; one retention entry owns
   the complete revision group. Add compare-and-set operation reconciliation;
   exact serialized limits, total quotas and known/unknown certainty are enforced
   by the owning transaction, with no independent per-feature store.
-- [ ] Validate malformed inputs, path collisions, quota edges, conflict/update,
+- [x] Validate malformed inputs, path collisions, quota edges, conflict/update,
   fault rollback and uncertain-commit readback. Exercise neutral helpers from an
   independent host fixture via public exports.
-- [ ] Run necessary scoped checks/review, fix findings and commit.
+- [x] Run necessary scoped checks/review, fix findings and commit.
 
 ## Stage 2 — native/browser bounded import and management
 

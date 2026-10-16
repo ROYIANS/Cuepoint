@@ -18,7 +18,7 @@ async function inventory(root) {
   for (const [directory, extension] of [['apps/desktop/scripts', /\.(?:ts|mjs)$/], ['apps/desktop/ui', /\.(?:ts|tsx)$/]]) {
     try { files.push(...(await filesUnder(root, directory)).filter(file => extension.test(file))); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
-  for (const file of ['pnpm-workspace.yaml', ...workspacePolicy(root).packages.flatMap(row => ['package.json', 'tsconfig.json', 'vite.config.ts', 'components.json', 'eslint.config.mjs', 'knip.json', 'index.html', 'landing.html'].map(file => `${row.path}/${file}`)), 'package.json', 'pnpm-lock.yaml', 'eslint.config.mjs', 'knip.json', 'tsconfig.json', 'tsconfig.app.json', 'tsconfig.node.json', 'vite.config.ts', 'vitest.config.ts', 'vitest.agent-source.config.ts', 'vitest.studio-source.config.ts', 'vitest.desktop-media-source.config.ts', 'index.html']) {
+  for (const file of ['pnpm-workspace.yaml', ...workspacePolicy(root).packages.flatMap(row => ['package.json', 'tsconfig.json', 'vite.config.ts', 'components.json', 'eslint.config.mjs', 'knip.json', 'index.html', 'landing.html'].map(file => `${row.path}/${file}`)), 'package.json', 'pnpm-lock.yaml', 'eslint.config.mjs', 'knip.json', 'tsconfig.json', 'tsconfig.app.json', 'tsconfig.node.json', 'vite.config.ts', 'vitest.config.ts', 'vitest.agent-source.config.ts', 'vitest.studio-source.config.ts', 'vitest.desktop-media-source.config.ts', 'vitest.installable-skills-source.config.ts', 'tests/typecheck/tsconfig.installable-skills-source.json', 'index.html']) {
     try { if ((await stat(path.join(root, file))).isFile()) files.push(file); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
   // Retention evidence may live outside the ordinary source/config roots.

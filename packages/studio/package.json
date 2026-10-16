@@ -85,7 +85,8 @@
     "zod": "^3.25.76",
     "@cuepoint/distribution": "workspace:*",
     "@cuepoint/agent-core": "workspace:*",
-    "@cuepoint/agent-providers": "workspace:*"
+    "@cuepoint/agent-providers": "workspace:*",
+    "yaml": "2.9.1"
   },
   "devDependencies": {
     "@types/react": "^19.1.13",

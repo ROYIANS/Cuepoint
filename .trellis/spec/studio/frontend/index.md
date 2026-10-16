@@ -18,6 +18,7 @@
 - Read [Agent topic reading](../../frontend/agent-thread-reading.md) for requested-topic query envelopes, owned departure and local return-to-latest; preserve the execution/composer owner.
 - Read [Agent jobs and retained reports](../../frontend/agent-jobs-results.md) for foreground progress, original completion publication, separate current-reader/historical-row scope, quota, paging, cleanup and truthful Stop/drain.
 - Read [granted desktop media import](../../frontend/desktop-media-import.md) for native directory/video grants, prepared claims, import receipts, truthful process Stop and source/thumbnail lifecycle.
+- Read [installed text skills](../../frontend/agent-installable-skills.md) for bounded local packages, strict device-setting CAS publication, immutable revisions and progressive reads without tool authority.
 - Before changing an Agent binding, read the actual core/runtime and provider/protocol contracts. Keep current credential, reference, native transport, ownership and transaction policy in Studio while invoking the shared algorithms.
 - Read [quality](../../frontend/quality-guidelines.md) and [shared guides](../../guides/index.md); update discovery when moving sources.
 

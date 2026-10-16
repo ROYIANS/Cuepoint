@@ -6066,6 +6066,48 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/skills/commands/installations.ts",
+      "target": "packages/studio/src/features/agent/skills/commands/installations.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/skills/commands/retention.ts",
+      "target": "packages/studio/src/features/agent/skills/commands/retention.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/skills/models/installedSkill.ts",
+      "target": "packages/studio/src/features/agent/skills/models/installedSkill.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/skills/queries/installedSkills.ts",
+      "target": "packages/studio/src/features/agent/skills/queries/installedSkills.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/skills/runtime/package.ts",
+      "target": "packages/studio/src/features/agent/skills/runtime/package.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/skills/runtime/records.ts",
+      "target": "packages/studio/src/features/agent/skills/runtime/records.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

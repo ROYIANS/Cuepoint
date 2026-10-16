@@ -13,9 +13,8 @@ creative workflow instructions remains independent from tool execution authority
 Planning under [the evolution epic](../10-15-agent-experience-desktop-evolution/prd.md).
 On 2026-10-16 the owner accepted the E09 outline: metadata/body/resource separation,
 local-directory installation and management, unchanged execution authority,
-immutable active-run behavior and neutral reusable ownership. This document and
-the accompanying design make the outline concrete for the final scope review;
-implementation has not started. Existing authorization for sequential stage
+immutable active-run behavior and neutral reusable ownership. The owner approved this concrete PRD/design/implementation plan and requested
+implementation on 2026-10-16. The task is now active. Existing authorization for sequential stage
 commits and necessary affected tests continues to apply after activation.
 
 ## Background and confirmed constraints
@@ -143,7 +142,7 @@ Each implementation stage receives scoped review, necessary affected checks and 
 commit. Full regression, emitted/packed consumer, production build, packaging and
 actual native/installed macOS+Windows acceptance remain at the owner's epic-end
 batch boundary. Source fixtures do not establish actual picker/webview/platform
-behavior. This planning turn executes no product tests or paid/live model calls.
+behavior. Stage 1 has passed its necessary source checks and independent review; detailed evidence lives in `research/stage-1-review.md`. No paid/live model calls are required.
 
 ## Supporting artifacts
 

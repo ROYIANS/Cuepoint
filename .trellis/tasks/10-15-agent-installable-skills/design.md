@@ -1,7 +1,7 @@
 # E09 design: installed text skills
 
-Status: concrete planning proposal for final review, 2026-10-16. No implementation
-or task activation yet. Requirement/acceptance ownership remains in `prd.md`.
+Status: approved for implementation on 2026-10-16. Requirement/acceptance
+ownership remains in `prd.md`; execute the staged plan without expanding scope.
 
 ## Architecture and owners
 

@@ -56,11 +56,10 @@
     "firstCandidate": "10-15-agent-parallel-details",
     "narrowDetailMode": "full-width working-surface detail, retained running conversation, explicit return; no modal drawer",
     "shotDetailScope": "view and edit one shot with existing save/conflict/draft guarantees",
-    "activeDelivery": "10-15-desktop-workspace-media",
+    "activeDelivery": "10-15-agent-installable-skills",
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E09 concrete local text-skill import, immutable version/run retention and retained-workspace management design is prepared for final review. E08 remains source-complete with actual Windows/installed and epic full batch acceptance pending; do not archive or treat E09 planning as discharging those gates.",
-    "planningDelivery": "10-15-agent-installable-skills"
+    "nextAction": "E09 concrete scope approved 2026-10-16; execute staged portable skill owner, finite local import/management and run-snapshot integration with necessary checks/review and commits. E08 actual Windows/installed and epic full batch acceptance remain pending."
   }
 }

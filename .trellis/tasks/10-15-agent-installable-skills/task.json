@@ -3,7 +3,7 @@
   "name": "agent-installable-skills",
   "title": "E09 · 可安装创作技能与按需加载",
   "description": "Load reusable creative workflow instructions on demand independently from tool execution authority.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "agent-installable-skills",
   "package": "studio",
@@ -12,7 +12,7 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": null,
+  "branch": "codex/agent-installable-skills",
   "base_branch": "main",
   "worktree_path": null,
   "commit": null,
@@ -27,16 +27,16 @@
     "apps/desktop/src-tauri",
     "quality/studio-ownership.json"
   ],
-  "notes": "Owner accepted E09 outline on 2026-10-16. Concrete text-only local-directory scope, immutable revision/storage/run/UX design and three-stage plan are prepared for final review. Planning checkpoint only; no implementation activation. Standing sequential stage-commit and necessary-affected-check cadence retained.",
+  "notes": "Owner approved the concrete E09 planning summary and requested implementation on 2026-10-16. Execute the reviewed three stages; commit each after necessary affected checks and independent review. Full build/package/actual-host acceptance stays at epic end.",
   "meta": {
     "epicCode": "E09",
-    "deliveryState": "planning-final-review",
-    "implementationApproved": false,
+    "deliveryState": "implementation-stage-2",
+    "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "PRD, design, staged implementation plan and source-backed research prepared; latest concrete scope review pending.",
+    "readiness": "Stage 1 source complete and independently reviewed: portable helpers, strict bounded parser, device-local immutable version storage, CAS/receipt and retention helpers. Next: native/browser capture and retained management UI.",
     "planningDate": "2026-10-16",
     "proposedPlatforms": [
       "macOS",
@@ -54,6 +54,21 @@
       "research/install-storage.md",
       "research/reference-skills.md",
       "research/format-and-interaction.md"
-    ]
+    ],
+    "implementationApprovedAt": "2026-10-16",
+    "approvedPlatforms": [
+      "macOS",
+      "Windows",
+      "browser directory import where supported"
+    ],
+    "stage1Evidence": {
+      "review": "research/stage-1-review.md",
+      "sourceTests": "64 passed across 2 finite source suites",
+      "sourceNoEmit": "passed including affected tests",
+      "coreNoEmit": "passed; types: []",
+      "scopedLint": "8 production files; 0 errors/0 warnings",
+      "architecture": "677 files; 2659 edges; 0 cycles/0 failures",
+      "deferred": "Full regression/build/emitted/packed/native installed macOS+Windows remains at epic end."
+    }
   }
 }

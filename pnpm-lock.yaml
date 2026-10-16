@@ -259,6 +259,9 @@ importers:
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
+      yaml:
+        specifier: 2.9.1
+        version: 2.9.1
       zod: *a23
     devDependencies:
       "@types/react": *a8
