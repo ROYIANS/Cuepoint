@@ -596,3 +596,40 @@ Completed E09 source delivery: immutable installed skill metadata is frozen and 
 
 - Keep E09 active as source-complete-pending-batch. Full regression/build/emitted/packed and real installed macOS+Windows acceptance are deferred; Windows cfg source not executed/cross-compiled.
 - E08 actual platform/media acceptance remains independently pending. E10 MCP is the next candidate and needs concrete scope/design review before activation.
+
+
+## Session 85: E09 runtime and uncertain skill toggle repair
+<!-- trellis-session: v=2 fp=43b118057d86071d -->
+
+**Date**: 2026-10-16
+**Task**: E09 runtime and uncertain skill toggle repair
+**Package**: studio
+**Branch**: `codex/agent-installable-skills`
+
+### Summary
+
+Fixed owner-approved runtime export and uncertain optimistic-toggle findings; independent Trellis check passed. Keep E09 active for deferred batch acceptance.
+
+### Main Changes
+
+- Regenerated reusable Agent runtime dependencies and verified active Vite /agent in temporary Edge; captured runtime handoff requirements in spec.
+- Preserved unknown skill-toggle intent through reconciliation, failed list read and conflict acknowledgement; added four meaningful ReactDOM cases.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `1e74e0c8` | fix: preserve uncertain skill toggles and repair runtime handoff |
+
+### Testing
+
+- [OK] 14 distinct UI cases passed in source profile and independently against emitted dependencies; final source noEmit passed; hook full-rule ESLint 0 errors/0 warnings.
+- [OK] Emitted freshness and public exports, actual browser render without page exceptions, context validation and staged whitespace checks passed.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Keep E09 source-complete-pending-batch; full app build, aggregate TSX discovery review, packed consumer and actual installed macOS/Windows acceptance remain at epic end.
