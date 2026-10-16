@@ -3,7 +3,7 @@
   "name": "agent-mcp-integration",
   "title": "E10 · MCP 外部工具与资源接入",
   "description": "Connect explicitly selected external tool servers through the same approval, lifecycle and result pipeline.",
-  "status": "in_progress",
+  "status": "completed",
   "dev_type": null,
   "scope": null,
   "package": "studio",
@@ -11,11 +11,11 @@
   "creator": "ROYIANS",
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
-  "completedAt": null,
+  "completedAt": "2026-10-16",
   "branch": "codex/agent-mcp-integration",
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "bc492b3817d07c132083dadcd07cf9b53531ea6f",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -39,7 +39,7 @@
   "notes": "Owner approved the final four-stage desktop-first plan with 开始吧 on 2026-10-16 and authorized sequential stage commits/completed-child bookkeeping. All four source stages are independently reviewed; no push. Full formal/build/packaging/installed macOS+Windows remain explicitly carried by the parent epic.",
   "meta": {
     "epicCode": "E10",
-    "deliveryState": "source-reviewed-batch-acceptance-deferred",
+    "deliveryState": "source-complete-batch-acceptance-deferred",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
@@ -72,7 +72,7 @@
     "authenticationScopeConfirmedAt": "2026-10-16",
     "platformPriority": "desktop macOS/Windows required; Web remote/OAuth where practical without proxy/backend or desktop delivery delay; stdio desktop-only",
     "platformPriorityConfirmedAt": "2026-10-16",
-    "nextAction": "Commit reviewed Stage 4, archive source delivery and journal; parent owns full/installed acceptance. E11 remains a separate scoped design decision.",
+    "nextAction": "Source delivery complete and committed; archived child and journal preserve evidence. Parent epic owns deferred full/installed acceptance; E11 host/lifetime planning is next candidate.",
     "planningArtifactsCompletedAt": "2026-10-16",
     "plannedStages": [
       "contracts and bounded SDK spike",
@@ -129,7 +129,7 @@
       "commit": "80513428"
     },
     "stage4": {
-      "state": "source-reviewed",
+      "state": "source-committed",
       "result": "research/stage-4-results.md",
       "review": "research/stage-4-review-notes.md",
       "integratedStudioTests": 232,
@@ -142,8 +142,10 @@
         "release resources and installers",
         "actual installed macOS/Windows, Keychain, Windows vault/Job Object and system browser/loopback",
         "third-party Web OAuth/deployment compatibility"
-      ]
+      ],
+      "commit": "bc492b38"
     },
-    "sourceReviewedAt": "2026-10-16"
+    "sourceReviewedAt": "2026-10-16",
+    "completedSourceStages": 4
   }
 }
