@@ -55,7 +55,7 @@ export function UpdateSection({visibleRowIds}: { visibleRowIds?: string[] }) {
                     title="检查更新"
                     description={state.kind === "checking" ? "正在检查…" : release
                         ? `最新桌面版本 ${release.version}${release.prerelease ? "（预发布）" : ""}${date ? ` · 发布于 ${date}` : ""}`
-                        : "从 GitHub 发布页获取最新桌面版本信息"}
+                        : "从发布页获取最新版本"}
                     control={<Button variant="outline" size="sm" disabled={state.kind === "checking" || busy}
                                      onClick={() => void runCheck()}><RefreshCw aria-hidden/>检查更新</Button>}
                 />
@@ -66,7 +66,7 @@ export function UpdateSection({visibleRowIds}: { visibleRowIds?: string[] }) {
                     <SettingsRow
                         title={`发现新版本 ${release?.version ?? ""}`}
                         description={choices.length
-                            ? `${state.ambiguous ? "请在「关于本机」确认芯片类型，再选择 Apple 或 Intel 安装包。" : ""}升级前请先导出项目备份。安装包未签名，系统可能给出安全提示。`
+                            ? `${state.ambiguous ? "请在「关于本机」确认芯片类型，再选择 Apple 或 Intel 安装包。" : ""}升级前请先导出备份。`
                             : `${state.unsupportedReason ?? "当前平台没有可直接下载的安装包"}，请前往发布页查看。`}
                         control={!choices.length ? releaseLink : undefined}
                     />
@@ -85,14 +85,14 @@ export function UpdateSection({visibleRowIds}: { visibleRowIds?: string[] }) {
                     })}
                 </>}
                 {state.kind === "ready" && state.verdict === "up-to-date" &&
-                    <SettingsRow title="已是最新版本" description="当前版本与线上最新版本一致。"/>}
+                    <SettingsRow title="已是最新版本"/>}
                 {state.kind === "ready" && state.verdict === "ahead" &&
-                    <SettingsRow title="当前版本高于线上" description="你使用的是开发或更新的版本，无需升级。"/>}
+                    <SettingsRow title="当前版本高于线上"/>}
                 {state.kind === "ready" && state.verdict === "unknown" && <SettingsRow title="无法比较版本"
-                                                                                       description="当前或线上版本号无法比较，仍可前往发布页查看最新版本。"/>}
+                                                                                       description="请前往发布页查看"/>}
             </>}
             {visible("release") &&
-                <SettingsRow title="发布页" description="查看所有版本、更新说明与校验文件。" control={releaseLink}/>}
+                <SettingsRow title="发布页" control={releaseLink}/>}
         </SettingsGroup>}
         {download.kind !== "idle" && <div role={download.kind === "failed" ? "alert" : "status"}>
             <SettingsGroup title="安装包">
@@ -107,7 +107,7 @@ export function UpdateSection({visibleRowIds}: { visibleRowIds?: string[] }) {
                         <Button variant="outline" size="sm" onClick={cancelDownload}>取消</Button> : undefined}
                 />
                 {(download.kind === "saved" || download.kind === "failed") &&
-                    <SettingsRow title="安装与备份说明" description="覆盖安装前请先导出项目备份。"
+                    <SettingsRow title="安装与备份说明" description="覆盖安装前先导出备份"
                                  control={<Button variant="outline" size="sm" asChild><a href={INSTALL_GUIDE_URL}
                                                                                          target="_blank"
                                                                                          rel="noreferrer">查看说明<ExternalLink
@@ -116,7 +116,7 @@ export function UpdateSection({visibleRowIds}: { visibleRowIds?: string[] }) {
         </div>}
         {(visible("privacy") || visible("about")) && <SettingsGroup title="关于小光点">
             {visible("privacy") && <SettingsRow title="数据与隐私"
-                                                description="项目与密钥保存在本机。检查更新仅请求公开发布信息；本地项目内容与密钥不会发送到 GitHub。"/>}
+                                                description="项目与密钥只保存在本机，检查更新不会上传它们"/>}
             {visible("about") && <SettingsRow title="更多关于 Cuepoint"
                                               control={<Button variant="outline" size="sm" asChild><Link
                                                   to="/about">关于小光点</Link></Button>}/>}

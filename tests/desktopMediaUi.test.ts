@@ -80,8 +80,8 @@ it("quarantines an uncertain admission instead of creating a second import inten
     await draw(project.id); await publish(); await click("导入文件夹");
     await vi.waitFor(() => expect(container.querySelectorAll('input[type="checkbox"]')).toHaveLength(1)); await selectAll();
     const fault = failStoreTableOnce(db, "desktopMediaImports", "add", new UnknownCommitError("admission", host.session.workspaceId));
-    try {await click("导入所选 1 个视频"); await vi.waitFor(() => expect(container.textContent).toContain("是否已受理尚未确认"));} finally {fault.mockRestore();}
-    expect(container.textContent).toContain("是否已受理尚未确认"); expect(button("导入文件夹").disabled).toBe(true);
+    try {await click("导入所选 1 个视频"); await vi.waitFor(() => expect(container.textContent).toContain("未确认这次导入是否已开始"));} finally {fault.mockRestore();}
+    expect(container.textContent).toContain("未确认这次导入是否已开始"); expect(button("导入文件夹").disabled).toBe(true);
     expect(button("核对导入结果")).toBeTruthy(); expect(host.actions().some(action => action.type === "prepareVideo")).toBe(false);
 });
 

@@ -41,15 +41,16 @@ beforeEach(() => {
 
 describe("update verdict presentation", () => {
     it.each([
-        ["0.1.3", "0.1.4", "发现新版本 0.1.4", "升级前请先导出项目备份"],
-        ["0.1.3", "0.1.3", "已是最新版本", "当前版本与线上最新版本一致"],
-        ["0.1.3", "0.1.2", "当前版本高于线上", "无需升级"],
-        ["dev", "0.1.4", "无法比较版本", "版本号无法比较"],
+        ["0.1.3", "0.1.4", "发现新版本 0.1.4", "升级前请先导出备份"],
+        ["0.1.3", "0.1.3", "已是最新版本", undefined],
+        ["0.1.3", "0.1.2", "当前版本高于线上", undefined],
+        ["dev", "0.1.4", "无法比较版本", "请前往发布页查看"],
     ])("renders the real %s versus %s classification as %s", (current, latest, title, explanation) => {
         host.state = {kind: "ready", release: release(latest), verdict: classifyUpdate(current, latest), asset};
         const html = render();
         expect(html).toContain(title);
-        expect(html).toContain(explanation);
+        if (explanation) expect(html).toContain(explanation);
+        else expect(html).not.toContain("线上最新版本一致");
         const verdictTitles = ["发现新版本", "已是最新版本", "当前版本高于线上", "无法比较版本"];
         verdictTitles.filter(value => !title.includes(value)).forEach(value => expect(html).not.toContain(value));
         if (current === "0.1.3" && latest === "0.1.4") expect(html).toContain("下载（12.0 MB）");
@@ -130,7 +131,7 @@ describe("update verdict presentation", () => {
         expect(html).toContain("安装包已保存");
         expect(html).toContain("Cuepoint-install-package");
         expect(html).toContain(instructions);
-        expect(html).toContain("覆盖安装前请先导出项目备份");
+        expect(html).toContain("覆盖安装前先导出备份");
     });
 
     it("retains a published-file warning without treating the saved file as an ordinary failure", () => {

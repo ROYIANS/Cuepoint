@@ -365,9 +365,15 @@ describe("B06 connector operation ownership", () => {
         const remove = vi.spyOn(repoConnectors, "deleteConnector").mockReturnValueOnce(gate.promise).mockResolvedValue(undefined);
         const ui = connectorUI([config]); const label = {probe: "拉取模型探活", test: "测试连接", save: "保存", disconnect: "断开"}[kind];
         click(button(ui.open(), label)); gate.reject(new Error("private-key Bearer hidden-token " + "x".repeat(400))); await settle();
-        // Model probing now goes through showError: its sanitized detail is the toast description. The other operations still pass the message itself.
-        const [message, options] = vi.mocked(toast.error).mock.calls[0] as [string, {description?: string}?];
-        const error = kind === "probe" ? options?.description ?? "" : message;
+        // Model probing goes through showError (toast description); test/save/disconnect show a sanitized inline alert in the editor dialog.
+        let error: string;
+        if (kind === "probe") {
+            const [, options] = vi.mocked(toast.error).mock.calls[0] as [string, {description?: string}?];
+            error = options?.description ?? "";
+        } else {
+            error = ui.render().filter(node => node.props.role === "alert").map(text).join("");
+            expect(toast.error).not.toHaveBeenCalled();
+        }
         expect(error).toContain("[已隐藏]"); expect(error).not.toContain("private-key"); expect(error).not.toContain("hidden-token"); expect(error.length).toBeLessThanOrEqual(300);
         expect(dialogOpen(ui.render())).toBe(true); expect(button(ui.render(), label).props.disabled).toBe(false);
         click(button(ui.render(), label)); await settle();

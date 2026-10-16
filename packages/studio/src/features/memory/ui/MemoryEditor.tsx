@@ -331,7 +331,7 @@ export function MemoryEditor({
                                 <div className="memory-conflicts" role="status">
                                     <strong>这条记忆已在其他地方更新</strong>
                                     <p>
-                                        最新版本 {current.revision}：{current.title}
+                                        最新内容：{current.title}
                                     </p>
                                     <p>{current.body}</p>
                                     <p>适用条件：{current.applicability || "未单独限定"}</p>

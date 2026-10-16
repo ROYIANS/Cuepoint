@@ -50,10 +50,10 @@ function SettingSelect({label, value, options, onChange, disabled}: {
     );
 }
 
-function Section({title, description, children}: { title: string; description: string; children: ReactNode }) {
+function Section({title, description, children}: { title: string; description?: string; children: ReactNode }) {
     return <section className="min-w-0 space-y-4 border-t pt-5">
-        <div><h3 className="text-sm font-semibold">{title}</h3><p
-            className="text-muted-foreground mt-1 text-xs leading-5">{description}</p></div>
+        <div><h3 className="text-sm font-semibold">{title}</h3>{description ? <p
+            className="text-muted-foreground mt-1 text-xs leading-5">{description}</p> : null}</div>
         {children}
     </section>;
 }
@@ -107,7 +107,7 @@ export function ProjectSettingsPanel({project, onOutputState, unavailable = fals
         </div>
         {getProjectKind(project) === "video" && <>
             <Section title="默认视觉风格"
-                     description="镜头默认跟随这里的风格；镜头中单独选择的风格会保留。可先在世界 → 风格中建立本项目的风格。">
+                     description="镜头默认跟随这里的风格">
                 <SettingSelect label="项目风格" value={project.defaultStyleId ?? "none"}
                                disabled={unavailable || styles === undefined || stylePending || !repository.capabilities().some(item => item.id === "world" && item.status === "available")}
                                options={[{
@@ -222,7 +222,7 @@ function ProjectOutputSettings({project, onOutputState, unavailable = false}: {
     }
 
     return <>{navigationGuard}<Section title="画幅与生成默认值"
-                                       description="画幅表达作品的目标。图片和视频可分别选择模型参数，也可以保持手动制作；保存配置不会发起生成。">
+                                       description="保存配置不会发起生成">
         {!generationAvailable &&
             <p role="status" className="text-muted-foreground text-xs">原生生成配置尚未接入，可先设置项目画幅。</p>}
         <fieldset disabled={saving || unavailable} className="min-w-0 space-y-5">

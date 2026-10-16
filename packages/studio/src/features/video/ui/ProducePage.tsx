@@ -151,7 +151,6 @@ function ScopedProducePage({
         <div className="app-scroll h-full overflow-auto">
             <PageContent mode="collection">
                 <PageHeader title="制作与交付"
-                            description={`检查${scopeLabel}的分镜完整性，并导出按当前顺序整理的交付物。`}
                             actions={<div className="flex flex-wrap items-center gap-2">
                                 <Button
                                     disabled={savingCsv || exportProgress !== undefined || delivery.rows.length === 0}
@@ -245,7 +244,7 @@ function ScopedProducePage({
                     </div>
                 ) : (
                     <PageState title={delivery.rows.length === 0 ? "还没有镜头" : "没有发现缺失项"}
-                               description={delivery.rows.length === 0 ? "添加镜头后可检查素材与交付内容。" : "可以导出交付物。"}
+                               description={delivery.rows.length === 0 ? "添加镜头后再检查" : undefined}
                                action={delivery.rows.length === 0 ? (
                                    <Link
                                        to="/p/$projectId/e/$episodeId/shots"

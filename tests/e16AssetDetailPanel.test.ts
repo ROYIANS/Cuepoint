@@ -142,7 +142,7 @@ describe("asset detail real DOM and existing commands", () => {
         const uncertain = new UnknownCommitError("asset-name-op", "workspace");
         const write = vi.spyOn(assets, "patchCharacter").mockRejectedValue(uncertain);
         const input = nameInput(); await act(async () => type(input, "Unknown name result"));
-        await settle(() => expect(portal.textContent).toContain("无法确认保存结果"));
+        await settle(() => expect(portal.textContent).toContain("未确认是否已保存"));
         expect(input.value).toBe("Unknown name result"); expect(input.readOnly).toBe(true);
         expect([...portal.querySelectorAll("button")].some(node => node.textContent === "重试")).toBe(false);
         if (target.owner.kind !== "project") throw new Error("Expected project owner");

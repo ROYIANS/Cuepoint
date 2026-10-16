@@ -4522,6 +4522,14 @@
       "publicTypes": []
     },
     {
+      "original": "packages/studio/src/platform/runtime/backupFeedback.ts",
+      "file": "packages/studio/src/platform/runtime/backupFeedback.ts",
+      "target": "packages/studio/src/platform/runtime/backupFeedback.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
       "original": "packages/studio/src/lib/runtimeSave.ts",
       "file": "packages/studio/src/platform/runtime/runtimeSave.ts",
       "target": "packages/studio/src/platform/runtime/runtimeSave.ts",
@@ -5769,6 +5777,18 @@
       ]
     },
     {
+      "original": "packages/studio/src/features/video/ui/shotCommandError.tsx",
+      "file": "packages/studio/src/features/video/ui/shotCommandError.tsx",
+      "target": "packages/studio/src/features/video/ui/shotCommandError.tsx",
+      "owner": "features/video",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "ShotCommandErrorContext",
+        "useShotCommandError"
+      ]
+    },
+    {
       "original": "packages/studio/src/features/video/ui/shotSelectionCommit.ts",
       "file": "packages/studio/src/features/video/ui/shotSelectionCommit.ts",
       "target": "packages/studio/src/features/video/ui/shotSelectionCommit.ts",
@@ -6072,6 +6092,13 @@
     {
       "file": "packages/studio/src/features/agent/skills/commands/installations.ts",
       "target": "packages/studio/src/features/agent/skills/commands/installations.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/ui/statusCopy.ts",
+      "target": "packages/studio/src/features/agent/ui/statusCopy.ts",
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
@@ -6436,6 +6463,16 @@
       "publicTypes": []
     },
     {
+      "file": "packages/studio/src/features/agent/ui/InstalledSkillsSettings.tsx",
+      "target": "packages/studio/src/features/agent/ui/InstalledSkillsSettings.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "InstalledSkillsSettings"
+      ]
+    },
+    {
       "original": "packages/studio/src/features/agent/mcp/ui/McpConnectionsSettings.tsx",
       "file": "packages/studio/src/features/agent/mcp/ui/McpConnectionsSettings.tsx",
       "target": "packages/studio/src/features/agent/mcp/ui/McpConnectionsSettings.tsx",
@@ -6683,6 +6720,30 @@
       "original": "packages/studio/src/features/agent/ui/threadReadVisibility.ts",
       "file": "packages/studio/src/features/agent/ui/threadReadVisibility.ts",
       "target": "packages/studio/src/features/agent/ui/threadReadVisibility.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/models/turnProblem.ts",
+      "file": "packages/studio/src/features/agent/models/turnProblem.ts",
+      "target": "packages/studio/src/features/agent/models/turnProblem.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/ComposerNotice.tsx",
+      "file": "packages/studio/src/features/agent/ui/ComposerNotice.tsx",
+      "target": "packages/studio/src/features/agent/ui/ComposerNotice.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/composerNotice.css",
+      "file": "packages/studio/src/features/agent/ui/composerNotice.css",
+      "target": "packages/studio/src/features/agent/ui/composerNotice.css",
       "owner": "features/agent",
       "public": false,
       "publicTypes": []

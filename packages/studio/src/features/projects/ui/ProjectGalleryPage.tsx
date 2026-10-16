@@ -37,7 +37,7 @@ import {formatUpdatedAt} from "../../../ui/format";
 import {filterAndSortLibrary, type LibrarySort} from "../../library/services/library";
 import { exportProjectZip,} from "../../../app/workflows/packages/projectPackage";
 import {downloadBlob} from "../../../platform/runtime/runtimeSave";
-import {isPublishedSaveError} from "../../../platform/runtime/runtimeSave";
+import {reportBackupFailure} from "../../../platform/runtime/backupFeedback";
 import {ASPECT_PRESET_IDS, ASPECT_PRESETS, type AspectPresetId, type ProjectMode} from "../../video/models/format";
 import {ProjectIpPicker} from "./ProjectIpPicker";
 import {Plus} from "../../../ui/icons";
@@ -68,6 +68,8 @@ export function ProjectGalleryPage() {
     const bindingRef = useRef(false);
     const archiveRef = useRef<string | undefined>(undefined)
     const [archivingId, setArchivingId] = useState<string>();
+    const [createError, setCreateError] = useState<string>();
+    const [archiveError, setArchiveError] = useState<string>();
     const [query, setQuery] = useState("");
     const [sort, setSort] = useState<LibrarySort>("updated");
     const [kindFilter, setKindFilter] = useState<ProjectKindId | "all">("all");
@@ -115,6 +117,7 @@ export function ProjectGalleryPage() {
         if (!creationAvailable || !name.trim() || creatingRef.current) return;
         creatingRef.current = true;
         setSubmitting(true);
+        setCreateError(undefined);
         try {
             const project = createKind === "audio" || createKind === "music"
                 ? await repository.createAudioMusicProject(name.trim(), createKind, createIpId)
@@ -126,7 +129,7 @@ export function ProjectGalleryPage() {
             setAspectPreset("16:9");
             await navigate({to: "/p/$projectId", params: {projectId: project.id}});
         } catch (err) {
-            if (activeRef.current) toast.error(err instanceof Error && err.message ? err.message : "创建失败，请重试");
+            if (activeRef.current) setCreateError(err instanceof Error && err.message ? err.message : "创建失败，请重试");
         } finally {
             creatingRef.current = false;
             if (activeRef.current) setSubmitting(false);
@@ -189,10 +192,11 @@ export function ProjectGalleryPage() {
         if (archiveRef.current) return;
         archiveRef.current = id;
         setArchivingId(id);
+        setArchiveError(undefined);
         try {
             await repository.setProjectArchived(id, archived);
         } catch (error) {
-            if (activeRef.current) toast.error(error instanceof Error && error.message ? error.message : "操作失败，请重试");
+            if (activeRef.current) setArchiveError(error instanceof Error && error.message ? error.message : "操作失败，请重试");
         } finally {
             archiveRef.current = undefined;
             if (activeRef.current) setArchivingId(undefined);
@@ -228,10 +232,11 @@ export function ProjectGalleryPage() {
             </div>
         </>}><PageContent>
             <VideoWorkspaceReadNotice {...readStatus}/>
+            {archiveError ? <p role="alert" className="text-destructive text-sm">{archiveError}</p> : null}
             <LibraryHeader title="项目" query={query} onQuery={setQuery} sort={sort} onSort={setSort}
-                           description="管理视频、音频与音乐项目。"
                            extra={<Button onClick={() => {
                                setCreateKind(kindFilter === "all" ? "video" : kindFilter);
+                               setCreateError(undefined);
                                setCreating(true);
                            }}><Plus aria-hidden/>新建项目</Button>}
             />
@@ -251,11 +256,12 @@ export function ProjectGalleryPage() {
                     {projects !== undefined && !visible.length &&
                         <PageState
                             title={query.trim() || ipFilter !== "all" || showArchived ? "没有找到匹配的项目" : "还没有项目"}
-                            description={query.trim() ? "试试其他关键词，或清除搜索。" : "选择视频、音频或音乐类型，新建项目开始制作。"}
+                            description={query.trim() ? "试试其他关键词，或清除搜索。" : undefined}
                             action={query.trim() ? <Button variant="outline"
                                                            onClick={() => setQuery("")}>清除搜索</Button> :
                                 <Button variant="outline" onClick={() => {
                                     setCreateKind(kindFilter === "all" ? "video" : kindFilter);
+                                    setCreateError(undefined);
                                     setCreating(true);
                                 }}>新建项目</Button>}/>}
                     <LibraryGrid>
@@ -312,10 +318,7 @@ export function ProjectGalleryPage() {
                                                 .then((outcome) => {
                                                     if (outcome === "canceled") toast.info("已取消保存项目备份");
                                                 })
-                                                .catch((error: unknown) => {
-                                                    if (isPublishedSaveError(error)) toast.warning(error.message);
-                                                    else toast.error(error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试");
-                                                });
+                                                .catch(reportBackupFailure);
                                         },
                                     }]),
                                     {
@@ -424,9 +427,9 @@ export function ProjectGalleryPage() {
                             {<div className="space-y-2"><span
                                 className="text-sm font-medium">所属 IP</span><ProjectIpPicker
                                 value={createIpId} onChange={setCreateIpId} disabled={submitting}/></div>}
-                            <p className="text-muted-foreground text-xs leading-5">项目类型创建后固定。可选择所属
-                                IP，也可以独立创作。</p>
+                            <p className="text-muted-foreground text-xs leading-5">项目类型创建后不可更改</p>
                         </>}
+                        {createError ? <p role="alert" className="text-destructive text-sm">{createError}</p> : null}
                     </div>
                     <DialogFooter>
                         <Button disabled={submitting} variant="outline" onClick={() => {

@@ -57,7 +57,7 @@ function AssetTextControl({label, value, projectId, draftKey, persist, multiline
                     setDraft(event.target.value);
                 }}/>
             </Field>
-            {uncertain ? <p role="alert" className="text-destructive text-xs">无法确认保存结果，当前草稿已保留。请先核对设定；离开时可以明确放弃这份草稿，当前不会重复保存。</p>
+            {uncertain ? <p role="alert" className="text-destructive text-xs">未确认是否已保存，草稿已保留。请核对设定后再离开。</p>
                 : <DraftStatus status={status} error={error} onRetry={() => {if (!unavailable) void retry();}} onUseLatest={adoptLatest}/>}
         </div>
     );

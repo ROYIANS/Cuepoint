@@ -17,7 +17,7 @@ export function DesktopMediaImportProgress({record, currentFilename, allowStop =
         {record.status === "stopping" || stopping && active ? <p>等待当前处理结束，不再开始下一项。</p> : null}
         {record.status === "stopped" && <p>已停止，保留已导入的素材。还有 {record.selection.items.length - record.receipts.length} 项未导入。</p>}
         {record.status === "failed" && <p role="alert">{record.error ?? "未能完成导入，已导入的素材仍然保留。"}</p>}
-        {record.status === "unknown" && <p role="alert">导入结果待核对，已确认的素材仍然保留。不会重复处理这些文件。</p>}
+        {record.status === "unknown" && <p role="alert">未确认导入结果，已导入的素材已保留。</p>}
         {canStop && <Button size="sm" variant="outline" disabled={stopping || record.status === "stopping"} onClick={() => {
             if (stopping) return;
             setStopping(true); stopDesktopMediaImport(record.id, record.projectId);
@@ -90,16 +90,16 @@ function ProjectDesktopMediaImport({projectId}: {projectId: string}) {
             setScanStopping(true); controller.current?.abort();
         }}>停止</Button>}
         {!available && <p className="material-muted">此功能需要 macOS 或 Windows 桌面版与桌面工作区。</p>}
-        {available && !candidates && !record && <p className="material-muted">扫描最深 8 层目录。Windows 首版支持本地固定 NTFS 磁盘中的素材目录。</p>}
+        {available && !candidates && !record && <p className="material-muted">最多扫描 8 层目录</p>}
         {candidates && !unresolved && <>
             <p>{candidates.grant.label} · {candidates.entries.length} 个视频{candidates.scan.skipped > 0 ? ` · ${candidates.scan.skipped} 项未纳入列表` : ""}</p>
             {candidates.entries.length > 0 ? <><div className="desktop-media-candidates" role="group" aria-label="选择要导入的视频">
                 {candidates.entries.map(entry => <label key={entry.entryId}><input type="checkbox" checked={selected.includes(entry.entryId)} disabled={busy || selected.length >= 64 && !selected.includes(entry.entryId)} onChange={event => setSelected(previous => event.target.checked ? [...previous, entry.entryId] : previous.filter(id => id !== entry.entryId))}/><span title={entry.relativeName}>{entry.displayName}</span><small>{(entry.byteLength / 1024 / 1024).toFixed(1)} MiB</small></label>)}
             </div><Button disabled={busy || !selected.length} onClick={() => void start()}>导入所选 {selected.length || ""} 个视频</Button></> : <p>此目录中没有符合范围的视频。</p>}
         </>}
-        {uncertainIntent && <p role="alert">这次导入是否已受理尚未确认，请先核对，不能重新导入。</p>}
+        {uncertainIntent && <p role="alert">未确认这次导入是否已开始，请先核对，暂不能重新导入。</p>}
         {record && !selecting && (!candidates || unresolved || live?.id === record.id) && <DesktopMediaImportProgress key={record.id} record={record} currentFilename={currentFilename} allowStop/>}
-        {unresolved && !busy && <div className="desktop-media-recovery"><p>请先核对这次导入。重新打开页面不会继续处理未导入的文件。</p><Button variant="outline" size="sm" disabled={checking} onClick={() => void inspect()}>核对导入结果</Button></div>}
+        {unresolved && !busy && <div className="desktop-media-recovery"><p>请先核对这次导入。</p><Button variant="outline" size="sm" disabled={checking} onClick={() => void inspect()}>核对导入结果</Button></div>}
         {(error || query.error) && <p role="alert" className="material-error">{error || query.error?.message}</p>}
     </section>;
 }

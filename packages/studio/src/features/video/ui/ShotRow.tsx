@@ -1,6 +1,6 @@
 import {ShotTextField} from "./ShotTextField";
 import type {TextDraftStatusChange} from "../../../app/drafts/useTextDraftRetention";
-import {toast} from "sonner";
+import {useShotCommandError} from "./shotCommandError";
 import {type CSSProperties, useCallback} from "react";
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
@@ -176,7 +176,8 @@ export function ShotRow({
         rowRef(element);
     }, [setNodeRef, rowRef]);
     const renderContents = nearViewport || active || isDragging || textPending;
-    const reportCommandError = (error: unknown) => toast.error(error instanceof Error ? error.message : "保存失败，请重试");
+    const reportShotError = useShotCommandError();
+    const reportCommandError = (error: unknown) => reportShotError(error);
     const mediaCapability = repository.capability("mediaSlots");
     const relationsAvailable = repository.capabilities().some(item => item.id === "relations" && item.status === "available");
     const selectedScene = scenes.find((scene) => scene.id === shot.sceneId);
@@ -445,7 +446,7 @@ export function ShotRow({
                                                             onCheckedChange={(checked) => {
                                                                 onActivate();
                                                                 void repository.setShotCharacterSelected(shot.id, character.id, checked === true)
-                                                                    .catch(() => toast.error("保存角色失败，请重试"));
+                                                                    .catch(() => reportShotError(new Error("保存角色失败，请重试")));
                                                             }}
                                                         >
                                                             <AssetStill

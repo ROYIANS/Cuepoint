@@ -230,8 +230,8 @@ export function AudioArrangementActions({projectId, chapterId, snapshot, history
                             <details className="text-xs">
                                 <summary>查看对应记录与保留剪辑</summary>
                                 <p className="break-all">段落 {item.segmentId} ·
-                                    所选版本 {item.takeId}</p>{proposal.before.filter(clip => item.preservedClipIds.includes(clip.id)).slice(0, 20).map(clip =>
-                                <p key={clip.id} className="break-all">保留片段 {clip.id} · 版本 {clip.takeId} ·
+                                    所选录音 {item.takeId}</p>{proposal.before.filter(clip => item.preservedClipIds.includes(clip.id)).slice(0, 20).map(clip =>
+                                <p key={clip.id} className="break-all">保留片段 {clip.id} · 录音 {clip.takeId} ·
                                     音轨 {clip.trackId} · 位置 {clip.startSec.toFixed(3)} 秒 ·
                                     源裁剪 {clip.trimStartSec.toFixed(3)}–{clip.trimEndSec.toFixed(3)} 秒 ·
                                     实际播放 {(clip.trimEndSec - clip.trimStartSec).toFixed(3)} 秒 · 音量 {clip.gain} ·
@@ -241,8 +241,8 @@ export function AudioArrangementActions({projectId, chapterId, snapshot, history
                         </div>)}
                         <details className="text-xs text-muted-foreground">
                             <summary>预览身份与冲突规则</summary>
-                            <p className="break-all">{proposal.id} · 版本 {proposal.revision}</p>
-                            <p>章节、版本、选用、音轨或片段改变后必须重新预览；旧批准不会覆盖新内容。</p></details>
+                            <p className="break-all">{proposal.id}</p>
+                            <p>内容改变后需要重新预览。</p></details>
                     </div>}
                     {error && <p role="alert" className="text-sm text-destructive break-words">{error}</p>}
                 </div>

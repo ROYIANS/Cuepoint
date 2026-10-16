@@ -63,6 +63,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
     const [probeModels, setProbeModels] = useState<string[]>([]);
     const [testing, setTesting] = useState(false);
     const [probing, setProbing] = useState(false);
+    const [opError, setOpError] = useState<string>();
     const [saving, setSaving] = useState(false);
 
     const mounted = useRef(true);
@@ -110,6 +111,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
         setBaseUrl(sessionRef.current.baseUrl);
         setApiKey("");
         setProbeModels([]);
+        setOpError(undefined);
         setTesting(false);
         setProbing(false);
         setSaving(false);
@@ -121,6 +123,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
         sessionRef.current = undefined;
         operationRef.current = undefined;
         setEditor(undefined);
+        setOpError(undefined);
         setProbeModels([]);
         setTesting(false);
         setProbing(false);
@@ -133,6 +136,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
         // Transport has no AbortSignal: cancel publication and release only this
         // credential operation synchronously, before another callback can run.
         operationRef.current = undefined;
+        setOpError(undefined);
         setTesting(false);
         setProbing(false);
         setProbeModels([]);
@@ -153,6 +157,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
         const operation: EditorOperation = {session, kind: "probe"};
         const request = credentials();
         operationRef.current = operation;
+        setOpError(undefined);
         setProbing(true);
         try {
             const result = await listConnectorModels(request);
@@ -188,12 +193,13 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
         const operation: EditorOperation = {session, kind: "test"};
         const request = credentials();
         operationRef.current = operation;
+        setOpError(undefined);
         setTesting(true);
         try {
             const result = await testConnectorConnection(request);
             if (!currentOperation(operation)) return;
             if (!result.ok) {
-                toast.error(redactCredentials(result.message, request.apiKey).slice(0, 300));
+                setOpError(redactCredentials(result.message, request.apiKey).slice(0, 300));
                 return;
             }
             // Wait for the nested directory read before publishing success;
@@ -207,7 +213,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
                 ? `（${result.modelCount} 个模型）` : "";
             toast.success(session.definition.id === "mimo" ? `模型目录读取成功${detail}；配音权限以实际生成为准` : result.via === "authenticated-read" ? "鉴权读取成功；具体模型权限以实际调用为准" : `连接成功${detail}`);
         } catch (error) {
-            if (currentOperation(operation)) toast.error(redactCredentials(error instanceof Error ? error.message : "测试失败", request.apiKey).slice(0, 300));
+            if (currentOperation(operation)) setOpError(redactCredentials(error instanceof Error ? error.message : "测试失败", request.apiKey).slice(0, 300));
         } finally {
             finishOperation(operation);
         }
@@ -218,6 +224,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
         const operation: EditorOperation = {session, kind: "save"};
         const request = {...credentials(), protocol: session.definition.protocol, label: session.definition.title};
         operationRef.current = operation;
+        setOpError(undefined);
         setSaving(true);
         try {
             await upsertConnector(request);
@@ -226,7 +233,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
             toast.success("已保存连接");
             closeEditor();
         } catch (error) {
-            if (currentOperation(operation)) toast.error(redactCredentials(error instanceof Error ? error.message : "保存失败", request.apiKey).slice(0, 300));
+            if (currentOperation(operation)) setOpError(redactCredentials(error instanceof Error ? error.message : "保存失败", request.apiKey).slice(0, 300));
         } finally {
             finishOperation(operation);
         }
@@ -238,6 +245,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
         const request = credentials();
         const id = session.existing.id;
         operationRef.current = operation;
+        setOpError(undefined);
         setSaving(true);
         try {
             await deleteConnector(id);
@@ -246,7 +254,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
             toast.success("已断开连接");
             closeEditor();
         } catch (error) {
-            if (currentOperation(operation)) toast.error(redactCredentials(error instanceof Error ? error.message : "断开失败", request.apiKey).slice(0, 300));
+            if (currentOperation(operation)) setOpError(redactCredentials(error instanceof Error ? error.message : "断开失败", request.apiKey).slice(0, 300));
         } finally {
             finishOperation(operation);
         }
@@ -386,6 +394,7 @@ export function ConnectorsSection({visibleRowIds, onEditorOpenChange}: {
                             </div>
                         ) : null}
                     </div>
+                    {opError ? <p role="alert" className="text-destructive shrink-0 px-1 text-sm break-words">{opError}</p> : null}
                     <DialogFooter className="shrink-0 gap-2 sm:justify-between">
                         <div className="flex flex-wrap gap-2">
                             {editor?.existing ? (

@@ -152,7 +152,7 @@ function EpisodeList({projectId}: { projectId: string }) {
         <div className="app-scroll h-full overflow-auto">
             <VideoWorkspaceReadNotice {...readStatus}/>
             <PageContent mode="collection">
-                <PageHeader title="集" description="按集整理故事与分镜，各集共用项目世界。"
+                <PageHeader title="集"
                             actions={<Button disabled={Boolean(pending)} onClick={() => void createEpisode()}><Plus
                                 aria-hidden/>{pending === "add" ? "创建中…" : `新建第 ${episodes.length + 1} 集`}
                             </Button>}/>
@@ -169,7 +169,7 @@ function EpisodeList({projectId}: { projectId: string }) {
                                                                title={readStatus.error ? "读取工作区失败" : "正在读取集列表…"}
                                                                description={readStatus.error} action={readStatus.error ?
                         <Button onClick={readStatus.retry}>重新读取</Button> : undefined}/> : !episodes.length ?
-                        <PageState title="暂无分集" description="新建第一集，开始整理故事与分镜。"/> :
+                        <PageState title="暂无分集"/> :
                         <LibraryGrid>
                             {episodes.map((episode, index) => (
                                 <CoverCard

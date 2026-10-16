@@ -76,7 +76,7 @@ export function IpProfilesPage() {
                                                                          params={{ipId: profile.id}}
                                                                          className="module-nav-item">{profile.name}</Link>)}</div>
     </>}><PageContent role="main" mode="collection" className="ip-page">
-        <PageHeader title="IP" description="管理创作定位、表达偏好与关联项目。"
+        <PageHeader title="IP"
                     actions={<Button onClick={() => setCreateOpen(true)}><Plus aria-hidden/>新建 IP</Button>}/>
         <PageToolbar className="ip-library-toolbar">
             <div className="ip-search"><Search size={15} aria-hidden/><Input aria-label="搜索 IP"
@@ -88,7 +88,7 @@ export function IpProfilesPage() {
         {!view ? <PageState kind="loading" title="正在读取 IP 档案…"/> : view.error ?
             <PageState kind="error" title="暂时无法读取 IP" description={view.error}/> : !filtered.length ?
                 <PageState title={search.trim() ? "没有匹配的 IP" : archived ? "暂无归档的 IP" : "暂无 IP"}
-                           description={search.trim() ? "试试其他名称或主题词。" : archived ? "归档后的档案会保留原有关联，也可以随时恢复。" : "新建 IP，记录定位与创作偏好，再关联项目和素材。"}
+                           description={search.trim() ? "试试其他名称或主题词。" : undefined}
                            action={!search.trim() && !archived ?
                                <Button variant="outline" onClick={() => setCreateOpen(true)}><Plus aria-hidden/>新建 IP</Button> : undefined}/>
                 : <div className="ip-profile-grid">{filtered.map(profile => {
@@ -198,8 +198,7 @@ export function IpProfilePage({ipId}: { ipId: string }) {
                         <strong>{project.name}</strong><span>{project.archivedAt ? "已归档 · " : ""}{PROJECT_KINDS.find(kind => kind.id === (project.kind ?? "video"))?.label ?? "未知类型"} · 更新于 {dateLabel(project.updatedAt)}</span>
                     </div>
                     <ArrowUpRight size={16} aria-hidden/></Link>)}</div> :
-                <PageState compact title="还没有关联项目"
-                           description={`在项目列表中新建项目，或为已有项目选择“${profile.name}”。`}/>}
+                <PageState compact title="还没有关联项目"/>}
         </section>}
         {tab === "materials" && <section className="ip-related-section">
             <div className="ip-section-heading">

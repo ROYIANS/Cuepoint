@@ -41,7 +41,7 @@ export function GeneralSection({visibleRowIds}: { visibleRowIds?: string[] }) {
         <SettingsGroup title="更新偏好">
             {(!visibleRowIds || visibleRowIds.includes("auto-check")) && <SettingsRow
                 title="启动时自动检查更新"
-                description="开启后每天最多检查一次新版本。默认关闭，小光点不会主动联网检查更新。"
+                description="每天最多检查一次"
                 control={<Switch checked={pending ?? settings?.autoCheck ?? false}
                                  disabled={!settings && !readError || pending !== undefined}
                                  aria-label="启动时自动检查更新" onCheckedChange={checked => void toggle(checked)}/>}

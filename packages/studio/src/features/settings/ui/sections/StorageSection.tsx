@@ -22,9 +22,7 @@ export function StorageSection({visibleRowIds}: { visibleRowIds?: string[] }) {
         <SettingsGroup title="本地数据">
             {(!visibleRowIds || visibleRowIds.includes("location")) && <SettingsRow
                 title="数据存放位置"
-                description={native
-                    ? "全部项目数据都在本机的应用私有目录内（本地 SQLite 工作区与托管媒体），不上传、不联网同步。"
-                    : "浏览器端数据保存在本站的 IndexedDB 中，不上传、不联网同步。"}
+                description={native ? "仅保存在本机应用目录" : "仅保存在本浏览器"}
             />}
             {(!visibleRowIds || visibleRowIds.includes("scale")) && <SettingsRow
                 title="数据规模"
@@ -32,7 +30,7 @@ export function StorageSection({visibleRowIds}: { visibleRowIds?: string[] }) {
             />}
             {(!visibleRowIds || visibleRowIds.includes("backup")) && <SettingsRow
                 title="备份与迁移"
-                description="升级或换机前请先在项目里导出备份。安装包为未签名版本，系统会给出安全提示，属正常现象。"
+                description="升级或换机前请先导出备份"
                 control={<a className="settings-link" href={INSTALL_GUIDE_URL} target="_blank" rel="noreferrer">安装与备份说明<ExternalLink
                     aria-hidden/></a>}
             />}

@@ -29,7 +29,7 @@ import {episodeLabel} from "../../features/video/models/episodes";
 import {normalizeProjectMode} from "../../features/video/models/format";
 import {IMAGE_ACCEPT, pickMediaFile, uploadMediaFile} from "../../features/library/services/media";
 import {downloadBlob, exportProjectZip} from "../workflows/packages/projectPackage";
-import {isPublishedSaveError} from "../../platform/runtime/runtimeSave";
+import {reportBackupFailure} from "../../platform/runtime/backupFeedback";
 import {cn} from "../../ui/cn";
 import {shouldRedirectAudioMusicChild} from "../../features/audio/engine/workspaceRoute";
 import {AppFrame} from "../layout/AppFrame";
@@ -289,10 +289,7 @@ export function WorkspaceChrome({projectId}: { projectId: string }) {
                 if (outcome === "saved") toast.success("项目备份已导出");
                 else toast.info("已取消保存项目备份");
             })
-            .catch((error: unknown) => {
-                if (isPublishedSaveError(error)) toast.warning(error.message);
-                else toast.error(error instanceof Error ? `备份失败：${error.message}` : "备份失败，请重试");
-            })
+            .catch(reportBackupFailure)
             .finally(() => setBackingUp(false));
     };
 

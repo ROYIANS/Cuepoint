@@ -10,6 +10,7 @@ import {useWorkspaceUnavailable} from "../../../platform/product/workspaceAvaila
 import {useManualDraftGuard} from "../../../app/drafts/useManualDraftGuard";
 import {ShotScrollViewport} from "./ShotRowViewport";
 import {toast} from "sonner";
+import {ShotCommandErrorContext, useShotCommandError} from "./shotCommandError";
 import {useShotMedia} from "../queries/useShotMedia";
 import {
     closestCenter,
@@ -306,9 +307,11 @@ function ShotEditorPageContent({
             ?.scrollIntoView({block: "nearest"});
     }, [activeShotId]);
 
-    function reportCommandError(error: unknown) {
-        toast.error(error instanceof Error ? error.message : "保存失败，请重试");
+    const [commandError, setCommandError] = useState<string>();
+    function reportShotError(error: unknown, fallback = "保存失败，请重试") {
+        setCommandError(error instanceof Error && error.message ? error.message : fallback);
     }
+    const reportCommandError = (error: unknown) => reportShotError(error);
 
     async function commitShotReorder(groupIds: string[], activeId: string, overId: string) {
         const action = await reorderShotGroupCommand({
@@ -352,7 +355,7 @@ function ShotEditorPageContent({
 
     async function persistFilters(next: ShotFilters) {
         await repository.updateEpisodeShotFilters(episodeId, next).catch((error: unknown) => {
-            toast.error(error instanceof Error ? error.message : "筛选保存失败");
+            reportShotError(error, "筛选保存失败");
         });
     }
 
@@ -928,6 +931,12 @@ function ShotEditorPageContent({
                 ) : null}
 
                 <div className="relative min-h-0 flex-1">
+                    {commandError ? <div role="alert"
+                                         className="text-destructive flex items-center justify-between gap-2 px-4 py-1 text-sm">
+                        <span>{commandError}</span>
+                        <Button size="sm" variant="ghost" onClick={() => setCommandError(undefined)}>知道了</Button>
+                    </div> : null}
+                    <ShotCommandErrorContext value={reportShotError}>
                     <ShotScrollViewport>
                         <div
                             className={cn(
@@ -1027,7 +1036,7 @@ function ShotEditorPageContent({
                             ) : null}
                         </div>
                         {empty ? <PageState className="pb-16" title="还没有镜头"
-                                            description="点击「新建」添加第一条分镜。"/> : null}
+                                           /> : null}
                         {filterEmpty ? (
                             <PageState className="pb-16" title="没有符合当前筛选的镜头" action={<Button
                                 size="sm"
@@ -1038,6 +1047,7 @@ function ShotEditorPageContent({
                             </Button>}/>
                         ) : null}
                     </ShotScrollViewport>
+                    </ShotCommandErrorContext>
 
                     <div className="text-muted-foreground pointer-events-none absolute bottom-3 left-4 text-xs">
                         镜头总数 {filtersOn ? `${visibleShots.length}/${shots.length}` : shots.length}
@@ -1203,7 +1213,8 @@ function BeatBlockView({
     sortableState?: ReturnType<typeof useSortable>;
 }) {
     const repository = useVideoWorkspaceRepository();
-    const reportCommandError = (error: unknown) => toast.error(error instanceof Error ? error.message : "保存失败，请重试");
+    const reportShotError = useShotCommandError();
+    const reportCommandError = (error: unknown) => reportShotError(error);
     const duration = shots.reduce((sum, shot) => sum + (Number(shot.durationSec) || 0), 0);
     const shotIds = shots.map((shot) => shot.id);
     const style: CSSProperties | undefined = sortableState

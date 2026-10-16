@@ -70,7 +70,7 @@ export function ProjectMemoryPage({
         result?.records.filter((item) => item.status === "active").length ?? 0;
     return (
         <main className={`memory-page${selected ? " has-selection" : ""}`}>
-            <PageHeader title="项目记忆" description="管理这个项目已确认的规范、偏好与决策。"
+            <PageHeader title="项目记忆"
                         className="memory-page-heading" actions={<Button onClick={() => setEditor("new")}>
                 <Plus/>
                 添加记忆
@@ -160,7 +160,6 @@ export function ProjectMemoryPage({
                         <div className="memory-detail-placeholder">
                             <BookOpen size={36}/>
                             <h2>{selectedId ? "这条记忆已被删除" : "选择一条项目记忆"}</h2>
-                            <p>选择一条记忆，查看它的适用条件、原始依据与修订过程。</p>
                             <small>已启用的记忆会按当前需求引用；也可标记为项目通用。</small>
                         </div>
                     )}
@@ -260,7 +259,6 @@ function MemoryDetail({
                     <ArrowLeft/>
                     返回列表
                 </Button>
-                <span>版本 {memory.revision}</span>
                 <div>
                     <Button
                         variant="ghost"
@@ -351,7 +349,7 @@ function MemoryDetail({
                     <h3>
             <span className="memory-section-label">
               <History size={15}/>
-              修订历史
+              历史版本
             </span>
                         <span>{versions?.length ?? 0} 版</span>
                     </h3>
@@ -417,7 +415,7 @@ function MemoryDetail({
                     <>
                         <p>
                             {memory.status === "active"
-                                ? "停用后内容和修订历史仍会保留。"
+                                ? "停用后内容仍会保留。"
                                 : memory.status === "pending_review"
                                     ? "来自备份。请核对正文与适用条件后再启用。"
                                     : "这条记忆已暂停使用，可随时重新启用。"}
@@ -459,7 +457,7 @@ function MemoryDetail({
                     <AlertDialogHeader>
                         <AlertDialogTitle>永久删除“{memory.title}”？</AlertDialogTitle>
                         <AlertDialogDescription>
-                            这条记忆及其全部修订历史都会被删除，原始任务总结会保留。如果暂时不再适用，可以取消后选择停用。
+                            这条记忆及其历史版本都会被删除，原始任务总结会保留。暂时不用可改为停用。
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     {error && (
@@ -477,7 +475,7 @@ function MemoryDetail({
                                     await deleteProjectMemory(projectId, id, memory.revision);
                                     setDeleting(false);
                                     onBack();
-                                }, "记忆及修订历史已删除")
+                                }, "记忆及历史版本已删除")
                             }
                         >
                             {pending ? "删除中…" : "永久删除"}

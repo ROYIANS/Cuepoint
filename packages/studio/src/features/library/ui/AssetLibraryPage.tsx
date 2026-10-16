@@ -136,7 +136,7 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
     return (
         <div className="app-scroll h-full min-h-0 min-w-0 overflow-auto">
             <PageContent mode="collection">
-                <PageHeader title="世界" description="管理项目共用的世界设定、角色、场景、道具与风格。"
+                <PageHeader title="世界"
                             actions={tab !== "setting" ? (
                                 <div className="flex flex-wrap gap-2">
                                     <Button variant="outline" disabled={operations.busy} onClick={() => setPickerOpen(true)}>
@@ -449,5 +449,5 @@ function StudioAssetPicker({
 }
 
 function EmptyWorldTab({singular}: { singular: string }) {
-    return <PageState title={`还没有${singular}`} description="可以新建，或从工作室添加一份可独立修改的快照。"/>;
+    return <PageState title={`还没有${singular}`}/>;
 }
