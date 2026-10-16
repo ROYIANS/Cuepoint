@@ -16,6 +16,31 @@ use tokio::{
     task::JoinHandle,
 };
 
+/// Minimal names a child needs to locate executables and the OS runtime. The
+/// rest of the parent environment (credentials, tokens) is never inherited;
+/// explicit per-server variables are applied afterwards and win.
+const INHERITED_ENV: &[&str] = &[
+    "PATH",
+    "HOME",
+    "LANG",
+    "TMPDIR",
+    "SystemRoot",
+    "SYSTEMROOT",
+    "windir",
+    "TEMP",
+    "TMP",
+];
+fn inherited_env(lookup: impl Fn(&str) -> Option<String>) -> Vec<(String, String)> {
+    INHERITED_ENV
+        .iter()
+        .filter_map(|name| {
+            lookup(name)
+                .filter(|v| v.len() <= 8192 && !v.contains('\0'))
+                .map(|v| ((*name).to_owned(), v))
+        })
+        .collect()
+}
+
 pub(crate) struct OwnedProcess {
     child: Option<Box<dyn ChildWrapper>>,
     stderr: Option<JoinHandle<()>>,
@@ -56,6 +81,7 @@ impl OwnedProcess {
         command
             .args(args)
             .env_clear()
+            .envs(inherited_env(|name| std::env::var(name).ok()))
             .envs(env)
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
@@ -155,7 +181,43 @@ mod tests {
     #[cfg(windows)]
     use std::os::windows::process::ExitStatusExt;
     use std::{future::Future, io, pin::Pin, process::ExitStatus, time::Duration};
-    use tokio::sync::Notify;
+    use tokio::{io::AsyncReadExt as _, sync::Notify};
+
+    #[test]
+    fn mcp_stdio_env_inherits_only_the_minimal_allowlist() {
+        let parent: HashMap<&str, &str> = HashMap::from([
+            ("PATH", "/usr/bin"),
+            ("SystemRoot", "C:\\Windows"),
+            ("OPENAI_API_KEY", "secret"),
+            ("AWS_SECRET_ACCESS_KEY", "secret"),
+        ]);
+        let got = inherited_env(|n| parent.get(n).map(|v| (*v).to_owned()));
+        assert!(got.contains(&("PATH".into(), "/usr/bin".into())));
+        assert!(got.contains(&("SystemRoot".into(), "C:\\Windows".into())));
+        assert!(got.iter().all(|(k, _)| INHERITED_ENV.contains(&k.as_str())));
+        assert!(!got.iter().any(|(k, _)| k.contains("KEY")));
+    }
+
+    #[cfg(unix)]
+    #[tokio::test]
+    async fn mcp_stdio_child_sees_path_but_not_other_parent_secrets() {
+        // SAFETY: test-only variable with a unique name; only read by the child.
+        unsafe { std::env::set_var("CUEPOINT_TEST_PARENT_SECRET", "x") };
+        let (mut p, mut out, _stdin) = OwnedProcess::spawn(
+            Path::new("/bin/sh"),
+            &[
+                "-c".into(),
+                "printf '%s|%s|%s' \"${PATH:+path}\" \"${CUEPOINT_TEST_PARENT_SECRET:-none}\" \"$EXPLICIT\"".into(),
+            ],
+            None,
+            &HashMap::from([("EXPLICIT".to_owned(), "yes".to_owned())]),
+        )
+        .unwrap();
+        let mut text = String::new();
+        out.read_to_string(&mut text).await.unwrap();
+        assert_eq!(text, "path|none|yes");
+        p.stop().await.unwrap();
+    }
 
     /// Reproduces process-wrap's cached parent status while descendants drain.
     #[derive(Debug)]

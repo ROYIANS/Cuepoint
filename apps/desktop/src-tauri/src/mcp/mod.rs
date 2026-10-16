@@ -22,6 +22,8 @@ pub(crate) enum McpError {
     VaultConflict,
     VaultCorrupt,
     DrainUnknown,
+    /// The user declined (or no native consent was obtainable for) an action.
+    Denied,
 }
 impl std::fmt::Display for McpError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -31,7 +33,12 @@ impl std::fmt::Display for McpError {
 impl std::error::Error for McpError {}
 pub(crate) type Result<T> = std::result::Result<T, McpError>;
 pub(crate) const MESSAGE_BYTES: usize = 1024 * 1024;
+/// Bound for short control exchanges (connect, discovery, OAuth metadata).
 pub(crate) const REQUEST_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(30);
+/// Call policy: one tool/resource call may take this long end to end. The MCP
+/// HTTP client uses it as its per-read idle bound (no total-body timeout) and the
+/// invoke task as its ceiling, so neither cuts a call earlier than the policy.
+pub(crate) const CALL_DEADLINE: std::time::Duration = std::time::Duration::from_secs(600);
 
 #[cfg(test)]
 mod tests;

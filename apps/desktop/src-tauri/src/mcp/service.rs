@@ -1,7 +1,7 @@
 //! Window/store scoped native owner. Reservations precede IO; original receipts
 //! survive retirement, while prepared authority is retired before mutation.
 use super::{
-    MESSAGE_BYTES, McpError, REQUEST_TIMEOUT, Result,
+    CALL_DEADLINE, MESSAGE_BYTES, McpError, REQUEST_TIMEOUT, Result,
     catalogue::{Catalogue, CatalogueSource, digest, id},
     oauth::{self, VaultCredentials},
     process::OwnedProcess,
@@ -31,6 +31,10 @@ use tokio_util::sync::CancellationToken;
 const RECORDS: usize = 256;
 const AUTHORITIES: usize = 256;
 type Open = Arc<dyn Fn(&str) -> Result<()> + Send + Sync>;
+/// Blocking native user confirmation to start a local executable
+/// (`executable`, `args`). Only a native-verified affirmative may return true;
+/// renderer-supplied configuration alone never starts a process.
+pub(crate) type Consent = Arc<dyn Fn(&str, &[String]) -> bool + Send + Sync>;
 fn fresh(prefix: &str) -> String {
     format!("{prefix}_{}", uuid::Uuid::new_v4())
 }
@@ -50,6 +54,7 @@ fn code(e: McpError) -> &'static str {
         McpError::VaultUnknown => "vault_unknown",
         McpError::VaultConflict => "conflict",
         McpError::DrainUnknown => "draining",
+        McpError::Denied => "denied",
         _ => "invalid",
     }
 }
@@ -138,6 +143,9 @@ pub(crate) struct Service {
     state: Mutex<State>,
     tasks: tokio_util::task::TaskTracker,
     admission: Arc<std::sync::atomic::AtomicBool>,
+    consent: Consent,
+    /// Launch digests the user approved for this owner's lifetime.
+    consented: Mutex<HashSet<String>>,
 }
 struct Connection {
     binding: Binding,
@@ -201,6 +209,7 @@ impl Service {
         profile: String,
         open: Open,
         admission: Arc<std::sync::atomic::AtomicBool>,
+        consent: Consent,
     ) -> Result<Arc<Self>> {
         let mut service = Self::new(
             session,
@@ -210,10 +219,15 @@ impl Service {
             profile,
             open,
         )?;
-        Arc::get_mut(&mut service)
-            .expect("Fresh MCP native owner")
-            .admission = admission;
+        let fresh = Arc::get_mut(&mut service).expect("Fresh MCP native owner");
+        fresh.admission = admission;
+        fresh.consent = consent;
         Ok(service)
+    }
+    #[cfg(test)]
+    pub(crate) fn with_consent(mut service: Arc<Self>, consent: Consent) -> Arc<Self> {
+        Arc::get_mut(&mut service).expect("Fresh MCP owner").consent = consent;
+        service
     }
     pub(crate) fn new(
         session: Session,
@@ -244,6 +258,9 @@ impl Service {
             state: Mutex::new(State::default()),
             tasks: tokio_util::task::TaskTracker::new(),
             admission: Arc::new(std::sync::atomic::AtomicBool::new(true)),
+            // Non-native owners (tests/fixtures) have no user to ask.
+            consent: Arc::new(|_, _| true),
+            consented: Mutex::new(HashSet::new()),
         }))
     }
     pub fn matches_session(&self, s: &Session) -> bool {
@@ -1018,6 +1035,37 @@ impl Service {
         if epoch.load(Ordering::Acquire) != expected {
             return Err(McpError::VaultConflict);
         }
+        if let PrivateConfig::Stdio {
+            executable,
+            args,
+            cwd,
+            environment,
+        } = &config
+        {
+            let launch = fingerprint(&(
+                executable,
+                args,
+                cwd,
+                environment
+                    .iter()
+                    .collect::<std::collections::BTreeMap<_, _>>(),
+            ))?;
+            let known = self.consented.lock().unwrap().contains(&launch);
+            if !known {
+                let ask = self.consent.clone();
+                let (exe, argv) = (executable.clone(), args.clone());
+                let granted = tokio::task::spawn_blocking(move || ask(&exe, &argv))
+                    .await
+                    .map_err(|_| McpError::Denied)?;
+                if !granted {
+                    return Err(McpError::Denied);
+                }
+                self.consented.lock().unwrap().insert(launch);
+            }
+            if epoch.load(Ordering::Acquire) != expected {
+                return Err(McpError::VaultConflict);
+            }
+        }
         let mut process = None;
         let runner_result: Result<RunningService<RoleClient, ()>> = async {
             Ok(match &config {
@@ -1056,7 +1104,7 @@ impl Service {
                             );
                         }
                     }
-                    let client = transport::BoundedHttpClient::new(
+                    let client = transport::BoundedHttpClient::streaming(
                         vec![reqwest::Url::parse(endpoint).map_err(|_| McpError::Endpoint)?],
                         MESSAGE_BYTES,
                     )?
@@ -1319,7 +1367,7 @@ impl Service {
                     )),
                 }
             };
-            let reply = match tokio::time::timeout(Duration::from_secs(65), result).await {
+            let reply = match tokio::time::timeout(CALL_DEADLINE + REQUEST_TIMEOUT, result).await {
                 Ok(Ok(r)) => r,
                 Ok(Err(e)) => {
                     let mut r = Reply::error(

@@ -1,5 +1,5 @@
 //! SDK client port with pre-parse response limits and no implicit effect retries.
-use super::{MESSAGE_BYTES, McpError, REQUEST_TIMEOUT, Result, bounded};
+use super::{CALL_DEADLINE, MESSAGE_BYTES, McpError, REQUEST_TIMEOUT, Result, bounded};
 use futures::{StreamExt, stream::BoxStream};
 use http::{HeaderName, HeaderValue};
 use rmcp::{
@@ -39,6 +39,20 @@ impl BoundedHttpClient {
         if timeout.is_zero() || timeout > REQUEST_TIMEOUT {
             return Err(McpError::Deadline);
         }
+        Self::build(endpoints, limit, Some(timeout), timeout)
+    }
+    /// MCP session client: bounded connect, per-read idle bound of the call
+    /// policy, and no total-body timeout, so a streamed long tool call is not
+    /// cut at the 30 s control-exchange bound.
+    pub(crate) fn streaming(endpoints: Vec<reqwest::Url>, limit: usize) -> Result<Self> {
+        Self::build(endpoints, limit, None, CALL_DEADLINE)
+    }
+    fn build(
+        endpoints: Vec<reqwest::Url>,
+        limit: usize,
+        total: Option<std::time::Duration>,
+        idle: std::time::Duration,
+    ) -> Result<Self> {
         if endpoints.is_empty() || endpoints.len() > 16 || limit == 0 || limit > MESSAGE_BYTES {
             return Err(McpError::Endpoint);
         }
@@ -54,12 +68,14 @@ impl BoundedHttpClient {
                 return Err(McpError::Endpoint);
             }
         }
-        let client = reqwest::Client::builder()
+        let mut builder = reqwest::Client::builder()
             .redirect(reqwest::redirect::Policy::none())
-            .timeout(timeout)
-            .connect_timeout(timeout.min(std::time::Duration::from_secs(10)))
-            .build()
-            .map_err(|_| McpError::Transport)?;
+            .connect_timeout(idle.min(std::time::Duration::from_secs(10)));
+        builder = match total {
+            Some(total) => builder.timeout(total),
+            None => builder.read_timeout(idle),
+        };
+        let client = builder.build().map_err(|_| McpError::Transport)?;
         Ok(Self {
             client,
             endpoints: Arc::new(endpoints),

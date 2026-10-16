@@ -237,6 +237,24 @@ async fn mcp_service_request(
                 crate::runtime_services::product_open_external(open_window.clone(), url.to_owned())
                     .map_err(|_| crate::mcp::McpError::Transport)
             });
+            let consent_window = window.clone();
+            let consent: crate::mcp::service::Consent = Arc::new(move |exe, args| {
+                use tauri_plugin_dialog::{MessageDialogButtons, MessageDialogKind};
+                let shown = args.iter().take(8).cloned().collect::<Vec<_>>().join(" ");
+                let shown: String = shown.chars().take(400).collect();
+                consent_window
+                    .dialog()
+                    .message(format!(
+                        "要启动本机程序作为 MCP 服务：\n{exe}\n参数：{shown}\n\n该程序将以你的用户权限运行，没有沙箱。仅在信任它时继续。"
+                    ))
+                    .title("启动本机 MCP 服务")
+                    .kind(MessageDialogKind::Warning)
+                    .buttons(MessageDialogButtons::OkCancelCustom(
+                        "启动".into(),
+                        "取消".into(),
+                    ))
+                    .blocking_show()
+            });
             let app = window.app_handle().config().identifier.clone();
             let profile = if cfg!(feature = "acceptance") {
                 "isolated"
@@ -254,6 +272,7 @@ async fn mcp_service_request(
                     profile,
                     open,
                     bridge.lifecycle.effects.clone(),
+                    consent,
                 )
                 .map_err(|_| {
                     Error::new(

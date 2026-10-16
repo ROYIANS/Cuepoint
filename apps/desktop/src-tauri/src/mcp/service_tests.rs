@@ -51,6 +51,15 @@ impl Harness {
         Self::new_with_opener(Arc::new(|_| Ok(())))
     }
     pub(super) fn new_with_opener(open: Arc<dyn Fn(&str) -> Result<()> + Send + Sync>) -> Self {
+        Self::build(open, None)
+    }
+    pub(super) fn new_with_consent(consent: super::service::Consent) -> Self {
+        Self::build(Arc::new(|_| Ok(())), Some(consent))
+    }
+    fn build(
+        open: Arc<dyn Fn(&str) -> Result<()> + Send + Sync>,
+        consent: Option<super::service::Consent>,
+    ) -> Self {
         let session = Session {
             version: 1,
             session: "session1".into(),
@@ -71,6 +80,10 @@ impl Harness {
             open,
         )
         .unwrap();
+        let service = match consent {
+            Some(consent) => Service::with_consent(service, consent),
+            None => service,
+        };
         Self {
             service,
             catalogue,
@@ -568,6 +581,57 @@ async fn mcp_service_real_stdio_discovery_invoke_and_drain() {
         h.call("dispose1", Action::Dispose {}).await.status,
         "drained"
     );
+}
+fn stdio_fixture_config() -> PrivateConfig {
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src/mcp/fixtures/server.py");
+    PrivateConfig::Stdio {
+        executable: "/usr/bin/python3".into(),
+        args: vec!["-u".into(), path.to_string_lossy().into(), "modern".into()],
+        cwd: None,
+        environment: HashMap::new(),
+    }
+}
+#[tokio::test]
+async fn mcp_service_stdio_start_requires_native_consent_and_decline_spawns_nothing() {
+    let asked = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    let counter = asked.clone();
+    let h = Harness::new_with_consent(Arc::new(move |exe, args| {
+        assert_eq!(exe, "/usr/bin/python3");
+        assert!(args.iter().any(|a| a == "modern"));
+        counter.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        false
+    }));
+    let reference = h.config(stdio_fixture_config()).await;
+    let reply = h
+        .call(
+            "connect1",
+            Action::Connect {
+                server_id: "server1".into(),
+                config_revision: 1,
+                private_revision: reference.clone(),
+            },
+        )
+        .await;
+    assert_eq!(reply.status, "unknown");
+    assert_eq!(reply.error.unwrap().code, "denied");
+    assert_eq!(asked.load(std::sync::atomic::Ordering::SeqCst), 1);
+    assert_eq!(
+        h.call("dispose1", Action::Dispose {}).await.status,
+        "drained"
+    );
+}
+#[tokio::test]
+async fn mcp_service_stdio_consent_is_asked_once_per_launch_and_then_connects() {
+    let asked = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    let counter = asked.clone();
+    let h = Harness::new_with_consent(Arc::new(move |_, _| {
+        counter.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        true
+    }));
+    let reference = h.config(stdio_fixture_config()).await;
+    let _ = h.connect(&reference).await;
+    assert_eq!(asked.load(std::sync::atomic::Ordering::SeqCst), 1);
+    h.call("dispose1", Action::Dispose {}).await;
 }
 #[tokio::test]
 async fn mcp_service_private_lost_ack_reconciles_same_original_and_rejects_current_cleanup() {

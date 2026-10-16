@@ -458,6 +458,31 @@ async fn mcp_real_oauth_metadata_limit_and_http_deadline() {
     );
     assert!(start.elapsed() < Duration::from_secs(1));
     assert_eq!(server.effects.load(Ordering::SeqCst), 1);
+
+    // The MCP session client has no total-body timeout: a slow (>80 ms here,
+    // >30 s in production) reply is still delivered within the call policy.
+    let server = fixture("deadline").await;
+    let client =
+        transport::BoundedHttpClient::streaming(vec![server.url.parse().unwrap()], 4096).unwrap();
+    let message: ClientJsonRpcMessage = serde_json::from_value(
+        json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"counter"}}),
+    )
+    .unwrap();
+    let start = std::time::Instant::now();
+    assert!(
+        client
+            .post_message(
+                server.url.clone().into(),
+                message,
+                None,
+                None,
+                HashMap::new()
+            )
+            .await
+            .is_ok()
+    );
+    assert!(start.elapsed() >= Duration::from_millis(900));
+    assert_eq!(server.effects.load(Ordering::SeqCst), 1);
 }
 
 #[derive(Default)]

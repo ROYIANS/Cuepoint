@@ -649,6 +649,39 @@ async fn mcp_oauth_rejected_callback_does_not_consume_legitimate_attempt() {
 }
 
 #[tokio::test]
+async fn mcp_oauth_stray_empty_closed_slow_and_oversized_connections_do_not_end_login() {
+    let fixture = Fixture::start(Options::default()).await;
+    let owner = Owner::new();
+    let login = fixture.login(&owner, true, Duration::from_secs(10)).await;
+    let url = fixture.callback(&login);
+    let address = (url.host_str().unwrap().to_owned(), url.port().unwrap());
+    // Connect-and-close (EOF before any byte).
+    drop(TcpStream::connect(address.clone()).await.unwrap());
+    // Partial head that is then closed.
+    let mut partial = TcpStream::connect(address.clone()).await.unwrap();
+    partial.write_all(b"GET /cuepoint").await.unwrap();
+    drop(partial);
+    // Oversized head without a terminator.
+    let mut big = TcpStream::connect(address.clone()).await.unwrap();
+    let _ = big.write_all(&vec![b'a'; 9000]).await;
+    // Silent connection kept open: it must not block later callbacks.
+    let silent = TcpStream::connect(address.clone()).await.unwrap();
+    // Invalid UTF-8 and malformed request target.
+    let mut binary = TcpStream::connect(address.clone()).await.unwrap();
+    let _ = binary.write_all(b"\xff\xfe\r\n\r\n").await;
+    let mut malformed = TcpStream::connect(address.clone()).await.unwrap();
+    let _ = malformed
+        .write_all(b"GET http://[::bad/ HTTP/1.1\r\nHost: x\r\n\r\n")
+        .await;
+    tokio::time::sleep(Duration::from_millis(100)).await;
+    assert_eq!(*login.state.lock().unwrap(), "pending");
+    assert_eq!(callback(&url, "GET", None).await, Some(200));
+    finish(login, "authorized").await;
+    drop(silent);
+    assert_eq!(fixture.state.token_forms.lock().unwrap().len(), 1);
+}
+
+#[tokio::test]
 async fn mcp_oauth_error_callback_cancellation_timeout_and_retirement_never_exchange() {
     let fixture = Fixture::start(Options::default()).await;
     let owner = Owner::new();
