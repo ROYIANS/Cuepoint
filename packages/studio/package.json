@@ -86,7 +86,8 @@
     "@cuepoint/distribution": "workspace:*",
     "@cuepoint/agent-core": "workspace:*",
     "@cuepoint/agent-providers": "workspace:*",
-    "yaml": "2.9.1"
+    "yaml": "2.9.1",
+    "@cfworker/json-schema": "4.1.1"
   },
   "devDependencies": {
     "@types/react": "^19.1.13",

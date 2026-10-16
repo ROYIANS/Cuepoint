@@ -9,6 +9,7 @@
 - Read [native runtime](../../frontend/native-product-runtime.md), [shared storage](../../frontend/shared-product-storage.md) and [desktop distribution](../../frontend/desktop-distribution.md) through their required sections, including tails beyond injection caps.
 - Read [native workspace/reference boundaries](../../frontend/native-workspace.md) when changing retained reference lanes.
 - Read [granted desktop media import](../../frontend/desktop-media-import.md) before changing directory grants, decoder resources/processes or managed import adoption.
+- Read [MCP connections](../../frontend/agent-mcp.md) before changing SDK transport, process groups/Job Objects, native vault or OAuth; disable effect replay and keep actual-host evidence distinct.
 - Read [quality](../../frontend/quality-guidelines.md), [directory ownership](../../frontend/directory-structure.md) and [guides](../../guides/index.md).
 - Verify actual pinned tool/probe paths and the shared schema/release input closure before building. Reuse local ignored dependencies/tools without treating them as source evidence.
 

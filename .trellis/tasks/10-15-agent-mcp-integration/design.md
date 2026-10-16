@@ -1,7 +1,8 @@
 # E10 technical design
 
-State: planning for final review on 2026-10-16. This is a prospective design,
-not implemented compatibility or installed-platform evidence. Scope is governed
+State: final plan approved by the owner with “开始吧” on 2026-10-16; E10 active.
+This records intended contracts, not implemented compatibility or installed-platform
+evidence. Scope is governed
 by [prd.md](./prd.md); source anchors and SDK citations live in
 [product integration research](./research/product-integration-design.md) and
 [SDK/OAuth research](./research/sdk-and-oauth-design.md).
@@ -46,10 +47,13 @@ Proposed explicit names, to become typed contracts in Stage 1:
   private payloads belong to the vault owner. No model/context/trace projection
   may contain this payload. Token-bearing URL userinfo is rejected; header
   values, environment secrets and tokens never become catalogue display text.
-- **McpConnectedGeneration**: serverId/configRevision, immutable normalized
-  manifest revision, fresh never-reused registrationId, host session and
-  optional authenticated-principal revision. Capability version identifies the
-  manifest; registrationId identifies this concrete connection/discovery owner.
+- **McpConnectedGeneration**: serverId/configRevision, opaque host-issued frozen
+  raw-catalogue revision, fresh never-reused registrationId, host session and
+  authenticated-principal revision. Studio separately computes its normalized
+  manifest digest for core capability version/snapshot identity; it is not the
+  host revision and Rust need not duplicate JS canonicalization. Both identities
+  are captured together. registrationId identifies the concrete connection/
+  discovery owner, and native authority checks its own frozen raw target map.
 - **McpRunSnapshot**: bounded secret-free generation references, exact tool
   wire-name mapping, normalized schemas, safe display text and deterministic
   groups. No secret, raw launch configuration or bearer invocation authority.
@@ -113,6 +117,11 @@ Do not assume README examples or transitive Tokio/HTTP features are sufficient.
 - Explicitly disable HTTP expired-session reinitialization/repost
   (reinit_on_expired_session(false) in the researched release). Do not wrap
   tools/call in generic retry, auth-refresh retry, reconnect or resume replay.
+  Native implementation preflight also confirmed that the SDK AuthClient HTTP
+  wrapper refreshes/reauthorizes on AuthRequired and reposts the original request.
+  Do not use that reactive wrapper for effect-bearing POSTs: obtain/refresh the
+  token before dispatch through AuthorizationManager, then bind its header to
+  this attempt. A 401 after dispatch does not authorize another tools/call.
 - Reconnection/discovery can be retried as an explicit connection operation;
   retrying an external effect requires a new user-authorized call after the
   original uncertain outcome has been handled through existing recovery policy.

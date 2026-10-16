@@ -125,5 +125,6 @@ require a third-party account, paid invocation, specific vendor or new deploymen
   curated implement.jsonl and check.jsonl.
 
 Product scope decisions are resolved. This PRD has been converged against the
-confirmed decisions; technical design and final planning review precede task
-activation. Planning/source checks do not establish packaged-host acceptance.
+confirmed decisions; the owner approved the final planning summary with “开始吧”
+on 2026-10-16. Task activation and staged implementation follow that approval.
+Planning/source checks do not establish packaged-host acceptance.

@@ -1,18 +1,19 @@
 # E10 staged implementation and validation plan
 
-Status: concrete planning for final review, 2026-10-16. No task activation,
-dependency installation or product implementation is claimed here. Product
-decisions are resolved in [prd.md](./prd.md); follow [design.md](./design.md).
+Status: final plan approved by the owner with “开始吧” on 2026-10-16; active on
+codex/agent-mcp-integration. Each stage ends with scoped checks/review and a
+commit before continuing. Product decisions are resolved in [prd.md](./prd.md);
+follow [design.md](./design.md). Unchecked steps are pending, not execution claims.
 
 ## Stage 0 — review and activate
 
-- [ ] Present the final PRD/design/stage summary and obtain the subsequent
+- [x] Present the final PRD/design/stage summary and obtain the subsequent
   implementation approval required by the project planning gate.
-- [ ] Validate curated context, load the full relevant package/spec checklists
+- [x] Validate curated context, load the full relevant package/spec checklists
   (including native/quality tails beyond injection caps), and record approval.
-- [ ] Activate this child. Use a codex/agent-mcp-integration branch from the actual
+- [x] Activate this child. Use a codex/agent-mcp-integration branch from the actual
   current source checkpoints; do not reset to main and lose E08/E09 work.
-- [ ] Preserve parent-owned deferred acceptance and E08's pending installed checks.
+- [x] Preserve parent-owned deferred acceptance and E08's pending installed checks.
 
 ## Stage 1 — contracts and bounded SDK compatibility spike
 
@@ -20,33 +21,35 @@ Ownership: Agent MCP contracts/strict device catalogue, finite platform port,
 test fixture harness and affected native dependency/adapter skeleton. Shared
 quality/discovery entries move with their actual source owners.
 
-- [ ] Add typed connection/configuration revisions, safe catalogue projections,
+- [x] Add typed connection/configuration revisions, safe catalogue projections,
   original operation receipts and strict ProductStore CAS/readback. Model native
   vault candidate publication/unknown reconciliation separately from store commit.
-- [ ] Define frozen manifest/run snapshots, exact namespaces, deterministic
+- [x] Define frozen manifest/run snapshots, exact namespaces, deterministic
   subgroup composition and current-generation authority. Bound discovery,
   schema compilation, arguments, framing and result payloads before allocation.
-- [ ] Pin rmcp =3.5.1 client-only features and actual target keyring providers
+- [x] Pin rmcp =3.5.1 client-only features and actual target keyring providers
   from research; verify dependency/toolchain resolution without reinstalling
   unrelated JS dependencies or building the app installer.
-- [ ] Build real stdio and Streamable HTTP fixture connections for verified
+- [x] Build real stdio and Streamable HTTP fixture connections for verified
   discover/initialize lifecycles. Prove expired-session repost is disabled,
   missing replies invoke an effect only once, and pre-parse IO caps terminate
   oversized stdio/JSON/SSE/OAuth messages.
-- [ ] Prove the vault revision/chunk adapter's ordering, limits, failure/readback,
+- [x] Prove the vault revision/chunk adapter's ordering, limits, failure/readback,
   refresh serialization and owned cleanup through its deterministic port. Exercise
   actual available-host secure storage separately where feasible, never label
   mocks as Keychain/Windows proof.
-- [ ] Establish process-group/Job Object ownership seams and stop a real available-
+- [x] Establish process-group/Job Object ownership seams and stop a real available-
   host fixture child/ordinary descendant. Keep unexecuted OS behavior pending.
-- [ ] If an SDK seam cannot meet the reviewed bounds, correct the adapter/design
+- [x] If an SDK seam cannot meet the reviewed bounds, correct the adapter/design
   within this scope before proceeding; return for review only if the product
   transport/auth/platform commitments would change.
-- [ ] Run necessary source/native checks and independent review; fix and commit.
+- [x] Run necessary source/native checks and independent review; fix and commit.
 
 Outcome: executable proof of critical SDK defaults and bounded adapters, typed
 contracts and strict configuration owner. No management UI claims real connection
 until the host is installed.
+
+Stage 1 source evidence: [reviewed results](./research/stage-1-results.md).
 
 ## Stage 2 — native desktop connection, OAuth and cleanup
 
@@ -66,7 +69,9 @@ native port installation and vault/OAuth owner. Do not widen media authority.
   timeout/cancel and missing registration. Cover preregistered public clients and
   advertised DCR; use CIMD only with an actual supported metadata fixture.
 - [ ] Serialize refresh and fence stale callbacks; expiry never replays a sent
-  tool. Retire dispatch authority before edit/disconnect/remove; record truthful
+  tool. Do not wrap effect POSTs in SDK AuthClient's reactive AuthRequired
+  refresh/repost; acquire the token before the one original dispatch.
+  Retire dispatch authority before edit/disconnect/remove; record truthful
   not-started/known/unknown outcomes and actual process drainage.
 - [ ] Run relevant native/transport/port checks and independent review; fix and commit.
 

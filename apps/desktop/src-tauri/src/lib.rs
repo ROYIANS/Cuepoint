@@ -1,3 +1,5 @@
+#[cfg(any(feature = "desktop", test))]
+pub(crate) mod mcp;
 mod backup;
 #[cfg(feature = "desktop")]
 mod bundled_origin;

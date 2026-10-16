@@ -3,7 +3,7 @@
   "name": "agent-mcp-integration",
   "title": "E10 · MCP 外部工具与资源接入",
   "description": "Connect explicitly selected external tool servers through the same approval, lifecycle and result pipeline.",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "studio",
@@ -12,7 +12,7 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": null,
+  "branch": "codex/agent-mcp-integration",
   "base_branch": "main",
   "worktree_path": null,
   "commit": null,
@@ -25,19 +25,20 @@
     "design.md",
     "implement.md",
     "implement.jsonl",
-    "check.jsonl"
+    "check.jsonl",
+    "research/stage-1-results.md"
   ],
-  "notes": "Desktop macOS/Windows priority, both transports, OAuth/manual/no-auth and practical Web reuse are confirmed. Concrete PRD/design/four-stage plan and curated context are ready for final planning review; no product implementation or activation yet. Standing necessary-check/stage-commit cadence applies.",
+  "notes": "Owner explicitly approved the final four-stage desktop-first plan with 开始吧 on 2026-10-16. E10 is active; execute necessary scoped checks and review/commit each stage, then continue. Full build/packaging/installed macOS+Windows remain epic-end gates.",
   "meta": {
     "epicCode": "E10",
-    "deliveryState": "ready-for-final-planning-review",
-    "implementationApproved": false,
+    "deliveryState": "stage-2-in-progress",
+    "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Product scope resolved; converged PRD, concrete design, four-stage implementation/validation plan and 22-entry manifests prepared. Research-only consistency review findings incorporated; SDK source inspection is not execution evidence.",
+    "readiness": "Approved four-stage plan; 23-entry implement/check manifests. Stage 1 source/native adapter review passed; installed/full gates remain pending.",
     "investigationDate": "2026-10-16",
     "researchArtifacts": [
       "research/scope-and-host-options.md",
@@ -63,7 +64,7 @@
     "authenticationScopeConfirmedAt": "2026-10-16",
     "platformPriority": "desktop macOS/Windows required; Web remote/OAuth where practical without proxy/backend or desktop delivery delay; stdio desktop-only",
     "platformPriorityConfirmedAt": "2026-10-16",
-    "nextAction": "Present final planning summary; subsequent explicit approval activates E10 Stage 1 under the local planning gate. Do not re-ask resolved transport/auth/platform scope.",
+    "nextAction": "Stage 1 reviewed and committed in this checkpoint; implement native connection/OAuth/cleanup plus finite Studio native port, then scoped review and commit.",
     "planningArtifactsCompletedAt": "2026-10-16",
     "plannedStages": [
       "contracts and bounded SDK spike",
@@ -74,7 +75,23 @@
     "sdkCandidates": {
       "desktop": "rmcp =3.5.1",
       "web": "@modelcontextprotocol/client 2.3.1 (opportunistic)",
-      "evidence": "published source/API inspection only; not installed or compiled"
+      "evidence": "Desktop rmcp pinned and compiled; current/compatible real fixture lifecycles executed in Stage 1. Browser candidate still source/API inspection only."
+    },
+    "implementationApprovedAt": "2026-10-16",
+    "approvalEvidence": "User: 开始吧 after final planning summary at 557c73db",
+    "activeStage": 2,
+    "stage1": {
+      "state": "source-reviewed",
+      "result": "research/stage-1-results.md",
+      "studioTests": 17,
+      "nativePassed": 14,
+      "nativeIgnored": 1,
+      "deferred": [
+        "actual Keychain authorization",
+        "Windows vault and Job Object execution",
+        "production IPC/OAuth/Agent/UI in subsequent stages",
+        "epic full/emitted/packed/installed acceptance"
+      ]
     }
   }
 }

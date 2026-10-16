@@ -60,7 +60,7 @@
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E10 desktop-first scope is resolved and concrete PRD/design/four-stage plan/context are ready for final review. Await subsequent implementation approval, then begin bounded SDK/contract Stage 1. Web remote/OAuth remains opportunistic without proxy/backend or desktop blocker. Preserve E08 and archived E09 separate epic-end acceptance.",
+    "nextAction": "E10 Stage 1 contracts/SDK spike independently reviewed; Stage 2 native connection/OAuth/cleanup follows its checkpoint. Desktop macOS+Windows required, practical Web optional; preserve E08/E09 epic-end acceptance.",
     "carriedAcceptance": {
       "E09": {
         "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",

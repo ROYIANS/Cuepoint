@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.studio-agent-source.json",
+  "include": [
+    "../../packages/studio/src/**/*.ts",
+    "../../packages/studio/src/**/*.tsx",
+    "../../packages/agent-core/src/**/*.ts",
+    "../../packages/agent-providers/src/**/*.ts",
+    "../mcpCatalogue.test.ts",
+    "../mcpManifest.test.ts",
+    "../mcp*.test.tsx"
+  ]
+}

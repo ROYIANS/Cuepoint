@@ -37,7 +37,8 @@
           "tests/typecheck/tsconfig.agent-source.json",
           "tests/typecheck/tsconfig.studio-agent-source.json",
           "tests/typecheck/tsconfig.desktop-media-source.json",
-          "tests/typecheck/tsconfig.installable-skills-source.json"
+          "tests/typecheck/tsconfig.installable-skills-source.json",
+          "tests/typecheck/tsconfig.mcp-source.json"
         ]
       },
       "vitest": {
@@ -45,7 +46,8 @@
           "vitest.agent-source.config.ts",
           "vitest.studio-source.config.ts",
           "vitest.desktop-media-source.config.ts",
-          "vitest.installable-skills-source.config.ts"
+          "vitest.installable-skills-source.config.ts",
+          "vitest.mcp-source.config.ts"
         ]
       },
       "paths": {

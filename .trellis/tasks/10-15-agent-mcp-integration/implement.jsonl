@@ -1,22 +1,23 @@
-{"file":".trellis/spec/studio/frontend/index.md","reason":"Shared Studio ownership and required layer checklists; one product UI for desktop and Web."}
-{"file":".trellis/spec/desktop/runtime/index.md","reason":"Native host/handler/OS evidence closure; distinguish source, target compilation and installed acceptance."}
-{"file":".trellis/spec/web/frontend/index.md","reason":"Optional browser adapter/callback stays in shared Studio with valid SPA delivery and browser export closure."}
-{"file":".trellis/spec/frontend/monorepo-boundaries.md","reason":"Use declared public core/provider entries; maintain emitted freshness and avoid a Node-only browser graph."}
-{"file":".trellis/spec/frontend/feature-organization.md","reason":"Agent owns MCP vertical modules; Settings uses a named integration and platform owns finite mechanisms."}
-{"file":".trellis/spec/frontend/shared-product-storage.md","reason":"Single ProductStore, explicit transactions, strict CAS receipts and unknown-result reconciliation."}
-{"file":".trellis/spec/frontend/native-product-runtime.md","reason":"Trusted finite native services, current store/session/generation and final effect checks; read omitted tail."}
-{"file":".trellis/spec/agent-core/library/runtime.md","reason":"One actual execution loop with exact offers, approval, unknown effects and host-owned services."}
-{"file":".trellis/spec/agent-core/library/capabilities.md","reason":"Immutable binding/registration identity and typed concrete resource authority; never retarget approvals."}
-{"file":".trellis/spec/agent-providers/library/protocols.md","reason":"Use core-supplied frozen definitions without corrupting model continuation, bounded IO or secret ownership."}
-{"file":".trellis/spec/frontend/agent-tools.md","reason":"Existing ask/assist/full approval, exact arguments/binding and no automatic external-effect replay."}
-{"file":".trellis/spec/frontend/agent-library-tools.md","reason":"Progressive discovery, actual foundation count, two-group/36-tool limits and pending pins."}
-{"file":".trellis/spec/frontend/agent-jobs-results.md","reason":"Extend original E07 publication/readback/clear owners; report retention must not settle an unknown MCP effect."}
-{"file":".trellis/spec/frontend/interaction-feedback.md","reason":"Quiet success/preparation, retained user intent and actionable actual errors at their owning surface."}
-{"file":".trellis/spec/frontend/agent-business-details.md","reason":"Retained ContextPanel and guarded wide/narrow detail behavior keep chat mounted and running."}
-{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Register source/TSX/native/discovery scope and use necessary checks; read omitted tail and retain epic-end gates."}
-{"file":".trellis/spec/guides/development-change-policy.md","reason":"Fresh fixtures without unrequested migrations/backfills; preserve current source behavior."}
-{"file":".trellis/tasks/10-15-agent-mcp-integration/research/scope-and-host-options.md","reason":"Confirmed two-transport scope and source/reference constraints; SDK adoption is separate from Cordis."}
-{"file":".trellis/tasks/10-15-agent-mcp-integration/research/oauth-host-and-browser-boundary.md","reason":"Desktop priority and practical browser/CORS boundary; opener is not callback or secret persistence."}
-{"file":".trellis/tasks/10-15-agent-mcp-integration/research/sdk-and-oauth-design.md","reason":"Published SDK APIs, disabled expired-session repost, bounded framing, native vault limits and platform spike risks."}
-{"file":".trellis/tasks/10-15-agent-mcp-integration/research/product-integration-design.md","reason":"Exact source seams: static registry, ignored frozen offers, binding fingerprints and E07 unknown-publication defect."}
-{"file":".trellis/tasks/10-15-agent-mcp-integration/research/planning-review.md","reason":"Unknown evidence must raise typed unresolved rather than complete the core call; verified late replies settle only surviving original owners."}
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Shared Studio ownership and required layer checklists; one product UI for desktop and Web."}
+{"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Native host/handler/OS evidence closure; distinguish source, target compilation and installed acceptance."}
+{"file": ".trellis/spec/web/frontend/index.md", "reason": "Optional browser adapter/callback stays in shared Studio with valid SPA delivery and browser export closure."}
+{"file": ".trellis/spec/frontend/monorepo-boundaries.md", "reason": "Use declared public core/provider entries; maintain emitted freshness and avoid a Node-only browser graph."}
+{"file": ".trellis/spec/frontend/feature-organization.md", "reason": "Agent owns MCP vertical modules; Settings uses a named integration and platform owns finite mechanisms."}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Single ProductStore, explicit transactions, strict CAS receipts and unknown-result reconciliation."}
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Trusted finite native services, current store/session/generation and final effect checks; read omitted tail."}
+{"file": ".trellis/spec/agent-core/library/runtime.md", "reason": "One actual execution loop with exact offers, approval, unknown effects and host-owned services."}
+{"file": ".trellis/spec/agent-core/library/capabilities.md", "reason": "Immutable binding/registration identity and typed concrete resource authority; never retarget approvals."}
+{"file": ".trellis/spec/agent-providers/library/protocols.md", "reason": "Use core-supplied frozen definitions without corrupting model continuation, bounded IO or secret ownership."}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Existing ask/assist/full approval, exact arguments/binding and no automatic external-effect replay."}
+{"file": ".trellis/spec/frontend/agent-library-tools.md", "reason": "Progressive discovery, actual foundation count, two-group/36-tool limits and pending pins."}
+{"file": ".trellis/spec/frontend/agent-jobs-results.md", "reason": "Extend original E07 publication/readback/clear owners; report retention must not settle an unknown MCP effect."}
+{"file": ".trellis/spec/frontend/agent-mcp.md", "reason": "Stage 1 executable catalogue/manifest/host/SDK/vault contracts and explicit stage/actual-host evidence limits."}
+{"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Quiet success/preparation, retained user intent and actionable actual errors at their owning surface."}
+{"file": ".trellis/spec/frontend/agent-business-details.md", "reason": "Retained ContextPanel and guarded wide/narrow detail behavior keep chat mounted and running."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Register source/TSX/native/discovery scope and use necessary checks; read omitted tail and retain epic-end gates."}
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Fresh fixtures without unrequested migrations/backfills; preserve current source behavior."}
+{"file": ".trellis/tasks/10-15-agent-mcp-integration/research/scope-and-host-options.md", "reason": "Confirmed two-transport scope and source/reference constraints; SDK adoption is separate from Cordis."}
+{"file": ".trellis/tasks/10-15-agent-mcp-integration/research/oauth-host-and-browser-boundary.md", "reason": "Desktop priority and practical browser/CORS boundary; opener is not callback or secret persistence."}
+{"file": ".trellis/tasks/10-15-agent-mcp-integration/research/sdk-and-oauth-design.md", "reason": "Published SDK APIs, disabled expired-session repost, bounded framing, native vault limits and platform spike risks."}
+{"file": ".trellis/tasks/10-15-agent-mcp-integration/research/product-integration-design.md", "reason": "Exact source seams: static registry, ignored frozen offers, binding fingerprints and E07 unknown-publication defect."}
+{"file": ".trellis/tasks/10-15-agent-mcp-integration/research/planning-review.md", "reason": "Unknown evidence must raise typed unresolved rather than complete the core call; verified late replies settle only surviving original owners."}

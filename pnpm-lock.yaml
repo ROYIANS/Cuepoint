@@ -168,6 +168,9 @@ importers:
       vite: *a5
   packages/studio:
     dependencies:
+      "@cfworker/json-schema":
+        specifier: 4.1.1
+        version: 4.1.1
       '@cuepoint/agent-providers':
         specifier: workspace:*
         version: link:../agent-providers
@@ -302,6 +305,8 @@ importers:
       typescript: *a4
       vite: *a5
 packages:
+  "@cfworker/json-schema@4.1.1":
+    resolution: {integrity: sha512-gAmrUZSGtKc3AiBL71iNWxDsyUC5uMaKKGdvzYsBoTW/xi42JQHl7eKV2OYzCUqvc+D2RCcf7EXY2iCyFIk6og==}
   "@ant-design/colors@8.0.1":
     resolution:
       integrity: sha512-foPVl0+SWIslGUtD/xBr1p9U4AKzPhNYEseXYRRo5QSzGACYZrQbe11AYJbYfAWnWSpGBx6JjBmSeugUsD9vqQ==
@@ -5404,6 +5409,7 @@ packages:
     resolution:
       integrity: sha512-IeiWvvEXfW5ltKVMkxq6FvNf2LojMKvB2OCeja6+ct24S1XOmQw2dGr2JyndwACWAGJva9B7yPHwAmeA9QCqAQ==
 snapshots:
+  "@cfworker/json-schema@4.1.1": {}
   "@ant-design/colors@8.0.1":
     dependencies:
       "@ant-design/fast-color": 3.0.1

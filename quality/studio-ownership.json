@@ -6174,6 +6174,110 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/commands/catalogue.ts",
+      "file": "packages/studio/src/features/agent/mcp/commands/catalogue.ts",
+      "target": "packages/studio/src/features/agent/mcp/commands/catalogue.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/models/connection.ts",
+      "file": "packages/studio/src/features/agent/mcp/models/connection.ts",
+      "target": "packages/studio/src/features/agent/mcp/models/connection.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/models/manifest.ts",
+      "file": "packages/studio/src/features/agent/mcp/models/manifest.ts",
+      "target": "packages/studio/src/features/agent/mcp/models/manifest.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/queries/catalogue.ts",
+      "file": "packages/studio/src/features/agent/mcp/queries/catalogue.ts",
+      "target": "packages/studio/src/features/agent/mcp/queries/catalogue.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/limits.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/limits.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/limits.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/manifest.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/manifest.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/manifest.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/privateRevisions.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/privateRevisions.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/privateRevisions.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/records.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/records.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/records.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/schema.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/schema.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/schema.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/snapshot.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/snapshot.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/snapshot.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/validation.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/validation.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/validation.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/mcp.ts",
+      "file": "packages/studio/src/platform/runtime/mcp.ts",
+      "target": "packages/studio/src/platform/runtime/mcp.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/mutation.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/mutation.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/mutation.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [
