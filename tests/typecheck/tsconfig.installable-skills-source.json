@@ -8,7 +8,10 @@
     "../installableSkills.test.ts",
     "../skillImportTransport.test.ts",
     "../browserSkillImport.test.ts",
-    "../installedSkillsUi.test.tsx"
+    "../installedSkillsUi.test.tsx",
+    "../installedSkillRuns.test.ts",
+    "../installedSkillTools.test.ts",
+    "../installedSkillProtocols.test.ts"
   ],
   "files": [
     "../../packages/agent-core/src/skills.test.ts"

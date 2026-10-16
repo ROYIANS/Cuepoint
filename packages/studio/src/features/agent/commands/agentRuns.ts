@@ -1,5 +1,6 @@
 import type {ProductStore} from "../../../platform/storage/types";
-import {createToolLoading, DISCOVERY_TOOL_NAME, toolLoadingInstructions} from "../runtime/toolLoading";
+import {composeRunSkills} from "../runtime/runSkills";
+import {retainInstalledSkills} from "../skills/commands/retention";
 import {settleRun} from "./agentRunTerminalState";
 import {runBlocksThread} from "../models/agentToolSelection";
 import type {ReferenceAttachment} from "../../references/models/references";
@@ -7,7 +8,6 @@ import {referenceSelectionCharacterBudget, selectReferenceContext} from "../../r
 import {initModelCatalog, snapshotModelPricing} from "../../settings/modelCatalog/store";
 import {requireVision, resolveVisionCapability} from "../../settings/models/visionCapability";
 import {getMemorySelection} from "../../memory/queries/memoryRetrieval";
-import {filterProjectMemoryTools} from "../../memory/agent/memoryToolNames";
 import {interruptedToolState, recoverBatchPreparationCalls, upgradeLegacyPlanCalls} from "./agentToolRecovery";
 import {createAgentTaskForThread} from "./agentTasks";
 import {getTaskContext} from "../runtime/taskContext";
@@ -28,7 +28,6 @@ import {getGeneralAgentConfig} from "./agentSettings";
 import {normalizeContextPolicy, resolveContextCapacity} from "../runtime/contextPolicy";
 import {buildContextMessages, findApplicableSummary, selectContextHistory} from "../runtime/contextPlanner";
 import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
-import {assembleSkills} from "../runtime/skills";
 import {assertReasoningEffort, selectAgentProtocol} from "../../settings/models/reasoningPolicy";
 import {deriveChatTitle} from "../models/chatTitle";
 import {assertChatAdmissionIdentity, normalizeSubmittedChatContent} from "../models/chatSubmission";
@@ -128,12 +127,16 @@ export async function beginAgentRun(input: {
         const taskMode = previous ? previous.taskMode === true : thread.taskMode === true;
         const taskContext = await getTaskContext(thread.id, agent.instructions, taskMode, interactionMode, thread.projectId, db);
         const instructions = taskContext.instructions;
-        const skills = assembleSkills(agent.enabledSkillIds ?? []);
-        const selectedToolNames = interactionMode === "conversation" ? [] : (previous ? previous.enabledToolNames ?? [] : [...new Set([...skills.enabledToolNames, ...taskContext.taskToolNames])]);
-        const allowedToolNames = filterProjectMemoryTools(selectedToolNames, thread.projectId, interactionMode);
-        const toolLoading = previous ? previous.toolLoading : interactionMode === "conversation" ? undefined : createToolLoading(agent.enabledSkillIds ?? [], allowedToolNames, taskContext.projectKind);
-        const enabledToolNames = toolLoading ? [...new Set([...allowedToolNames, DISCOVERY_TOOL_NAME])] : allowedToolNames;
-        const skillInstructions = interactionMode === "conversation" ? "" : (previous ? previous.skillInstructions ?? "" : toolLoading ? toolLoadingInstructions(toolLoading) : skills.skillInstructions);
+        // A retry with no installed snapshot stays legacy; it never discovers today's catalogue.
+        const installedSkills = interactionMode === "conversation" || (previous && previous.installedSkills === undefined)
+            ? undefined : await retainInstalledSkills(db, previous?.installedSkills);
+        const surface = previous ? {
+            enabledToolNames: interactionMode === "conversation" ? [] : previous.enabledToolNames ?? [],
+            toolLoading: interactionMode === "conversation" ? undefined : previous.toolLoading,
+            skillInstructions: interactionMode === "conversation" ? "" : previous.skillInstructions ?? "",
+        } : composeRunSkills({enabledSkillIds: agent.enabledSkillIds ?? [], taskToolNames: taskContext.taskToolNames,
+            projectId: thread.projectId, projectKind: taskContext.projectKind, interactionMode, installedSkills});
+        const {enabledToolNames, toolLoading, skillInstructions} = surface;
         const policy = normalizeContextPolicy(thread.contextPolicy);
         const selectedHistory = selectContextHistory(history, policy);
         const summary = policy.autoCompress ? findApplicableSummary(selectedHistory, await db.contextCompactions.where("threadId").equals(thread.id).toArray()) : undefined;
@@ -189,6 +192,7 @@ export async function beginAgentRun(input: {
             interactionMode,
             taskMode,
             enabledToolNames,
+            ...(installedSkills ? {installedSkills} : {}),
             toolLoading,
             skillInstructions,
             status: "running",

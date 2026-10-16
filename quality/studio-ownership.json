@@ -6150,6 +6150,30 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/runtime/runSkills.ts",
+      "file": "packages/studio/src/features/agent/runtime/runSkills.ts",
+      "target": "packages/studio/src/features/agent/runtime/runSkills.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/skills/runtime/disclosure.ts",
+      "file": "packages/studio/src/features/agent/skills/runtime/disclosure.ts",
+      "target": "packages/studio/src/features/agent/skills/runtime/disclosure.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/skills/runtime/tools.ts",
+      "file": "packages/studio/src/features/agent/skills/runtime/tools.ts",
+      "target": "packages/studio/src/features/agent/skills/runtime/tools.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

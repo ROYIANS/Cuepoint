@@ -301,3 +301,140 @@ or metadata from an earlier selection populates the current review.
 Correct: native owns one real busy chooser, validates its session and returns
 captured text. UI compares an owned selection ticket after every await, presents
 that immutable candidate and publishes only through the receipt-aware command.
+
+## Frozen runs and progressive tool reads
+
+### 1. Scope / Trigger
+
+Read before changing new-run admission/retry, installed skill tool definitions,
+capability refresh, context preview/compaction or actual recorded-run deletion.
+The installed catalogue supplies guidance independently of builtin tool policy.
+All bodies and references remain attributed tool-result data.
+
+### 2. Signatures
+
+- `AgentRun.installedSkills?: InstalledSkillsSnapshot` is separate from builtin
+  IDs and executable capability bindings. The version-1 snapshot contains only
+  exact installation IDs, content revisions and validated descriptive metadata.
+- `runtime/runSkills.ts` owns `composeRunSkills({enabledSkillIds,taskToolNames,
+  projectId?,projectKind?,interactionMode,installedSkills?}): RunSkillSurface`.
+  Its result contains `enabledToolNames`, `toolLoading` and `skillInstructions`.
+  New admission and next-send context preview use this same assembly.
+- `skills/runtime/disclosure.ts` owns `INSTALLED_SKILL_TOOL_NAMES` and
+  `installedSkillInstructions(snapshot?): string`. It formats only the bounded
+  neutral catalogue and fixed host policy. Empty entries produce no layer.
+- `skills/runtime/tools.ts` owns the two code-defined read tools, registered
+  once through the actual central registry: `load_skill({skillId})` and
+  `read_skill_resource({skillId,path,offset?,limit?})`. Both use strict schemas,
+  `effect: 'read'`, `atomic: true`, and the existing `executeAtomicTool` owner.
+
+### 3. Contracts
+
+New smart admission calls `retainInstalledSkills` inside the same read/write
+transaction that creates the messages and run. It reads catalogue/retention
+metadata without hydrating body/resource records and increments each distinct
+revision once. A new empty snapshot can remain empty for that run. A failed or
+duplicate admission rolls back the pins along with the run/message writes.
+Retry inherits only the prior snapshot and adds its new run references; legacy
+retry without the field stays absent. Resume does not retain again. Conversation
+mode neither reads the live installed catalogue nor gains these tools or pins.
+
+The shared surface adds fixed read names before `createToolLoading` calculates
+its foundation and preload budget. They count within the existing 36-definition
+and two-business-group limits. No group, builtin opt-out, paid confirmation,
+native grant or MCP capability is enabled by metadata, `allowed-tools`, a body
+or a resource. A nonempty catalogue is accompanied by its actual read tools.
+
+Tool execution uses current run/thread/project/call ownership and the frozen
+per-step offer. Resolve `skillId` only through that run's validated snapshot;
+the model cannot select a replacement revision or current same-name install.
+Revalidate the recorded parsed arguments and read/atomic metadata inside the
+actual ledger transaction. Missing or corrupt content fails explicitly.
+
+`load_skill` reads the selected immutable manifest/body rows only and returns
+`{version,skillId,revision,name,body,resources:[{path,byteLength}],notice}`. The
+resource tool requires an earlier completed successful `load_skill` in the same
+run/thread with matching arguments and attributed result identity. A same-step
+earlier `order` is valid; later, failed, rejected, unknown or foreign calls are
+not proof. Validate the path and manifest member before reading one resource
+row. Return `{version,skillId,revision,path,text,offset,nextOffset,end}` using
+the shared Unicode-scalar pagination. No original directory or URL is opened.
+
+The complete serialized result still obeys the existing 65,536-character tool
+limit. A valid raw package does not guarantee its escaped load result fits this
+independent bound. Oversized body/manifest output must fail with an actionable
+shorten-and-manually-update message; it cannot become a successful prior load.
+Do not truncate content, raise the generic limit or substitute a different
+revision. Shared context budgeting can separately refuse an oversized protected
+tool chain before the next model request.
+
+Context preview includes `deviceSettings` in its explicit coherent readonly
+table list. New preview reads only catalogue metadata, freezes no pin, and uses
+the actual input/thread interaction mode plus the shared run surface. Saved-run
+preview uses the stored optional fields and never acquires today's installations.
+ContextUsagePanel passes those exact definitions/instructions to the existing
+budget/usage helpers; no independent token formula is added.
+
+Builtin-group refresh reassembles its current builtin layer plus the same
+frozen installed catalogue once. Requested bodies stay in original tool results.
+Refresh and compaction replace only verified base prefixes, preserving the exact
+live Chat tool chain and Responses calls/results/encrypted reasoning suffix.
+
+`deleteChatThread` is the actual run-deletion owner. Read the deleted runs and
+release their snapshots inside its existing aggregate transaction, including
+`deviceSettings`; collect a revision only at zero current and run references.
+Failed/interrupted/cancelled/completed records retain pins until deletion.
+Project deletion currently keeps chats/runs, so it keeps their pins. Stop, late
+reads and deletion cannot write a completed tool result into removed records.
+
+### 4. Validation & Error Matrix
+
+| Condition | Required result |
+| --- | --- |
+| Catalogue changes while request or approval waits | Existing snapshot and original business-tool identity stay fixed |
+| Disabled/uninstalled skill on a new send | Absent from new catalogue; existing pinned runs can still read their version |
+| Same name reinstalled | Fresh installation ID; cannot revive old membership |
+| Legacy retry or conversation-only run | No live skill discovery or new helper surface |
+| Unknown/foreign skill, revision override, unsafe/unlisted path | Reject before the corresponding content row read |
+| Resource requested before ordered successful load | Reject with no resource read |
+| Missing row, digest/count corruption or output budget exceeded | Explicit failure; no current-version substitution or successful load proof |
+| Duplicate admission or late deletion fault | Same transaction rolls back pins and all aggregate writes |
+| Stop/delete while a selected read is pending | Abort/rollback; no late completed ledger or thread resurrection |
+| Group refresh or history compaction | One metadata layer; exact live tool/protocol suffix retained |
+
+### 5. Good / Base / Bad Cases
+
+Good: a run sees a `media-intake` catalogue entry, later loads that exact body,
+then reads one reference page. Manual update/uninstall during a model request
+does not affect those captured bytes. Base: no enabled installed entries adds
+no helper definitions or instructions. Bad: reading every resource during
+discovery, appending a body to trusted system text, or interpreting guidance as
+permission to access local files or submit a paid generation.
+
+### 6. Tests Required
+
+Use real admission/lifecycle commands and ProductStore transactions for snapshot
+counts, retry/resume, legacy/conversation, failed/duplicate admission, update/
+uninstall races, reopen, deletion rollback and project-retained runs. Storage
+spies must intercept transaction-bound handles and assert physical catalogue,
+body and selected-resource row reads. Exercise the actual offered registry,
+ledger and runtime with both protocol requests; preserve existing group bounds,
+permission/approval checks, opaque suffixes and context-compaction assertions.
+
+The finite E09 source lane includes `installedSkillRuns.test.ts`,
+`installedSkillTools.test.ts`, `installedSkillProtocols.test.ts` and affected
+run/tool-loading/context baselines. It maps only declared public package roots
+to source. Source noEmit includes all production sources and the new E09 tests;
+older baseline fixtures run through Vitest, separately from this type profile.
+Actual installed native flow and emitted/packed consumers stay at the deferred
+epic gate. `examples/skills/media-intake` is a portable text example, never an
+automatic installation or additional permission grant.
+
+### 7. Wrong vs Correct
+
+Wrong: admission stores only a skill name, a resource tool looks up today's
+installation, or a retry increments references outside the run transaction.
+
+Correct: admission retains exact immutable descriptors in its transaction;
+ordered read tools resolve only that snapshot, and the actual aggregate deletion
+owner releases its references atomically with deleting the owning runs.

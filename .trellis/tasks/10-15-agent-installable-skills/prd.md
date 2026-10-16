@@ -142,7 +142,7 @@ Each implementation stage receives scoped review, necessary affected checks and 
 commit. Full regression, emitted/packed consumer, production build, packaging and
 actual native/installed macOS+Windows acceptance remain at the owner's epic-end
 batch boundary. Source fixtures do not establish actual picker/webview/platform
-behavior. Stages 1 and 2 have passed their necessary source checks and independent review; detailed evidence lives in `research/stage-1-review.md` and `research/stage-2-review.md`. Runtime and actual-host acceptance remain pending. No paid/live model calls are required.
+behavior. All three implementation stages are source-complete and have passed their necessary affected checks and independent review; evidence lives in `research/stage-1-review.md`, `research/stage-2-review.md` and `research/stage-3-review.md`. The acceptance checkboxes above remain for final batch confirmation, including the actual installed UI/native platforms. Source evidence does not establish those host flows. No paid/live model calls are required.
 
 ## Supporting artifacts
 
@@ -153,3 +153,15 @@ behavior. Stages 1 and 2 have passed their necessary source checks and independe
   [reference comparison](./research/reference-skills.md),
   [format/interaction](./research/format-and-interaction.md).
 - [Original capability comparison](../10-15-desktop-agent-capability-research/research/capability-comparison.md).
+
+## Source acceptance coverage — 2026-10-16
+
+| Criterion | Source evidence; final acceptance remains above |
+| --- | --- |
+| AC1 | Both protocols through actual runtime; metadata-only first request, selected immutable body/resource reads, group refresh and actual compaction preserve exact tool/opaque suffixes. |
+| AC2 | Real update/disable/uninstall/reinstall plus frozen retry/resume and reopened-store version tests; fresh installation identity cannot replace a saved one. |
+| AC3 | Strict unsafe/unlisted paths and actual model attempts to load a disabled native group/call native, paid or invented tools are denied without effects. Approval waits preserve original business calls. |
+| AC4 | Strict format/UTF-8/path/quota, real native capture and changed-source helper tests, atomic late-fault rollback and unknown readback. Actual system picker/Windows execution remains pending. |
+| AC5 | Actual admission/version pin transaction, independent concurrent update, duplicate/uncertain admission, thread deletion rollback/collection and project-retained pins. Preview uses the shared surface. |
+| AC6 | Held ReactDOM management/quick switches, guarded replacement, wide/narrow same-node retention/focus and known/unknown persistence tests. Actual installed interaction remains pending. |
+| AC7 | Neutral public-root independent in-memory host fixture passes without Studio; emitted/packed consumer remains deferred. |

@@ -60,6 +60,6 @@
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E09 concrete scope approved 2026-10-16; execute staged portable skill owner, finite local import/management and run-snapshot integration with necessary checks/review and commits. E08 actual Windows/installed and epic full batch acceptance remain pending."
+    "nextAction": "E09 three source stages complete and independently reviewed; preserve pending epic full/emitted/packed and actual installed macOS+Windows acceptance (including E08). Next development candidate is E10 MCP integration, which still needs its concrete scope/design review before activation."
   }
 }

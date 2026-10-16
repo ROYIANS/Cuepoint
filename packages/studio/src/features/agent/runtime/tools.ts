@@ -9,6 +9,7 @@ import {AUDIO_BATCH_TOOLS} from "../../audio/agent/audioBatchTools";
 import {AUDIO_ARRANGEMENT_TOOLS} from "../../audio/agent/audioArrangementTools";
 import {MATERIAL_TOOLS} from "../../library/agent/materialTools";
 import {DISCOVERY_TOOLS} from "./toolLoading";
+import {INSTALLED_SKILL_TOOLS} from "../skills/runtime/tools";
 import {WEB_TOOLS} from "../../references/agent/webTools";
 import {REFERENCE_TOOLS} from "../../references/agent/referenceTools";
 import {MEMORY_TOOLS} from "../../memory/agent/memoryTools";
@@ -122,6 +123,7 @@ const definitions = [
     ...AUDIO_ARRANGEMENT_TOOLS,
     ...MATERIAL_TOOLS,
     ...DISCOVERY_TOOLS,
+    ...INSTALLED_SKILL_TOOLS,
     ...TASK_TOOLS,
     ...BUSINESS_TOOLS,
     ...GENERATION_TOOLS,

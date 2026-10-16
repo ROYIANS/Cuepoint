@@ -9,13 +9,15 @@ import type {AgentRun, AgentToolCall, AgentToolLoading} from "../models/agent";
 import {toResponseInput} from "../providers/responsesStream";
 import {AGENT_SKILLS, SMART_EXECUTION_INSTRUCTIONS} from "./skills";
 import type {ProjectKind} from "../../projects/models/project";
+import {INSTALLED_SKILL_TOOL_NAMES, installedSkillInstructions} from "../skills/runtime/disclosure";
 
 export {
     DISCOVERY_TOOL_NAME, MAX_LOADED_TOOLS, getOfferedToolNames, toolNamesForCall
 } from "../models/agentToolSelection";
 
 const settled = (call: AgentToolCall) => ["completed", "failed", "rejected"].includes(call.status);
-const foundation = (name: string) => name === "workspace_overview" || name === "update_run_plan" || name.startsWith("task_");
+const foundation = (name: string) => name === "workspace_overview" || name === "update_run_plan" || name.startsWith("task_")
+    || INSTALLED_SKILL_TOOL_NAMES.some(installed => installed === name);
 
 /** Freeze descriptions, instructions and permission-filtered names at run creation. */
 export function createToolLoading(skillIds: readonly string[], allowedNames: readonly string[], projectKind?: ProjectKind): AgentToolLoading | undefined {
@@ -105,7 +107,7 @@ export async function refreshRunToolLoading(runId: string, store?: ProductStore)
         if (!run.toolLoading && !run.createdProjectBinding) return run;
         if ((await db.agentToolCalls.where("runId").equals(runId).toArray()).some((call) => !settled(call))) throw new Error("请先处理工具步骤，再切换能力");
         const bindingNotice = "当前执行已通过创建项目工具一次性绑定新项目。请以最新项目事实与创建结果中的真实 ID 在同次执行继续用户要求的创作；不需要新开对话或请用户再次发送开始。此说明取代旧技能中创建后必须新开项目对话的指引。原有付费确认、权限和停止边界继续生效。";
-        let skillInstructions = run.toolLoading ? toolLoadingInstructions(run.toolLoading) : run.skillInstructions ?? "";
+        let skillInstructions = run.toolLoading ? [toolLoadingInstructions(run.toolLoading), installedSkillInstructions(run.installedSkills)].filter(Boolean).join("\n") : run.skillInstructions ?? "";
         if (run.createdProjectBinding?.projectId === run.projectId && !skillInstructions.includes(bindingNotice)) skillInstructions += `\n${bindingNotice}`;
         if (skillInstructions === run.skillInstructions) return run;
         const messages = run.continuationMessages ?? run.requestMessages;

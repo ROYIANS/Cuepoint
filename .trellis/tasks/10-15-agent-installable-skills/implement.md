@@ -55,22 +55,22 @@ fixes, a commit and updated task/journal evidence. No remote push.
 
 ## Stage 3 — run snapshots, progressive reads and retained lifecycle
 
-- [ ] Capture metadata/revision references and counts atomically with run admission;
+- [x] Capture metadata/revision references and counts atomically with run admission;
   preserve retry/resume/legacy/conversation behavior and shared preview/budget.
-- [ ] Add fixed read-only load/resource tools with strict parsers and actual
+- [x] Add fixed read-only load/resource tools with strict parsers and actual
   offered-definition integration, within the existing 36-tool/two-group limits.
-- [ ] Return requested content through durable attributed tool results; keep
+- [x] Return requested content through durable attributed tool results; keep
   builtin refresh/compaction and both protocol suffixes correct.
-- [ ] Release pins in actual run-deletion lifecycle owners using their exact
+- [x] Release pins in actual run-deletion lifecycle owners using their exact
   transaction; collect only unreferenced noncurrent revisions. Current project
   deletion retains chats/runs and their pins; preserve that behavior.
-- [ ] Exercise installation changes during held model/approval/read boundaries,
+- [x] Exercise installation changes during held model/approval/read boundaries,
   reopen/retry, missing/corrupt versions, permission-escalation denial, late Stop
   and deletion without resurrection. No live/paid model request is required.
-- [ ] Add a small portable creative-workflow example using existing tools, such
+- [x] Add a small portable creative-workflow example using existing tools, such
   as E08 media organization, with explicit desktop/tool availability requirements.
   The example grants no extra authority and is not silently installed/enabled.
-- [ ] Run necessary affected checks/review, capture durable specs and commit.
+- [x] Run necessary affected checks/review, capture durable specs and commit.
 
 ## Necessary validation execution
 
@@ -123,3 +123,12 @@ and exact source/export/lockfile discovery. Reuse actual command/transaction own
 do not copy their policy into the skills feature. Missing content/count corruption
 fails explicitly. A failed review fixes the current stage before proceeding; a
 rollback never erases installed or retained user data to make tests pass.
+
+## Source delivery result — 2026-10-16
+
+All three implementation stages are source-complete and independently reviewed.
+Stage 1 was committed as `0c7b8b10`; Stage 2 as `e7a5c8ff`; Stage 3 is the
+current reviewed checkpoint. Necessary source checks pass; the task remains
+active for the explicitly deferred epic batch and actual-host acceptance.
+No native Windows execution/cross-compilation, actual installed system picker,
+emitted/packed consumer or production packaging result is claimed.

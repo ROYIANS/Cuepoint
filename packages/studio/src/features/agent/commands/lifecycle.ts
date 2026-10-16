@@ -4,10 +4,11 @@ import type {Id} from "../../../platform/identity";
 import {db as productDb} from "../../../platform/product/store";
 import {PRODUCTION_TABLES} from "../../../platform/product/scopes";
 import {deleteMediaIfOrphans} from "../../library/commands/media";
+import {releaseInstalledSkills} from "../skills/commands/retention";
 
 export async function deleteChatThread(id: Id, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
-    await db.transaction("rw", [...PRODUCTION_TABLES, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentJobs, db.agentJobResultChunks, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.agentTaskWrapupVersions], async (db) => {
+    await db.transaction("rw", [...PRODUCTION_TABLES, db.deviceSettings, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentJobs, db.agentJobResultChunks, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.agentTaskWrapupVersions], async (db) => {
         for (const job of await db.agentJobs.where("threadId").equals(id).toArray()) await db.agentJobResultChunks.where("jobId").equals(job.id).delete();
         await db.agentJobs.where("threadId").equals(id).delete();
         const jobs = await db.agentGenerationJobs.where("threadId").equals(id).toArray();
@@ -42,6 +43,8 @@ export async function deleteChatThread(id: Id, store?: ProductStore): Promise<vo
         }
         await db.agentTasks.where("threadId").equals(id).delete();
         await db.agentToolCalls.where("threadId").equals(id).delete();
+        const deletedRuns = await db.agentRuns.where("threadId").equals(id).toArray();
+        await releaseInstalledSkills(db, deletedRuns.flatMap(run => run.installedSkills ? [run.installedSkills] : []));
         await db.agentRuns.where("threadId").equals(id).delete();
         await db.chatMessages.where("threadId").equals(id).delete();
         await db.chatThreads.delete(id);

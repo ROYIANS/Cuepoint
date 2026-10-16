@@ -10,5 +10,12 @@ export default createStudioVitestConfig({
         "tests/skillImportTransport.test.ts",
         "tests/browserSkillImport.test.ts",
         "tests/installedSkillsUi.test.tsx",
+        "tests/installedSkillRuns.test.ts",
+        "tests/installedSkillTools.test.ts",
+        "tests/installedSkillProtocols.test.ts",
+        "tests/agentRuns.test.ts",
+        "tests/toolLoading.test.ts",
+        "tests/contextPreviewSnapshot.test.ts",
+        "tests/contextManagement.test.ts",
     ],
 });

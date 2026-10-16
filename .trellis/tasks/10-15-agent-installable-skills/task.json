@@ -30,13 +30,13 @@
   "notes": "Owner approved the concrete E09 planning summary and requested implementation on 2026-10-16. Execute the reviewed three stages; commit each after necessary affected checks and independent review. Full build/package/actual-host acceptance stays at epic end.",
   "meta": {
     "epicCode": "E09",
-    "deliveryState": "implementation-stage-3",
+    "deliveryState": "source-complete-pending-batch",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Stages 1 and 2 source complete and independently reviewed. Native/browser bounded capture, retained management UI and uncertainty-safe quick switches are ready; next is frozen run snapshots, progressive tools and lifecycle integration.",
+    "readiness": "All three source stages implemented and independently reviewed: portable contracts/storage, bounded native/browser import and retained management, frozen run snapshots/progressive tools/shared preview/lifecycle. Necessary affected source checks passed. Keep active for epic-end full and actual macOS/Windows installed acceptance.",
     "planningDate": "2026-10-16",
     "proposedPlatforms": [
       "macOS",
@@ -78,6 +78,26 @@
       "scopedLint": "8 production files; 0 errors/6 visible warnings; no suppressions",
       "architecture": "682 files; 2683 static value edges; 14 dynamic edges; 0 cycles/0 failures",
       "deferred": "Windows actual/cross-cfg execution and actual macOS/Windows picker/installed UI, full build/regression/emitted/packed remain pending at epic end."
-    }
+    },
+    "stage3Evidence": {
+      "review": "research/stage-3-review.md",
+      "sourceTests": "53 distinct new cases (16 runs, 28 tools, 9 protocols/example); independent reviewer executed original 50 in one command, root final protocol selection 9 passed; 61 affected preexisting baselines also passed",
+      "sourceNoEmit": "passed including all production sources and new E09 fixtures",
+      "scopedLint": "10 changed production files; 0 errors/10 visible complexity/nested warnings; no suppressions",
+      "architecture": "685 files; 2699 static value edges; 14 dynamic edges; 0 cycles/0 failures",
+      "example": "examples/skills/media-intake parsed through actual bounded importer; not automatically installed/enabled",
+      "deferred": "Full regression/build/emitted/packed/native installed actual macOS+Windows remains at epic end. Windows source branch not executed/cross-compiled."
+    },
+    "sourceCheckpoints": [
+      "0c7b8b10",
+      "e7a5c8ff"
+    ],
+    "pendingAcceptance": [
+      "epic full regression and formal quality/build",
+      "emitted declarations and offline packed consumer",
+      "actual macOS installed picker and retained management flow",
+      "Windows cfg/native execution and installed picker/UI on fixed local NTFS",
+      "E08 media acceptance remains separately pending"
+    ]
   }
 }

@@ -521,3 +521,40 @@ Activated approved E09 and committed neutral portable skill contracts, bounded t
 
 - Implement bounded native/browser capture and retained ContextPanel management, then review/commit Stage 2; Stage 3 run/tool integration follows.
 - Keep full regression/build/emitted/packed/native installed macOS+Windows acceptance deferred to epic-end; E08 pending acceptance unchanged.
+
+
+## Session 83: E09 stage 2 local capture and retained management
+<!-- trellis-session: v=2 fp=e8aadbf8f5495d88 -->
+
+**Date**: 2026-10-16
+**Task**: E09 stage 2 local capture and retained management
+**Package**: studio
+**Branch**: `codex/agent-installable-skills`
+
+### Summary
+
+Completed native/browser bounded text capture, retained skill management and optimistic quick switches; independent review closed pre-read identity, typography and unknown builtin intent findings.
+
+### Main Changes
+
+- Native closed trusted-session directory picker returns bounded immutable text; normal and acceptance handlers/ACL are registered without media grant changes.
+- Retained list/detail/import review, explicit enable, manual update/uninstall and uncertainty-safe quick switches share the existing conversation workspace.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `e7a5c8ff` | feat: add bounded local skill import and retained management |
+
+### Testing
+
+- [OK] 92 distinct affected source cases across reviewer/worker/root runs passed; Rust focused desktop 11 passed, source noEmit/full-rule scoped lint/architecture/staged whitespace passed.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Stage 3 actual run snapshots and retention, progressive read tools, shared preview/budget, protocol refresh/compaction and lifecycle integration.
+- Full regression/build/emitted/packed/native installed macOS+Windows remains pending at epic end; Windows cfg execution and real picker/installed UI not claimed.

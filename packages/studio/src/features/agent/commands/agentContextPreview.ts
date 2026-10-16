@@ -11,6 +11,10 @@ import {projectContextTables} from "../runtime/projectContext";
 import {normalizeContextPolicy, resolveContextCapacity} from "../runtime/contextPolicy";
 import {selectContextHistory} from "../runtime/contextPlanner";
 import {referenceSelectionCharacterBudget, selectReferenceContext} from "../../references/agent/referenceContext";
+import {getInstalledSkillCatalogue} from "../skills/queries/installedSkills";
+import {DEFAULT_SKILL_IDS} from "../runtime/skills";
+import {composeRunSkills, type RunSkillSurface} from "../runtime/runSkills";
+import type {InstalledSkillsSnapshot} from "../skills/models/installedSkill";
 
 export type ContextPreviewInput = {
     threadId?: string;
@@ -32,7 +36,7 @@ export function contextPreviewIdentity(input: ContextPreviewInput): string {
 /** Includes every store used by nested project/task/memory/reference readers. */
 export function contextPreviewTables(store?: ProductStore) {
     const db = store ?? productDb;
-    return [...new Set([db.agents, db.chatThreads, db.chatMessages, db.agentRuns, db.contextCompactions,
+    return [...new Set([db.deviceSettings, db.agents, db.chatThreads, db.chatMessages, db.agentRuns, db.contextCompactions,
         db.agentTasks, db.agentTaskRecords, db.projectMemories, db.projectReferences, db.referenceChunks,
         db.media, ...projectContextTables(db)])];
 }
@@ -68,11 +72,20 @@ async function selectPreviewMaterials(input: ContextPreviewInput, rows: Awaited<
     // Optional saved fields remain absent, rather than acquiring new live selections.
     if (activeRun) return {
         previewPolicy: normalizeContextPolicy(activeRun.context?.policy),
-        taskContext: undefined, memorySelection: undefined, selectedReferences: undefined
+        taskContext: undefined, memorySelection: undefined, selectedReferences: undefined,
+        installedSkills: activeRun.installedSkills,
+        skillSurface: {enabledToolNames: activeRun.enabledToolNames ?? [], toolLoading: activeRun.toolLoading,
+            skillInstructions: activeRun.skillInstructions ?? ""} satisfies RunSkillSurface,
     };
     const previewPolicy = normalizeContextPolicy(thread ? thread.contextPolicy : rows.config?.contextPolicy);
+    const interactionMode = input.interactionMode ?? thread?.interactionMode ?? "smart";
     const taskContext = await getTaskContext(input.threadId, rows.config?.instructions ?? "",
-        thread?.taskMode, input.interactionMode, projectId, db);
+        thread?.taskMode, interactionMode, projectId, db);
+    const catalogue = interactionMode === "conversation" ? undefined : await getInstalledSkillCatalogue(db);
+    const installedSkills: InstalledSkillsSnapshot | undefined = catalogue ? {version: 1, entries: catalogue.entries.filter(entry => entry.enabled)
+        .map(({skillId, revision, metadata}) => ({skillId, revision, metadata}))} : undefined;
+    const skillSurface = composeRunSkills({enabledSkillIds: rows.config?.enabledSkillIds ?? DEFAULT_SKILL_IDS,
+        taskToolNames: taskContext.taskToolNames, projectId, projectKind: taskContext.projectKind, interactionMode, installedSkills});
     const capacity = resolveContextCapacity(input.model, input.metadata, input.providerId, previewPolicy).capacity;
     const memorySelection = taskContext.projectContext ? await getMemorySelection({
         projectId: taskContext.projectContext.projectId, threadId: input.threadId, draft: input.draft,
@@ -81,7 +94,7 @@ async function selectPreviewMaterials(input: ContextPreviewInput, rows: Awaited<
     }, db) : undefined;
     const selectedReferences = await selectReferenceContext(projectId, input.attachments, referenceSelectionCharacterBudget(capacity), db);
     if (selectedReferences?.images?.length) requireVision(vision);
-    return {previewPolicy, taskContext, memorySelection, selectedReferences};
+    return {previewPolicy, taskContext, memorySelection, selectedReferences, installedSkills, skillSurface};
 }
 
 async function readFacts(input: ContextPreviewInput, identity: string, vision: Awaited<ReturnType<typeof resolveVisionCapability>>, store?: ProductStore) {

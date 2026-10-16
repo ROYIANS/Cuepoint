@@ -53,6 +53,15 @@ menu close/reopen, and a held latest-config read cannot invert the captured
 intent or remove another skill enabled by a competing source. The finding is
 closed. No unresolved Stage 2 code finding remains.
 
+## Existing path left outside Stage 2
+
+The existing permission-mode control still uses `useAgentSettings.save`, whose
+generic catch presents unknown persistence as an ordinary settings-save failure.
+The main session explicitly kept that old permission flow outside this skills
+change. Its later certainty review should distinguish confirmed failure from
+unknown outcome; this review neither changed it nor counts it as repaired by
+the builtin skill-switch correction.
+
 ## Other reviewed boundaries
 
 - Rust accepts no renderer-selected source path. The command checks the trusted

@@ -10,6 +10,7 @@ import type {GenerationPreferences} from "../../settings/models/generationPrefer
 import type {ContextPolicy, ContextSnapshot} from "./context";
 import type {ConnectorConfig} from "../../settings/models/connector";
 import type {Id} from "../../../platform/identity";
+import type {InstalledSkillsSnapshot} from "../skills/models/installedSkill";
 
 export interface AgentConfig {
     generationPreferences?: GenerationPreferences;
@@ -141,6 +142,8 @@ export interface AgentRun {
     /** Frozen per-run execution surface. Conversation mode never exposes tools. */
     interactionMode?: AgentInteractionMode;
     enabledToolNames?: string[];
+    /** Immutable installed guidance and retained content revisions, separate from tool authority. */
+    installedSkills?: InstalledSkillsSnapshot;
     /** Absent on legacy runs: retain their original full-tool surface. */
     toolLoading?: AgentToolLoading;
     offeredTools?: Array<{ step: number; names: string[] }>;

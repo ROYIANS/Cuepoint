@@ -1,12 +1,6 @@
-import {
-    createToolLoading,
-    DISCOVERY_TOOL_NAME,
-    getOfferedToolNames,
-    toolLoadingInstructions
-} from "../runtime/toolLoading";
+import {getOfferedToolNames} from "../runtime/toolLoading";
 import type {ReferenceAttachment} from "../../references/models/references";
 import {withMemoryContext} from "../../memory/services/retrieval";
-import {filterProjectMemoryTools} from "../../memory/agent/memoryToolNames";
 import {MemoryContextDetails} from "./MemoryContextDetails";
 import type {AgentInteractionMode} from "../models/agent";
 import {ContextCompactionDetails} from "./ContextCompactionDetails";
@@ -25,7 +19,6 @@ import {contextPreviewIdentity, readAgentContextPreview} from "../commands/agent
 import {useProductQuery} from "../../../platform/product/queries";
 import * as Popover from "@radix-ui/react-popover";
 import {X} from "../../../ui/icons";
-import {assembleSkills, DEFAULT_SKILL_IDS} from "../runtime/skills";
 import {toolSchemas} from "../runtime/tools";
 import {estimateContextUsage, formatTokenCount,} from "../runtime/contextUsage";
 import {popupCollisionPadding} from "../../../ui/popupCollision";
@@ -74,7 +67,7 @@ function useContextUsage(props: ContextProps) {
             }[snapshot.entity];
             return {identity, status: snapshot?.status ?? "loading", model, error} as const;
         }
-        const {config, messages, records, taskContext, activeRun, previewPolicy} = snapshot.facts;
+        const {messages, records, taskContext, activeRun, previewPolicy} = snapshot.facts;
         const policy = activeRun ? normalizeContextPolicy(activeRun.context?.policy) : previewPolicy;
         const selected = selectContextHistory(
             messages.filter((message) => message.threadId === threadId),
@@ -97,23 +90,10 @@ function useContextUsage(props: ContextProps) {
                 policy,
             );
         const {capacity, capacitySource: source} = resolved;
-        const skills = assembleSkills(
-            interactionMode === "conversation"
-                ? []
-                : (config?.enabledSkillIds ?? DEFAULT_SKILL_IDS),
-        );
-        const instructions =
-            activeRun ? activeRun.agentSnapshot.instructions : taskContext?.instructions ?? "";
-        const allowedNames = activeRun ? activeRun.enabledToolNames ?? [] : filterProjectMemoryTools([...new Set([...skills.enabledToolNames, ...(taskContext?.taskToolNames ?? [])])], taskContext?.projectContext?.projectId, interactionMode);
-        const loading = activeRun ? activeRun.toolLoading : createToolLoading(interactionMode === "conversation" ? [] : config?.enabledSkillIds ?? DEFAULT_SKILL_IDS, allowedNames, taskContext?.projectKind);
-        const offeredNames = activeRun ? getOfferedToolNames(activeRun) : getOfferedToolNames({
-            enabledToolNames: loading ? [...allowedNames, DISCOVERY_TOOL_NAME] : allowedNames,
-            toolLoading: loading,
-            interactionMode
-        });
-        const skillInstructions = activeRun
-            ? (activeRun.skillInstructions ?? "")
-            : loading ? toolLoadingInstructions(loading) : skills.skillInstructions;
+        const instructions = activeRun ? activeRun.agentSnapshot.instructions : taskContext?.instructions ?? "";
+        const {enabledToolNames, toolLoading: loading, skillInstructions} = snapshot.facts.skillSurface;
+        const offeredNames = getOfferedToolNames(activeRun ?? {enabledToolNames, toolLoading: loading,
+            interactionMode: interactionMode ?? snapshot.facts.thread?.interactionMode ?? "smart"});
         const memorySelection =
             activeRun ? activeRun.memorySelection : snapshot.facts.memorySelection;
         const selectedReferences = activeRun ? activeRun.context?.selectedReferences : snapshot.facts.selectedReferences;
