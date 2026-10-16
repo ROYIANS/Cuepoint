@@ -7,6 +7,14 @@ import {PRODUCTION_TABLES} from "../../../platform/product/scopes";
 import {deleteMediaIfOrphans} from "../../library/commands/media";
 import {releaseInstalledSkills} from "../skills/commands/retention";
 
+/** Removes a thread created for a send that never produced any message or run (failure-then-restore). */
+export async function discardEmptyChatThread(id: Id, store?: ProductStore): Promise<boolean> {
+    const db = store ?? productDb;
+    if (await db.chatMessages.where("threadId").equals(id).count() > 0 || await db.agentRuns.where("threadId").equals(id).count() > 0) return false;
+    await deleteChatThread(id, db);
+    return true;
+}
+
 export async function deleteChatThread(id: Id, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
     const activity = prepareThreadActivityKey(id);

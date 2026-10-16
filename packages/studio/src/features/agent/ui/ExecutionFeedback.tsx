@@ -45,7 +45,9 @@ export function usePublicOutputCommit(output: PublicOutputIdentity | undefined, 
     useLayoutEffect(() => {
         const element = ref.current;
         if (!element || !enabled || !text || !runId || !assistantMessageId || !invocation || sampledInvocation.current === invocation || snapshot?.runId !== runId ||
-            snapshot.assistantMessageId !== assistantMessageId) return;
+            snapshot.assistantMessageId !== assistantMessageId ||
+            // No DOM/CSS sampling or observers until a confirmed checkpoint can make the commit possible.
+            snapshot.outputRevision < 1) return;
         const mutations = new MutationObserver(() => check());
         const cleanup = () => {mutations.disconnect(); document.removeEventListener("visibilitychange", check);};
         const check = () => {

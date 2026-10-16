@@ -1,4 +1,4 @@
-import {type MouseEvent, useCallback, useEffect, useId, useRef, useState} from "react";
+import {type MouseEvent, useCallback, useEffect, useId, useLayoutEffect, useRef, useState} from "react";
 import {readBusinessDetailTarget, useBusinessDetails, type BusinessDetailTarget, type DetailReturnOrigin} from "../../../app/details/BusinessDetails";
 import {useProductQuery} from "../../../platform/product/queries";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
@@ -77,6 +77,8 @@ type ReviewHandoff = {
     requestId?: string;
     returnRequested?: boolean;
 };
+/** Bound for the modal to release focus before the detail opens, if `onCloseAutoFocus` never fires. */
+const HANDOFF_RELEASE_FALLBACK_MS = 400;
 const REVIEW_CONTROLS = "button, a[href], input, textarea, select, summary, [tabindex]";
 
 function reviewControlKey(control: HTMLElement) {
@@ -209,6 +211,9 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
     const last = useRef<BatchDetail | undefined>(undefined);
     const [readAttempt, setReadAttempt] = useState(0);
     const [open, setOpen] = useState(false);
+    const [retainedNotice, setRetainedNotice] = useState<string>();
+    const localRef = useRef<{ revision: number; edits: DraftEdit[] } | null>(null);
+    const releaseRef = useRef<() => void>(() => undefined);
     const finishHandoff = useCallback((token: string, restore: boolean) => {
         const current = handoffRef.current;
         if (!alive.current || current?.token !== token) return;
@@ -217,9 +222,12 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
         // Replacement retires the old origin without opening its modal over the new detail.
         setOpen(restore);
         setHandoff(false);
+        // The retained local draft stays reachable and is announced, never silently hidden.
+        if (!restore && localRef.current) setRetainedNotice("批量审阅已收起，未保存的编辑仍保留。点击「打开」继续审阅。");
     }, []);
     const revealReview = useCallback(() => {
         const current = handoffRef.current;
+        setRetainedNotice(undefined);
         if (!current) {setOpen(true); return;}
         if (current.phase !== "opened") {current.returnRequested = true; return;}
         if (returnToOrigin) void returnToOrigin(current.token).then(result => {
@@ -238,6 +246,12 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
     }, []);
     const [inspecting, setInspecting] = useState(false);
     const [local, setLocal] = useState<{ revision: number; edits: DraftEdit[] } | null>(null);
+    useLayoutEffect(() => {localRef.current = local; releaseRef.current = openAfterModalRelease;});
+    useEffect(() => {
+        if (!handoff) return;
+        const timer = setTimeout(() => releaseRef.current(), HANDOFF_RELEASE_FALLBACK_MS);
+        return () => clearTimeout(timer);
+    }, [handoff]);
     const [expanded, setExpanded] = useState<string>();
     const [targetKey, setTargetKey] = useState<string>();
     const [pending, setPending] = useState(false);
@@ -412,6 +426,7 @@ function BatchSurface({batch, parentReadError}: { batch: GenerationBatch; parent
                     aria-label={`打开批量生成：${current.title}`} onClick={revealReview}>打开<ChevronRight
                 size={14} aria-hidden/></button>
         </div>
+        {retainedNotice && !open && <p className="agent-batch-error" role="status">{retainedNotice}</p>}
         {view?.error && !open && <p className="agent-batch-error" role="alert">{view.error}
             <button type="button" onClick={() => setReadAttempt(value => value + 1)}>重新读取</button>
         </p>}

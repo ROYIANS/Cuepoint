@@ -343,11 +343,11 @@
         },
         {
           "file": "apps/desktop/scripts/build-app.mjs",
-          "sha256": "15f6e4c998b339ababa622b8e43175cbdc897e20273745a5da546e45792cea70"
+          "sha256": "79a471933eb63245665c4974a15a1b25e3b0997b41583baacd31b7d3737d75c8"
         },
         {
           "file": "apps/desktop/scripts/build-release.mjs",
-          "sha256": "c0568ec87686137acf0f5907da2be21089389211d296458171dfabdf973358dc"
+          "sha256": "0a496fbc85edc0469b36f36bb69ce6ac44ac912582cba857830ee9f084dfe48f"
         },
         {
           "file": "apps/desktop/scripts/tool-resolver.mjs",

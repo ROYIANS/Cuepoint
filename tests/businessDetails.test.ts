@@ -27,9 +27,9 @@ function Controls() {
         h(ShotDetailLink, {href: asset.kind === "asset" ? assetDetailHref(asset.target) : "", onClick: event => event.preventDefault()}, "Cancelled asset"),
         h(ShotDetailLink, {href: "/p/p", onClick: event => event.preventDefault()}, "Continue project"));
 }
-function Fixture({width = 1440, delegate = false}: {width?: number; delegate?: boolean}) {
+function Fixture({width = 1440, delegate = false, scopeKey}: {width?: number; delegate?: boolean; scopeKey?: string}) {
     return h(ContextPanelHostProvider, {target: portal, surfaceWidth: width, navigationWidth: 260},
-        h(delegate ? ShotDetailsProvider : BusinessDetailsProvider, null, h(Controls)));
+        h(delegate ? ShotDetailsProvider : BusinessDetailsProvider, {scopeKey}, h(Controls)));
 }
 async function settle(check: () => void) {await vi.waitFor(async () => {await act(async () => {}); check();});}
 async function open(target: BusinessDetailTarget, origin?: DetailReturnOrigin) {
@@ -68,6 +68,22 @@ beforeEach(async () => {
 afterEach(async () => {await act(async () => root.unmount()); container.remove(); portal.remove(); vi.restoreAllMocks(); vi.unstubAllGlobals();});
 
 describe("actual finite detail composition and origin lifecycle", () => {
+    it("retires an open pane when the host scope (thread) changes, without remounting the host children", async () => {
+        await act(async () => root.render(h(Fixture, {scopeKey: "thread-a"})));
+        const composer = container.querySelector("textarea")!;
+        const onEnd = vi.fn();
+        await open(shot, {token: "review-scope", label: "返回批量审阅", onEnd});
+        await settle(() => expect(portal.querySelector("[data-shot-detail]")).not.toBeNull());
+        await act(async () => root.render(h(Fixture, {scopeKey: "thread-a"})));
+        expect(portal.querySelector("[data-shot-detail]")).not.toBeNull();
+        await act(async () => root.render(h(Fixture, {scopeKey: "thread-b"})));
+        await settle(() => expect(portal.querySelector("[data-shot-detail]")).toBeNull());
+        expect(container.querySelector("textarea")).toBe(composer);
+        expect(onEnd).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({token: "review-scope", reason: "close"}));
+        const reopened = await open(second);
+        await expect(reopened.result).resolves.toMatchObject({status: "opened"});
+    });
+
     it("acknowledges the committed loading frame and returns only after guarded removal", async () => {
         vi.spyOn(db, "observe").mockImplementation(() => () => {});
         const composer = container.querySelector("textarea")!; composer.scrollTop = 31;

@@ -41,16 +41,26 @@ export interface ThreadControlSnapshot {
     readonly error?: string;
 }
 
+/** Allocation-free structural equality: no per-publish encoded key is retained or rebuilt. */
+export function sameThreadControl(left: ThreadControlSnapshot, right: ThreadControlSnapshot): boolean {
+    if (left.threadId !== right.threadId || left.ready !== right.ready || left.hasMessages !== right.hasMessages ||
+        left.hasRuns !== right.hasRuns || left.compacting !== right.compacting || left.error !== right.error ||
+        left.runs.length !== right.runs.length) return false;
+    return left.runs.every((run, index) => {
+        const other = right.runs[index];
+        return run.id === other.id && run.threadId === other.threadId && run.taskId === other.taskId && run.createdAt === other.createdAt &&
+            run.status === other.status && run.hasToolCalls === other.hasToolCalls && run.pauseReason === other.pauseReason;
+    });
+}
+
 /** Only the finite command/composer projection can invalidate the page. */
 function createThreadControl(threadId: string | undefined) {
     let snapshot: ThreadControlSnapshot = Object.freeze({threadId, ready: false, hasMessages: false, hasRuns: false, runs: [], compacting: false});
-    let encoded = "";
     let stop: (() => void) | undefined;
     const listeners = new Set<() => void>();
     const publish = (value: ThreadControlSnapshot) => {
-        const key = JSON.stringify(value);
-        if (encoded === key) return;
-        encoded = key; snapshot = Object.freeze(value);
+        if (sameThreadControl(snapshot, value)) return;
+        snapshot = Object.freeze(value);
         for (const listener of listeners) listener();
     };
     return {

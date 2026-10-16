@@ -14,6 +14,7 @@
     "lint": "node tooling/build-agent-packages.mjs && tsc -b --pretty false",
     "quality": "node tooling/build-agent-packages.mjs && node tooling/quality-check.mjs",
     "quality:self-test": "node tooling/quality/self-test.mjs && node --test tooling/workspace.test.mjs tooling/studio.test.mjs tooling/agent-packages.test.mjs",
+    "test:browser:agent-parallel-details": "node tooling/agent-parallel-details-browser.mjs",
     "test:storage:native": "node tooling/native-storage-regression.mjs",
     "models-dev:baseline": "node tooling/models-dev-baseline.mjs generate",
     "models-dev:verify": "node tooling/models-dev-baseline.mjs verify",

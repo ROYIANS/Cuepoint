@@ -4,7 +4,7 @@ import {useLayoutEffect, useRef} from "react";
 import {ProvisionalCommitProbe} from "./ExecutionFeedback";
 import "./submissionMessage.css";
 
-export type SubmissionAction = "retry" | "restore" | "check" | "recover";
+export type SubmissionAction = "retry" | "restore" | "check" | "recover" | "confirm";
 
 /** Eager plain-text echo: deliberately independent of rich transcript dependencies. */
 export function SubmissionMessage({attempt, busy, onAction}: {
@@ -34,7 +34,8 @@ export function SubmissionStatus({attempt, busy, onAction}: {
             {phase === "failed" && <><button type="button" disabled={busy} onClick={() => onAction(admission.userMessageId, "retry")}>重试发送</button>
                 <button type="button" disabled={busy} onClick={() => onAction(admission.userMessageId, "restore")}>
                     {attempt.originThreadId ? "恢复草稿" : "恢复到首页草稿"}</button></>}
-            {phase === "uncertain" && <button type="button" disabled={busy} onClick={() => onAction(admission.userMessageId, "check")}>核对发送状态</button>}
+            {phase === "uncertain" && <><button type="button" disabled={busy} onClick={() => onAction(admission.userMessageId, "check")}>核对发送状态</button>
+                <button type="button" disabled={busy} onClick={() => onAction(admission.userMessageId, "confirm")}>确认未发送</button></>}
             {phase === "accepted" && attempt.recoveryRequired && <button type="button" disabled={busy}
                 onClick={() => onAction(admission.userMessageId, "recover")}>查看恢复选项</button>}
         </div>;

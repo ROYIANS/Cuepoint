@@ -373,3 +373,64 @@ it("cold startup only reconciles abandoned records, with zero external requests 
     expect(owner.snapshot(submitted.threadId).active).toBe(false);
     expect(fetcher).not.toHaveBeenCalled();
 });
+
+it("freezes model metadata on the attempt so an explicit retry resolves the same capability inputs", async () => {
+    const config = await connector(), submitted = await attempt(config);
+    const metadata = {vision: true, contextWindow: 4096, source: "provider" as const};
+    const begin = runCommands.beginAgentRun;
+    const seen: unknown[] = [];
+    vi.spyOn(runCommands, "beginAgentRun").mockImplementation(async (...args) => {
+        seen.push(args[0].modelMetadata);
+        if (seen.length === 1) throw new Error("not admitted");
+        return begin(...args);
+    });
+    const fetcher = vi.fn<typeof fetch>(async () => answer());
+    const owner = service({store: db, fetchImpl: fetcher});
+    const identity = {threadId: submitted.threadId, userMessageId: submitted.admission.userMessageId};
+    await expect(owner.submit({attempt: submitted, modelMetadata: metadata}).done).rejects.toThrow("not admitted");
+    expect(owner.snapshot(submitted.threadId).attempts[0].phase).toBe("failed");
+    expect(owner.snapshot(submitted.threadId).attempts[0].modelMetadata).toEqual(metadata);
+    await owner.retrySubmission(identity).done;
+    expect(seen).toEqual([metadata, metadata]);
+});
+
+it("lets the user confirm an unresolved send was not delivered, after which retry re-reads admission before dispatch", async () => {
+    const config = await connector(), submitted = await attempt(config);
+    vi.spyOn(runCommands, "beginAgentRun").mockRejectedValueOnce(new UnknownCommitError("original-admission", "fixture"));
+    const fetcher = vi.fn<typeof fetch>(async () => answer()), owner = service({store: db, fetchImpl: fetcher});
+    const identity = {threadId: submitted.threadId, userMessageId: submitted.admission.userMessageId};
+    await expect(owner.submit({attempt: submitted}).done).rejects.toBeInstanceOf(UnknownCommitError);
+    expect(owner.snapshot(identity.threadId).attempts[0].phase).toBe("uncertain");
+    expect(() => owner.retrySubmission(identity)).toThrow("核对发送状态");
+    expect(owner.confirmNotSent({threadId: "other", userMessageId: identity.userMessageId})).toBe(false);
+    expect(owner.confirmNotSent(identity)).toBe(true);
+    expect(owner.confirmNotSent(identity)).toBe(false);
+    expect(owner.snapshot(identity.threadId).attempts[0].phase).toBe("failed");
+    const read = vi.spyOn(admissionQueries, "readAgentAdmission");
+    await owner.retrySubmission(identity).done;
+    expect(read).toHaveBeenCalled();
+    expect((await db.agentRuns.get(submitted.admission.runId))?.status).toBe("completed");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+});
+
+it("discards only a created thread that never received a message or run", async () => {
+    const {discardEmptyChatThread} = await import("@/features/agent/commands/lifecycle");
+    const empty = await createChatThread(), used = await createChatThread();
+    const config = await connector();
+    await runCommands.beginAgentRun({threadId: used.id, connector: config, model: "test", content: "kept"});
+    expect(await discardEmptyChatThread(empty.id)).toBe(true);
+    expect(await db.chatThreads.get(empty.id)).toBeUndefined();
+    expect(await discardEmptyChatThread(used.id)).toBe(false);
+    expect(await db.chatThreads.get(used.id)).toBeDefined();
+});
+
+it("exposes a content-free feedback timeline for tests and dev tooling", async () => {
+    const config = await connector(), submitted = await attempt(config);
+    const owner = service({store: db, fetchImpl: vi.fn<typeof fetch>(async () => answer())});
+    await owner.submit({attempt: submitted}).done;
+    const timeline = owner.feedbackTimeline(submitted.threadId);
+    expect(timeline).toHaveLength(1);
+    expect(Object.keys(timeline[0].marks)).toEqual(expect.arrayContaining(["submitted", "admitted", "requestInvoked", "settled"]));
+    expect(JSON.stringify(timeline)).not.toContain("hello");
+    expect(owner.feedbackTimeline("unknown-thread")).toEqual([]);
+});

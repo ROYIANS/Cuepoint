@@ -5769,6 +5769,20 @@
       ]
     },
     {
+      "original": "packages/studio/src/features/video/ui/shotSelectionCommit.ts",
+      "file": "packages/studio/src/features/video/ui/shotSelectionCommit.ts",
+      "target": "packages/studio/src/features/video/ui/shotSelectionCommit.ts",
+      "owner": "features/video",
+      "public": false,
+      "publicTypes": [
+        "ShotSelectionCommit"
+      ],
+      "publicSymbols": [
+        "shotSceneCommit",
+        "shotStatusCommit"
+      ]
+    },
+    {
       "original": "packages/studio/src/features/agent/ui/AgentMarkdown.tsx",
       "file": "packages/studio/src/features/agent/ui/AgentMarkdown.tsx",
       "target": "packages/studio/src/features/agent/ui/AgentMarkdown.tsx",
@@ -6058,6 +6072,13 @@
     {
       "file": "packages/studio/src/features/agent/skills/commands/installations.ts",
       "target": "packages/studio/src/features/agent/skills/commands/installations.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/skills/commands/history.ts",
+      "target": "packages/studio/src/features/agent/skills/commands/history.ts",
       "owner": "features/agent",
       "public": false,
       "publicTypes": []

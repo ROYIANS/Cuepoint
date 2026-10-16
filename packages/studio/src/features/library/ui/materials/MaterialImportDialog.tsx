@@ -19,11 +19,15 @@ export const MATERIAL_ACCEPT = "image/png,image/jpeg,image/webp,image/gif,image/
 type ImportBatch = {scope: MaterialScope; total: number; completed: number; lastId?: string; unknown: boolean};
 type ImportProgress = {total: number; completed: number; currentName?: string; stopRequested: boolean};
 
-export function MaterialImportDialog({initialScope, open = true, onClose, onImported}: {
+export type ImportInterruption = {completed: number; remaining: number; uncertain: boolean};
+
+export function MaterialImportDialog({initialScope, open = true, onClose, onImported, onInterrupted}: {
     initialScope: string;
     open?: boolean;
     onClose: () => void;
-    onImported: (id: string) => void
+    onImported: (id: string) => void;
+    /** The dialog unmounted mid-batch: acknowledged files stay saved, unprocessed ones are dropped. */
+    onInterrupted?: (summary: ImportInterruption) => void;
 }) {
     const [scope, setScope] = useState(initialScope);
     const [files, setFiles] = useState<File[]>([]);
@@ -62,6 +66,23 @@ export function MaterialImportDialog({initialScope, open = true, onClose, onImpo
         else requestClose(() => {reset(); onClose();});
     }
 
+    /** Explicit user attestation after checking the library; never inferred. */
+    function resolveUnknown(action: "skip" | "retry") {
+        const batch = batchRef.current;
+        if (pendingRef.current || !batch?.unknown) return;
+        batch.unknown = false;
+        setUnknown(false);
+        setError("");
+        if (action === "retry") return;
+        filesRef.current = filesRef.current.slice(1);
+        batch.total--;
+        setFiles(filesRef.current);
+        setProgress({total: batch.total, completed: batch.completed, stopRequested: false});
+        if (filesRef.current.length) return;
+        if (batch.lastId) finishImport(batch.lastId);
+        else {reset(); onClose();}
+    }
+
     function requestStop() {
         if (!pendingRef.current || stopRemaining.current) return;
         stopRemaining.current = true;
@@ -98,17 +119,24 @@ export function MaterialImportDialog({initialScope, open = true, onClose, onImpo
                 batch.lastId = material.id;
                 batch.completed++;
                 filesRef.current = filesRef.current.slice(1);
-                if (!activeRef.current) return;
+                if (!activeRef.current) {
+                    if (filesRef.current.length) onInterrupted?.({completed: batch.completed, remaining: filesRef.current.length, uncertain: false});
+                    return;
+                }
                 setFiles(filesRef.current);
                 setProgress({total: batch.total, completed: batch.completed, stopRequested: stopRemaining.current});
             }
             allImported = filesRef.current.length === 0;
         } catch (cause) {
-            if (!activeRef.current) return;
+            if (!activeRef.current) {
+                onInterrupted?.({completed: batch.completed, remaining: filesRef.current.length,
+                    uncertain: cause instanceof StorageError && cause.certainty === "unknown"});
+                return;
+            }
             if (cause instanceof StorageError && cause.certainty === "unknown") {
                 batch.unknown = true;
                 setUnknown(true);
-                setError("当前文件的导入结果待确认，请先核对素材库。已确认保存的文件会保留；不要重复导入或跳过此文件继续。");
+                setError("当前文件的导入结果待确认，请先核对素材库。已确认保存的文件会保留；核对后请选择重新导入或跳过此文件，系统不会自动重复导入。");
             } else setError(cause instanceof Error ? cause.message : "导入失败，请重试。已保存的文件不会重复导入。");
         } finally {
             pendingRef.current = false;
@@ -153,6 +181,8 @@ export function MaterialImportDialog({initialScope, open = true, onClose, onImpo
                 {pending && progress.stopRequested && " · 当前文件完成后停止后续导入"}</p>}
         <DialogFooter><Button variant="outline" disabled={pending}
                               onClick={close}>{unknown ? "查看素材库" : "取消"}</Button>
+            {unknown && <><Button variant="outline" onClick={() => resolveUnknown("retry")}>已核对，重新导入此文件</Button>
+                <Button variant="outline" onClick={() => resolveUnknown("skip")}>已核对，跳过此文件继续</Button></>}
             {pending && <Button variant="outline" disabled={progress?.stopRequested} onClick={requestStop}>停止后续导入</Button>}
             <Button disabled={pending || unknown || !files.length}
             onClick={() => void save()}>{importLabel}</Button></DialogFooter>

@@ -9,7 +9,7 @@ import {chatDrafts} from "../runtime/chatDraftStore";
 import {useThreadControl} from "../queries/threadReading";
 import {db} from "../../../platform/product/store";
 import {createChatThread, updateChatThread} from "../commands/chat";
-import {deleteChatThread} from "./../commands/lifecycle";
+import {deleteChatThread, discardEmptyChatThread} from "./../commands/lifecycle";
 import {useReferenceDraft} from "./useReferenceDraft";
 import {runBlocksThread} from "../models/agentToolSelection";
 import {TaskBoard} from "./TaskBoard";
@@ -58,7 +58,7 @@ import {
 } from "../../settings/models/chatModelPolicy";
 
 export function AgentChatPage({threadId, view}: { threadId?: Id; view?: "tasks" }) {
-    return <ShotDetailsProvider><AgentActivityNavigationProvider threadId={threadId}><AgentChatInner threadId={threadId}
+    return <ShotDetailsProvider scopeKey={threadId ?? "home"}><AgentActivityNavigationProvider threadId={threadId}><AgentChatInner threadId={threadId}
                                                                                 view={view}/></AgentActivityNavigationProvider></ShotDetailsProvider>;
 }
 
@@ -354,9 +354,16 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             const identity = {threadId: attempt.threadId, userMessageId: id};
             if (action === "restore") {
                 if (attempt.phase !== "failed") return;
-                if (chatDrafts.session(attempt.submitted.scope, attempt.projectId).restore(attempt.submitted, attempt.recovery)) removeAttempt(id);
-                else toast.error("当前草稿已有改动，发送内容仍保留在消息中");
-            } else if (action === "recover") agentExecution.recoverAdmissionState(identity);
+                if (chatDrafts.session(attempt.submitted.scope, attempt.projectId).restore(attempt.submitted, attempt.recovery)) {
+                    removeAttempt(id);
+                    const created = !attempt.originThreadId ? attempt.createdThread?.id : undefined;
+                    // A new topic created for a send that never produced a message must not linger after restore.
+                    if (created) void discardEmptyChatThread(created).then(removed => {
+                        if (removed && mounted.current && currentThread.current === created) void navigate({to: "/agent", replace: true});
+                    }).catch(() => undefined);
+                } else toast.error("当前草稿已有改动，发送内容仍保留在消息中");
+            } else if (action === "confirm") agentExecution.confirmNotSent(identity);
+            else if (action === "recover") agentExecution.recoverAdmissionState(identity);
             else if (action === "check") agentExecution.checkAdmission(identity);
             else agentExecution.retrySubmission(identity);
         } catch (cause) {showError({title: "无法处理发送记录", cause, actionName: "submission-action"});}

@@ -102,3 +102,19 @@ it("folded reasoning cannot count until its actual body opens, and a foreign run
     });
     expect(foreign.marked("firstPublicCommitted")).toBe(false); foreign.controller.dispose();
 });
+
+it("does no DOM/CSS sampling or observer work for streamed deltas before the first confirmed checkpoint", async () => {
+    const feedback = owner();
+    await act(async () => {start(feedback); feedback.invocation.runtime({...runtimeIdentity, type: "publicReceived", kind: "content"});});
+    const styles = vi.spyOn(globalThis, "getComputedStyle");
+    const observe = vi.spyOn(MutationObserver.prototype, "observe");
+    for (const text of ["a", "ab", "abc"]) {
+        await act(async () => feedback.render(h(PublicOutputCommit, {output: identity, text}, h("p", null, text))));
+    }
+    expect(styles).not.toHaveBeenCalled(); expect(observe).not.toHaveBeenCalled();
+    expect(feedback.marked("firstPublicCommitted")).toBe(false);
+    await act(async () => feedback.invocation.runtime({...runtimeIdentity, type: "checkpoint", confirmed: true, sequence: 1,
+        checkpoint: 1, output: {content: "abc"}}));
+    expect(feedback.marked("firstPublicCommitted")).toBe(true);
+    feedback.controller.dispose();
+});

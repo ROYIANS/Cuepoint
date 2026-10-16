@@ -1,6 +1,7 @@
 import {DesktopMediaImportPanel} from "./DesktopMediaImportPanel";
 import {ModuleLayout} from "../../../app/layout/ModuleLayout";
 import {useEffect, useState} from "react";
+import {toast} from "sonner";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {useProductQuery} from "../../../platform/product/queries";
 import {Archive, Image, Layers, Search, Upload} from "../../../ui/icons";
@@ -131,7 +132,9 @@ function SharedMaterialLibraryPage({routeSearch}: { routeSearch: MaterialLibrary
             包含已加入项目的素材副本，不包含整个素材库或 IP 档案。</p>
         {selected && <MaterialDetailPanel id={selected} onClose={() => setSelected(null)} onSelect={setSelected}/>}
         <MaterialImportDialog open={importing} initialScope={initialScope} onClose={() => setImporting(false)}
-                              onImported={setSelected}/>
+                              onImported={setSelected}
+                              onInterrupted={({completed, remaining, uncertain}) => toast.warning(
+                                  `素材导入已中断：已保存 ${completed} 个文件，${remaining} 个文件未处理${uncertain ? "，其中当前文件的结果待确认，请先查看素材库" : ""}。`)}/>
     </PageContent></ModuleLayout>;
 }
 

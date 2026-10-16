@@ -205,7 +205,8 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             try {await checkAttempt(attempt, entry.feedback);} catch { /* Failed/absent reads never prove rollback. */ }
         }
     }
-    async function send(attempt: ChatSubmissionAttempt, entry: Invocation, modelMetadata?: ChatModelMetadata, retry = false) {
+    async function send(attempt: ChatSubmissionAttempt, entry: Invocation, retry = false) {
+        const modelMetadata = attempt.modelMetadata;
         const id = attempt.admission.userMessageId;
         let admitted = false;
         try {
@@ -243,22 +244,21 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
         }
     }
     function submit(input: {attempt: ChatSubmissionAttempt; modelMetadata?: ChatModelMetadata; afterOptimisticPaint?: Promise<void>}) {
-        const attempt = freezeAttempt({...input.attempt, phase: "preparing", error: undefined});
+        const modelMetadata = input.modelMetadata ? Object.freeze(structuredClone(input.modelMetadata)) : undefined;
+        const attempt = freezeAttempt({...input.attempt, modelMetadata, phase: "preparing", error: undefined});
         if (state(attempt.threadId).attempts.some(item => item.admission.userMessageId === attempt.admission.userMessageId)) throw new Error("发送内容已提交，请使用原发送记录");
-        const modelMetadata = input.modelMetadata ? structuredClone(input.modelMetadata) : undefined;
         return claim(attempt.threadId, "submit", async entry => {
             await input.afterOptimisticPaint;
             if (entry.controller.signal.aborted) {patchAttempt(attempt.threadId, attempt.admission.userMessageId, {phase: "failed", error: "发送已停止，可重试或恢复草稿"}); return;}
-            await send(attempt, entry, modelMetadata);
+            await send(attempt, entry);
         }, attempt);
     }
-    function retrySubmission(input: {threadId: string; userMessageId: string; modelMetadata?: ChatModelMetadata}) {
+    function retrySubmission(input: {threadId: string; userMessageId: string}) {
         const attempt = attemptFor(input.threadId, input.userMessageId);
         if (attempt.phase !== "failed") throw new Error("只有确认未发送的内容可以重试，请先核对发送状态");
-        const modelMetadata = input.modelMetadata ? structuredClone(input.modelMetadata) : undefined;
         return claim(input.threadId, "submit", async entry => {
             patchAttempt(input.threadId, input.userMessageId, {phase: "preparing", error: undefined});
-            await send(attempt, entry, modelMetadata, true);
+            await send(attempt, entry, true);
         });
     }
     function runAction(input: {threadId: string; runId: string; action: RunAction; callId?: string}) {
@@ -333,6 +333,18 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
                 }
             });
         },
+        /**
+         * User exit for an unresolved send: the user asserts the message was not delivered. This only makes the
+         * frozen attempt actionable; a later retry still performs the positive admission read first, so an
+         * actually-committed run is adopted rather than duplicated.
+         */
+        confirmNotSent(input: {threadId: string; userMessageId: string}): boolean {
+            const owner = threads.get(input.threadId);
+            const attempt = owner?.attempts.find(item => item.admission.userMessageId === input.userMessageId);
+            if (!owner || !attempt || owner.invocation || attempt.phase !== "uncertain") return false;
+            patchAttempt(input.threadId, input.userMessageId, {phase: "failed", error: "已确认未发送，可重试或恢复草稿"});
+            return true;
+        },
         recoverAdmissionState(input: {threadId: string; userMessageId: string}) {
             const attempt = attemptFor(input.threadId, input.userMessageId);
             if (attempt.phase !== "accepted" || !attempt.recoveryRequired) throw new Error("此发送记录不需要恢复状态");
@@ -359,6 +371,10 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             input.work.controller.abort();
             publish(input.threadId, state(input.threadId));
             return true;
+        },
+        /** Content-free timing marks of this thread's recent invocations (bounded by the feedback controller). */
+        feedbackTimeline(threadId: string) {
+            return threads.get(threadId)?.feedbackOwner.timeline() ?? [];
         },
         feedback(threadId: string, token: AgentExecutionToken): ExecutionFeedbackInvocation | undefined {
             const feedback = threads.get(threadId)?.lastFeedback;

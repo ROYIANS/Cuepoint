@@ -32,14 +32,6 @@
     },
     {
       "rule": "preserve-caught-error",
-      "file": "packages/agent-core/src/runtime.ts",
-      "signature": "b95b812d29bce4a9c41aeffdcb52dfbaf3c875fd77c92ca7536100c5a7ce7bd7",
-      "count": 1,
-      "reason": "Failure during local checkpoint persistence exposes a fixed safe diagnostic after conservative run/call settlement. Do not leak the captured provider exception through cause.",
-      "owner": "Agent execution"
-    },
-    {
-      "rule": "preserve-caught-error",
       "file": "packages/studio/src/features/agent/runtime/taskWrapup.ts",
       "signature": "371ccbf1379bcb8c1940601aae483c4480b360f041eb6969c57be519b78e29a0",
       "count": 1,

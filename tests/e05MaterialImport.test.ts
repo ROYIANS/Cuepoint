@@ -25,10 +25,11 @@ function deferred<T>() {
     const promise = new Promise<T>((yes, no) => {resolve = yes; reject = no;});
     return {promise, resolve, reject};
 }
+const interrupted = vi.fn();
 function Owner({initialScope = "global"}: {initialScope?: string}) {
     const [open, setOpen] = useState(true);
     return h(Fragment, null, h("button", {type: "button", onClick: () => setOpen(true)}, "打开导入"),
-        h(MaterialImportDialog, {open, initialScope, onClose: () => {closed(); setOpen(false);}, onImported: imported}));
+        h(MaterialImportDialog, {open, initialScope, onClose: () => {closed(); setOpen(false);}, onImported: imported, onInterrupted: interrupted}));
 }
 let root: Root, container: HTMLDivElement;
 function button(label: string) {
@@ -47,7 +48,7 @@ function progress() {return document.querySelector('[role="status"]')?.textConte
 beforeEach(async () => {
     vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
     vi.stubGlobal("ResizeObserver", class {observe() {} unobserve() {} disconnect() {}});
-    create.mockReset(); imported.mockReset(); closed.mockReset(); routing.blockers = [];
+    create.mockReset(); interrupted.mockReset(); imported.mockReset(); closed.mockReset(); routing.blockers = [];
     container = document.createElement("div"); document.body.append(container); root = createRoot(container);
     await act(async () => root.render(h(Owner, {})));
 });
@@ -131,5 +132,47 @@ describe("E05 serial file import", () => {
         expect(closed).toHaveBeenCalledTimes(phase === "open" ? 0 : 1);
         expect(document.querySelector('[role="alert"]')?.textContent).toContain("全部文件已导入");
         expect(remaining()).toEqual([]); expect(button(phase === "open" ? "继续导入" : "导入").disabled).toBe(true);
+    });
+
+    it("lets the user resolve a verified unknown file by re-importing it or skipping it", async () => {
+        create.mockResolvedValueOnce(material("A")).mockRejectedValueOnce(new UnknownCommitError("operation", "workspace"));
+        await select(); await click("导入 3 个文件");
+        expect(button("继续导入").disabled).toBe(true);
+        create.mockResolvedValueOnce(material("B")).mockResolvedValueOnce(material("C"));
+        await click("已核对，重新导入此文件");
+        expect(button("继续导入").disabled).toBe(false); expect(remaining()).toEqual(["B.txt", "C.txt"]);
+        await click("继续导入");
+        expect(create.mock.calls.map(call => call[0].name)).toEqual(["A.txt", "B.txt", "B.txt", "C.txt"]);
+        expect(imported).toHaveBeenCalledExactlyOnceWith("C");
+    });
+
+    it("skips only the verified uncertain head and continues with the remaining files", async () => {
+        create.mockResolvedValueOnce(material("A")).mockRejectedValueOnce(new UnknownCommitError("operation", "workspace"));
+        await select(); await click("导入 3 个文件");
+        await click("已核对，跳过此文件继续");
+        expect(remaining()).toEqual(["C.txt"]); expect(progress()).toContain("已导入 1 / 2");
+        create.mockResolvedValueOnce(material("C"));
+        await click("继续导入");
+        expect(create.mock.calls.map(call => call[0].name)).toEqual(["A.txt", "B.txt", "C.txt"]);
+        expect(imported).toHaveBeenCalledExactlyOnceWith("C");
+    });
+
+    it("reports a mid-batch unmount with what was saved and what was dropped", async () => {
+        const first = deferred<LibraryMaterial>();
+        create.mockImplementationOnce(() => first.promise);
+        await select(); await click("导入 3 个文件");
+        await act(async () => root.render(null));
+        await act(async () => first.resolve(material("A")));
+        expect(create).toHaveBeenCalledTimes(1);
+        expect(interrupted).toHaveBeenCalledExactlyOnceWith({completed: 1, remaining: 2, uncertain: false});
+        expect(imported).not.toHaveBeenCalled();
+    });
+
+    it("keeps the route guard installed while an import is pending", async () => {
+        const first = deferred<LibraryMaterial>();
+        create.mockImplementationOnce(() => first.promise);
+        await select(); await click("导入 3 个文件");
+        expect(routing.blockers.at(-1)?.shouldBlockFn()).toBe(true); expect(routing.blockers.at(-1)?.enableBeforeUnload).toBe(true);
+        await act(async () => first.reject(new Error("stop")));
     });
 });

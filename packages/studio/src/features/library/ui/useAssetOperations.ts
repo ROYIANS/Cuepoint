@@ -83,6 +83,12 @@ export function useAssetOperations({kind, ownerId, openAsset}: {
         }
     }
 
+    /** User attests they checked the list; creation may be attempted again (a duplicate is then a deliberate choice). */
+    function releaseUnknownCreate() {
+        if (!isCurrent() || locks.current.has(owner.key) || !unknownCreates.current.delete(owner.key)) return;
+        update({createIssue: undefined});
+    }
+
     function selectDelete(target: Target) {
         if (!isCurrent() || locks.current.has(owner.key)) return;
         const uncertainty = unknownDeletes.current.get(owner.key)?.get(target.id);
@@ -137,5 +143,5 @@ export function useAssetOperations({kind, ownerId, openAsset}: {
             update({checking: false});
         }
     }
-    return {...state, busy, create, selectDelete, closeDelete, remove, inspectDelete};
+    return {...state, busy, create, releaseUnknownCreate, selectDelete, closeDelete, remove, inspectDelete};
 }

@@ -40,7 +40,7 @@ class DetailLoadBoundary extends Component<{requestId: string; onUnavailable: (i
 }
 
 /** Finite composition; features and the existing host retain draft arbitration. */
-export function BusinessDetailsProvider({children}: {children: ReactNode}) {
+export function BusinessDetailsProvider({children, scopeKey}: {children: ReactNode; scopeKey?: string}) {
     const prefix = useId();
     const sequence = useRef(0);
     const [{slots, revision}, setFrame] = useState<{slots: Slots; revision: number}>({slots: {}, revision: 0});
@@ -76,6 +76,26 @@ export function BusinessDetailsProvider({children}: {children: ReactNode}) {
             });
         };
     }, []);
+    // Detail state is scoped to its host (for Agent: the thread), not to the lifetime of the page component.
+    // A scope change retires every pane/attempt without remounting the host's children; the departure guard
+    // already refused the route change if a pane held unsaved work.
+    const scope = useRef(scopeKey);
+    useLayoutEffect(() => {
+        if (scope.current === scopeKey) return;
+        scope.current = scopeKey;
+        const opening = openAttempt.current;
+        openAttempt.current = undefined;
+        opening?.resolve({status: "refused", requestId: opening.id, reason: "superseded"});
+        const returning = returnAttempt.current;
+        returnAttempt.current = undefined;
+        returning?.resolve("stale");
+        for (const selection of deferredReplacements.current.splice(0)) notify(selection, "close");
+        for (const kind of ["shot", "asset"] as const) {
+            const accepted = current.current[kind]?.accepted;
+            if (accepted) notify(accepted, "close");
+        }
+        publish({});
+    }, [scopeKey, notify, publish]);
     useEffect(() => {
         // A child may request closure from a passive effect of the previous
         // commit. Only the render containing that removal may return its origin.

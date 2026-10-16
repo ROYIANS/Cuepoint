@@ -153,6 +153,8 @@ function StudioLibrary({kind}: { kind: LibraryKind }) {
                            extra={<Button disabled={operations.busy || operations.createIssue?.kind === "unknown"} onClick={() => void operations.create()}><Plus
                                aria-hidden/>{operations.creating ? "创建中…" : operations.createIssue?.kind === "open" ? "打开已创建的设定" : copy.create}</Button>}/>
             {operations.createIssue && <p role="alert" className="text-destructive text-sm">{operations.createIssue.message}</p>}
+            {operations.createIssue?.kind === "unknown" && <Button variant="outline" size="sm" disabled={operations.busy}
+                onClick={operations.releaseUnknownCreate}>已核对列表，允许重新创建</Button>}
             <div>
                 {(!view || view.kind !== kind) && <PageState kind="loading" title="正在读取设定…"/>}
                 {view?.kind === kind && view.error &&

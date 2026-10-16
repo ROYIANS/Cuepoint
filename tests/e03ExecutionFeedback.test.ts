@@ -160,3 +160,19 @@ describe('invocation-owned execution feedback', () => {
         owner.dispose();
     });
 });
+
+describe('timing collection path', () => {
+    it('returns bounded, content-free relative marks without requiring User Timing support', () => {
+        let at = 5;
+        const owner = createExecutionFeedbackController({timing: undefined, now: () => at});
+        for (let index = 0; index < 10; index++) { at += 1; owner.begin(`token-${index}`); }
+        const first = owner.begin('token-private');
+        at = 50; first.admitted(run);
+        const timeline = owner.timeline();
+        expect(timeline).toHaveLength(8);
+        expect(timeline.at(-1)?.marks).toMatchObject({submitted: expect.any(Number), admitted: 50});
+        expect(JSON.stringify(timeline)).not.toContain('private');
+        owner.dispose();
+        expect(owner.timeline()).toEqual([]);
+    });
+});

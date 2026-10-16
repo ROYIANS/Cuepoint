@@ -226,6 +226,22 @@ describe("actual batch review target handoff", () => {
         expect(duration.value).toBe("invalid");
         noExecution();
     });
+    it("still opens the detail when the modal never reports onCloseAutoFocus", async () => {
+        const dispatch = EventTarget.prototype.dispatchEvent;
+        const swallowed = vi.fn();
+        vi.spyOn(EventTarget.prototype, "dispatchEvent").mockImplementation(function (this: EventTarget, event: Event) {
+            if (event.type === "focusScope.autoFocusOnUnmount") {swallowed(); return true;}
+            return dispatch.call(this, event);
+        });
+        await showReview(); await editPrompt("watchdog draft"); await click(targetLink());
+        await vi.waitFor(async () => {
+            await act(async () => {await new Promise(resolve => setTimeout(resolve, 50));});
+            expect(portal.querySelector("[data-shot-editor]")?.getAttribute("data-shot-editor")).toBe(fixture.shots[0].id);
+        }, {timeout: 3000});
+        expect(swallowed).toHaveBeenCalled();
+        expect([...document.querySelectorAll("button")].some(node => node.textContent === "返回批量审阅")).toBe(true);
+        noExecution();
+    });
     it("retires a replaced origin without reopening it over the new detail", async () => {
         await showReview(); await editPrompt("仍是原来的审阅"); await click(targetLink());
         await settle(() => expect(portal.querySelector("[data-shot-editor]")?.getAttribute("data-shot-editor")).toBe(fixture.shots[0].id));
@@ -233,7 +249,10 @@ describe("actual batch review target handoff", () => {
         await settle(() => expect(portal.querySelector("[data-shot-editor]")?.getAttribute("data-shot-editor")).toBe(fixture.shots[1].id));
         expect(document.querySelector(".agent-batch-dialog")).toBeNull();
         expect([...document.querySelectorAll("button")].some(node => node.textContent === "返回批量审阅")).toBe(false);
+        // The retained dirty draft is announced, not silently hidden.
+        expect(document.querySelector(".agent-batch-error[role=status]")?.textContent).toContain("未保存的编辑仍保留");
         await click(document.querySelector<HTMLElement>(".agent-batch-open")!);
+        expect(document.querySelector(".agent-batch-error[role=status]")).toBeNull();
         await settle(() => expect(document.querySelector(".agent-batch-dialog")).not.toBeNull());
         expect(document.querySelector<HTMLTextAreaElement>(".agent-batch-fields textarea")?.value).toBe("仍是原来的审阅");
         noExecution();

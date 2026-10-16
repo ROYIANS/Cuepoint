@@ -22,6 +22,8 @@ import type {Project} from "../../projects/models/project";
 import type {Episode} from "../models/episodes";
 import type {Character, Scene, Prop, VisualStyle} from "../../library/models/assets";
 import {sanitizeText} from "../../../platform/diagnostics/sanitize";
+import {DraftConflictError} from "../../../platform/product/draftConflict";
+import {shotSceneCommit, shotStatusCommit, type ShotSelectionCommit} from "./shotSelectionCommit";
 
 type DraftEntry = ManualDraftState & {discard?: () => void};
 type ReportDraft = (key: string, state: ManualDraftState, discard?: () => void) => void;
@@ -187,6 +189,13 @@ function ShotDetailFields({project, episode, shot, characters, scenes, props, st
             retry.current = undefined;
             report("selection", {dirty: false, pending: false});
         } catch (cause) {
+            if (cause instanceof DraftConflictError) {
+                // The control re-reads the latest row; replaying the stale baseline could only conflict again.
+                retry.current = undefined;
+                setError("该镜头已被其他操作更改，已显示最新值，请重新选择。");
+                report("selection", {dirty: false, pending: false});
+                return;
+            }
             setError(cause instanceof Error ? sanitizeText(cause.message, 200) : "保存选择失败，请重试");
             report("selection", {dirty: true, pending: false});
         } finally {
@@ -194,6 +203,7 @@ function ShotDetailFields({project, episode, shot, characters, scenes, props, st
             setPending(false);
         }
     }
+    const commitSelection = ({patch, baseline}: ShotSelectionCommit) => void commit(() => repository.patchShot(shot.id, patch, baseline));
     const slots = parseShotPictureSlots(shot as unknown as Record<string, unknown>);
     const textFields = Object.values(TEXT_SHOT_FIELDS) as TextShotField[];
     return <div className="space-y-5" data-shot-editor={shot.id}>
@@ -205,7 +215,7 @@ function ShotDetailFields({project, episode, shot, characters, scenes, props, st
                 onDepartureState={(state, discard) => report("durationSec", state, discard)}/></Field>
         </div>
         <Field label="状态"><Select value={normalizeShotStatus(shot.status)} disabled={pending || unavailable}
-            onValueChange={value => void commit(() => repository.patchShot(shot.id, {status: normalizeShotStatus(value)}))}>
+            onValueChange={value => commitSelection(shotStatusCommit(shot, value))}>
             <SelectTrigger aria-label="镜头状态" className="w-full"><SelectValue/></SelectTrigger>
             <SelectContent>{SHOT_STATUSES.map(status => <SelectItem key={status} value={status}>{SHOT_STATUS_LABELS[status]}</SelectItem>)}</SelectContent>
         </Select></Field>
@@ -214,7 +224,7 @@ function ShotDetailFields({project, episode, shot, characters, scenes, props, st
                 multiline={field === "content" || field === "notes"} rows={field === "content" ? 4 : 2} unavailable={unavailable}
                 onDepartureState={(state, discard) => report(field, state, discard)}/></Field>)}
         <Field label="场景"><Select value={shot.sceneId ?? "none"} disabled={pending || unavailable}
-            onValueChange={value => void commit(() => repository.patchShot(shot.id, {sceneId: value === "none" ? undefined : value}))}>
+            onValueChange={value => commitSelection(shotSceneCommit(shot, value))}>
             <SelectTrigger aria-label="镜头场景" className="w-full"><SelectValue/></SelectTrigger><SelectContent>
                 <SelectItem value="none">未选择场景</SelectItem>
                 {shot.sceneId && !scenes.some(scene => scene.id === shot.sceneId) && <SelectItem value={shot.sceneId} disabled>已失效的场景</SelectItem>}

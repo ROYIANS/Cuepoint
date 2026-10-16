@@ -3,6 +3,7 @@ import type {AgentRun, AgentReasoningEffort} from "./agent";
 import type {ChatMessage, ChatThread} from "./chat";
 import type {DraftRecovery, SubmittedDraft} from "./chatDraft";
 import type {AgentInteractionMode} from "./agent";
+import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
 import {createId, nowIso} from "../../../platform/identity";
 
 /** App/document-local presentation and frozen intent; never persisted or used as history. */
@@ -18,6 +19,8 @@ export type ChatSubmissionAttempt = {
     taskMode: boolean;
     interactionMode: AgentInteractionMode;
     reasoningEffort?: AgentReasoningEffort;
+    /** Frozen at first send so an explicit retry resolves the same capacity/vision rules. */
+    modelMetadata?: ChatModelMetadata;
     createdAt: string;
     phase: "preparing" | "accepted" | "failed" | "uncertain" | "checking";
     error?: string;

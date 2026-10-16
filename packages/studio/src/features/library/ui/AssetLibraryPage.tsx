@@ -150,6 +150,8 @@ export function AssetLibraryPage({projectId, tab, onTabChange}: {
                             ) : undefined}/>
 
                 {operations.createIssue && <p role="alert" className="text-destructive text-sm">{operations.createIssue.message}</p>}
+            {operations.createIssue?.kind === "unknown" && <Button variant="outline" size="sm" disabled={operations.busy}
+                onClick={operations.releaseUnknownCreate}>已核对列表，允许重新创建</Button>}
                 <PageToolbar>
                     <Tabs
                         value={tab}

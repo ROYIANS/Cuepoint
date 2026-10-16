@@ -113,6 +113,16 @@ describe("E05 actual asset collections and destructive Radix dialog", () => {
         expect(host.addCharacter).toHaveBeenCalledTimes(1);
         expect(host.navigate.mock.calls[0][0].params).toEqual({projectId: "project", characterId: "old-owner-created"});
     });
+    it("offers an explicit exit from an unknown creation after the user checked the list", async () => {
+        host.addCharacter.mockRejectedValueOnce(new UnknownCommitError("op", "workspace"));
+        await draw(); await click("新建角色");
+        expect(button("新建角色").disabled).toBe(true);
+        await click("已核对列表，允许重新创建");
+        expect(document.querySelector('[role="alert"]')).toBeNull(); expect(button("新建角色").disabled).toBe(false);
+        expect([...document.querySelectorAll("button")].some(node => node.textContent === "已核对列表，允许重新创建")).toBe(false);
+        await click("新建角色"); expect(host.addCharacter).toHaveBeenCalledTimes(2);
+        expect(host.navigate).toHaveBeenCalledTimes(1);
+    });
     it("quarantines unknown creation per owner/kind through tab changes and suppresses unmounted completion", async () => {
         host.addCharacter.mockRejectedValueOnce(new UnknownCommitError("op", "workspace"));
         await draw(); await click("新建角色"); expect(button("新建角色").disabled).toBe(true);

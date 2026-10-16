@@ -263,6 +263,10 @@ export function createExecutionFeedbackController(options: {
                 },
             };
         },
+        /** Content-free collection path (tests / dev tooling): trace prefix plus relative mark times, newest last. */
+        timeline(): Array<{trace: string; marks: Partial<Record<MarkName, number>>}> {
+            return traces.map(trace => ({trace: trace.prefix, marks: Object.fromEntries(trace.marks)}));
+        },
         dispose() {
             current = undefined;
             traces.splice(0).forEach(clear);

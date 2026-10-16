@@ -3,8 +3,8 @@ import type {ShotDetailTarget} from "../../features/video/models/shotDetailTarge
 import {BusinessDetailLink, BusinessDetailsProvider, useBusinessDetailActivation} from "./BusinessDetails";
 
 /** Existing consumers share the single finite business-detail composition. */
-export function ShotDetailsProvider({children}: {children: ReactNode}) {
-    return <BusinessDetailsProvider>{children}</BusinessDetailsProvider>;
+export function ShotDetailsProvider({children, scopeKey}: {children: ReactNode; scopeKey?: string}) {
+    return <BusinessDetailsProvider scopeKey={scopeKey}>{children}</BusinessDetailsProvider>;
 }
 
 export function useShotDetailActivation() {
