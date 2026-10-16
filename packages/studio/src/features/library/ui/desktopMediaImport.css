@@ -1,0 +1,12 @@
+.desktop-media-import { border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin: 18px 0 24px; display: grid; gap: 12px; }
+.desktop-media-import-header { display: flex; gap: 16px; align-items: center; justify-content: space-between; }
+.desktop-media-import h2 { font-size: 14px; font-weight: 600; }
+.desktop-media-import p { font-size: 14px; line-height: 1.6; }
+.desktop-media-import-header p, .desktop-media-current { color: var(--muted-foreground); }
+.desktop-media-candidates { max-height: 320px; overflow: auto; display: grid; border-block: 1px solid var(--border); }
+.desktop-media-candidates label { display: flex; align-items: center; gap: 10px; padding: 10px 0; min-width: 0; }
+.desktop-media-candidates span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+.desktop-media-candidates small { color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+.desktop-media-progress, .desktop-media-recovery { display: grid; gap: 8px; }
+.desktop-media-progress button, .desktop-media-recovery button, .desktop-media-import > button { justify-self: start; }
+@media (max-width: 540px) { .desktop-media-import-header { align-items: flex-start; flex-direction: column; } }

@@ -76,6 +76,10 @@ eight grants and two active operations. Grants expire after30minutes of scoped
 inactivity. Ordinary source files require one link. Discovered aliases/reparse
 points are skipped; Windows sources use the existing local fixed NTFS baseline.
 Directory identity excludes link count, which normal member changes can alter.
+Revoking a grant checks the scope of its actual owner, then removes authority even
+if the grant expired or its source changed. Repeating revocation of an absent ID
+is idempotent. It must not require the source-use checks that expiry already denies;
+otherwise an expired candidate could permanently block choosing another directory.
 
 Scan freezes file identity, length, mtime and SHA-256. Preparation rechecks ancestors
 and source identity, copies into a private owned directory and verifies the frozen

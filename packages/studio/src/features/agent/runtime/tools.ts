@@ -1,5 +1,6 @@
 import type {AgentToolDefinition} from './toolDefinition';
 import {assertUniqueToolNames, defineTool} from './toolDefinition';
+import {DESKTOP_MEDIA_TOOLS} from "../../library/agent/desktopMediaTools";
 import {IP_TOOLS} from "../../library/agent/ipTools";
 import {AUDIO_TOOLS} from "../../audio/agent/audioTools";
 import {MUSIC_TOOLS} from "../../music/agent/musicTools";
@@ -129,6 +130,7 @@ const definitions = [
     ...WEB_TOOLS,
     ...MEDIA_CHECK_TOOLS,
     ...JOB_TOOLS,
+    ...DESKTOP_MEDIA_TOOLS,
 ];
 
 // Existential registry: dispatch must use the selected definition's own parser before

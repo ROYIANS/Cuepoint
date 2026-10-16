@@ -1,3 +1,4 @@
+import {DesktopMediaImportPanel} from "./DesktopMediaImportPanel";
 import {ModuleLayout} from "../../../app/layout/ModuleLayout";
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "@tanstack/react-router";
@@ -91,6 +92,7 @@ function SharedMaterialLibraryPage({routeSearch}: { routeSearch: MaterialLibrary
         <PageHeader title="素材库" description="管理媒体、资料和创作设定的版本。"
                     actions={<Button onClick={() => setImporting(true)}><Upload size={16}
                                                                                 aria-hidden/>导入素材</Button>}/>
+        {view === "media" && routeSearch.project && <DesktopMediaImportPanel key={routeSearch.project} projectId={routeSearch.project}/>}
         <PageToolbar className="material-filters">
             <div className="material-search"><Search size={16} aria-hidden/><Input aria-label="搜索素材"
                                                                                    placeholder="搜索名称、标签或备注"

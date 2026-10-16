@@ -5999,6 +5999,73 @@
       "owner": "features/library",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/library/agent/desktopMediaToolNames.ts",
+      "file": "packages/studio/src/features/library/agent/desktopMediaToolNames.ts",
+      "target": "packages/studio/src/features/library/agent/desktopMediaToolNames.ts",
+      "owner": "features/library",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "DESKTOP_MEDIA_TOOL_NAMES"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/library/agent/desktopMediaTools.ts",
+      "file": "packages/studio/src/features/library/agent/desktopMediaTools.ts",
+      "target": "packages/studio/src/features/library/agent/desktopMediaTools.ts",
+      "owner": "features/library",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "DESKTOP_MEDIA_TOOLS"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/library/services/desktopMediaImport.ts",
+      "file": "packages/studio/src/features/library/services/desktopMediaImport.ts",
+      "target": "packages/studio/src/features/library/services/desktopMediaImport.ts",
+      "owner": "features/library",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "inspectDesktopMediaImport",
+        "ownsDesktopMediaImport",
+        "stopDesktopMediaImport"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/library/ui/DesktopMediaImportPanel.tsx",
+      "file": "packages/studio/src/features/library/ui/DesktopMediaImportPanel.tsx",
+      "target": "packages/studio/src/features/library/ui/DesktopMediaImportPanel.tsx",
+      "owner": "features/library",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/library/ui/desktopMediaImport.css",
+      "file": "packages/studio/src/features/library/ui/desktopMediaImport.css",
+      "target": "packages/studio/src/features/library/ui/desktopMediaImport.css",
+      "owner": "features/library",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/desktopMedia.ts",
+      "file": "packages/studio/src/platform/runtime/desktopMedia.ts",
+      "target": "packages/studio/src/platform/runtime/desktopMedia.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/AgentDesktopMediaReport.tsx",
+      "file": "packages/studio/src/features/agent/ui/AgentDesktopMediaReport.tsx",
+      "target": "packages/studio/src/features/agent/ui/AgentDesktopMediaReport.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

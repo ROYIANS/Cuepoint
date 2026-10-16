@@ -2,7 +2,7 @@
 
 Status: approved and active after the 2026-10-16 platform decision. Keep stages
 small enough to checkpoint and commit independently; do not run the full package or
-installer gate until every source stage is complete.
+installer gate until the entire selected epic batch is complete.
 
 ## Stage 0 — activation and contracts
 
@@ -26,7 +26,7 @@ installer gate until every source stage is complete.
 - [x] Check the source changes, fix findings, commit the stage.
 
 Stage 1 source/native checkpoint: `52e584c7` (native grants/processes and pinned
-decoder resources). desktop-focused Rust tests **13 passed**, one
+decoder resources). Desktop-focused Rust tests **13 passed**, one
 explicit-resource fixture ignored in that command; the real bundled FFmpeg fixture
 ran separately and passed. Decoder/release source checks passed. Windows execution
 and system-picker/installed acceptance remain in the final epic batch gate.
@@ -44,21 +44,21 @@ and system-picker/installed acceptance remain in the final epic batch gate.
   idempotence, concurrent edits, derivative lifecycle and package mapping.
 - [x] Check the source changes, fix findings, commit the stage.
 
-Stage 2 source review: the six foundation Studio suites passed **53 tests**;
+Stage 2 checkpoint: `2b00d8e5`. Source review: the six foundation Studio suites passed **53 tests**;
 scoped foundation lint had **0 errors, 44 warnings**. Exact approval, unknown-claim
 retention and derivative closure findings were fixed before this checkpoint.
 
 ## Stage 3 — Agent tools and interaction surface
 
-- [ ] Add a finite `desktop-media` read/prepare/import tool group with exact scope,
+- [x] Add a finite `desktop-media` read/prepare/import tool group with exact scope,
   approval and frozen-preview rules. Keep native work outside atomic DB callbacks.
-- [ ] Wire the native transport and shared import coordinator into the existing
+- [x] Wire the native transport and shared import coordinator into the existing
   media library and Agent result surface: immediate selection acknowledgement, real progress, one Stop, truthful
   failed/unknown/committed outcomes, no drawer/navigation or transient technical
   captions.
-- [ ] Add focused tool-loading, preview, report and UI tests, including browser
+- [x] Add focused tool-loading, preview, report and UI tests, including browser
   unavailable behavior and duplicate/late-stop guards.
-- [ ] Check the source changes, fix findings, commit the stage.
+- [x] Check the source changes, fix findings, commit the stage.
 
 ## Stage 4 — decoder resources and host validation
 
@@ -68,10 +68,19 @@ retention and derivative closure findings were fixed before this checkpoint.
 - [x] Run only the necessary target-specific source/native tests and a deterministic
   fixture workflow on available hosts. Record Windows runtime/packaging evidence as
   pending when this macOS host cannot execute it.
-- [ ] Check the complete source closure and update specs with durable contracts.
-- [ ] Record full build/package/emitted/live gates for the owner's end-of-epic batch
+- [x] Check the complete source closure and update specs with durable contracts.
+- [x] Record full build/package/emitted/live gates for the owner's end-of-epic batch
   acceptance, and commit this task's final source integration checkpoint. Do not run
   those gates merely because E08 source stages are complete.
+
+Stage 3 source closure: actual ReactDOM interaction, strict transport/tool parsers
+and shared-store workflow regressions passed. Final focused native review passed
+**16 tests** plus one resource-dependent ignored fixture; the real FFmpeg fixture
+ran separately. Whole changed-scope architecture had **669 files**, **2,635 static
+and 14 dynamic edges**, **0 static cycles and 0 failures**. Strict E08 source and
+Node typechecks passed. Final implementation evidence is consolidated in
+`research/implementation-validation.md`; actual other-host/installed acceptance
+remains deferred, so the task remains open for the epic batch gate.
 
 ## Validation commands
 

@@ -610,9 +610,20 @@ impl DesktopMedia {
                 Ok(json!({"status":"released","operationId":operation_id}))
             }
             MediaAction::RevokeDirectory { grant_id } => {
-                let grant = self.grant(scope, &grant_id)?;
-                grant.revoked.store(true, Ordering::SeqCst);
+                uuid(&grant_id)?;
                 let mut owner = lock(&self.owner)?;
+                let Some(grant) = owner.grants.get(&grant_id) else {
+                    return Ok(json!({"status":"revoked","grantId":grant_id}));
+                };
+                if !scope.matches(&grant.scope) {
+                    return Err(Error::new(
+                        "ownership",
+                        "Directory belongs to another project or session",
+                    ));
+                }
+                // Revocation removes authority even after expiry or source changes.
+                // Only reading/using a grant requires its live filesystem checks.
+                grant.revoked.store(true, Ordering::SeqCst);
                 for operation in owner.operations.values() {
                     if operation.grant_id.as_deref() == Some(&grant_id) {
                         operation.cancel.store(true, Ordering::SeqCst);
@@ -1356,6 +1367,91 @@ mod tests {
         assert_eq!(native.check_entry(entry).unwrap_err().code, "changed");
         native.revoked.store(true, Ordering::SeqCst);
         assert_eq!(native.check().unwrap_err().code, "grantRevoked");
+    }
+    #[test]
+    fn expired_directory_grant_can_be_revoked_and_replaced() {
+        let fixture = Fixture::new();
+        let (worker, scope) = worker(&fixture);
+        let owner = DesktopMedia::default();
+        let grant_id = grant(&owner, &scope, &fixture.0);
+        let native = owner.grant(&scope, &grant_id).unwrap();
+        let operation = owner
+            .reserve(&scope, &id(), Some(&grant_id), "scanning")
+            .unwrap();
+        *lock(&native.touched).unwrap() = Instant::now() - GRANT_IDLE - Duration::from_secs(1);
+        assert_eq!(owner.grant(&scope, &grant_id).err().unwrap().code, "grantRevoked");
+        let result = owner
+            .request(
+                &scope,
+                MediaAction::RevokeDirectory {
+                    grant_id: grant_id.clone(),
+                },
+                &worker,
+                &fixture.0,
+                &fixture.0,
+            )
+            .unwrap();
+        assert_eq!(result["status"], "revoked");
+        assert!(native.revoked.load(Ordering::SeqCst));
+        assert!(operation.cancel.load(Ordering::SeqCst));
+        assert!(!lock(&owner.owner).unwrap().grants.contains_key(&grant_id));
+        let replacement = grant(&owner, &scope, &fixture.0);
+        assert_ne!(replacement, grant_id);
+        assert!(owner.grant(&scope, &replacement).is_ok());
+        worker.close().unwrap();
+    }
+    #[test]
+    fn repeated_directory_revocation_is_idempotent_without_other_effects() {
+        let fixture = Fixture::new();
+        let (worker, scope) = worker(&fixture);
+        let owner = DesktopMedia::default();
+        let grant_id = grant(&owner, &scope, &fixture.0);
+        let unrelated = owner.reserve(&scope, &id(), None, "picking").unwrap();
+        for _ in 0..2 {
+            let result = owner
+                .request(
+                    &scope,
+                    MediaAction::RevokeDirectory {
+                        grant_id: grant_id.clone(),
+                    },
+                    &worker,
+                    &fixture.0,
+                    &fixture.0,
+                )
+                .unwrap();
+            assert_eq!(result["status"], "revoked");
+            assert_eq!(result["grantId"], grant_id);
+            assert!(!unrelated.cancel.load(Ordering::SeqCst));
+        }
+        assert!(lock(&owner.owner).unwrap().grants.is_empty());
+        worker.close().unwrap();
+    }
+    #[test]
+    fn foreign_scope_cannot_revoke_existing_directory_grant() {
+        let fixture = Fixture::new();
+        let (worker, scope) = worker(&fixture);
+        let owner = DesktopMedia::default();
+        let grant_id = grant(&owner, &scope, &fixture.0);
+        let native = owner.grant(&scope, &grant_id).unwrap();
+        let operation = owner
+            .reserve(&scope, &id(), Some(&grant_id), "scanning")
+            .unwrap();
+        let mut foreign = scope.clone();
+        foreign.project_id = "foreign".into();
+        let result = owner.request(
+            &foreign,
+            MediaAction::RevokeDirectory {
+                grant_id: grant_id.clone(),
+            },
+            &worker,
+            &fixture.0,
+            &fixture.0,
+        );
+        assert_eq!(result.err().unwrap().code, "ownership");
+        assert!(!native.revoked.load(Ordering::SeqCst));
+        assert!(!operation.cancel.load(Ordering::SeqCst));
+        assert!(owner.grant(&scope, &grant_id).is_ok());
+        worker.close().unwrap();
     }
     #[test]
     fn scan_is_ordered_bounded_and_does_not_follow_aliases() {

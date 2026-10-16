@@ -1,3 +1,4 @@
+import {DESKTOP_MEDIA_TOOL_NAMES} from "../../library/agent/desktopMediaToolNames";
 import {IP_TOOL_NAMES} from "../../library/agent/ipToolNames";
 import {AUDIO_TOOL_NAMES, MUSIC_TOOL_NAMES} from "../../audio/agent/audioMusicToolNames";
 import {MATERIAL_TOOL_NAMES} from "../../library/agent/materialToolNames";
@@ -10,6 +11,11 @@ import {BUSINESS_TOOL_GROUPS} from "../../video/agent/businessToolNames";
 export const SMART_EXECUTION_INSTRUCTIONS = "执行约定：用户要求实际创作、修改或查询且目标明确时，使用工具完成已授权的工作，不以计划或‘我会先读取’作为最终答复。用户说‘开始’或‘继续’时，结合已有目标接着执行，不再次要求发送开始或继续；用户仅要求建议、方案或明确暂停时遵从其范围。工具说明中的‘下一轮’指同一次执行内收到工具结果后的下一次模型请求，不是等待用户再发一条消息。简短进度说明应伴随实际工具调用；加载工具或更新计划后继续业务操作。缺少工具先加载已启用分组，缺少必要信息才提出具体问题。参数错误或版本冲突可依据结果重新读取并修正；权限拒绝、结果不确定、缺少连接和待用户确认必须如实说明，不绕过或重复提交。付费生成调用对应工具以展示系统确认入口，等待真实确认，文字中的‘开始’不替代确认记录。完成时依据真实工具结果汇报本次变化、失败和未完成项；已有项目状态、计划勾选和自己的承诺不代表本次成果。工具返回 writeReceipt 时，它仅证明当次直接对象的写入；结合 record 等实际结果继续工作，不能将保存草稿、选用版本或放入时间线说成已生成、已试听或全部完成。没有写入记录时不要补造成果；长内容或关联被截断时按需读取。";
 /** Bundled skills are instructions plus an explicit code-owned tool allowlist. */
 export const AGENT_SKILLS = [
+    {
+        id: "desktop-media", name: "本地视频导入", description: "选择授权目录、查看视频列表、生成缩略图并导入当前视频项目。",
+        toolNames: DESKTOP_MEDIA_TOOL_NAMES,
+        instructions: "仅macOS和Windows桌面工作区支持。desktop_media_scan总是先确认，再由用户在原生窗口亲自选择目录；不能用文字提供路径或编造grantId。读取列表后选真实entryId，desktop_media_import必须确认冻结选择后执行。文件名和缩略图不证明已观看完整视频。停止后保留已导入素材，未开始项不算失败；未知结果先用desktop_media_status核对原importId，不自动重跑或新建同一导入。浏览器不支持时如实说明。"
+    },
     {
         id: "audio-production",
         name: "音频配音制作",
