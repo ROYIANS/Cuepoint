@@ -49,7 +49,7 @@ If a warning reports malware, a virus, or a damaged file, stop installation and 
 
 | Area | Implemented capabilities |
 | --- | --- |
-| Creative assistant | Streaming conversations, project binding, task plans, tool execution, permissions, execution history, and saved outcomes |
+| Creative assistant | Streaming conversations, project binding, task plans, tool execution, permissions, installed skills, MCP connections, execution history, and saved outcomes. Work in progress can continue after leaving the conversation |
 | Video projects | Films and series, world settings, stories and scenes, shot lists, asset relationships, visual generation, and production delivery |
 | Audio projects | Chapters and manuscripts, speakers and voices, speech generation, microphone recording, source auditions, multitrack editing, and WAV mixdown |
 | Music projects | Drafts, Suno / Flow Music generation, playback and favorites, settings reuse, downloads, and adoption into audio projects |
