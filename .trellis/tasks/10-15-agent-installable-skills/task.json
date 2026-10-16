@@ -4,8 +4,8 @@
   "title": "E09 · 可安装创作技能与按需加载",
   "description": "Load reusable creative workflow instructions on demand independently from tool execution authority.",
   "status": "planning",
-  "dev_type": null,
-  "scope": null,
+  "dev_type": "fullstack",
+  "scope": "agent-installable-skills",
   "package": "studio",
   "priority": "P2",
   "creator": "ROYIANS",
@@ -20,16 +20,40 @@
   "subtasks": [],
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
-  "relatedFiles": [],
-  "notes": "Planning backlog from the 2026-10-15 investigation. Task creation is authorized; delivery scope and implementation remain subject to this task review.",
+  "relatedFiles": [
+    "packages/agent-core",
+    "packages/studio/src/features/agent",
+    "packages/studio/src/platform/runtime",
+    "apps/desktop/src-tauri",
+    "quality/studio-ownership.json"
+  ],
+  "notes": "Owner accepted E09 outline on 2026-10-16. Concrete text-only local-directory scope, immutable revision/storage/run/UX design and three-stage plan are prepared for final review. Planning checkpoint only; no implementation activation. Standing sequential stage-commit and necessary-affected-check cadence retained.",
   "meta": {
     "epicCode": "E09",
-    "deliveryState": "planning-backlog",
+    "deliveryState": "planning-final-review",
     "implementationApproved": false,
     "dependsOn": [
       "10-15-agent-resource-capabilities"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Needs child-specific requirement convergence, design, implementation/validation plan and review before start."
+    "readiness": "PRD, design, staged implementation plan and source-backed research prepared; latest concrete scope review pending.",
+    "planningDate": "2026-10-16",
+    "proposedPlatforms": [
+      "macOS",
+      "Windows",
+      "browser directory import where supported"
+    ],
+    "proposedInstallSource": "explicit one-directory UTF-8 text snapshot; manual update; no source watch",
+    "proposedScope": "device-local installed catalogue and existing global Agent enablement; no project override/sync",
+    "testingPolicy": "necessary affected tests and scoped review per stage; full regression/build/emitted/packed/native/installer at epic end",
+    "planningArtifacts": [
+      "prd.md",
+      "design.md",
+      "implement.md",
+      "research/current-runtime.md",
+      "research/install-storage.md",
+      "research/reference-skills.md",
+      "research/format-and-interaction.md"
+    ]
   }
 }

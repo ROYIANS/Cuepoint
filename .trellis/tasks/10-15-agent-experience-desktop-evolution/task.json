@@ -60,6 +60,7 @@
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E08 source stages committed as 52e584c7/2b00d8e5/ca2da1a5 with necessary source/native checks and independent reviews passed. Retain actual Windows/installed and full build/package/native integration acceptance for the owner-approved epic batch boundary; E08 remains open for those gates. Subsequent independent deliveries retain their own planning/approval contracts."
+    "nextAction": "E09 concrete local text-skill import, immutable version/run retention and retained-workspace management design is prepared for final review. E08 remains source-complete with actual Windows/installed and epic full batch acceptance pending; do not archive or treat E09 planning as discharging those gates.",
+    "planningDelivery": "10-15-agent-installable-skills"
   }
 }

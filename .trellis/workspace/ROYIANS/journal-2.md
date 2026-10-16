@@ -450,3 +450,37 @@ Completed native directory/decoder ownership, atomic source-thumbnail import, in
 ### Next Steps
 
 - Keep E08 active source-complete awaiting actual Windows/installed and whole-epic full regression/build/emitted/packed/native integration; do not archive or claim cross-platform runtime acceptance from source checks.
+
+
+## Session 81: E09 installable skills planning and scope review
+<!-- trellis-session: v=2 fp=f1d5f5b26a46407b -->
+
+**Date**: 2026-10-16
+**Task**: E09 installable skills planning and scope review
+**Package**: studio
+**Branch**: `codex/desktop-workspace-media`
+
+### Summary
+
+Prepared E09 local text-skill installation, immutable version/run retention, progressive loading and retained-workspace management design for final review; product implementation not started.
+
+### Main Changes
+
+- Added source-backed current-runtime, local install/storage, reference-project and portable-format/UI research; resolved whole-row resource hydration in the plan by separate manifest/body/resource keys.
+- Wrote converged PRD, concrete design, three-stage implementation/validation plan and curated implement/check context; parent roadmap records E09 planning while E08 deferred acceptance remains open.
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] Planning consistency review completed; identified draft storage/lifecycle discrepancies corrected. task.py validate passes with explicit long-spec injection-tail warnings; no product tests/build/package run.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Present final concrete E09 scope for review; after approval activate and implement Stage 1, then scoped review and commit.

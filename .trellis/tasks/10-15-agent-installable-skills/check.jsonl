@@ -1,7 +1,20 @@
-{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/agent-core/library/runtime.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/agent-providers/library/protocols.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/capability-comparison.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Shared Agent feature ownership and retained product behavior."}
+{"file": ".trellis/spec/frontend/feature-organization.md", "reason": "Agent-owned install commands/UI; named ContextPanel entry and exact source discovery."}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Only ProductStore; deviceSettings key/value bounds, transaction propagation and commit certainty. Read full document."}
+{"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Trusted native session/window, finite transport and no second storage/runtime owner. Read full document."}
+{"file": ".trellis/spec/desktop/runtime/index.md", "reason": "macOS/Windows handler/ACL ownership and actual host acceptance at epic batch."}
+{"file": ".trellis/spec/agent-core/library/runtime.md", "reason": "Pure public API, one loop, protocol/compaction and source versus emitted proof."}
+{"file": ".trellis/spec/agent-core/library/capabilities.md", "reason": "Exact offers, 36-tool budget and immutable identities; documents never grant resources."}
+{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Argument/approval/run ownership for fixed skill reads."}
+{"file": ".trellis/spec/frontend/agent-context.md", "reason": "Frozen retry/context, shared preview budget and preserved protocol chains."}
+{"file": ".trellis/spec/frontend/agent-creative-skills.md", "reason": "Builtin allowlists/default opt-outs and paid confirmation."}
+{"file": ".trellis/spec/frontend/agent-business-details.md", "reason": "Retained chat, right ContextPanel and guarded replacement/narrow return."}
+{"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Immediate direct feedback, quiet success and owned failure/unknown recovery."}
+{"file": ".trellis/spec/frontend/monorepo-boundaries.md", "reason": "Public root imports and neutral source ownership."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Untrusted YAML/DTO decoding and validated plain types."}
+{"file": ".trellis/tasks/10-15-agent-installable-skills/research/current-runtime.md", "reason": "Actual builtin/discovery/run owners and progressive-read integration."}
+{"file": ".trellis/tasks/10-15-agent-installable-skills/research/install-storage.md", "reason": "Finite import, device KV revision/pin accounting and project deletion retention."}
+{"file": ".trellis/tasks/10-15-agent-installable-skills/research/reference-skills.md", "reason": "Metadata/body separation without Cordis, live-body changes or executable plugins."}
+{"file": ".trellis/tasks/10-15-agent-installable-skills/research/format-and-interaction.md", "reason": "Portable format evidence, explicit text subset and retained-workspace UX."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Actual affected source closure/type/lint/architecture and deferred batch gates."}
+{"file": ".trellis/spec/guides/task-artifact-retention.md", "reason": "Authored conclusions, not raw logs/copied contexts."}
