@@ -16,6 +16,8 @@ export interface CompactionHost<Run,Source extends ContextSource,Record extends 
     request:(run:Run,input:Input,outputReserve:number,signal:AbortSignal)=>Promise<{content:string;hasToolCalls:boolean;usage?:Usage}>;
     tokens:(content:string)=>number;
     activate:(run:Run,record:Record,content:string,usage:Usage|undefined,signal:AbortSignal)=>Promise<Run>;
+    /** Bounded, model-free reduction of already-seen current-turn results; return the same run when nothing changed. */
+    prune?:(run:Run,signal:AbortSignal)=>Promise<Run>;
     fail:(record:Record,cause:unknown,signal:AbortSignal)=>Promise<string>;
 }
 
@@ -41,18 +43,35 @@ export function isContextSourcePrefix<Source extends ContextSource>(prefix:reado
     return prefix.length>0 && prefix.length<=history.length && prefix.every((source,i)=>source.id === history[i].id && source.role === history[i].role && source.content === history[i].content && sameMetadata(source,history[i]));
 }
 
-/** A summary never slices a turn, includes the current draft, or runs an unbounded extra request. */
-export async function compactContext<Run,Source extends ContextSource,Record extends SummaryRecord<Source>,Input,Usage>(host:CompactionHost<Run,Source,Record,Input,Usage>,signal:AbortSignal):Promise<Run> {
+export interface CompactionOptions {
+    /** A confirmed provider overflow: reduce once regardless of thresholds, never loop. */
+    force?:boolean;
+}
+
+/**
+ * A summary never slices a turn, includes the current draft, or runs an unbounded extra request.
+ * One failed summary request is retried once; a second failure falls back to the uncompressed request
+ * only while it is still inside the hard input budget, otherwise the failure is reported.
+ */
+export async function compactContext<Run,Source extends ContextSource,Record extends SummaryRecord<Source>,Input,Usage>(host:CompactionHost<Run,Source,Record,Input,Usage>,signal:AbortSignal,options:CompactionOptions={}):Promise<Run> {
     let run=await host.read();
     await host.assertSettled(run);
     if (!host.context(run)) return run;
+    let pruned=false;
     for (let pass=0;pass<8;pass++) {
         signal.throwIfAborted();
+        if (options.force && pass>0) return run;
         const context=host.context(run)!;
-        const budget=host.budget(run);
+        const measured=host.budget(run);
+        const budget=options.force ? {...measured,needsCompression:true,overBudget:true} : measured;
         if (!context.autoCompress || !budget.needsCompression) {
             if (budget.overBudget) throw new Error('上下文超过安全输入预算。请开启自动压缩、减少历史消息或缩短当前输入后重新发送。');
             return run;
+        }
+        if (host.prune && !pruned) {
+            pruned=true;
+            const next=await host.prune(run,signal);
+            if (next !== run) {run=next;continue;}
         }
         const previous=context.summaryId ? await host.readSummary(context.summaryId) : undefined;
         if (context.summaryId && (!previous || previous.status !== 'completed' || !isContextSourcePrefix(previous.coverage,context.history,host.sameSource))) throw new Error('历史摘要已失效，请发送新消息重新选择上下文');
@@ -64,19 +83,38 @@ export async function compactContext<Run,Source extends ContextSource,Record ext
             selected.push(...group);
         }
         if (!selected.length) {
-            if (budget.overBudget) throw new Error('当前输入、完整对话轮次或本轮工具结果过大，无法安全压缩。请缩短输入、减少历史范围，或结束本次执行后开启新对话。');
+            if (measured.overBudget) throw new Error('当前输入、完整对话轮次或本轮工具结果过大，无法安全压缩。请缩短输入、减少历史范围，或结束本次执行后开启新对话。');
             return run;
         }
         const input=host.input(previous,selected);
-        const record=host.create(run,previous,selected,input);
-        await host.begin(run,record);
+        let accepted:{record:Record;content:string;usage:Usage|undefined}|undefined;
+        let failure='';
+        for (let attempt=0;attempt<2 && !accepted;attempt++) {
+            const record=host.create(run,previous,selected,input);
+            await host.begin(run,record);
+            try {
+                const result=await host.request(run,input,budget.outputReserve,signal);
+                signal.throwIfAborted();
+                const content=result.content.trim();
+                if (!content) throw new Error('摘要为空，原始对话已保留。');
+                if (result.hasToolCalls || host.tokens(content)+32 >= record.beforeTokens) throw new Error('摘要未能有效缩短上下文，原始对话已保留。请调整历史范围后重新发送。');
+                accepted={record,content,usage:result.usage};
+            } catch (cause) {
+                failure=await host.fail(record,cause,signal);
+                // eslint-disable-next-line preserve-caught-error -- Only the host's redacted message may cross this boundary.
+                if (signal.aborted) throw new Error(failure);
+            }
+        }
+        if (!accepted) {
+            if (measured.overBudget || options.force) throw new Error(failure);
+            return run;
+        }
         try {
-            const result=await host.request(run,input,budget.outputReserve,signal);
-            signal.throwIfAborted();
-            const content=result.content.trim();
-            if (!content || result.hasToolCalls || host.tokens(content)+32 >= record.beforeTokens) throw new Error('摘要未能有效缩短上下文，原始对话已保留。请调整历史范围后重新发送。');
-            run=await host.activate(run,record,content,result.usage,signal);
-        } catch (cause) {throw new Error(await host.fail(record,cause,signal));}
+            run=await host.activate(run,accepted.record,accepted.content,accepted.usage,signal);
+        } catch (cause) {
+            // eslint-disable-next-line preserve-caught-error -- Only the host's redacted message may cross this boundary.
+            throw new Error(await host.fail(accepted.record,cause,signal));
+        }
     }
     if (!host.budget(run,true).needsCompression) return run;
     throw new Error('已完成本轮 8 次历史整理，已保存摘要。请手动继续或重新生成，不会自动追加请求。');

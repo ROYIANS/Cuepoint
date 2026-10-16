@@ -10,8 +10,8 @@ export type {RuntimeRun,RuntimeCall,RuntimeHost,ModelResult,RoundDetail,RuntimeE
 export {createCapabilityLoading,selectCapabilityGroups,offeredToolNames,offeredToolNamesForCall,MAX_LOADED_TOOLS} from './capabilities.js';
 export type {CapabilityGroup} from './capabilities.js';
 export {compactContext,replaceContinuationBase,selectHistoryByCount,isContextSourcePrefix} from './compaction.js';
-export type {CompactionHost,ContextSource,SummaryRecord} from './compaction.js';
-export {normalizeContextPolicy,DEFAULT_CONTEXT_POLICY,estimateTokens,budgetEnvelope} from './contextBudget.js';
+export type {CompactionHost,CompactionOptions,ContextSource,SummaryRecord} from './compaction.js';
+export {normalizeContextPolicy,DEFAULT_CONTEXT_POLICY,estimateTokens,budgetEnvelope,budgetTokens} from './contextBudget.js';
 export type {ContextPolicy} from './contextBudget.js';
 export {requiresToolApproval} from './tools.js';
 

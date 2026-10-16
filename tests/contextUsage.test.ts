@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { estimateContextUsage, estimateTokens } from "../packages/studio/src/features/agent/runtime/contextUsage";
+import { estimateContextUsage, estimateTokens, summarizeContextRows } from "../packages/studio/src/features/agent/runtime/contextUsage";
 import { buildContextMessages, selectContextHistory } from "@/features/agent/runtime/contextPlanner";
 import { DEFAULT_CONTEXT_POLICY } from "@/features/agent/runtime/contextPolicy";
 import type {ChatMessage} from "./../packages/studio/src/features/agent/models/chat";
@@ -42,4 +42,21 @@ describe("context preview", () => {
     expect(estimateTokens("中文")).toBe(3);
     expect(estimateTokens("😀")).toBe(2);
   });
+});
+
+describe("context popover rows", () => {
+    const cat = (id: string, tokens: number) => ({id, label: id, tokens, color: "#000"});
+    it("merges categories into at most five non-zero rows and folds request structure into the system row", () => {
+        const rows = summarizeContextRows([
+            cat("assistant", 100), cat("envelope", 20), cat("skills", 5), cat("tool-schemas", 50),
+            cat("messages", 300), cat("summary", 40), cat("results", 0), cat("memory", 10), cat("references", 15),
+        ]);
+        expect(rows.map(row => [row.label, row.tokens])).toEqual([
+            ["系统指令", 120], ["工具", 55], ["对话", 340], ["记忆与参考", 25],
+        ]);
+        expect(rows.reduce((sum, row) => sum + row.tokens, 0)).toBe(540);
+    });
+    it("returns no rows when everything is zero", () => {
+        expect(summarizeContextRows([cat("assistant", 0)])).toEqual([]);
+    });
 });

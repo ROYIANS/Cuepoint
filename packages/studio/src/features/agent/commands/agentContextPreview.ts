@@ -128,7 +128,7 @@ async function readFacts(input: ContextPreviewInput, identity: string, vision: A
         return {
             identity, status: "ready" as const, facts: {
                 config: rows.config, thread, projectId, available: projectAvailable && !!rows.config,
-                messages: rows.messages, records: rows.records, activeRun, toolSchemas: schemas, ...selected,
+                messages: rows.messages, records: rows.records, activeRun, lastRun: rows.runs.at(-1), toolSchemas: schemas, ...selected,
             }
         };
     });

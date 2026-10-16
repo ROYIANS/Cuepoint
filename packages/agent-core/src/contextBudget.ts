@@ -17,12 +17,24 @@ export function estimateTokens(text:string):number {
     return Math.ceil(weight);
 }
 
-/** Product materialization costs are explicit input; reserve and threshold mechanisms are shared. */
-export function budgetEnvelope(messages:readonly unknown[],tools:readonly unknown[],capacity?:number,hasSummary=false,extraTokens=0) {
-    const estimatedTokens=estimateTokens(JSON.stringify(messages))+(tools.length ? estimateTokens(JSON.stringify(tools)) : 0)+extraTokens;
-    const adjustedTokens=Math.ceil(estimatedTokens*1.25);
+/**
+ * One budget scale for ring and trigger. `usedTokens` is the displayed figure (provider-reported
+ * baseline plus estimated delta, or a pure estimate); `margin` is the safety allowance added only to
+ * the estimated part before comparing with thresholds. `triggerTokens`/`limitTokens` restate the
+ * thresholds on the displayed scale, so `usedTokens >= triggerTokens` is exactly `needsCompression`.
+ */
+export function budgetTokens(usedTokens:number,margin:number,capacity?:number,hasSummary=false) {
+    const adjustedTokens=usedTokens+margin;
     const outputReserve=capacity ? Math.min(8192,Math.max(256,Math.floor(capacity*0.15))) : 0;
     const inputBudget=capacity ? Math.max(0,capacity-outputReserve-Math.ceil(capacity*0.05)) : undefined;
     const threshold=capacity && inputBudget ? Math.min(inputBudget,Math.floor(capacity*(hasSummary ? 0.65 : 0.5))) : undefined;
-    return {estimatedTokens,adjustedTokens,outputReserve,inputBudget,threshold,needsCompression:threshold !== undefined && adjustedTokens>=threshold,overBudget:inputBudget !== undefined && adjustedTokens>inputBudget};
+    return {estimatedTokens:usedTokens,usedTokens,margin,adjustedTokens,outputReserve,inputBudget,threshold,
+        triggerTokens:threshold === undefined ? undefined : threshold-margin,limitTokens:inputBudget === undefined ? undefined : inputBudget-margin,
+        needsCompression:threshold !== undefined && adjustedTokens>=threshold,overBudget:inputBudget !== undefined && adjustedTokens>inputBudget};
+}
+
+/** Product materialization costs are explicit input; reserve and threshold mechanisms are shared. */
+export function budgetEnvelope(messages:readonly unknown[],tools:readonly unknown[],capacity?:number,hasSummary=false,extraTokens=0) {
+    const estimatedTokens=estimateTokens(JSON.stringify(messages))+(tools.length ? estimateTokens(JSON.stringify(tools)) : 0)+extraTokens;
+    return budgetTokens(estimatedTokens,Math.ceil(estimatedTokens*1.25)-estimatedTokens,capacity,hasSummary);
 }

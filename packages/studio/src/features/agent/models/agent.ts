@@ -9,7 +9,7 @@ import type {AgentReferenceAudit, AgentReferenceInput, AgentVisionCapability} fr
 import type {MemoryDispatchAudit, MemorySelection} from "../../memory/models/memoryRetrieval";
 import type {ProjectContextSnapshot} from "./projectContext";
 import type {GenerationPreferences} from "../../settings/models/generationPreferences";
-import type {ContextPolicy, ContextSnapshot} from "./context";
+import type {ContextAnchor, ContextPolicy, ContextSnapshot} from "./context";
 import type {ConnectorConfig} from "../../settings/models/connector";
 import type {Id} from "../../../platform/identity";
 import type {InstalledSkillsSnapshot} from "../skills/models/installedSkill";
@@ -135,6 +135,8 @@ export interface AgentRun {
     /** Idempotent successful final Responses envelope checkpoint, independent of the once-only review. */
     finalResponseStep?: number;
     modelMetrics?: AgentModelMetrics[];
+    /** Provider-reported prompt size paired with our estimate of that same request; see contextMeasurement. */
+    contextAnchor?: ContextAnchor;
     activitySteps?: AgentActivityStep[];
     usage?: AgentTokenUsage;
     outputTokensPerSecond?: number;

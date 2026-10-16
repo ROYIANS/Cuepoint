@@ -7,7 +7,8 @@ import {StorageError} from '../../../platform/storage/errors';
 import {getOfferedToolNames,refreshRunToolLoading,toolNamesForCall} from './toolLoading';
 import {saveAgentFinishingCheck} from '../commands/agentFinishingCheck';
 import {upgradeLegacyPlanCalls} from '../commands/agentToolRecovery';
-import {budgetContext} from './contextPlanner';
+import {budgetContext,runBudgetMeasure} from './contextPlanner';
+import {createContextAnchor} from './contextMeasurement';
 import {continuationExtraTokens,prepareRunContext} from './contextCompaction';
 import {refreshRunMemoryContext} from '../../memory/agent/memoryContext';
 import {refreshRunProjectContext} from './projectContext';
@@ -25,6 +26,10 @@ import {createRunCredentials} from './runCredentials';
 import {responseRoundMatches} from '@cuepoint/agent-providers';
 import {runtimeFetchFor} from '../../../platform/runtime/runtimeFetch';
 import type {RuntimeExecutionFeedback} from './executionFeedback';
+
+/** Provider wording differs; only a confirmed context-length rejection may trigger the single overflow compaction. */
+const CONTEXT_OVERFLOW=/context[_ ]length|maximum context|context window|prompt is too long|input is too long|too many tokens|exceeds? the (?:model'?s )?(?:max|limit)|上下文(?:长度)?(?:超|过长)/i;
+export function isContextOverflow(message:string):boolean {return CONTEXT_OVERFLOW.test(message);}
 
 /** Only user review may supply an execution override; wire arguments remain untouched. */
 function effectiveToolInput(call:AgentToolCall) {
@@ -77,30 +82,45 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
             run=await refreshRunMemoryContext(run.id,db);
             run=await prepareRunContext(run.id,toolSchemas(getOfferedToolNames(run),registry),apiKey,signal,fetchImpl,db,run=>credentials.resolve(run),cause=>credentials.message(cause));
             run=await refreshRunMemoryContext(run.id,db);
-            if (budgetContext(run.continuationMessages ?? run.requestMessages,toolSchemas(getOfferedToolNames(run),registry),run.context?.capacity,!!run.context?.summaryId,continuationExtraTokens(run)).overBudget) throw new Error('记忆更新后上下文超出安全预算，请减少历史或调整输入后继续');
+            if (budgetContext(run.continuationMessages ?? run.requestMessages,toolSchemas(getOfferedToolNames(run),registry),run.context?.capacity,!!run.context?.summaryId,continuationExtraTokens(run),runBudgetMeasure(run)).overBudget) throw new Error('记忆更新后上下文超出安全预算，请减少历史或调整输入后继续');
             return run;
         },
         admitModelStep:(run,limit)=>guard(run,tx=>startModelStep(run.id,limit,tx,registry.map(tool=>tool.name))),
         async request(run,signal,onDelta,offeredDefinitions) {
             ownership.assertHeld();
-            const currentKey=await credentials.resolve(run);
-            signal.throwIfAborted();
-            const transport=run.protocol === 'responses' ? streamResponses : streamChatCompletions;
-            const selectedFetch=fetchImpl ?? runtimeFetchFor();
-            const observedFetch:typeof fetch=(input,init)=>{
-                observe({...feedbackIdentity,type:'requestInvoked'});
-                return selectedFetch(input,init);
+            let delivered=false;
+            const dispatch=async(current:AgentRun):Promise<ResponsesResult>=>{
+                const currentKey=await credentials.resolve(current);
+                signal.throwIfAborted();
+                const transport=current.protocol === 'responses' ? streamResponses : streamChatCompletions;
+                const selectedFetch=fetchImpl ?? runtimeFetchFor();
+                const observedFetch:typeof fetch=(input,init)=>{
+                    observe({...feedbackIdentity,type:'requestInvoked'});
+                    return selectedFetch(input,init);
+                };
+                return transport({projectId:current.projectId,runId:current.id,visionCapability:current.visionCapability,responseItems:current.responseItems,baseUrl:current.connector.baseUrl,apiKey:currentKey,model:current.model,connectorDefinitionId:current.connector.definitionId,reasoningEffort:current.reasoningEffort,messages:current.continuationMessages ?? current.requestMessages,tools:offeredDefinitions.map(tool=>({type:"function",function:{name:tool.name,description:tool.description,parameters:tool.parameters}}))},{signal,fetchImpl:feedback ? observedFetch : fetchImpl,onDelta:content=>{
+                    if (content && !signal.aborted) {delivered=true;observe({...feedbackIdentity,type:'publicReceived',kind:'content'});}
+                    onDelta({content});
+                },onReasoning:reasoning=>{
+                    if (reasoning && !signal.aborted) {delivered=true;observe({...feedbackIdentity,type:'publicReceived',kind:'reasoning'});}
+                    onDelta({reasoning});
+                }});
             };
-            const result:ResponsesResult=await transport({projectId:run.projectId,runId:run.id,visionCapability:run.visionCapability,responseItems:run.responseItems,baseUrl:run.connector.baseUrl,apiKey:currentKey,model:run.model,connectorDefinitionId:run.connector.definitionId,reasoningEffort:run.reasoningEffort,messages:run.continuationMessages ?? run.requestMessages,tools:offeredDefinitions.map(tool=>({type:"function",function:{name:tool.name,description:tool.description,parameters:tool.parameters}}))},{signal,fetchImpl:feedback ? observedFetch : fetchImpl,onDelta:content=>{
-                if (content && !signal.aborted) observe({...feedbackIdentity,type:'publicReceived',kind:'content'});
-                onDelta({content});
-            },onReasoning:reasoning=>{
-                if (reasoning && !signal.aborted) observe({...feedbackIdentity,type:'publicReceived',kind:'reasoning'});
-                onDelta({reasoning});
-            }});
+            let result=await dispatch(run);
+            // A confirmed provider overflow compacts once and repeats the same step; nothing was delivered yet.
+            if (!result.ok && !result.aborted && !signal.aborted && !delivered && isContextOverflow(result.message)) {
+                const before=JSON.stringify(run.continuationMessages ?? run.requestMessages);
+                const reduced=await prepareRunContext(run.id,toolSchemas(getOfferedToolNames(run),registry),apiKey,signal,fetchImpl,db,current=>credentials.resolve(current),cause=>credentials.message(cause),{force:true}).catch(()=>undefined);
+                if (reduced && JSON.stringify(reduced.continuationMessages ?? reduced.requestMessages) !== before) result=await dispatch(reduced);
+            }
             return result.ok ? {...result,continuation:result.responseOutput} : result;
         },
-        recordMetrics:(run,metrics)=>guard(run,tx=>recordAgentModelMetrics(run.id,metrics,tx),[db.agentRuns,db.chatMessages]),
+        recordMetrics:async(run,metrics)=>{
+            // Pair the provider's prompt size with our estimate of the request actually sent (an overflow retry may have compacted it).
+            const sent=await db.agentRuns.get(run.id) ?? run;
+            const anchor=createContextAnchor({step:metrics.step,model:sent.model,definitionId:sent.connector.definitionId,protocol:sent.protocol ?? 'chat-completions',summaryId:sent.context?.summaryId,reportedTokens:metrics.usage?.inputTokens,messages:sent.continuationMessages ?? sent.requestMessages,tools:toolSchemas(getOfferedToolNames(sent),registry),extraTokens:continuationExtraTokens(sent)});
+            return guard(run,tx=>recordAgentModelMetrics(run.id,metrics,tx,anchor),[db.agentRuns,db.chatMessages]);
+        },
         finishingCheck:(run,output,continuation,signal)=>{ownership.assertHeld();return saveAgentFinishingCheck(run.id,run.modelStep!,output,continuation,signal,db);},
         commitRound:(run,result,details,output)=>guard(run,tx=>saveToolRound(run.id,result.content,result.toolCalls!,details.map(detail=>({...detail,recovery:productRecovery(detail)})),result.continuation,output,tx,activity)),
         offeredNames:(run,step)=>step === undefined ? getOfferedToolNames(run) : toolNamesForCall(run,step),

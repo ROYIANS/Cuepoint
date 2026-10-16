@@ -1,3 +1,4 @@
+import { estimateImageTokens } from "@/features/agent/runtime/contextMeasurement";
 import {registeredTools} from "./helpers/registeredTools";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/platform/product/store";
@@ -138,7 +139,11 @@ describe("bounded project references and native same-model vision", () => {
     const messages = buildContextMessages("system", "", history, "继续", summary);
     expect(messages.flatMap((message) => message.referenceInput?.images ?? [])).toHaveLength(0);
     expect(messages.flatMap((message) => message.referenceInput?.references ?? [])).toEqual([ref]);
-    expect(budgetContext(run.requestMessages, []).estimatedTokens).toBeGreaterThan(4096);
+    // Live pixels are priced per image (size-based, bounded), not folded into the text estimate.
+    const live = run.requestMessages.flatMap((message) => message.referenceInput?.images ?? []);
+    const stripped = run.requestMessages.map((message) => message.referenceInput ? { ...message, referenceInput: { ...message.referenceInput, images: [] } } : message);
+    expect(live.length).toBeGreaterThan(0);
+    expect(budgetContext(run.requestMessages, []).estimatedTokens - budgetContext(stripped, []).estimatedTokens).toBe(live.reduce((sum, image) => sum + estimateImageTokens(image), 0));
     const scope = { projectId: p.id, model: run.model, visionCapability: run.visionCapability };
     expect(JSON.stringify(await materializeResponseItems(toResponseInput(messages), scope))).not.toContain("data:image");
     await removeProjectReference(p.id, ref.referenceId);

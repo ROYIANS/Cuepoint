@@ -2,25 +2,28 @@ import {getOfferedToolNames} from "../runtime/toolLoading";
 import type {ReferenceAttachment} from "../../references/models/references";
 import {withMemoryContext} from "../../memory/services/retrieval";
 import {MemoryContextDetails} from "./MemoryContextDetails";
-import type {AgentInteractionMode} from "../models/agent";
+import type {AgentInteractionMode, AgentReasoningEffort} from "../models/agent";
 import {ContextCompactionDetails} from "./ContextCompactionDetails";
 import {normalizeContextPolicy, resolveContextCapacity,} from "../runtime/contextPolicy";
 import {
     budgetContext,
     buildContextMessages,
     findApplicableSummary,
+    runBudgetMeasure,
     selectContextHistory,
+    summaryCandidates,
 } from "../runtime/contextPlanner";
+import {agentExecution} from "../runtime/agentExecution";
 import {continuationExtraTokens} from "../runtime/contextCompaction";
 import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
+import type {ContextCompaction} from "../models/context";
 import type {ConnectorConfig} from "../../settings/models/connector";
 import {useEffect, useMemo, useState, useSyncExternalStore} from "react";
 import {contextPreviewIdentity, prepareAgentContextPreview, readPreparedAgentContextPreview, type ContextPreviewRead} from "../commands/agentContextPreview";
 import {useProductQuery} from "../../../platform/product/queries";
 import * as Popover from "@radix-ui/react-popover";
-import {X} from "../../../ui/icons";
 import {mcpRuntimeOwner} from "../mcp/runtime/owner";
-import {estimateContextUsage, formatTokenCount,} from "../runtime/contextUsage";
+import {estimateContextUsage, formatTokenCount, summarizeContextRows,} from "../runtime/contextUsage";
 import {popupCollisionPadding} from "../../../ui/popupCollision";
 
 const EMPTY_ATTACHMENTS: ReferenceAttachment[] = [];
@@ -34,6 +37,7 @@ type ContextProps = {
     model: string;
     connector?: ConnectorConfig;
     modelMetadata?: Record<string, ChatModelMetadata>;
+    reasoningEffort?: AgentReasoningEffort;
 };
 
 function useContextUsage(props: ContextProps) {
@@ -85,11 +89,8 @@ function useContextUsage(props: ContextProps) {
             messages.filter((message) => message.threadId === threadId),
             policy,
         );
-        const summary = !activeRun && policy.autoCompress
-            ? findApplicableSummary(
-                selected,
-                records,
-            )
+        const summary = !activeRun
+            ? findApplicableSummary(selected, summaryCandidates(records, policy))
             : undefined;
         const resolved =
             activeRun ? (activeRun.context ?? {
@@ -124,23 +125,33 @@ function useContextUsage(props: ContextProps) {
                 memorySelection,
             );
         const tools = snapshot.facts.toolSchemas;
+        // The same figure the compaction trigger compares: provider-reported baseline + estimated delta when
+        // the last request still describes this one, otherwise a whole-request estimate.
+        const lastAnchor = snapshot.facts.lastRun?.contextAnchor;
+        const anchorProtocol = lastAnchor?.protocol ?? "chat-completions";
+        const measure = activeRun ? runBudgetMeasure(activeRun) : {
+            protocol: anchorProtocol, anchor: lastAnchor,
+            scope: {model, definitionId: connector?.definitionId, protocol: anchorProtocol, summaryId: summary?.id},
+        };
         const budget = budgetContext(
             request,
             tools,
             capacity,
             activeRun ? !!activeRun.context?.summaryId : !!summary,
             activeRun ? continuationExtraTokens(activeRun) : 0,
+            measure,
         );
         const usage = estimateContextUsage({
             instructions,
             skillInstructions,
             messages: request,
             tools,
+            protocol: measure.protocol,
         });
         const projectContext =
             activeRun ? activeRun.projectContext : taskContext?.projectContext;
         if (projectContext) usage.categories[0].label = "助手指令与项目事实";
-        const overhead = Math.max(0, budget.estimatedTokens - usage.total);
+        const overhead = Math.max(0, budget.requestEstimate - usage.total);
         usage.categories.push({
             id: "envelope",
             label: "请求结构与续接状态",
@@ -148,6 +159,12 @@ function useContextUsage(props: ContextProps) {
             color: "#888888",
         });
         usage.total += overhead;
+        if (budget.source === "reported" && usage.total > 0) {
+            // Composition is always an estimate; scale it so the bar sums to the reported-based total.
+            const factor = budget.usedTokens / usage.total;
+            for (const category of usage.categories) category.tokens = Math.round(category.tokens * factor);
+        }
+        usage.total = budget.usedTokens;
         const percent = capacity
             ? Math.min(100, (usage.total / capacity) * 100)
             : undefined;
@@ -158,7 +175,7 @@ function useContextUsage(props: ContextProps) {
             projectContext,
             memorySelection,
             selectedReferences,
-            identity, status: "ready" as const, model,
+            identity, status: "ready" as const, model, threadId,
             available: snapshot.facts.available,
             referencesLoading: false,
             error: undefined,
@@ -175,172 +192,123 @@ function useContextUsage(props: ContextProps) {
     }, [snapshot, identity, threadId, requestDraft, interactionMode, model, modelMetadata, connector]);
 }
 
-export function ContextUsagePanel({snapshot, onClose, onMemoryOpen}: {
-    snapshot: ReturnType<typeof useContextUsage>;
-    onClose: () => void;
+/** One footer action: compress now, with progress, Cancel and a one-line request-level result. */
+export function CompactAction({threadId, connector, model, modelMetadata, reasoningEffort, blocked, lastRecord}: {
+    threadId?: string;
+    connector?: ConnectorConfig;
+    model: string;
+    modelMetadata?: ChatModelMetadata;
+    reasoningEffort?: AgentReasoningEffort;
+    blocked?: string;
+    lastRecord?: ContextCompaction;
+}) {
+    const execution = useSyncExternalStore(
+        listener => threadId ? agentExecution.subscribe(threadId, listener) : () => undefined,
+        () => threadId ? agentExecution.snapshot(threadId) : undefined, () => undefined);
+    const [requested, setRequested] = useState(false);
+    const [failure, setFailure] = useState<string>();
+    const compacting = execution?.active && execution.kind === "contextCompaction";
+    const otherWork = execution?.active && !compacting;
+    const reason = blocked ?? compactBlockReason({otherWork: !!otherWork, threadId, connector, model});
+    const start = () => {
+        if (!threadId || !connector || reason) return;
+        setFailure(undefined);
+        setRequested(true);
+        try {
+            agentExecution.compactContext({threadId, connectorId: connector.id, model, reasoningEffort, modelMetadata});
+        } catch (cause) {
+            setFailure(cause instanceof Error ? cause.message : "无法压缩");
+        }
+    };
+    const stop = () => {
+        if (threadId && execution?.token) agentExecution.requestStop({threadId, token: execution.token});
+    };
+    const message = failure ?? (requested && !compacting ? execution?.error : undefined);
+    const manual = lastRecord?.origin === "manual" && lastRecord.status === "completed" ? lastRecord : undefined;
+    const result = manual?.requestBefore !== undefined && manual.requestAfter !== undefined
+        ? `${formatTokenCount(manual.requestBefore)} → ${formatTokenCount(manual.requestAfter)}` : undefined;
+    const note = compacting ? "正在压缩…" : result ?? reason;
+    return <div className="agent-context-footer">
+        <div className="agent-context-footer-row">
+            <span className="agent-context-footer-note" role={compacting || result ? "status" : undefined}
+                  title={result ? "压缩前后的请求大小（估算）" : undefined}>{note}</span>
+            {compacting
+                ? <button type="button" onClick={stop} disabled={execution?.stopping}>{execution?.stopping ? "正在取消…" : "取消"}</button>
+                : <button type="button" onClick={start} disabled={!!reason} title={reason}>压缩</button>}
+        </div>
+        {message && !compacting && <p role="alert">{message}</p>}
+    </div>;
+}
+
+function compactBlockReason(input: {otherWork: boolean; threadId?: string; connector?: ConnectorConfig; model: string}): string | undefined {
+    if (input.otherWork) return "对话正忙，稍后可压缩";
+    if (!input.threadId) return "发送消息后可压缩";
+    if (!input.connector || !input.model) return "请先选择模型";
+    return undefined;
+}
+
+function percentLabel(percent: number): string {
+    return percent > 0 && percent < 1 ? "<1%" : `${Math.round(percent)}%`;
+}
+
+function ContextDetails({snapshot, onMemoryOpen}: {
+    snapshot: Extract<ReturnType<typeof useContextUsage>, {status: "ready"}>;
     onMemoryOpen?: () => void;
 }) {
-    if (snapshot.status !== "ready" || !("usage" in snapshot)) return <div className="agent-context-panel" role="region"
-                                                                           aria-label="上下文明细">
-        <button type="button" aria-label="关闭上下文明细" onClick={onClose}><X size={16}/></button>
+    const {activeRun, capacity, source, policy, budget, selectedCount, lastRecord, projectContext, memorySelection, selectedReferences, toolCount} = snapshot;
+    return <details className="agent-context-details">
+        <summary>详情</summary>
+        <div className="agent-context-details-body">
+            <p>{activeRun ? "当前执行的已保存上下文" : "下次发送，包含当前草稿"} · {toolCount} 个工具</p>
+            <p>{policy.limitHistory ? `历史上限 ${policy.historyMessageCount} 条` : "历史不限条数"} · 已选 {selectedCount} 条</p>
+            {capacity ? <p>上限 {formatTokenCount(capacity)}{source ? ` · ${source}` : ""} · 输出预留 {formatTokenCount(budget.outputReserve)} · 输入预算 {formatTokenCount(budget.inputBudget ?? 0)}</p> : <p>上限未知，可在对话参数中设置本地预算</p>}
+            <p>{budget.source === "reported" ? `基于最近一次实际输入 ${formatTokenCount(budget.reportedTokens ?? 0)}，加新增内容估算` : "按文本长度估算，发送后以供应商用量校准"}</p>
+            {projectContext && <p>项目 {projectContext.name} · 分集 {projectContext.coverage.episodes.included}/{projectContext.coverage.episodes.total} · 资产 {projectContext.coverage.assets.included}/{projectContext.coverage.assets.total}</p>}
+            {memorySelection && onMemoryOpen && <button type="button" className="agent-context-memory-link" onClick={onMemoryOpen}><span>项目记忆 · {memorySelection.selectedCount} 条</span><span>查看引用与排除 →</span></button>}
+            {selectedReferences && <p>参考资料 {selectedReferences.references.length} 份，仅含本次准备的范围</p>}
+            {lastRecord && <ContextCompactionDetails record={lastRecord}/>}
+        </div>
+    </details>;
+}
+
+export function ContextUsagePanel({snapshot, onMemoryOpen, connector, modelMetadata, reasoningEffort}: {
+    snapshot: ReturnType<typeof useContextUsage>;
+    onMemoryOpen?: () => void;
+    connector?: ConnectorConfig;
+    modelMetadata?: ChatModelMetadata;
+    reasoningEffort?: AgentReasoningEffort;
+}) {
+    if (snapshot.status !== "ready" || !("usage" in snapshot)) return <div className="agent-context-panel" role="region" aria-label="上下文用量">
         <p role={snapshot.error ? "alert" : "status"}>{snapshot.error ?? "正在读取上下文…"}</p>
     </div>;
-    const {
-        usage, capacity, percent, activeRun, source, policy, budget, selectedCount, lastRecord,
-        projectContext, memorySelection, selectedReferences, referencesLoading, toolCount, capabilityCount,
-        loadedCapabilities, error, model
-    } = snapshot;
+    const {usage, capacity, percent, activeRun, budget, lastRecord, error, model} = snapshot;
+    const rows = summarizeContextRows(usage.categories);
+    const scale = capacity ?? usage.total;
     return (
-        <div className="agent-context-panel" role="region" aria-label="上下文明细">
-            <div className="agent-context-heading">
-                <span>上下文明细</span>
-                <span className="agent-context-heading-actions">
-          <small>TOKEN · 估算</small>
-          <button type="button" aria-label="关闭上下文明细" onClick={onClose}>
-            <X size={16}/>
-          </button>
-        </span>
+        <div className="agent-context-panel" role="region" aria-label="上下文用量">
+            <div className="agent-context-head">
+                <strong>{percent !== undefined ? `已用 ${percentLabel(percent)}` : "已用"}</strong>
+                <span>
+                    {budget.source === "estimated" && <small>估算</small>}
+                    <span>≈ {formatTokenCount(usage.total)}{capacity ? ` / ${formatTokenCount(capacity)}` : ""}</span>
+                </span>
             </div>
-            {!snapshot.available && <p role="alert">当前范围不可用；已保存的执行上下文仅供查看。</p>}
-            <div className="agent-context-scope">
-                {activeRun ? "当前执行 · 已保存的上下文" : "下次发送 · 包含当前草稿"}
+            <div className="agent-context-bar" aria-hidden>
+                {rows.map(item => <span key={item.id} style={{width: `${scale ? Math.min(100, (item.tokens / scale) * 100) : 0}%`, background: item.color}}/>)}
             </div>
-            <div className="agent-context-model" title={activeRun?.model ?? model}>
-                {activeRun?.model ?? (model || "尚未选择模型")}
-            </div>
-            <div className="agent-context-project">
-                <strong>当前提供 {toolCount} 个工具{capabilityCount ? ` · ${capabilityCount} 组能力按需加载` : ""}</strong>
-                {capabilityCount > 0 &&
-                    <small>{loadedCapabilities.length ? `已加载：${loadedCapabilities.join("、")}` : "先提供基础工具与能力目录，业务工具使用时再加载。"}</small>}
-            </div>
-            {projectContext && (
-                <div className="agent-context-project">
-                    <strong>{projectContext.name}</strong>
-                    <span>当前项目事实 · {activeRun ? "执行快照" : "随资料更新"}</span>
-                    <small>
-                        分集 {projectContext.coverage.episodes.included}/
-                        {projectContext.coverage.episodes.total} · 资产{" "}
-                        {projectContext.coverage.assets.included}/
-                        {projectContext.coverage.assets.total}
-                        {projectContext.coverage.truncated ? " · 部分摘录" : ""}
-                    </small>
-                    <small>包含项目设定与素材索引；完整内容由助手按需读取。</small>
-                </div>
-            )}
-            {memorySelection && onMemoryOpen && (
-                <button
-                    type="button"
-                    className="agent-context-memory-link"
-                    onClick={onMemoryOpen}
-                >
-                    <span>项目记忆 · {memorySelection.selectedCount} 条</span>
-                    <span>查看引用与排除 →</span>
-                </button>
-            )}
-            {selectedReferences && (
-                <details className="agent-context-project">
-                    <summary>本次消息参考资料 · {selectedReferences.references.length} 份</summary>
-                    <small>仅显示本次准备的范围；原文未覆盖部分不会自动发送。</small>
-                    {selectedReferences.coverage?.map((item) => (
-                        <div key={`${item.referenceId}:${item.revision}`}>
-                            <strong>{item.filename}</strong>
-                            <small>{item.kind === "image" ? "真实图片输入 · 按 4096 tokens 保守估算" : `文本片段 ${item.includedChunkIndices.length}/${item.totalChunks} · ${item.includedCharacters.toLocaleString()} 字符${item.partial ? " · 部分摘录" : ""}`}</small>
-                            {item.warnings.map((warning, index) => <small key={index}>{warning}</small>)}
-                        </div>
-                    ))}
-                </details>
-            )}
-            {referencesLoading && <p role="status">正在准备所选参考资料的范围与估算…</p>}
-            {error && <p role="status">{error}。历史仍可查看。</p>}
-            {usage ? (
-                <>
-                    <div className="agent-context-bar" aria-hidden>
-                        {usage.categories.map((item) => (
-                            <span
-                                key={item.id}
-                                style={{
-                                    width: `${usage.total ? (item.tokens / usage.total) * 100 : 0}%`,
-                                    background: item.color,
-                                }}
-                            />
-                        ))}
-                    </div>
-                    <dl className="agent-context-breakdown">
-                        {usage.categories.map((item) => (
-                            <div key={item.id}>
-                                <dt>
-                                    <i style={{background: item.color}}/>
-                                    {item.label}
-                                </dt>
-                                <dd title={`${item.tokens.toLocaleString()} tokens（估算）`}>
-                                    {formatTokenCount(item.tokens)}
-                                </dd>
-                            </div>
-                        ))}
-                    </dl>
-                    <div className="agent-context-capacity-bar" aria-hidden>
-                        <span style={{width: `${percent ?? 0}%`}}/>
-                    </div>
-                    <div className="agent-context-totals">
-                        <div>
-                            <span>预计占用</span>
-                            <strong>≈ {formatTokenCount(usage.total)}</strong>
-                        </div>
-                        <div>
-                            <span>剩余可用</span>
-                            <span>
-                {capacity
-                    ? `≈ ${formatTokenCount(Math.max(0, capacity - usage.total))}`
-                    : "待确认"}
-              </span>
-                        </div>
-                        <div>
-              <span title={source}>
-                上下文上限{source ? ` · ${source}` : ""}
-              </span>
-                            <span>{capacity ? formatTokenCount(capacity) : "未知"}</span>
-                        </div>
-                    </div>
-                    <div className="agent-context-budget">
-                        <div>
-                            {policy.limitHistory
-                                ? `历史上限 ${policy.historyMessageCount} 条 · 已选择 ${selectedCount} 条`
-                                : `历史不限条数 · 已选择 ${selectedCount} 条`}
-                        </div>
-                        <div>
-                            {capacity
-                                ? `输出预留 ${formatTokenCount(budget.outputReserve)} · 安全输入预算 ${formatTokenCount(budget.inputBudget!)}`
-                                : "上限未知 · 可在对话参数中设置本地预算"}
-                        </div>
-                        <div>
-                            {policy.autoCompress
-                                ? capacity
-                                    ? budget.needsCompression
-                                        ? "下次请求前将检查并整理较早的历史"
-                                        : "自动整理已开启"
-                                    : "自动整理等待可用预算"
-                                : "自动整理已关闭"}
-                        </div>
-                    </div>
-                    {lastRecord && <ContextCompactionDetails record={lastRecord}/>}
-                    <p>
-                        文本按长度粗略估算；每张图片按 4096 tokens 保守估算，非模型实际用量。
-                        {capacity
-                            ? `预计占用 ${((usage.total / capacity) * 100).toFixed(1)}%；整理触发基于上限的 50%（已有摘要时为 65%），另计 25% 估算余量及输出预留。`
-                            : "当前连接未提供可信的上下文上限，暂不计算占用比例。"}
-                    </p>
-                    {activeRun && (
-                        <p>
-                            包含已保存的请求与续接状态；当前输出及未回填的工具结果尚未计入。
-                            {activeRun.modelMetrics?.at(-1)?.usage?.inputTokens !== undefined
-                                ? `最近一次请求实际输入 ${formatTokenCount(activeRun.modelMetrics.at(-1)!.usage!.inputTokens!)} tokens${activeRun.modelMetrics.at(-1)?.usage?.cachedInputTokens !== undefined ? `，其中缓存命中 ${formatTokenCount(activeRun.modelMetrics.at(-1)!.usage!.cachedInputTokens!)}` : ""}。`
-                                : ""}
-                        </p>
-                    )}
-                </>
-            ) : (
-                !error && !referencesLoading && <p>正在读取助手配置…</p>
-            )}
+            {!snapshot.available && <p role="alert">当前范围不可用，已保存的上下文仅供查看。</p>}
+            {error && <p role="status">{error}</p>}
+            <ul className="agent-context-rows">
+                {rows.map(item => <li key={item.id}>
+                    <span><i style={{background: item.color}}/>{item.label}</span>
+                    <span title={`${item.tokens.toLocaleString()} tokens`}>{formatTokenCount(item.tokens)}</span>
+                </li>)}
+            </ul>
+            <CompactAction threadId={snapshot.threadId} connector={connector} model={model}
+                           modelMetadata={modelMetadata} reasoningEffort={reasoningEffort}
+                           blocked={activeRun ? "执行中，结束后可压缩" : !snapshot.available ? "当前范围不可用" : undefined}
+                           lastRecord={lastRecord}/>
+            <ContextDetails snapshot={snapshot} onMemoryOpen={onMemoryOpen}/>
         </div>
     );
 }
@@ -365,7 +333,7 @@ export function ContextUsageTrigger({
                         title={
                             capacity && usage
                                 ? `上下文预计占用 ${((usage.total / capacity) * 100).toFixed(1)}%`
-                                : "上下文明细（估算）"
+                                : "上下文明细"
                         }
                     >
                         <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
@@ -408,7 +376,9 @@ export function ContextUsageTrigger({
                     >
                         <ContextUsagePanel
                             snapshot={snapshot}
-                            onClose={() => onOpenChange(false)}
+                            connector={props.connector}
+                            modelMetadata={props.modelMetadata?.[props.model]}
+                            reasoningEffort={props.reasoningEffort}
                             onMemoryOpen={() => {
                                 onOpenChange(false);
                                 setMemoryOpen(true);

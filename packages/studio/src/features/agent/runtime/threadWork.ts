@@ -6,7 +6,8 @@ export type AgentWorkIdentity =
     | {kind: "model"; threadId: string; invocationId: string}
     | {kind: "videoBatch"; threadId: string; batchId: string}
     | {kind: "audioBatch"; threadId: string; batchId: string; projectId: string}
-    | {kind: "taskWrapup"; threadId: string; taskId: string};
+    | {kind: "taskWrapup"; threadId: string; taskId: string}
+    | {kind: "contextCompaction"; threadId: string; invocationId: string};
 export interface AgentThreadWork {
     readonly identity: Readonly<AgentWorkIdentity>;
     readonly controller: AbortController;

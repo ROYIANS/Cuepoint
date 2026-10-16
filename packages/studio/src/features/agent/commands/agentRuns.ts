@@ -26,11 +26,12 @@ import type {
     AgentTokenUsage
 } from "../models/agent";
 import type {ChatMessage} from "../models/chat";
+import type {ContextAnchor} from "../models/context";
 import type {ConnectorConfig} from "../../settings/models/connector";
 import {createId, nowIso} from "../../../platform/identity";
 import {getGeneralAgentConfig} from "./agentSettings";
 import {normalizeContextPolicy, resolveContextCapacity} from "../runtime/contextPolicy";
-import {buildContextMessages, findApplicableSummary, selectContextHistory} from "../runtime/contextPlanner";
+import {buildContextMessages, findApplicableSummary, selectContextHistory, summaryCandidates} from "../runtime/contextPlanner";
 import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
 import {assertReasoningEffort, selectAgentProtocol} from "../../settings/models/reasoningPolicy";
 import {deriveChatTitle} from "../models/chatTitle";
@@ -147,7 +148,7 @@ export async function beginAgentRun(input: {
         const {enabledToolNames, toolLoading, skillInstructions, mcpSnapshot} = surface;
         const policy = normalizeContextPolicy(thread.contextPolicy);
         const selectedHistory = selectContextHistory(history, policy);
-        const summary = policy.autoCompress ? findApplicableSummary(selectedHistory, await db.contextCompactions.where("threadId").equals(thread.id).toArray()) : undefined;
+        const summary = findApplicableSummary(selectedHistory, summaryCandidates(await db.contextCompactions.where("threadId").equals(thread.id).toArray(), policy));
         const capacity = resolveContextCapacity(input.model, input.modelMetadata, identity.definitionId, policy);
         const memorySelection = previous?.memorySelection ?? (thread.projectId ? await getMemorySelection({
             projectId: thread.projectId,
@@ -305,7 +306,7 @@ export async function interruptThreadRuns(threadId: string, store?: ProductStore
 
 
 /** One immutable metrics record per model step, safe to replay after local recovery. */
-export async function recordAgentModelMetrics(runId: string, metrics: AgentModelMetrics, store?: ProductStore): Promise<void> {
+export async function recordAgentModelMetrics(runId: string, metrics: AgentModelMetrics, store?: ProductStore, anchor?: ContextAnchor): Promise<void> {
     const db = store ?? productDb;
     await db.transaction("rw", [db.agentRuns].flat(), async (db) => {
         const run = await db.agentRuns.get(runId);
@@ -328,6 +329,7 @@ export async function recordAgentModelMetrics(runId: string, metrics: AgentModel
         const outputTokensPerSecond = measurable && duration > 0 && usage.outputTokens !== undefined ? usage.outputTokens * 1000 / duration : undefined;
         await db.agentRuns.update(runId, {
             modelMetrics,
+            ...(anchor && anchor.step === metrics.step && (!run.contextAnchor || run.contextAnchor.step < anchor.step) ? {contextAnchor: anchor} : {}),
             usage: Object.keys(usage).length ? usage : undefined,
             outputTokensPerSecond,
             // Usage-only changes still belong to this run's revision so live readers refresh.

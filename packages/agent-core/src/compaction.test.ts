@@ -57,3 +57,52 @@ describe('shared context and capability mechanisms',()=>{
         expect(()=>selectCapabilityGroups({...state,groups:[{...groups[0],toolNames:names}]},['a'],[],allowed)).toThrow('超过 36');
     });
 });
+
+describe('compaction hardening',()=>{
+    /** Compression is needed until a summary exists; `overBudget` selects the hard-window behaviour. */
+    function hardened(overBudget:boolean) {
+        const f=compactionFixture();
+        f.host.budget=run=>run.summaryId ? {needsCompression:false,overBudget:false,outputReserve:256} : {needsCompression:true,overBudget,outputReserve:256};
+        return f;
+    }
+    it('retries one failed summary request once and activates the second summary',async()=>{
+        const f=hardened(false);let calls=0;
+        f.host.request=()=>{calls++;if (calls===1) return Promise.reject(new Error('transient'));return Promise.resolve({content:'short summary',hasToolCalls:false,usage:1});};
+        await compactContext(f.host,new AbortController().signal);
+        expect(calls).toBe(2);expect(f.jobs.map(job=>job.status)).toEqual(['failed','completed']);expect(f.run().summaryId).toBe('1');
+    });
+    it('rejects empty summaries, retries, and falls back to the uncompressed request inside the hard window',async()=>{
+        const f=hardened(false);let calls=0;
+        f.host.request=()=>{calls++;return Promise.resolve({content:'  ',hasToolCalls:false});};
+        const run=await compactContext(f.host,new AbortController().signal);
+        expect(calls).toBe(2);expect(f.jobs.map(job=>job.status)).toEqual(['failed','failed']);expect(run.summaryId).toBeUndefined();
+    });
+    it('reports the failure after the retry when the request is beyond the hard window',async()=>{
+        const f=hardened(true);let calls=0;
+        f.host.request=()=>{calls++;return Promise.reject(new Error('provider down'));};
+        await expect(compactContext(f.host,new AbortController().signal)).rejects.toThrow('provider down');
+        expect(calls).toBe(2);expect(f.jobs.every(job=>job.status==='failed')).toBe(true);
+    });
+    it('never retries a stopped summary',async()=>{
+        const f=hardened(false),controller=new AbortController();let calls=0;
+        f.host.request=()=>{calls++;controller.abort();return Promise.resolve({content:'short summary',hasToolCalls:false});};
+        await expect(compactContext(f.host,controller.signal)).rejects.toThrow();
+        expect(calls).toBe(1);expect(f.jobs).toHaveLength(1);
+    });
+    it('compacts once on a confirmed overflow regardless of thresholds and honours disabled compression',async()=>{
+        const f=compactionFixture();
+        f.host.budget=()=>({needsCompression:false,overBudget:false,outputReserve:256});
+        const run=await compactContext(f.host,new AbortController().signal,{force:true});
+        expect(f.jobs).toHaveLength(1);expect(run.summaryId).toBe('0');
+        const off=compactionFixture();off.host.context=current=>({...current,autoCompress:false});
+        await compactContext(off.host,new AbortController().signal,{force:true}).then(()=>undefined,()=>undefined);
+        expect(off.jobs).toHaveLength(0);
+    });
+    it('prunes seen tool results before summarizing and skips the summary when that suffices',async()=>{
+        const f=compactionFixture();let pruned=0;
+        f.host.budget=run=>({needsCompression:!(run as Run&{pruned?:boolean}).pruned,overBudget:false,outputReserve:256});
+        f.host.prune=run=>{pruned++;return Promise.resolve({...run,pruned:true} as Run);};
+        await compactContext(f.host,new AbortController().signal);
+        expect(pruned).toBe(1);expect(f.jobs).toHaveLength(0);
+    });
+});

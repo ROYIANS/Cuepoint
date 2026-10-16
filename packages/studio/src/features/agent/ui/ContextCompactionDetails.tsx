@@ -10,7 +10,7 @@ export function ContextCompactionDetails({record}: { record: ContextCompaction }
                        className={running ? "animate-spin" : undefined}/>{running ? "正在整理较早的对话" : done ? "历史已整理" : record.status === "interrupted" ? "整理已中断" : "整理未完成"}<span>{record.coverage.length} 条</span><ChevronDown
             size={12}/></summary>
         <div className="agent-compaction-body">
-            <p>{done ? `摘要已保存，约 ${formatTokenCount(record.beforeTokens)} → ${formatTokenCount(record.afterTokens ?? 0)} tokens；原始消息仍可在对话中查看。` : running ? "完成后自动接续回复。可通过输入框的停止按钮中断，未完成的摘要不会生效。" : `${record.error ?? "原始对话已保留。"} 使用回复上的重新生成或执行步骤中的继续操作重试。`}</p>
+            <p>{done ? `摘要已保存，约 ${formatTokenCount(record.beforeTokens)} → ${formatTokenCount(record.afterTokens ?? 0)} tokens；原始消息仍可在对话中查看。` : running ? (record.origin === "manual" ? "完成后将在下次发送时使用。可随时取消，未完成的摘要不会生效。" : "完成后自动接续回复。可通过输入框的停止按钮中断，未完成的摘要不会生效。") : `${record.error ?? "原始对话已保留。"}${record.origin === "manual" ? " 可再次点击“压缩”重试。" : " 使用回复上的重新生成或执行步骤中的继续操作重试。"}`}</p>
             {record.usage?.totalTokens !== undefined &&
                 <p>整理用量：{formatTokenCount(record.usage.totalTokens)} tokens · 与回复用量分开统计</p>}
             {done && <pre>{record.content}</pre>}

@@ -10,7 +10,8 @@ import { updateContextPolicy, resetThreadContextPolicy, saveContextPolicyAsDefau
 import { createAgentTask } from "@/features/agent/commands/agentTasks";
 import { DEFAULT_CONTEXT_POLICY, normalizeContextPolicy, resolveContextCapacity } from "@/features/agent/runtime/contextPolicy";
 import { selectContextHistory, budgetContext, findApplicableSummary, buildContextMessages } from "@/features/agent/runtime/contextPlanner";
-import { prepareRunContext } from "@/features/agent/runtime/contextCompaction";
+import { prepareRunContext, pruneSeenToolResults, summaryOutputCap, summaryReasoningEffort, PRUNE_RESULT_CHARACTERS } from "@/features/agent/runtime/contextCompaction";
+import { isContextOverflow } from "@/features/agent/runtime/runChat";
 import { BUILTIN_TOOLS } from "@/features/agent/runtime/tools";
 import { executeChatRun } from "@/features/agent/runtime/runChat";
 import { toResponseInput } from "@/features/agent/providers/responsesStream";
@@ -121,13 +122,36 @@ describe("durable context compaction", () => {
     expect(next.context?.summaryId).toBeUndefined();
     expect(next.requestMessages).toHaveLength(2);
   });
-  it.each(["failed", "empty", "larger", "stopped", "deleted"])("keeps the old envelope when summary is %s", async (mode) => {
+  it.each(["failed", "empty", "larger"])("retries once, keeps the old envelope and sends uncompressed when summary is %s", async (mode) => {
+    const { run } = await begin();
+    const fetcher = vi.fn(async () => {
+      if (mode === "failed") return new Response(`error ${connector.apiKey}`, { status: 500 });
+      return json(mode === "empty" ? "" : "x".repeat(20000));
+    });
+    // Still inside the hard window: the run proceeds with the original request instead of failing.
+    const next = await prepareRunContext(run.id, [], connector.apiKey, new AbortController().signal, fetcher);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(next.context?.summaryId).toBeUndefined();
+    expect(next.requestMessages).toEqual(run.requestMessages);
+    const records = await db.contextCompactions.toArray();
+    expect(records).toHaveLength(2);
+    expect(records.every(record => record.status === "failed")).toBe(true);
+    expect(JSON.stringify(records)).not.toContain(connector.apiKey);
+  });
+  it("fails clearly after the retry when the request is beyond the hard window", async () => {
+    const { run } = await begin(8, 900);
+    await db.agentRuns.update(run.id, { requestMessages: [{ role: "user", content: "x".repeat(40000) }], continuationMessages: [{ role: "user", content: "x".repeat(40000) }] });
+    const fetcher = vi.fn(async () => new Response(`error ${connector.apiKey}`, { status: 500 }));
+    await expect(prepareRunContext(run.id, [], connector.apiKey, new AbortController().signal, fetcher)).rejects.toThrow();
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect((await db.contextCompactions.toArray()).every(record => record.status === "failed")).toBe(true);
+  });
+  it.each(["stopped", "deleted"])("keeps the old envelope when summary is %s", async (mode) => {
     const { run } = await begin(); const controller = new AbortController();
     const fetcher = vi.fn(async () => {
       if (mode === "stopped") controller.abort();
       if (mode === "deleted") await deleteChatThread(run.threadId);
-      if (mode === "failed") return new Response(`error ${connector.apiKey}`, { status: 500 });
-      return json(mode === "empty" ? "" : mode === "larger" ? "x".repeat(20000) : "summary");
+      return json("summary");
     });
     await expect(prepareRunContext(run.id, [], connector.apiKey, controller.signal, fetcher)).rejects.toThrow();
     expect(fetcher).toHaveBeenCalledTimes(1);
@@ -136,7 +160,7 @@ describe("durable context compaction", () => {
     expect(saved?.context?.summaryId).toBeUndefined();
     expect(saved?.requestMessages).toEqual(run.requestMessages);
     const record = (await db.contextCompactions.toArray())[0];
-    expect(record.status).toBe(mode === "stopped" ? "interrupted" : "failed");
+    expect(record.status).toBe("interrupted");
     expect(JSON.stringify(record)).not.toContain(connector.apiKey);
   });
   it("recovers a reload without network and only retries an unfinished summary explicitly", async () => {
@@ -175,14 +199,15 @@ describe("durable context compaction", () => {
     const fetcher = vi.fn(async (_url, init) => {
       const body = JSON.parse(String(init?.body)); bodies.push(body);
       if (body.messages[0].content.startsWith("Summarize")) return json("已整理历史，继续当前目标。");
-      if (bodies.length === 1) return Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "call", type: "function", function: { name: "workspace_overview", arguments: "{}" } }] }, finish_reason: "tool_calls" }] });
-      return json("最终回复");
+      if (bodies.length === 1) return Response.json({ choices: [{ message: { content: "", tool_calls: [{ id: "call", type: "function", function: { name: "workspace_overview", arguments: "{}" } }] }, finish_reason: "tool_calls" }], usage: { prompt_tokens: 1500, completion_tokens: 10, total_tokens: 1510 } });
+      return Response.json({ choices: [{ message: { content: "最终回复" }, finish_reason: "stop" }], usage: { prompt_tokens: 1800, completion_tokens: 10, total_tokens: 1810 } });
     });
     await executeChatRun((await db.agentRuns.get(run.id))!, connector.apiKey, new AbortController(), fetcher, [tool]);
     expect((await db.agentRuns.get(run.id))?.status).toBe("completed");
     expect(tool.execute).toHaveBeenCalledTimes(1);
-    expect(bodies).toHaveLength(5);
-    expect(bodies.filter(body => !body.tools)).toHaveLength(2);
+    // The first request is under threshold; its provider-reported size anchors the post-tool recheck.
+    expect(bodies).toHaveLength(4);
+    expect(bodies.filter(body => !body.tools)).toHaveLength(1);
     expect(bodies[1].tools).toBeUndefined();
     expect(bodies[2].messages.slice(-2).map((m) => m.role)).toEqual(["assistant", "tool"]);
     expect((await db.contextCompactions.toArray())[0]?.status).toBe("completed");
@@ -236,5 +261,95 @@ describe("durable context compaction", () => {
     const fetcher = vi.fn(async () => json("answer"));
     await expect(prepareRunContext(run.id, [], connector.apiKey, new AbortController().signal, fetcher)).rejects.toThrow("无法安全压缩");
     expect(fetcher).not.toHaveBeenCalled();
+  });
+});
+
+describe("automatic compaction hardening", () => {
+  async function wide(n = 8, size = 900) {
+    const thread = await createChatThread();
+    await updateContextPolicy(thread.id, { ...DEFAULT_CONTEXT_POLICY, customContextTokens: 100000 });
+    await db.chatMessages.bulkAdd(history(thread.id, n, size));
+    const run = await beginAgentRun({ threadId: thread.id, connector, model: "unknown-model", content: "接着完成当前目标", interactionMode: "conversation" });
+    return { thread, run };
+  }
+  it("recognizes provider context-length rejections only", () => {
+    for (const message of ["请求失败（400）：This model's maximum context length is 8192 tokens", "context_length_exceeded", "prompt is too long: 210000 tokens", "Your input exceeds the context window of this model"]) expect(isContextOverflow(message)).toBe(true);
+    for (const message of ["请求失败（401）：invalid api key", "请求失败（429）：rate limit", "模型暂时不可用"]) expect(isContextOverflow(message)).toBe(false);
+  });
+  it("compacts once on a provider overflow and repeats the same step with the summary", async () => {
+    const { run } = await wide();
+    const bodies: Array<{ messages: AgentRequestMessage[] }> = [];
+    let mains = 0;
+    const fetcher = vi.fn(async (_url, init) => {
+      const body = JSON.parse(String(init?.body)); bodies.push(body);
+      if (body.messages[0].content.startsWith("Summarize")) return json("已整理：目标、约束与进度。");
+      mains++;
+      if (mains === 1) return new Response(JSON.stringify({ error: { code: "context_length_exceeded", message: "maximum context length exceeded" } }), { status: 400 });
+      return json("最终回复");
+    });
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
+    expect(fetcher).toHaveBeenCalledTimes(3);
+    const saved = (await db.agentRuns.get(run.id))!;
+    expect(saved.status).toBe("completed");
+    expect(saved.modelStep).toBe(1);
+    expect(bodies[2].messages.some(message => String(message.content).includes("历史摘要"))).toBe(true);
+    expect((await db.contextCompactions.toArray()).map(record => record.status)).toEqual(["completed"]);
+  });
+  it("does not loop: an overflow with nothing to compact fails with the original error after one request", async () => {
+    const thread = await createChatThread();
+    await updateContextPolicy(thread.id, { ...DEFAULT_CONTEXT_POLICY, customContextTokens: 100000 });
+    const run = await beginAgentRun({ threadId: thread.id, connector, model: "unknown-model", content: "你好", interactionMode: "conversation" });
+    const fetcher = vi.fn(async () => new Response("maximum context length exceeded", { status: 400 }));
+    await executeChatRun(run, connector.apiKey, new AbortController(), fetcher);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect((await db.agentRuns.get(run.id))?.status).toBe("failed");
+  });
+  it("clips only bulky results the model already saw, once, keeping the latest round intact", () => {
+    const big = (tag: string) => tag.repeat(PRUNE_RESULT_CHARACTERS + 500);
+    const messages: AgentRequestMessage[] = [{ role: "system", content: "s" }, { role: "user", content: "q" },
+      { role: "assistant", content: "", tool_calls: [{ id: "a", type: "function", function: { name: "t", arguments: "{}" } }] }, { role: "tool", tool_call_id: "a", content: big("a") },
+      { role: "assistant", content: "", tool_calls: [{ id: "b", type: "function", function: { name: "t", arguments: "{}" } }] }, { role: "tool", tool_call_id: "b", content: big("b") }];
+    const pruned = pruneSeenToolResults(messages)!;
+    expect(pruned[3].content.length).toBeLessThan(PRUNE_RESULT_CHARACTERS);
+    expect(pruned[3].content).toContain("已省略");
+    expect(pruned[5]).toEqual(messages[5]);
+    expect(pruneSeenToolResults(pruned)).toBeUndefined();
+    expect(pruneSeenToolResults(messages.slice(0, 2))).toBeUndefined();
+  });
+  it("prunes seen results before asking a model to summarize, and skips the request when that suffices", async () => {
+    const { run } = await wide(0);
+    const tool = (id: string, content: string): AgentRequestMessage[] => [{ role: "assistant", content: "", tool_calls: [{ id, type: "function", function: { name: "t", arguments: "{}" } }] }, { role: "tool", tool_call_id: id, content }];
+    await db.agentRuns.update(run.id, { context: { ...run.context!, capacity: 4096 }, continuationMessages: [...run.requestMessages, ...tool("a", "a".repeat(12000)), ...tool("b", "latest result")] });
+    const fetcher = vi.fn(async () => json("unused"));
+    const next = await prepareRunContext(run.id, [], connector.apiKey, new AbortController().signal, fetcher);
+    expect(fetcher).not.toHaveBeenCalled();
+    const messages = next.continuationMessages!;
+    expect(messages.find(message => message.role === "tool" && message.tool_call_id === "a")!.content).toContain("已省略");
+    expect(messages.at(-1)).toEqual({ role: "tool", tool_call_id: "b", content: "latest result" });
+    expect(next.context?.summaryId).toBeUndefined();
+  });
+  it("asks for a cheap, capped, tool-free summary", async () => {
+    const { run } = await begin();
+    const bodies: Array<Record<string, unknown>> = [];
+    await prepareRunContext(run.id, [], connector.apiKey, new AbortController().signal, vi.fn(async (_url, init) => { bodies.push(JSON.parse(String(init?.body))); return json("有效的简短摘要"); }));
+    expect(bodies[0].tools).toBeUndefined();
+    expect(bodies[0].reasoning_effort).toBeUndefined();
+    const cap = Number(bodies[0].max_tokens);
+    expect(cap).toBeGreaterThan(0);
+    expect(cap).toBeLessThanOrEqual(4096);
+    expect(summaryOutputCap([{ role: "user", content: "x".repeat(400) }], 10000)).toBe(512);
+    expect(summaryOutputCap([{ role: "user", content: "x".repeat(40000) }], 10000)).toBe(4096);
+    expect(summaryOutputCap([{ role: "user", content: "x" }], 300)).toBe(300);
+    const identity = { definitionId: "openai-compatible" as const, baseUrl: connector.baseUrl };
+    expect(summaryReasoningEffort(identity, "gpt-5", "high")).toBe("minimal");
+    expect(summaryReasoningEffort(identity, "gpt-5.1", "xhigh")).toBe("none");
+    expect(summaryReasoningEffort(identity, "gpt-5-pro", "high")).toBe("high");
+    expect(summaryReasoningEffort(identity, "gpt-5", undefined)).toBeUndefined();
+  });
+  it("rejects an empty summary after the retry and sends the original request", async () => {
+    const { run } = await begin();
+    const next = await prepareRunContext(run.id, [], connector.apiKey, new AbortController().signal, vi.fn(async () => json("")));
+    expect(next.context?.summaryId).toBeUndefined();
+    expect((await db.contextCompactions.toArray()).every(record => record.status === "failed" && record.error)).toBe(true);
   });
 });
