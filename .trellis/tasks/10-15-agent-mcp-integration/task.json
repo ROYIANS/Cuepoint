@@ -21,7 +21,7 @@
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
   "relatedFiles": [],
-  "notes": "Owner requested E09 archive and next delivery on 2026-10-16, then explicitly selected both local stdio and remote Streamable HTTP for the first E10 delivery across macOS/Windows. Converge remote authentication coverage, initial use case/UX and concrete design before implementation; standing stage-commit and necessary-check cadence remains in force.",
+  "notes": "Owner requested E09 archive and next delivery on 2026-10-16, then explicitly selected both local stdio and remote Streamable HTTP across macOS/Windows, and OAuth browser login together with manual Token/request headers in the first remote delivery. Converge browser-edition availability, initial use case/UX and concrete design before implementation; standing stage-commit and necessary-check cadence remains in force.",
   "meta": {
     "epicCode": "E10",
     "deliveryState": "scope-research",
@@ -31,10 +31,11 @@
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Both desktop transports on macOS/Windows confirmed by the owner. Awaiting remote authentication scope, followed by remaining product choices and concrete design/implementation/validation review before activation.",
+    "readiness": "Both desktop transports on macOS/Windows and initial OAuth plus manual remote credentials confirmed. Investigating browser-edition compatibility, credential/callback ownership and connection lifecycle before concrete design/implementation/validation review.",
     "investigationDate": "2026-10-16",
     "researchArtifacts": [
-      "research/scope-and-host-options.md"
+      "research/scope-and-host-options.md",
+      "research/oauth-host-and-browser-boundary.md"
     ],
     "confirmedTransports": [
       "stdio",
@@ -45,6 +46,12 @@
       "Windows"
     ],
     "transportScopeConfirmedAt": "2026-10-16",
-    "nextDecision": "include remote OAuth browser login in the initial delivery vs defer it after manual-credential connections; OAuth inclusion recommended, not selected"
+    "confirmedRemoteAuthentication": [
+      "none where applicable",
+      "manual token/request headers",
+      "OAuth browser login"
+    ],
+    "authenticationScopeConfirmedAt": "2026-10-16",
+    "nextDecision": "browser-edition remote MCP and OAuth alongside desktop vs desktop MCP first; browser remote support recommended for compatible endpoints, not selected"
   }
 }

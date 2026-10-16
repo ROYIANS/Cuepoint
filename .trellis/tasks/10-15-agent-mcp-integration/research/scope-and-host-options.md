@@ -97,17 +97,19 @@ support. A manual token/header connection and a browser-login connection are
 different user workflows. OAuth also requires discovery/registration, guarded
 browser return and token lifecycle design; no such implementation was tested.
 
-Next owner decision: include OAuth browser login in the initial remote scope,
-or initially offer unauthenticated/manual-token connections and defer login.
-Recommendation: include OAuth for a more complete remote connection experience,
-with the extra login/token lifecycle work split into a reviewed stage. This is
-not yet selected. Specific auth extensions and credential storage remain to be
-designed against the selected SDK and actual server acceptance target.
+Owner decision on 2026-10-16: **include OAuth browser login together with manual
+Token/request-header connections** in the first remote delivery. The owner
+answered “那就一起做了吧。” to that explicit scope question. OAuth is therefore
+in scope, not a post-MVP promise. Specific auth extensions and credential storage
+remain to be designed against the selected SDK and actual server acceptance
+target. Browser-based desktop authorization does not itself establish support
+in Cuepoint's separately deployed browser edition.
 
 ## Remaining decisions and necessary validation shape
 
-Transport scope is confirmed. Next converge authentication coverage, initial
-real-server/use-case acceptance and explicit server/tool enablement UX. Keep
+Transport and initial authentication scope are confirmed. Next converge browser-
+edition availability, real-server/use-case acceptance and explicit server/tool
+enablement UX. Keep
 the existing quiet UI, shared right-side workspace and unsaved-edit guards.
 Do not manufacture defaults for these product choices from current source alone.
 
