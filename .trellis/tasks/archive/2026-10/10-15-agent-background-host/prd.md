@@ -6,7 +6,7 @@ Make conversation execution independent of the selected page, with truthful per-
 
 ## Background and confirmed scope
 
-The owner authorized this existing child of [Agent experience and desktop evolution](../10-15-agent-experience-desktop-evolution/prd.md). Planning resumed after E10 source delivery on 2026-10-16. The screenshot supplied that day places the running indicator at the trailing edge of a conversation row. The latest clarification is: “是的，需要支持桌面端后台运行，且不支持多开窗口”. This accepts the preceding proposed lifetime: window close retains the application-managed host, explicit Quit ends it, and reopening/repeated launch returns to the same window.
+The owner authorized this existing child of [Agent experience and desktop evolution](../../../10-15-agent-experience-desktop-evolution/prd.md). Planning resumed after E10 source delivery on 2026-10-16. The screenshot supplied that day places the running indicator at the trailing edge of a conversation row. The latest clarification is: “是的，需要支持桌面端后台运行，且不支持多开窗口”. This accepts the preceding proposed lifetime: window close retains the application-managed host, explicit Quit ends it, and reopening/repeated launch returns to the same window.
 
 Desktop is primary and **both macOS and Windows are in scope**. Web shares supported behavior for the lifetime of its document. The six confirmed outcomes are captured by R1/R4/R5/R6/R7/R8 below. This is an independent-conversation delivery; model-created child Agents belong to E12.
 
@@ -38,7 +38,7 @@ Source-stage verification completed on 2026-10-16; exact receipts and limits are
 
 ## Dependencies and evidence
 
-Prerequisites are the delivered [E06 capability contracts](../archive/2026-10/10-15-agent-resource-capabilities/prd.md) and [E07 jobs/results contracts](../archive/2026-10/10-15-agent-jobs-results/prd.md). Preserve integration with delivered [E10 MCP](../archive/2026-10/10-15-agent-mcp-integration/prd.md), including exact original stop/status/publication and current private authority. These are actual ordering constraints, not consequences of the task tree.
+Prerequisites are the delivered [E06 capability contracts](../10-15-agent-resource-capabilities/prd.md) and [E07 jobs/results contracts](../10-15-agent-jobs-results/prd.md). Preserve integration with delivered [E10 MCP](../10-15-agent-mcp-integration/prd.md), including exact original stop/status/publication and current private authority. These are actual ordering constraints, not consequences of the task tree.
 
 Current source-backed investigation:
 
@@ -47,7 +47,7 @@ Current source-backed investigation:
 - [Pinned native lifetime, single-instance alternatives and OS evidence](research/native-background-and-single-instance.md).
 - [Running projection, publication/read races and report ownership](research/sidebar-running-unread.md).
 
-Original broader inputs remain [host integration](../10-15-desktop-agent-capability-research/research/host-integration-review.md) and [capability comparison](../10-15-desktop-agent-capability-research/research/capability-comparison.md). Current files were investigated against E10 source delivery instead of assuming old line anchors remain current.
+Original broader inputs remain [host integration](../../../10-15-desktop-agent-capability-research/research/host-integration-review.md) and [capability comparison](../../../10-15-desktop-agent-capability-research/research/capability-comparison.md). Current files were investigated against E10 source delivery instead of assuming old line anchors remain current.
 
 ## Delivery and boundaries
 

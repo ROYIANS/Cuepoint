@@ -3,7 +3,7 @@
   "name": "agent-background-host",
   "title": "E11 · 后台 Agent 宿主与重连恢复",
   "description": "Independent concurrent conversations, durable sidebar running/unread state and navigation without Stop; macOS/Windows single-window app remains resident after close and reconciles safely on restart.",
-  "status": "in_progress",
+  "status": "completed",
   "dev_type": null,
   "scope": null,
   "package": "studio",
@@ -11,11 +11,11 @@
   "creator": "ROYIANS",
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
-  "completedAt": null,
+  "completedAt": "2026-10-16",
   "branch": "codex/agent-background-host",
   "base_branch": "codex/agent-mcp-integration",
   "worktree_path": null,
-  "commit": null,
+  "commit": "7fb1b3c0",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -33,14 +33,14 @@
   "notes": "Final E11 plan approved on 2026-10-16: 进入开发吧. Six owner outcomes and four source stages are authorized. Stage commits preauthorized; no push. Full/installed gates remain epic batch.",
   "meta": {
     "epicCode": "E11",
-    "deliveryState": "source-reviewed-complete",
+    "deliveryState": "source-complete-pending-epic-acceptance",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "All four source stages independently reviewed. Stage 4 fixes sidebar remount/placement, strict viewed-only unread and repeated completed-background observation crash. Final local commit and source-delivery archive follow; full/installed acceptance stays parent epic.",
+    "readiness": "All four source stages reviewed and committed; source-delivery archive. Actual installed macOS/Windows and full regression/build/package acceptance stays with parent epic.",
     "ownerRequirements20261016": [
       "Sidebar per-conversation loading/in-progress icon",
       "Sidebar per-conversation unread indicator",
@@ -161,7 +161,8 @@
         "ownerCrash": "发送记录不存在 on completed-background reentry reproduced before fix; actual service/MessageList/StrictMode repeat cleanup passes after fix",
         "latency": "Controlled populated browser send→DOM160.9ms; provider/native IPC seconds-level delay not reproduced or attributed",
         "evidence": "results.md",
-        "nativeInstalledAcceptance": "unchanged Stage3 native evidence reused; installed both OS and full/build/package pending epic batch"
+        "nativeInstalledAcceptance": "unchanged Stage3 native evidence reused; installed both OS and full/build/package pending epic batch",
+        "commit": "7fb1b3c0"
       }
     }
   }
