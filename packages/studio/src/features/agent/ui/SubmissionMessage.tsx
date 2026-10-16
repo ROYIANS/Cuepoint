@@ -1,4 +1,4 @@
-import type {ChatSubmissionAttempt} from "./chatSubmissionAttempts";
+import type {ChatSubmissionAttempt} from "../models/chatSubmissionAttempt";
 import {ReferenceAttachments} from "./ReferenceAttachments";
 import {useLayoutEffect, useRef} from "react";
 import {ProvisionalCommitProbe} from "./ExecutionFeedback";

@@ -2,8 +2,8 @@
   "id": "agent-background-host",
   "name": "agent-background-host",
   "title": "E11 · 后台 Agent 宿主与重连恢复",
-  "description": "Move execution ownership out of the chatting view for an explicitly chosen lifecycle while retaining the same public loop and product owner.",
-  "status": "planning",
+  "description": "Independent concurrent conversations, durable sidebar running/unread state and navigation without Stop; macOS/Windows single-window app remains resident after close and reconciles safely on restart.",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "studio",
@@ -12,25 +12,79 @@
   "assignee": "ROYIANS",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": null,
-  "base_branch": "main",
+  "branch": "codex/agent-background-host",
+  "base_branch": "codex/agent-mcp-integration",
   "worktree_path": null,
   "commit": null,
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
-  "relatedFiles": [],
-  "notes": "Planning backlog from the 2026-10-15 investigation. Task creation is authorized; delivery scope and implementation remain subject to this task review.",
+  "relatedFiles": [
+    "prd.md",
+    "design.md",
+    "implement.md",
+    "research/lifecycle-and-sidebar-inventory.md",
+    "research/product-execution-boundaries.md",
+    "research/native-background-and-single-instance.md",
+    "research/sidebar-running-unread.md",
+    "results.md"
+  ],
+  "notes": "Final E11 plan approved on 2026-10-16: 进入开发吧. Six owner outcomes and four source stages are authorized. Stage commits preauthorized; no push. Full/installed gates remain epic batch.",
   "meta": {
     "epicCode": "E11",
-    "deliveryState": "planning-backlog",
-    "implementationApproved": false,
+    "deliveryState": "stage-1-reviewed-stage-2-next",
+    "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Needs child-specific requirement convergence, design, implementation/validation plan and review before start."
+    "readiness": "Stage 1 source implementation and independent review passed; commit locally then integrate retained views/drafts/generation in Stage 2.",
+    "ownerRequirements20261016": [
+      "Sidebar per-conversation loading/in-progress icon",
+      "Sidebar per-conversation unread indicator",
+      "Multiple independent conversations can execute concurrently",
+      "No stop-before-leaving dialog or implicit cancellation on ordinary conversation/page navigation",
+      "Desktop window close retains background execution; explicit Quit ends the application-managed host",
+      "One desktop application instance/product window; repeated launch reopens/focuses the existing instance"
+    ],
+    "integrationInputs": [
+      "10-15-agent-mcp-integration"
+    ],
+    "architecture": "Application-level Studio service in the retained sole main WebView; existing Rust resource owners and one ProductStore/session; native File lock and bounded activation.",
+    "planningValidation": {
+      "date": "2026-10-16",
+      "result": "passed",
+      "checks": [
+        "task.py validate: implement/check each 9 real entries, no truncation warnings",
+        "PRD convergence: 8 requirements and 8 mapped acceptance criteria",
+        "all authored Markdown relative links/whitespace and related files",
+        "research consistency reviews incorporated: native lifetime, execution/guards, read/report/render boundaries",
+        "git diff --check; only task/parent planning documents changed"
+      ],
+      "evidenceLimit": "No product implementation, native background probe, build/package or installed-OS acceptance performed."
+    },
+    "approval": "2026-10-16: owner approved the final four-stage plan with 进入开发吧",
+    "stageResults": {
+      "stage1": {
+        "status": "reviewed-passed",
+        "date": "2026-10-16",
+        "sourceTests": {
+          "files": 8,
+          "passed": 96
+        },
+        "finiteTypecheck": "passed including every changed TS input",
+        "nodeConfigTypecheck": "passed",
+        "architecture": {
+          "sources": 731,
+          "failures": 0,
+          "cycles": 0
+        },
+        "lint": "0 errors; 30 existing UI warnings",
+        "evidence": "results.md",
+        "nativeInstalledAcceptance": "not performed; later stage/final batch"
+      }
+    }
   }
 }

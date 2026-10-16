@@ -56,11 +56,11 @@
     "firstCandidate": "10-15-agent-parallel-details",
     "narrowDetailMode": "full-width working-surface detail, retained running conversation, explicit return; no modal drawer",
     "shotDetailScope": "view and edit one shot with existing save/conflict/draft guarantees",
-    "activeDelivery": null,
+    "activeDelivery": "10-15-agent-background-host",
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E10 four-stage source delivery reviewed and checkpointed; next delivery candidate E11 needs its own concrete host/lifetime design review. Keep E08/E09/E10 full and installed acceptance for the epic batch, without repeating broad builds per child.",
+    "nextAction": "E11 Stage 1 execution foundation reviewed (96 source tests, finite types and architecture passed); commit and continue Stage 2 retained page/draft/generation integration. Desktop lifecycle and sidebar remain subsequent stages; full/installed acceptance stays epic batch.",
     "carriedAcceptance": {
       "E09": {
         "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",
@@ -85,6 +85,17 @@
           "installed system-browser OAuth, loopback/firewall, preregistration/DCR and window lifetime",
           "compatible Web deployment/third-party OAuth; no HTTP1/stringbody/proxy/persistent-secret fallback",
           "observe isolated pre-interaction Dexie PrematureCommit in broader integration runs"
+        ]
+      },
+      "E11": {
+        "record": "../10-15-agent-background-host/task.json",
+        "state": "planned-not-yet-implemented",
+        "items": [
+          "full formal quality/regression/whole-app builds and affected TSX aggregate discovery",
+          "isolated emitted/declaration/offline packed consumer if applicable",
+          "actual installed macOS and Windows hidden progress, tray/Dock reopen, simultaneous launch and Quit",
+          "Windows WebView2/Job Object/process/session cleanup and signed macOS native permission flows",
+          "actual final linked and installer footprint; no runtime binary is planned"
         ]
       }
     }

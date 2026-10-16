@@ -1,8 +1,9 @@
-{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/agent-core/library/runtime.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/agent-providers/library/protocols.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/host-integration-review.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
-{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/capability-comparison.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Verify: Studio package entry and pre-development/quality checklist; compose the retained feature host once."}
+{"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Verify: Native package entry, closed main/session IPC and actual-platform evidence boundaries."}
+{"file": ".trellis/spec/frontend/feature-organization.md", "reason": "Verify: No runtime dependency on UI; explicit feature exports and architecture ownership for generation integration."}
+{"file": ".trellis/spec/frontend/shared-product-storage.md", "reason": "Verify: Sole fixed ProductStore, explicit source StoreTx scopes and small typed per-thread device settings."}
+{"file": ".trellis/spec/frontend/agent-send-recovery.md", "reason": "Verify: Immediate echo, exact whole-draft revision, reserved identities and unknown admission without duplicate dispatch."}
+{"file": ".trellis/spec/frontend/agent-thread-reading.md", "reason": "Verify: Requested-thread identity, stale queries and local reading; intentionally replace execution-only departure semantics."}
+{"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Verify: Quiet preparation, no transient user-bubble captions or ordinary success toasts."}
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Verify: Fresh contracts; no unsolicited history upgrade/backfill."}
+{"file": ".trellis/spec/guides/task-artifact-retention.md", "reason": "Verify: Authored evidence retained; raw fixtures and generated artifacts outside task/repo."}

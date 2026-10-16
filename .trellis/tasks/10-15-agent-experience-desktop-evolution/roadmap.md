@@ -17,7 +17,7 @@ State: planning. The owner authorized this epic and sequential task organization
 | [E08: Native workspace/media](../10-15-desktop-workspace-media/prd.md) | Authorized input directory to verified media processing and project import. | E06, E07. | Source complete on `codex/desktop-workspace-media` in `52e584c7`, `2b00d8e5`, `ca2da1a5`: macOS + Windows source/native grants, decoder resources, atomic source+thumbnail import, inline library UI and Agent group. Necessary affected checks and independent reviews passed; task stays open for deferred actual Windows/installed and epic batch acceptance. |
 | [E09: Installable Skills](../archive/2026-10/10-15-agent-installable-skills/prd.md) | Discover and load reusable creative instructions on demand. | E06. | Three reviewed source stages (`0c7b8b10`, `e7a5c8ff`, `0449ed6f`) and runtime/uncertain-toggle repair (`1e74e0c8`) complete. Archived at the owner's request on 2026-10-16; deferred full/emitted/packed and actual installed macOS/Windows acceptance is retained by this epic below. |
 | [E10: MCP integration](../archive/2026-10/10-15-agent-mcp-integration/prd.md) | Selected external server tools/resources share approval, lifecycle and result handling. | E06, E07. | Four source stages independently reviewed on codex/agent-mcp-integration: `45bffe3c` contracts/SDK, `9d2d2de6` desktop transports/OAuth, `80513428` Agent approval/E07, followed by shared retained management and compatible Web. Final 19 suites/232 tests, actual SDK Chromium24 and retained UI12 passed. Source delivery is archived after its final checkpoint; exact Stage 4 commit is in the archived task. Both desktop transports/OAuth implemented; Web requires request-stream + HTTP/2/3 + CORS, no proxy. Full/installed gates remain carried below. |
-| [E11: Background Agent host](../10-15-agent-background-host/prd.md) | Continue across a selected UI detach case and reattach to authoritative state. | E06, E07. | Backlog; choose lifetime and runtime separately. |
+| [E11: Background Agent host](../10-15-agent-background-host/prd.md) | Independent concurrent conversations continue across in-app navigation, with per-conversation sidebar running/unread icons and no stop-before-leaving dialog. Reattach to authoritative state. | E06, E07; preserve delivered E10 session/authority integration. | Six owner outcomes and four-stage plan approved 2026-10-16 (进入开发吧). Active on codex/agent-background-host, beginning app-owned execution. macOS+Windows background/single-instance and sidebar delivery follow; native/installed acceptance is not yet established. |
 | [E12: Delegation/concurrency](../10-15-agent-delegation/prd.md) | Bounded child work, inherited grants, budgets and coordinated creative writes. | E06, E07, E11. | Backlog; may narrow E11 dependence only by explicit scoped design. |
 | [E13: Programmatic workflows](../10-15-agent-programmatic-workflows/prd.md) | Verified batches with nested calls through the same policy and scheduler. | E06, E07, E12. | Backlog; typed orchestration before choosing code execution. |
 | [E14: Scheduled follow-ups](../10-15-agent-scheduled-followups/prd.md) | Manage reminders with honest online/offline, delivery and duplicate semantics. | E07, E11. | Backlog; no app-exit/daemon promise. |
@@ -44,6 +44,7 @@ This is a proposed sequence, not a dependency scheduler. The same dependencies a
 | Filesystem Skills, metadata/body separation and distribution | E09 | On-demand instructions/resources; no implicit execution grants. |
 | MCP tools/resources, transport/credentials, reconnect/process ownership | E10 | Test server and late-response/disconnect/approval identity cases. |
 | Current UI-bound loop, actual host ownership, product bridge and packaged lifetime | E11 | Chosen lifecycle in actual package; one ProductStore and run owner. |
+| Owner request on 2026-10-16: sidebar loading/unread icons, concurrent conversations, no stop-before-leaving, desktop background and one application window | E11 | Two conversations progress independently; row icons/read cursors remain truthful, navigation does not cancel, and manual drafts remain protected. Window close retains the host; reopen/repeated launch reuses it; explicit Quit ends it without replay. macOS and Windows source plus actual platform acceptance are distinct. Child Agents remain E12. |
 | Spawn/Fork, role contexts, messages, budgets and child scope | E12 | Managed child lineage, cancellation, bounded read concurrency and exclusive effects. |
 | PTC/programmatic batches and nested-tool concurrency | E13 | Verified outputs and preserved nested policies, cancellation and ledger. |
 | Timers, cold follow-up, missed runs and acknowledgement windows | E14 | Host availability plus duplicate/crash admission tests. |
@@ -108,6 +109,25 @@ remote support. Source-stage receipts do not discharge this epic's final batch:
   retry or error suppression; no unrelated store repair was invented in E10.
 
 E08's pending installed media checks and archived E09 acceptance remain separate.
+
+### E11 planned final-batch acceptance
+
+The [E11 design](../10-15-agent-background-host/design.md) and
+[four-stage plan](../10-15-agent-background-host/implement.md) separate necessary
+source/native probes from final acceptance. E11 implementation is active; none of these
+final-batch checks are claimed complete:
+
+- Full formal quality/regression/whole-app builds and affected TSX aggregate
+  discovery, plus isolated emitted/declaration/packed consumer if applicable.
+- Actual installed macOS and Windows hidden progress with two conversations,
+  tray/Dock/platform reopen, simultaneous launch, original session retention and
+  idempotent Quit/cold restart with zero automatic effect replay.
+- Windows WebView2/Job Object/native process cleanup and signed macOS native
+  permission behavior, together with the actual final linked/installer footprint.
+
+The available-host hidden-progress feasibility probe is necessary during E11,
+not a replacement for these final installed checks. Earlier E08/E09/E10 residual
+acceptance remains independent.
 
 ### Shared integration cases
 

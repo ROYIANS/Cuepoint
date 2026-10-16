@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.studio-agent-source.json",
+  "include": [
+    "../../packages/studio/src/features/agent/runtime/agentExecution.ts",
+    "../../packages/studio/src/features/agent/runtime/agentExecutionService.ts",
+    "../../packages/studio/src/features/agent/ui/chatExecutionFlows.ts",
+    "../../packages/studio/src/features/agent/ui/AgentChatPage.tsx",
+    "../../packages/agent-core/src/**/*.ts",
+    "../../packages/agent-providers/src/**/*.ts",
+    "../agentExecutionService.test.ts",
+    "../e02SubmissionPresentation.test.ts",
+    "../e03ExecutionFeedback.test.ts",
+    "../b07ComposeSessions.test.ts",
+    "../../packages/studio/src/app/vite-env.d.ts",
+    "../e04ReadingNavigation.test.ts",
+    "../../packages/studio/src/app/bootstrap.tsx",
+    "../../vitest.agent-background-source.config.ts"
+  ]
+}

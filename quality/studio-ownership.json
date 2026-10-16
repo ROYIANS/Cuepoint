@@ -6505,6 +6505,57 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/models/chatDraft.ts",
+      "file": "packages/studio/src/features/agent/models/chatDraft.ts",
+      "target": "packages/studio/src/features/agent/models/chatDraft.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/models/chatRunAction.ts",
+      "file": "packages/studio/src/features/agent/models/chatRunAction.ts",
+      "target": "packages/studio/src/features/agent/models/chatRunAction.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/models/chatSubmissionAttempt.ts",
+      "file": "packages/studio/src/features/agent/models/chatSubmissionAttempt.ts",
+      "target": "packages/studio/src/features/agent/models/chatSubmissionAttempt.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/runtime/agentExecution.ts",
+      "file": "packages/studio/src/features/agent/runtime/agentExecution.ts",
+      "target": "packages/studio/src/features/agent/runtime/agentExecution.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "initializeAgentExecution"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/agent/runtime/agentExecutionService.ts",
+      "file": "packages/studio/src/features/agent/runtime/agentExecutionService.ts",
+      "target": "packages/studio/src/features/agent/runtime/agentExecutionService.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/runtime/chatExecutionFlows.ts",
+      "file": "packages/studio/src/features/agent/runtime/chatExecutionFlows.ts",
+      "target": "packages/studio/src/features/agent/runtime/chatExecutionFlows.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

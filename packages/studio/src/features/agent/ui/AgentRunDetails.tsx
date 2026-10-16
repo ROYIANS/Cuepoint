@@ -27,7 +27,7 @@ import "./executionActivity.css";
 
 const MARKDOWN_PROPS = {variant: "chat"} as const;
 
-export type RunAction = "resume" | "cancel" | "approve" | "reject";
+import type {RunAction} from "../models/chatRunAction";
 // Success is shown by its icon only; every other state gets a short word.
 const STATUS: Partial<Record<AgentToolCall["status"], string>> = {
     pending: "准备执行", awaiting_approval: "等待批准", approved: "已批准，等待执行",

@@ -1,5 +1,5 @@
 import type {ReferenceAttachment} from "../../references/models/references";
-import type {ReferenceImportDraft} from "./useReferenceDraft";
+import type {ReferenceImportDraft} from "../models/chatDraft";
 import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
 import type {AgentInteractionMode, AgentReasoningEffort} from "../models/agent";
 import type {ReactNode} from "react";

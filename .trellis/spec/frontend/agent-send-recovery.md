@@ -4,6 +4,8 @@
 
 Apply [Interaction Feedback](./interaction-feedback.md) to user-facing labels and recovery actions. Read before changing Send, compose consumption/restoration, first-message home navigation, local submission presentation or admission reconciliation. E02 changes the submitted draft into a local attempt before asynchronous preparation. Attempts have the mounted Agent page's lifetime; they are neither durable messages nor a reload-safe outbox.
 
+E11 Stage 1 adds an application/document-lifetime attempt owner in `runtime/agentExecutionService.ts`; the foreground adapter is connected in Stage 2. `models/chatDraft.ts` owns the React-free submitted/recovery DTOs and `models/chatSubmissionAttempt.ts` owns reserved intent and canonical transcript joins. These are the authoritative type locations for both UI and runtime; runtime must not import a UI hook or composer module. Service attempts survive a listener detaching, remain memory-only, and keep the existing unknown-outcome/no-replay rules. No reload-safe outbox or persisted credential is introduced.
+
 ## 2. Signatures
 
 - `ChatAdmissionIdentity = Readonly<{ runId: string; userMessageId: string; assistantMessageId: string }>` in `features/agent/models/chatSubmission.ts`.

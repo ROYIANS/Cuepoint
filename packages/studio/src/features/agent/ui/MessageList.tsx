@@ -3,7 +3,8 @@ import {ReferenceMessageSources} from "./ReferenceAttachments";
 import {ModelIcon} from "./ModelIcons";
 import {ArrowDown, Coins, Gauge} from "../../../ui/icons";
 import {formatTokenCount} from "../runtime/contextUsage";
-import {AgentRunDetails, type RunAction} from "./AgentRunDetails";
+import {AgentRunDetails} from "./AgentRunDetails";
+import type {RunAction} from "../models/chatRunAction";
 import type {AgentRun, AgentToolCall} from "../models/agent";
 import {useProductQuery} from "../../../platform/product/queries";
 import {isPersistedToolRound} from "../runtime/runPresentation";
@@ -18,7 +19,7 @@ import {ThinkingPanel} from "./ThinkingPanel";
 import {MemoryRunHistory} from "./MemoryContextDetails";
 import {TurnNavigation} from "./TurnNavigation";
 import {SubmissionMessage, SubmissionStatus, type SubmissionAction} from "./SubmissionMessage";
-import {submissionTranscript, type ChatSubmissionAttempt} from "./chatSubmissionAttempts";
+import {submissionTranscript, type ChatSubmissionAttempt} from "../models/chatSubmissionAttempt";
 import {PublicOutputCommit} from "./ExecutionFeedback";
 
 /** One quiet status line, only for outcomes the reader must notice. */

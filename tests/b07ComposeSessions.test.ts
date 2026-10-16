@@ -63,7 +63,8 @@ vi.mock("@/platform/identity", async original => ({...await original<typeof impo
     createId: (prefix: string) => prefix === "thread" ? "created" : `${prefix}_${crypto.randomUUID()}`}));
 vi.mock("@/features/agent/commands/agentRuns", async original => ({...await original<typeof import("@/features/agent/commands/agentRuns")>(), beginAgentRun: io.begin}));
 vi.mock("@/features/agent/runtime/runChat", () => ({executeChatRun: io.execute, resumeChatRun: vi.fn()}));
-vi.mock("@/features/agent/runtime/runOwnership", () => ({recoverAbandonedRuns: vi.fn().mockResolvedValue(undefined), withThreadRunLock: io.lock}));
+vi.mock("@/features/agent/runtime/runOwnership", async original => ({...await original<typeof import("@/features/agent/runtime/runOwnership")>(),
+    recoverAbandonedRuns: vi.fn().mockResolvedValue(undefined), withThreadRunLock: io.lock}));
 vi.mock("@/features/agent/runtime/taskWrapup", () => ({recoverTaskWrapups: vi.fn().mockResolvedValue(undefined)}));
 vi.mock("@/features/video/agent/generationBatchRuntime", () => ({pauseThreadGeneration: vi.fn()}));
 vi.mock("@/features/settings/models/connectors", () => ({runWithCompatibleChatModel: io.compatible,
@@ -145,7 +146,7 @@ function page(initial?: string, connection = connector) {
     const select = (id?: string) => {active = id; render(); render();};
     io.navigate.mockImplementation(async (options: {params?: {threadId: string}}) => {select(options.params?.threadId);});
     render(); render();
-    const attempts = () => (surface().props.submissions ?? []) as import("@/features/agent/ui/chatSubmissionAttempts").ChatSubmissionAttempt[];
+    const attempts = () => (surface().props.submissions ?? []) as import("@/features/agent/models/chatSubmissionAttempt").ChatSubmissionAttempt[];
     const action = async (action: "retry" | "restore" | "check" | "recover", id = attempts()[0]?.admission.userMessageId) => {
         (surface().props.onSubmissionAction as (id: string, action: string) => void)(id, action); await settle();
     };
@@ -600,10 +601,19 @@ describe("E02 immediate submission recovery", () => {
         expect((await db.agentRuns.get(admission.runId))?.status).toBe("running");
         expect(ui.attempts()[0].recoveryRequired).toBe(true);
         expect(ui.attempts()[0].error).toContain("暂时无法恢复");
-        io.lock.mockImplementation((id, operation) => ownership.withThreadRunLock(id, operation, {
-            request: (_name, _options, callback) => callback({})
-        }));
+        let recoveryDone: Promise<unknown> | undefined;
+        io.lock.mockImplementation((id, operation) => {
+            recoveryDone = ownership.withThreadRunLock(id, operation, {
+                request: (_name, _options, callback) => callback({})
+            });
+            return recoveryDone;
+        });
         await ui.action("recover");
+        // This UI callback intentionally returns void. Await its actual owned
+        // recovery, rather than assuming eight event-loop turns drain real IO.
+        expect(recoveryDone).toBeDefined();
+        await recoveryDone;
+        await settle();
         expect((await db.agentRuns.get(admission.runId))?.status).toBe("interrupted");
         expect(ui.attempts()[0].recoveryRequired).toBe(false);
         expect(io.begin).toHaveBeenCalledTimes(1); expect(io.execute).not.toHaveBeenCalled();

@@ -64,11 +64,11 @@ export async function withExecutionOwnership<T>(threadId:string,execute:(ownersh
     });
 }
 
-export async function withThreadRunLock<T>(threadId:string,execute:(ownership:ThreadOwnership)=>Promise<T>,locks:ThreadLockManager=browserLocks()):Promise<T> {
+export async function withThreadRunLock<T>(threadId:string,execute:(ownership:ThreadOwnership)=>Promise<T>,locks:ThreadLockManager=browserLocks(),store:ProductStore=productDb):Promise<T> {
     return withExecutionOwnership(threadId,async ownership=>{
-        await (await import("../commands/agentJobs")).recoverAgentJobs(threadId, ownership);
-        await recoverAbandonedGenerationBatches(threadId);
-        await interruptThreadRuns(threadId);
+        await (await import("../commands/agentJobs")).recoverAgentJobs(threadId, ownership, store);
+        await recoverAbandonedGenerationBatches(threadId, store);
+        await interruptThreadRuns(threadId, store);
         return execute(ownership);
     },locks);
 }

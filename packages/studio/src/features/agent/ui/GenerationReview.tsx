@@ -23,7 +23,7 @@ import {
 import {reviewAndApproveGeneration} from "../../video/agent/generationReview";
 import {recommendGenerationSelection} from "../../video/agent/generationSelection";
 import {applyGenerationSelection} from "../../video/agent/generationReviewDraft";
-import type {RunAction} from "./AgentRunDetails";
+import type {RunAction} from "../models/chatRunAction";
 
 const PROVIDER_LABELS = {apimart: "APIMart", aihubmix: "AIHubMix"};
 

@@ -14,6 +14,8 @@ Read before changing invocation phases, Stop acknowledgement, Studio runtime obs
 
 Studio's `executeChatRun(..., ownership?, feedback?)` and `resumeChatRun(..., ownership?, feedback?)` accept the feature-private optional eighth `RuntimeExecutionFeedback` argument. Legacy callers remain unchanged. Studio adapts existing core output/checkpoint/tool/approval/settled events and its own actual preparation/main-request boundaries; no core or provider protocol is added.
 
+E11 Stage 1's application service owns a separate feedback controller for each thread and begins feedback using that exact service invocation token. Feedback is prepared privately; only a fully initialized service reservation is published to synchronous subscribers. Unsubscribing a view neither disposes the controller nor requests Stop; application shutdown and exact explicit Stop are the lifetime owners. The original foreground hook remains in place until Stage 2 connects it; its legacy cleanup behavior must not be mistaken for the service's contract.
+
 ## 3. Contracts
 
 Invocation identity follows the existing synchronous execution token. Bind a newly created thread before navigation and admission. Ignore foreign run/thread/execution events, older core sequences and old invocation callbacks. Stop is a separate explicit user intent: publish `stopping` and disable repeat Stop before abort; do not infer user Stop from an aborted signal caused by persistence failure. Keep send/Web Locks until the original flush/settlement flow releases them. Existing conditional settlement is authoritative, including completed-before-late-Stop and unknown outcomes.

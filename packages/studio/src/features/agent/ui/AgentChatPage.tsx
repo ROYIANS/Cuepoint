@@ -21,7 +21,7 @@ import {createAgentTaskForThread, setAgentTaskLifecycle} from "../commands/agent
 import {getTaskDisplayState, TASK_STATE_LABELS} from "../runtime/taskState";
 import type {AgentRun} from "../models/agent";
 import {ContextUsageTrigger} from "./ContextUsagePanel";
-import type {RunAction} from "./AgentRunDetails";
+import type {RunAction} from "../models/chatRunAction";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {useProductQuery} from "../../../platform/product/queries";
 import {Button, Empty, Flexbox} from "@lobehub/ui";
@@ -29,7 +29,8 @@ import {useCallback, useEffect, useMemo, useRef, useState,} from "react";
 import {toast} from "sonner";
 import {showError} from "../../../app/errors/showError";
 import {ChatWorkspace} from "./ChatWorkspace";
-import {createSubmissionAttempt, yieldSubmissionPaint, type ChatSubmissionAttempt} from "./chatSubmissionAttempts";
+import {createSubmissionAttempt, type ChatSubmissionAttempt} from "../models/chatSubmissionAttempt";
+import {yieldSubmissionPaint} from "./chatSubmissionAttempts";
 import {readAgentAdmission} from "../queries/agentAdmission";
 import {resolveConnector} from "../../settings/commands/connectors";
 import {StorageError} from "../../../platform/storage/errors";

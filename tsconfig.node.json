@@ -28,6 +28,7 @@
     "vitest.studio-source.config.ts",
     "vitest.desktop-media-source.config.ts",
     "vitest.installable-skills-source.config.ts",
+    "vitest.agent-background-source.config.ts",
     "apps/*/vite.config.ts",
     "tooling/vite.shared.ts",
     "tooling/agent-source-exports.ts",

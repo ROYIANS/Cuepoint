@@ -1,5 +1,5 @@
 import {ModuleLayout} from "../../../app/layout/ModuleLayout";
-import type {RunAction} from "./AgentRunDetails";
+import type {RunAction} from "../models/chatRunAction";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import type {AgentRun} from "../models/agent";
 import {Flexbox} from "@lobehub/ui";
@@ -14,7 +14,7 @@ import {CHAT_COMPOSER_SAFE, CHAT_CONTENT_MAX, CHAT_SAFE_X,} from "./agentTheme";
 import type {ChatMessage, ChatThread} from "../models/chat";
 import type {Id} from "../../../platform/identity";
 import {SubmissionTranscriptFallback, type SubmissionAction} from "./SubmissionMessage";
-import {visibleSubmissionAttempts, type ChatSubmissionAttempt} from "./chatSubmissionAttempts";
+import {visibleSubmissionAttempts, type ChatSubmissionAttempt} from "../models/chatSubmissionAttempt";
 // Rich transcript rendering (markdown, diagrams, syntax highlighting) is needed only
 // once a thread contains messages. Keep the Agent runtime and composer mounted.
 const MessageList = lazy(() => import("./MessageList").then((module) => ({default: module.MessageList})));

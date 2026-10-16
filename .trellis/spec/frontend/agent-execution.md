@@ -13,14 +13,15 @@ Batch queue, selection and genuine generation-source evidence extend these contr
 - `beginAgentRun({threadId, connector, model, content?, attachments?, admission?, expectedOwner?, retryOfRunId?}): Promise<AgentRun>`
 - `checkpointAgentRun(runId, sequence, output, store?): Promise<boolean>` returns true only when the conditional checkpoint was applied; stale/terminal no-ops return false.
 - `finishAgentRun(runId, status, output?, error?, finishReason?): Promise<void>`
-- `withThreadRunLock(threadId, execute: (ownership: ThreadOwnership) => Promise<T>, locks?): Promise<T>`
+- `withThreadRunLock(threadId, execute: (ownership: ThreadOwnership) => Promise<T>, locks?, store?: ProductStore): Promise<T>`
 - `withExecutionOwnership(threadId, execute, locks?)` acquires execution ownership without startup recovery; `withOwnedExecution(ownership, threadId, execute)` validates the held capability and excludes concurrent reuse.
-- `recoverAbandonedRuns(locks?): Promise<void>`
+- `recoverAbandonedRuns(locks?, store?: ProductStore): Promise<void>`
 - `executeChatRun(run, apiKey, controller, fetchImpl?, registry?, store?, ownership?): Promise<void>` and `resumeChatRun(runId, apiKey, controller, fetchImpl?, registry?, store?, ownership?)` bind the real shared core `executeRun`. Production flows supply their already held ownership; direct consumers acquire execution-only ownership.
 - `createRunWriter(persist, onFailure): {push(output), flush(): Promise<void>}`
 - `AgentRunStatus`: running / waiting_approval / completed / failed / cancelled / interrupted.
 
 ## 3. Contracts
+- An explicit store passed into `withThreadRunLock` must reach all lock-aware recovery readers/writers as well as the operation. Recovering through an ambient store while executing through a supplied store breaks ownership isolation.
 - Caller owns the per-thread Web Lock from recovery through atomic begin, transport and final flush. Missing Web Locks fails closed. Recovery uses `ifAvailable`, never a heartbeat timeout that could invalidate a frozen live tab. `ThreadOwnership` is a private-identity capability, scoped to that actually held lock and exact thread; forged, released, foreign-thread or concurrent use must reject before resume/context writes. Keep current transactional run/call/step/approval/offer predicates; the product schema has no general durable run-owner/revision field.
 - The actual model/tool loop and serialized writer are implemented once in `@cuepoint/agent-core`; Studio's runtime is a typed ProductStore/context/tool/credential binding. Keep creative finishing/scope policies in Studio and generic execution in core. See [shared runtime](../agent-core/library/runtime.md).
 - Begin transaction creates input/output/run together and idempotently seeds a stable general Agent. Run snapshots agent instructions, request messages, connector identity and actual model. Never copy API keys into runs; reject URL credentials/query/fragment before saving connector identity.
@@ -117,6 +118,51 @@ Correct: push snapshots into the serialized writer, await `flush()`, then atomic
 
 Wrong: `setTimeout` decides a background tab died and starts its request again.
 Correct: probe the thread's Web Lock; if unavailable leave it alone; if available mark unfinished local execution interrupted without network traffic.
+
+## E11 Stage 1: application execution owner (2026-10-16)
+
+### 1. Scope / Trigger
+
+The headless service foundation is implemented before the foreground page is connected in Stage 2. The earlier page-bound departure contract remains the foreground behavior during this intermediate stage; do not remove its guards independently of the retained-page integration.
+
+### 2. Signatures
+
+`features/agent/runtime/agentExecutionService.ts` owns `createAgentExecutionService(binding: ChatExecutionBinding)`. The production singleton `agentExecution` is composed by `runtime/agentExecution.ts`; `initializeAgentExecution()` is called once after product storage and MCP initialization. The binding is `{store, locks?, fetchImpl?, registry?}` and invokes the existing Studio/core algorithm, not another scheduler or database.
+
+Commands are `submit({attempt, modelMetadata?})`, `retrySubmission({threadId, userMessageId, modelMetadata?})`, `retry({threadId, runId})`, `resolveApproval({threadId, runId, callId, decision})`, `resume({threadId, runId})`, `cancelSavedRun({threadId, runId})`, `checkAdmission({threadId, userMessageId})` and `recoverAdmissionState({threadId, userMessageId})`. Execution commands return `{threadId, token, done: Promise<void>}`. `requestStop({threadId, token}): boolean` uses the exact opaque local token. `snapshot(threadId)` and `subscribe(threadId, listener)` expose immutable view state. `shutdown(): Promise<void>` closes admission and joins original work.
+
+### 3. Contracts
+
+Claim a thread synchronously before the first await, including model compatibility, first-thread creation and atomic admission. An observable reservation must support Stop even when subscribers react synchronously. Other threads may execute independently. Startup reconciliation is memoized for the actual service lifetime and is local/lock-aware; it never replays requests.
+
+Keep the original `done` until transport, tools, writer flush and authoritative settlement finish. Stop publishes once, aborts only the matching invocation and retains the reservation until that original completion. Detaching listeners never aborts. A saved run/call must belong to the explicitly supplied thread. Approval refusal persists independently of connector availability; actual continuation resolves the current connector and credentials under the existing frozen-identity rules.
+
+The service retains no API keys in snapshots or attempts. Errors exposed by snapshots use bounded product copy; actual errors remain with their original durable/result owner. A known pre-dispatch failure ends the local attempt instead of leaving it preparing. Unknown admission remains quarantined; a read, positive receipt or application startup cannot authorize dispatch.
+
+### 4. Validation & Error Matrix
+
+| Boundary | Required behavior |
+| --- | --- |
+| Same-tick second command for A | Refuse synchronously before dispatch; preserve the first owner. |
+| A and B both held in model/tool work | Both original operations remain active; Stop A does not abort B. |
+| Stop during compatibility/creation/begin | No late model dispatch; any already admitted run follows actual settlement. |
+| Original terminal publication held | Reservation and Web Lock remain held until the publication settles. |
+| Unknown admission followed by absent read | Stay uncertain; no begin/retry/dispatch. |
+| Positive matching unknown receipt | Join accepted records and expose local recovery, with zero model requests. |
+| Initialization fails before operation starts | Local submission becomes failed; release only the original claim. |
+| Application shutdown called repeatedly | One closed admission state, exact Stops and one original drain promise. |
+
+### 5. Good / Base / Bad Cases
+
+Good: A finishes its actual held tool publication after its view detaches while B keeps receiving output. Base: an idle subscription returns the same snapshot until an actual service publication. Bad: use a route ID as execution identity, release on abort acknowledgement, or create another core loop for concurrency.
+
+### 6. Tests Required
+
+`tests/agentExecutionService.test.ts` must exercise actual Studio commands, ProductStore transactions, thread locks and shared runtime with held transports/tools/flushes. Cover synchronous admission, preparation Stop, detached creation, independent A/B, original completion, supplied-store recovery, approval association/refusal, unknown positive/absent reads and shutdown. The finite E11 source profile is `vitest.agent-background-source.config.ts`; full application/package/native acceptance remains separate.
+
+### 7. Wrong vs Correct
+
+Wrong: implement concurrency with an invented queue whose tests never invoke `beginAgentRun` or the actual writer. Correct: retain independent original Studio operations under their real per-thread capabilities, and prove held boundaries through the actual store/runtime binding.
 
 ## Bounded terminal finishing check (2026-10-10, narrowed 2026-10-13)
 

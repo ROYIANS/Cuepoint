@@ -4,7 +4,7 @@ import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {ChatMessage} from "@/features/agent/models/chat";
 import type {AgentRun} from "@/features/agent/models/agent";
-import {createSubmissionAttempt, type ChatSubmissionAttempt} from "@/features/agent/ui/chatSubmissionAttempts";
+import {createSubmissionAttempt, type ChatSubmissionAttempt} from "@/features/agent/models/chatSubmissionAttempt";
 
 vi.mock("@/platform/product/queries", () => ({useProductQuery: () => []}));
 vi.mock("@lobehub/ui", () => ({

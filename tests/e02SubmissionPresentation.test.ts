@@ -4,7 +4,8 @@ import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import type {ChatMessage} from "@/features/agent/models/chat";
 import type {ComposerProps} from "@/features/agent/ui/composerTypes";
-import {createSubmissionAttempt, submissionTranscript, visibleSubmissionAttempts, yieldSubmissionPaint} from "@/features/agent/ui/chatSubmissionAttempts";
+import {createSubmissionAttempt, submissionTranscript, visibleSubmissionAttempts} from "@/features/agent/models/chatSubmissionAttempt";
+import {yieldSubmissionPaint} from "@/features/agent/ui/chatSubmissionAttempts";
 
 const rich = vi.hoisted(() => {
     let release!: () => void;

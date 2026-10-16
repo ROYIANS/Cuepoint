@@ -10,7 +10,7 @@ import {
     readMusicGenerationReview
 } from "../../music/agent/musicGenerationReview";
 import {describeMusicReview} from "../../music/agent/musicReviewPresentation";
-import type {RunAction} from "./AgentRunDetails";
+import type {RunAction} from "../models/chatRunAction";
 
 function ReviewText({label, text}: { label: string; text: string }) {
     const [expanded, setExpanded] = useState(false);

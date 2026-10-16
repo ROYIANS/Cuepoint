@@ -3,23 +3,7 @@ import {toast} from "sonner";
 import {REFERENCE_LIMITS, referenceAttachment, type ReferenceAttachment} from "../../references/models/references";
 import {importReferenceFile, retryReferenceImport} from "../../references/documents/import";
 
-export type ReferenceImportDraft = {
-    id: string;
-    filename: string;
-    status: "importing" | "failed";
-    error?: string;
-    file: File;
-    referenceId?: string
-};
-type DraftState = {
-    text: string;
-    textRevision: number;
-    revision: number;
-    attachments: ReferenceAttachment[];
-    imports: ReferenceImportDraft[]
-};
-export type SubmittedDraft = Pick<DraftState, "text" | "textRevision" | "attachments" | "imports"> & { scope: string };
-export type DraftRecovery = {scope: string; revision: number};
+import type {DraftState, DraftRecovery, SubmittedDraft, ReferenceImportDraft} from "../models/chatDraft";
 const EMPTY: DraftState = {text: "", textRevision: 0, revision: 0, attachments: [], imports: []};
 
 export function useReferenceDraft(scope: string, projectId?: string) {
