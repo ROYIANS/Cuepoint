@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-2.md`
-- **Total Sessions**: 78
-- **Last Active**: 2026-10-15
+- **Total Sessions**: 80
+- **Last Active**: 2026-10-16
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-2.md` | ~374 | Active |
+| `journal-2.md` | ~452 | Active |
 | `journal-1.md` | ~1968 | Archived |
 <!-- @@@/auto:active-documents -->
 
@@ -30,6 +30,8 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 80 | 2026-10-16 | E08 desktop media source delivery on macOS and Windows | `52e584c7`, `2b00d8e5`, `ca2da1a5`, `836757ed` | `codex/desktop-workspace-media` |
+| 79 | 2026-10-16 | E08 cross-platform activation and implementation start | `a542fce1` | `codex/desktop-workspace-media` |
 | 78 | 2026-10-15 | E07 owned foreground jobs and retained reports | `c9fd6706` | `codex/agent-jobs-results` |
 | 77 | 2026-10-15 | E06 reusable capabilities and exact resource authority | `d4c2c877` | `codex/agent-resource-capabilities` |
 | 76 | 2026-10-15 | E16 finite business details and retained batch review | `8ac73652` | `codex/business-detail-links` |

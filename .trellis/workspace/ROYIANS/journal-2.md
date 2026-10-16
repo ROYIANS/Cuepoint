@@ -372,3 +372,81 @@ E08 first flow remains directory scan -> video thumbnails -> project import. Rea
 ### Next Steps
 
 - Converge E08 native directory scan, video thumbnail and project import; await supported-system answer, research actual backend/distribution, then design scoped paths, owned process stop and verified product import.
+
+
+## Session 79: E08 cross-platform activation and implementation start
+<!-- trellis-session: v=2 fp=3aae44f54bd3bf7d -->
+
+**Date**: 2026-10-16
+**Task**: E08 cross-platform activation and implementation start
+**Package**: desktop
+**Branch**: `codex/desktop-workspace-media`
+
+### Summary
+
+Approved macOS and Windows scope, activated E08 after native/storage/backend research, and started bounded native and Studio implementation.
+
+### Main Changes
+
+- Recorded source-backed design, staged implementation plan, NTFS source baseline, derivative media representation, fixed decoder distribution and truthful cancellation boundaries.
+- Dispatched native grant/process, Studio managed-claim/import/lifecycle and decoder resource implementation owners; no product acceptance is claimed yet.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `a542fce1` | docs: activate cross-platform desktop media workflow |
+
+### Testing
+
+- [OK] Task context validation passed (13 entries per manifest); native spec exceeds injection cap, workers instructed to read complete tail. git diff --check passed for activation checkpoint.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Finish source stages, run necessary affected checks and independent review, checkpoint each completed stage; full build/package/native integration remains end-of-epic batch acceptance.
+
+
+## Session 80: E08 desktop media source delivery on macOS and Windows
+<!-- trellis-session: v=2 fp=d1a60d8e67254006 -->
+
+**Date**: 2026-10-16
+**Task**: E08 desktop media source delivery on macOS and Windows
+**Package**: desktop
+**Branch**: `codex/desktop-workspace-media`
+
+### Summary
+
+Completed native directory/decoder ownership, atomic source-thumbnail import, inline library and finite Agent integration; source reviews passed and actual host/package acceptance remains explicitly deferred.
+
+### Main Changes
+
+- Implemented native session/project directory grants, deterministic scan, frozen source, fixed verified FFmpeg resources and owned Stop/drain.
+- Shared durable admission/publication adopts original and PNG claims atomically with exact approvals, receipts and derivative lifecycle; source stages committed separately.
+- Inline project media importer and four Agent tools retain duplicate guards, known receipts and unknown quarantine; no drawer/chat departure.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `52e584c7` | feat: add granted desktop video processing and pinned decoder resources |
+| `2b00d8e5` | feat: publish desktop media with atomic receipts and thumbnail ownership |
+| `ca2da1a5` | feat: integrate scoped desktop video imports with agent and media library |
+| `836757ed` | docs: record desktop media source delivery and deferred host acceptance |
+
+### Testing
+
+- [OK] Affected source suites passed after targeted fixes; root final six affected suites34tests plus final UI6cases, foundation6suites53tests (overlapping sets).
+- [OK] Strict E08 source and Node typechecks passed; foundation lint0errors44warnings and Stage3lint0errors21warnings; architecture669files0cycles0failures.
+- [OK] Final focused desktop Rust16passed1explicitignored; native owner separately ran realFFmpegfixture successfully; decoder/release source73tests passed.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Keep E08 active source-complete awaiting actual Windows/installed and whole-epic full regression/build/emitted/packed/native integration; do not archive or claim cross-platform runtime acceptance from source checks.
