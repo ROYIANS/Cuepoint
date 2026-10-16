@@ -7,5 +7,8 @@ export default createStudioVitestConfig({
     include: [
         "packages/agent-core/src/skills.test.ts",
         "tests/installableSkills.test.ts",
+        "tests/skillImportTransport.test.ts",
+        "tests/browserSkillImport.test.ts",
+        "tests/installedSkillsUi.test.tsx",
     ],
 });

@@ -30,13 +30,13 @@
   "notes": "Owner approved the concrete E09 planning summary and requested implementation on 2026-10-16. Execute the reviewed three stages; commit each after necessary affected checks and independent review. Full build/package/actual-host acceptance stays at epic end.",
   "meta": {
     "epicCode": "E09",
-    "deliveryState": "implementation-stage-2",
+    "deliveryState": "implementation-stage-3",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Stage 1 source complete and independently reviewed: portable helpers, strict bounded parser, device-local immutable version storage, CAS/receipt and retention helpers. Next: native/browser capture and retained management UI.",
+    "readiness": "Stages 1 and 2 source complete and independently reviewed. Native/browser bounded capture, retained management UI and uncertainty-safe quick switches are ready; next is frozen run snapshots, progressive tools and lifecycle integration.",
     "planningDate": "2026-10-16",
     "proposedPlatforms": [
       "macOS",
@@ -69,6 +69,15 @@
       "scopedLint": "8 production files; 0 errors/0 warnings",
       "architecture": "677 files; 2659 edges; 0 cycles/0 failures",
       "deferred": "Full regression/build/emitted/packed/native installed macOS+Windows remains at epic end."
+    },
+    "stage2Evidence": {
+      "review": "research/stage-2-review.md",
+      "sourceTests": "92 passed across 4 finite source suites (DOM 10, browser 16, transport 41, storage 25)",
+      "nativeTests": "11 passed with desktop --lib skill_import; normal desktop and acceptance compilation passed",
+      "sourceNoEmit": "passed including affected tests",
+      "scopedLint": "8 production files; 0 errors/6 visible warnings; no suppressions",
+      "architecture": "682 files; 2683 static value edges; 14 dynamic edges; 0 cycles/0 failures",
+      "deferred": "Windows actual/cross-cfg execution and actual macOS/Windows picker/installed UI, full build/regression/emitted/packed remain pending at epic end."
     }
   }
 }

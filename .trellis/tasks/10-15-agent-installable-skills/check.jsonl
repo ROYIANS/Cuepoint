@@ -18,3 +18,4 @@
 {"file": ".trellis/tasks/10-15-agent-installable-skills/research/format-and-interaction.md", "reason": "Portable format evidence, explicit text subset and retained-workspace UX."}
 {"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Actual affected source closure/type/lint/architecture and deferred batch gates."}
 {"file": ".trellis/spec/guides/task-artifact-retention.md", "reason": "Authored conclusions, not raw logs/copied contexts."}
+{"file": ".trellis/spec/frontend/agent-installable-skills.md", "reason": "Actual Stage1 contract and Stage2/3 invariants; source checks do not establish installed native acceptance."}

@@ -23,6 +23,9 @@ import {toast} from "sonner";
 import {type AgentPermissionMode, GENERAL_AGENT_ID} from "../models/agent";
 import {getGeneralAgentConfig, updateGeneralAgentConfig} from "../commands/agentSettings";
 import {AGENT_SKILLS} from "../runtime/skills";
+import {StorageError} from "../../../platform/storage/errors";
+import {useInstalledSkills} from "./useInstalledSkills";
+import {InstalledSkillMutationNotice, InstalledSkillsPanel} from "./InstalledSkillsPanel";
 
 const PERMISSIONS = [
     {id: "ask", title: "请求批准", description: "编辑业务数据或使用互联网工具前询问", icon: Hand},
@@ -136,7 +139,17 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
             void navigate({to: "/p/$projectId/memory", params: {projectId}});
         }
     };
-    const {config, saving, save, enabledSkills} = useAgentSettings();
+    const {config, enabledSkills: savedBuiltinSkills} = useAgentSettings();
+    const installed = useInstalledSkills();
+    const [managementOpen, setManagementOpen] = useState(false);
+    const [builtinPending, setBuiltinPending] = useState(false);
+    const [builtinError, setBuiltinError] = useState<string>();
+    const [builtinUnknown, setBuiltinUnknown] = useState(false);
+    const [builtinOptimistic, setBuiltinOptimistic] = useState<string[]>();
+    const builtinLock = useRef(false);
+    const enabledSkills = builtinOptimistic ?? savedBuiltinSkills;
+    const saving = builtinPending || builtinUnknown || installed.pending;
+    const enabledCount = enabledSkills.length + installed.entries.filter(skill => skill.enabled).length;
     const [open, setOpen] = useState(false);
     const [view, setView] = useState<"home" | "skills" | "parameters">("home");
     const [search, setSearch] = useState("");
@@ -168,13 +181,31 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
         if (open && !triggerRef.current?.closest("[inert]")) searchInput.current?.focus();
     }, [open, view]);
     const skills = AGENT_SKILLS.filter((skill) => `${skill.name} ${skill.description}`.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
-    const toggleSkill = (key: string) => void save(async () => {
-        const current = await getGeneralAgentConfig();
-        const previous = current.enabledSkillIds ?? AGENT_SKILLS.map((skill) => skill.id);
-        await updateGeneralAgentConfig({enabledSkillIds: previous.includes(key) ? previous.filter((id) => id !== key) : [...previous, key]});
-    }, "技能已更新，对新执行生效");
+    const installedMatches = installed.entries.filter(skill => `${skill.metadata.name} ${skill.metadata.description}`.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
+    async function toggleSkill(key: string, wantedEnabled: boolean) {
+        if (builtinLock.current || !config) return;
+        builtinLock.current = true;
+        setBuiltinPending(true);
+        setBuiltinError(undefined);
+        setBuiltinOptimistic(wantedEnabled ? [...new Set([...enabledSkills, key])] : enabledSkills.filter(id => id !== key));
+        let unknown = false;
+        try {
+            const current = await getGeneralAgentConfig();
+            const previous = current.enabledSkillIds ?? AGENT_SKILLS.map(skill => skill.id);
+            await updateGeneralAgentConfig({enabledSkillIds: wantedEnabled ? [...new Set([...previous, key])] : previous.filter(id => id !== key)});
+        } catch (cause) {
+            unknown = cause instanceof StorageError && cause.certainty === "unknown";
+            if (unknown) {
+                setBuiltinUnknown(true);
+                setBuiltinError("内置技能设置的保存结果尚未确认，暂时无法再次修改。请重新加载工作区并核对设置后再操作。");
+            } else setBuiltinError("内置技能设置保存失败，请重试");
+        } finally {
+            setBuiltinPending(false);
+            if (!unknown) {builtinLock.current = false; setBuiltinOptimistic(undefined);}
+        }
+    }
 
-    return <Dropdown
+    return <><Dropdown
         trigger={["click"]}
         placement="topLeft"
         getPopupContainer={popupRoot}
@@ -216,7 +247,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                 {
                     key: "skills",
                     icon: <Boxes size={16}/>,
-                    label: <span className="agent-plus-row">技能<span>{enabledSkills.length} 项已启用<ChevronRight
+                    label: <span className="agent-plus-row">技能<span>{enabledCount} 项已启用<ChevronRight
                         size={14}/></span></span>
                 },
             ] : [],
@@ -268,8 +299,11 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                                 onClick={() => setView("skills")}><Boxes size={16}/><span
                             className="agent-control-option"><span>{skill.name}</span><small>{skill.description}</small></span><ChevronRight
                             size={14}/>
-                        </button>) : !/导入|上传|图片|文档|文件|upload|import|资料|项目|library|reference|参数|历史|压缩|context|parameter/i.test(search) && !(project && /记忆|项目|memory/i.test(search)) ?
-                        <p className="agent-control-panel-note">没有匹配的技能或操作</p> : null}</div> : menu}
+                        </button>) : !installedMatches.length && !/导入|上传|图片|文档|文件|upload|import|资料|项目|library|reference|参数|历史|压缩|context|parameter/i.test(search) && !(project && /记忆|项目|memory/i.test(search)) ?
+                        <p className="agent-control-panel-note">没有匹配的技能或操作</p> : null}
+                        {installedMatches.map(skill => <button key={skill.skillId} type="button" className="agent-plus-search-result" onClick={() => setView("skills")}>
+                            <Boxes size={16}/><span className="agent-control-option"><span>{skill.metadata.name}</span><small>{skill.metadata.description}</small></span><ChevronRight size={14}/></button>)}
+                    </div> : menu}
                 <p className="agent-control-panel-note">图片 ≤10 MB · TXT / MD ≤5 MB · PDF / DOCX ≤20 MB<br/>每次最多 10
                     个，导入仅在本地解析。</p>
             </div> : <div className="agent-control-panel agent-skill-panel">
@@ -277,7 +311,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                     <button type="button" className="agent-skill-back" aria-label="返回更多选项"
                             onClick={() => setView("home")}><ArrowLeft size={16}/>技能
                     </button>
-                    <span>{enabledSkills.length} 项已启用</span>
+                    <span>{enabledCount} 项已启用</span>
                 </div>
                 <div className="agent-skill-search"><Input variant="borderless" ref={searchInput}
                                                            prefix={<Search size={14}/>} value={search}
@@ -285,15 +319,25 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                                                            placeholder="搜索技能…" aria-label="搜索技能" allowClear/>
                 </div>
                 <div className="agent-skill-list">
-                    {skills.length ? skills.map((skill) => <div className="agent-skill-row" key={skill.id}>
+                    {skills.length > 0 && <p className="agent-installed-skills-heading">内置能力</p>}
+                    {skills.map((skill) => <div className="agent-skill-row" key={skill.id}>
                         <span
                             className="agent-control-option"><span>{skill.name}</span><small>{skill.description}</small></span>
                         <Switch size="small" checked={enabledSkills.includes(skill.id)} disabled={saving || !config}
-                                aria-label={skill.name} onChange={() => toggleSkill(skill.id)}/>
-                    </div>) : <p className="agent-control-panel-note">没有匹配的技能</p>}
+                                aria-label={skill.name} onChange={checked => void toggleSkill(skill.id, checked)}/>
+                    </div>)}
+                    {installedMatches.length > 0 && <p className="agent-installed-skills-heading">已安装技能</p>}
+                    {installedMatches.map(skill => <div className="agent-skill-row" key={skill.skillId}>
+                        <span className="agent-control-option"><span>{skill.metadata.name}</span><small>{skill.metadata.description}</small></span>
+                        <Switch size="small" checked={skill.enabled} disabled={saving || installed.blocked} aria-label={`启用 ${skill.metadata.name}`}
+                            onChange={checked => void installed.toggle(skill, checked)}/>
+                    </div>)}
+                    {!skills.length && !installedMatches.length && <p className="agent-control-panel-note">没有匹配的技能</p>}
                 </div>
-                <p className="agent-control-panel-note"
-                   role="status">{saving ? "正在保存…" : "对新执行生效，已开始的执行保留原设置。"}</p>
+                {builtinError && <p className="agent-control-panel-note" role="alert">{builtinError}</p>}
+                <InstalledSkillMutationNotice controller={installed}/>
+                <button type="button" className="agent-skill-manage" onClick={() => {setOpen(false); setManagementOpen(true);}}>管理技能<ChevronRight size={14}/></button>
+                <p className="agent-control-panel-note">对新执行生效，已开始的执行保留原设置。</p>
             </div>}</div>}
     >
         <Tooltip title="更多选项" open={open ? false : undefined} placement="top" getPopupContainer={popupRoot}
@@ -302,5 +346,5 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                     aria-label="更多选项" aria-haspopup="menu" aria-expanded={open}><Plus size={18} aria-hidden/>
             </button>
         </Tooltip>
-    </Dropdown>;
+    </Dropdown><InstalledSkillsPanel open={managementOpen} onOpenChange={setManagementOpen} controller={installed} returnFocus={triggerRef}/></>;
 }

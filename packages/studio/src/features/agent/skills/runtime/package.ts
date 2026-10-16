@@ -51,7 +51,7 @@ export function decodeSkillFrontmatter(frontmatter: string): unknown {
     return decoded;
 }
 
-function assertImportPath(path: string): void {
+export function validateSkillImportPath(path: string): void {
     const segments = path.split("/");
     if (!path || encoder.encode(path).byteLength > SKILL_LIMITS.pathBytes || segments.length > SKILL_LIMITS.pathDepth
         || /[\\:<>"|?*\p{Cc}\p{Cf}]/u.test(path)
@@ -61,7 +61,7 @@ function assertImportPath(path: string): void {
     }
 }
 
-function supportedResource(path: string, nestedRoots: readonly string[]): boolean {
+export function isSupportedSkillResource(path: string, nestedRoots: readonly string[]): boolean {
     if (path.split("/").some(segment => segment.startsWith(".")) || nestedRoots.some(root => path.startsWith(root))) return false;
     if (path === "LICENSE" || path === "LICENSE.txt") return true;
     return /^(?:references|assets)\/.+\.(?:md|txt|json|yaml|yml|csv)$/iu.test(path) && !path.toLowerCase().endsWith("/skill.md");
@@ -87,13 +87,13 @@ function eligibleImportFiles(files: readonly SkillImportFile[], priorExclusions?
         || priorExclusions.paths.length > EXCLUSION_PREVIEW_COUNT)) throw new Error("技能排除列表无效");
     const seen = new Set<string>();
     for (const file of files) {
-        assertImportPath(file.path);
+        validateSkillImportPath(file.path);
         const folded = file.path.normalize("NFC").toUpperCase().toLowerCase();
         if (seen.has(folded)) throw new Error("技能目录包含重名文件");
         seen.add(folded);
     }
     const nestedRoots = files.filter(file => file.path !== "SKILL.md" && file.path.endsWith("/SKILL.md")).map(file => file.path.slice(0, -8));
-    const eligible = files.filter(file => file.path === "SKILL.md" || supportedResource(file.path, nestedRoots));
+    const eligible = files.filter(file => file.path === "SKILL.md" || isSupportedSkillResource(file.path, nestedRoots));
     if (eligible.length > SKILL_LIMITS.fileCount) throw new Error("技能文本文件过多");
     let totalBytes = 0;
     for (const file of eligible) {
@@ -131,7 +131,7 @@ export function prepareSkillImport(directoryName: string, files: readonly SkillI
     const count = excluded.length + (priorExclusions?.count ?? 0);
     if (!Number.isSafeInteger(count) || count < 0 || count > SKILL_LIMITS.directoryEntries) throw new Error("技能排除列表无效");
     const exclusionPaths = [...(priorExclusions?.paths ?? []), ...excluded].slice(0, EXCLUSION_PREVIEW_COUNT);
-    for (const path of exclusionPaths) assertImportPath(path);
+    for (const path of exclusionPaths) validateSkillImportPath(path);
     return {version: 1, directoryName, manifest, document, resources: records,
         exclusions: {count, paths: exclusionPaths}, serializedBytes};
 }

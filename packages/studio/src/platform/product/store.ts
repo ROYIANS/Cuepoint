@@ -1,4 +1,5 @@
 import {createDesktopMediaServices, installDesktopMediaServices} from "../runtime/desktopMedia";
+import {createSkillDirectoryImportServices, installSkillDirectoryImportServices} from "../runtime/skillImport";
 import {invoke} from "@tauri-apps/api/core";
 import {getProductStorage} from "../runtime/storageProfile";
 import {type BrowserStoreLifecycle, createBrowserProductStore} from "../storage/browser";
@@ -20,6 +21,7 @@ function selectProductStore(): ProductStore & BrowserStoreLifecycle {
     const {store, driver} = createNativeProductStore(bridge, services);
     installNativeBinaryAccess(services);
     installDesktopMediaServices(createDesktopMediaServices(() => driver.getSession()));
+    installSkillDirectoryImportServices(createSkillDirectoryImportServices(() => driver.getSession()));
     Object.defineProperties(store, {
         name: {value: getProductStorage().databaseName},
         verno: {value: 1},

@@ -6108,6 +6108,48 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/skills/runtime/browserImport.ts",
+      "target": "packages/studio/src/features/agent/skills/runtime/browserImport.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/ui/InstalledSkillsContent.tsx",
+      "target": "packages/studio/src/features/agent/ui/InstalledSkillsContent.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/ui/InstalledSkillsPanel.tsx",
+      "target": "packages/studio/src/features/agent/ui/InstalledSkillsPanel.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/ui/useInstalledSkills.ts",
+      "target": "packages/studio/src/features/agent/ui/useInstalledSkills.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/platform/runtime/skillImport.ts",
+      "target": "packages/studio/src/platform/runtime/skillImport.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "file": "packages/studio/src/features/agent/ui/installedSkills.css",
+      "target": "packages/studio/src/features/agent/ui/installedSkills.css",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

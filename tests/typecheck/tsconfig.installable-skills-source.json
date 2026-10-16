@@ -5,7 +5,10 @@
     "../../packages/studio/src/**/*.tsx",
     "../../packages/agent-core/src/**/*.ts",
     "../../packages/agent-providers/src/**/*.ts",
-    "../installableSkills.test.ts"
+    "../installableSkills.test.ts",
+    "../skillImportTransport.test.ts",
+    "../browserSkillImport.test.ts",
+    "../installedSkillsUi.test.tsx"
   ],
   "files": [
     "../../packages/agent-core/src/skills.test.ts"

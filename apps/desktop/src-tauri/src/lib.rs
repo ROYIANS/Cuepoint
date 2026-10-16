@@ -20,6 +20,8 @@ mod import;
 #[cfg(any(feature = "desktop", test))]
 mod native_print;
 mod paths;
+#[cfg(any(feature = "desktop", test))]
+mod skill_import;
 pub mod product_binary;
 #[cfg(any(feature = "desktop", test))]
 mod product_media;

@@ -98,7 +98,7 @@ pub async fn acceptance_request(
                 if window.app_handle().get_webview_window("denied-probe").is_some(){return Err(Error::new("acceptance","Close the existing denial probe first"));}
                 tauri::WebviewWindowBuilder::new(window.app_handle(),"denied-probe",tauri::WebviewUrl::App("index.html".into()))
                     .title("拒绝权限验收 · 非主窗口").inner_size(720.0,480.0).incognito(true)
-                    .on_navigation(|url|url.scheme()=="tauri"&&url.host_str()==Some("localhost")&&url.port().is_none()&&url.query().is_none()&&is_entry_path(url.path()))
+                    .on_navigation(crate::bundled_origin::accepts)
                     .build().map_err(|e|Error::new("acceptance",e.to_string()))?;
             }
             AcceptanceAction::Setup {}=>{

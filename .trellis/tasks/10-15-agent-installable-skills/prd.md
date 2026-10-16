@@ -142,7 +142,7 @@ Each implementation stage receives scoped review, necessary affected checks and 
 commit. Full regression, emitted/packed consumer, production build, packaging and
 actual native/installed macOS+Windows acceptance remain at the owner's epic-end
 batch boundary. Source fixtures do not establish actual picker/webview/platform
-behavior. Stage 1 has passed its necessary source checks and independent review; detailed evidence lives in `research/stage-1-review.md`. No paid/live model calls are required.
+behavior. Stages 1 and 2 have passed their necessary source checks and independent review; detailed evidence lives in `research/stage-1-review.md` and `research/stage-2-review.md`. Runtime and actual-host acceptance remain pending. No paid/live model calls are required.
 
 ## Supporting artifacts
 

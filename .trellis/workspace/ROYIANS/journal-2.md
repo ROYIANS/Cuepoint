@@ -484,3 +484,40 @@ Prepared E09 local text-skill installation, immutable version/run retention, pro
 ### Next Steps
 
 - Present final concrete E09 scope for review; after approval activate and implement Stage 1, then scoped review and commit.
+
+
+## Session 82: E09 stage 1 portable skills and immutable install owner
+<!-- trellis-session: v=2 fp=336d010da09446e3 -->
+
+**Date**: 2026-10-16
+**Task**: E09 stage 1 portable skills and immutable install owner
+**Package**: studio
+**Branch**: `codex/agent-installable-skills`
+
+### Summary
+
+Activated approved E09 and committed neutral portable skill contracts, bounded text/YAML import, immutable device-local revisions, CAS receipts and retention helpers; continuing Stage 2.
+
+### Main Changes
+
+- Core public helpers and independent host fixture; separate metadata/manifest/body/resource rows with strict validation and atomic ownership.
+- Independent review fixed orphan retention overwrite; specs and finite source discovery registered.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `0c7b8b10` | feat: add portable text skills and immutable installed versions |
+
+### Testing
+
+- [OK] 64 focused source tests passed; Studio and neutral core noEmit passed; 8 production files lint0errors0warnings; architecture677files0cycles0failures.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Implement bounded native/browser capture and retained ContextPanel management, then review/commit Stage 2; Stage 3 run/tool integration follows.
+- Keep full regression/build/emitted/packed/native installed macOS+Windows acceptance deferred to epic-end; E08 pending acceptance unchanged.

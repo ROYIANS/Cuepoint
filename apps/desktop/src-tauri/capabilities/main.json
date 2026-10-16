@@ -11,6 +11,7 @@
     "allow-product-binary-read",
     "allow-product-binary-write",
     "allow-desktop-media-request",
+    "allow-skill-import-directory",
     "allow-product-media-preview",
     "allow-product-media-release",
     "allow-workspace-request",

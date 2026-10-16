@@ -38,20 +38,20 @@ fixes, a commit and updated task/journal evidence. No remote push.
 
 ## Stage 2 — native/browser bounded import and management
 
-- [ ] Add separate trusted native picker/snapshot service for macOS/Windows; no
+- [x] Add separate trusted native picker/snapshot service for macOS/Windows; no
   arbitrary path parameter, broad filesystem permission or media-grant widening.
   Register normal and isolated handler/ACL/transport closure together.
-- [ ] Capture bounded UTF-8 text through reviewed containment/identity primitives;
+- [x] Capture bounded UTF-8 text through reviewed containment/identity primitives;
   reject links/reparse/unsupported volume/changed files, bound traversal before
   reading huge trees and preserve truthful picker cancellation.
-- [ ] Browser directory FileList import uses the same logical-root validation and
+- [x] Browser directory FileList import uses the same logical-root validation and
   parser. Capability detection provides explicit unsupported behavior.
-- [ ] Add Agent-owned list/detail/import-review ContextPanel, plus-menu quick
+- [x] Add Agent-owned list/detail/import-review ContextPanel, plus-menu quick
   switches and explicit enable choice; view/update/uninstall retain chat and
   existing editor departure guards. Avoid permanent composer clutter.
-- [ ] Verify actual ReactDOM pending/error/reconciliation and wide/narrow return,
+- [x] Verify actual ReactDOM pending/error/reconciliation and wide/narrow return,
   no duplicate action, safe content rendering and no redundant success/captions.
-- [ ] Run necessary affected transport/native/source checks/review and commit.
+- [x] Run necessary affected transport/native/source checks/review and commit.
 
 ## Stage 3 — run snapshots, progressive reads and retained lifecycle
 

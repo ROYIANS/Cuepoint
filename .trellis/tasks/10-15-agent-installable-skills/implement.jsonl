@@ -16,3 +16,4 @@
 {"file": ".trellis/tasks/10-15-agent-installable-skills/research/install-storage.md", "reason": "Finite import, device KV revision/pin accounting and project deletion retention."}
 {"file": ".trellis/tasks/10-15-agent-installable-skills/research/reference-skills.md", "reason": "Metadata/body separation without Cordis, live-body changes or executable plugins."}
 {"file": ".trellis/tasks/10-15-agent-installable-skills/research/format-and-interaction.md", "reason": "Portable format evidence, explicit text subset and retained-workspace UX."}
+{"file": ".trellis/spec/frontend/agent-installable-skills.md", "reason": "Stage1 source contracts: strict parser, immutable storage CAS and unknown readback; extend native/UI/runtime contracts in later stages."}
