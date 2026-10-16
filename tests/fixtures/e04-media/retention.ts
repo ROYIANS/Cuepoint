@@ -52,6 +52,10 @@ export async function snapshotFreshness(source: RetentionSource) {
     });
     return {source: source.name, freshAdditionAndRemoval: true};
 }
+/** E04's 14 current-reference passes plus the two full media passes added by the desktop media commit (2b00d8e5):
+ * the candidate dependency-closure read in deleteMediaIfOrphans and the dependency expansion in collectMediaIds.
+ * Both are one bounded scan each, independent of candidate count; thread-activity (E11) rows live in deviceSettings and are never scanned here. */
+export const CURRENT_REFERENCE_PASSES = 14 + 2;
 export async function workCount(size: number, original = false, ownerCount = 3) {
     const owners = Array.from({length: ownerCount}, (_, i) => `owner-${i}`), ids: string[] = [];
     for (let i = 0; i < size; i++) {const id = `work-${i}`; ids.push(id); await db.media.put(media(id, owners[i % owners.length], true));}
@@ -66,10 +70,16 @@ export async function workCount(size: number, original = false, ownerCount = 3) 
     const batchReferenceScans = scans.filter(scan => scan.table === "audioGenerationBatchItems");
     check(batchReferenceScans.length === (original ? 0 : 1), "one additive v24 batch reference scan, independent of candidates/owners");
     if (!original) check(batchReferenceScans[0].index == null && batchReferenceScans[0].rangeType === 3, "batch references scanned once globally like existing current references");
-    const expectedPasses = original ? 18 * size * 2 : 14 + 1 + 4 * actualOwners;
+    const expectedPasses = original ? 18 * size * 2 : CURRENT_REFERENCE_PASSES + 1 + 4 * actualOwners;
     check(scans.length === expectedPasses, `work passes: expected ${expectedPasses}, actual ${scans.length}`);
     const mediaReads = observed.scans.filter(scan => scan.table === "media" && ["getMany", "get"].includes(scan.method));
-    if (!original) check(mediaReads.length === 1 && mediaReads[0].keys === size + 1, "one deduplicated bulk read including missing id");
+    // Since 2b00d8e5 candidates are resolved by one whole-table media pass (dependency closure) instead of one
+    // deduplicated bulk id read: no per-candidate reads may appear, and media passes stay a fixed three
+    // (closure read, retained-flag read, dependency expansion) regardless of candidate count.
+    if (!original) {
+        check(mediaReads.length === 0, "no per-candidate media reads (duplicates/missing ids deduplicated)");
+        check(scans.filter(scan => scan.table === "media").length === 3, "fixed media passes independent of candidate count");
+    }
     const stores = [...new Set(observed.scans.flatMap(scan => scan.stores))].sort();
     check(JSON.stringify(stores) === JSON.stringify(PRODUCTION_TABLES.map(t => t.name).sort()), "complete current production scope");
     check(scans.filter(s => s.table.startsWith("agentGeneration") || s.table === "productionProposals").every(s => s.rows === 0), "unrelated history rows excluded");

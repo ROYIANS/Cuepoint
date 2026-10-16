@@ -712,7 +712,7 @@ fn safe_message(code: &str) -> &'static str {
         "decoderUnavailable" => "当前安装尚未提供可用的视频解码器",
         "decoderTimeout" => "视频解码超时",
         "decoderLimit" | "mediaLimit" => "素材处理超过当前支持的范围",
-        "platform" => "当前系统或磁盘类型暂不支持；Windows 首版需要本地固定 NTFS 磁盘",
+        "platform" | "nativeFilesystem" => "当前系统或磁盘类型暂不支持；Windows 首版需要本地固定 NTFS 磁盘",
         "containment" => "所选文件包含链接或不受支持的文件类型",
         _ => "本地素材处理失败，请检查文件后重试",
     }
@@ -900,7 +900,22 @@ fn prepare(
 ) -> Result<Prepared> {
     operation.check()?;
     grant.check_entry(entry)?;
-    let executable = crate::media_decoder::verified_decoder(resources)?;
+    // Hash and execute one app-owned copy so the resource path cannot be swapped
+    // between verification and process creation. Dropped after the decode.
+    let mut tool = OwnedDirectory::create(staging)?;
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(&tool.root, fs::Permissions::from_mode(0o700))?;
+    }
+    let name = if cfg!(windows) { "ffmpeg.exe" } else { "ffmpeg" };
+    let mut copy = tool.file(name)?;
+    let bytes = crate::media_decoder::verified_decoder(resources, &mut copy)?;
+    copy.sync_all()?;
+    drop(copy);
+    let executable = tool.root.join(name);
+    let _sealed = crate::media_decoder::seal_copy(&executable, bytes)?;
+    operation.check()?;
     prepare_with_decoder(
         grant,
         entry,
@@ -1530,6 +1545,11 @@ mod tests {
         assert!(!operation.cancel.load(Ordering::SeqCst));
         assert!(owner.grant(&scope, &grant_id).is_ok());
         worker.close().unwrap();
+    }
+    #[test]
+    fn native_filesystem_failure_has_the_scoped_volume_message() {
+        assert_eq!(safe_message("nativeFilesystem"), safe_message("platform"));
+        assert!(safe_message("nativeFilesystem").contains("NTFS"));
     }
     #[test]
     fn scan_is_ordered_bounded_and_does_not_follow_aliases() {

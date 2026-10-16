@@ -1,5 +1,6 @@
-//! One owned decoder child. Windows promises direct-child kill and wait; Unix
-//! additionally owns a fresh process group. No renderer-authored command exists.
+//! One owned decoder child. Unix owns a fresh process group; Windows assigns the
+//! child to a kill-on-close Job Object (direct-child kill remains the fallback
+//! when the job cannot be created or assigned). No renderer-authored command exists.
 use crate::{Error, Result};
 use std::{
     io::Read,
@@ -17,12 +18,80 @@ const PNG_LIMIT: usize = 8 * 1024 * 1024;
 const LOG_LIMIT: usize = 64 * 1024;
 const DEADLINE: Duration = Duration::from_secs(120);
 
+#[cfg(windows)]
+struct Job(windows_sys::Win32::Foundation::HANDLE);
+// SAFETY: a job handle is an opaque kernel object usable from any thread.
+#[cfg(windows)]
+unsafe impl Send for Job {}
+#[cfg(windows)]
+impl Job {
+    /// Creates a kill-on-close job and assigns `child` to it. The child is
+    /// assigned right after creation (std cannot create it suspended), so only
+    /// descendants spawned after assignment are owned; the pinned decoder
+    /// spawns none at start-up. Returns None to keep the direct-child fallback.
+    fn assign(child: &Child) -> Option<Self> {
+        use std::{mem, os::windows::io::AsRawHandle, ptr};
+        use windows_sys::Win32::{
+            Foundation::CloseHandle,
+            System::JobObjects::{
+                AssignProcessToJobObject, CreateJobObjectW, JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE,
+                JOBOBJECT_EXTENDED_LIMIT_INFORMATION, JobObjectExtendedLimitInformation,
+                SetInformationJobObject,
+            },
+        };
+        // SAFETY: null attributes/name; the handle is owned by the returned Job
+        // or closed on every failure path below.
+        let handle = unsafe { CreateJobObjectW(ptr::null(), ptr::null()) };
+        if handle.is_null() {
+            return None;
+        }
+        // SAFETY: zeroed plain-old-data struct with a correct size argument.
+        let mut info: JOBOBJECT_EXTENDED_LIMIT_INFORMATION = unsafe { mem::zeroed() };
+        info.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+        let configured = unsafe {
+            SetInformationJobObject(
+                handle,
+                JobObjectExtendedLimitInformation,
+                (&raw const info).cast(),
+                mem::size_of::<JOBOBJECT_EXTENDED_LIMIT_INFORMATION>() as u32,
+            )
+        } != 0;
+        // SAFETY: borrowed live child process handle.
+        let assigned = configured
+            && unsafe { AssignProcessToJobObject(handle, child.as_raw_handle()) } != 0;
+        if !assigned {
+            // SAFETY: handle was created above and is not stored elsewhere.
+            unsafe { CloseHandle(handle) };
+            return None;
+        }
+        Some(Self(handle))
+    }
+    fn terminate(&self) {
+        // SAFETY: live job handle owned by self.
+        unsafe { windows_sys::Win32::System::JobObjects::TerminateJobObject(self.0, 1) };
+    }
+}
+#[cfg(windows)]
+impl Drop for Job {
+    fn drop(&mut self) {
+        // Closing the last handle kills any remaining member (kill-on-close).
+        // SAFETY: handle owned by self, closed exactly once.
+        unsafe { windows_sys::Win32::Foundation::CloseHandle(self.0) };
+    }
+}
+
 struct OwnedChild {
     child: Child,
     settled: bool,
+    #[cfg(windows)]
+    job: Option<Job>,
 }
 impl OwnedChild {
     fn terminate(&mut self) {
+        #[cfg(windows)]
+        if let Some(job) = &self.job {
+            job.terminate();
+        }
         #[cfg(unix)]
         {
             // process_group(0) below makes this child's PID its private PGID.
@@ -95,10 +164,13 @@ fn run_with_wait(
         use std::os::windows::process::CommandExt;
         command.creation_flags(0x08000000);
     }
+    let spawned = command
+        .spawn()
+        .map_err(|_| Error::new("decoderUnavailable", "Media decoder could not start"))?;
     let mut child = OwnedChild {
-        child: command
-            .spawn()
-            .map_err(|_| Error::new("decoderUnavailable", "Media decoder could not start"))?,
+        #[cfg(windows)]
+        job: Job::assign(&spawned),
+        child: spawned,
         settled: false,
     };
     let overflow = Arc::new(AtomicBool::new(false));
@@ -143,7 +215,7 @@ fn run_with_wait(
         }
     };
     // Kill even after a successful direct-child exit so Unix descendants cannot
-    // retain pipes. The pinned Windows decoder is a single-child contract.
+    // retain pipes. Windows terminates the whole job, then the direct child.
     child.terminate();
     let waited = wait(&mut child.child);
     if waited.is_err() {
@@ -320,6 +392,28 @@ mod tests {
         );
         assert!(started.elapsed() < Duration::from_secs(2));
         stop.join().unwrap();
+    }
+    #[cfg(windows)]
+    #[test]
+    fn windows_cancellation_kills_job_and_reaps_child() {
+        // Not executed on the macOS development host.
+        let cancel = AtomicBool::new(true);
+        let mut command = Command::new("cmd.exe");
+        command.args(["/C", "ping", "-n", "30", "127.0.0.1"]);
+        assert_eq!(
+            run(command, &cancel, Duration::from_secs(10)).unwrap_err().code,
+            "canceled"
+        );
+        let mut command = Command::new("cmd.exe");
+        command.args(["/C", "ping", "-n", "30", "127.0.0.1"]);
+        let started = Instant::now();
+        assert_eq!(
+            run(command, &AtomicBool::new(false), Duration::from_millis(200))
+                .unwrap_err()
+                .code,
+            "decoderTimeout"
+        );
+        assert!(started.elapsed() < Duration::from_secs(5));
     }
     #[cfg(unix)]
     #[test]

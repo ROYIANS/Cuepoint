@@ -113,6 +113,23 @@ fn unix_stat(metadata: std::fs::Metadata) -> Result<NativeStat> {
 #[cfg(windows)]
 mod windows;
 
+/// Platform-neutral Win32 attribute classification (unit-tested on every host).
+/// Reparse points (symlink, junction, mount point) and cloud placeholders or
+/// offline files are aliases: they are never followed or hydrated. Returns
+/// `(alias, file, directory)`; an alias is neither file nor directory, like a
+/// Unix symlink from `symlink_metadata`.
+#[cfg_attr(not(windows), allow(dead_code))]
+pub(crate) fn classify_win32_attributes(attributes: u32) -> (bool, bool, bool) {
+    const DIRECTORY: u32 = 0x10;
+    const OFFLINE: u32 = 0x1000;
+    const REPARSE_POINT: u32 = 0x400;
+    const RECALL_ON_OPEN: u32 = 0x4_0000;
+    const RECALL_ON_DATA_ACCESS: u32 = 0x40_0000;
+    let alias = attributes & (REPARSE_POINT | OFFLINE | RECALL_ON_OPEN | RECALL_ON_DATA_ACCESS) != 0;
+    let directory = !alias && attributes & DIRECTORY != 0;
+    (alias, !alias && !directory, directory)
+}
+
 pub(crate) fn stat_path(path: &Path) -> Result<NativeStat> {
     #[cfg(unix)]
     {
@@ -590,6 +607,18 @@ fn publish_json_with_checkpoint<T: serde::Serialize>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn win32_attributes_classify_reparse_and_cloud_entries_as_aliases() {
+        assert_eq!(classify_win32_attributes(0x20), (false, true, false));
+        assert_eq!(classify_win32_attributes(0x10), (false, false, true));
+        // Junction/symlink: reparse point, usually also a directory.
+        assert_eq!(classify_win32_attributes(0x410), (true, false, false));
+        assert_eq!(classify_win32_attributes(0x420), (true, false, false));
+        // Cloud placeholders and offline files must not be hydrated by a scan.
+        assert_eq!(classify_win32_attributes(0x40_0020), (true, false, false));
+        assert_eq!(classify_win32_attributes(0x4_0020), (true, false, false));
+        assert_eq!(classify_win32_attributes(0x1020), (true, false, false));
+    }
 
     struct Fixture(PathBuf);
     impl Fixture {

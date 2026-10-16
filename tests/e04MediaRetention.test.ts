@@ -10,7 +10,7 @@ vi.mock("./fixtures/sourceSnapshots/e04-media/src/db/productionShared", async ()
     const {browserDatabase} = await import("@/platform/storage/browserDatabase");
     return {...current, PRODUCTION_TABLES: current.PRODUCTION_TABLES.map(table => browserDatabase!.table(table.name))};
 });
-import {retentionSources, isolatedSource, mixedOwnerParity, snapshotFreshness, workCount, nativeScheduling} from "./fixtures/e04-media/retention";
+import {CURRENT_REFERENCE_PASSES, retentionSources, isolatedSource, mixedOwnerParity, snapshotFreshness, workCount, nativeScheduling} from "./fixtures/e04-media/retention";
 import {commandNames, commandRollback, commandWork, releaseEventRollback, retainedReleaseRollback, outerTransactionRollback, releaseDuplicateMissing} from "./fixtures/e04-media/commands";
 
 import {orphanReceiptRollback, shotReceiptRollback} from "./fixtures/e04-media/receipt";
@@ -19,7 +19,7 @@ describe("E04 media retention batch", () => {
     it.each(retentionSources)("isolates $name and collects its final orphan", async source => {expect(await isolatedSource(source)).toMatchObject({source: source.name});});
     it("matches original scalar semantics for mixed record owners and scoped backup", async () => {expect(await mixedOwnerParity()).toMatchObject({parity: true, backupProjection: true});});
     it.each(retentionSources.filter(source => source.retains))("refreshes $name after later writes in one outer transaction", async source => {expect(await snapshotFreshness(source)).toMatchObject({freshAdditionAndRemoval: true});});
-    it.each([1, 30])("bounds native-request work for %i distinct/duplicate retained candidates", async size => {expect(await workCount(size)).toMatchObject({passes: 14 + 1 + 4 * Math.min(3, size), batchReferencePasses: 1});});
+    it.each([1, 30])("bounds native-request work for %i distinct/duplicate retained candidates", async size => {expect(await workCount(size)).toMatchObject({passes: CURRENT_REFERENCE_PASSES + 1 + 4 * Math.min(3, size), batchReferencePasses: 1});});
     it("measures original repeated scans on retained duplicates", async () => {expect(await workCount(4, true)).toMatchObject({passes: 144});});
     it.each(commandNames)("rolls back later real media deletion in %s and succeeds on retry", async name => {expect(await commandRollback(name)).toMatchObject({failureReached: true, escapedSnapshot: false, retry: true});});
     it.each(commandNames.filter(name => !["patchProjectOutput", "removeProjectReference"].includes(name)).flatMap(name => [1, 12].map(size => ({name, size}))))("bounds $name at $size candidates", async ({name, size}) => {expect(await commandWork(name, size)).toMatchObject({historyPasses: 4, batchReferencePasses: 1, dormantHistoryPasses: name === "deleteChatThread" ? 1 : 0});});

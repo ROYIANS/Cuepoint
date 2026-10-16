@@ -6,8 +6,8 @@ use sha2::{Digest, Sha256};
 use std::{
     collections::BTreeMap,
     fs::File,
-    io::Read,
-    path::{Path, PathBuf},
+    io::{Read, Write},
+    path::Path,
 };
 
 const LOCK: &str = include_str!("../../media/decoder-lock.json");
@@ -68,7 +68,11 @@ fn expected(target: &str) -> Result<Manifest> {
     .map_err(|_| integrity())
 }
 
-fn read_verified(path: &Path, expected: &Executable) -> Result<()> {
+fn read_verified(
+    path: &Path,
+    expected: &Executable,
+    mut copy: Option<&mut File>,
+) -> Result<()> {
     let named = paths::ordinary(path, 1).map_err(|_| integrity())?;
     if named.len() != expected.bytes {
         return Err(integrity());
@@ -105,6 +109,10 @@ fn read_verified(path: &Path, expected: &Executable) -> Result<()> {
             return Err(integrity());
         }
         digest.update(&buffer[..count]);
+        // The bytes hashed are exactly the bytes written to the app-owned copy.
+        if let Some(out) = copy.as_mut() {
+            out.write_all(&buffer[..count]).map_err(|_| integrity())?;
+        }
     }
     let after = paths::ordinary(path, 1).map_err(|_| integrity())?;
     let handle = paths::stat_file(&file).map_err(|_| integrity())?;
@@ -122,11 +130,52 @@ fn read_verified(path: &Path, expected: &Executable) -> Result<()> {
     Ok(())
 }
 
-pub(crate) fn verified_decoder(resource_root: &Path) -> Result<PathBuf> {
-    verify(resource_root, &expected(target()?)?)
+/// Verifies the bundled decoder and streams the verified `ffmpeg` bytes into
+/// `copy`, an app-owned empty file. The caller executes that copy (see
+/// `seal_copy`), never the resource path, so hash and exec share one object.
+pub(crate) fn verified_decoder(resource_root: &Path, copy: &mut File) -> Result<u64> {
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        copy.set_permissions(std::fs::Permissions::from_mode(0o700))
+            .map_err(|_| integrity())?;
+    }
+    verify(resource_root, &expected(target()?)?, Some(copy))
 }
 
-fn verify(resource_root: &Path, expected: &Manifest) -> Result<PathBuf> {
+/// Closes the write side of the owned copy. On Windows the returned handle
+/// denies write/delete sharing until dropped, so the image cannot be replaced
+/// between verification and process creation.
+pub(crate) struct SealedCopy {
+    _hold: Option<File>,
+}
+pub(crate) fn seal_copy(path: &Path, expected_bytes: u64) -> Result<SealedCopy> {
+    #[cfg(windows)]
+    let hold = {
+        use std::os::windows::fs::OpenOptionsExt;
+        // FILE_SHARE_READ only: deny FILE_SHARE_WRITE and FILE_SHARE_DELETE.
+        Some(
+            std::fs::OpenOptions::new()
+                .read(true)
+                .share_mode(1)
+                .open(path)
+                .map_err(|_| integrity())?,
+        )
+    };
+    #[cfg(not(windows))]
+    let hold: Option<File> = None;
+    let named = paths::ordinary(path, 1).map_err(|_| integrity())?;
+    if named.len() != expected_bytes {
+        return Err(integrity());
+    }
+    Ok(SealedCopy { _hold: hold })
+}
+
+fn verify(
+    resource_root: &Path,
+    expected: &Manifest,
+    mut copy: Option<&mut File>,
+) -> Result<u64> {
     let root = paths::canonical_root(resource_root).map_err(|_| integrity())?;
     let root_identity = paths::ordinary_directory(&root).map_err(|_| integrity())?;
     let media = root.join("media");
@@ -170,7 +219,8 @@ fn verify(resource_root: &Path, expected: &Manifest) -> Result<PathBuf> {
         {
             return Err(integrity());
         }
-        read_verified(&media.join(&executable.file), executable)?;
+        let destination = if name == "ffmpeg" { copy.as_deref_mut() } else { None };
+        read_verified(&media.join(&executable.file), executable, destination)?;
     }
     if paths::ordinary_directory(&root)
         .map_err(|_| integrity())?
@@ -183,13 +233,13 @@ fn verify(resource_root: &Path, expected: &Manifest) -> Result<PathBuf> {
     {
         return Err(integrity());
     }
-    Ok(media.join(&manifest.executables["ffmpeg"].file))
+    Ok(manifest.executables["ffmpeg"].bytes)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs;
+    use std::{fs, path::PathBuf};
 
     fn fixture() -> (PathBuf, Manifest) {
         let root = std::env::temp_dir().join(format!("cuepoint-decoder-{}", uuid::Uuid::new_v4()));
@@ -220,16 +270,26 @@ mod tests {
         .unwrap();
         (root, manifest)
     }
+    fn tempfile_in(root: &Path) -> File {
+        paths::exclusive(&root.join("copy.bin")).unwrap()
+    }
     #[test]
     fn fixed_resource_identity_rejects_corruption_and_foreign_manifest() {
         let (root, manifest) = fixture();
         assert_eq!(
-            verify(&root, &manifest).unwrap(),
-            fs::canonicalize(&root).unwrap().join("media/ffmpeg")
+            verify(&root, &manifest, None).unwrap(),
+            manifest.executables["ffmpeg"].bytes
+        );
+        let mut copy = tempfile_in(&root);
+        verify(&root, &manifest, Some(&mut copy)).unwrap();
+        drop(copy);
+        assert_eq!(
+            fs::read(root.join("copy.bin")).unwrap(),
+            fs::read(root.join("media/ffmpeg")).unwrap()
         );
         fs::write(root.join("media/ffmpeg"), "corrupted").unwrap();
         assert_eq!(
-            verify(&root, &manifest).unwrap_err().code,
+            verify(&root, &manifest, None).unwrap_err().code,
             "mediaDecoderIntegrity"
         );
         let _ = fs::remove_dir_all(root);
@@ -239,7 +299,7 @@ mod tests {
             serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
         value["target"] = "windows-x64".into();
         fs::write(&path, serde_json::to_vec(&value).unwrap()).unwrap();
-        assert!(verify(&root, &manifest).is_err());
+        assert!(verify(&root, &manifest, None).is_err());
         let _ = fs::remove_dir_all(root);
     }
     #[test]
@@ -266,10 +326,10 @@ mod tests {
         let (root, manifest) = fixture();
         fs::rename(root.join("media/ffmpeg"), root.join("original")).unwrap();
         symlink(root.join("original"), root.join("media/ffmpeg")).unwrap();
-        assert!(verify(&root, &manifest).is_err());
+        assert!(verify(&root, &manifest, None).is_err());
         fs::remove_file(root.join("media/ffmpeg")).unwrap();
         fs::hard_link(root.join("original"), root.join("media/ffmpeg")).unwrap();
-        assert!(verify(&root, &manifest).is_err());
+        assert!(verify(&root, &manifest, None).is_err());
         let _ = fs::remove_dir_all(root);
     }
 }

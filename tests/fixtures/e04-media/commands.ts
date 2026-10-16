@@ -126,8 +126,9 @@ export async function commandWork(name: CommandName, size: number) {
     const dormantHistoryPasses = name === "deleteChatThread" ? 1 : 0;
     check(audioJobs.length === 1 + dormantHistoryPasses, `${name}: one current job-reference pass plus explicit chat-history dormancy scan`);
     // Preserve the E04 14-pass control (+release conflict read), and enumerate
-    // only the two concrete v24 additions rather than increasing a loose bound.
-    const expected = (name === "releaseMaterialUse" ? 15 : 14) + 1 + dormantHistoryPasses;
+    // only the concrete additions (+2 full media passes from 2b00d8e5: closure read + dependency
+    // expansion; +1 v24 batch reference) rather than increasing a loose bound.
+    const expected = (name === "releaseMaterialUse" ? 15 : 14) + 2 + 1 + dormantHistoryPasses;
     check(current.length === expected, `${name}: expected ${expected} current passes, got ${current.length}`);
     check((await db.media.bulkGet(prepared.ids)).every(row => row === undefined), `${name}: no orphan escaped`);
     const stores = [...new Set(scans.flatMap(s => s.stores))].sort();
@@ -149,12 +150,11 @@ export async function releaseEventRollback() {
     try {await rejects(prepared.execute, "E04 final release event fault");} finally {fault.mockRestore();}
     check(failed && copiesGone && await snapshot() === before, "release event restores flags/copies/library/event bytes");
     let clearedBeforeSnapshot = false;
-    const capture = interceptStoreTable(db, "media", "bulkGet", async (_tx, args, next) => {
-        const keys = args[0] as string[];
-        const records = await next() as Array<{libraryRetained?: boolean} | undefined>;
-        if (keys.length === prepared.ids.length && keys.every(id => prepared.ids.includes(id))) {
-            if (records.every(row => row && row.libraryRetained === false)) clearedBeforeSnapshot = true;
-        }
+    // Since 2b00d8e5 the orphan pass snapshots media with one whole-table read (no id bulkGet).
+    const capture = interceptStoreTable(db, "media", "toArray", async (_tx, _args, next) => {
+        const records = await next() as Array<{id: string; libraryRetained?: boolean}>;
+        const copies = records.filter(row => prepared.ids.includes(row.id));
+        if (copies.length === prepared.ids.length && copies.every(row => row.libraryRetained === false)) clearedBeforeSnapshot = true;
         return records;
     });
     try {await prepared.execute();} finally {capture.mockRestore();}

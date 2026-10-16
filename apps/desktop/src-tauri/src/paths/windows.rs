@@ -10,8 +10,7 @@ use std::{
 };
 use windows_sys::Win32::{
     Storage::FileSystem::{
-        BY_HANDLE_FILE_INFORMATION, FILE_ATTRIBUTE_DIRECTORY, FILE_ATTRIBUTE_REPARSE_POINT,
-        FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OPEN_REPARSE_POINT, FILE_LIST_DIRECTORY,
+        BY_HANDLE_FILE_INFORMATION, FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OPEN_REPARSE_POINT, FILE_LIST_DIRECTORY,
         FILE_READ_ATTRIBUTES, FILE_SHARE_DELETE, FILE_SHARE_READ, FILE_SHARE_WRITE, FILE_TYPE_DISK,
         GetDriveTypeW, GetFileInformationByHandle, GetFileType, GetFinalPathNameByHandleW,
         GetVolumeInformationByHandleW, VOLUME_NAME_GUID,
@@ -125,16 +124,26 @@ pub(super) fn stat_file(file: &File) -> Result<NativeStat> {
     if unsafe { GetFileInformationByHandle(handle, &mut info) } == 0 {
         return Err(query_error("GetFileInformationByHandle"));
     }
-    // Return reparse classification before requiring a volume query on a referral.
-    let alias = info.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT != 0;
+    // Return alias classification (reparse point, cloud placeholder, offline)
+    // before requiring a volume query on a referral. Scanners skip aliases;
+    // every opening/importing caller rejects them through `is_alias()`
+    // (`ordinary`, `ordinary_directory`, pins), as on Unix.
+    let (alias, file_kind, directory) = super::classify_win32_attributes(info.dwFileAttributes);
     if alias {
-        return Err(Error::new(
-            "containment",
-            "Native paths must not contain reparse entries",
-        ));
+        return Ok(NativeStat {
+            identity: (
+                u64::from(info.dwVolumeSerialNumber),
+                (u64::from(info.nFileIndexHigh) << 32) | u64::from(info.nFileIndexLow),
+                u64::from(info.nNumberOfLinks),
+            ),
+            byte_length: (u64::from(info.nFileSizeHigh) << 32) | u64::from(info.nFileSizeLow),
+            modified: file.metadata()?.modified()?,
+            file: false,
+            directory: false,
+            alias: true,
+        });
     }
     require_local_ntfs(file)?;
-    let directory = info.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY != 0;
     Ok(NativeStat {
         identity: (
             u64::from(info.dwVolumeSerialNumber),
@@ -143,9 +152,9 @@ pub(super) fn stat_file(file: &File) -> Result<NativeStat> {
         ),
         byte_length: (u64::from(info.nFileSizeHigh) << 32) | u64::from(info.nFileSizeLow),
         modified: file.metadata()?.modified()?,
-        file: !directory,
+        file: file_kind,
         directory,
-        alias,
+        alias: false,
     })
 }
 pub(super) fn stat_path(path: &Path) -> Result<NativeStat> {
