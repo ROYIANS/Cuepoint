@@ -21,16 +21,21 @@
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
   "relatedFiles": [],
-  "notes": "Planning backlog from the 2026-10-15 investigation. Task creation is authorized; delivery scope and implementation remain subject to this task review.",
+  "notes": "Owner requested E09 archive and next delivery on 2026-10-16. E10 initial source/reference/official-protocol investigation is captured. Converge transport scope first, then initial use case/auth/UX and concrete design before implementation; standing stage-commit and necessary-check cadence remains in force.",
   "meta": {
     "epicCode": "E10",
-    "deliveryState": "planning-backlog",
+    "deliveryState": "scope-research",
     "implementationApproved": false,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Needs child-specific requirement convergence, design, implementation/validation plan and review before start."
+    "readiness": "Initial source/reference/protocol evidence captured. Awaiting owner transport-scope selection, followed by remaining product choices and concrete design/implementation/validation review before activation.",
+    "investigationDate": "2026-10-16",
+    "researchArtifacts": [
+      "research/scope-and-host-options.md"
+    ],
+    "firstDecision": "local stdio plus remote Streamable HTTP vs remote first vs local first; both desktop transports across macOS/Windows recommended, not selected"
   }
 }
