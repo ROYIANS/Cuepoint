@@ -21,7 +21,7 @@
   "children": [],
   "parent": "10-15-agent-experience-desktop-evolution",
   "relatedFiles": [],
-  "notes": "E04 delivered in 982dece3 plus owner screenshot correction 8220faf5: requested-topic reads and owned departure, local reading intent, centered circular return-to-latest. Necessary changed-scope checks and actual Chromium desktop/narrow/parallel-detail placement passed. Full batch gates deferred.",
+  "notes": "E04 delivered in 982dece3 plus owner screenshot correction 8220faf5: requested-topic reads and owned departure, local reading intent, centered circular return-to-latest. Necessary changed-scope checks and actual Chromium desktop/narrow/parallel-detail placement passed. Full batch gates deferred. [2026-10-16 review note: departure part (R2/AC1) superseded by E11 background host, which removed useThreadDeparture; see prd.md.]",
   "meta": {
     "epicCode": "E04",
     "deliveryState": "committed-and-reviewed",

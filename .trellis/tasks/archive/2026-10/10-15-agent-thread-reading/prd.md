@@ -21,12 +21,12 @@ Tree position does not enforce these dependencies. If a dependency is deliberate
 ## Requirements
 
 - E04-R1: Return requested-thread identity with message/run queries, including empty results; retain old cached values only under a matching scope.
-- E04-R2: Use matching-thread runs in departure predicates and preserve genuine active-execution confirmation.
+- E04-R2: Use matching-thread runs in departure predicates and preserve genuine active-execution confirmation. **[Superseded 2026-10-16: the background host delivery (E11, fe4fcb59) removed the execution-only departure confirmation (`useThreadDeparture`); runs now continue in the background. The identity-scoped control projection in `queries/threadReading.ts` remains.]**
 - E04-R3: Provide an accessible back-to-latest action when following is paused; preserve user reading intent and existing instant stream scrolling. The owner’s screenshot correction selects a circular downward-arrow icon centered above the composer within the conversation column, with accessible name `返回最新` and no visible text pill.
 
 ## Acceptance criteria
 
-- [x] E04-AC1: When B reads are held after A to B navigation, B displays loading rather than a false empty conversation and departure checks do not use A runs.
+- [x] E04-AC1: When B reads are held after A to B navigation, B displays loading rather than a false empty conversation and departure checks do not use A runs. *(2026-10-16 note: the departure clause is superseded by E11 — no execution-only departure blocker exists at HEAD; the loading/identity clause remains met. `tests/e04AgentQueryDeparture.test.ts` asserts that no blocker is installed.)*
 - [x] E04-AC2: Current filtering/keyed-workspace protection against old transcript display remains intact; parent execution/draft ownership is not remounted as a workaround.
 - [x] E04-AC3: Reading older content remains stable while output grows; keyboard/touch activation returns to latest and resumes following.
 
