@@ -1,4 +1,5 @@
 import type {AgentJob, AgentJobResultChunk} from "../../features/agent/models/agentJob";
+import type {DesktopMediaImport} from "../../features/library/models/desktopMediaImport";
 import {getProductStorage} from "../runtime/storageProfile";
 import {recoverLegacyText} from "../data/legacyScalar";
 import type {
@@ -48,6 +49,7 @@ import {parseShotPictureSlots} from "../../features/library/models/slot";
 import {createId, nowIso} from "../identity";
 
 class BrowserDatabase extends Dexie {
+    desktopMediaImports!: Table<DesktopMediaImport, string>;
     agentJobs!: Table<AgentJob, string>;
     agentJobResultChunks!: Table<AgentJobResultChunk, string>;
     audioChapters!: Table<AudioChapter, string>;
@@ -314,6 +316,7 @@ class BrowserDatabase extends Dexie {
             agentJobs: "id, &callId, threadId, runId, projectId, status, updatedAt",
             agentJobResultChunks: "id, jobId, &[jobId+ordinal]",
         });
+        this.version(27).stores({desktopMediaImports: "id, projectId, status, updatedAt"});
     }
 }
 

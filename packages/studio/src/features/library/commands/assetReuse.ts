@@ -8,7 +8,7 @@ import {isStudioLibrary} from "../models/ownership";
 import {slotMediaIds} from "../models/slot";
 import {PRODUCTION_TABLES} from "../../../platform/product/scopes";
 import {touch} from "../../../platform/data/patch";
-import {assertSlotMedia, deleteMediaIfOrphans} from "./media";
+import {assertSlotMedia, copyMediaDependencies, deleteMediaIfOrphans} from "./media";
 
 /** Release only unused project copies. Failure rolls back both the binding and media. */
 export async function releaseMaterialUse(useId: string, store?: ProductStore): Promise<void> {
@@ -93,18 +93,7 @@ async function copyStudioSnapshot<T extends SnapshotAsset>(
             for (const [slotKey, slot] of Object.entries(source.slots ?? {})) {
                 if (!slot) continue;
                 await assertSlotMedia(source.projectId, slot, undefined, db);
-                for (const oldMediaId of new Set(slotMediaIds(slot))) {
-                    if (mediaMap.has(oldMediaId)) continue;
-                    const media = await db.media.get(oldMediaId);
-                    if (!media) throw new Error("来源素材已失效，请重新选择");
-                    const newMediaId = createId("med");
-                    mediaMap.set(oldMediaId, newMediaId);
-                    await db.media.add({
-                        ...media,
-                        id: newMediaId,
-                        projectId,
-                    });
-                }
+                await copyMediaDependencies(slotMediaIds(slot), source.projectId, projectId, db, mediaMap);
                 const mapMedia = (id?: Id) => (id ? mediaMap.get(id) : undefined);
                 slots[slotKey] = {
                     prompt: slot.prompt,

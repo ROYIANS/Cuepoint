@@ -2,7 +2,7 @@ import {invoke} from "@tauri-apps/api/core";
 import {z} from "zod";
 import type {ManagedBinaryRef} from "../media/binaryTypes";
 import {Sha256} from "../media/sha256";
-import {registerBinaryReference} from "./codec";
+import {registerBinaryReference, registerPreparedBinaryReference} from "./codec";
 import {StorageError} from "./errors";
 import {type BinaryClaim, IPC_CHUNK_BYTES, type NativeSession} from "./protocol";
 
@@ -99,6 +99,11 @@ function sessionDto(session: NativeSession): NativeSession {
         workspaceId: session.workspaceId,
         generation: session.generation
     });
+}
+
+/** Called only by the closed native media transport with its actual store session. */
+export function registerNativePreparedBinary(value: unknown, session: NativeSession): ManagedBinaryRef {
+    return registerPreparedBinaryReference(claimSchema.parse(value), sessionDto(session));
 }
 
 function missingBinary(message: string): StorageError {

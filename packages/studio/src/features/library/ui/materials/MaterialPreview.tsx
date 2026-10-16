@@ -15,6 +15,9 @@ export function MaterialPreview({payload, inspect = false}: { payload?: Material
     const file = payload?.type === "file" ? payload : payload?.media.find((item) => item.mimeType.startsWith("image/"));
     const blob = file?.blob;
     const mime = file?.mimeType ?? "";
+    const source = payload?.type === 'file' && payload.sourceMediaId ? payload.media?.find(item => item.id === payload.sourceMediaId) : undefined;
+    const thumbnail = source?.thumbnailMediaId ? payload?.media?.find(item => item.id === source.thumbnailMediaId && item.projectId === source.projectId && item.derivative?.sourceMediaId === source.id) : undefined;
+    const poster = useBinaryPreview(thumbnail?.blob);
     const preview = useBinaryPreview(blob, mime.startsWith("image/") || mime.startsWith("video/") || (inspect && (mime.startsWith("audio/") || !native)));
     const url = preview.status === "ready" ? preview.url : undefined;
     const onPreviewError = preview.status === "ready" ? preview.onError : undefined;
@@ -64,9 +67,10 @@ export function MaterialPreview({payload, inspect = false}: { payload?: Material
             {blob && ["missing", "corrupt", "error"].includes(preview.status) ?
                 <p role="alert">{binaryPreviewMessage(preview)}</p> : url && /^image\/(png|jpeg|webp|gif|avif|bmp)$/.test(mime) ?
                     <img src={url} onError={onPreviewError} alt={inspect ? "素材预览" : ""} loading="lazy"/>
+                    : mime.startsWith("video/") && !inspect && poster.status === 'ready' ? <img src={poster.url} onError={poster.onError} alt="" loading="lazy"/>
                     : url && mime.startsWith("video/") ?
                         <video src={url} onError={onPreviewError} controls={inspect} muted={!inspect} playsInline
-                               preload="metadata"
+                               preload="metadata" poster={poster.status === 'ready' ? poster.url : undefined}
                                aria-label="视频素材预览"/>
                         : mime.startsWith("audio/") ? <><Music2 aria-hidden/>{inspect && url ?
                                 <audio src={url} onError={onPreviewError} controls preload="metadata"

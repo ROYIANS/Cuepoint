@@ -1,12 +1,29 @@
 import {binaryByteLength} from "../../../platform/media/binaryTypes";
 import type {ProductStore} from "../../../platform/storage/types";
 import {type GenerationSlot} from "../models/slots";
-import {type Id} from "../../../platform/identity";
+import {createId, type Id} from "../../../platform/identity";
 import {type MediaRecord} from "../models/media";
 import {db as productDb} from "../../../platform/product/store";
 import {collectSlotsMedia, SHOT_PICTURE_FIELDS, slotMediaIds} from "../models/slot";
 import {assertProjectOwner, touchProject} from "../../projects/commands/ownership";
 import {PRODUCTION_TABLES} from "../../../platform/product/scopes";
+import {mediaDependencyIds, remapMediaRelations} from "../models/mediaRelations";
+
+/** Caller supplies the existing media/project transaction and a shared copy map. */
+export async function copyMediaDependencies(roots: Iterable<Id>, sourceProjectId: Id, projectId: Id, db: ProductStore, map = new Map<Id, Id>()): Promise<Map<Id, Id>> {
+    const records = await db.media.where("projectId").equals(sourceProjectId).toArray();
+    const selected = mediaDependencyIds(roots, records);
+    const copies: MediaRecord[] = [];
+    for (const id of selected) {
+        if (map.has(id)) continue;
+        const record = records.find(item => item.id === id);
+        if (!record) throw new Error("来源素材已失效，请重新选择");
+        map.set(id, createId("med"));
+        copies.push(record);
+    }
+    for (const record of copies) await db.media.add(remapMediaRelations(record, map, projectId));
+    return map;
+}
 
 export async function collectMediaIds(projectId?: Id, store?: ProductStore): Promise<Set<Id>> {
     const db = store ?? productDb;
@@ -48,7 +65,7 @@ export async function collectMediaIds(projectId?: Id, store?: ProductStore): Pro
     ])) {
         ids.add(mediaId);
     }
-    return ids;
+    return mediaDependencyIds(ids, await (projectId === undefined ? db.media : db.media.where("projectId").equals(projectId)).toArray());
 }
 
 export async function recycleSlotMedia(
@@ -103,13 +120,15 @@ export async function deleteMediaIfOrphans(mediaIds: readonly (Id | undefined)[]
     const candidates = [...new Set(mediaIds.filter((id): id is Id => !!id))];
     if (!candidates.length) return;
     await db.transaction("rw", PRODUCTION_TABLES, async (db) => {
-        const records = (await db.media.bulkGet(candidates)).filter((record): record is MediaRecord => record !== undefined);
+        const allMedia = await db.media.toArray();
+        const candidateIds = mediaDependencyIds(candidates, allMedia);
+        const records = allMedia.filter(record => candidateIds.has(record.id));
         if (!records.length) return;
         const used = await collectMediaIds(undefined, db);
         // History belongs to each candidate record's owner; current references remain global.
         const histories = new Map<Id, Set<Id>>();
         for (const projectId of new Set(records.map((record) => record.projectId))) {
-            histories.set(projectId, await collectHistoryMediaIds(projectId, db));
+            histories.set(projectId, mediaDependencyIds(await collectHistoryMediaIds(projectId, db), allMedia));
         }
         for (const record of records) {
             if (!used.has(record.id) && !histories.get(record.projectId)?.has(record.id)) {

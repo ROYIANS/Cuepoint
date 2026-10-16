@@ -1,7 +1,54 @@
-import {StorageError} from "./errors";
-import type {EncodedValue, NativeBinaryRef} from "./protocol";
+import {StorageError, UnknownCommitError} from "./errors";
+import type {BinaryClaim, EncodedValue, NativeBinaryRef, NativeSession} from "./protocol";
 
 const binaryReferences = new WeakSet<object>();
+type PreparedReference = {claim: BinaryClaim; session: NativeSession; state: "prepared" | "reserved" | "committed" | "discarded" | "unknown"; operationId?: string};
+const preparedReferences = new WeakMap<object, PreparedReference>();
+const preparedClaims = new Map<string, WeakRef<PreparedReference> | PreparedReference>();
+const MAX_PREPARED_CLAIMS = 4096;
+const preparedClaimKey = (claim: BinaryClaim, session: NativeSession) => `${session.session}:${session.generation}:${session.workspaceId}:${claim.stageId}`;
+const retainedPreparedClaim = (value: WeakRef<PreparedReference> | PreparedReference | undefined) => value instanceof WeakRef ? value.deref() : value;
+
+/** Storage-internal registration after the native reply and current session were validated. */
+export function registerPreparedBinaryReference(claim: BinaryClaim, session: NativeSession): NativeBinaryRef {
+    const reference = registerBinaryReference(claim.reference);
+    if (reference.workspaceId !== session.workspaceId) throw new StorageError("invalid", "Prepared binary belongs to another workspace");
+    const key = preparedClaimKey(claim, session);
+    const existing = retainedPreparedClaim(preparedClaims.get(key));
+    if (existing && (existing.state === "committed" || existing.state === "discarded" || JSON.stringify(existing.claim) !== JSON.stringify({...claim, reference})))
+        throw new StorageError("closed", "Prepared binary claim was consumed or replaced");
+    if (!existing) {
+        if (preparedClaims.size >= MAX_PREPARED_CLAIMS) for (const [stored, value] of preparedClaims) if (!retainedPreparedClaim(value)) preparedClaims.delete(stored);
+        if (preparedClaims.size >= MAX_PREPARED_CLAIMS) throw new StorageError("unavailable", "Prepared binary claim retention limit reached");
+    }
+    const prepared: PreparedReference = existing ?? {claim: {...claim, reference}, session: {...session}, state: "prepared"};
+    preparedReferences.set(reference, prepared);
+    if (!existing) preparedClaims.set(key, new WeakRef(prepared));
+    return reference;
+}
+
+/** A clone preserves capability identity; a JSON-shaped reference cannot acquire a claim. */
+export function reservePreparedBinaryReference(reference: NativeBinaryRef, session: NativeSession, operationId: string): BinaryClaim | undefined {
+    const prepared = preparedReferences.get(reference);
+    if (!prepared || prepared.state === "committed") return undefined;
+    if (prepared.state === "unknown") throw new UnknownCommitError(prepared.operationId!, prepared.session.workspaceId);
+    if (prepared.state === "discarded" || prepared.session.session !== session.session || prepared.session.workspaceId !== session.workspaceId || prepared.session.generation !== session.generation)
+        throw new StorageError("closed", "Prepared binary is no longer available in this session");
+    if (prepared.state === "reserved" && prepared.operationId !== operationId) throw new StorageError("conflict", "Prepared binary is already reserved by another transaction");
+    prepared.state = "reserved";
+    prepared.operationId = operationId;
+    return prepared.claim;
+}
+
+export function settlePreparedBinaryReference(reference: NativeBinaryRef, operationId: string, outcome: "committed" | "discarded" | "unknown"): void {
+    const prepared = preparedReferences.get(reference);
+    if (prepared?.state === "reserved" && prepared.operationId === operationId) {
+        prepared.state = outcome;
+        // A lost JS reference cannot erase consumed/uncertain stage identity and
+        // let the original native reply mint a fresh preparation capability.
+        preparedClaims.set(preparedClaimKey(prepared.claim, prepared.session), prepared);
+    }
+}
 
 function wellFormed(value: string): boolean {
     for (let index = 0; index < value.length; index++) {
@@ -129,6 +176,8 @@ function registerClonedReferences(original: unknown, clone: unknown, seen = new 
     if (!original || !clone || typeof original !== "object" || typeof clone !== "object") return;
     if (isBinaryReference(original)) {
         binaryReferences.add(clone);
+        const prepared = preparedReferences.get(original);
+        if (prepared) preparedReferences.set(clone, prepared);
         Object.freeze(clone);
         return;
     }

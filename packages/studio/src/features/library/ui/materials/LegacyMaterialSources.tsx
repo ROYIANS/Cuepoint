@@ -49,7 +49,7 @@ export function LegacyMaterialSources({view, scope, search, kind, onCreated}: {
             view === "media" ? [] : scope === "all" ? db.styles.toArray() : db.styles.where("projectId").equals(ownerId).toArray(),
             db.projects.toArray(),
         ]);
-        const rows: LegacyRow[] = view === "media" ? media.map((item) => ({
+        const rows: LegacyRow[] = view === "media" ? media.filter(item => !item.derivative).map((item) => ({
             id: item.id,
             kind: "media",
             name: item.filename || "未命名文件",

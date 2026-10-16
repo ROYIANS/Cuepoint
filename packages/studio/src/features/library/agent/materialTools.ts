@@ -158,6 +158,7 @@ async function sourceLegacy(type: 'media' | SettingMaterialKind, sourceId: strin
     };
     await assertMaterialAccess({scope}, context, db);
     await assertActiveMaterialScope(scope, db);
+    if ('blob' in row && row.derivative) throw new Error('视频缩略图不能作为独立素材保存，请选择来源视频');
     if ('blob' in row) return {
         row,
         state: {
@@ -265,7 +266,7 @@ export const MATERIAL_TOOLS = [
                         id: owner
                     }
                 }, context, db);
-                const rows = args.legacyKind === 'media' ? await db.media.where('projectId').equals(owner).toArray() : await settingTable(args.legacyKind, db).where('projectId').equals(owner).toArray();
+                const rows = args.legacyKind === 'media' ? (await db.media.where('projectId').equals(owner).toArray()).filter(row => !row.derivative) : await settingTable(args.legacyKind, db).where('projectId').equals(owner).toArray();
                 const matches = rows.filter(row => ('filename' in row ? row.filename : row.name).toLocaleLowerCase().includes(query));
                 return {
                     source: 'legacy',

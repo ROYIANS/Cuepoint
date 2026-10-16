@@ -4,7 +4,8 @@ import {AUDIO_TABLES} from "../../../platform/product/scopes";
 import {insertAudioPackage, snapshotAudioPackage} from "../../../features/audio/services/audioProjectPackage";
 import {getProjectKind, type Project} from "../../../features/projects/models/project";
 import {type Id} from "../../../platform/identity";
-import {type MediaRecord} from "../../../features/library/models/media";
+import {desktopImportProvenanceSchema, type MediaRecord} from "../../../features/library/models/media";
+import {mediaDependencyIds} from "../../../features/library/models/mediaRelations";
 import {PACKAGE_FORMAT} from "../../../platform/data/packageFormat";
 import {remapReferencePackage} from "../../../features/references/documents/package";
 import JSZip from "jszip";
@@ -189,6 +190,9 @@ export async function exportProjectZip(projectId: Id): Promise<Blob> {
         filename: media.filename,
         mimeType: media.mimeType,
         libraryRetained: media.libraryRetained,
+        thumbnailMediaId: media.thumbnailMediaId,
+        derivative: media.derivative,
+        source: media.source,
     }))));
     for (const media of mediaRecords) {
         const filename = `media/${media.id}.${extFor(media.mimeType, media.filename)}`;
@@ -242,7 +246,7 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     });
     const {projectRaw, referencePackage} = parsed;
     const mediaMetadataRaw = await readJson("mediaMetadata.json");
-    const mediaMetadata = new Map<string, { filename: string; mimeType: string; libraryRetained?: boolean }>();
+    const mediaMetadata = new Map<string, Pick<MediaRecord, "filename" | "mimeType" | "libraryRetained" | "thumbnailMediaId" | "derivative" | "source">>();
     if (mediaMetadataRaw !== undefined) {
         for (const raw of asArray(mediaMetadataRaw, "mediaMetadata.json")) {
             const row = asRecord(raw, "mediaMetadata.json");
@@ -252,10 +256,15 @@ export async function importProjectZip(file: Blob): Promise<Project> {
                 throw new PackageError("媒体元数据无效、重复或不属于当前项目");
             }
             if (row.libraryRetained !== undefined && typeof row.libraryRetained !== "boolean") throw new PackageError("素材保留标记无效");
+            const relation = z.object({thumbnailMediaId: z.string().min(1).optional(),
+                derivative: z.object({kind: z.literal('video-thumbnail'), sourceMediaId: z.string().min(1)}).strict().optional(),
+                source: desktopImportProvenanceSchema.optional()}).safeParse({thumbnailMediaId: row.thumbnailMediaId, derivative: row.derivative, source: row.source});
+            if (!relation.success || relation.data.derivative && (row.libraryRetained === true || row.thumbnailMediaId !== undefined || row.mimeType !== 'image/png')) throw new PackageError("视频缩略图元数据无效");
             mediaMetadata.set(row.id, {
                 filename: row.filename,
                 mimeType: row.mimeType,
-                libraryRetained: row.libraryRetained
+                libraryRetained: row.libraryRetained,
+                ...relation.data,
             });
         }
     }
@@ -285,6 +294,22 @@ export async function importProjectZip(file: Blob): Promise<Project> {
     }
 
     if ([...mediaMetadata.keys()].some((id) => !mediaMap.has(id))) throw new PackageError("媒体元数据对应的文件缺失");
+    const remapMedia = (id: string): string => {
+        const mapped = mediaMap.get(id);
+        if (!mapped) throw new PackageError("视频缩略图依赖的文件缺失");
+        return mapped;
+    };
+    for (const [oldId, id] of mediaMap) {
+        const metadata = mediaMetadata.get(oldId), record = mediaRecords.find(item => item.id === id)!;
+        if (metadata?.thumbnailMediaId) record.thumbnailMediaId = remapMedia(metadata.thumbnailMediaId);
+        if (metadata?.derivative) record.derivative = {...metadata.derivative, sourceMediaId: remapMedia(metadata.derivative.sourceMediaId)};
+        if (metadata?.source) record.source = metadata.source;
+    }
+    try {
+        mediaDependencyIds(mediaRecords.map(record => record.id), mediaRecords);
+        for (const record of mediaRecords) if (record.derivative && mediaRecords.find(source => source.id === record.derivative!.sourceMediaId)?.thumbnailMediaId !== record.id)
+            throw new Error("缩略图来源关联无效");
+    } catch (cause) { throw new PackageError(cause instanceof Error ? cause.message : "视频缩略图关联无效"); }
 
     const {
         references,

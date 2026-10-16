@@ -35,13 +35,15 @@
         "config": [
           "tsconfig.json",
           "tests/typecheck/tsconfig.agent-source.json",
-          "tests/typecheck/tsconfig.studio-agent-source.json"
+          "tests/typecheck/tsconfig.studio-agent-source.json",
+          "tests/typecheck/tsconfig.desktop-media-source.json"
         ]
       },
       "vitest": {
         "entry": [
           "vitest.agent-source.config.ts",
-          "vitest.studio-source.config.ts"
+          "vitest.studio-source.config.ts",
+          "vitest.desktop-media-source.config.ts"
         ]
       },
       "paths": {

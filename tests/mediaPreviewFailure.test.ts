@@ -43,7 +43,7 @@ describe("current binary preview failure lifecycle", () => {
     it.each(["image/png", "video/mp4"])("rechecks a mounted %s media element and preserves the missing logical row", async mimeType => {
         const binary = ref(1, mimeType);
         const record: MediaRecord = {id: "owned-media", projectId: "project", mimeType, filename: "owned", blob: binary};
-        host.query.mockReturnValue(record);
+        host.query.mockReturnValue({record, thumbnail: undefined});
         const render = () => host.hooks!.render(() => MediaPreview({mediaId: record.id}));
         render();
         await vi.waitFor(() => expect((render() as Node).type).toBe(mimeType.startsWith("image/") ? "img" : "video"));
@@ -53,7 +53,7 @@ describe("current binary preview failure lifecycle", () => {
         await vi.waitFor(() => expect((render() as Node).props.children).toBe("素材已丢失"));
         expect(host.availability).toHaveBeenCalledExactlyOnceWith(binary, expect.any(AbortSignal));
         expect(releases[0]).toHaveBeenCalledOnce();
-        expect(host.query()).toBe(record);
+        expect(host.query().record).toBe(record);
         host.hooks!.unmount();expect(releases[0]).toHaveBeenCalledOnce();
     });
     it("routes a material img error through the same corrupt status callback and releases its URL", async () => {
@@ -67,6 +67,16 @@ describe("current binary preview failure lifecycle", () => {
         (img.props.onError as () => void)();
         await vi.waitFor(() => expect(render().find(node => node.props.role === "alert")?.props.children).toBe("素材内容已损坏，无法预览"));
         expect(releases[0]).toHaveBeenCalledOnce();expect(payload.blob).toBe(binary);
+    });
+    it("shows the durable PNG poster for a video and releases both previews on unmount", async () => {
+        const record: MediaRecord = {id: 'video', projectId: 'project', filename: 'clip.mp4', mimeType: 'video/mp4', blob: ref(11, 'video/mp4'), thumbnailMediaId: 'poster'};
+        const thumbnail: MediaRecord = {id: 'poster', projectId: 'project', filename: 'poster.png', mimeType: 'image/png', blob: ref(12), derivative: {kind: 'video-thumbnail', sourceMediaId: record.id}};
+        host.query.mockReturnValue({record, thumbnail});
+        const render = () => host.hooks!.render(() => MediaPreview({mediaId: record.id})) as Node;
+        render(); await vi.waitFor(() => expect(render().type).toBe('img'));
+        expect(render().props.src).toBe('blob:verified-2');
+        expect(host.create).toHaveBeenCalledTimes(2);
+        host.hooks!.unmount(); expect(releases.every(release => release.mock.calls.length === 1)).toBe(true);
     });
     it("keeps a present but unsupported/decode-failed Blob as preview error rather than claiming missing", async () => {
         vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:present-unsupported");

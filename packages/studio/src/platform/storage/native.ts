@@ -1,4 +1,4 @@
-import {cloneStoredValue, decodeLocalValue, registerBinaryReference} from "./codec";
+import {cloneStoredValue, decodeLocalValue, registerBinaryReference, reservePreparedBinaryReference, settlePreparedBinaryReference} from "./codec";
 import {StorageError, UnknownCommitError} from "./errors";
 import {deliverStorageNotification} from "./notifications";
 import {compareKeys, indexKey, primaryKey, requireKey} from "./keys";
@@ -255,7 +255,10 @@ class NativeTransaction implements TransactionBackend {
             const wire = mutation.kind === "delete" ? {...mutation, key: encodeWireText(mutation.key)} : {
                 ...mutation,
                 key: encodeWireText(mutation.key),
-                value: await encodeProductRow(mutation.table, mutation.value, blob => this.prepareBlob(blob))
+                value: await encodeProductRow(mutation.table, mutation.value, blob => this.prepareBlob(blob), reference => {
+                    const claim = reservePreparedBinaryReference(reference, this.handle, this.transactionId);
+                    if (claim && !this.claims.some(existing => existing.stageId === claim.stageId)) this.claims.push(claim);
+                })
             };
             await send({kind: "mutation", mutation: wire});
         }
@@ -268,6 +271,10 @@ class NativeTransaction implements TransactionBackend {
 
     async discard(): Promise<void> {
         for (const claim of this.claims) await this.binaries.discard(claim, this.handle).catch(() => undefined);
+    }
+
+    settle(outcome: "committed" | "discarded" | "unknown"): void {
+        for (const claim of this.claims) settlePreparedBinaryReference(claim.reference, this.transactionId, outcome);
     }
 
     private assertTable(table: TableName): void {
@@ -497,6 +504,7 @@ export class NativeStoreDriver implements StoreDriver {
         const handle = await this.bridge.begin({...session, operationId, mode, tables: [...scope]});
         const backend = new NativeTransaction(handle, this.bridge, this.binaries, mode, scope);
         let commitSent = false;
+        let committed = false;
         try {
             const result = await callback(backend);
             if (mode === "r") {
@@ -522,6 +530,8 @@ export class NativeStoreDriver implements StoreDriver {
                 } else throw new UnknownCommitError(operationId, session.workspaceId, error);
             }
             if (commit.operationId !== operationId || commit.fingerprint !== prepared.fingerprint) throw new UnknownCommitError(operationId, session.workspaceId);
+            committed = true;
+            backend.settle("committed");
             await this.notify(commit).catch(() => {
                 for (const listener of this.listeners) deliverStorageNotification(listener, {
                     generation: session.generation,
@@ -533,9 +543,10 @@ export class NativeStoreDriver implements StoreDriver {
         } finally {
             backend.close();
             if (!commitSent) {
+                backend.settle("discarded");
                 await this.bridge.abort(handle).catch(() => undefined);
                 await backend.discard();
-            }
+            } else if (!committed) backend.settle("unknown");
         }
     }
 }

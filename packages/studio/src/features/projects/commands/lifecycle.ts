@@ -49,8 +49,10 @@ export async function deleteProject(id: Id, store?: ProductStore): Promise<void>
             db.productionProposals,
             db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems,
             db.agentJobs, db.agentJobResultChunks,
+            db.desktopMediaImports,
         ],
         async (db) => {
+            await db.desktopMediaImports.where("projectId").equals(id).delete();
             for (const job of await db.agentJobs.where("projectId").equals(id).toArray()) await db.agentJobResultChunks.where("jobId").equals(job.id).delete();
             await db.agentJobs.where("projectId").equals(id).delete();
             for (const table of AUDIO_TABLES) await db.table(table.name).where("projectId").equals(id).delete();

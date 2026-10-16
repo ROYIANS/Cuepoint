@@ -1433,6 +1433,33 @@ export const PRODUCT_SCHEMA = {
                 "unique": true
             }
         ]
+    },
+    "desktopMediaImports": {
+        "keyPath": "id",
+        "scope": "content",
+        "indexes": [
+            {
+                "name": "projectId",
+                "keyPaths": [
+                    "projectId"
+                ],
+                "unique": false
+            },
+            {
+                "name": "status",
+                "keyPaths": [
+                    "status"
+                ],
+                "unique": false
+            },
+            {
+                "name": "updatedAt",
+                "keyPaths": [
+                    "updatedAt"
+                ],
+                "unique": false
+            }
+        ]
     }
 } as const satisfies Record<TableName, TableDefinition>;
 

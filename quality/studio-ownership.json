@@ -2299,7 +2299,10 @@
       "target": "packages/studio/src/features/agent/models/agentToolSelection.ts",
       "owner": "features/agent",
       "public": false,
-      "publicTypes": []
+      "publicTypes": [],
+      "publicSymbols": [
+        "toolNamesForCall"
+      ]
     },
     {
       "original": "packages/studio/src/domain/audio.ts",
@@ -5434,7 +5437,8 @@
       "owner": "features/library",
       "public": true,
       "publicTypes": [
-        "MediaRecord"
+        "MediaRecord",
+        "DesktopImportProvenance"
       ]
     },
     {
@@ -5967,6 +5971,32 @@
       "file": "packages/studio/src/features/agent/ui/AgentJobReport.tsx",
       "target": "packages/studio/src/features/agent/ui/AgentJobReport.tsx",
       "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/library/commands/desktopMediaImport.ts",
+      "file": "packages/studio/src/features/library/commands/desktopMediaImport.ts",
+      "target": "packages/studio/src/features/library/commands/desktopMediaImport.ts",
+      "owner": "features/library",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/library/models/desktopMediaImport.ts",
+      "file": "packages/studio/src/features/library/models/desktopMediaImport.ts",
+      "target": "packages/studio/src/features/library/models/desktopMediaImport.ts",
+      "owner": "features/library",
+      "public": false,
+      "publicTypes": [
+        "DesktopMediaImport"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/library/models/mediaRelations.ts",
+      "file": "packages/studio/src/features/library/models/mediaRelations.ts",
+      "target": "packages/studio/src/features/library/models/mediaRelations.ts",
+      "owner": "features/library",
       "public": false,
       "publicTypes": []
     }

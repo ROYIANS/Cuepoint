@@ -46,7 +46,7 @@ Table operations are `get`, `bulkGet`, `toArray`, `count`, `where`, `orderBy`,
 `filter`, `add`, `put`, `update`, `delete`, `bulkAdd`, `bulkPut`, `bulkDelete`,
 `clear`. Collections retain `first`, `filter`/`and`, `reverse`, `limit`, `sortBy`,
 `each`, `modify`, `delete`; `anyOf` accepts an array or variadic keys.
-`platform/storage/schema.json` is the closed 52-table key/index/scope registry, shared
+`platform/storage/schema.json` is the closed 53-table key/index/scope registry, shared
 with Rust and checked against the browser schema. The 50th table, `deviceSettings`
 (`key` primary key, free-form `value`, `updatedAt`; scope `device`), is a generic
 device-local key/value store: it never enters project packages or the future cloud
@@ -54,13 +54,16 @@ checkpoint, values are validated by the reader (`getDeviceSetting(key, parse)`
 returns `undefined` for unreadable or invalid data), keys match `[A-Za-z0-9][A-Za-z0-9._:-]{0,127}`
 and one value is at most 2 MiB. New device-local state adds a key, not a table.
 Current keys: `modelCatalog`, `modelCatalogSelection`. Browser schema is Dexie
-version 26. Tables 51 and 52 are the text-only `agentJobs` and
+version 27. Tables 51 and 52 are the text-only `agentJobs` and
 `agentJobResultChunks`; see [Agent jobs and retained reports](./agent-jobs-results.md)
-for their publication, quotas and lifecycle scopes. Table counts in shared tests
+for their publication, quotas and lifecycle scopes. Table 53, `desktopMediaImports`,
+stores project-owned intent, frozen selection and import receipts; see
+[granted desktop media import](./desktop-media-import.md) for its admission,
+prepared-claim publication and Stop/unknown contracts. Table counts in shared tests
 derive from `schema.json`; the Rust registry assertion is the one hand-maintained
-count (52). Adding a table changes the registry hash. Fresh development does not
+count (53). Adding a table changes the registry hash. Fresh development does not
 authorize a new historical transition; preserve the already named 49-to-50
-recipe's target without expanding it to 52. Incompatible native workspaces remain
+recipe's target without expanding it to the current registry. Incompatible native workspaces remain
 rejected. Immutable version tables use
 their declared `versionId`, rather than an invented universal `id`.
 

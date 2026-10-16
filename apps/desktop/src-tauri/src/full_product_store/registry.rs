@@ -35,7 +35,7 @@ pub fn tables() -> &'static BTreeMap<String, Table> {
             let value: Registry =
                 serde_json::from_str(REGISTRY_JSON).expect("Bundled table registry");
             assert_eq!(value.version, 1);
-            assert_eq!(value.tables.len(), 52);
+            assert_eq!(value.tables.len(), 53);
             assert!(
                 value
                     .tables

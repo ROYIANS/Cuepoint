@@ -31,9 +31,10 @@ export function MediaPreview({
     }
     const view = state.media;
     if (view.kind === "video") {
+        if (!inspect && view.poster) return <img src={view.poster} onError={view.onPosterError} alt="" className={cn("object-cover", className)}/>;
         return <video src={view.url} onError={view.onError} aria-label={label}
                       className={cn(inspect ? "object-contain" : "object-cover", className)} controls={inspect}
-                      muted={!inspect} playsInline preload="metadata"/>;
+                      muted={!inspect} playsInline preload="metadata" poster={view.poster}/>;
     }
     return <img src={view.url} onError={view.onError} alt={inspect ? label : ""}
                 className={cn(inspect ? "object-contain" : "object-cover", className)}/>;

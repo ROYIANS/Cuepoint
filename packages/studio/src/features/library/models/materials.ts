@@ -46,7 +46,9 @@ export interface LibraryMaterial {
 }
 
 export type MaterialPayload =
-    { type: 'file'; blob: import('../../../platform/media/binaryTypes').BinaryContent; filename: string; mimeType: string }
+    { type: 'file'; blob: import('../../../platform/media/binaryTypes').BinaryContent; filename: string; mimeType: string;
+        /** Optional immutable source + derivative snapshot, using the existing media[].blob carrier. */
+        sourceMediaId?: string; media?: MediaRecord[] }
     | { type: 'setting'; kind: SettingMaterialKind; entity: MaterialEntity; media: MediaRecord[] };
 
 export interface MaterialVersion {

@@ -25,30 +25,35 @@ installer gate until every source stage is complete.
   rejection, cancellation/reap state and unsupported Windows volumes.
 - [x] Check the source changes, fix findings, commit the stage.
 
-Stage 1 source/native checkpoint: desktop-focused Rust tests **13 passed**, one
+Stage 1 source/native checkpoint: `52e584c7` (native grants/processes and pinned
+decoder resources). desktop-focused Rust tests **13 passed**, one
 explicit-resource fixture ignored in that command; the real bundled FFmpeg fixture
 ran separately and passed. Decoder/release source checks passed. Windows execution
 and system-picker/installed acceptance remain in the final epic batch gate.
 
 ## Stage 2 — managed claims and shared import command
 
-- [ ] Add the trusted prepared-claim adoption seam to the existing native transaction;
+- [x] Add the trusted prepared-claim adoption seam to the existing native transaction;
   reject foreign/stale/unregistered references and preserve unknown commit certainty.
-- [ ] Add the desktop media import service and library command shared by human and
+- [x] Add durable library admission/publication commands shared by human and
   Agent callers. Commit original media, derivative thumbnail, provenance and stable
   receipt atomically in the existing ProductStore.
-- [ ] Add derivative-media closure to retention/orphan cleanup, picker/preview,
+- [x] Add derivative-media closure to retention/orphan cleanup, picker/preview,
   project copy/reuse and package round-trip owners.
-- [ ] Add focused Studio storage/library tests for claim adoption, rollback,
+- [x] Add focused Studio storage/library tests for claim adoption, rollback,
   idempotence, concurrent edits, derivative lifecycle and package mapping.
-- [ ] Check the source changes, fix findings, commit the stage.
+- [x] Check the source changes, fix findings, commit the stage.
+
+Stage 2 source review: the six foundation Studio suites passed **53 tests**;
+scoped foundation lint had **0 errors, 44 warnings**. Exact approval, unknown-claim
+retention and derivative closure findings were fixed before this checkpoint.
 
 ## Stage 3 — Agent tools and interaction surface
 
 - [ ] Add a finite `desktop-media` read/prepare/import tool group with exact scope,
   approval and frozen-preview rules. Keep native work outside atomic DB callbacks.
-- [ ] Wire the shared controller into the existing media library and Agent result
-  surface: immediate selection acknowledgement, real progress, one Stop, truthful
+- [ ] Wire the native transport and shared import coordinator into the existing
+  media library and Agent result surface: immediate selection acknowledgement, real progress, one Stop, truthful
   failed/unknown/committed outcomes, no drawer/navigation or transient technical
   captions.
 - [ ] Add focused tool-loading, preview, report and UI tests, including browser

@@ -18,6 +18,8 @@ export interface MediaView {
     mimeType: string;
     kind: MediaKind;
     onError: () => void;
+    poster?: string;
+    onPosterError?: () => void;
 }
 
 export type MediaState = { status: "ready"; media: MediaView }
@@ -122,14 +124,21 @@ export function binaryPreviewMessage(state: BinaryPreviewState): string {
 }
 
 export function useMediaState(mediaId: Id | undefined): MediaState {
-    const record = useProductQuery(async (db) => mediaId ? (await db.media.get(mediaId)) ?? null : null, [mediaId]);
+    const data = useProductQuery(async (db) => {
+        const record = mediaId ? (await db.media.get(mediaId)) ?? null : null;
+        const thumbnail = record?.thumbnailMediaId ? await db.media.get(record.thumbnailMediaId) : undefined;
+        return {record, thumbnail: thumbnail?.projectId === record?.projectId && thumbnail?.derivative?.sourceMediaId === record?.id && thumbnail?.mimeType === 'image/png' ? thumbnail : undefined};
+    }, [mediaId]);
+    const record = data?.record;
     const view = useBinaryPreview(record && record.id === mediaId ? record.blob : undefined);
+    const thumbnail = useBinaryPreview(record?.id === mediaId ? data?.thumbnail?.blob : undefined);
     if (!mediaId) return {status: "empty"};
     if (record === null) return {status: "missing"};
     if (!record || record.id !== mediaId) return {status: "loading"};
     return view.status === "ready" ? {
         status: "ready",
-        media: {url: view.url, mimeType: record.mimeType, kind: kindFromMime(record.mimeType), onError: view.onError}
+        media: {url: view.url, mimeType: record.mimeType, kind: kindFromMime(record.mimeType), onError: view.onError,
+            ...(thumbnail.status === 'ready' ? {poster: thumbnail.url, onPosterError: thumbnail.onError} : {})}
     } : view;
 }
 

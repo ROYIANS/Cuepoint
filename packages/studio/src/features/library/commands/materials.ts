@@ -15,6 +15,7 @@ import type {
 import {remapSlot, slotMediaIds} from '../models/slot';
 import {createId, nowIso} from '../../../platform/identity';
 import {STUDIO_LIBRARY_ID} from "../models/ownership";
+import {mediaDependencyIds, remapMediaRelations} from "../models/mediaRelations";
 
 const tables = (store?: ProductStore) => (db => [db.projects, db.ipProfiles, db.projectIpLinks, db.libraryMaterials, db.materialVersions, db.materialUses, db.materialEvents, db.media, db.characters, db.scenes, db.props, db.styles])(store ?? productDb);
 const MAX_FILE_SIZE = 512 * 1024 * 1024;
@@ -173,8 +174,10 @@ async function snapshotSetting(kind: SettingMaterialKind, entityId: string, stor
             }
         }
     }
-    for (const id of ids) {
-        const item = (await db.media.get(id))!;
+    const sourceMedia = await db.media.where("projectId").equals(entity.projectId).toArray();
+    for (const id of mediaDependencyIds(ids, sourceMedia)) {
+        const item = sourceMedia.find(record => record.id === id);
+        if (!item) throw new Error('来源设定引用的素材缺失');
         media.push({
             ...item,
             blob: (await db.waitFor(readBinaryBlob(item.blob))).slice(0, binaryByteLength(item.blob), item.mimeType)
@@ -201,9 +204,18 @@ export async function promoteLegacyMaterial(kind: MaterialKind | 'media', entity
         }
         const media = await db.media.get(entityId);
         if (!media) throw new Error('来源素材不存在');
+        if (media.derivative) throw new Error('视频缩略图不能作为独立素材保存，请选择来源视频');
         if (media.projectId !== STUDIO_LIBRARY_ID && !await db.projects.get(media.projectId)) throw new Error('来源项目不存在');
         const parsed = filePayload(await db.waitFor(readBinaryBlob(media.blob)), media.filename, media.mimeType);
         if (kind !== 'media' && kind !== parsed.kind) throw new Error('来源素材类型不匹配');
+        if (media.thumbnailMediaId && parsed.payload.type === 'file') {
+            const records = await db.media.where('projectId').equals(media.projectId).toArray();
+            const ids = mediaDependencyIds([media.id], records);
+            parsed.payload.sourceMediaId = media.id;
+            parsed.payload.media = [];
+            for (const item of records.filter(record => ids.has(record.id))) parsed.payload.media.push({...item,
+                blob: item.id === media.id ? parsed.payload.blob : await db.waitFor(readBinaryBlob(item.blob))});
+        }
         return insertMaterial(media.filename, parsed.kind, scope, parsed.payload, {
             projectId: media.projectId,
             entityId
@@ -327,23 +339,39 @@ async function adopt(material: LibraryMaterial, projectId: string, store?: Produ
     const payload = version.payload;
     if (payload.type === 'file') {
         filePayload(await db.waitFor(readBinaryBlob(payload.blob)), payload.filename, payload.mimeType);
-        use.targetId = createId('med');
-        use.mediaIds = [use.targetId];
-        await db.media.add({
+        if (payload.sourceMediaId && payload.media) {
+            const source = payload.media.find(item => item.id === payload.sourceMediaId);
+            if (!source || source.filename !== payload.filename || source.mimeType !== payload.mimeType || source.derivative) throw new Error('素材来源快照不匹配');
+            const ids = mediaDependencyIds([source.id], payload.media);
+            if (ids.size !== payload.media.length) throw new Error('素材来源快照包含无关文件');
+            const map = new Map(payload.media.map(item => [item.id, createId('med')]));
+            use.targetId = map.get(source.id)!;
+            use.mediaIds = [...map.values()];
+            for (const item of payload.media) {
+                filePayload(await db.waitFor(readBinaryBlob(item.blob)), item.filename, item.mimeType);
+                await db.media.add({...remapMediaRelations(item, map, projectId), libraryRetained: !item.derivative});
+            }
+        } else {
+            if (payload.sourceMediaId || payload.media) throw new Error('素材来源快照不完整');
+            use.targetId = createId('med');
+            use.mediaIds = [use.targetId];
+            await db.media.add({
             id: use.targetId,
             projectId,
             libraryRetained: true,
             blob: payload.blob,
             filename: payload.filename,
             mimeType: payload.mimeType
-        });
+            });
+        }
     } else {
         const map = new Map<string, string>();
+        for (const item of payload.media) map.set(item.id, createId('med'));
+        mediaDependencyIds(payload.media.map(item => item.id), payload.media);
         for (const item of payload.media) {
-            const id = createId('med');
-            map.set(item.id, id);
+            const id = map.get(item.id)!;
             filePayload(await db.waitFor(readBinaryBlob(item.blob)), item.filename, item.mimeType);
-            await db.media.add({...item, id, projectId, libraryRetained: true});
+            await db.media.add({...remapMediaRelations(item, map, projectId), libraryRetained: !item.derivative});
             use.mediaIds.push(id);
         }
         for (const slot of Object.values(payload.entity.slots)) for (const id of slotMediaIds(slot)) if (!map.has(id)) throw new Error('素材版本包含缺失的图片或视频');

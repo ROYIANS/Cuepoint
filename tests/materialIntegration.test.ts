@@ -18,7 +18,7 @@ describe('IP and material integration with legacy projects', () => {
     if (!browserDatabase) throw new Error('Historical comparator requires browser storage');
     const rawDb=browserDatabase,db=createBrowserProductStore(rawDb);
     const project = await createProject('legacy v21',undefined,undefined,undefined,db);
-    const added = new Set(['ipProfiles', 'projectIpLinks', 'libraryMaterials', 'materialVersions', 'materialUses', 'materialEvents', 'audioGenerationBatches', 'audioGenerationBatchItems', 'audioArrangementProposals']);
+    const added = new Set(['ipProfiles', 'projectIpLinks', 'libraryMaterials', 'materialVersions', 'materialUses', 'materialEvents', 'audioGenerationBatches', 'audioGenerationBatchItems', 'audioArrangementProposals', 'agentJobs', 'agentJobResultChunks', 'desktopMediaImports']);
     const stores = Object.fromEntries(browserDatabase!.tables.filter((table) => !added.has(table.name))
       .map((table) => [table.name, [table.schema.primKey.src, ...table.schema.indexes.map((index) => index.src)].join(',')]));
     await db.delete();
@@ -28,7 +28,7 @@ describe('IP and material integration with legacy projects', () => {
     await legacy.table('projects').add(project);
     legacy.close();
     await db.open();
-    expect(db.verno).toBe(25);
+    expect(db.verno).toBe(27);
     expect(await db.projects.get(project.id)).toEqual(project);
     for (const name of added) expect(await db.table(name).count()).toBe(0);
   });

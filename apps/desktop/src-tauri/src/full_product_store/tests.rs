@@ -748,7 +748,7 @@ fn encoded_metadata_envelopes_are_bounded_even_for_control_heavy_chunks() {
 
 fn downgrade_to_legacy_registry(root: &std::path::Path, extra_missing: Option<&str>) {
     let db = rusqlite::Connection::open(root.join(".local/state.sqlite")).unwrap();
-    db.execute("DELETE FROM product_tables WHERE name IN ('deviceSettings','agentJobs','agentJobResultChunks')", [])
+    db.execute("DELETE FROM product_tables WHERE name IN ('deviceSettings','agentJobs','agentJobResultChunks','desktopMediaImports')", [])
         .unwrap();
     if let Some(name) = extra_missing {
         db.execute("DELETE FROM product_tables WHERE name=?", [name])
@@ -761,7 +761,7 @@ fn downgrade_to_legacy_registry(root: &std::path::Path, extra_missing: Option<&s
     .unwrap();
 }
 #[test]
-fn legacy_49_registry_is_not_silently_migrated_to_current_52() {
+fn legacy_49_registry_is_not_silently_migrated_to_current_53() {
     let mut store = fixture(Hooks::default());
     let root = store.root.clone();
     store.close().unwrap();

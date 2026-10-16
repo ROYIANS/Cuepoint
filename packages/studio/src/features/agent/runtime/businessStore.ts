@@ -152,7 +152,7 @@ export async function listBusinessRecords(kind: BusinessKind, ownerId?: string, 
         case "style":
             return (await db.styles.where("projectId").equals(ownerId).toArray()).map(row => ({kind, row}));
         case "media":
-            return (await db.media.where("projectId").equals(ownerId).toArray()).map(row => ({
+            return (await db.media.where("projectId").equals(ownerId).toArray()).filter(row => !row.derivative).map(row => ({
                 kind,
                 row: metadata(row)
             }));
