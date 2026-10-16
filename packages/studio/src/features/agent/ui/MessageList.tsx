@@ -7,7 +7,7 @@ import {formatTokenCount} from "../runtime/contextUsage";
 import {AgentRunDetails} from "./AgentRunDetails";
 import type {RunAction} from "../models/chatRunAction";
 import type {AgentRun, AgentToolCall} from "../models/agent";
-import {isPersistedToolRound} from "../runtime/runPresentation";
+import {liveRoundEcho} from "../runtime/runPresentation";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import {CopyButton, Text} from "@lobehub/ui";
 import {Fragment, memo, type ReactNode, useCallback, useLayoutEffect, useRef, useState} from "react";
@@ -189,7 +189,13 @@ const AgentChatMessageItem = memo(
         onRunAction: (runId: string, action: RunAction, callId?: string) => void;
     }) {
         const isUser = message.role === "user";
-        const processOwnsContent = !isUser && !!run && (run.status === "running" || isPersistedToolRound(run, message, calls));
+        const echo = !isUser && run ? liveRoundEcho(run, message, calls) : undefined;
+        // While the process is open, a sentence already in the timeline stays there.
+        // A reasoning change must not print it again under the tools.
+        const processOwnsContent = !isUser && !!run && (
+            run.status === "running" ||
+            (!!echo?.content && (echo.reasoning || run.status === "waiting_approval"))
+        );
         const reasoningText = message.reasoning?.trim() ?? "";
         const hasReasoning = reasoningText.length > 0;
         const reasoningActive =

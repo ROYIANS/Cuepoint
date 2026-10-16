@@ -55,7 +55,10 @@ export function buildRunActivity(run: AgentRun, calls: readonly AgentToolCall[])
             content: step.reasoning,
             durationMs: step.reasoningDurationMs
         });
-        if (step?.content.trim()) result.push({kind: "text", id: `${prefix}-text`, content: step.content});
+        // A later saved round can repeat a sentence already shown, such as a finishing check. Keep the first copy.
+        if (step?.content.trim() && !result.some((item) => item.kind === "text" && item.content === step.content)) {
+            result.push({kind: "text", id: `${prefix}-text`, content: step.content});
+        }
         const group = callsByStep.get(number);
         if (!group?.length) continue;
         const previous = result.at(-1);
@@ -65,17 +68,34 @@ export function buildRunActivity(run: AgentRun, calls: readonly AgentToolCall[])
     return result;
 }
 
-/** The message keeps the last tool round until the next model delta arrives. */
-export function isPersistedToolRound(run: AgentRun, output: Pick<AgentRunOutput, "content" | "reasoning">, calls?: readonly AgentToolCall[]): boolean {
-    // A successfully completed model response is final, even if it repeats earlier text.
-    if (run.status === "completed" || !run.hasToolCalls) return false;
+function latestPublicStep(run: AgentRun, calls?: readonly AgentToolCall[]): AgentActivityStep | undefined {
     const savedSteps = calls ? [...publicSteps(run, ownedCalls(run, calls)).values()] : run.activitySteps ?? [];
-    const latest = savedSteps.reduce<AgentActivityStep | undefined>((found, step) => !found || step.step >= found.step ? step : found, undefined);
-    if (latest) return latest.content === output.content && (latest.reasoning === undefined || latest.reasoning === (output.reasoning ?? ""));
-    if (calls) return false;
+    return savedSteps.reduce<AgentActivityStep | undefined>((found, step) => !found || step.step >= found.step ? step : found, undefined);
+}
+
+/**
+ * The live message can still hold the latest saved round while the next thought starts.
+ * Content and reasoning are separate: new reasoning must not draw that sentence again.
+ */
+export function liveRoundEcho(run: AgentRun, output: Pick<AgentRunOutput, "content" | "reasoning">, calls?: readonly AgentToolCall[]): { content: boolean; reasoning: boolean } {
+    // A successfully completed model response is final, even if it repeats earlier text.
+    if (run.status === "completed" || !run.hasToolCalls) return {content: false, reasoning: false};
+    const latest = latestPublicStep(run, calls);
+    if (latest) return {
+        content: latest.content === output.content,
+        reasoning: latest.reasoning === undefined || latest.reasoning === (output.reasoning ?? ""),
+    };
+    if (calls) return {content: false, reasoning: false};
     // Legacy caller without the ledger: only rounds appended after this run's base.
     const rounds = currentContinuation(run).filter((message) => message.role === "assistant" && message.tool_calls?.length);
-    return rounds.length > 0 && rounds.at(-1)!.content === output.content;
+    const content = rounds.length > 0 && rounds.at(-1)!.content === output.content;
+    return {content, reasoning: content};
+}
+
+/** The message keeps the last tool round until the next model delta arrives. */
+export function isPersistedToolRound(run: AgentRun, output: Pick<AgentRunOutput, "content" | "reasoning">, calls?: readonly AgentToolCall[]): boolean {
+    const echo = liveRoundEcho(run, output, calls);
+    return echo.content && echo.reasoning;
 }
 
 /** Natural elapsed time includes waits; paused/terminal records freeze at their timestamp. */

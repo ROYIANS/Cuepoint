@@ -362,8 +362,11 @@
     font-size: 14px;
 }
 
-.reference-project-dialog {
+.reference-project-dialog[data-slot="dialog-content"] {
     max-width: min(440px, calc(100vw - 32px));
+    /* The project list is a popover portaled into this dialog. The shared
+       dialog overflow would clip that list to the dialog box. */
+    overflow: visible;
 }
 
 @keyframes reference-spin {

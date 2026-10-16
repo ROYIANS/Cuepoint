@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { AgentRun, AgentToolCall } from "@/features/agent/models/agent";
-import { buildRunActivity, formatRunElapsed, getRunElapsedMs, isPersistedToolRound } from "@/features/agent/runtime/runPresentation";
+import { buildRunActivity, formatRunElapsed, getRunElapsedMs, isPersistedToolRound, liveRoundEcho } from "@/features/agent/runtime/runPresentation";
 
 const run: AgentRun = {
   id: "run", threadId: "thread", agentId: "agent", agentSnapshot: { name: "Agent", instructions: "" },
@@ -70,12 +70,29 @@ describe("run activity presentation", () => {
     expect(isPersistedToolRound(record, { content: "计划", reasoning: "思考" })).toBe(true);
     expect(isPersistedToolRound(record, { content: "新输出", reasoning: "思考" })).toBe(false);
     expect(isPersistedToolRound(record, { content: "计划", reasoning: "新思考" })).toBe(false);
+    expect(liveRoundEcho(record, { content: "计划", reasoning: "新思考" })).toEqual({ content: true, reasoning: false });
     expect(isPersistedToolRound({ ...record, status: "completed" }, { content: "计划", reasoning: "思考" })).toBe(false);
     const first = call(1), history = { ...call(0), runId: "old" };
     const legacy = { ...run, requestMessages: [round(history, "过去")], continuationMessages: [round(history, "过去"), round(first, "当前")] };
     expect(isPersistedToolRound(legacy, { content: "当前" })).toBe(true);
     expect(isPersistedToolRound(legacy, { content: "当前" }, [first])).toBe(true);
     expect(isPersistedToolRound({ ...legacy, continuationMessages: [round(history, "过去")] }, { content: "过去" })).toBe(false);
+  });
+
+  it("keeps one copy when a later round repeats the sentence already shown before tools", () => {
+    const first = call(1);
+    const sentence = "哈哈，刚才我说“草稿已准备好”确实不准确";
+    const record = {
+      ...run,
+      activitySteps: [
+        { step: 1, content: sentence, reasoning: "思考" },
+        { step: 2, content: sentence, reasoning: "收尾思考" },
+      ],
+    };
+    const items = buildRunActivity(record, [first]);
+    expect(items.filter((item) => item.kind === "text").map((item) => item.content)).toEqual([sentence]);
+    expect(items.map((item) => item.kind)).toEqual(["reasoning", "text", "tools", "reasoning"]);
+    expect(liveRoundEcho(record, { content: sentence, reasoning: "新思考" }, [first])).toEqual({ content: true, reasoning: false });
   });
 });
 
