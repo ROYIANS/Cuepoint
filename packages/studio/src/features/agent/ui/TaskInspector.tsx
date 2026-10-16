@@ -1,3 +1,4 @@
+import {useProductQuery} from "../../../platform/product/queries";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {type ManualDraftDeparture, type ManualDraftState, useManualDraftDeparture} from "../../../app/drafts/useManualDraftGuard";
 import {
@@ -47,8 +48,6 @@ type InspectorProps = {
     projectUnavailable?: boolean;
     summaryModel?: WrapupModelSelection;
     task: AgentTask;
-    runs: AgentRun[];
-    messages: ChatMessage[];
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onOpenBoard: () => void;
@@ -107,9 +106,14 @@ export function TaskInspector(props: InspectorProps) {
             setOwner(props);
         });
     }, [sameOwner, props, requestedOwner, requestDeparture, updateState]);
+    const reading = useProductQuery(async tx => ({threadId: shown.task.threadId,
+        runs: await tx.agentRuns.where("threadId").equals(shown.task.threadId).sortBy("createdAt"),
+        messages: await tx.chatMessages.where("threadId").equals(shown.task.threadId).sortBy("createdAt"),
+    }), [shown.task.threadId]);
     return <>{departure.confirmation}<TaskInspectorContent
         key={`${shown.task.id}:${shown.task.threadId}:${shown.task.projectId}:${session}`}
-        {...shown} requestDeparture={requestDeparture} onDraftStateChange={updateState}/></>;
+        {...shown} runs={reading?.threadId === shown.task.threadId ? reading.runs : []}
+        messages={reading?.threadId === shown.task.threadId ? reading.messages : []} requestDeparture={requestDeparture} onDraftStateChange={updateState}/></>;
 }
 
 function TaskInspectorContent({
@@ -124,7 +128,7 @@ function TaskInspectorContent({
                                   projectUnavailable,
                                   requestDeparture,
                                   onDraftStateChange,
-                              }: InspectorProps & {
+                              }: InspectorProps & {runs: AgentRun[]; messages: ChatMessage[];
     requestDeparture: ManualDraftDeparture;
     onDraftStateChange: (state: ManualDraftState) => void
 }) {

@@ -39,14 +39,22 @@ vi.mock("@/features/agent/ui/TaskBoard", () => ({TaskBoard: () => null}));
 vi.mock("@/features/agent/ui/TaskInspector", () => ({TaskInspector: () => null}));
 vi.mock("@/features/agent/ui/HomeWelcome", () => ({HomeWelcome: () => h("div", {"data-home": true})}));
 vi.mock("@/features/agent/ui/ContextUsagePanel", () => ({ContextUsageTrigger: () => null}));
-vi.mock("@/features/agent/ui/AgentComposerAttention", () => ({AgentComposerAttention: ({runs}: {runs: AgentRun[]}) =>
-    h("div", {"data-attention-runs": runs.map(run => run.id).join(",")})}));
-vi.mock("@/features/agent/ui/ChatWorkspace", () => ({ChatWorkspace: ({messages, runs, composer, retryableRunId}: {
-    messages?: ChatMessage[]; runs?: AgentRun[]; composer: ComposerProps; retryableRunId?: string;
-}) => h("section", {"data-workspace": true, "data-message-state": messages === undefined ? "loading" : messages.length ? "loaded" : "empty",
-    "data-run-state": runs === undefined ? "loading" : runs.map(run => run.id).join(","),
-    "data-project-locked": String(composer.projectLocked), "data-retry": retryableRunId ?? ""},
-    messages === undefined ? "正在加载对话…" : messages.map(message => h("p", {key: message.id}, message.content)), composer.status)}));
+vi.mock("@/features/agent/ui/AgentComposerAttention", () => ({AgentComposerAttention: () => null}));
+vi.mock("@/features/agent/ui/ChatWorkspace", async () => {
+    const {useProductQueryState} = await import("@/platform/product/queries");
+    const {readThreadTranscript} = await import("@/features/agent/queries/threadReading");
+    const {prepareThreadActivityKey} = await import("@/features/agent/commands/threadActivity");
+    return {ChatWorkspace: ({activeThreadId, composer}: {activeThreadId?: string; composer: ComposerProps}) => {
+        const identity = activeThreadId ? prepareThreadActivityKey(activeThreadId) : undefined;
+        const state = useProductQueryState(tx => readThreadTranscript(identity, tx), [activeThreadId]);
+        const reading = state.value?.threadId === activeThreadId ? state.value : undefined;
+        return h("section", {"data-workspace": true,
+            "data-message-state": !reading ? "loading" : reading.messages.length ? "loaded" : "empty",
+            "data-run-state": !reading ? "loading" : reading.runs.map(run => run.id).join(","),
+            "data-project-locked": String(composer.projectLocked), "data-retry": reading?.retryableRunId ?? ""},
+            !reading ? "正在加载对话…" : reading.messages.map(message => h("p", {key: message.id}, message.content)), composer.status);
+    }};
+});
 vi.mock("@/features/agent/runtime/runOwnership", () => ({recoverAbandonedRuns: vi.fn().mockResolvedValue(undefined), withThreadRunLock: vi.fn()}));
 vi.mock("@/features/agent/runtime/taskWrapup", () => ({recoverTaskWrapups: vi.fn().mockResolvedValue(undefined)}));
 vi.mock("@/features/video/agent/generationBatchRuntime", () => ({pauseThreadGeneration: vi.fn()}));
@@ -89,75 +97,71 @@ beforeEach(async () => {
 afterEach(async () => {await act(async () => root.unmount()); container.remove(); vi.restoreAllMocks(); vi.unstubAllGlobals();});
 
 describe("actual Agent query observation ownership", () => {
+    async function addedThreadReads(start: number) {
+        const candidates = await Promise.all(reads.slice(start).map(async read => ({read, value: await query(read) as Record<string, unknown>})));
+        return {routed: candidates.find(item => "forId" in item.value)!.read,
+            control: candidates.find(item => "ready" in item.value)!.read,
+            transcript: candidates.find(item => "messages" in item.value)!.read};
+    }
     async function mountA() {
-        await draw("A"); expect(reads).toHaveLength(9);
+        await draw("A"); expect(reads).toHaveLength(7);
         for (const read of [...reads]) await publish(read);
+        expect(reads).toHaveLength(8); await publish(reads[7]);
         expect(workspace()).toBeTruthy(); return [...reads];
     }
-    it("keeps an empty A result distinct from pending B, accepts empty B and ignores retired A delivery", async () => {
+    it("keeps empty A distinct from pending B and ignores retired A transcript/control delivery", async () => {
         const initial = await mountA(); expect(workspace().getAttribute("data-message-state")).toBe("empty");
-        const emptyA = await query(initial[6]);
-        await draw("B"); expect(reads).toHaveLength(13);
-        const [routedB, messagesB, compactionsB, runsB] = reads.slice(9);
+        const emptyA = await query(initial[7]);
+        await draw("B"); expect(reads).toHaveLength(11);
+        const {routed: routedB, control: controlB, transcript: transcriptB} = await addedThreadReads(8);
         await publish(routedB);
         expect(workspace().getAttribute("data-message-state")).toBe("loading");
-        expect(workspace().getAttribute("data-run-state")).toBe("loading");
-        expect(container.textContent).toContain("正在加载对话…");
         expect(workspace().getAttribute("data-project-locked")).toBe("false");
-        expect(router.shouldBlock()).toBe(false);
         expect(initial.slice(5).every(read => read.stopped)).toBe(true);
-        await publish(initial[6], emptyA);
+        await publish(initial[7], emptyA); await publish(initial[6]);
         expect(workspace().getAttribute("data-message-state")).toBe("loading");
-        const observedEmpty = await publish(messagesB);
-        expect(observedEmpty).toEqual({forThreadId: "B", messages: []});
+        const observed = await publish(transcriptB) as {threadId: string; messages: ChatMessage[]};
+        expect(observed.threadId).toBe("B"); expect(observed.messages).toEqual([]);
         expect(workspace().getAttribute("data-message-state")).toBe("empty");
-        expect(workspace().getAttribute("data-run-state")).toBe("loading");
-        await publish(compactionsB); await publish(runsB);
-        expect(workspace().getAttribute("data-run-state")).toBe("");
+        await publish(controlB); expect(router.shouldBlock()).toBe(false);
     });
-    it("never lends A's transcript, execution, compaction or departure guard to B", async () => {
+    it("never lends A transcript, run, compaction or blocker to B", async () => {
         await db.chatMessages.add({id: "user-A", threadId: "A", role: "user", content: "A private text", status: "complete", createdAt: timestamp});
         await db.agentRuns.add(run("A"));
         await db.contextCompactions.add({id: "compaction-A", threadId: "A", runId: "run-A", status: "running",
             coverage: [], input: [], policy: DEFAULT_CONTEXT_POLICY, connector: run("A").connector, model: "model",
             content: "", beforeTokens: 1, createdAt: timestamp, updatedAt: timestamp});
         const initial = await mountA();
-        expect(container.textContent).toContain("A private text"); expect(router.shouldBlock()).toBe(false);
-        expect(container.textContent).toContain("正在整理较早的对话…");
-        const oldMessages = await query(initial[6]), oldRuns = await query(initial[8]);
-        await draw("B"); await publish(reads[9]);
-        expect(container.textContent).not.toContain("A private text");
-        expect(workspace().getAttribute("data-run-state")).toBe("loading");
-        expect(workspace().getAttribute("data-retry")).toBe("");
-        expect(container.querySelector("[data-attention-runs]")?.getAttribute("data-attention-runs")).toBe("");
-        expect(container.textContent).not.toContain("正在执行"); expect(router.shouldBlock()).toBe(false);
-        await publish(initial[6], oldMessages); await publish(initial[8], oldRuns);
-        expect(workspace().getAttribute("data-message-state")).toBe("loading"); expect(router.shouldBlock()).toBe(false);
-        await db.agentRuns.add(run("B", "waiting_approval"));
-        await publish(reads[12]);
-        expect(workspace().getAttribute("data-run-state")).toBe("run-B"); expect(router.shouldBlock()).toBe(false);
-        expect(container.textContent).not.toContain("正在整理较早的对话");
-        await db.agentRuns.update("run-B", {status: "running"}); await publish(reads[12]);
-        expect(container.textContent).toContain("正在执行");
-        expect(container.textContent).not.toContain("正在整理较早的对话");
+        expect(container.textContent).toContain("A private text"); expect(container.textContent).toContain("正在整理较早的对话…");
+        const old = await query(initial[7]); await draw("B");
+        const {routed, control, transcript} = await addedThreadReads(8); await publish(routed);
+        expect(container.textContent).not.toContain("A private text"); expect(container.textContent).not.toContain("正在执行");
+        await publish(initial[7], old); await publish(initial[6]);
+        expect(workspace().getAttribute("data-message-state")).toBe("loading");
+        await db.agentRuns.add(run("B", "waiting_approval")); await publish(control); await publish(transcript);
+        expect(workspace().getAttribute("data-run-state")).toBe("run-B");
+        expect(container.textContent).not.toContain("正在整理较早的对话"); expect(router.shouldBlock()).toBe(false);
+        await db.agentRuns.update("run-B", {status: "running"}); await publish(control);
+        expect(container.textContent).toContain("正在执行"); expect(container.textContent).not.toContain("正在整理较早的对话");
     });
-    it("keeps the home/null envelope explicit and rejects foreign rows even in a matching envelope", async () => {
+    it("keeps home identity explicit and filters every source by the requested topic in the same snapshot", async () => {
+        await db.chatMessages.bulkAdd([{id: "msgA", threadId: "A", role: "user", content: "owned", createdAt: timestamp},
+            {id: "msgB", threadId: "B", role: "user", content: "foreign", createdAt: timestamp}]);
+        await db.agentRuns.add(run("B"));
         const initial = await mountA();
-        await publish(initial[6], {forThreadId: "A", messages: [{id: "foreign", threadId: "B", role: "user", content: "foreign"}]});
-        await publish(initial[8], {forThreadId: "A", runs: [run("B")]});
-        expect(workspace().getAttribute("data-message-state")).toBe("empty"); expect(router.shouldBlock()).toBe(false);
+        const value = await query(initial[7]) as {threadId: string; messages: ChatMessage[]; runs: AgentRun[]};
+        expect(value.threadId).toBe("A"); expect(value.messages.map(row => row.id)).toEqual(["msgA"]); expect(value.runs).toEqual([]);
         await draw(undefined);
-        expect(await query(reads[10])).toEqual({forThreadId: null, messages: []});
-        expect(await query(reads[11])).toEqual({forThreadId: null, compactions: []});
-        expect(await query(reads[12])).toEqual({forThreadId: null, runs: []});
+        const home = await Promise.all(reads.slice(8).map(query));
+        const control = home.find(value => !!value && typeof value === "object" && "ready" in value);
+        expect(control).toMatchObject({hasMessages: false, runs: []});
+        expect(control && "threadId" in control ? control.threadId : undefined).toBeUndefined();
     });
 });
 
-it("running and parked owned runs do not install an execution-only departure blocker", async () => {
+it("running and parked saved runs do not install an execution-only departure blocker", async () => {
     await db.agentRuns.add(run("A", "waiting_approval", true));
     await draw("A"); for (const read of [...reads]) await publish(read);
-    expect(router.shouldBlock()).toBe(false);
-    expect(container.querySelector("[data-departure-confirmation]")).toBeNull();
-    await db.agentRuns.update("run-A", {status: "running"}); await publish(reads[8]);
-    expect(router.shouldBlock()).toBe(false);
+    expect(router.shouldBlock()).toBe(false); expect(container.querySelector("[data-departure-confirmation]")).toBeNull();
+    await db.agentRuns.update("run-A", {status: "running"}); await publish(reads[6]); expect(router.shouldBlock()).toBe(false);
 });

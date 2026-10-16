@@ -599,54 +599,24 @@
     color: var(--foreground);
 }
 
-.agent-chat-root .agent-topic-row-time {
-    flex: none;
-    padding-right: 10px;
-    color: var(--muted-foreground);
-    font-size: 12px;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-}
-
-.agent-chat-root .agent-topic-row-actions {
-    position: absolute;
-    right: 4px;
-    display: inline-flex;
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* Hover or keyboard focus swaps the age for the row actions. */
+.agent-chat-root .agent-topic-row-status { flex: none; display: inline-flex; align-items: center; gap: 5px; width: 27px; height: 24px; margin-right: 8px; position: relative; }
+.agent-chat-root .agent-topic-spinner { width: 14px; height: 14px; border: 1.5px solid transparent; border-radius: 50%; }
+.agent-chat-root .agent-topic-spinner.is-busy { border-color: rgb(255 255 255 / 25%); border-top-color: rgb(255 255 255 / 75%); animation: agent-topic-spin 900ms linear infinite; }
+.agent-chat-root .agent-topic-unread { width: 5px; height: 5px; border-radius: 50%; background: transparent; }
+.agent-chat-root .agent-topic-unread.is-unread { background: var(--foreground); }
+.agent-chat-root .agent-topic-unavailable { position: absolute; right: 4px; color: var(--muted-foreground); font-size: 11px; }
+.agent-chat-root .agent-topic-row-trailing { flex: none; position: relative; display: inline-flex; align-items: center; justify-content: flex-end; width: 58px; height: 100%; margin-right: 4px; }
+.agent-chat-root .agent-topic-row-time { color: var(--muted-foreground); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; padding-right: 6px; }
+.agent-chat-root .agent-topic-row-actions { position: absolute; inset: 0; display: inline-flex; align-items: center; justify-content: flex-end; opacity: 0; pointer-events: none; }
 .agent-chat-root .agent-topic-row:hover .agent-topic-row-time,
-.agent-chat-root .agent-topic-row:focus-within .agent-topic-row-time {
-    visibility: hidden;
-}
-
+.agent-chat-root .agent-topic-row:focus-within .agent-topic-row-time { visibility: hidden; }
 .agent-chat-root .agent-topic-row:hover .agent-topic-row-actions,
-.agent-chat-root .agent-topic-row:focus-within .agent-topic-row-actions {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.agent-chat-root .agent-topic-row:hover .agent-topic-row-title,
-.agent-chat-root .agent-topic-row:focus-within .agent-topic-row-title {
-    padding-right: 56px;
-}
-
+.agent-chat-root .agent-topic-row:focus-within .agent-topic-row-actions { opacity: 1; pointer-events: auto; }
+@keyframes agent-topic-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .agent-chat-root .agent-topic-spinner.is-busy { animation: none; } }
 @media (hover: none) {
-    .agent-chat-root .agent-topic-row-time {
-        display: none;
-    }
-
-    .agent-chat-root .agent-topic-row-actions {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .agent-chat-root .agent-topic-row-title {
-        padding-right: 56px;
-    }
+    .agent-chat-root .agent-topic-row-time { visibility: hidden; }
+    .agent-chat-root .agent-topic-row-actions { opacity: 1; pointer-events: auto; }
 }
 
 .agent-chat-root .agent-topic-row-action {

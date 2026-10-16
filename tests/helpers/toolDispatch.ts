@@ -1,3 +1,4 @@
+import {prepareRunActivityKey} from "@/features/agent/commands/threadActivity";
 import { db } from "@/platform/product/store";
 import { saveToolRound } from "@/features/agent/commands/agentTools";
 import type { AgentRun } from "@/features/agent/models/agent";
@@ -6,6 +7,7 @@ import type { AgentRun } from "@/features/agent/models/agent";
 export async function saveFixtureToolRound(...args: Parameters<typeof saveToolRound>) {
   const [runId,content,calls,details,output,publicOutput,store]=args;
   const owner=store ?? db;
+  const activity = args[7] ?? await prepareRunActivityKey(runId, owner);
   return owner.transaction("rw",owner.tables,async tx=> {
     const run = await tx.agentRuns.get(runId);
     if (run?.toolLoading) {
@@ -13,7 +15,7 @@ export async function saveFixtureToolRound(...args: Parameters<typeof saveToolRo
       const offeredTools = [...(run.offeredTools ?? []).filter((offer) => offer.step !== step), { step, names: calls.map((call) => call.function.name) }];
       await tx.agentRuns.update(run.id, { offeredTools });
     }
-    return saveToolRound(runId,content,calls,details,output,publicOutput,tx);
+    return saveToolRound(runId,content,calls,details,output,publicOutput,tx,activity);
   });
 }
 /** Focused tool lifecycle tests start after discovery; full discovery transport is tested separately. */

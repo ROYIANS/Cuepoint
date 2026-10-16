@@ -130,6 +130,8 @@ Wrong: reset busy on close, then let any old promise update shared form state. C
 
 Chat preview has one live subscription at ContextUsageTrigger and a complete input-identity gate. Its panel, ring and memory preview consume the same snapshot. Policy/memory management queries retain their own scope envelopes and current availability; old results/callbacks cannot publish in another thread. See [the D04 coherent-preview contract](./agent-context.md#d04-coherent-preview-snapshot-contract-2026-10-08).
 
+Asynchronous catalogue/import preparation happens before the actual observed readonly transaction, using `prepareAgentContextPreview`. The observed callback passes only its prepared matching input to `readPreparedAgentContextPreview`. Awaiting preparation inside a convenience helper called from `useProductQuery` still runs inside the original transaction and can close Dexie prematurely; adding a nested transaction or retry does not correct that boundary.
+
 Shot/beat text retention follows `state-management.md` D08. `useTextDraftRetention` keeps readable pending rows; synchronous status refs protect the input event and actual pending-ID state participates in memo invalidation. Existing debouncedDraft owns timers, baselines, retry and persistence. Avoid dummy revision dependencies or a second draft store.
 
 ## E04 SS09 precise library query scope and held-result identity (2026-10-09)

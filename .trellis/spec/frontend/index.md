@@ -45,6 +45,7 @@
 | [Agent Execution](./agent-execution.md) | Durable runs, ordered checkpoints, explicit retry and cross-tab recovery | Filled |
 | [Agent Execution Feedback](./agent-execution-feedback.md) | Invocation phases, immediate Stop acknowledgement and private receipt/checkpoint/DOM timing | Filled |
 | [Agent Topic Reads / Reading](./agent-thread-reading.md) | Owned topic loading/departure and local accessible return-to-latest | Filled |
+| [Agent Sidebar Activity / Read Revisions](./agent-thread-activity.md) | Atomic meaningful publication, separate report cursors, observed-only acknowledgement and semantic navigation | Filled |
 | [Agent Activity UI](./agent-activity-ui.md) | Chronological execution, persistent action reminders and turn navigation | Filled |
 | [Agent Write Evidence](./agent-write-evidence.md) | Atomic direct-write receipts, normalized results and bounded historical outcome display | Filled |
 | [Chat Performance](./chat-performance.md) | Agent transcript scroll + memo vs LobeHub virtua | Filled |

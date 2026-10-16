@@ -5,6 +5,7 @@ import {join} from "node:path";
 import {fileURLToPath} from "node:url";
 import {createServer} from "vite";
 import react from "@vitejs/plugin-react";
+import ts from "typescript";
 import tailwindcss from "@tailwindcss/vite";
 import {prepareNativeFixture} from "./native-fixture-ready.mjs";
 const {chromium} = await import(process.env.E11_PLAYWRIGHT_PATH ?? "playwright");
@@ -12,13 +13,35 @@ const cacheDir = await mkdtemp(join(tmpdir(), "e11-vite-"));
 const output = process.env.E11_EVIDENCE_DIR ?? await mkdtemp(join(tmpdir(), "e11-browser-"));
 const fixture = "/tests/fixtures/e11-background/";
 const server = await createServer({configFile: false, cacheDir, publicDir: fileURLToPath(new URL("../packages/distribution/public", import.meta.url)),
-    plugins: [{name: "e11-held-creation", enforce: "pre", transform(code, id) {
+    plugins: [{name: "e11-function-render-counts", enforce: "pre", transform(code, id) {
+        if (id.endsWith("/platform/product/queries.ts")) return code.replace("if (active) setState(previous => ({", "if (active) (globalThis as {__e11ReadError?: (value: string) => void}).__e11ReadError?.(queryRef.current.toString());\n                if (active) setState(previous => ({");
+        const names = id.endsWith("/app/layout/AppFrame.tsx") ? ["AppFrame"] :
+            id.endsWith("/agent/ui/AgentChatPage.tsx") ? ["AgentChatInner"] :
+            id.endsWith("/agent/ui/ChatWorkspace.tsx") ? ["ChatWorkspace"] :
+            id.endsWith("/agent/ui/FloatingComposer.tsx") ? ["FloatingComposer"] :
+            id.endsWith("/agent/ui/TopicSidebar.tsx") ? ["TopicListBody", "TopicRow"] : [];
+        if (!names.length) return;
+        const source = ts.createSourceFile(id, code, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+        const insertions = [];
+        const visit = node => {
+            if ((ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node)) && node.name && names.includes(node.name.text) && node.body) {
+                insertions.push({position: node.body.getStart(source) + 1, name: node.name.text});
+            }
+            ts.forEachChild(node, visit);
+        };
+        visit(source);
+        assert.equal(insertions.length, names.length, `Render counter discovery: ${id}`);
+        for (const {position, name} of insertions.sort((a, b) => b.position - a.position)) {
+            code = code.slice(0, position) + `\n    (globalThis as {__e11Render?: (name: string) => void}).__e11Render?.("${name}");` + code.slice(position);
+        }
+        return names.length ? code : undefined;
+    }}, {name: "e11-held-creation", enforce: "pre", transform(code, id) {
         if (!id.endsWith("/features/agent/commands/chat.ts")) return;
         return code.replace("    const db = store ?? productDb;", "    await (globalThis as {__e11BeforeCreate?: () => Promise<void>}).__e11BeforeCreate?.();\n    const db = store ?? productDb;");
     }}, react(), tailwindcss()], optimizeDeps: {holdUntilCrawlEnd: false, entries: [fileURLToPath(new URL(`..${fixture}index.html`, import.meta.url))]},
     resolve: {alias: {"@": fileURLToPath(new URL("../packages/studio/src", import.meta.url))}},
     server: {host: "127.0.0.1", port: 0, hmr: false, watch: {ignored: ["**/.trellis/**"]}}});
-const errors = [], checks = [];
+const errors = [], checks = [], measurements = {};
 let browser, page;
 try {
     await server.listen(); await prepareNativeFixture(server, `${fixture}harness.tsx`);
@@ -32,6 +55,41 @@ try {
     const composer = () => page.getByRole("textbox", {name: "消息内容", exact: true});
     const go = to => page.evaluate(to => window.e11.navigate(to), to);
     const test = async (name, run) => {await run(); assert.deepEqual(errors, []); assert.deepEqual(await page.evaluate(() => window.e11.errors), []); checks.push(name); console.log(`PASS ${name}`);};
+    const checkBusyGeometry = async () => {
+        const row = page.locator(`[data-thread-id="${ids.b}"]`);
+        await row.locator(".agent-topic-spinner.is-busy").waitFor({state: "visible"});
+        await row.locator(".agent-topic-unread.is-unread").waitFor({state: "visible"});
+        assert.notEqual(await row.locator(".agent-topic-spinner").evaluate(element => getComputedStyle(element).animationName), "none");
+        await page.emulateMedia({reducedMotion: "reduce"});
+        const geometry = () => row.evaluate(element => {
+            const rect = selector => {const value = element.querySelector(selector).getBoundingClientRect(); return {left: value.left, right: value.right, width: value.width};};
+            return {row: {left: element.getBoundingClientRect().left, right: element.getBoundingClientRect().right},
+                spinner: rect(".agent-topic-spinner"), dot: rect(".agent-topic-unread"), trailing: rect(".agent-topic-row-trailing"),
+                title: rect(".agent-topic-row-title"), time: rect("time"), actions: rect(".agent-topic-row-actions")};
+        });
+        const assertOrder = value => {assert.ok(value.spinner.left >= value.trailing.right, JSON.stringify(value));
+            assert.ok(value.dot.right <= value.spinner.left); assert.ok(value.title.right <= value.trailing.left);
+            assert.ok(value.spinner.right <= value.row.right); assert.ok(value.spinner.width >= 13);};
+        const before = await geometry(); assertOrder(before);
+        await row.hover(); const hovered = await geometry(); assertOrder(hovered); assert.equal(hovered.spinner.right, before.spinner.right);
+        await row.getByRole("button", {name: "重命名", exact: true}).focus();
+        const focused = await geometry(); assertOrder(focused); assert.equal(focused.spinner.right, before.spinner.right);
+        assert.equal(await row.locator(".agent-topic-spinner").evaluate(element => getComputedStyle(element).opacity), "1");
+        assert.equal(await row.locator(".agent-topic-unread").evaluate(element => getComputedStyle(element).opacity), "1");
+        await page.screenshot({path: join(output, "sidebar-wide.png")});
+        assert.equal(await row.locator(".agent-topic-spinner").evaluate(element => getComputedStyle(element).animationName), "none");
+        await page.setViewportSize({width: 650, height: 900});
+        const topicOpener = page.getByRole("button", {name: "展开模块导航", exact: true});
+        await topicOpener.click(); await row.waitFor({state: "visible"});
+        const narrow = await geometry(); assertOrder(narrow);
+        await row.getByRole("button", {name: "删除", exact: true}).focus();
+        assert.equal((await geometry()).spinner.right, narrow.spinner.right);
+        await page.screenshot({path: join(output, "sidebar-narrow.png")});
+        measurements.sidebarGeometry = {before, hovered, focused, narrow};
+        await page.keyboard.press("Escape"); await page.setViewportSize({width: 1440, height: 900});
+        await page.emulateMedia({reducedMotion: "no-preference"});
+        await composer().focus();
+    };
     await test("optimistic message paints before preparation; A original request stays live", async () => {
         await composer().fill("E11 payload A");
         await page.getByRole("button", {name: "发送", exact: true}).click();
@@ -53,6 +111,41 @@ try {
         assert.deepEqual(requests, [{aborted: false}, {aborted: false}]);
         await go(`/agent/${ids.a}`); assert.equal(await composer().inputValue(), "Unsent A draft");
         assert.equal(await page.getByRole("alertdialog").count(), 0);
+    });
+    await test("actual busy plus unread spinner is the fixed far-right glyph through wide/narrow hover and keyboard focus", checkBusyGeometry);
+    await test("A/B switching retains exact sidebar DOM and search while B transcript delivery is held", async () => {
+        await page.evaluate(() => {window.__e11Sidebar = document.querySelector(".agent-topic-sidebar"); window.__e11Rows = [...document.querySelectorAll(".agent-topic-row")];});
+        await page.getByRole("button", {name: "搜索", exact: true}).click();
+        await page.getByRole("searchbox", {name: "搜索话题标题", exact: true}).fill("E11");
+        await page.evaluate(id => window.e11.holdTranscript(id), ids.b);
+        await go(`/agent/${ids.b}`); await composer().waitFor();
+        assert.equal(await page.evaluate(() => document.querySelector(".agent-topic-sidebar") === window.__e11Sidebar), true);
+        assert.equal(await page.getByRole("searchbox", {name: "搜索话题标题", exact: true}).inputValue(), "E11");
+        assert.equal(await page.evaluate(() => window.__e11Rows.every(row => row.isConnected)), true);
+        assert.equal(await page.getByText(/Render warmup/).count(), 0);
+        await page.evaluate(() => window.e11.releaseTranscript());
+        await page.getByText(/B while detached/).first().waitFor();
+        await go(`/agent/${ids.a}`); await composer().waitFor();
+        assert.equal(await page.evaluate(() => document.querySelector(".agent-topic-sidebar") === window.__e11Sidebar), true);
+        await page.getByRole("button", {name: "关闭搜索", exact: true}).click();
+    });
+    await test("real streaming checkpoints and metrics change text without page/composer/sidebar function renders", async () => {
+        await page.evaluate(() => window.e11.emit(0, " Render warmup."));
+        await page.getByText(/Render warmup/).first().waitFor();
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        const before = await page.evaluate(() => ({...window.e11.renders}));
+        for (const name of ["AppFrame", "AgentChatInner", "ChatWorkspace", "FloatingComposer", "TopicListBody", "TopicRow"]) assert.ok(before[name] > 0, `actual function counter ${name}`);
+        for (let index = 1; index <= 4; index++) {
+            await page.evaluate(index => window.e11.emit(0, ` Checkpoint ${index}.`), index);
+            await page.getByText(new RegExp(`Checkpoint ${index}`)).first().waitFor();
+        }
+        await page.evaluate(threadId => window.e11.metrics(threadId), ids.a);
+        await page.waitForFunction(id => window.e11.db.agentRuns.where("threadId").equals(id).toArray().then(rows => rows.some(run => run.usage?.totalTokens === 30)), ids.a);
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        const after = await page.evaluate(() => ({...window.e11.renders}));
+        assert.deepEqual(after, before);
+        measurements.renderCounts = {before, after};
+        measurements.executionTimings = await page.evaluate(() => performance.getEntriesByType("measure").filter(entry => entry.name.includes("agent")).map(entry => ({name: entry.name, durationMs: entry.duration})));
     });
     await test("Stop A leaves B live and reattachment does not dispatch", async () => {
         await page.getByRole("button", {name: "停止", exact: true}).last().click();
@@ -107,6 +200,31 @@ try {
         await go("/settings"); assert.equal(await page.evaluate(() => window.e11.requests[3].aborted), false);
         await page.evaluate(() => window.e11.finish(3));
     });
+    await test("populated real transcript and mounted context gauge expose original send/request/receipt/DOM timings", async () => {
+        const history = await page.evaluate(() => window.e11.preparePopulatedThread());
+        await go(`/agent/${history.threadId}`); await composer().waitFor();
+        await page.getByRole("button", {name: "上下文明细", exact: true}).waitFor();
+        await page.getByText(/Previous creative discussion/).first().waitFor();
+        const baseline = await page.evaluate(() => ({requests: window.e11.requests.length, preflights: window.e11.preflightRequests(),
+            marks: performance.getEntriesByType("mark").filter(entry => entry.name.startsWith("cuepoint.agent.")).map(entry => entry.name)}));
+        await composer().fill("E11 populated timing request");
+        await page.getByRole("button", {name: "发送", exact: true}).click();
+        await page.waitForFunction(count => window.e11.requests.length === count + 1, baseline.requests);
+        await page.getByText(/Original live answer/).first().waitFor();
+        await page.waitForFunction(oldMarks => performance.getEntriesByType("mark").some(entry => entry.name.endsWith(".firstPublicCommitted") && !oldMarks.includes(entry.name)), baseline.marks);
+        measurements.populatedSend = await page.evaluate(({history, baseline}) => {
+            const marks = performance.getEntriesByType("mark").filter(entry => entry.name.startsWith("cuepoint.agent.") && !baseline.marks.includes(entry.name));
+            const at = ending => marks.find(entry => entry.name.endsWith(`.${ending}`))?.startTime;
+            const elapsed = (from, to) => at(from) === undefined || at(to) === undefined ? null : at(to) - at(from);
+            return {history, modelPreflightGets: window.e11.preflightRequests() - baseline.preflights,
+                submissionToRequestMs: elapsed("submitted", "requestInvoked"), requestToReceiptMs: elapsed("requestInvoked", "firstPublicReceived"),
+                receiptToCheckpointMs: elapsed("firstPublicReceived", "firstCheckpointConfirmed"), receiptToDomMs: elapsed("firstPublicReceived", "firstPublicCommitted"),
+                submissionToDomMs: elapsed("submitted", "firstPublicCommitted"), marks: marks.map(entry => ({name: entry.name, at: entry.startTime}))};
+        }, {history, baseline});
+        assert.equal(measurements.populatedSend.modelPreflightGets, 0);
+        assert.ok(measurements.populatedSend.submissionToDomMs !== null);
+        await page.evaluate(index => window.e11.finish(index), baseline.requests);
+    });
     await test("explicit Quit includes pending route:false editor overlays and cancel keeps admission open", async () => {
         await go("/manual-overlay"); await page.getByText("Retained local editor", {exact: true}).waitFor();
         await page.evaluate(() => window.e11.quit.emit("checking_drafts", "overlay-quit"));
@@ -152,11 +270,11 @@ try {
         assert.equal(await page.evaluate(() => window.e11.quit.admissionOpen()), false);
         assert.equal(await page.evaluate(() => window.e11.quit.actions.filter(action => action.kind === "drained").length), 1);
     });
-    await writeFile(join(output, "result.json"), JSON.stringify({status: "PASS", checks, errors, browser: browser.version(),
+    await writeFile(join(output, "result.json"), JSON.stringify({status: "PASS", checks, errors, measurements, browser: browser.version(),
         limits: "Actual routed Agent/Settings/Project UI, IndexedDB and generation runtime; controlled local HTTP only. Chromium fixture does not establish packaged/native hidden scheduling."}, null, 2));
     console.log(`E11 evidence: ${output}`);
 } catch (cause) {
     if (page) {await page.screenshot({path: join(output, "failure.png"), fullPage: true}); await writeFile(join(output, "failure.html"), await page.content());}
-    await writeFile(join(output, "result.json"), JSON.stringify({status: "FAIL", checks, errors, error: String(cause)}, null, 2));
+    await writeFile(join(output, "result.json"), JSON.stringify({status: "FAIL", checks, errors, error: String(cause), fixtureErrors: page ? await page.evaluate(() => ({errors: window.e11?.errors, readErrors: window.e11?.readErrors})).catch(() => []) : []}, null, 2));
     console.error(`E11 evidence: ${output}`); throw cause;
 } finally {await browser?.close(); await server.close(); await rm(cacheDir, {recursive: true, force: true});}

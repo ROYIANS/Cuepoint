@@ -140,14 +140,24 @@ export type ContextPreviewRead = Awaited<ReturnType<typeof readFacts>> | {
     message: string
 };
 
+/** Resolve catalog I/O before starting an observed ProductStore snapshot. */
+export async function prepareAgentContextPreview(input: ContextPreviewInput) {
+    await initModelCatalog();
+    return {identity: contextPreviewIdentity(input), vision: await resolveVisionCapability(input.model, input.providerId, input.metadata)};
+}
+export function readPreparedAgentContextPreview(input: ContextPreviewInput, prepared: Awaited<ReturnType<typeof prepareAgentContextPreview>>, store: ProductStore) {
+    const identity = contextPreviewIdentity(input);
+    if (prepared.identity !== identity) throw new Error("上下文准备范围已变化");
+    return readFacts(input, identity, prepared.vision, store);
+}
+
 /** Model catalog loading finishes before the final coherent IndexedDB read. */
 export async function readAgentContextPreview(input: ContextPreviewInput, store?: ProductStore): Promise<ContextPreviewRead> {
     const db = store ?? productDb;
     const identity = contextPreviewIdentity(input);
     try {
-        await initModelCatalog();
-        const vision = await resolveVisionCapability(input.model, input.providerId, input.metadata);
-        return await readFacts(input, identity, vision, db);
+        const prepared = await prepareAgentContextPreview(input);
+        return await readPreparedAgentContextPreview(input, prepared, db);
     } catch (error) {
         return {identity, status: "error", message: error instanceof Error ? error.message : "上下文暂时无法读取"};
     }

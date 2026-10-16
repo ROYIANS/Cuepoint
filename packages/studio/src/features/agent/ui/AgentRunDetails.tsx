@@ -124,7 +124,7 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
     const object = callObject(call);
     const soft = isValidationFailure(call, validationError);
     return <div className="agent-run-step" data-activity-call={call.id}>
-        <button type="button" className="agent-tool-call-toggle" aria-expanded={open} aria-controls={panelId}
+        <button type="button" className="agent-tool-call-toggle" data-agent-public="true" aria-expanded={open} aria-controls={panelId}
                 data-status={call.status} data-soft={soft ? "true" : undefined}
                 onClick={() => setOpen((value) => !value)}>
             <StepIcon status={call.status} soft={soft}/><span className="agent-tool-verb">{call.title}{object &&
@@ -151,7 +151,7 @@ function ToolCallRow({run, call, busy, readOnly, unknown, executing, onAction}: 
                 {musicReview ? <MusicGenerationReview key={call.id} call={call} busy={busy} active={activeMusicReview}
                                                       onAction={onAction}/> : reviewGeneration ?
                     <GenerationReview call={call} busy={busy} onAction={onAction}/> : preview &&
-                    <div className="agent-change-preview">
+                    <div className="agent-change-preview" data-agent-public="true">
                         <strong>{preview.summary}</strong>
                         {preview.changes.length > 0 &&
                             <ul>{preview.changes.map((change, index) => <li key={index}>{change}</li>)}</ul>}
@@ -179,7 +179,7 @@ function MergedCalls({calls, ...props}: RowProps & { calls: AgentToolCall[] }) {
         if (request?.runId === props.run.id && request.callId && calls.some((call) => call.id === request.callId)) setOpen(true);
     }, [request, props.run.id, calls]);
     return <div className="agent-tool-merged">
-        <button type="button" className="agent-tool-call-toggle" aria-expanded={open} aria-controls={panelId}
+        <button type="button" className="agent-tool-call-toggle" data-agent-public="true" aria-expanded={open} aria-controls={panelId}
                 onClick={() => setOpen((value) => !value)}>
             <Check size={15} className="text-green-500" aria-hidden/><span
             className="agent-tool-verb">{calls[0].title} · {calls.length} 项</span><ChevronDown
@@ -284,8 +284,8 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
         <div id={panelId} className="agent-execution-timeline" hidden={hasProcess && !expanded}>
             {(expanded || hasExpanded) && <>
                 {activity.map((item) => item.kind === "text"
-                    ? <Markdown key={item.id} {...MARKDOWN_PROPS}
-                                className="agent-activity-narrative">{item.content}</Markdown>
+                    ? <div key={item.id} data-agent-public="true"><Markdown {...MARKDOWN_PROPS}
+                                className="agent-activity-narrative">{item.content}</Markdown></div>
                     : item.kind === "reasoning"
                         ? <ThinkingPanel key={item.id} reasoning={item.content} active={false}
                                          durationMs={item.durationMs}/>
@@ -296,7 +296,7 @@ export function AgentRunDetails({run, message, calls, busy, readOnly, onAction}:
                                                     durationMs={message.reasoningDurationMs}/>}
                 {currentContent &&
                     <PublicOutputCommit output={{runId: run.id, assistantMessageId: message.id}} text={currentContent}>
-                        <Markdown {...MARKDOWN_PROPS} className="agent-activity-narrative">{currentContent}</Markdown></PublicOutputCommit>}
+                        <div data-agent-public="true"><Markdown {...MARKDOWN_PROPS} className="agent-activity-narrative">{currentContent}</Markdown></div></PublicOutputCommit>}
                 {run.plan && run.plan.length > 0 && <details className="agent-activity-plan">
                     <summary>执行计划
                         · {run.plan.filter((step) => step.status === "completed").length}/{run.plan.length}<ChevronDown

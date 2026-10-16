@@ -134,6 +134,7 @@ Maintain this contract when changing the chat context preview, usage ring/toolti
 ### 2. Signatures / Owners
 
 - `features/agent/commands/agentContextPreview.ts` owns `ContextPreviewInput`, `contextPreviewIdentity(input)`, `contextPreviewTables()` and `readAgentContextPreview(input): Promise<ContextPreviewRead>`.
+- Observed callers use `prepareAgentContextPreview(input)` before opening their readonly snapshot, then `readPreparedAgentContextPreview(input, prepared, tx)` with that exact prepared identity inside it. The convenience `readAgentContextPreview` owns preparation plus a new root read; do not call it from an existing observed StoreTx.
 - The input contains thread/project/interaction mode, normalized draft, attachments, model/provider and model metadata. Its identity includes those exact request-relevant values; credentials and retained parent-query results are excluded.
 - `ContextUsageTrigger` owns one `useContextUsage`/live subscription and one display assembly. Ring, tooltip, `ContextUsagePanel` and preview memory details consume that same result. The panel receives a snapshot rather than querying/planning independently.
 - `ContextParameters` retains its own lightweight policy-source query and existing field-intent write/reset/default-copy APIs. `MemoryContextDetails` separately reads current management availability/exclusions, without recomputing preview selection/budget. `MemoryRunHistory` supplies the frozen saved selection and existing readOnly contract.
@@ -141,6 +142,7 @@ Maintain this contract when changing the chat context preview, usage ring/toolti
 ### 3. Contracts / Invariants
 
 - Resolve model-catalog vision preparation outside the database transaction. Durable fact reading uses one outer read-only transaction over the explicit deduplicated preview table list, including every nested task/project/memory/reference/IP/audio reader store. Do not use `db.tables` or add out-of-transaction durable reads to the preview.
+- Passing an existing readonly StoreTx to a helper that internally awaits catalogue initialization does not move that initialization outside the transaction. Prepare before registering/entering the actual observation callback; keep the prepared identity gate when thread/draft/model inputs change. A deferred catalogue import must not cause Dexie `PrematureCommitError` or a replacement workspace.
 - Validate agent/thread/project existence and requested binding. Missing, unavailable/foreign scope and read failure return explicit discriminated states, never ready defaults or fake empty selections. Loaded empty history/memory/reference data is a legitimate ready result. Unknown capacity remains unknown.
 - The subscription's ready/error/missing/empty result is usable only for the current complete identity. A result retained from a previous thread, project, provider/model, metadata, draft or attachments cannot expose its percentage, budget, coverage or enabled memory action in a new scope.
 - Parent transcript/status queries keep their actual consumers. They are not preview snapshot inputs; temporarily retained or empty parent data cannot be treated as complete durable context.

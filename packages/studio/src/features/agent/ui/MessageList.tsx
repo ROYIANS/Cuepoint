@@ -1,3 +1,4 @@
+import {useObservedReadProbe} from "./threadReadVisibility";
 import {AgentMarkdown as Markdown} from "./AgentMarkdown";
 import {ReferenceMessageSources} from "./ReferenceAttachments";
 import {ModelIcon} from "./ModelIcons";
@@ -6,7 +7,6 @@ import {formatTokenCount} from "../runtime/contextUsage";
 import {AgentRunDetails} from "./AgentRunDetails";
 import type {RunAction} from "../models/chatRunAction";
 import type {AgentRun, AgentToolCall} from "../models/agent";
-import {useProductQuery} from "../../../platform/product/queries";
 import {isPersistedToolRound} from "../runtime/runPresentation";
 import {useAgentActivityNavigation} from "./AgentActivityNavigation";
 import {Button} from "../../../ui/button";
@@ -44,10 +44,12 @@ const MARKDOWN_PROPS = {variant: "chat"} as const;
  * Stick with `scrollTop` on this element (not `scrollIntoView` smooth).
  * History rows are memoized so Dexie liveQuery ticks only paint the streaming item.
  */
-export function MessageList({threadId, messages, runs, retryableRunId, onRetryRun, busy, readOnly, onRunAction, submissions = [], onSubmissionAction, onSubmissionObserved}: {
+export function MessageList({threadId, messages, runs, calls = EMPTY_CALLS, observedRevision = 0, retryableRunId, onRetryRun, busy, readOnly, onRunAction, submissions = [], onSubmissionAction, onSubmissionObserved}: {
     threadId: string | undefined;
     messages: ChatMessage[] | undefined;
     runs?: AgentRun[];
+    calls?: AgentToolCall[];
+    observedRevision?: number;
     busy: boolean;
     readOnly?: boolean;
     onRunAction: (runId: string, action: RunAction, callId?: string) => void;
@@ -62,6 +64,8 @@ export function MessageList({threadId, messages, runs, retryableRunId, onRetryRu
     const contentRef = useRef<HTMLDivElement | null>(null);
     const stickToBottom = useRef(true);
     const manuallyNavigated = useRef(false);
+    const observedSurface = useRef<HTMLDivElement | null>(null);
+    useObservedReadProbe({threadId, revision: observedRevision, surface: observedSurface, viewport: listRef, following: stickToBottom});
     const [followingPaused, setFollowingPaused] = useState(false);
     const setFollowing = useCallback((following: boolean) => {
         if (stickToBottom.current === following) return;
@@ -157,11 +161,12 @@ export function MessageList({threadId, messages, runs, retryableRunId, onRetryRu
                             const unresolved = submissions.find(attempt => (attempt.phase === "uncertain" || attempt.phase === "checking" || attempt.recoveryRequired) &&
                                 message.role === "user" && message.id === attempt.admission.userMessageId && message.threadId === attempt.threadId);
                             return (
-                                <Fragment key={message.id}><AgentChatMessageItem message={message}
-                                                      run={runs?.find((run) => run.id === message.runId)} busy={busy}
+                                <Fragment key={message.id}><div ref={message.role === "assistant" && message.publicRevision === observedRevision && observedRevision > 0 ? observedSurface : undefined}
+                                    data-public-revision={message.publicRevision}><AgentChatMessageItem message={message}
+                                                      run={runs?.find((run) => run.id === message.runId)} calls={calls.filter(call => call.runId === message.runId)} busy={busy}
                                                       readOnly={readOnly} onRunAction={onRunAction}
                                                       retryable={Boolean(message.runId && message.runId === retryableRunId)}
-                                                      onRetryRun={onRetryRun}/>{unresolved && <SubmissionStatus attempt={unresolved} busy={busy}
+                                                      onRetryRun={onRetryRun}/></div>{unresolved && <SubmissionStatus attempt={unresolved} busy={busy}
                                     onAction={onSubmissionAction ?? (() => undefined)}/>}</Fragment>
                             );
                         })
@@ -181,6 +186,7 @@ const AgentChatMessageItem = memo(
     function AgentChatMessageItem({
                                       message,
                                       run,
+                                      calls,
                                       busy,
                                       readOnly,
                                       onRunAction,
@@ -189,13 +195,13 @@ const AgentChatMessageItem = memo(
                                   }: {
         message: ChatMessage;
         run?: AgentRun;
+        calls: AgentToolCall[];
         busy: boolean;
         readOnly?: boolean;
         onRunAction: (runId: string, action: RunAction, callId?: string) => void;
         retryable: boolean;
         onRetryRun: (id: string) => void;
     }) {
-        const calls = useProductQuery((db) => run ? db.agentToolCalls.where("runId").equals(run.id).toArray() : Promise.resolve(EMPTY_CALLS), [run?.id]) ?? EMPTY_CALLS;
         const isUser = message.role === "user";
         const processOwnsContent = !isUser && !!run && (run.status === "running" || isPersistedToolRound(run, message, calls));
         const reasoningText = message.reasoning?.trim() ?? "";
@@ -235,7 +241,7 @@ const AgentChatMessageItem = memo(
                                                         durationMs={message.reasoningDurationMs}/>}
                 {showMatrix && <ThinkingMatrix/>}
                 {text && (run ? <PublicOutputCommit output={{runId: run.id, assistantMessageId: message.id}} text={text}>
-                    <Markdown {...MARKDOWN_PROPS}>{text}</Markdown></PublicOutputCommit> : <Markdown {...MARKDOWN_PROPS}>{text}</Markdown>)}
+                    <div data-agent-public="true"><Markdown {...MARKDOWN_PROPS}>{text}</Markdown></div></PublicOutputCommit> : <div data-agent-public="true"><Markdown {...MARKDOWN_PROPS}>{text}</Markdown></div>)}
                 <div className="agent-message-footer">
                     <ReferenceMessageSources run={run} content={processOwnsContent ? "" : message.content}/>
                     <div className="agent-message-meta">
@@ -254,7 +260,7 @@ const AgentChatMessageItem = memo(
                         </span>
                     </div>
                     {(statusLine || (retryable && message.runId)) && <div className="agent-message-status">
-                        {statusLine && <span role="status"
+                        {statusLine && <span data-agent-public="true" role="status"
                                              className={statusLine.tone === "error" ? "agent-message-error" : undefined}>{statusLine.text}</span>}
                         {retryable && message.runId && <Button size="sm" variant="outline"
                                                                onClick={() => onRetryRun(message.runId!)}>重新生成</Button>}
@@ -264,6 +270,8 @@ const AgentChatMessageItem = memo(
         );
     },
     (prev, next) =>
+        JSON.stringify(prev.calls) === JSON.stringify(next.calls) &&
+        prev.message.publicRevision === next.message.publicRevision &&
         prev.run?.id === next.run?.id &&
         prev.run?.updatedAt === next.run?.updatedAt &&
         prev.run?.status === next.run?.status &&

@@ -1,3 +1,5 @@
+import {acknowledgeThreadRead, acknowledgeAgentReportRead, prepareThreadActivityKey, readThreadActivity} from "@/features/agent/commands/threadActivity";
+import {finishAgentRun, checkpointAgentRun} from "@/features/agent/commands/agentRuns";
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {db} from '@/platform/product/store';
 import type {McpHostServices, McpInvocationOutcome} from '@/platform/runtime/mcp';
@@ -5,7 +7,7 @@ import {McpHostError} from '@/platform/runtime/mcpErrors';
 import {UnknownCommitError} from '@/platform/storage/errors';
 import {createChatThread} from '@/features/agent/commands/chat';
 import {beginAgentRun} from '@/features/agent/commands/agentRuns';
-import {transitionToolCall} from '@/features/agent/commands/agentTools';
+import {transitionToolCall, cancelAgentRun} from '@/features/agent/commands/agentTools';
 import {deleteChatThread} from '@/features/agent/commands/lifecycle';
 import {readAgentJobPage, clearAgentJobResult, recoverAgentJobs} from '@/features/agent/commands/agentJobs';
 import {reconcileOriginalMcpInvocation, canReconcileOriginalMcpInvocation} from '@/features/agent/mcp/runtime/executionOwner';
@@ -110,6 +112,35 @@ describe('MCP execution and finite retained original result owner', () => {
         expect(await f.tool.execute(f.args, f.context)).toMatchObject({status: 'completed', jobId: job.id});
         expect(f.host.invoke).toHaveBeenCalledTimes(1);
         expect(await readAgentJobPage(f.reader, job.id)).toMatchObject({available: true, text: expect.stringContaining('verified late original')});
+    });
+    it('keeps a late historical original report unread independently of an acknowledged newer tail', async () => {
+        const f = await fixture();
+        vi.spyOn(f.host, 'invoke').mockImplementation(async input => ({status: 'unknown', operationId: input.operationId, code: 'reply_lost'}));
+        await expect(f.tool.execute(f.args, f.context)).rejects.toBeInstanceOf(ToolPendingError);
+        const job = (await db.agentJobs.where('callId').equals(f.call.id).first())!;
+        await finishAgentRun(f.run.id, 'interrupted');
+        await cancelAgentRun(f.run.id);
+        // Preserve the exact historical original owner, with a newer ordinary
+        // turn visible after the user ends the interrupted run. No second
+        // original MCP invocation is dispatched.
+        const next = await beginAgentRun({threadId: f.thread.id, connector, model: 'fixture', content: 'newer turn'});
+        await checkpointAgentRun(next.id, 1, {content: 'newer tail'});
+        const identity = prepareThreadActivityKey(f.thread.id);
+        const read = () => db.transaction('r', [db.deviceSettings], tx => readThreadActivity(identity, tx));
+        const before = (await read())!;
+        await acknowledgeThreadRead({threadId: f.thread.id, observedRevision: before.publicRevision});
+        vi.spyOn(f.host, 'invocationStatus').mockImplementation(async input => completed(input.operationId, 'late original historical report'));
+        expect(await f.tool.execute(f.args, f.context)).toMatchObject({status: 'completed', jobId: job.id});
+        const late = (await read())!, saved = (await db.agentJobs.get(job.id))!;
+        expect(late.publicRevision).toBe(before.publicRevision);
+        expect(late.readRevision).toBe(before.publicRevision);
+        expect(late.reports.find(report => report.jobId === job.id)).toMatchObject({publicRevision: saved.revision, readRevision: 0});
+        // Reading exactly the previous unknown report cannot clear its newer result.
+        await acknowledgeAgentReportRead({threadId: f.thread.id, jobId: job.id, observedRevision: job.revision});
+        expect((await read())!.reports[0]).toMatchObject({publicRevision: saved.revision, readRevision: job.revision});
+        await acknowledgeAgentReportRead({threadId: f.thread.id, jobId: job.id, observedRevision: saved.revision});
+        expect((await read())!.reports[0].readRevision).toBe(saved.revision);
+        expect(f.host.invoke).toHaveBeenCalledTimes(1);
     });
     it('keeps unknown publication ACK loss unresolved and reads back only the already committed descriptor', async () => {
         const f = await fixture();

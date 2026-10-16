@@ -6,7 +6,7 @@ import {MemoryContextDetails} from "@/features/agent/ui/MemoryContextDetails";
 
 const host = vi.hoisted(() => ({result: undefined as unknown, queries: [] as Array<() => Promise<unknown>>}));
 vi.mock("react", async () => ({...await vi.importActual<typeof import("react")>("react"),
-    useMemo: (compute: () => unknown) => compute(), useSyncExternalStore: (_subscribe: unknown, getSnapshot: () => unknown) => getSnapshot(), useState: (initial: unknown) => [initial, vi.fn()],
+    useEffect: () => {}, useMemo: (compute: () => unknown) => compute(), useSyncExternalStore: (_subscribe: unknown, getSnapshot: () => unknown) => getSnapshot(), useState: (initial: unknown) => [initial, vi.fn()],
 }));
 vi.mock("@/platform/product/queries", () => ({useProductQuery: (query: (tx: typeof db) => Promise<unknown>) => {
     host.queries.push(() => query(db)); return host.result;

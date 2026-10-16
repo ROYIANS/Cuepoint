@@ -59,7 +59,7 @@ export function ThinkingPanel({
                 />
             </button>
             {open ? (
-                <div id={panelId} ref={contentRef} className="agent-thinking-content">
+                <div id={panelId} ref={contentRef} data-agent-public="true" className="agent-thinking-content">
                     <Markdown {...THINKING_MARKDOWN_PROPS} className="agent-thinking-body">
                         {reasoning}
                     </Markdown>

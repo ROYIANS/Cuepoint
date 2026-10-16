@@ -1,3 +1,4 @@
+import {prepareThreadActivityKey} from "./threadActivity";
 import {nowIso} from "../../../platform/identity";
 import type {ProductStore} from "../../../platform/storage/types";
 import type {Id} from "../../../platform/identity";
@@ -8,6 +9,7 @@ import {releaseInstalledSkills} from "../skills/commands/retention";
 
 export async function deleteChatThread(id: Id, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
+    const activity = prepareThreadActivityKey(id);
     await db.transaction("rw", [...PRODUCTION_TABLES, db.deviceSettings, db.chatThreads, db.chatMessages, db.agentRuns, db.agentToolCalls, db.agentJobs, db.agentJobResultChunks, db.agentTasks, db.contextCompactions, db.agentTaskRecords, db.agentTaskRecordVersions, db.agentTaskWrapups, db.agentTaskWrapupVersions], async (db) => {
         for (const job of await db.agentJobs.where("threadId").equals(id).toArray()) await db.agentJobResultChunks.where("jobId").equals(job.id).delete();
         await db.agentJobs.where("threadId").equals(id).delete();
@@ -47,6 +49,7 @@ export async function deleteChatThread(id: Id, store?: ProductStore): Promise<vo
         await releaseInstalledSkills(db, deletedRuns.flatMap(run => run.installedSkills ? [run.installedSkills] : []));
         await db.agentRuns.where("threadId").equals(id).delete();
         await db.chatMessages.where("threadId").equals(id).delete();
+        await db.deviceSettings.delete(activity.key);
         await db.chatThreads.delete(id);
         await deleteMediaIfOrphans([...jobMedia], db);
     });

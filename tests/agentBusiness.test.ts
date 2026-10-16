@@ -11,7 +11,6 @@ import * as repoMedia from "@/features/library/commands/media";
 import * as repoShots from "@/features/video/commands/shots";
 import * as repoEpisodes from "@/features/video/commands/episodes";
 import * as repoAssetReuse from "@/features/library/commands/assetReuse";
-import * as projectLifecycle from "@/features/projects/commands/lifecycle";
 import * as chatLifecycle from "@/features/agent/commands/lifecycle";
 import { AtomicToolRollbackError } from "@/features/agent/commands/agentTools";
 import { beginAgentRun } from "@/features/agent/commands/agentRuns";
@@ -25,10 +24,11 @@ import { assembleSkills } from "@/features/agent/runtime/skills";
 import { createToolLoading, MAX_LOADED_TOOLS } from "@/features/agent/runtime/toolLoading";
 import { readWriteReceipt } from "@/features/agent/runtime/writeReceipt";
 import * as receipts from "@/features/agent/runtime/writeReceipt";
+import {parseGenerationSlot} from "@/features/library/models/slot";
 const BUSINESS_TOOLS = registeredTools(BUSINESS_TOOLS_DEFINITIONS);
 
 
-const connector: ConnectorConfig = { id: "fixture", definitionId: "openai-compatible", baseUrl: "https://fixture.invalid/v1", apiKey: "not-real", updatedAt: "2026-09-19" };
+const connector: ConnectorConfig = { id: "fixture", definitionId: "openai-compatible", protocol: "openai-compatible", baseUrl: "https://fixture.invalid/v1", apiKey: "not-real", updatedAt: "2026-09-19" };
 function tool(name: string) { const result = BUSINESS_TOOLS.find((item) => item.name === name); if (!result) throw new Error(`Missing ${name}`); return result; }
 async function begin() { const thread = await repoChat.createChatThread(); const initial = await beginAgentRun({ threadId: thread.id, connector, model: "fixture-model", content: "维护创作数据" }); const run = { ...initial, permissionMode: "full" as const, toolLoading: undefined }; await db.agentRuns.put(run); return run; }
 async function prepare(name: string, raw: unknown, run?: AgentRun) {
@@ -350,13 +350,16 @@ describe("complete manual creative workflow through real repository tools", () =
     const copy = await execute("asset_copy_from_studio", { kind, sourceId: source.id, ownerId });
     expect(copy.id).not.toBe(source.id);
     const row = await db.table(kind === "character" ? "characters" : `${kind}s`).get(String(copy.id));
-    expect(row.slots[slot].result.mediaId).not.toBe("studio-image");
-    expect((await db.media.get(row.slots[slot].result.mediaId))?.projectId).toBe(ownerId);
+    if (!row) throw new Error("Missing copied asset");
+    const mediaId = parseGenerationSlot(Reflect.get(row.slots, slot)).result?.mediaId;
+    expect(mediaId).not.toBe("studio-image");
+    if (!mediaId) throw new Error("Missing copied media");
+    expect((await db.media.get(mediaId))?.projectId).toBe(ownerId);
     await execute(`${kind}_update`, { ownerId, id: copy.id, patch: { notes: "仅项目修改" } });
-    expect((await db.table(kind === "character" ? "characters" : `${kind}s`).get(String(source.id))).notes).toBe("原始设定");
+    expect((await db.table(kind === "character" ? "characters" : `${kind}s`).get(String(source.id)))?.notes).toBe("原始设定");
     await expect(execute("asset_copy_from_studio", { kind, sourceId: source.id, ownerId })).rejects.toThrow("添加");
     await execute(`${kind}_delete`, { ownerId: "studio", id: source.id });
-    expect(await db.media.get(row.slots[slot].result.mediaId)).toBeDefined();
+    expect(await db.media.get(mediaId)).toBeDefined();
   });
 });
 

@@ -5639,10 +5639,13 @@
       "target": "packages/studio/src/features/projects/commands/lifecycle.ts",
       "owner": "features/projects",
       "public": false,
-      "publicTypes": [],
+      "publicTypes": [
+        "ProjectReportDeletion"
+      ],
       "publicSymbols": [
         "deleteProject",
-        "setProjectArchived"
+        "setProjectArchived",
+        "prepareProjectReportDeletion"
       ]
     },
     {
@@ -6605,6 +6608,61 @@
       "file": "packages/studio/src/app/lifecycle/desktopApplication.ts",
       "target": "packages/studio/src/app/lifecycle/desktopApplication.ts",
       "owner": "app",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/commands/threadActivity.ts",
+      "file": "packages/studio/src/features/agent/commands/threadActivity.ts",
+      "target": "packages/studio/src/features/agent/commands/threadActivity.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "prepareThreadActivityKey",
+        "prepareRunActivityKey",
+        "clearAgentReportActivity"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/agent/models/threadActivity.ts",
+      "file": "packages/studio/src/features/agent/models/threadActivity.ts",
+      "target": "packages/studio/src/features/agent/models/threadActivity.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": [
+        "ThreadActivityIdentity"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/agent/queries/threadActivity.ts",
+      "file": "packages/studio/src/features/agent/queries/threadActivity.ts",
+      "target": "packages/studio/src/features/agent/queries/threadActivity.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/queries/threadReading.ts",
+      "file": "packages/studio/src/features/agent/queries/threadReading.ts",
+      "target": "packages/studio/src/features/agent/queries/threadReading.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/ThreadTranscript.tsx",
+      "file": "packages/studio/src/features/agent/ui/ThreadTranscript.tsx",
+      "target": "packages/studio/src/features/agent/ui/ThreadTranscript.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/threadReadVisibility.ts",
+      "file": "packages/studio/src/features/agent/ui/threadReadVisibility.ts",
+      "target": "packages/studio/src/features/agent/ui/threadReadVisibility.ts",
+      "owner": "features/agent",
       "public": false,
       "publicTypes": []
     }

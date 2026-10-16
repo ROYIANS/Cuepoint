@@ -60,7 +60,7 @@
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E11 Stage 3 reviewed: Studio313/native12, actual macOS370429ms hidden progress and activation passed. Commit then implement Stage 4 sidebar running/unread and read publication. Full/installed acceptance stays epic batch.",
+    "nextAction": "E11 all four source stages reviewed; final stage commit/source closure underway. Sidebar flash and completed-background reentry crash fixed with actual regressions. E12 is the next planning candidate; full/installed acceptance stays epic batch.",
     "carriedAcceptance": {
       "E09": {
         "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",
@@ -89,14 +89,16 @@
       },
       "E11": {
         "record": "../10-15-agent-background-host/task.json",
-        "state": "in-progress-source-stages",
+        "state": "pending-epic-batch",
         "items": [
           "full formal quality/regression/whole-app builds and affected TSX aggregate discovery",
           "isolated emitted/declaration/offline packed consumer if applicable",
           "actual installed macOS and Windows hidden progress, tray/Dock reopen, simultaneous launch and Quit",
           "Windows WebView2/Job Object/process/session cleanup and signed macOS native permission flows",
           "actual final linked and installer footprint; no runtime binary is planned"
-        ]
+        ],
+        "sourceEvidence": "Four independently reviewed source stages; Stage4 integrated40/524 plus separate finaldelta4/82, actual Chromium13, typed100/100 and architecture742/0/0. Stage3 native12 and actual macOS hidden370429ms same-session activation/one original tool effect. Source closure does not establish installed acceptance.",
+        "observedProbeAnomaly": "Earlier if5hwj attempt exited0 at hidden205s; cause unproven, failed evidence retained. Final nR0cpc passed but does not establish the earlier cause; inspect during installed lifecycle acceptance."
       }
     }
   }

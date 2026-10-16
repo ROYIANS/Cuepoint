@@ -15,7 +15,7 @@ import { BUILTIN_TOOLS } from "@/features/agent/runtime/tools";
 import type { AgentPlanItem, AgentResponseItem, AgentRun, AgentToolCall, AgentWireToolCall } from "@/features/agent/models/agent";
 import type {ConnectorConfig} from "@/features/settings/models/connector";
 
-const connector: ConnectorConfig = { id: "local", definitionId: "openai-compatible", baseUrl: "https://model.test/v1", apiKey: "test-secret", updatedAt: "2026-09-22" };
+const connector: ConnectorConfig = {protocol: "openai-compatible", id: "local", definitionId: "openai-compatible", baseUrl: "https://model.test/v1", apiKey: "test-secret", updatedAt: "2026-09-22" };
 const plan: AgentPlanItem[] = [{ id: "create", title: "创建项目", status: "in_progress" }];
 const candidate = { content: "下一步我会创建项目。", reasoning: "计划尚未完成", reasoningDurationMs: 12 };
 const messageOutput: AgentResponseItem[] = [
@@ -97,7 +97,7 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
   it.each(["no plan", "inherited plan", "conversation", "empty tools"])("checks only text-only replies with an unfinished plan for %s; plain Q&A, conversation and empty tools make exactly one request", async kind => {
     const run = await begin("chat-completions", { ...(kind === "inherited plan" ? { plan } : {}), ...(kind === "conversation" ? { interactionMode: "conversation", plan } : {}), ...(kind === "empty tools" ? { enabledToolNames: [], plan } : {}) });
     let count = 0;
-    const fetchImpl = vi.fn<typeof fetch>(async () => reply(run.protocol, ++count && "下一步将开始，先说明建议。"));
+    const fetchImpl = vi.fn<typeof fetch>(async () => reply(run.protocol, (++count, "下一步将开始，先说明建议。")));
     await executeChatRun(run, connector.apiKey, new AbortController(), fetchImpl);
     const eligible = kind === "inherited plan";
     expect(fetchImpl).toHaveBeenCalledTimes(eligible ? 2 : 1);
@@ -165,7 +165,7 @@ describe("bounded unfinished-plan finishing checkpoint", () => {
     expect(fetchImpl).toHaveBeenCalledOnce();
     db.close(); await db.open();
     let resumedRequests = 0;
-    const resumeFetch = vi.fn<typeof fetch>(async () => reply(protocol, ++resumedRequests && "需要你补充具体内容。"));
+    const resumeFetch = vi.fn<typeof fetch>(async () => reply(protocol, (++resumedRequests, "需要你补充具体内容。")));
     await resumeChatRun(f.run.id, connector.apiKey, new AbortController(), resumeFetch);
     const saved = (await db.agentRuns.get(f.run.id))!;
     expect(saved.finishingCheck).toEqual(stopped.finishingCheck);

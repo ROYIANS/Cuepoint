@@ -1,3 +1,5 @@
+import type {ThreadActivityIdentity} from "../models/threadActivity";
+import {prepareThreadActivityKey, prepareRunActivityKey, publishAssistantActivity} from "./threadActivity";
 import type {ProductStore} from "../../../platform/storage/types";
 import {mcpRuntimeOwner} from "../mcp/runtime/owner";
 import {assertMcpSnapshotCurrent} from "../mcp/runtime/surface";
@@ -73,6 +75,7 @@ export async function beginAgentRun(input: {
     modelMetadata?: ChatModelMetadata;
 }, store?: ProductStore): Promise<AgentRun> {
     const db = store ?? productDb;
+    prepareThreadActivityKey(input.threadId);
     const identity = connectorRunIdentity(input.connector);
     if (!input.model.trim() || !input.connector.apiKey.trim()) throw new Error("请选择模型并配置 API Key");
     // Capture before catalog preparation so a caller cannot replace IDs while begin awaits.
@@ -240,35 +243,41 @@ export async function beginAgentRun(input: {
     });
 }
 
-export async function checkpointAgentRun(runId: string, sequence: number, output: AgentRunOutput, store?: ProductStore): Promise<boolean> {
+export async function checkpointAgentRun(runId: string, sequence: number, output: AgentRunOutput, store?: ProductStore, preparedActivity?: ThreadActivityIdentity): Promise<boolean> {
     const db = store ?? productDb;
-    return db.transaction("rw", [db.agentRuns, db.chatMessages].flat(), async (db) => {
+    const activity = preparedActivity ?? await prepareRunActivityKey(runId, db);
+    return db.transaction("rw", [db.agentRuns, db.chatMessages, db.chatThreads, db.deviceSettings], async (db) => {
         const run = await db.agentRuns.get(runId);
         if (!run) throw new Error("执行已删除");
         if (run.status !== "running" || sequence <= run.checkpoint) return false;
         const message = await db.chatMessages.get(run.assistantMessageId);
         if (!message || message.runId !== run.id) throw new Error("执行消息不存在");
+        const reasoning = Object.hasOwn(output, "reasoning") ? output.reasoning : message.reasoning;
+        const changed = output.content !== message.content || (reasoning ?? "") !== (message.reasoning ?? "");
         await db.chatMessages.update(message.id, {...output});
+        if (changed && (output.content || reasoning) && activity) await publishAssistantActivity(activity, run, db);
         await db.agentRuns.update(run.id, {checkpoint: sequence, updatedAt: nowIso()});
         return true;
     });
 }
 
-export async function finishAgentRun(runId: string, status: Exclude<AgentRunStatus, "running" | "waiting_approval">, output?: AgentRunOutput, error?: string, finishReason?: string, store?: ProductStore): Promise<void> {
+export async function finishAgentRun(runId: string, status: Exclude<AgentRunStatus, "running" | "waiting_approval">, output?: AgentRunOutput, error?: string, finishReason?: string, store?: ProductStore, preparedActivity?: ThreadActivityIdentity): Promise<void> {
     const db = store ?? productDb;
-    // Thin wrapper: one terminal writer, always inside the run+message transaction.
-    await db.transaction("rw", [db.agentRuns, db.chatMessages].flat(), (tx) =>
-        settleRun(tx, runId, status, {output, error, finishReason}).then(() => undefined));
+    const activity = preparedActivity ?? await prepareRunActivityKey(runId, db);
+    // Terminal output and its public revision share the original transaction.
+    await db.transaction("rw", [db.agentRuns, db.chatMessages, db.chatThreads, db.deviceSettings], (tx) =>
+        settleRun(tx, runId, status, {output, error, finishReason, activity}).then(() => undefined));
 }
 
 /** Caller must own the thread's Web Lock; elapsed wall time is not proof of abandonment. */
 export async function interruptThreadRuns(threadId: string, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
-    await db.transaction("rw", [db.agentRuns, db.agentToolCalls, db.chatMessages, db.contextCompactions, db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems], async (db) => {
+    const activity = prepareThreadActivityKey(threadId);
+    await db.transaction("rw", [db.deviceSettings, db.chatThreads, db.agentRuns, db.agentToolCalls, db.chatMessages, db.contextCompactions, db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems], async (db) => {
         const runs = await db.agentRuns.where("threadId").equals(threadId).toArray();
         for (const run of runs) {
             await upgradeLegacyPlanCalls(run.id, db);
-            await recoverBatchPreparationCalls(run.id, db);
+            await recoverBatchPreparationCalls(run.id, db, activity);
             if (run.status !== "running") continue;
             await db.contextCompactions.where("runId").equals(run.id).filter((record) => record.status === "running").modify({
                 status: "interrupted",
@@ -284,11 +293,12 @@ export async function interruptThreadRuns(threadId: string, store?: ProductStore
             if (calls.some((call) => call.status === "awaiting_approval") && !calls.some((call) => call.status === "unknown")) {
                 await db.agentRuns.update(run.id, {status: "waiting_approval", updatedAt: nowIso()});
                 await db.chatMessages.update(run.assistantMessageId, {status: "pending", error: undefined});
+                await publishAssistantActivity(activity, run, db);
                 continue;
             }
             await finishAgentRun(run.id, "interrupted", undefined, run.hasToolCalls
                 ? "执行已中断。继续时将使用已保存的步骤与结果；结果不确定的操作需要先核实。"
-                : "上次生成已中断，已保留收到的内容。重新生成会创建一次新的请求。", undefined, db);
+                : "上次生成已中断，已保留收到的内容。重新生成会创建一次新的请求。", undefined, db, activity);
         }
     });
 }

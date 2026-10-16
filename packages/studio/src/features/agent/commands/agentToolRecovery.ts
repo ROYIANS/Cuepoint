@@ -2,6 +2,8 @@ import type {ProductStore} from "../../../platform/storage/types";
 import {db as productDb} from "../../../platform/product/store";
 import type {AgentToolCall} from "../models/agent";
 import {nowIso} from "../../../platform/identity";
+import {prepareRunActivityKey, publishAssistantActivity} from "./threadActivity";
+import type {ThreadActivityIdentity} from "../models/threadActivity";
 
 /** This exact built-in only prepares local drafts with an atomic result ledger. */
 export function isUnknownBatchPreparation(call: AgentToolCall): boolean {
@@ -13,12 +15,14 @@ export function isUnknownBatchPreparation(call: AgentToolCall): boolean {
 /** Reconcile old misclassified preflight failures without executing tools or HTTP.
  * Caller holds the thread lock. Inconsistent evidence remains unknown.
  */
-export async function recoverBatchPreparationCalls(runId: string, store?: ProductStore): Promise<void> {
+export async function recoverBatchPreparationCalls(runId: string, store?: ProductStore, preparedActivity?: ThreadActivityIdentity): Promise<void> {
     const db = store ?? productDb;
-    await db.transaction("rw", [db.agentRuns, db.agentToolCalls, db.agentGenerationBatches, db.agentGenerationBatchItems, db.agentGenerationJobs].flat(), async (db) => {
+    const activity = preparedActivity ?? await prepareRunActivityKey(runId, db);
+    await db.transaction("rw", [db.chatThreads, db.chatMessages, db.deviceSettings, db.agentRuns, db.agentToolCalls, db.agentGenerationBatches, db.agentGenerationBatchItems, db.agentGenerationJobs].flat(), async (db) => {
         const run = await db.agentRuns.get(runId);
         if (!run || !["running", "interrupted", "failed", "waiting_approval"].includes(run.status)) return;
         const calls = await db.agentToolCalls.where("runId").equals(runId).filter(isUnknownBatchPreparation).toArray();
+        let changed = false;
         for (const call of calls) {
             if (call.threadId !== run.threadId) continue;
             // A paid-job record contradicts this tool's local-only contract.
@@ -43,6 +47,7 @@ export async function recoverBatchPreparationCalls(runId: string, store?: Produc
                         recovered: true
                     })
                 });
+                changed = true;
             } else {
                 const error = '已核实本地没有此次操作创建的批量草稿，未提交生成。原失败原因未保存，请检查参数后重新准备草稿；图片比例使用 size，不要传 aspectRatio 或 mode。';
                 await db.agentToolCalls.update(call.id, {
@@ -54,8 +59,10 @@ export async function recoverBatchPreparationCalls(runId: string, store?: Produc
                         recovered: true
                     })
                 });
+                changed = true;
             }
         }
+        if (changed && activity) await publishAssistantActivity(activity, run, db);
     });
 }
 

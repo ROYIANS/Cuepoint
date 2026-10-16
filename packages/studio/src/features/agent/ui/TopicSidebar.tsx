@@ -1,3 +1,4 @@
+import {useTopicActivity} from "../queries/threadActivity";
 import {Flexbox, Text} from "@lobehub/ui";
 import {LOGO_SRC, PRODUCT_NAME_ZH} from "@cuepoint/distribution/brand";
 import {
@@ -14,7 +15,7 @@ import {
     Tray,
     X,
 } from "../../../ui/icons";
-import {type ComponentType, useEffect, useMemo, useRef, useState,} from "react";
+import {type ComponentType, memo, useId, useEffect, useMemo, useRef, useState,} from "react";
 import {filterThreadsByTitle} from "./filterThreadsByTitle";
 import {groupThreadsByTime} from "./timeGroups";
 import {
@@ -42,13 +43,13 @@ import type {Project} from "../../projects/models/project";
  * Topic sidebar: brand row, 新话题 / 搜索 / 任务, then grouped topic list
  * (by project by default, optionally merged by time). The list body also powers the narrow overlay.
  */
-export function TopicSidebar(props: TopicListProps) {
+export const TopicSidebar = memo(function TopicSidebar(props: TopicListProps) {
     return (
         <Flexbox width="100%" height="100%" className="agent-topic-sidebar">
             <TopicListBody {...props}/>
         </Flexbox>
     );
-}
+});
 
 interface TopicListProps {
     threads: ChatThread[];
@@ -250,9 +251,9 @@ function TopicListBody({
                                             projectName={thread.projectId ? projectNames.get(thread.projectId) : undefined}
                                             now={now}
                                             active={thread.id === activeThreadId}
-                                            onSelect={() => onSelect(thread.id)}
-                                            onRename={() => onRename(thread)}
-                                            onDelete={() => onDelete(thread)}
+                                            onSelect={onSelect}
+                                            onRename={onRename}
+                                            onDelete={onDelete}
                                         />
                                     ))}
                             </Flexbox>
@@ -287,7 +288,7 @@ function SidebarNavItem({
     );
 }
 
-function TopicRow({
+const TopicRow = memo(function TopicRow({
                       thread,
                       projectName,
                       now,
@@ -300,34 +301,49 @@ function TopicRow({
     projectName?: string;
     now: number;
     active: boolean;
-    onSelect: () => void;
-    onRename: () => void;
-    onDelete: () => void;
+    onSelect: (id: Id) => void;
+    onRename: (thread: ChatThread) => void;
+    onDelete: (thread: ChatThread) => void;
 }) {
+    const statusId = useId();
     return (
-        <div className={active ? "agent-topic-row is-active" : "agent-topic-row"}>
+        <div className={active ? "agent-topic-row is-active" : "agent-topic-row"} data-thread-id={thread.id}>
             <Tooltip delayDuration={600}>
                 <TooltipTrigger asChild>
-                    <button type="button" className="agent-topic-row-title" onClick={onSelect}
-                            aria-current={active ? "true" : undefined}>
+                    <button type="button" className="agent-topic-row-title" onClick={() => onSelect(thread.id)}
+                            aria-current={active ? "true" : undefined} aria-describedby={statusId}>
                         {thread.title}
                     </button>
                 </TooltipTrigger>
                 <TooltipContent
                     side="right">{projectName ? `${thread.title} · ${projectName}` : thread.title}</TooltipContent>
             </Tooltip>
-            <time className="agent-topic-row-time"
+            <span className="agent-topic-row-trailing"><time className="agent-topic-row-time"
                   dateTime={thread.updatedAt}>{formatRelativeShort(thread.updatedAt, now)}</time>
             <span className="agent-topic-row-actions">
                 <button type="button" role="button" className="agent-topic-row-action" title="重命名"
-                        aria-label="重命名" onClick={onRename}>
+                        aria-label="重命名" onClick={() => onRename(thread)}>
                     <Pencil size={16} aria-hidden/>
                 </button>
                 <button type="button" role="button" className="agent-topic-row-action" title="删除" aria-label="删除"
-                        onClick={onDelete}>
+                        onClick={() => onDelete(thread)}>
                     <Trash2 size={16} aria-hidden/>
                 </button>
-            </span>
+            </span></span>
+            <TopicActivityStatus threadId={thread.id} id={statusId}/>
         </div>
     );
+});
+
+/** Streaming can update this finite indicator without rerendering the title/action owner. */
+function TopicActivityStatus({threadId, id}: {threadId: string; id: string}) {
+    const activity = useTopicActivity(threadId);
+    const label = [activity.busy ? "进行中" : activity.waitingApproval ? "等待批准" : undefined,
+        activity.unread ? "有未读内容" : undefined, activity.unavailable ? "状态读取失败" : undefined].filter(Boolean).join("，");
+    return <span className="agent-topic-row-status" title={label || undefined}>
+        <span id={id} className="sr-only">{label}</span>
+        <i aria-hidden="true" className={activity.unread ? "agent-topic-unread is-unread" : "agent-topic-unread"}/>
+        <i aria-hidden="true" className={activity.busy ? "agent-topic-spinner is-busy" : "agent-topic-spinner"}/>
+        {activity.unavailable && <span aria-hidden="true" className="agent-topic-unavailable">!</span>}
+    </span>;
 }

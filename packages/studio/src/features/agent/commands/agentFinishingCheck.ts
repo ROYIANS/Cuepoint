@@ -1,3 +1,4 @@
+import {prepareRunActivityKey, publishAssistantActivity} from "./threadActivity";
 import type {ProductStore} from "../../../platform/storage/types";
 import {db as productDb} from "../../../platform/product/store";
 import {type AgentPlanItem, type AgentResponseItem, type AgentRunOutput, MODEL_STEPS_PER_SEGMENT} from "../models/agent";
@@ -41,7 +42,8 @@ export async function saveAgentFinishingCheck(
     runId: string, expectedStep: number, output: AgentRunOutput, responseOutput?: AgentResponseItem[], signal?: AbortSignal, store?: ProductStore
 ): Promise<boolean> {
     const db = store ?? productDb;
-    return db.transaction("rw", [db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.projects, db.agentTasks], async (db) => {
+    const activity = await prepareRunActivityKey(runId, db);
+    return db.transaction("rw", [db.deviceSettings, db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.projects, db.agentTasks], async (db) => {
         signal?.throwIfAborted();
         const run = await db.agentRuns.get(runId);
         if (!run || run.status !== "running" || run.finishingCheck || run.interactionMode === "conversation" || !run.enabledToolNames?.length ||
@@ -106,6 +108,7 @@ export async function saveAgentFinishingCheck(
             ...(responseItems ? {responseItems: [...(run.responseItems ?? toResponseInput(previous)), ...responseItems, ...toResponseInput([notice])]} : {}),
             updatedAt: at,
         });
+        if (activity) await publishAssistantActivity(activity, run, db);
         signal?.throwIfAborted();
         return true;
     });

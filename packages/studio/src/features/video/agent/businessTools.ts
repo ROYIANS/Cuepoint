@@ -27,7 +27,8 @@ import {
     reorderEpisodes,
     updateEpisodeDraft
 } from "../commands/episodes";
-import {deleteProject} from "./../../projects/commands/lifecycle";
+import {deleteProject, prepareProjectReportDeletion} from "./../../projects/commands/lifecycle";
+import type {ProjectReportDeletion} from "./../../projects/commands/lifecycle";
 import {addShots, deleteEpisodeShots, duplicateShot, patchShot, reorderShots, setShotSlot} from "../commands/shots";
 import {
     addCharacter,
@@ -51,6 +52,7 @@ import {copyStudioCharacter, copyStudioProp, copyStudioScene, copyStudioStyle} f
 import {deleteMediaIfOrphan} from "../../library/commands/media";
 import {db as productDb} from "../../../platform/product/store";
 import {AtomicToolRollbackError, executeAtomicTool} from "../../agent/commands/agentTools";
+import {prepareRunActivityKey} from "../../agent/commands/threadActivity";
 import {flushPendingDrafts} from "../../../platform/product/drafts";
 import {validateGenerationDefaults} from "../models/output";
 import {emptySlot, parseGenerationSlot} from "../../library/models/slot";
@@ -238,7 +240,7 @@ type WriteHooks<Args> = {
 };
 
 function writeTool<T extends object, const Name extends string>(name: Name, title: string, description: string, spec: s.Spec<T>,
-                                                                scope: (args: NoInfer<ResolvedBusinessArgs<T>>) => string[], prepare: (args: NoInfer<ResolvedBusinessArgs<T>>, context: AgentToolContext) => Promise<PreviewState>, execute: (args: NoInfer<ResolvedBusinessArgs<T>>, context: AgentToolContext) => Promise<unknown>, highRisk = false, hooks: WriteHooks<NoInfer<ResolvedBusinessArgs<T>>> = {}): TypedToolDefinition<T, Name> {
+                                                                scope: (args: NoInfer<ResolvedBusinessArgs<T>>) => string[], prepare: (args: NoInfer<ResolvedBusinessArgs<T>>, context: AgentToolContext) => Promise<PreviewState>, execute: (args: NoInfer<ResolvedBusinessArgs<T>>, context: AgentToolContext, reports?: ProjectReportDeletion) => Promise<unknown>, highRisk = false, hooks: WriteHooks<NoInfer<ResolvedBusinessArgs<T>>> = {}): TypedToolDefinition<T, Name> {
     const properties = spec.json.properties;
     const hasOwner = properties !== null && typeof properties === "object" && Object.hasOwn(properties, "ownerId");
 
@@ -297,12 +299,14 @@ function writeTool<T extends object, const Name extends string>(name: Name, titl
             const db = context.store ?? productDb;
             const parsed = spec.schema.parse(raw);
             let args: ResolvedBusinessArgs<T>;
+            let projectReports: ProjectReportDeletion | undefined;
             try {
                 args = await resolve(parsed, context, db);
                 const replay = await hooks.completedReplay?.(args, context);
                 if (replay) return replay.value;
                 await assertProjectToolScope(context, name, args, true, db);
                 await flush(args, context);
+                if (name === "project_delete" && "id" in args && typeof args.id === "string") projectReports = await prepareProjectReportDeletion(args.id, db);
             } catch (error) {
                 if (error instanceof StorageError && error.certainty === "unknown") throw error;
                 throw new AtomicToolRollbackError(error instanceof Error ? error.message : "草稿保存失败，业务操作尚未开始", {cause: error});
@@ -315,7 +319,7 @@ function writeTool<T extends object, const Name extends string>(name: Name, titl
                 if (!boundContext.preview?.revision || boundContext.preview.revision !== (await preview(args, boundContext)).revision) throw new ToolRecoveryError("STALE_TOOL_PREVIEW", "目标或影响范围已变化，请重新读取并提出操作，原批准不能覆盖新的内容");
                 await hooks.beforeWrite?.(args, boundContext);
                 const deleted = await captureBusinessDeletion(name, args, db);
-                const result = await execute(args, boundContext);
+                const result = await execute(args, boundContext, projectReports);
                 return withBusinessWriteReceipt(name, args, result, deleted, db);
             }, db);
         }
@@ -570,6 +574,7 @@ const projectTools = [
         },
         completedReplay: async (args, context) => {
             const db = context.store ?? productDb;
+            const activity = await prepareRunActivityKey(context.runId, db);
             return db.transaction("rw", db.tables, async (db) => {
                 const boundContext = {...context, store: db};
                 const call = await db.agentToolCalls.get(boundContext.callId);
@@ -584,7 +589,7 @@ const projectTools = [
                 return {
                     value: await executeAtomicTool(boundContext, () => {
                         throw new Error("创建项目重放状态已变化");
-                    }, db)
+                    }, db, activity)
                 };
             });
         },
@@ -633,9 +638,9 @@ const projectTools = [
     writeTool("project_delete", "删除项目及内容", "永久删除指定项目及全部分集、镜头、资产和素材；审批预览绑定级联范围。工作室不能删除。", s.object({id: s.id}), (args) => [args.id], (args, context) => (db => deletePreview("project", {
         id: args.id,
         ownerId: args.id
-    }, db))(context.store ?? productDb), async (args, context) => {
+    }, db))(context.store ?? productDb), async (args, context, reports) => {
         const db = context.store ?? productDb;
-        await deleteProject(args.id, db);
+        await deleteProject(args.id, db, reports);
         return {deletedId: args.id};
     }, true),
 ];

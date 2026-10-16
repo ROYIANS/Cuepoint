@@ -7,6 +7,10 @@ import type {ComposerProps} from "@/features/agent/ui/composerTypes";
 import {createSubmissionAttempt, submissionTranscript, visibleSubmissionAttempts} from "@/features/agent/models/chatSubmissionAttempt";
 import {yieldSubmissionPaint} from "@/features/agent/ui/chatSubmissionAttempts";
 
+const reading = vi.hoisted(() => ({messages: [] as ChatMessage[]}));
+vi.mock("@/platform/product/queries", () => ({useProductQueryState: () => ({value: {threadId: "thread", messages: reading.messages, runs: [], calls: [], observedRevision: 0}, error: null})}));
+vi.mock("@/features/agent/ui/ExecutionFeedback", async original => ({...await original<typeof import("@/features/agent/ui/ExecutionFeedback")>(),
+    ThreadExecutionFeedbackProvider: ({children}: {children?: ReactNode}) => children}));
 const rich = vi.hoisted(() => {
     let release!: () => void;
     return {gate: new Promise<void>(resolve => {release = resolve;}), release: () => release()};
@@ -84,7 +88,8 @@ it("actual React DOM keeps the eager echo through cold rich loading and accepted
     const composer = {value: "newer independent draft", sending: true, projects: [], projectId: "project"} as unknown as ComposerProps;
     function Owner({messages, accepted}: {messages: ChatMessage[]; accepted?: boolean}) {
         useEffect(() => {mounted(); return () => {unmounted();};}, []);
-        return h(ChatWorkspace, {threads: [], activeThreadId: "thread", messages, submissions: [{...captured, phase: accepted ? "accepted" : "preparing"}],
+        reading.messages = messages;
+        return h(ChatWorkspace, {threads: [], activeThreadId: "thread", ownerId: "thread", submissions: [{...captured, phase: accepted ? "accepted" : "preparing"}],
             composer, onSubmissionObserved: observed, onRetryRun: vi.fn(), onRunAction: vi.fn(), onOpenTask: vi.fn(), onOpenTasks: vi.fn(), onSelectThread: vi.fn(),
             onNewTopic: vi.fn(), onRenameThread: vi.fn(), onDeleteThread: vi.fn()});
     }

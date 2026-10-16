@@ -11,7 +11,7 @@ export function isTaskBusy(runs: readonly AgentRun[]): boolean {
         (run.hasToolCalls && (run.status === "interrupted" || run.status === "failed")));
 }
 
-export function getTaskDisplayState(task: AgentTask, runs: readonly AgentRun[]): TaskDisplayState {
+export function getTaskDisplayState(task: AgentTask, runs: readonly Pick<AgentRun, "taskId" | "createdAt" | "status">[]): TaskDisplayState {
     if (task.lifecycle !== "open") return task.lifecycle;
     const latest = runs.filter((run) => run.taskId === task.id).sort((a, b) => a.createdAt.localeCompare(b.createdAt)).at(-1);
     if (!latest) {

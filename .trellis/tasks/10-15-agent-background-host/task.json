@@ -33,14 +33,14 @@
   "notes": "Final E11 plan approved on 2026-10-16: 进入开发吧. Six owner outcomes and four source stages are authorized. Stage commits preauthorized; no push. Full/installed gates remain epic batch.",
   "meta": {
     "epicCode": "E11",
-    "deliveryState": "stage-3-reviewed",
+    "deliveryState": "source-reviewed-complete",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Stages 1/2 committed; Stage 3 Studio/native review and actual macOS 370429 ms hidden-progress/activation passed. Commit Stage 3 before Stage 4 sidebar/read implementation.",
+    "readiness": "All four source stages independently reviewed. Stage 4 fixes sidebar remount/placement, strict viewed-only unread and repeated completed-background observation crash. Final local commit and source-delivery archive follow; full/installed acceptance stays parent epic.",
     "ownerRequirements20261016": [
       "Sidebar per-conversation loading/in-progress icon",
       "Sidebar per-conversation unread indicator",
@@ -135,7 +135,33 @@
         },
         "earlierFailedProbe": "if5hwj exited at hidden205s; cause unproven and retained",
         "evidence": "results.md",
-        "nativeInstalledAcceptance": "not performed; Windows/WebView2 and installed both-OS acceptance pending epic batch"
+        "nativeInstalledAcceptance": "not performed; Windows/WebView2 and installed both-OS acceptance pending epic batch",
+        "commit": "59701819"
+      },
+      "stage4": {
+        "status": "reviewed-passed",
+        "date": "2026-10-16",
+        "integratedSourceTestsBeforeFinalDelta": {
+          "files": 40,
+          "passed": 524
+        },
+        "finalAffectedDeltaTests": {
+          "files": 4,
+          "passed": 82
+        },
+        "runLimit": "Separate successful runs; no single final all-530 sweep claimed.",
+        "browserCases": 13,
+        "finiteTypecheck": "source and Node passed; 100 extant changed typed files covered, zero omitted",
+        "architecture": {
+          "sources": 742,
+          "failures": 0,
+          "cycles": 0
+        },
+        "lint": "70 changed production typed files; 0 errors, 101 visible complexity/nesting warnings",
+        "ownerCrash": "发送记录不存在 on completed-background reentry reproduced before fix; actual service/MessageList/StrictMode repeat cleanup passes after fix",
+        "latency": "Controlled populated browser send→DOM160.9ms; provider/native IPC seconds-level delay not reproduced or attributed",
+        "evidence": "results.md",
+        "nativeInstalledAcceptance": "unchanged Stage3 native evidence reused; installed both OS and full/build/package pending epic batch"
       }
     }
   }

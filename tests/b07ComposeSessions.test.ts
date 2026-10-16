@@ -52,6 +52,12 @@ vi.mock("@/platform/product/queries", () => {
     return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
 });
 
+vi.mock("@/features/agent/queries/threadReading", () => ({useThreadControl: (threadId?: string) => {
+    const host = runtime.active!;
+    const results = host.results[8] as {runs: import("@/features/agent/models/agent").AgentRun[]} | undefined;
+    return {threadId, ready: true, hasMessages: false, hasRuns: !!results?.runs.length, runs: results?.runs ?? [], compacting: false};
+}}));
+
 const io = vi.hoisted(() => ({navigate: vi.fn(), create: vi.fn(), begin: vi.fn(), execute: vi.fn(),
     update: vi.fn(), resolveConnector: vi.fn(), reconcile: vi.fn(), importFile: vi.fn(), retryImport: vi.fn(), compatible: vi.fn(), discover: vi.fn(), lock: vi.fn()}));
 vi.mock("@tanstack/react-router", () => ({useNavigate: () => io.navigate, Link: "a", useBlocker: () => ({status: "idle", proceed: vi.fn(), reset: vi.fn()})}));

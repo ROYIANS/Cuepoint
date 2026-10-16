@@ -364,11 +364,13 @@ export function createAgentExecutionService(options: ChatExecutionBinding) {
             const feedback = threads.get(threadId)?.lastFeedback;
             return feedback?.token === token ? feedback.invocation : undefined;
         },
-        /** Remove only a view-observed settled attempt; uncertainty/recovery must remain actionable. */
+        /** Repeated view observations may outlive the ephemeral attempt they already removed. */
         dismissAttempt(input: {threadId: string; userMessageId: string}) {
-            const owner = state(input.threadId);
-            const attempt = attemptFor(input.threadId, input.userMessageId);
-            if (owner.invocation || attempt.phase === "uncertain" || attempt.phase === "checking" || attempt.recoveryRequired) return false;
+            const owner = threads.get(input.threadId);
+            const attempt = owner?.attempts.find(item => item.admission.userMessageId === input.userMessageId);
+            // Observation cleanup is idempotent; retry/check/recovery still use
+            // the strict lookup and preserve their exact action authority.
+            if (!owner || !attempt || owner.invocation || attempt.phase === "uncertain" || attempt.phase === "checking" || attempt.recoveryRequired) return false;
             owner.attempts = owner.attempts.filter(item => item !== attempt);
             publish(input.threadId, owner);
             return true;

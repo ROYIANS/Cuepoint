@@ -31,6 +31,18 @@
     "../nativePreparedBinary.test.ts",
     "../e11DesktopLifecycle.test.ts",
     "../e11McpQuit.test.ts",
-    "../../apps/desktop/ui/e11Background.ts"
+    "../../apps/desktop/ui/e11Background.ts",
+    "../e11ThreadActivity.test.ts",
+    "../agentRuns.test.ts",
+    "../agentRunDefects.test.ts",
+    "../agentToolsReview.test.ts",
+    "../agentFinishingCheck.test.ts",
+    "../agentJobs.test.ts",
+    "../topicSidebar.test.ts",
+    "../e11ThreadReadingUi.test.ts",
+    "../mcpAgentExecution.test.ts",
+    "../agentJobsUi.test.ts",
+    "../agentBusiness.test.ts",
+    "../contextPreviewSnapshot.test.ts"
   ]
 }

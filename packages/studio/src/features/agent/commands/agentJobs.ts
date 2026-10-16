@@ -1,3 +1,5 @@
+import {prepareThreadActivityKey, publishAgentReportActivity, clearAgentReportActivity} from "./threadActivity";
+import type {ThreadActivityIdentity} from "../models/threadActivity";
 import {createId, nowIso} from '../../../platform/identity';
 import {targetRevision} from '../../../platform/data/revision';
 import {binaryByteLength} from '../../../platform/media/binaryTypes';
@@ -24,7 +26,7 @@ export class AgentJobAdmissionError extends Error {
 }
 const terminal = (job: AgentJob) => ['completed', 'stopped', 'failed', 'unknown'].includes(job.status);
 class JobUnavailableError extends Error {}
-const tables = (db: ProductStore) => [db.media, db.agentJobs, db.agentJobResultChunks, db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.projects];
+const tables = (db: ProductStore) => [db.deviceSettings, db.media, db.agentJobs, db.agentJobResultChunks, db.agentRuns, db.agentToolCalls, db.chatThreads, db.chatMessages, db.projects];
 const bytes = (text: string) => new TextEncoder().encode(text).byteLength;
 const envelope = (call: AgentToolCall) => targetRevision({runId: call.runId, threadId: call.threadId, name: call.name,
     binding: call.binding, arguments: call.arguments, step: call.step, effect: call.effect, highRisk: call.highRisk, atomic: call.atomic,
@@ -207,8 +209,9 @@ export async function checkpointAgentJob(context: AgentJobContext, jobId: string
 /** Local publication commits retained text and the original bounded completion together; never wraps producer IO. */
 export async function publishAgentJob(context: AgentJobContext, jobId: string, expectedRevision: number, publication: {
     status: AgentJobResult['status']; text?: string; metadata?: AgentJobOutputMetadata; error?: string; serviceMayHaveRun?: boolean;
-}, originalMcp = false): Promise<AgentJobResult> {
+}, originalMcp = false, preparedActivity?: ThreadActivityIdentity): Promise<AgentJobResult> {
     const db = context.store ?? productDb;
+    const activity = preparedActivity ?? prepareThreadActivityKey(context.threadId);
     const publicationReader = originalMcp ? {...context, original: {runId: context.runId, callId: context.callId}} : context;
     const suppliedText = publication.text ?? '';
     // The descriptor is also serialized into the original completion. Freeze only
@@ -261,6 +264,8 @@ export async function publishAgentJob(context: AgentJobContext, jobId: string, e
             await tx.agentJobResultChunks.bulkAdd(savedChunks);
             await tx.agentJobs.put(next);
             await tx.agentToolCalls.update(call.id, {status: job.kind === 'mcp' && publication.status === 'unknown' ? 'unknown' : 'completed', result: JSON.stringify(result), error: job.kind === 'mcp' && publication.status === 'unknown' ? '外部操作结果待核实，不会自动重试。' : undefined, updatedAt: nowIso()});
+            const run = (await tx.agentRuns.get(job.runId))!;
+            await publishAgentReportActivity(activity, next, run, tx);
             return result;
         });
     } catch (cause) {
@@ -315,9 +320,11 @@ function clearedSelection(selection: AgentJobSelection): AgentJobSelection {
 }
 export async function clearAgentJobResult(reader: AgentJobReader, jobId: string, store?: ProductStore): Promise<void> {
     const db = store ?? productDb;
+    const activity = prepareThreadActivityKey(reader.threadId);
     await db.transaction('rw', tables(db), async tx => {
         const job = await ownedJob(reader, jobId, tx);
         if (!terminal(job)) throw new Error('请先停止作业，再清理结果');
+        await clearAgentReportActivity(activity, jobId, tx);
         await tx.agentJobResultChunks.where('jobId').equals(jobId).delete();
         await tx.agentJobs.put({...job, reservedBytes: 0, observations: [], selection: clearedSelection(job.selection),
             revision: job.revision + 1, output: {version: 1, jobId, revision: job.revision + 1, retention: 'cleared', length: 0, byteLength: 0, preview: ''}, updatedAt: nowIso()});
@@ -327,6 +334,7 @@ export async function clearAgentJobResult(reader: AgentJobReader, jobId: string,
 /** Existing exclusive thread recovery only; no producer/model dispatch, no timeout-based lease. */
 export async function recoverAgentJobs(threadId: string, ownership: ThreadOwnership, store?: ProductStore): Promise<void> {
     assertThreadOwnership(ownership, threadId);
+    const activity = prepareThreadActivityKey(threadId);
     const db = store ?? productDb;
     await db.transaction('rw', tables(db), async tx => {
         assertThreadOwnership(ownership, threadId);
@@ -342,15 +350,17 @@ export async function recoverAgentJobs(threadId: string, ownership: ThreadOwners
                 // The producer requires an acknowledged running transition first.
                 // A durable accepted row therefore cannot have issued its invocation.
                 await publishAgentJob({runId: run.id, threadId, callId: call.id, projectId: job.projectId, store: tx}, job.id, job.revision,
-                    {status: 'stopped', text: '此调用在访问外部服务之前中断，未自动重试。', serviceMayHaveRun: false}, true);
+                    {status: 'stopped', text: '此调用在访问外部服务之前中断，未自动重试。', serviceMayHaveRun: false}, true, activity);
             } else if (job.kind === 'mcp' || job.kind === 'web_read' && job.serviceMayHaveRun) {
-                await tx.agentJobs.put({...job, status: 'unknown', error: '服务可能已经执行，未收到可确认的完整结果；不会自动重新请求。', revision: job.revision + 1, updatedAt: nowIso()});
+                const next = {...job, status: 'unknown' as const, error: '服务可能已经执行，未收到可确认的完整结果；不会自动重新请求。', revision: job.revision + 1, updatedAt: nowIso()};
+                await tx.agentJobs.put(next);
+                await publishAgentReportActivity(activity, next, run, tx);
                 await tx.agentToolCalls.update(call.id, {status: 'unknown', error: '服务可能已经执行，请核对后发起新请求，不能自动重跑。', updatedAt: nowIso()});
             } else {
                 // Reuse the same local publication transaction after re-establishing a conservative current owner.
                 const context = {runId: run.id, threadId, callId: call.id, projectId: job.projectId, store: tx};
                 if (run.status !== 'running' || call.status !== 'running') continue;
-                await publishAgentJob(context, job.id, job.revision, {status: 'stopped', ...(job.kind === 'web_read' ? {text: ''} : {}), error: '上次检查已中断，仅保留已确认的检查记录。'});
+                await publishAgentJob(context, job.id, job.revision, {status: 'stopped', ...(job.kind === 'web_read' ? {text: ''} : {}), error: '上次检查已中断，仅保留已确认的检查记录。'}, false, activity);
             }
         }
         assertThreadOwnership(ownership, threadId);

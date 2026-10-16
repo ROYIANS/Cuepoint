@@ -27,6 +27,8 @@ A new draft is independently editable. Later text typed on home remains in that 
 
 Join local and durable messages by the reserved `userMessageId`. Command acknowledgement alone does not remove an echo before observation; durable observation suppresses a stale local echo immediately. Model execution failure after known admission belongs to the durable run UI and cannot restore an already-sent draft.
 
+View-observation cleanup is repeat-safe. A captured accepted-attempt array can outlive the first successful dismissal: React StrictMode, Suspense layout-effect reappearance or switching back to a completed background conversation may report the same durable user row again. `dismissAttempt({threadId, userMessageId})` treats an already absent exact attempt as an unchanged `false` result, without publishing, creating a new owner or touching another conversation. Keep missing-attempt errors for retry/check/recovery commands that require existing authority; do not catch all service errors in the layout effect. Active work, uncertainty/checking and required recovery remain protected from dismissal.
+
 Fresh IDs are nonempty strings of at most 256 characters, contain no whitespace or Unicode control characters, and are distinct. Writes remain create-only inside the original atomic transaction. E02 supplies `expectedOwner: {projectId}` even when unbound, and begin checks it against the actual thread inside the same transaction. Capture that optional object before preparation; omission preserves legacy callers. An existing ID cannot be treated as successful idempotent admission, because callers could dispatch that existing run again. Durable regeneration continues to use its separate `retryOfRunId` contract.
 
 Reconciliation reads the owning thread and all three records inside one read-only transaction. Validate thread/project ownership, role and run/message pointers, frozen normalized connector/model, normalized effective user content and ordered reference ID/revision pairs. `projectId: undefined` intentionally means an unbound thread. All three rows absent means `absent` if the thread is missing or its owner matches; an existing foreign-owner thread, partial records or foreign records mean `mismatch`. A separate read does not replace begin’s atomic expected-owner check.
@@ -47,6 +49,7 @@ Unknown storage certainty is not rollback. Preserve an uncertain attempt and all
 | Positive matching admission read | Join existing durable records; no automatic execution |
 | Duplicate/reserved/partial/foreign identity | Atomic refusal or mismatch; no second turn |
 | Late observation or acknowledgement | Exactly one bubble by canonical user ID |
+| Repeated observation after completed attempt was dismissed | Harmless no-op; canonical messages stay visible and no request replays |
 | Scope changed during async work | Old completion cannot replace the current draft or conversation |
 
 ## 5. Good / Base / Bad Cases
@@ -58,6 +61,8 @@ Good: send A from home, type B while creation waits, see A throughout handoff, a
 Use held compatibility/creation/begin boundaries through actual compose/page callbacks. Assert the exact submitted payload and available composer before resolving them; cover same-tick duplicate sends and cold transcript fallback. Exercise home handoff without abort/remount, original home draft retention, failed recovery with text/reference/import changes, edit-back-to-empty and stale callbacks. Test canonical deduplication both before and after acknowledgement.
 
 Real ProductStore tests cover caller-reserved IDs, unchanged legacy admission, atomic duplicate failure, rollback, complete matching acceptance, partial/foreign records and exact attachment revisions. Unknown-outcome flow tests assert zero automatic admission, transport or deletion after status reads, including absent. Keep necessary affected B07 and execution/reference regressions. Distinguish mocked timing/transport evidence from browser paint, native delivery or a live paid service; broad integration/package gates follow the owner's batch cadence.
+
+Complete an actual owned request while its conversation is detached, return to it and repeat the captured durable-observation callback under StrictMode/reappearance. Assert one exact attempt retirement, no crash on later visits, no observer notification on repeated cleanup, intact canonical rows and unchanged request count. Missing or foreign cleanup identities cannot retire another attempt; retry/check/recovery retain their stricter missing-record behavior.
 
 ## 7. Wrong vs Correct
 

@@ -150,6 +150,17 @@ terminal clear. Preserve readOnly, synchronous pending guards, quiet success,
 keyboard access and narrow wrapping. No drawer, navigation or extra execution
 owner is needed to inspect a report.
 
+E11 publishes an independently bounded report read cursor in the same accepted
+result transaction; direct unknown recovery uses that same contract. Its public
+revision is the accepted `job.revision`. The retained body's `output.revision`
+may differ and must still match the actual page read. An ordinary newest-message
+read cannot clear a late result in an older turn. A meaningful public summary or
+revision-matched body may acknowledge its own captured job revision only when
+actually visible/focused/non-inert; a generic unchanged `查看报告` toggle cannot.
+Historical report eligibility does not require following the transcript tail.
+Clear/delete removes the matching cursor atomically and wins late callbacks.
+See [Sidebar Activity / Read Revisions](./agent-thread-activity.md).
+
 ## 4. Validation and error matrix
 
 | Condition | Required behavior |

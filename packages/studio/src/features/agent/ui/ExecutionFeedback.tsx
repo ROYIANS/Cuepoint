@@ -1,5 +1,7 @@
-import {createContext, useContext, useLayoutEffect, useRef, type ReactNode} from "react";
+import {createContext, useCallback, useContext, useLayoutEffect, useRef, useSyncExternalStore, type ReactNode} from "react";
 import type {ExecutionFeedbackInvocation, ExecutionFeedbackSnapshot} from "../runtime/executionFeedback";
+import {agentExecution} from "../runtime/agentExecution";
+import type {AgentExecutionToken} from "../runtime/agentExecutionService";
 
 type PublicOutputIdentity = {runId: string; assistantMessageId: string};
 type FeedbackValue = {
@@ -8,6 +10,19 @@ type FeedbackValue = {
     provisionalMessageId?: string;
 };
 export const ExecutionFeedbackContext = createContext<FeedbackValue>({});
+
+/** Full streaming observation stays underneath the workspace/page boundary. */
+export function ThreadExecutionFeedbackProvider({ownerId, children}: {ownerId: string; children: ReactNode}) {
+    const snapshot = useSyncExternalStore(useCallback(listener => agentExecution.subscribe(ownerId, listener), [ownerId]),
+        useCallback(() => agentExecution.snapshot(ownerId), [ownerId]));
+    const lastToken = useRef<{ownerId: string; token?: AgentExecutionToken}>({ownerId});
+    if (lastToken.current.ownerId !== ownerId) lastToken.current = {ownerId};
+    if (snapshot.token) lastToken.current.token = snapshot.token;
+    const token = lastToken.current.token;
+    const invocation = token ? agentExecution.feedback(ownerId, token) : undefined;
+    const provisionalMessageId = [...snapshot.attempts].reverse().find(attempt => attempt.phase === "preparing")?.admission.userMessageId;
+    return <ExecutionFeedbackContext value={{invocation, snapshot: snapshot.feedback, provisionalMessageId}}>{children}</ExecutionFeedbackContext>;
+}
 
 /** DOM eligibility only: this does not claim compositor paint or remote receipt. */
 function visible(element: HTMLElement) {

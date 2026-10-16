@@ -16,6 +16,13 @@ Studio's `executeChatRun(..., ownership?, feedback?)` and `resumeChatRun(..., ow
 
 E11 Stage 1's application service owns a separate feedback controller for each thread and begins feedback using that exact service invocation token. Feedback is prepared privately; only a fully initialized service reservation is published to synchronous subscribers. Unsubscribing a view neither disposes the controller nor requests Stop; application shutdown and exact explicit Stop are the lifetime owners. The foreground hook subscribes to the service. Keep its last exact feedback lineage available after release until replaced, so a delayed visible DOM acknowledgement is possible without another execution.
 
+E11 separates the full transcript feedback reader from page/composer semantic
+state. Subscribe `outputRevision` and public DOM lineage locally beneath the page
+boundary; higher controls retain stable active/stopping/owner/attempt/coarse-label
+projections. Moving only database queries is insufficient if a full feedback
+snapshot still invalidates AgentChatPage on each token. Keep timing observations
+independent from the durable observed-only read watermark.
+
 ## 3. Contracts
 
 Invocation identity follows the existing synchronous execution token. Bind a newly created thread before navigation and admission. Ignore foreign run/thread/execution events, older core sequences and old invocation callbacks. Stop is a separate explicit user intent: publish `stopping` and disable repeat Stop before abort; do not infer user Stop from an aborted signal caused by persistence failure. Keep send/Web Locks until the original flush/settlement flow releases them. Existing conditional settlement is authoritative, including completed-before-late-Stop and unknown outcomes.

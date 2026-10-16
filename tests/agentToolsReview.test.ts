@@ -1,4 +1,4 @@
-import {failStoreTableOnce} from "./helpers/storeFaults";
+import {interceptStoreTable} from "./helpers/storeFaults";
 import { describe, expect, it, vi } from "vitest";
 import { db } from "@/platform/product/store";
 import { beginAgentRun, checkpointAgentRun, interruptThreadRuns } from "@/features/agent/commands/agentRuns";
@@ -12,7 +12,7 @@ import { executeChatRun, resumeChatRun } from "@/features/agent/runtime/runChat"
 import { recoverAbandonedRuns, withThreadRunLock, type ThreadLockManager } from "@/features/agent/runtime/runOwnership";
 import { BUILTIN_TOOLS, type AgentToolDefinition } from "@/features/agent/runtime/tools";
 
-const connector: ConnectorConfig = { id: "review", name: "Review fixture", definitionId: "openai-compatible", baseUrl: "https://review.invalid/v1", apiKey: "fixture-key", updatedAt: "2026-09-18" };
+const connector: ConnectorConfig = { id: "review", label: "Review fixture", protocol: "openai-compatible", definitionId: "openai-compatible", baseUrl: "https://review.invalid/v1", apiKey: "fixture-key", updatedAt: "2026-09-18" };
 const wireCall = (id: string): AgentWireToolCall => ({ id, type: "function", function: { name: "workspace_overview", arguments: "{}" } });
 const toolResponse = (ids = ["call-1"]) => Response.json({ choices: [{ message: { content: "需要执行以下操作", tool_calls: ids.map(wireCall) }, finish_reason: "tool_calls" }] });
 const answer = () => Response.json({ choices: [{ message: { content: "已完成" }, finish_reason: "stop" }] });
@@ -74,7 +74,12 @@ describe("independent tool lifecycle review regressions", () => {
   it("keeps saved approvals actionable after parking fails without concealing the failure", async () => {
     const run = await begin();
     const tool = writeTool();
-    const messageWrite = failStoreTableOnce(db, "chatMessages", "update", new Error("temporary storage failure"));
+    let failed = false;
+    const messageWrite = interceptStoreTable(db, "chatMessages", "update", async (_tx, args, next) => {
+      const patch = args[1];
+      if (!failed && patch && typeof patch === "object" && "status" in patch && patch.status === "pending") {failed = true; throw new Error("temporary storage failure");}
+      return next();
+    });
     try {
       // Empty content avoids a stream checkpoint, so the failing write belongs
       // to pauseForApproval after the immutable pending call has been saved.

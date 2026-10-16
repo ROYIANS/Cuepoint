@@ -57,7 +57,9 @@ See [Agent topic reading](./agent-thread-reading.md) for explicit requested topi
 - **User intent**: `onScroll` updates `stickToBottom` via `isChatNearBottom`. Wheel / drag that leaves more than 300px of room cancels follow until the user returns to the bottom.
 - **Layout settle**: `ResizeObserver` on `.agent-content` re-snaps while pinned (markdown / images growing). One `requestAnimationFrame` snap on thread change covers layout settle, but must recheck the live following ref so manual pause before that callback wins.
 - **2026-10-13 note**: assistant and user messages are now drawn directly (`agent-user-bubble` for the user; no bubble, avatar, title or time row for the assistant). `ChatItem`, avatar meta and the avatar loading ring named in older bullets below no longer exist; the memo comparator, `ThinkingMatrix`, `markdownProps` hoisting, anchored scrolling and stick-to-bottom contracts are unchanged.
-- **History isolation**: Shared `useProductQuery` can update the parent after a matching committed change. `AgentChatMessageItem` compares `id/content/status/role/createdAt/reasoning/reasoningDurationMs` so completed rows skip ChatItem + markdown. Hoist `markdownProps` and avatar meta; do not allocate them in the map.
+- **History isolation**: Full message/run/tool-call streaming queries live at the transcript-reader boundary below ChatWorkspace. AgentChatPage/composer consume equality-cached semantic control values; a token/checkpoint/metrics commit that does not change those semantics cannot re-render them or all topic titles. Shared `useProductQuery` still updates its actual reader after matching committed changes. `AgentChatMessageItem` compares `id/content/status/role/createdAt/reasoning/reasoningDurationMs` so completed rows skip markdown. Hoist `markdownProps`; do not allocate it in the map. See [Sidebar Activity / Read Revisions](./agent-thread-activity.md) for small row subscriptions and exact revision envelopes.
+- **Navigation continuity**: A thread change resets its local transcript scope while retaining the sidebar's actual DOM, search, fold and scroll state. Do not key the enclosing workspace by thread ID or show a replacement workspace while the selected listed thread's detail snapshot reloads. Prove continuity with actual routed DOM identity while holding that read; memoization alone does not prevent a keyed remount.
+- **Snapshot preparation**: Resolve model catalogue initialization and other external asynchronous preparation before entering an observed ProductStore transaction. `ContextUsagePanel` calls `prepareAgentContextPreview` outside observation and `readPreparedAgentContextPreview` inside the readonly snapshot. A catalog import/initialization awaited inside Dexie can close its transaction and trigger a workspace error; timers or query retries do not repair that boundary.
 - **Empty streaming**: while `status === "streaming"` and both `content` and `reasoning` are empty, `renderMessage` swaps in `ThinkingMatrix` (3×3 square cells; per-column length-2 snakes in order 1→2→3, bounce at top, may exit bottom; ~220ms tick); pass `message=""` so EditableMessage does not coerce a React node. Avatar `loading` stays on until the first answer token — ChatItem’s corner badge must be a hollow ring (transparent fill), not a solid `colorPrimary` disc. For run-backed messages, the execution process owns the current public reasoning/content and working indicator; the standalone matrix/ThinkingPanel path remains for legacy messages without a run.
 - **Avatars**: none. Assistant text is drawn flat; user messages keep a right bubble without an avatar (2026-10-13).
 
@@ -136,6 +138,22 @@ if (stickToBottom.current) snapChatToBottom(listEl);
 `ChatWorkspace` dynamically loads `MessageList` only when the current thread has messages. The empty welcome/composer and task board must not eagerly load Markdown's diagram/math/syntax dependencies. Suspense occupies the same transcript container with a Chinese loading status. An E02 submitted attempt must remain visible through an eager lightweight row in both the workspace and this fallback; see [Agent Send Recovery](./agent-send-recovery.md). The provisional row does not import rich Markdown and joins its durable counterpart by canonical user ID. This boundary never remounts `AgentChatPage` or owns a run: generation continues while the transcript module loads. Once mounted, the existing scroll, ResizeObserver and memo contracts above remain unchanged.
 
 The full vendor icon catalog is a separate lazy module behind `ModelIcons`; keep named re-exports in `ModelIconCatalog` so dynamic import does not retain every unrelated package export. The icon fallback reserves the requested dimensions and is decorative. Provider and model names remain visible while icons load.
+
+E11's combined reader must preserve this lazy rich-transcript boundary and its
+eager optimistic fallback. Isolate the complete execution-feedback subscription
+with the transcript too: `outputRevision` changes are another streaming source,
+even after message queries move below the page. Page/composer admission, Stop,
+attempts and coarse feedback labels use semantic snapshots. Keep the original
+per-invocation feedback controller and delayed DOM timing correlation; unread
+acknowledgements do not replace E03 timing.
+
+Measure renders at the actual app/page/workspace/composer/topic-list/topic-row
+function boundaries while repeated public checkpoints and metrics still update
+transcript text. React Profiler commits for a whole descendant subtree do not
+prove that the named parent function re-rendered. Use fixture-only instrumentation
+and keep counters out of the product API. Semantic transitions such as a new
+owner, approval, unread boolean or completion can update their actual consumers;
+unchanged output/internal revisions cannot invalidate all navigation rows.
 
 
 ## Execution and turn navigation

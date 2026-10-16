@@ -1,3 +1,5 @@
+import {publishAssistantActivity} from "./threadActivity";
+import type {ThreadActivityIdentity} from "../models/threadActivity";
 import {canSettleRun} from '@cuepoint/agent-core';
 import type {StoreTx} from "../../../platform/storage/types";
 import type {AgentRun, AgentRunOutput, AgentRunStatus} from "../models/agent";
@@ -17,6 +19,7 @@ const SETTLED_MESSAGE_STATUS = {
  * fields by hand.
  */
 export async function settleRun(db: StoreTx, runId: string, status: Exclude<AgentRunStatus, "running" | "waiting_approval">, options: {
+    activity: ThreadActivityIdentity | undefined;
     output?: AgentRunOutput;
     error?: string;
     finishReason?: string;
@@ -27,9 +30,10 @@ export async function settleRun(db: StoreTx, runId: string, status: Exclude<Agen
     messageError?: string;
     /** Source states this transition accepts. Resumable runs may also be ended explicitly. */
     allowedFrom?: readonly AgentRunStatus[];
-} = {}): Promise<boolean> {
+}): Promise<boolean> {
     const run = await db.agentRuns.get(runId);
     if (!run || !canSettleRun(run.status,options.allowedFrom)) return false;
+    if (!options.activity) throw new Error("公开结束状态缺少对话阅读标识");
     const message = await db.chatMessages.get(run.assistantMessageId);
     if (!message || message.runId !== run.id) throw new Error("执行消息不存在");
     const at = nowIso();
@@ -56,6 +60,7 @@ export async function settleRun(db: StoreTx, runId: string, status: Exclude<Agen
         updatedAt: at,
         endedAt: at,
     });
+    await publishAssistantActivity(options.activity, run, db);
     return true;
 }
 

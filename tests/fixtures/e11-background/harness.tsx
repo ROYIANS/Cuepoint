@@ -1,8 +1,11 @@
+const renders: Record<string, number> = {};
+Object.assign(globalThis, {__e11Render: (name: string) => {renders[name] = (renders[name] ?? 0) + 1;}});
 import {manualQuitGuards} from "@/app/drafts/manualQuitGuards";
 import {createApplicationQuit} from "@/app/lifecycle/applicationQuit";
 import {createEffectAdmission} from "@/platform/runtime/effectAdmission";
 import type {DesktopLifecycleEvent, DesktopLifecycleAction} from "@/platform/runtime/desktopLifecycle";
 import {chatDrafts} from "@/features/agent/runtime/chatDraftStore";
+import type {ChatMessage} from "@/features/agent/models/chat";
 import {useState} from "react";
 import {useManualDraftDeparture} from "@/app/drafts/useManualDraftGuard";
 import {createRoot} from "react-dom/client";
@@ -17,7 +20,7 @@ import {AgentGenerationBatches} from "@/features/agent/ui/AgentGenerationBatches
 import {db} from "@/platform/product/store";
 import {agentExecution} from "@/features/agent/runtime/agentExecution";
 import {createChatThread} from "@/features/agent/commands/chat";
-import {beginAgentRun, finishAgentRun} from "@/features/agent/commands/agentRuns";
+import {beginAgentRun, finishAgentRun, recordAgentModelMetrics} from "@/features/agent/commands/agentRuns";
 import {createAgentTask} from "@/features/agent/commands/agentTasks";
 import {TaskWrapup} from "@/features/agent/ui/TaskWrapup";
 import {pauseForApproval, transitionToolCall} from "@/features/agent/commands/agentTools";
@@ -27,6 +30,18 @@ import {addShot} from "@/features/video/commands/shots";
 import {saveFixtureToolRound} from "../../helpers/toolDispatch";
 import "@/ui/theme.css";
 
+const readErrors: string[] = [];
+Object.assign(globalThis, {__e11ReadError: (value: string) => readErrors.push(value)});
+let heldTranscript: string | undefined;
+const heldDeliveries: Array<() => void> = [];
+const observeStore = db.observe.bind(db);
+db.observe = (query, observer) => observeStore(query, {...observer, next(value) {
+    if (heldTranscript && value && typeof value === "object" && "observedRevision" in value && "threadId" in value && value.threadId === heldTranscript) heldDeliveries.push(() => observer.next(value));
+    else observer.next(value);
+}, error(cause) {
+    readErrors.push(`${String(cause)}\n${query.toString()}\n${cause instanceof Error ? cause.stack : ""}`);
+    observer.error(cause);
+}});
 await db.open();
 await agentExecution.initialize();
 const at = new Date().toISOString();
@@ -41,6 +56,7 @@ const c = await createChatThread({title: "E11 generation C", connectorId: connec
 const wrapupTask = await createAgentTask({projectId: project.id, title: "E11 wrapup", goal: "Review existing records", acceptanceCriteria: [], plan: []});
 const encoder = new TextEncoder();
 const requests: Array<{text: string; aborted: boolean; optimisticVisible: boolean; stream?: ReadableStreamDefaultController<Uint8Array>}> = [];
+let modelPreflightRequests = 0;
 const wrapup = {requests: 0, aborted: false, release: () => {}};
 const wrapupGate = new Promise<void>(resolve => {wrapup.release = resolve;});
 const generation: Array<{method: string; url: string; aborted: boolean}> = [];
@@ -51,7 +67,7 @@ const realFetch = window.fetch.bind(window);
 window.fetch = async (input, init) => {
     const url = input instanceof Request ? input.url : String(input);
     if (url.startsWith(connector.baseUrl)) {
-        if (url.endsWith("/models")) return Response.json({data: [{id: "gpt-4o", object: "model"}]});
+        if (url.endsWith("/models")) {modelPreflightRequests++; return Response.json({data: [{id: "gpt-4o", object: "model"}]});}
         const body = JSON.parse(String(init?.body));
         if (String(body.messages[0]?.content).includes("任务验收记录助手")) {
             wrapup.requests++;
@@ -115,10 +131,26 @@ const control = {holdCreation() {
         creationGate = new Promise<void>(resolve => {releaseCreation = resolve;});
         Object.assign(globalThis, {__e11BeforeCreate: async () => {creationEntered = true; await creationGate;}});
     }, releaseCreation() {releaseCreation?.(); Object.assign(globalThis, {__e11BeforeCreate: undefined});}, creationEntered: () => creationEntered,
-    db, a, b, c, project, requests, generation, releaseGeneration, errors, wrapup, wrapupTask,
+    renders, readErrors, db, a, b, c, project, requests, generation, releaseGeneration, errors, wrapup, wrapupTask,
+    preflightRequests: () => modelPreflightRequests,
+    async preparePopulatedThread() {
+        const thread = await createChatThread({title: "E11 populated history", connectorId: connector.id, model: "gpt-4o"});
+        const rows: ChatMessage[] = Array.from({length: 100}, (_, index) => ({id: `e11-history-${index}`, threadId: thread.id,
+            role: index % 2 ? "assistant" : "user", status: "complete", content: `${index} Previous creative discussion. `.repeat(50),
+            createdAt: new Date(Date.parse(at) + index).toISOString()}));
+        await db.chatMessages.bulkAdd(rows);
+        return {threadId: thread.id, messages: rows.length, units: rows.reduce((sum, row) => sum + row.content.length, 0)};
+    },
+    holdTranscript(threadId: string) {heldTranscript = threadId;},
+    releaseTranscript() {heldTranscript = undefined; heldDeliveries.splice(0).forEach(deliver => deliver());},
     setOverlayPending: (value: boolean) => setOverlayPending(value),
     quit: {actions: quitActions, needsDecision: () => manualQuitGuards.needsDecision(), admissionOpen: () => quitAdmission.open,
         emit: (phase: DesktopLifecycleEvent["phase"], intentId: string | null) => quit.handle(quitEvent(phase, intentId)), done: () => quit.done},
+    async metrics(threadId: string) {
+        const run = (await db.agentRuns.where("threadId").equals(threadId).sortBy("createdAt")).at(-1)!;
+        await recordAgentModelMetrics(run.id, {step: run.modelStep!, startedAt: 1, firstTokenAt: 2, endedAt: 102,
+            usage: {inputTokens: 10, outputTokens: 20, totalTokens: 30}});
+    },
     execution: (threadId: string) => ({active: agentExecution.snapshot(threadId).active, kind: agentExecution.snapshot(threadId).kind}),
     route: () => router.history.location.pathname,
     navigate: (to: string) => router.navigate({to}),

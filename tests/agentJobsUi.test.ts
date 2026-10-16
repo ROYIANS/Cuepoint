@@ -33,6 +33,7 @@ const timestamp = "2026-10-15T00:00:00.000Z";
 const network = vi.fn(() => {throw new Error("UI must not dispatch a provider request");});
 beforeEach(() => {
     vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+    vi.stubGlobal("ResizeObserver", class {observe() {} disconnect() {}});
     // IndexedDB's real structuredClone needs a native Blob; jsdom's wrapper loses its byte metadata.
     vi.stubGlobal("Blob", NodeBlob);
     vi.stubGlobal("fetch", network); network.mockClear(); reads = [];
@@ -256,8 +257,8 @@ it("keeps MCP unknown evidence readable in its original report while preserving 
     const host: McpHostServices = {active: true, capabilities: {host: "desktop", stdio: true, streamableHttp: true, oauth: true, rememberedCredentials: true},
         initialize: unused, preparePrivateRevision: unused, privateRevisionStatus: unused, discardPrivateRevision: unused, confirmPrivateRevision: unused,
         retireServer: unused, oauthBegin: unused, oauthStatus: unused, oauthCancel: unused, connect: unused, disconnect: unused, prepare: unused,
-        invoke: vi.fn(unused), stop: unused, dispose: async () => ({status: "drained"}),
-        invocationStatus: vi.fn(async identity => ({status: "completed", operationId: identity.operationId, result: {contents: [{uri: "fixture://one", text: "已核实的原回复"}]}}))};
+        invoke: vi.fn(unused), stop: unused, dispose: async () => ({status: "drained" as const}),
+        invocationStatus: vi.fn(async identity => ({status: "completed" as const, operationId: identity.operationId, result: {contents: [{uri: "fixture://one", text: "已核实的原回复"}]}}))};
     installMcpHostServices(host);
     try {
         retainMcpOriginalInvocation(host, {identity: {operationId: owner.call.id, authority: {authorityId: "authority_ui", binding: facts.binding,

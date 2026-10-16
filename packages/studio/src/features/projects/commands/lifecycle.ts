@@ -2,6 +2,17 @@ import type {ProductStore} from "../../../platform/storage/types";
 import {type Id, createId, nowIso} from "../../../platform/identity";
 import {db as productDb} from "../../../platform/product/store";
 import {AUDIO_TABLES} from "../../../platform/product/scopes";
+import {prepareThreadActivityKey, clearAgentReportActivity} from "../../agent/commands/threadActivity";
+import type {ThreadActivityIdentity} from "../../agent/models/threadActivity";
+
+export type ProjectReportDeletion = Readonly<{projectId: string; jobs: readonly Readonly<{jobId: string; threadId: string; activity: ThreadActivityIdentity}>[]}>;
+/** The initiating UI/tool command prepares identities before its aggregate transaction. */
+export async function prepareProjectReportDeletion(projectId: string, store?: ProductStore): Promise<ProjectReportDeletion> {
+    const db = store ?? productDb;
+    if ("transactionId" in db) throw new Error("请在项目删除事务开始前准备报告归属");
+    const jobs = await db.agentJobs.where("projectId").equals(projectId).toArray();
+    return Object.freeze({projectId, jobs: Object.freeze(jobs.map(job => Object.freeze({jobId: job.id, threadId: job.threadId, activity: prepareThreadActivityKey(job.threadId)})))});
+}
 
 /** Archiving hides a project and its owned library snapshots without altering shared sources. */
 export async function setProjectArchived(id: Id, archived: boolean, store?: ProductStore): Promise<void> {
@@ -27,8 +38,10 @@ export async function setProjectArchived(id: Id, archived: boolean, store?: Prod
     });
 }
 
-export async function deleteProject(id: Id, store?: ProductStore): Promise<void> {
+export async function deleteProject(id: Id, store?: ProductStore, preparedReports?: ProjectReportDeletion): Promise<void> {
     const db = store ?? productDb;
+    const reports = preparedReports ?? await prepareProjectReportDeletion(id, db);
+    if (reports.projectId !== id) throw new Error("项目报告删除归属已变化");
     await db.transaction(
         "rw",
         [
@@ -49,11 +62,20 @@ export async function deleteProject(id: Id, store?: ProductStore): Promise<void>
             db.productionProposals,
             db.agentGenerationJobs, db.agentGenerationBatches, db.agentGenerationBatchItems,
             db.agentJobs, db.agentJobResultChunks,
+            db.deviceSettings,
             db.desktopMediaImports,
         ],
         async (db) => {
+            const jobs = await db.agentJobs.where("projectId").equals(id).toArray();
+            const expected = new Map(reports.jobs.map(job => [job.jobId, job]));
+            if (jobs.length !== expected.size || jobs.some(job => expected.get(job.id)?.threadId !== job.threadId)) throw new Error("项目报告范围已变化，请重试删除");
+            for (const job of jobs) {
+                const prepared = expected.get(job.id)!;
+                if (prepared.activity.threadId !== job.threadId) throw new Error("项目报告删除归属已变化");
+                await clearAgentReportActivity(prepared.activity, job.id, db);
+            }
             await db.desktopMediaImports.where("projectId").equals(id).delete();
-            for (const job of await db.agentJobs.where("projectId").equals(id).toArray()) await db.agentJobResultChunks.where("jobId").equals(job.id).delete();
+            for (const job of jobs) await db.agentJobResultChunks.where("jobId").equals(job.id).delete();
             await db.agentJobs.where("projectId").equals(id).delete();
             for (const table of AUDIO_TABLES) await db.table(table.name).where("projectId").equals(id).delete();
             await db.projectIpLinks.delete(id);

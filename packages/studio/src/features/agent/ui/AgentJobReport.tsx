@@ -1,3 +1,4 @@
+import {useObservedReadProbe} from "./threadReadVisibility";
 import {useEffect, useId, useRef, useState} from "react";
 import {db} from "../../../platform/product/store";
 import {useProductQueryState} from "../../../platform/product/queries";
@@ -42,8 +43,11 @@ function JobProgress({job}: {job: AgentJob}) {
     const notice = jobNotice(job);
     const selectedMedia = job.selection.kind === "project_media_check" ? job.selection.media : [];
     const remaining = job.selected - job.completed;
+    const surface = useRef<HTMLDivElement>(null);
+    const meaningful = ["completed", "stopped", "failed", "unknown"].includes(job.status) && (job.kind === "project_media_check" || !!notice);
+    useObservedReadProbe({threadId: job.threadId, jobId: job.id, revision: meaningful ? job.revision : 0, surface});
     if (job.kind !== "project_media_check" && !notice) return null;
-    return <div className="agent-job-progress">
+    return <div ref={surface} className="agent-job-progress">
         {job.kind === "project_media_check" && <p>已检查 {job.completed} / {job.selected} 项</p>}
         {job.kind === "project_media_check" && job.selected === 0 && <p>没有可检查的视频。</p>}
         {notice && <p role={job.status === "failed" || job.status === "unknown" ? "alert" : undefined}>{notice}</p>}
@@ -69,15 +73,17 @@ function ReportPage({reader, job}: {reader: AgentJobReader; job: AgentJob}) {
     const state = useProductQueryState(async tx => ({key, page: await readAgentJobPage(reader, job.id, offset, AGENT_JOB_LIMITS.pageUnits, tx)}),
         [key, retry]);
     const page = state.value?.key === key ? state.value.page : undefined;
+    const available = page?.available && page.jobId === job.id && page.revision === revision && page.offset === offset ? page : undefined;
+    const surface = useRef<HTMLDivElement>(null);
+    useObservedReadProbe({threadId: reader.threadId, jobId: job.id, revision: available ? job.revision : 0, surface});
     if (state.error) return <div className="agent-job-read-error" role="alert">
         <p>报告读取失败，请重试读取。</p>
         <Button size="sm" variant="ghost" onClick={() => setRetry(value => value + 1)}>重试读取报告</Button>
     </div>;
-    const available = page?.available && page.jobId === job.id && page.revision === revision && page.offset === offset ? page : undefined;
     return <div className="agent-job-reader" aria-busy={!page}>
         {!page ? <p>正在读取报告…</p> : !available ?
             <p>{!page.available && page.reason === "cleared" ? "保留结果已清理。" : "保留报告不可用。"}</p> : <>
-                {available.text ? <pre tabIndex={0} aria-label="报告正文">{available.text}</pre> : <p>报告没有正文内容。</p>}
+                <div ref={surface}>{available.text ? <pre tabIndex={0} aria-label="报告正文">{available.text}</pre> : <p>报告没有正文内容。</p>}</div>
                 <p className="agent-job-page-position">{available.length === 0 ? "0 字符" : `${available.offset + 1}–${available.offset + available.text.length} / ${available.length} 字符`}</p>
             </>}
         <div className="agent-job-page-actions" aria-label="报告分页">

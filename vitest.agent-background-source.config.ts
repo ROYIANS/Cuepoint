@@ -5,6 +5,19 @@ import {createStudioVitestConfig} from "./tooling/vitest.studio.ts";
 export default createStudioVitestConfig({
     aliases: createAgentSourceAliases(),
     include: [
+        "tests/agentBusiness.test.ts",
+        "tests/contextPreviewSnapshot.test.ts",
+        "tests/mcpAgentExecution.test.ts",
+        "tests/agentJobsUi.test.ts",
+        "tests/e11ThreadReadingUi.test.ts",
+        "tests/e11ThreadActivity.test.ts",
+        "tests/agentRuns.test.ts",
+        "tests/agentRunDefects.test.ts",
+        "tests/agentToolsReview.test.ts",
+        "tests/agentFinishingCheck.test.ts",
+        "tests/agentJobs.test.ts",
+        "tests/topicSidebar.test.ts",
+
         "tests/e11McpQuit.test.ts",
         "tests/mcpNativePort.test.ts",
         "tests/mcpBrowserHost.test.ts",

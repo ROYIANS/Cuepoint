@@ -1,3 +1,4 @@
+import {prepareThreadActivityKey} from "@/features/agent/commands/threadActivity";
 import {describe, expect, it, vi} from "vitest";
 import {db} from "@/platform/product/store";
 import {beginAgentRun, finishAgentRun} from "@/features/agent/commands/agentRuns";
@@ -13,7 +14,7 @@ import {appendStartPrompt} from "@/features/agent/ui/startPrompt";
 import type {AgentRun} from "@/features/agent/models/agent";
 import type {ConnectorConfig} from "@/features/settings/models/connector";
 
-const connector: ConnectorConfig = {id: "defects-cx", name: "test", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret", updatedAt: "2026-01-01"};
+const connector: ConnectorConfig = {id: "defects-cx", label: "test", protocol: "openai-compatible", definitionId: "openai-compatible", baseUrl: "https://example.test/v1", apiKey: "secret", updatedAt: "2026-01-01"};
 
 async function begin(permissionMode: "ask" | "full" = "ask") {
     await updateGeneralAgentConfig({permissionMode, enabledSkillIds: ["workspace", "planning"]});
@@ -31,8 +32,9 @@ describe("settleRun is the only terminal-state writer", () => {
         for (const status of ["completed", "failed", "cancelled", "interrupted"] as const) {
             const run = await begin();
             await db.agentRuns.update(run.id, {status: "running", pauseReason: "model_step_limit"});
-            await db.transaction("rw", [db.agentRuns, db.chatMessages], async (tx) => {
-                await settleRun(tx, run.id, status, {error: `${status}-error`});
+            const activity = prepareThreadActivityKey(run.threadId);
+            await db.transaction("rw", [db.agentRuns, db.chatMessages, db.chatThreads, db.deviceSettings], async (tx) => {
+                await settleRun(tx, run.id, status, {activity, error: `${status}-error`});
             });
             const saved = await db.agentRuns.get(run.id);
             expect(saved).toMatchObject({status, error: `${status}-error`});

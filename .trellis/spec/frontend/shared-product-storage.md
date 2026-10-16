@@ -54,7 +54,10 @@ checkpoint, values are validated by the reader (`getDeviceSetting(key, parse)`
 returns `undefined` for unreadable or invalid data), keys match `[A-Za-z0-9][A-Za-z0-9._:-]{0,127}`
 and one value is at most 2 MiB. New device-local state adds a key, not a table.
 Current keys: `modelCatalog`, `modelCatalogSelection`. Browser schema is Dexie
-version 27. Tables 51 and 52 are the text-only `agentJobs` and
+version 27. E11 also owns strict namespaced per-thread activity/read keys; see
+[Sidebar Activity / Read Revisions](./agent-thread-activity.md). These readers
+must distinguish absent data from corruption/read failure, so the forgiving
+`getDeviceSetting` helper is unsuitable for the activity watermark. Tables 51 and 52 are the text-only `agentJobs` and
 `agentJobResultChunks`; see [Agent jobs and retained reports](./agent-jobs-results.md)
 for their publication, quotas and lifecycle scopes. Table 53, `desktopMediaImports`,
 stores project-owned intent, frozen selection and import receipts; see

@@ -7,6 +7,7 @@ import {createSubmissionAttempt} from "@/features/agent/models/chatSubmissionAtt
 import {createChatThread} from "@/features/agent/commands/chat";
 import * as chatCommands from "@/features/agent/commands/chat";
 import * as runCommands from "@/features/agent/commands/agentRuns";
+import * as admissionQueries from "@/features/agent/queries/agentAdmission";
 import {upsertConnector} from "@/features/settings/commands/connectors";
 import {updateGeneralAgentConfig} from "@/features/agent/commands/agentSettings";
 import {withExecutionOwnership, type ThreadLockManager} from "@/features/agent/runtime/runOwnership";
@@ -128,6 +129,40 @@ it("retains the actual lock and local reservation while a final publication is h
     await expect(withExecutionOwnership(submitted.threadId, async () => true)).resolves.toBe(true);
 });
 
+it("idempotently dismisses repeated captured observations after a background completion without touching another thread", async () => {
+    const config = await connector(), a = await attempt(config), b = await attempt(config);
+    const entered = deferred(), release = deferred(); let requests = 0;
+    const fetcher = vi.fn<typeof fetch>(async () => {if (++requests === 2) entered.resolve(); await release.promise; return answer("completed in background");});
+    const owner = service({store: db, fetchImpl: fetcher});
+    const first = owner.submit({attempt: a}), second = owner.submit({attempt: b});
+    await entered.promise;
+    const captured = owner.snapshot(a.threadId).attempts;
+    expect(captured[0].phase).toBe("accepted");
+    expect(owner.dismissAttempt({threadId: a.threadId, userMessageId: a.admission.userMessageId})).toBe(false);
+    release.resolve(); await Promise.all([first.done, second.done]);
+    const bBefore = owner.snapshot(b.threadId), notifications = vi.fn();
+    owner.subscribe(a.threadId, notifications);
+    const observeCaptured = () => captured.map(item => owner.dismissAttempt({threadId: item.threadId, userMessageId: item.admission.userMessageId}));
+    expect(observeCaptured()).toEqual([true]);
+    const after = owner.snapshot(a.threadId);
+    // StrictMode/reappearing layouts and stale immutable arrays can observe the
+    // same canonical row again after the presentation-only attempt was removed.
+    expect(observeCaptured()).toEqual([false]);
+    expect(owner.dismissAttempt({threadId: a.threadId, userMessageId: b.admission.userMessageId})).toBe(false);
+    expect(owner.dismissAttempt({threadId: "unmounted-foreign-thread", userMessageId: b.admission.userMessageId})).toBe(false);
+    expect(owner.snapshot(a.threadId)).toBe(after);
+    expect(owner.snapshot(b.threadId)).toBe(bBefore);
+    expect(notifications).toHaveBeenCalledTimes(1);
+    expect(after.attempts).toEqual([]);
+    expect(bBefore.attempts[0].admission.userMessageId).toBe(b.admission.userMessageId);
+    expect((await db.chatMessages.get(a.admission.userMessageId))?.role).toBe("user");
+    expect((await db.agentRuns.get(a.admission.runId))?.status).toBe("completed");
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(() => owner.retrySubmission({threadId: a.threadId, userMessageId: a.admission.userMessageId})).toThrow("发送记录不存在");
+    expect(() => owner.checkAdmission({threadId: a.threadId, userMessageId: a.admission.userMessageId})).toThrow("发送记录不存在");
+    expect(() => owner.recoverAdmissionState({threadId: a.threadId, userMessageId: a.admission.userMessageId})).toThrow("发送记录不存在");
+});
+
 it("owns compatibility preparation before await and prevents late creation/dispatch after exact Stop", async () => {
     const config = await connector(), submitted = await attempt(config);
     config.definitionId = "apimart"; await db.connectors.put(config); submitted.connector.definitionId = "apimart";
@@ -198,6 +233,31 @@ for (const committed of [true, false]) it(`unknown admission with ${committed ? 
     }
     expect(() => owner.retrySubmission({threadId: submitted.threadId, userMessageId: submitted.admission.userMessageId})).toThrow();
     expect(admissions).toBe(1); expect(fetcher).not.toHaveBeenCalled();
+});
+
+it("keeps a pending status check and unresolved submission actionable across repeated observations", async () => {
+    const config = await connector(), submitted = await attempt(config);
+    vi.spyOn(runCommands, "beginAgentRun").mockRejectedValue(new UnknownCommitError("original-admission", "fixture"));
+    const fetcher = vi.fn<typeof fetch>(async () => answer()), owner = service({store: db, fetchImpl: fetcher});
+    await expect(owner.submit({attempt: submitted}).done).rejects.toBeInstanceOf(UnknownCommitError);
+    const identity = {threadId: submitted.threadId, userMessageId: submitted.admission.userMessageId};
+    expect(owner.dismissAttempt(identity)).toBe(false);
+    const entered = deferred(), release = deferred();
+    vi.spyOn(admissionQueries, "readAgentAdmission").mockImplementation(async () => {entered.resolve(); await release.promise; return {status: "absent"};});
+    const check = owner.checkAdmission(identity);
+    await entered.promise;
+    const pending = owner.snapshot(submitted.threadId), observer = vi.fn();
+    owner.subscribe(submitted.threadId, observer);
+    expect(pending.attempts[0].phase).toBe("checking");
+    expect(owner.dismissAttempt(identity)).toBe(false);
+    expect(owner.dismissAttempt(identity)).toBe(false);
+    expect(owner.snapshot(submitted.threadId)).toBe(pending);
+    expect(observer).not.toHaveBeenCalled();
+    release.resolve(); await check.done;
+    expect(owner.snapshot(submitted.threadId).attempts[0].phase).toBe("uncertain");
+    expect(owner.dismissAttempt(identity)).toBe(false);
+    expect(() => owner.retrySubmission(identity)).toThrow("核对发送状态");
+    expect(fetcher).not.toHaveBeenCalled();
 });
 
 it("persists an explicit refusal without a connector and validates run/call thread association", async () => {

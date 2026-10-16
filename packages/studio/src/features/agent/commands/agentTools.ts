@@ -1,3 +1,5 @@
+import type {ThreadActivityIdentity} from "../models/threadActivity";
+import {prepareRunActivityKey, publishAssistantActivity, publishAgentReportActivity} from "./threadActivity";
 import {modelStepLimitReached} from '@cuepoint/agent-core';
 import {responseRoundMatches, appendResponseToolResult} from '@cuepoint/agent-providers';
 import type {ProductStore, StoreTx} from "../../../platform/storage/types";
@@ -55,8 +57,9 @@ async function requireLatestRun(run: AgentRun, store?: ProductStore): Promise<vo
 }
 
 /** Park at a model boundary, before context preparation can issue another request. */
-export async function pauseAtModelStepLimit(runId: string, store?: ProductStore): Promise<boolean> {
+export async function pauseAtModelStepLimit(runId: string, store?: ProductStore, preparedActivity?: ThreadActivityIdentity): Promise<boolean> {
     const db = store ?? productDb;
+    const activity = preparedActivity ?? await prepareRunActivityKey(runId, db);
     return db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
         if (run.status !== "running") throw new Error("执行已停止");
@@ -66,6 +69,7 @@ export async function pauseAtModelStepLimit(runId: string, store?: ProductStore)
         const notice = `本段已达到 ${MODEL_STEPS_PER_SEGMENT} 轮模型请求，进度已保存。可继续执行下一段，或结束本次执行。`;
         // A budget pause is a terminal-but-resumable state; it uses the shared writer too.
         await settleRun(db, runId, "interrupted", {
+            activity,
             messageError: notice,
             pauseReason: "model_step_limit",
             preserveOutput: true
@@ -119,8 +123,9 @@ export type AgentToolRoundDetail =
     failure?: { error: string; result: string }
 };
 
-export async function saveToolRound(runId: string, content: string, wireCalls: AgentWireToolCall[], details: AgentToolRoundDetail[], responseOutput?: AgentResponseItem[], publicOutput?: Pick<AgentRunOutput, "reasoning" | "reasoningDurationMs">, store?: ProductStore): Promise<void> {
+export async function saveToolRound(runId: string, content: string, wireCalls: AgentWireToolCall[], details: AgentToolRoundDetail[], responseOutput?: AgentResponseItem[], publicOutput?: Pick<AgentRunOutput, "reasoning" | "reasoningDurationMs">, store?: ProductStore, preparedActivity?: ThreadActivityIdentity): Promise<void> {
     const db = store ?? productDb;
+    const activity = preparedActivity ?? await prepareRunActivityKey(runId, db);
     await db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
         if (run.status !== "running") throw new Error("执行已停止");
@@ -178,32 +183,39 @@ export async function saveToolRound(runId: string, content: string, wireCalls: A
             }],
             updatedAt: at,
         });
+        if (activity) await publishAssistantActivity(activity, run, db);
     });
 }
 
 export async function transitionToolCall(runId: string, callId: string, from: AgentToolCall["status"][], to: AgentToolCall["status"], extra: {
     result?: string;
     error?: string
-} = {}, store?: ProductStore, validateClaim?: (run:AgentRun,call:AgentToolCall,tx:StoreTx)=>Promise<void>|void): Promise<boolean> {
+} = {}, store?: ProductStore, validateClaim?: (run:AgentRun,call:AgentToolCall,tx:StoreTx)=>Promise<void>|void, preparedActivity?: ThreadActivityIdentity): Promise<boolean> {
     const db = store ?? productDb;
+    const activity = preparedActivity ?? await prepareRunActivityKey(runId, db);
     return db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
         const call = await db.agentToolCalls.get(callId);
         if (run.status !== "running" || !call || call.runId !== runId || call.threadId !== run.threadId) throw new Error("工具调用归属或执行状态不匹配");
-        if (!from.includes(call.status)) return false;
+        if (!from.includes(call.status) || call.status === to && extra.result === call.result && extra.error === call.error) return false;
         if (to === 'running') await validateClaim?.(run,call,db);
         await db.agentToolCalls.update(callId, {status: to, ...extra, updatedAt: nowIso()});
+        // Progress/claim transitions are internal; actual result/attention changes
+        // are public. Retained reports own a separate exact result cursor.
+        if (activity && ["completed", "failed", "unknown"].includes(to) && !await db.agentJobs.where("callId").equals(callId).first()) await publishAssistantActivity(activity, run, db);
         return true;
     });
 }
 
-export async function pauseForApproval(runId: string, store?: ProductStore): Promise<void> {
+export async function pauseForApproval(runId: string, store?: ProductStore, preparedActivity?: ThreadActivityIdentity): Promise<void> {
     const db = store ?? productDb;
+    const activity = preparedActivity ?? await prepareRunActivityKey(runId, db);
     await db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
         if (run.status !== "running") throw new Error("执行已停止");
         await db.agentRuns.update(run.id, {status: "waiting_approval", updatedAt: nowIso()});
         await db.chatMessages.update(run.assistantMessageId, {status: "pending"});
+        if (activity) await publishAssistantActivity(activity, run, db);
     });
 }
 
@@ -227,13 +239,14 @@ export async function resolveAgentToolApproval(runId: string, callId: string, de
 
 export async function resumeAgentRun(runId: string, store?: ProductStore): Promise<AgentRun> {
     const db = store ?? productDb;
+    const activity = await prepareRunActivityKey(runId, db);
     return db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
         await requireProject(run, db);
         if (!canResumeAgentRun(run)) throw new Error("此执行不能继续");
         await requireLatestRun(run, db);
         await upgradeLegacyPlanCalls(runId, db);
-        await recoverBatchPreparationCalls(runId, db);
+        await recoverBatchPreparationCalls(runId, db, activity);
         const calls = await db.agentToolCalls.where("runId").equals(runId).toArray();
         if (calls.some((call) => call.status === "running" || call.status === "unknown")) throw new Error("有操作结果尚不确定，请先核实，不能自动继续或重跑");
         if (calls.some((call) => call.status === "awaiting_approval")) throw new Error("请先批准或拒绝待处理的操作");
@@ -292,8 +305,9 @@ export async function appendToolResults(runId: string, store?: ProductStore): Pr
 }
 
 /** Plan changes and the successful ledger result commit together. */
-export async function updateRunPlanAndComplete(runId: string, callId: string, plan: AgentPlanItem[], reason?: string, store?: ProductStore): Promise<string> {
+export async function updateRunPlanAndComplete(runId: string, callId: string, plan: AgentPlanItem[], reason?: string, store?: ProductStore, preparedActivity?: ThreadActivityIdentity): Promise<string> {
     const db = store ?? productDb;
+    const activity = preparedActivity ?? await prepareRunActivityKey(runId, db);
     return db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
         await requireProject(run, db);
@@ -315,6 +329,7 @@ export async function updateRunPlanAndComplete(runId: string, callId: string, pl
         const result = JSON.stringify({plan});
         await db.agentRuns.update(runId, {plan, updatedAt: nowIso()});
         await db.agentToolCalls.update(callId, {status: "completed", result, updatedAt: nowIso()});
+        if (activity) await publishAssistantActivity(activity, run, db);
         return result;
     }).catch((error: unknown) => {
         if (error instanceof StorageError && error.certainty === "unknown") throw error;
@@ -322,8 +337,9 @@ export async function updateRunPlanAndComplete(runId: string, callId: string, pl
     });
 }
 
-export async function cancelAgentRun(runId: string, store?: ProductStore): Promise<void> {
+export async function cancelAgentRun(runId: string, store?: ProductStore, preparedActivity?: ThreadActivityIdentity): Promise<void> {
     const db = store ?? productDb;
+    const activity = preparedActivity ?? await prepareRunActivityKey(runId, db);
     await db.transaction("rw", tables(db), async (db) => {
         const run = await requireRun(runId, db);
         if (run.status === "completed" || run.status === "cancelled") return;
@@ -337,6 +353,7 @@ export async function cancelAgentRun(runId: string, store?: ProductStore): Promi
         // One terminal writer: the same path that ends interrupted/failed/completed runs.
         // A resumable run may also be ended explicitly, which clears its pause reason.
         await settleRun(db, runId, "cancelled", {
+            activity,
             error: "本次执行已结束，已完成的步骤保留。",
             preserveOutput: true,
             allowedFrom: ["running", "waiting_approval", "interrupted", "failed"],
@@ -344,17 +361,24 @@ export async function cancelAgentRun(runId: string, store?: ProductStore): Promi
     });
 }
 
-export async function markRunningToolsUnknown(runId: string, store?: ProductStore, unresolvedOutcome = false): Promise<void> {
+export async function markRunningToolsUnknown(runId: string, store?: ProductStore, unresolvedOutcome = false, preparedActivity?: ThreadActivityIdentity): Promise<void> {
     const db = store ?? productDb;
+    const activity = preparedActivity ?? await prepareRunActivityKey(runId, db);
     await db.transaction("rw", tables(db), async (db) => {
-        if (!(await db.agentRuns.get(runId))) return;
+        const run = await db.agentRuns.get(runId);
+        if (!run) return;
         const running = await db.agentToolCalls.where("runId").equals(runId).filter((call) => call.status === "running").toArray();
         for (const call of running) {
             const job = await db.agentJobs.where("callId").equals(call.id).first();
-            if (job && !["completed", "stopped", "failed", "unknown"].includes(job.status)) await db.agentJobs.update(job.id, {status: "unknown", revision: job.revision + 1, error: "作业结果尚未确认，请核对；不会自动重复执行。", updatedAt: nowIso()});
+            if (job && !["completed", "stopped", "failed", "unknown"].includes(job.status)) {
+                const next = {...job, status: "unknown" as const, revision: job.revision + 1, error: "作业结果尚未确认，请核对；不会自动重复执行。", updatedAt: nowIso()};
+                await db.agentJobs.put(next);
+                if (activity) await publishAgentReportActivity(activity, next, run, db);
+            }
             await db.agentToolCalls.update(call.id, unresolvedOutcome || job ? {
             status: "unknown", error: "操作结果尚不确定，不能自动重跑。", updatedAt: nowIso()
         } : await interruptedToolState(call, db));
+            if (!job && activity) await publishAssistantActivity(activity, run, db);
         }
     });
 }
@@ -384,9 +408,10 @@ export async function saveToolPreview(runId: string, callId: string, preview: Ag
  */
 export async function executeAtomicTool(
     context: { runId: string; threadId: string; callId: string; signal: AbortSignal; store?: ProductStore },
-    execute: (db: StoreTx) => Promise<unknown>, store?: ProductStore
+    execute: (db: StoreTx) => Promise<unknown>, store?: ProductStore, preparedActivity?: ThreadActivityIdentity
 ): Promise<unknown> {
     const db = store ?? context.store ?? productDb;
+    const activity = preparedActivity ?? await prepareRunActivityKey(context.runId, db);
     try {
         return await db.transaction("rw", db.tables, async (db) => {
             context.signal.throwIfAborted();
@@ -404,6 +429,7 @@ export async function executeAtomicTool(
             const result = JSON.stringify(value);
             if (result === undefined || result.length > 65536) throw new Error("工具结果超过大小限制");
             await db.agentToolCalls.update(call.id, {status: "completed", result, updatedAt: nowIso()});
+            if (activity) await publishAssistantActivity(activity, run, db);
             return value;
         });
     } catch (error) {

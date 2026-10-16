@@ -14,8 +14,8 @@ import {
 import {continuationExtraTokens} from "../runtime/contextCompaction";
 import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
 import type {ConnectorConfig} from "../../settings/models/connector";
-import {useMemo, useState, useSyncExternalStore} from "react";
-import {contextPreviewIdentity, readAgentContextPreview} from "../commands/agentContextPreview";
+import {useEffect, useMemo, useState, useSyncExternalStore} from "react";
+import {contextPreviewIdentity, prepareAgentContextPreview, readPreparedAgentContextPreview, type ContextPreviewRead} from "../commands/agentContextPreview";
 import {useProductQuery} from "../../../platform/product/queries";
 import * as Popover from "@radix-ui/react-popover";
 import {X} from "../../../ui/icons";
@@ -54,10 +54,19 @@ function useContextUsage(props: ContextProps) {
         }),
         [threadId, projectId, interactionMode, requestDraft, attachments, model, connector?.definitionId, modelMetadata]);
     const identity = contextPreviewIdentity(input);
+    const [preparation, setPreparation] = useState<Awaited<ReturnType<typeof prepareAgentContextPreview>> | {identity: string; error: string}>();
+    useEffect(() => {
+        let attached = true;
+        void prepareAgentContextPreview(input).then(value => {if (attached) setPreparation(value);},
+            cause => {if (attached) setPreparation({identity, error: cause instanceof Error ? cause.message : "上下文准备失败"});});
+        return () => {attached = false;};
+    }, [input, identity]);
     const connections = mcpRuntimeOwner()?.connections;
     const connectionRevision = useSyncExternalStore(connections ? listener => connections.subscribe(listener) : () => () => undefined,
         () => connections?.revision ?? 0, () => 0);
-    const loaded = useProductQuery((db) => readAgentContextPreview(input, db), [input, connectionRevision]);
+    const prepared = preparation?.identity === identity ? preparation : undefined;
+    const loaded = useProductQuery<ContextPreviewRead | undefined>(db => !prepared ? undefined : "error" in prepared ?
+        {identity, status: "error", message: prepared.error} : readPreparedAgentContextPreview(input, prepared, db), [input, prepared, connectionRevision]);
     const snapshot = loaded?.identity === identity ? loaded : undefined;
     return useMemo(() => {
         if (!snapshot || snapshot.status !== "ready") {

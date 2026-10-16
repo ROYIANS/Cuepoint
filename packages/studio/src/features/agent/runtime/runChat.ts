@@ -1,3 +1,4 @@
+import {prepareThreadActivityKey} from "../commands/threadActivity";
 import {createMcpRunRegistry} from "../mcp/runtime/runRegistry";
 import {createId} from '../../../platform/identity';
 import {executeRun,toolMetadataMatches,type RuntimeHost,type RoundDetail} from '@cuepoint/agent-core';
@@ -36,6 +37,7 @@ function effectiveToolInput(call:AgentToolCall) {
 function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKey:string,fetchImpl:typeof fetch|undefined,materialized:ReturnType<typeof createMcpRunRegistry>,signal:AbortSignal,run:AgentRun,feedback?:RuntimeExecutionFeedback):RuntimeHost<AgentRun,AgentToolCall,AgentToolContext,AgentToolPreview,AgentResponseItem[]> {
     const registry = materialized.definitions;
     assertThreadOwnership(ownership,ownership.threadId);
+    const activity=prepareThreadActivityKey(run.threadId);
     const executionId=createId('exec');
     const observe:RuntimeExecutionFeedback=event=>{
         try {feedback?.(event);} catch { /* Optional feedback cannot affect execution or committed results. */ }
@@ -65,8 +67,8 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
             if (output) observe({...feedbackIdentity,type:'baseline',output});
             return output;
         },
-        checkpoint:(run,seq,output)=>guard(run,tx=>checkpointAgentRun(run.id,seq,output,tx),[db.agentRuns,db.chatMessages]),
-        pauseAtLimit:run=>guard(run,tx=>pauseAtModelStepLimit(run.id,tx)),
+        checkpoint:(run,seq,output)=>guard(run,tx=>checkpointAgentRun(run.id,seq,output,tx,activity),[db.agentRuns,db.chatMessages,db.chatThreads,db.deviceSettings]),
+        pauseAtLimit:run=>guard(run,tx=>pauseAtModelStepLimit(run.id,tx,activity)),
         async prepareContext(run,signal) {
             ownership.assertHeld();
             observe({...feedbackIdentity,type:'preparing'});
@@ -100,9 +102,9 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
         },
         recordMetrics:(run,metrics)=>guard(run,tx=>recordAgentModelMetrics(run.id,metrics,tx),[db.agentRuns,db.chatMessages]),
         finishingCheck:(run,output,continuation,signal)=>{ownership.assertHeld();return saveAgentFinishingCheck(run.id,run.modelStep!,output,continuation,signal,db);},
-        commitRound:(run,result,details,output)=>guard(run,tx=>saveToolRound(run.id,result.content,result.toolCalls!,details.map(detail=>({...detail,recovery:productRecovery(detail)})),result.continuation,output,tx)),
+        commitRound:(run,result,details,output)=>guard(run,tx=>saveToolRound(run.id,result.content,result.toolCalls!,details.map(detail=>({...detail,recovery:productRecovery(detail)})),result.continuation,output,tx,activity)),
         offeredNames:(run,step)=>step === undefined ? getOfferedToolNames(run) : toolNamesForCall(run,step),
-        settle:(run,status,output,error,reason)=>guard(run,async tx=>{await finishAgentRun(run.id,status,output,error,reason,tx);return (await tx.agentRuns.get(run.id))!.status;},[db.agentRuns,db.chatMessages]),
+        settle:(run,status,output,error,reason)=>guard(run,async tx=>{await finishAgentRun(run.id,status,output,error,reason,tx,activity);return (await tx.agentRuns.get(run.id))!.status;},[db.agentRuns,db.chatMessages,db.chatThreads,db.deviceSettings]),
         tools:{
             registry,
             readRound:run=>{
@@ -123,7 +125,7 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
             context:(run,call,signal,preview)=>({projectId:run.projectId,runId:run.id,threadId:run.threadId,callId:call.id,signal,preview,store:db}),
             approval:requiresToolApproval,
             preview:(run,call,preview)=>guard(run,tx=>saveToolPreview(run.id,call.id,preview,tx)),
-            transition:(run,call,from,to,extra)=>to !== 'running' ? guard(run,tx=>transitionToolCall(run.id,call.id,from,to,extra,tx)) : transitionToolCall(run.id,call.id,from,to,extra,db,async(current,saved,tx)=>{
+            transition:(run,call,from,to,extra)=>to !== 'running' ? guard(run,tx=>transitionToolCall(run.id,call.id,from,to,extra,tx,undefined,activity)) : transitionToolCall(run.id,call.id,from,to,extra,db,async(current,saved,tx)=>{
                 assertThreadOwnership(ownership,current.threadId);
                 if (current.id !== run.id || current.modelStep !== run.modelStep || current.assistantMessageId !== run.assistantMessageId || claimFingerprint(saved) !== claimFingerprint(call)) throw new Error('工具调用或审批在领取前已经变化');
                 const {tool,args}=validateToolCall(saved.name,effectiveToolInput(saved).arguments,toolNamesForCall(current,saved.step),registry);
@@ -131,9 +133,9 @@ function createStudioRuntimeHost(db:ProductStore,ownership:ThreadOwnership,apiKe
                 await frozenProjectScope({runId:current.id,threadId:current.threadId,callId:saved.id,signal,projectId:current.projectId},tx);
                 await materialized.assertBinding(saved.binding,tx);
             }),
-            park:run=>guard(run,tx=>pauseForApproval(run.id,tx)),
+            park:run=>guard(run,tx=>pauseForApproval(run.id,tx,activity)),
             appendResults:run=>guard(run,tx=>appendToolResults(run.id,tx)),
-            markUnknown:(run,force)=>guard(run,tx=>markRunningToolsUnknown(run.id,tx,force))
+            markUnknown:(run,force)=>guard(run,tx=>markRunningToolsUnknown(run.id,tx,force,activity))
         },
         errors:{failure:toolFailureResult,unavailable:(name,offered)=>new ToolUnavailableError(name,offered),pending:cause=>cause instanceof ToolPendingError,pendingError:()=>new ToolPendingError('生成任务已保存，请继续查询已有任务。'),rolledBack:cause=>cause instanceof AtomicToolRollbackError,unknown:cause=>cause instanceof StorageError && cause.certainty === 'unknown',publicMessage:cause=>credentials.message(cause)}
     };

@@ -29,6 +29,8 @@ export interface ChatThread {
 }
 
 export interface ChatMessage {
+    /** Revision of the exact publicly rendered assistant snapshot. */
+    publicRevision?: number;
     attachments?: ReferenceAttachment[];
     referenceContext?: AgentSelectedReferences;
     runId?: Id;
