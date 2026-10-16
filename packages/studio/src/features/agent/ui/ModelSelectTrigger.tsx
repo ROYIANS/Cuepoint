@@ -6,7 +6,7 @@ import {ModelIcon, ProviderIcon} from "./ModelIcons";
 import {ActionIcon} from "@lobehub/ui/base-ui";
 import * as Popover from "@radix-ui/react-popover";
 import {ArrowUp, Check, ChevronDown, Eye, Plug, Square, Wrench} from "../../../ui/icons";
-import {type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore} from "react";
+import {useEffect, useMemo, useRef, useState, useSyncExternalStore} from "react";
 import {formatPrice} from "../../settings/modelCatalog/format";
 import {
     getModelCatalog,
@@ -21,6 +21,9 @@ import {buildChatModelOptions, type ChatModelPolicy} from "../../settings/models
 import {connectorDisplayName, connectorProviderKey,} from "../../settings/models/catalog";
 import {groupModelsByVendor, inferModelHints, lookupVendor, modelDisplayName,} from "../../settings/models/modelVendors";
 import {popupCollisionPadding} from "../../../ui/popupCollision";
+import {getReasoningPolicy, REASONING_EFFORT_LABELS} from "../../settings/models/reasoningPolicy";
+import type {AgentReasoningEffort} from "../models/agent";
+import {ReasoningEffortControl} from "./ModelSettingsMenu";
 
 function popupRoot(anchor: HTMLElement | null): HTMLElement {
     return anchor?.closest<HTMLElement>('[data-slot="context-panel-content"]') ?? anchor?.closest<HTMLElement>(".agent-chat-root") ?? document.body;
@@ -137,7 +140,6 @@ function ModelDetail({modelId, metadata, providerId, baseUrl}: {
  */
 export function ModelSelectTrigger({
                                        model,
-                                       trigger,
                                        modelOptions,
                                        modelMetadata,
                                        probingModels,
@@ -146,11 +148,12 @@ export function ModelSelectTrigger({
                                        selectedConnectorId,
                                        onConnectorChange,
                                        onModelChange,
+                                       reasoningEffort,
+                                       onReasoningEffortChange,
                                        open: controlledOpen,
                                        onOpenChange,
                                    }: {
     model: string;
-    trigger?: ReactNode;
     modelMetadata?: Record<string, ChatModelMetadata>;
     modelOptions: Array<{ label: string; value: string }>;
     probingModels: boolean;
@@ -159,6 +162,8 @@ export function ModelSelectTrigger({
     selectedConnectorId?: Id;
     onConnectorChange: (id: string) => void;
     onModelChange: (model: string) => void;
+    reasoningEffort?: AgentReasoningEffort;
+    onReasoningEffortChange?: (effort: AgentReasoningEffort | undefined) => void;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
 }) {
@@ -199,6 +204,10 @@ export function ModelSelectTrigger({
     const previewId = groups.some((group) => group.models.includes(preview))
         ? preview
         : groups[0]?.models[0];
+
+    const selectedConnector = connectors.find((item) => item.id === selectedConnectorId);
+    const effortPolicy = onReasoningEffortChange && model ? getReasoningPolicy(selectedConnector, model) : undefined;
+    const shownEffort = effortPolicy && reasoningEffort && effortPolicy.levels.includes(reasoningEffort) ? reasoningEffort : undefined;
 
     const panel = (
         <div
@@ -255,8 +264,11 @@ export function ModelSelectTrigger({
                                     <button
                                         key={id}
                                         type="button"
-                                        className={`agent-model-row${id === model || id === previewId ? " is-active" : ""}`}
+                                        title={id}
+                                        aria-current={id === model ? "true" : undefined}
+                                        className={`agent-model-row${id === model ? " is-selected" : ""}${id === previewId ? " is-previewed" : ""}`}
                                         onMouseEnter={() => setPreview(id)}
+                                        onFocus={() => setPreview(id)}
                                         onClick={() => {
                                             onModelChange(id);
                                             setSearch("");
@@ -275,13 +287,16 @@ export function ModelSelectTrigger({
                                         >
                       {modelDisplayName(id)}
                     </span>
-                                        {id === model ? <Check size={14} color="#aaa"/> : null}
+                                        {id === model ? <Check size={14} aria-hidden="true"/> : null}
                                     </button>
                                 ))}
                             </div>
                         ))
                     )}
                 </div>
+                {effortPolicy && onReasoningEffortChange
+                    ? <ReasoningEffortControl policy={effortPolicy} effort={shownEffort} onChange={onReasoningEffortChange}/>
+                    : null}
             </div>
             {previewId ? <ModelDetail modelId={previewId} metadata={modelMetadata?.[previewId]}
                                       providerId={connectors.find((item) => item.id === selectedConnectorId)?.definitionId}
@@ -291,36 +306,25 @@ export function ModelSelectTrigger({
 
     return (
         <Popover.Root open={open} onOpenChange={setOpen}>
-            {trigger ? <Popover.Anchor asChild><span ref={anchorRef}
-                                                     className="agent-model-settings-anchor">{trigger}</span></Popover.Anchor> :
-                <Popover.Trigger asChild>
-                    <button ref={node => {
-                        anchorRef.current = node;
-                    }} type="button" className="agent-chip" aria-label={model || "选择模型"} aria-haspopup="dialog"
-                            aria-expanded={open}>
-                        {model ? <ModelIcon model={model} size={16} type="color"/> : null}
-                        <span
-                            style={{
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                            }}
-                        >
-          {model ? modelDisplayName(model) : probingModels ? "拉取模型中…" : "选择模型"}
-        </span>
-                        <ChevronDown size={12} style={{flexShrink: 0, opacity: 0.7}}/>
-                    </button>
-                </Popover.Trigger>}
+            <Popover.Trigger asChild>
+                <button ref={node => {
+                    anchorRef.current = node;
+                }} type="button" className="agent-chip agent-model-chip" title={model || undefined}
+                        aria-label={model ? `模型：${model}${shownEffort ? `，推理强度${REASONING_EFFORT_LABELS[shownEffort]}` : ""}` : "选择模型"}
+                        aria-haspopup="dialog" aria-expanded={open}>
+                    {model ? <ModelIcon model={model} size={16} type="color"/> : null}
+                    <span className="agent-model-setting-label">
+                        {model ? modelDisplayName(model) : probingModels ? "拉取模型中…" : "选择模型"}
+                    </span>
+                    {shownEffort ? <small className="agent-model-effort-label">{REASONING_EFFORT_LABELS[shownEffort]}</small> : null}
+                    <ChevronDown size={12} style={{flexShrink: 0, opacity: 0.7}}/>
+                </button>
+            </Popover.Trigger>
             <Popover.Portal container={popupRoot(anchorRef.current)}>
                 <Popover.Content side="top" align="end" sideOffset={10} collisionPadding={popupCollisionPadding(16)}
                                  className="agent-model-popover" onOpenAutoFocus={(event) => {
                     event.preventDefault();
                     searchRef.current?.focus({preventScroll: true});
-                }} onCloseAutoFocus={(event) => {
-                    if (trigger) {
-                        event.preventDefault();
-                        anchorRef.current?.querySelector<HTMLButtonElement>("button")?.focus({preventScroll: true});
-                    }
                 }}>
                     {panel}
                 </Popover.Content>

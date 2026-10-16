@@ -17,6 +17,8 @@ import {
 } from "../../../ui/icons";
 import {type ComponentType, memo, useId, useEffect, useMemo, useRef, useState,} from "react";
 import {filterThreadsByTitle} from "./filterThreadsByTitle";
+import {DotMatrixMarker} from "./ThinkingMatrix";
+import {resolveTopicMarker, type TopicActivityFlags, topicActivityLabel} from "./statusCopy";
 import {groupThreadsByTime} from "./timeGroups";
 import {
     formatRelativeShort,
@@ -308,6 +310,7 @@ const TopicRow = memo(function TopicRow({
     const statusId = useId();
     return (
         <div className={active ? "agent-topic-row is-active" : "agent-topic-row"} data-thread-id={thread.id}>
+            <TopicActivityStatus threadId={thread.id} id={statusId}/>
             <Tooltip delayDuration={600}>
                 <TooltipTrigger asChild>
                     <button type="button" className="agent-topic-row-title" onClick={() => onSelect(thread.id)}
@@ -330,20 +333,22 @@ const TopicRow = memo(function TopicRow({
                     <Trash2 size={16} aria-hidden/>
                 </button>
             </span></span>
-            <TopicActivityStatus threadId={thread.id} id={statusId}/>
         </div>
     );
 });
 
 /** Streaming can update this finite indicator without rerendering the title/action owner. */
 function TopicActivityStatus({threadId, id}: {threadId: string; id: string}) {
-    const activity = useTopicActivity(threadId);
-    const label = [activity.busy ? "进行中" : activity.waitingApproval ? "等待批准" : undefined,
-        activity.unread ? "有未读内容" : undefined, activity.unavailable ? "状态读取失败" : undefined].filter(Boolean).join("，");
-    return <span className="agent-topic-row-status" title={label || undefined}>
+    return <TopicStatusCell activity={useTopicActivity(threadId)} id={id}/>;
+}
+
+/** Fixed leading cell: exactly one marker by precedence, fixed size so rows never shift. */
+export function TopicStatusCell({activity, id}: {activity: TopicActivityFlags; id: string}) {
+    const label = topicActivityLabel(activity);
+    const marker = resolveTopicMarker(activity);
+    return <span className="agent-topic-row-status" data-marker={marker} title={label || undefined}>
         <span id={id} className="sr-only">{label}</span>
-        <i aria-hidden="true" className={activity.unread ? "agent-topic-unread is-unread" : "agent-topic-unread"}/>
-        <i aria-hidden="true" className={activity.busy ? "agent-topic-spinner is-busy" : "agent-topic-spinner"}/>
-        {activity.unavailable && <span aria-hidden="true" className="agent-topic-unavailable">!</span>}
+        {marker === "running" ? <DotMatrixMarker/> : null}
+        {marker !== "running" && marker !== "none" ? <i aria-hidden="true" className={`agent-topic-marker is-${marker}`}/> : null}
     </span>;
 }

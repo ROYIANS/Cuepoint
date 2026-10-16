@@ -41,7 +41,8 @@
 .agent-chat-root .agent-control-panel,
 .agent-chat-root .agent-composer-menu {
     width: min(320px, calc(100vw - 32px));
-    max-height: min(440px, calc(100dvh - 32px));
+    /* 52px top-bar clearance + 16px bottom edge, matching ui/popupCollision.ts */
+    max-height: min(440px, calc(100dvh - 68px));
     overflow-y: auto;
     overscroll-behavior: contain;
 }
@@ -411,8 +412,10 @@
 }
 
 .agent-project-picker {
-    width: min(360px, calc(100vw - 32px));
-    overflow: hidden;
+    width: min(360px, calc(100vw - 32px), var(--radix-popover-content-available-width, 100vw));
+    max-height: var(--radix-popover-content-available-height);
+    overflow-x: hidden;
+    overflow-y: auto;
     border: 1px solid var(--border);
     border-radius: 14px;
     background: var(--surface-elevated);

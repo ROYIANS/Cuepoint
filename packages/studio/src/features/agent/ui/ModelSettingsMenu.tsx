@@ -1,56 +1,37 @@
-import {Dropdown} from "antd";
-import {Check, ChevronDown} from "../../../ui/icons";
-import {useState} from "react";
 import type {AgentReasoningEffort} from "../models/agent";
-import type {ConnectorConfig} from "../../settings/models/connector";
-import {getReasoningPolicy, REASONING_EFFORT_LABELS} from "../../settings/models/reasoningPolicy";
-import {modelDisplayName} from "../../settings/models/modelVendors";
+import {REASONING_EFFORT_LABELS, type ReasoningPolicy} from "../../settings/models/reasoningPolicy";
 
-export function ModelSettingsMenu({connector, model, effort, onChange, onChooseModel}: {
-    connector?: ConnectorConfig; model: string; effort?: AgentReasoningEffort;
-    onChange: (effort: AgentReasoningEffort | undefined) => void; onChooseModel: () => void;
+const DEFAULT_LABEL = "默认";
+/** Up to this many levels render as segments; more render as a slider. */
+const SEGMENTED_MAX_LEVELS = 4;
+
+/**
+ * Effort control shown below the model list. Step 0 is the model default (no effort sent);
+ * the remaining steps are exactly the levels the model/connector supports.
+ */
+export function ReasoningEffortControl({policy, effort, onChange}: {
+    policy: ReasoningPolicy;
+    effort?: AgentReasoningEffort;
+    onChange: (effort: AgentReasoningEffort | undefined) => void;
 }) {
-    const [open, setOpen] = useState(false);
-    const policy = connector ? getReasoningPolicy(connector, model) : undefined;
-    return <Dropdown open={open} onOpenChange={setOpen} trigger={["click"]} placement="topRight" autoFocus
-                     getPopupContainer={trigger => trigger.closest<HTMLElement>('[data-slot="context-panel-content"]') ?? trigger.closest<HTMLElement>(".agent-chat-root") ?? document.body}
-                     menu={{
-                         className: "agent-composer-menu",
-                         items: [
-                             ...(policy ? [{
-                                 key: "effort",
-                                 label: `推理强度 · ${effort ? REASONING_EFFORT_LABELS[effort] : "模型默认"}`,
-                                 children: [
-                                     {
-                                         key: "default",
-                                         label: "模型默认",
-                                         icon: effort === undefined ? <Check size={14}/> : undefined
-                                     },
-                                     ...policy.levels.map((value) => ({
-                                         key: value,
-                                         label: REASONING_EFFORT_LABELS[value],
-                                         icon: value === effort ? <Check size={14}/> : undefined
-                                     })),
-                                 ]
-                             }, {type: "divider" as const}] : []),
-                             {
-                                 key: "model",
-                                 label: <span
-                                     className="agent-control-option"><span>更换模型</span><small>{modelDisplayName(model)}</small></span>
-                             },
-                         ],
-                         onClick: ({key}) => {
-                             if (key === "model") onChooseModel();
-                             else if (key === "default") onChange(undefined);
-                             else if (policy?.levels.some((value) => value === key)) onChange(key as AgentReasoningEffort);
-                             setOpen(false);
-                         },
-                     }}>
-        <button type="button" className="agent-chip" aria-label={`模型设置：${model}`} aria-haspopup="menu"
-                aria-expanded={open}>
-            <span className="agent-model-setting-label">{modelDisplayName(model)}</span>
-            {policy && effort && <small className="agent-model-effort-label">{REASONING_EFFORT_LABELS[effort]}</small>}
-            <ChevronDown size={12} aria-hidden/>
-        </button>
-    </Dropdown>;
+    const steps: Array<AgentReasoningEffort | undefined> = [undefined, ...policy.levels];
+    const index = Math.max(0, steps.indexOf(effort));
+    const label = (value: AgentReasoningEffort | undefined) => value ? REASONING_EFFORT_LABELS[value] : DEFAULT_LABEL;
+    return <div className="agent-effort" data-testid="reasoning-effort">
+        <div className="agent-effort-head">
+            <span id="agent-effort-label">推理强度</span>
+            <strong aria-live="polite">{label(steps[index])}</strong>
+        </div>
+        {policy.levels.length <= SEGMENTED_MAX_LEVELS
+            ? <div className="agent-effort-segments" role="radiogroup" aria-labelledby="agent-effort-label">
+                {steps.map((value) => <button key={value ?? "default"} type="button" role="radio"
+                                              aria-checked={value === steps[index]}
+                                              className={`agent-effort-segment${value === steps[index] ? " is-selected" : ""}`}
+                                              onClick={() => onChange(value)}>{label(value)}</button>)}
+            </div>
+            : <input type="range" className="agent-effort-slider" aria-labelledby="agent-effort-label"
+                     min={0} max={steps.length - 1} step={1} value={index}
+                     aria-valuetext={label(steps[index])}
+                     onChange={(event) => onChange(steps[Number(event.target.value)])}/>}
+    </div>;
 }

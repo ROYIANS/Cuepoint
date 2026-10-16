@@ -22,11 +22,12 @@ describe("verified reasoning policy", () => {
     expect(getReasoningPolicy(connector, "gpt-5.1")?.levels).toEqual(["none", "low", "medium", "high"]);
     expect(getReasoningPolicy(connector, "gpt-5.6-luna")).toMatchObject({ levels: ["none", "low", "medium", "high", "xhigh", "max"], contextWindow: 1_050_000 });
     expect(getReasoningPolicy({ ...connector, definitionId: "aihubmix" }, "gpt-5.6-luna")?.levels).not.toContain("max");
-    for (const model of ["gpt-5-custom", "gpt-5-pro", "vendor/gpt-5", "gpt-4o", "constructor", "__proto__"]) {
+    for (const model of ["gpt-5-custom", "vendor/gpt-5", "gpt-4o", "constructor", "__proto__"]) {
       expect(getReasoningPolicy(connector, model)).toBeUndefined();
       expect(() => assertReasoningEffort(connector, model, "high")).toThrow("不支持");
       expect(() => assertReasoningEffort(connector, model, undefined)).not.toThrow();
     }
+    expect(getReasoningPolicy(connector, "gpt-5-pro")?.levels).toEqual(["high"]);
     for (const definitionId of ["deepseek", "apimart"] as const) {
       expect(getReasoningPolicy({ ...connector, definitionId }, "gpt-5")).toBeUndefined();
     }

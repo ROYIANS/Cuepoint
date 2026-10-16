@@ -43,7 +43,7 @@ const noop = () => {};
 function message(revision: number, content = "Actual visible answer"): ChatMessage {return {id: "answer", threadId: "A", role: "assistant", status: "complete", content, publicRevision: revision, createdAt: at};}
 async function draw(revision: number) {
     await act(async () => root.render(h("div", {className: "agent-chat-column"},
-        h(MessageList, {threadId: "A", messages: [message(revision)], runs: [], busy: false, observedRevision: revision, onRunAction: noop, onRetryRun: noop}),
+        h(MessageList, {threadId: "A", messages: [message(revision)], runs: [], busy: false, observedRevision: revision, onRunAction: noop}),
         h("div", {className: "agent-composer-dock"}, "Composer"))));
 }
 beforeEach(async () => {
@@ -75,13 +75,13 @@ describe("E11 actual reader eligibility", () => {
         const terminal = {...message(9, ""), status};
         Object.defineProperty(document, "elementFromPoint", {configurable: true, value: () => container.querySelector("[data-agent-public][role='status']")});
         await act(async () => root.render(h("div", {className: "agent-chat-column"},
-            h(MessageList, {threadId: "A", messages: [terminal], runs: [], busy: false, observedRevision: 9, onRunAction: noop, onRetryRun: noop}),
+            h(MessageList, {threadId: "A", messages: [terminal], runs: [], busy: false, observedRevision: 9, onRunAction: noop}),
             h("div", {className: "agent-composer-dock"}, "Composer"))));
         expect(container.querySelector("[data-agent-public][role='status']")?.textContent).toBeTruthy();
         await paint(); expect((await readActivity()).readRevision).toBe(9);
         await putActivity(10, 9);
         await act(async () => root.render(h(MessageList, {threadId: "A", messages: [message(10, "")], runs: [], busy: false,
-            observedRevision: 10, onRunAction: noop, onRetryRun: noop})));
+            observedRevision: 10, onRunAction: noop})));
         await paint(); expect((await readActivity()).readRevision).toBe(9);
     });
     it("acknowledges only the painted captured 41 while newer 42 stays unread", async () => {
@@ -191,7 +191,7 @@ it("completed background A can reappear through B and StrictMode with a stale ac
         }, [snapshot.attempts]);
         if (snapshot.attempts.length) staleObserved = observed;
         return h(MessageList, {threadId, messages: rows.filter(row => row.threadId === threadId), runs: [], busy: snapshot.active,
-            submissions: [...snapshot.attempts], onSubmissionObserved: observed, onRunAction: noop, onRetryRun: noop});
+            submissions: [...snapshot.attempts], onSubmissionObserved: observed, onRunAction: noop});
     }
     const attach = async (threadId: string) => act(async () => root.render(h(StrictMode, null, h(AttachedReader, {threadId}))));
     try {

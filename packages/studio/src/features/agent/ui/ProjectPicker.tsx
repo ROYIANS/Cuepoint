@@ -135,6 +135,7 @@ export function ProjectPicker({projects, projectId, required, locked, onChange, 
                     <div id={listId} className="agent-project-picker-list" role="listbox" aria-label="项目列表">
                         {filtered.map((project) => <button type="button" role="option"
                                                            aria-selected={project.id === projectId} key={project.id}
+                                                           title={project.brief?.trim() ? `${project.name}\n${project.brief}` : project.name}
                                                            disabled={pending} onClick={() => void choose(project.id)}>
                             <Folder size={16}
                                     aria-hidden/><span><strong>{project.name}</strong>{project.brief?.trim() &&

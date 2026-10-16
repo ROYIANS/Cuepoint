@@ -57,33 +57,27 @@ try {
     const test = async (name, run) => {await run(); assert.deepEqual(errors, []); assert.deepEqual(await page.evaluate(() => window.e11.errors), []); checks.push(name); console.log(`PASS ${name}`);};
     const checkBusyGeometry = async () => {
         const row = page.locator(`[data-thread-id="${ids.b}"]`);
-        await row.locator(".agent-topic-spinner.is-busy").waitFor({state: "visible"});
-        await row.locator(".agent-topic-unread.is-unread").waitFor({state: "visible"});
-        assert.notEqual(await row.locator(".agent-topic-spinner").evaluate(element => getComputedStyle(element).animationName), "none");
+        await row.locator('.agent-topic-row-status[data-marker="running"] .agent-dot-matrix').waitFor({state: "visible"});
         await page.emulateMedia({reducedMotion: "reduce"});
         const geometry = () => row.evaluate(element => {
-            const rect = selector => {const value = element.querySelector(selector).getBoundingClientRect(); return {left: value.left, right: value.right, width: value.width};};
-            return {row: {left: element.getBoundingClientRect().left, right: element.getBoundingClientRect().right},
-                spinner: rect(".agent-topic-spinner"), dot: rect(".agent-topic-unread"), trailing: rect(".agent-topic-row-trailing"),
+            const rect = selector => {const value = element.querySelector(selector).getBoundingClientRect(); return {left: value.left, right: value.right, width: value.width, height: value.height};};
+            return {row: {left: element.getBoundingClientRect().left, right: element.getBoundingClientRect().right, height: element.getBoundingClientRect().height},
+                marker: rect(".agent-topic-row-status"), trailing: rect(".agent-topic-row-trailing"),
                 title: rect(".agent-topic-row-title"), time: rect("time"), actions: rect(".agent-topic-row-actions")};
         });
-        const assertOrder = value => {assert.ok(value.spinner.left >= value.trailing.right, JSON.stringify(value));
-            assert.ok(value.dot.right <= value.spinner.left); assert.ok(value.title.right <= value.trailing.left);
-            assert.ok(value.spinner.right <= value.row.right); assert.ok(value.spinner.width >= 13);};
+        const assertOrder = value => {assert.ok(value.marker.right <= value.title.left, JSON.stringify(value));
+            assert.ok(value.title.right <= value.trailing.left); assert.equal(value.marker.width, 16); assert.equal(value.row.height, 32);};
         const before = await geometry(); assertOrder(before);
-        await row.hover(); const hovered = await geometry(); assertOrder(hovered); assert.equal(hovered.spinner.right, before.spinner.right);
+        await row.hover(); const hovered = await geometry(); assertOrder(hovered); assert.equal(hovered.marker.right, before.marker.right);
         await row.getByRole("button", {name: "重命名", exact: true}).focus();
-        const focused = await geometry(); assertOrder(focused); assert.equal(focused.spinner.right, before.spinner.right);
-        assert.equal(await row.locator(".agent-topic-spinner").evaluate(element => getComputedStyle(element).opacity), "1");
-        assert.equal(await row.locator(".agent-topic-unread").evaluate(element => getComputedStyle(element).opacity), "1");
+        const focused = await geometry(); assertOrder(focused); assert.equal(focused.marker.right, before.marker.right);
         await page.screenshot({path: join(output, "sidebar-wide.png")});
-        assert.equal(await row.locator(".agent-topic-spinner").evaluate(element => getComputedStyle(element).animationName), "none");
         await page.setViewportSize({width: 650, height: 900});
         const topicOpener = page.getByRole("button", {name: "展开模块导航", exact: true});
         await topicOpener.click(); await row.waitFor({state: "visible"});
         const narrow = await geometry(); assertOrder(narrow);
         await row.getByRole("button", {name: "删除", exact: true}).focus();
-        assert.equal((await geometry()).spinner.right, narrow.spinner.right);
+        assert.equal((await geometry()).marker.right, narrow.marker.right);
         await page.screenshot({path: join(output, "sidebar-narrow.png")});
         measurements.sidebarGeometry = {before, hovered, focused, narrow};
         await page.keyboard.press("Escape"); await page.setViewportSize({width: 1440, height: 900});
@@ -112,7 +106,7 @@ try {
         await go(`/agent/${ids.a}`); assert.equal(await composer().inputValue(), "Unsent A draft");
         assert.equal(await page.getByRole("alertdialog").count(), 0);
     });
-    await test("actual busy plus unread spinner is the fixed far-right glyph through wide/narrow hover and keyboard focus", checkBusyGeometry);
+    await test("actual busy row keeps a fixed 16px leading marker cell through wide/narrow hover and keyboard focus", checkBusyGeometry);
     await test("A/B switching retains exact sidebar DOM and search while B transcript delivery is held", async () => {
         await page.evaluate(() => {window.__e11Sidebar = document.querySelector(".agent-topic-sidebar"); window.__e11Rows = [...document.querySelectorAll(".agent-topic-row")];});
         await page.getByRole("button", {name: "搜索", exact: true}).click();

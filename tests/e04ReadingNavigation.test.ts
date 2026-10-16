@@ -45,7 +45,7 @@ async function render(messages: ChatMessage[], extra: {threadId?: string; submis
     await act(async () => root.render(h(AgentActivityNavigationProvider, {threadId, children: [
         h(RevealActivity, {key: "reveal"}),
         h(MessageList, {key: "messages", threadId, messages, submissions: extra.submissions, runs: extra.runs,
-            busy: false, onRunAction: noop, onRetryRun: noop}),
+            busy: false, onRunAction: noop}),
     ]})));
 }
 function viewport() {return container.querySelector<HTMLDivElement>(".agent-message-list")!;}

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useSyncExternalStore} from "react";
 
 /** 3 columns × 3 rows — Cursor-style column snakes, not random noise. */
 export const THINK_COLS = 3;
@@ -67,7 +67,79 @@ const STATIC_PATTERN = paintSnakeCells([
 function prefersReducedMotion(): boolean {
     return (
         typeof window !== "undefined" &&
+        typeof window.matchMedia === "function" &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+}
+
+/**
+ * One timer for every mounted matrix: all instances read the same frame, so
+ * a list of running rows costs a single interval and animates in lockstep.
+ */
+export function createSharedMatrixTicker(
+    options: { tickMs?: number; reduced?: () => boolean } = {},
+) {
+    const tickMs = options.tickMs ?? TICK_MS;
+    const reduced = options.reduced ?? prefersReducedMotion;
+    let columns = initialColumns();
+    let frame = paintSnakeCells(columns);
+    let timer: ReturnType<typeof setInterval> | undefined;
+    const listeners = new Set<() => void>();
+    const advance = () => {
+        columns = columns.map(stepColumn);
+        frame = paintSnakeCells(columns);
+        for (const listener of listeners) listener();
+    };
+    return {
+        getSnapshot: (): boolean[] => (reduced() ? STATIC_PATTERN : frame),
+        getServerSnapshot: () => STATIC_PATTERN,
+        subscribe(this: void, listener: () => void) {
+            listeners.add(listener);
+            if (timer === undefined && !reduced()) {
+                timer = setInterval(advance, tickMs);
+            }
+            return () => {
+                listeners.delete(listener);
+                if (listeners.size === 0 && timer !== undefined) {
+                    clearInterval(timer);
+                    timer = undefined;
+                }
+            };
+        },
+        /** Mounted subscriber count; the timer exists only while this is > 0. */
+        subscriberCount: () => listeners.size,
+        running: () => timer !== undefined,
+    };
+}
+
+const sharedTicker = createSharedMatrixTicker();
+
+function useMatrixCells(): boolean[] {
+    return useSyncExternalStore(
+        sharedTicker.subscribe,
+        sharedTicker.getSnapshot,
+        sharedTicker.getServerSnapshot,
+    );
+}
+
+/**
+ * Compact (11px) matrix for a ~16px leading cell. Decorative: the owner
+ * supplies the accessible label.
+ */
+export function DotMatrixMarker({className}: { className?: string }) {
+    const cells = useMatrixCells();
+    return (
+        <span
+            className={className ? `agent-dot-matrix ${className}` : "agent-dot-matrix"}
+            aria-hidden
+        >
+            {cells.map((on, i) => (
+                <span
+                    key={i}
+                    className={on ? "agent-dot-matrix-dot is-on" : "agent-dot-matrix-dot"}
+                />
+            ))}
+        </span>
     );
 }
 
@@ -76,17 +148,7 @@ function prefersReducedMotion(): boolean {
  * bounce at top, may vanish at bottom. Not a spinner / LoadingDots.
  */
 export function ThinkingMatrix() {
-    const [columns, setColumns] = useState<ColState[]>(initialColumns);
-    const reduced = prefersReducedMotion();
-    const cells = reduced ? STATIC_PATTERN : paintSnakeCells(columns);
-
-    useEffect(() => {
-        if (prefersReducedMotion()) return;
-        const id = window.setInterval(() => {
-            setColumns((prev) => prev.map(stepColumn));
-        }, TICK_MS);
-        return () => window.clearInterval(id);
-    }, []);
+    const cells = useMatrixCells();
 
     return (
         <div
