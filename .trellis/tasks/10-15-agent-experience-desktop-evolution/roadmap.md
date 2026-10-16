@@ -16,7 +16,7 @@ State: planning. The owner authorized this epic and sequential task organization
 | [E07: Jobs, results and artifacts](../archive/2026-10/10-15-agent-jobs-results/prd.md) | Owned progress/cancel/output and recoverable large-result references. | E06. | Committed as `c9fd6706` and archived: foreground project video availability and retained web extraction with owned paged reports. Necessary source checks/review passed (11 suites/208 tests); native/emitted/packed/full gates deferred. Persistence does not extend lifetime; actual process termination remains with E08. |
 | [E08: Native workspace/media](../10-15-desktop-workspace-media/prd.md) | Authorized input directory to verified media processing and project import. | E06, E07. | Source complete on `codex/desktop-workspace-media` in `52e584c7`, `2b00d8e5`, `ca2da1a5`: macOS + Windows source/native grants, decoder resources, atomic source+thumbnail import, inline library UI and Agent group. Necessary affected checks and independent reviews passed; task stays open for deferred actual Windows/installed and epic batch acceptance. |
 | [E09: Installable Skills](../archive/2026-10/10-15-agent-installable-skills/prd.md) | Discover and load reusable creative instructions on demand. | E06. | Three reviewed source stages (`0c7b8b10`, `e7a5c8ff`, `0449ed6f`) and runtime/uncertain-toggle repair (`1e74e0c8`) complete. Archived at the owner's request on 2026-10-16; deferred full/emitted/packed and actual installed macOS/Windows acceptance is retained by this epic below. |
-| [E10: MCP integration](../10-15-agent-mcp-integration/prd.md) | Selected external server tools/resources share approval, lifecycle and result handling. | E06, E07. | Final desktop-first four-stage plan approved with “开始吧” on 2026-10-16; active on codex/agent-mcp-integration. Stage 1 contracts and bounded native SDK spike committed as `45bffe3c` after independent review; Stage 2 native connection/OAuth/cleanup committed as `9d2d2de6`; Stage 3 Agent offers/approval/E07 retention independently reviewed (138 scoped tests); shared management/practical Web is next. Both transports/OAuth remain required; Web remote reuse is opportunistic without proxy/backend or desktop blocker. |
+| [E10: MCP integration](../archive/2026-10/10-15-agent-mcp-integration/prd.md) | Selected external server tools/resources share approval, lifecycle and result handling. | E06, E07. | Four source stages independently reviewed on codex/agent-mcp-integration: `45bffe3c` contracts/SDK, `9d2d2de6` desktop transports/OAuth, `80513428` Agent approval/E07, followed by shared retained management and compatible Web. Final 19 suites/232 tests, actual SDK Chromium24 and retained UI12 passed. Source delivery is archived after its final checkpoint; exact Stage 4 commit is in the archived task. Both desktop transports/OAuth implemented; Web requires request-stream + HTTP/2/3 + CORS, no proxy. Full/installed gates remain carried below. |
 | [E11: Background Agent host](../10-15-agent-background-host/prd.md) | Continue across a selected UI detach case and reattach to authoritative state. | E06, E07. | Backlog; choose lifetime and runtime separately. |
 | [E12: Delegation/concurrency](../10-15-agent-delegation/prd.md) | Bounded child work, inherited grants, budgets and coordinated creative writes. | E06, E07, E11. | Backlog; may narrow E11 dependence only by explicit scoped design. |
 | [E13: Programmatic workflows](../10-15-agent-programmatic-workflows/prd.md) | Verified batches with nested calls through the same policy and scheduler. | E06, E07, E12. | Backlog; typed orchestration before choosing code execution. |
@@ -79,6 +79,35 @@ unperformed checks in the epic's final batch; archival is source-delivery closur
 
 Source/check details remain in the [archived E09 record](../archive/2026-10/10-15-agent-installable-skills/task.json)
 and [repair review](../archive/2026-10/10-15-agent-installable-skills/research/runtime-repair-review.md).
+
+### E10 acceptance carried forward from the source delivery
+
+E10 implements desktop stdio and Streamable HTTP, none/manual/OAuth, the actual
+Agent approval/E07 result path, shared retained management and compatible browser
+remote support. Source-stage receipts do not discharge this epic's final batch:
+
+- Full formal lint/unused/architecture/model/regression, whole app production
+  builds and isolated emitted/declaration/offline packed-consumer checks. The
+  explicit Agent-library regeneration and development /agent import smoke are
+  narrower evidence. Include the MCP TSX suites in aggregate test discovery.
+- Actual signed/installed macOS Keychain authorization, vault unavailable/rotation,
+  local executable and ordinary-descendant stop/drain, and both native transports
+  through normal and isolated application entry points.
+- Windows cfg/native execution, Credential Manager Local persistence and Job
+  Object descendants, plus the installed configuration/connect/disconnect/teardown
+  flows. macOS compilation and memory vault fixtures do not prove these.
+- Installed system-browser PKCE callbacks, exact loopback/firewall behavior,
+  preregistered public-client/DCR compatibility and app/window teardown. Controlled
+  local TCP/HTTP/OAuth fixtures do not establish third-party IdP acceptance.
+- Practical Web deployment requires request-stream support, HTTP/2 or HTTP/3,
+  CORS and a matching public-client callback. The controlled TLS fixture is not
+  production certificate, third-party registration or CIMD evidence. No proxy or
+  persistent browser credential fallback was introduced.
+- Preserve the one reported pre-interaction Dexie PrematureCommit observation for
+  broader integration runs. The strict final retained-UI fixture passed without
+  retry or error suppression; no unrelated store repair was invented in E10.
+
+E08's pending installed media checks and archived E09 acceptance remain separate.
 
 ### Shared integration cases
 

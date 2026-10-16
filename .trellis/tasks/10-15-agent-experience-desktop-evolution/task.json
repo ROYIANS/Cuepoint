@@ -56,11 +56,11 @@
     "firstCandidate": "10-15-agent-parallel-details",
     "narrowDetailMode": "full-width working-surface detail, retained running conversation, explicit return; no modal drawer",
     "shotDetailScope": "view and edit one shot with existing save/conflict/draft guarantees",
-    "activeDelivery": "10-15-agent-mcp-integration",
+    "activeDelivery": null,
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "E10 Stage 1 contracts/SDK spike independently reviewed; Stage 2 native connection/OAuth/cleanup follows its checkpoint. Desktop macOS+Windows required, practical Web optional; preserve E08/E09 epic-end acceptance.",
+    "nextAction": "E10 four-stage source delivery reviewed and checkpointed; next delivery candidate E11 needs its own concrete host/lifetime design review. Keep E08/E09/E10 full and installed acceptance for the epic batch, without repeating broad builds per child.",
     "carriedAcceptance": {
       "E09": {
         "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",
@@ -71,6 +71,20 @@
           "isolated emitted declarations and offline packed consumer",
           "actual macOS installed picker and retained management",
           "Windows cfg/native execution and installed picker/UI on fixed local NTFS"
+        ]
+      },
+      "E10": {
+        "record": "../archive/2026-10/10-15-agent-mcp-integration/task.json",
+        "state": "pending-epic-batch",
+        "sourceEvidence": "Stage 1/2 native fixtures, Stage 3 actual Agent/E07 integration, Stage 4 integrated232 + SDKChromium24 + retainedUI12; source evidence is not installed proof",
+        "items": [
+          "full formal quality/unused/regression/whole-app builds including affected TSX discovery",
+          "isolated emitted/declaration/offline packed consumer",
+          "actual signed installed macOS Keychain, stdio/process-tree and both transport flows",
+          "actual Windows vault Local persistence, Job Object and installed UI/teardown",
+          "installed system-browser OAuth, loopback/firewall, preregistration/DCR and window lifetime",
+          "compatible Web deployment/third-party OAuth; no HTTP1/stringbody/proxy/persistent-secret fallback",
+          "observe isolated pre-interaction Dexie PrematureCommit in broader integration runs"
         ]
       }
     }

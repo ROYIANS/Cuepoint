@@ -6390,6 +6390,121 @@
       "owner": "features/agent",
       "public": false,
       "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/ui/editor.ts",
+      "file": "packages/studio/src/features/agent/mcp/ui/editor.ts",
+      "target": "packages/studio/src/features/agent/mcp/ui/editor.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/ui/management.ts",
+      "file": "packages/studio/src/features/agent/mcp/ui/management.ts",
+      "target": "packages/studio/src/features/agent/mcp/ui/management.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/ui/McpConnectionDetail.tsx",
+      "file": "packages/studio/src/features/agent/mcp/ui/McpConnectionDetail.tsx",
+      "target": "packages/studio/src/features/agent/mcp/ui/McpConnectionDetail.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/ui/mcpConnections.css",
+      "file": "packages/studio/src/features/agent/mcp/ui/mcpConnections.css",
+      "target": "packages/studio/src/features/agent/mcp/ui/mcpConnections.css",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/ui/McpConnectionsSettings.tsx",
+      "file": "packages/studio/src/features/agent/mcp/ui/McpConnectionsSettings.tsx",
+      "target": "packages/studio/src/features/agent/mcp/ui/McpConnectionsSettings.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": [],
+      "publicSymbols": [
+        "McpConnectionsSettings"
+      ]
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/ui/McpConnectionEditor.tsx",
+      "file": "packages/studio/src/features/agent/mcp/ui/McpConnectionEditor.tsx",
+      "target": "packages/studio/src/features/agent/mcp/ui/McpConnectionEditor.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/browserMcpCallback.ts",
+      "file": "packages/studio/src/platform/runtime/browserMcpCallback.ts",
+      "target": "packages/studio/src/platform/runtime/browserMcpCallback.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/browserMcpFetch.ts",
+      "file": "packages/studio/src/platform/runtime/browserMcpFetch.ts",
+      "target": "packages/studio/src/platform/runtime/browserMcpFetch.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/browserMcpOAuth.ts",
+      "file": "packages/studio/src/platform/runtime/browserMcpOAuth.ts",
+      "target": "packages/studio/src/platform/runtime/browserMcpOAuth.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/browserMcp.ts",
+      "file": "packages/studio/src/platform/runtime/browserMcp.ts",
+      "target": "packages/studio/src/platform/runtime/browserMcp.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/platform/runtime/browserMcpData.ts",
+      "file": "packages/studio/src/platform/runtime/browserMcpData.ts",
+      "target": "packages/studio/src/platform/runtime/browserMcpData.ts",
+      "owner": "platform/runtime",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/runtime/browserRuntime.ts",
+      "file": "packages/studio/src/features/agent/mcp/runtime/browserRuntime.ts",
+      "target": "packages/studio/src/features/agent/mcp/runtime/browserRuntime.ts",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/ui/McpConnectionsPanel.tsx",
+      "file": "packages/studio/src/features/agent/ui/McpConnectionsPanel.tsx",
+      "target": "packages/studio/src/features/agent/ui/McpConnectionsPanel.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
+      "original": "packages/studio/src/features/agent/mcp/ui/McpManagementBody.tsx",
+      "file": "packages/studio/src/features/agent/mcp/ui/McpManagementBody.tsx",
+      "target": "packages/studio/src/features/agent/mcp/ui/McpManagementBody.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
     }
   ],
   "featureUiAppEntries": [

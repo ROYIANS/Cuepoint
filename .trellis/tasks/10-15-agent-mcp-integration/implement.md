@@ -123,22 +123,22 @@ Ownership: Agent MCP management/ContextPanel, named Settings connection integrat
 historical report UI and optional browser remote adapter/callback. Reuse existing
 routes and editors; do not add another app product tree.
 
-- [ ] Provide list/detail/save/connect/login/reconnect/disable/disconnect/remove
+- [x] Provide list/detail/save/connect/login/reconnect/disable/disconnect/remove
   with explicit enablement, guarded edits and retained unknown intent. Saving
   alone does not launch a process; pending operations prevent duplicate mutation.
-- [ ] Keep chat mounted during wide/narrow retained-panel interaction and editor
+- [x] Keep chat mounted during wide/narrow retained-panel interaction and editor
   replacement. Test actual ReactDOM controls, errors, return/focus and no extra
   preparation/model-check/user-bubble/success status copy.
-- [ ] Attempt the official browser client 2.3.1 remote-only port after desktop
+- [x] Attempt the official browser client 2.3.1 remote-only port after desktop
   integration. Prove browser-only export closure before admitting the dependency;
   import no Node stdio in the browser graph.
-- [ ] Use session-memory credentials and guarded same-origin callback/popup only
+- [x] Use session-memory credentials and guarded same-origin callback/popup only
   for compatible endpoint/public-client/CORS/deployment combinations. Provide
   actionable unsupported/reconnect-required states and desktop-only stdio.
   Do not add a proxy/backend or wait on third-party browser compatibility.
-- [ ] Capture actual final model/context, diagnostics and project export bytes;
+- [x] Capture actual final model/context, diagnostics and project export bytes;
   assert private config/headers/env/token/callback data is absent.
-- [ ] Run necessary UI/browser/source integration checks, full changed-scope
+- [x] Run necessary UI/browser/source integration checks, full changed-scope
   independent review (all E10 stages), spec update and commit. Carry actual
   installed/whole-app acceptance to the parent; do not call those checks passed.
 

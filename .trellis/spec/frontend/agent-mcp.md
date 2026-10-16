@@ -6,7 +6,8 @@ E10 adds desktop-first MCP support to the existing Agent and ProductStore.
 Stage 1 establishes strict device configuration, immutable discovery and bounded
 native SDK adapters. Stage 2 adds the finite desktop port, connection/configuration
 owners and native OAuth/service lifecycle. Stage 3 connects the actual Agent
-surface and E07 retention; management remains Stage 4. Review each stage against
+surface and E07 retention. Stage 4 adds shared retained management and compatible
+browser remote connections. Review each stage against
 actual executed evidence. Keep macOS/Windows
 evidence separate; practical browser remote support must not require a proxy
 or block desktop delivery.
@@ -303,6 +304,91 @@ late replies cannot recreate deleted rows. Resource reads accept only captured
 opaque handles; binary/link payloads stay explicitly unsupported and never cause
 an implicit fetch. Text/JSON is bounded attributed untrusted content retained
 through E07, available for scoped offline readback.
+
+## 9. Shared management and retained editing
+
+Agent and Settings use one management owner keyed by the actual connection owner.
+Keep the pending original operation, unresolved intent, login attempt and private
+draft across panel unmount or entry changes. UI locking is synchronous before the
+first await. A React state update alone cannot prevent duplicate events or a
+same-event autofill/search/navigation mutation. Settings combines its model and
+MCP editor locks through synchronous reads rather than overwriting either owner.
+
+Saving configuration does not connect. New entries are disabled until explicitly
+enabled. Existing private configuration is not readable by the renderer: editing
+is a clearly labeled full replacement. Load only public labels/kinds/origins;
+never manufacture an empty secret as an unchanged old value. Enable/disable and
+remove use the existing configuration intent rather than requiring re-entry.
+
+Unknown private/store acknowledgement, committed-but-unconfirmed publication and
+pending cleanup keep the original intent locked. Offer readback/reconciliation of
+that operation, never a fresh save. A failed login cancellation or a retired login
+check must have a recovery path for its original server/attempt; retain uncertainty
+until acknowledged retirement/drain, then release the UI. Do not leave a permanently
+pending login whose owner can no longer be queried, and do not call cancel failure
+successful just to unlock controls.
+
+Use the existing ContextPanel host: wide windows show details beside chat; narrow
+windows switch to a full-width surface while chat, streaming, scroll and unsent
+content remain mounted. The wrapper that imports app frame/draft APIs belongs in
+the existing top-level Agent ui bridge; nested mcp/ui owns the form/body/controller.
+All close, replacement and return paths use the same synchronous draft/pending
+guard. Focus restoration must wait for the actual confirmation dialog removal and
+inert release; a fixed animation-frame race does not prove keyboard focus returned.
+Successful configuration/connection actions stay quiet. Errors and unresolved
+actions belong in management, with no preparation/model-check/user-bubble text.
+
+## 10. Practical browser remote host
+
+The official client is pinned to @modelcontextprotocol/client 2.3.1. Admit only its
+public browser-root closure: no Node stdio, cross-spawn, Node shim, Ajv entry or
+feature-owned SDK types in reusable core. The named feature bootstrap injects the
+real public ProductStore catalogue into the finite platform host; platform does
+not import product feature owners. No backend/proxy is introduced.
+
+Browser private configuration, headers, tokens, PKCE verifiers and prepared bearer
+authority live only in the current host's memory. Public references use
+session_memory and exact owner/revision identity. A fresh tab cannot restore them
+from saved IDs. Confirm private preparation only against the actual positive CAS
+receipt and current pointer. Before dispatch, check catalogue/config/reference,
+enabled state, current registration, canonical arguments and granted identity.
+
+String fetch bodies can be automatically retransmitted by Chromium after an
+ambiguous network failure, even when JavaScript calls fetch once and SDK retries
+are disabled. All browser MCP and OAuth POST bodies therefore use a single-use
+ReadableStream with duplex=half, with explicit request-stream feature detection.
+Never fall back to a replayable string. Supported Web endpoints need HTTP/2 or
+HTTP/3, CORS and compatible public-client deployment; HTTP/1 rejection is an honest
+limitation. Keep cookies omitted, redirects rejected and caching disabled.
+Count actual HTTP effects in Chromium, including a lost header response and
+REFUSED_STREAM; mocked fetch call count cannot establish no network replay.
+
+Acquire/refresh tokens before dispatch. The fixed token provider has no reactive
+onUnauthorized; insufficient-scope reauthorization and retries are disabled. Use
+raw SDK request rather than callTool's repair loop. input_required is not fulfilled
+automatically. Lost reply, 401/403/404/408, header mismatch, stream reset and result
+overflow never authorize replay. Bound response bytes while reading actual JSON,
+SSE and error bodies, and retain a deadline while the body is stalled.
+
+Reserve a popup synchronously from the user click. Process /mcp/oauth/callback and
+scrub its parameters before router breadcrumbs, analytics and diagnostics start.
+The opener validates exact origin, source popup, redirect, state, issuer, bounded
+finite fields and current epoch before consuming it. Wrong callbacks do not consume
+a legitimate attempt. Consume the verifier before awaiting code exchange. Refresh
+rotation is serialized, published under the current epoch, and changes to actual
+issuer/resource/client/granted scopes retire prior invocation authority.
+
+Local teardown retains original pending-connect, retired connection, queued call
+and OAuth request owners until their tasks actually finish. Closing the SDK client
+or issuing abort is not a drained receipt. Repeated disconnect/dispose must observe
+the same cleanup owner. Late old-call failure, onclose or directory notifications
+may retire only that exact current connection, never a newer same-server binding.
+This is local IO cleanup; it does not promise to undo or stop a remote effect.
+
+Necessary evidence includes real ReactDOM controls, retained Chromium wide/narrow
+UI with one running stream, real SDK cross-origin HTTP/2 and popup OAuth, and actual
+public DB/context/model/export/diagnostic bytes. Keep those distinct from installed
+Keychain/Windows/system-browser/loopback and full build/packed-consumer acceptance.
 List frozen resource descriptors in explicit four-entry pages, preserving a
 continuation. Maximum JSON escaping must fit core's smaller result envelope;
 the larger discovery-generation cap is not an inline result allowance.

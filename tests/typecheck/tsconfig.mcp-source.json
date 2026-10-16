@@ -15,6 +15,9 @@
     "../toolLoading.test.ts",
     "../contextPreviewSnapshot.test.ts",
     "../agentRuntimeClaimRaces.test.ts",
-    "../mcp*.test.tsx"
+    "../mcp*.test.tsx",
+    "../mcpPrivacy.test.ts",
+    "../mcpBrowser*.test.ts",
+    "../settingsModel.test.ts"
   ]
 }

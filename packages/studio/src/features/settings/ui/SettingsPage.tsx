@@ -2,6 +2,7 @@ import {useCallback, useRef, useState} from "react";
 import {ModuleLayout, useModuleNavigation} from "../../../app/layout/ModuleLayout";
 import {PageContent, PageHeader} from "../../../app/layout/PageLayout";
 import {Search} from "../../../ui/icons";
+import {McpConnectionsSettings} from "../../agent/mcp/ui/McpConnectionsSettings";
 import {ConnectorsSection} from "./ConnectorsPage";
 import {AppearanceSection} from "./sections/AppearanceSection";
 import {GeneralSection} from "./sections/GeneralSection";
@@ -16,11 +17,18 @@ export function SettingsPage({section, onSectionChange}: {
     const [query, setQuery] = useState("");
     const [editingConnection, setEditingConnection] = useState(false);
     const editingConnectionRef = useRef(false);
+    const modelEditingRef = useRef(false), mcpEditingRef = useRef(false);
     const onEditorOpenChange = useCallback((open: boolean) => {
         // Lock before the credential dialog mounts: autofill can use the search
         // handler from the preceding render during that same browser event.
-        editingConnectionRef.current = open;
-        setEditingConnection(open);
+        modelEditingRef.current = open;
+        editingConnectionRef.current = open || mcpEditingRef.current;
+        setEditingConnection(editingConnectionRef.current);
+    }, []);
+    const onMcpEditorOpenChange = useCallback((open: boolean) => {
+        mcpEditingRef.current = open;
+        editingConnectionRef.current = open || modelEditingRef.current;
+        setEditingConnection(editingConnectionRef.current);
     }, []);
     const navigation = useModuleNavigation();
     const active: SettingsSectionId = isSettingsSectionId(section) ? section : "general";
@@ -74,7 +82,8 @@ export function SettingsPage({section, onSectionChange}: {
                 {visible === "general" ? <GeneralSection visibleRowIds={visibleRowIds}/> : null}
                 {visible === "appearance" ? <AppearanceSection visibleRowIds={visibleRowIds}/> : null}
                 {visible === "connections" ?
-                    <ConnectorsSection visibleRowIds={visibleRowIds} onEditorOpenChange={onEditorOpenChange}/> : null}
+                    <><ConnectorsSection visibleRowIds={visibleRowIds} onEditorOpenChange={onEditorOpenChange}/>
+                        {(!visibleRowIds || visibleRowIds.includes("mcp")) && <McpConnectionsSettings onEditorOpenChange={onMcpEditorOpenChange}/>}</> : null}
                 {visible === "storage" ? <StorageSection visibleRowIds={visibleRowIds}/> : null}
                 {visible === "update" ? <UpdateSection visibleRowIds={visibleRowIds}/> : null}
                 {!visible ? <div role="status" className="settings-empty-state">

@@ -33,6 +33,7 @@ export const SETTINGS_SECTIONS: (SettingsSection & { icon: Icon })[] = [
                 description: "API Key 密钥与服务商配置",
                 keywords: "provider OpenAI AIHubMix APIMart MiMo base URL"
             },
+            {id: "mcp", title: "MCP 外部工具连接", description: "本地程序与远程服务、授权和连接管理", keywords: "stdio Streamable HTTP OAuth Token 请求头 外部工具 资源"},
             {id: "search", title: "网络搜索连接", description: "Tavily 搜索密钥"},
             {id: "catalog", title: "模型目录", description: "Models.dev 价格与模型清单", keywords: "pricing 同步"},
         ]

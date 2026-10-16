@@ -80,6 +80,9 @@ export interface McpHostServices {
     readonly active: boolean;
     readonly capabilities: McpHostCapabilities;
     initialize(): Promise<McpHostCapabilities>;
+    /** Browser-only: reserve synchronously in the trusted login click, before awaits. */
+    reserveOAuthPopup?(): void;
+    cancelReservedOAuthPopup?(): void;
     preparePrivateRevision(input: {readonly operationId: string; readonly serverId: string; readonly catalogueRevision: number; readonly expectedConfigRevision: number; readonly config: McpPrivateConfig}): Promise<McpPrivateRevisionRef>;
     /** Reconciles the original write without creating a second vault revision. */
     privateRevisionStatus(input: {readonly operationId: string; readonly serverId: string}): Promise<{readonly status: "prepared"; readonly reference: McpPrivateRevisionRef} | {readonly status: "unknown"}>;

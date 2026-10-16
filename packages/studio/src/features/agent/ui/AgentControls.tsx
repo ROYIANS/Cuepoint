@@ -13,6 +13,7 @@ import {
     FolderOpen,
     Hand,
     Plus,
+    Plug,
     Search,
     ShieldAlert,
     ShieldCheck,
@@ -25,6 +26,7 @@ import {getGeneralAgentConfig, updateGeneralAgentConfig} from "../commands/agent
 import {AGENT_SKILLS} from "../runtime/skills";
 import {StorageError} from "../../../platform/storage/errors";
 import {useInstalledSkills} from "./useInstalledSkills";
+import {McpConnectionsPanel} from "./McpConnectionsPanel";
 import {InstalledSkillMutationNotice, InstalledSkillsPanel} from "./InstalledSkillsPanel";
 
 const PERMISSIONS = [
@@ -142,6 +144,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
     const {config, enabledSkills: savedBuiltinSkills} = useAgentSettings();
     const installed = useInstalledSkills();
     const [managementOpen, setManagementOpen] = useState(false);
+    const [mcpOpen, setMcpOpen] = useState(false);
     const [builtinPending, setBuiltinPending] = useState(false);
     const [builtinError, setBuiltinError] = useState<string>();
     const [builtinUnknown, setBuiltinUnknown] = useState(false);
@@ -222,6 +225,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
         menu={{
             className: "agent-composer-menu",
             items: view === "home" ? [
+                {key: "mcp", icon: <Plug size={16}/>, label: <span className="agent-plus-row">MCP 连接<span>外部工具与资源<ChevronRight size={14}/></span></span>},
                 {
                     key: "import",
                     icon: <Upload size={16}/>,
@@ -252,6 +256,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                 },
             ] : [],
             onClick: ({key}) => {
+                if (key === "mcp") {setOpen(false); setMcpOpen(true); return;}
                 if (key === "import" || key === "library") {
                     setOpen(false);
                     if (key === "import") onImport?.(); else onLibrary?.();
@@ -280,7 +285,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                                                            allowClear/></div>
                 <div className="agent-control-panel-heading">创作能力</div>
                 {search.trim() ?
-                    <div className="agent-skill-list">{/导入|上传|图片|文档|文件|upload|import/i.test(search) &&
+                    <div className="agent-skill-list">{/mcp|连接|外部|工具|资源/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => {setOpen(false); setMcpOpen(true);}}><Plug size={16}/>MCP 连接<ChevronRight size={14}/></button>}{/导入|上传|图片|文档|文件|upload|import/i.test(search) &&
                         <button type="button" className="agent-plus-search-result" onClick={() => {
                             setOpen(false);
                             onImport?.();
@@ -299,7 +304,7 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                                 onClick={() => setView("skills")}><Boxes size={16}/><span
                             className="agent-control-option"><span>{skill.name}</span><small>{skill.description}</small></span><ChevronRight
                             size={14}/>
-                        </button>) : !installedMatches.length && !/导入|上传|图片|文档|文件|upload|import|资料|项目|library|reference|参数|历史|压缩|context|parameter/i.test(search) && !(project && /记忆|项目|memory/i.test(search)) ?
+                        </button>) : !installedMatches.length && !/mcp|连接|外部|工具|资源|导入|上传|图片|文档|文件|upload|import|资料|项目|library|reference|参数|历史|压缩|context|parameter/i.test(search) && !(project && /记忆|项目|memory/i.test(search)) ?
                         <p className="agent-control-panel-note">没有匹配的技能或操作</p> : null}
                         {installedMatches.map(skill => <button key={skill.skillId} type="button" className="agent-plus-search-result" onClick={() => setView("skills")}>
                             <Boxes size={16}/><span className="agent-control-option"><span>{skill.metadata.name}</span><small>{skill.metadata.description}</small></span><ChevronRight size={14}/></button>)}
@@ -346,5 +351,5 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                     aria-label="更多选项" aria-haspopup="menu" aria-expanded={open}><Plus size={18} aria-hidden/>
             </button>
         </Tooltip>
-    </Dropdown><InstalledSkillsPanel open={managementOpen} onOpenChange={setManagementOpen} controller={installed} returnFocus={triggerRef}/></>;
+    </Dropdown><InstalledSkillsPanel open={managementOpen} onOpenChange={setManagementOpen} controller={installed} returnFocus={triggerRef}/><McpConnectionsPanel open={mcpOpen} onOpenChange={setMcpOpen} returnFocus={triggerRef}/></>;
 }

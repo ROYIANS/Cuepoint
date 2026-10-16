@@ -10,6 +10,7 @@
         "tooling/prepare-native-test-probe.mjs",
         "tooling/prepare-native-test-probe.test.mjs",
         "tooling/*-browser-regression.mjs",
+        "tooling/mcp-management-browser.mjs",
         "tooling/e06-*.mjs",
         "tests/**/*.test.{ts,tsx}",
         "tests/typecheck/agentToolDefinition.ts",

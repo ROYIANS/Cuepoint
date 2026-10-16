@@ -29,19 +29,24 @@
     "research/stage-1-results.md",
     "research/stage-2-results.md",
     "research/stage-3-results.md",
-    "research/stage-3-review-notes.md"
+    "research/stage-3-review-notes.md",
+    "research/stage-4-management-seams.md",
+    "research/stage-4-browser-seams.md",
+    "research/stage-4-browser-validation.md",
+    "research/stage-4-results.md",
+    "research/stage-4-review-notes.md"
   ],
-  "notes": "Owner explicitly approved the final four-stage desktop-first plan with 开始吧 on 2026-10-16. E10 is active; execute necessary scoped checks and review/commit each stage, then continue. Full build/packaging/installed macOS+Windows remain epic-end gates.",
+  "notes": "Owner approved the final four-stage desktop-first plan with 开始吧 on 2026-10-16 and authorized sequential stage commits/completed-child bookkeeping. All four source stages are independently reviewed; no push. Full formal/build/packaging/installed macOS+Windows remain explicitly carried by the parent epic.",
   "meta": {
     "epicCode": "E10",
-    "deliveryState": "stage-4-in-progress",
+    "deliveryState": "source-reviewed-batch-acceptance-deferred",
     "implementationApproved": true,
     "dependsOn": [
       "10-15-agent-resource-capabilities",
       "10-15-agent-jobs-results"
     ],
     "researchSource": "10-15-desktop-agent-capability-research",
-    "readiness": "Approved four-stage plan; 23-entry implement/check manifests. Stage 1 source/native adapter review passed; installed/full gates remain pending.",
+    "readiness": "All four source stages independently reviewed; final integrated 19-suite/232-test check, real SDK Chromium24 and retained UI12 passed. Installed/full gates remain pending with parent.",
     "investigationDate": "2026-10-16",
     "researchArtifacts": [
       "research/scope-and-host-options.md",
@@ -67,7 +72,7 @@
     "authenticationScopeConfirmedAt": "2026-10-16",
     "platformPriority": "desktop macOS/Windows required; Web remote/OAuth where practical without proxy/backend or desktop delivery delay; stdio desktop-only",
     "platformPriorityConfirmedAt": "2026-10-16",
-    "nextAction": "Stage 3 independent source review passed. Commit Agent offers/approval/original E07 certainty and continue shared management/practical Web; full gates remain deferred.",
+    "nextAction": "Commit reviewed Stage 4, archive source delivery and journal; parent owns full/installed acceptance. E11 remains a separate scoped design decision.",
     "planningArtifactsCompletedAt": "2026-10-16",
     "plannedStages": [
       "contracts and bounded SDK spike",
@@ -77,8 +82,8 @@
     ],
     "sdkCandidates": {
       "desktop": "rmcp =3.5.1",
-      "web": "@modelcontextprotocol/client 2.3.1 (opportunistic)",
-      "evidence": "Desktop rmcp pinned and compiled; current/compatible real fixture lifecycles executed in Stage 1. Browser candidate still source/API inspection only."
+      "web": "@modelcontextprotocol/client =2.3.1 (actual workspace browser closure and controlled Chromium remote/OAuth fixtures verified)",
+      "evidence": "Desktop rmcp pinned/compiled with real fixtures in Stages 1/2; browser SDK dependency closure, actual cross-origin HTTP/2, popup/PKCE/DCR/refresh and no-replay cases executed in Stage 4; installed/third-party/full acceptance remains pending."
     },
     "implementationApprovedAt": "2026-10-16",
     "approvalEvidence": "User: 开始吧 after final planning summary at 557c73db",
@@ -113,14 +118,32 @@
       "commit": "9d2d2de6"
     },
     "stage3": {
-      "state": "source-reviewed",
+      "state": "source-committed",
       "result": "research/stage-3-results.md",
       "studioTests": 138,
       "studioSuites": 12,
       "deferred": [
         "browser UI/transport evidence belongs to Stage 4",
         "actual Keychain/Windows/installed and epic full gates"
+      ],
+      "commit": "80513428"
+    },
+    "stage4": {
+      "state": "source-reviewed",
+      "result": "research/stage-4-results.md",
+      "review": "research/stage-4-review-notes.md",
+      "integratedStudioTests": 232,
+      "integratedStudioSuites": 19,
+      "actualSdkBrowserCases": 24,
+      "actualRetainedUiCases": 12,
+      "deferred": [
+        "full formal/regression/whole-app builds",
+        "isolated emitted declarations and packed consumer",
+        "release resources and installers",
+        "actual installed macOS/Windows, Keychain, Windows vault/Job Object and system browser/loopback",
+        "third-party Web OAuth/deployment compatibility"
       ]
-    }
+    },
+    "sourceReviewedAt": "2026-10-16"
   }
 }

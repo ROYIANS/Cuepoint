@@ -3,6 +3,8 @@ import {act, createElement} from "react";
 import {createRoot, type Root} from "react-dom/client";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("@tanstack/react-router", async original => ({...await original<typeof import("@tanstack/react-router")>(), useBlocker: () => ({status: "idle", proceed: vi.fn(), reset: vi.fn()})}));
+
 const boundary = vi.hoisted(() => ({save: vi.fn()}));
 vi.mock("@/features/settings/commands/searchConnections", async original => ({
     ...await original<typeof import("@/features/settings/commands/searchConnections")>(), saveSearchConnection: boundary.save,

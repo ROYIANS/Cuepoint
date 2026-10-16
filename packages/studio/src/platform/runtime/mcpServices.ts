@@ -3,7 +3,7 @@ import type {McpHostServices} from "./mcp";
 let installed: McpHostServices | undefined;
 let removeListeners: (() => void) | undefined;
 
-/** Installed only beside the fixed native ProductStore; no browser fallback. */
+/** Installed beside the fixed ProductStore owner; browser credentials remain session-only. */
 export function installMcpHostServices(services: McpHostServices, events: Pick<Window, "addEventListener" | "removeEventListener"> | undefined = typeof window === "undefined" ? undefined : window): void {
     if (installed) throw new Error("MCP 服务已安装");
     installed = services;
