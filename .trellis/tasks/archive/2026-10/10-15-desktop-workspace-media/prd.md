@@ -24,8 +24,8 @@ separate platform contract is written.
 
 ## Dependencies and order
 
-- E06: [E06 delivered contracts](../archive/2026-10/10-15-agent-resource-capabilities/prd.md) — use its reviewed contracts/results before this task is activated.
-- E07: [delivered foreground jobs/results](../archive/2026-10/10-15-agent-jobs-results/prd.md), commit `c9fd6706` — use its reviewed contracts/results before this task is activated.
+- E06: [E06 delivered contracts](../10-15-agent-resource-capabilities/prd.md) — use its reviewed contracts/results before this task is activated.
+- E07: [delivered foreground jobs/results](../10-15-agent-jobs-results/prd.md), commit `c9fd6706` — use its reviewed contracts/results before this task is activated.
 
 The working branch starts from the delivered E07 checkpoint. No second ProductStore,
 reference-workspace import lane, or renderer filesystem/shell authority is allowed.

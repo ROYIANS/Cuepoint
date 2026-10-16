@@ -3,8 +3,8 @@
 {"file":".trellis/spec/frontend/agent-tools.md","reason":"Preserve approvals, unknown effects and current execution semantics."}
 {"file":".trellis/spec/frontend/chat-performance.md","reason":"Verify interaction changes preserve reading position, streaming isolation and lazy loading."}
 {"file":".trellis/spec/frontend/agent-activity-ui.md","reason":"Verify approvals, cancellation and final effects retain accurate and accessible presentation."}
-{"file":".trellis/tasks/10-15-desktop-agent-capability-research/research/capability-comparison.md","reason":"Validate future changes against current source-backed capabilities and reference limits."}
-{"file":".trellis/tasks/10-15-desktop-agent-capability-research/research/host-integration-review.md","reason":"Verify host claims distinguish independent algorithms, live execution, durable state and confirmed business effects."}
-{"file":".trellis/tasks/10-15-desktop-agent-capability-research/research/interaction-spotchecks.md","reason":"Separate confirmed UI wiring gaps from unmeasured latency and preserve truthful persistence outcomes."}
-{"file":".trellis/tasks/10-15-desktop-agent-capability-research/research/interaction-audit.md","reason":"Verify provisional/accepted/confirmed state separation, failure recovery, scope identity, stopping and user-owned reading position."}
+{"file":".trellis/tasks/archive/2026-10/10-15-desktop-agent-capability-research/research/capability-comparison.md","reason":"Validate future changes against current source-backed capabilities and reference limits."}
+{"file":".trellis/tasks/archive/2026-10/10-15-desktop-agent-capability-research/research/host-integration-review.md","reason":"Verify host claims distinguish independent algorithms, live execution, durable state and confirmed business effects."}
+{"file":".trellis/tasks/archive/2026-10/10-15-desktop-agent-capability-research/research/interaction-spotchecks.md","reason":"Separate confirmed UI wiring gaps from unmeasured latency and preserve truthful persistence outcomes."}
+{"file":".trellis/tasks/archive/2026-10/10-15-desktop-agent-capability-research/research/interaction-audit.md","reason":"Verify provisional/accepted/confirmed state separation, failure recovery, scope identity, stopping and user-owned reading position."}
 {"file":".trellis/spec/guides/task-artifact-retention.md","reason":"Research records only, no disposable artifacts."}

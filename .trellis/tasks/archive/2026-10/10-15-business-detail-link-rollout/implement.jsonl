@@ -6,7 +6,7 @@
 {"file": ".trellis/spec/frontend/agent-execution.md", "reason": "Current detail presentation, feature ownership, draft/query/runtime and quality contracts to preserve; accepted narrow-detail behavior supersedes the historical drawer clause."}
 {"file": ".trellis/spec/frontend/agent-activity-ui.md", "reason": "Current detail presentation, feature ownership, draft/query/runtime and quality contracts to preserve; accepted narrow-detail behavior supersedes the historical drawer clause."}
 {"file": ".trellis/spec/frontend/chat-performance.md", "reason": "Current detail presentation, feature ownership, draft/query/runtime and quality contracts to preserve; accepted narrow-detail behavior supersedes the historical drawer clause."}
-{"file": ".trellis/tasks/10-15-agent-experience-desktop-evolution/research/parallel-detail-navigation.md", "reason": "Actual route/blocker/portal/shot/link boundaries, confirmed owner decisions and modal-source limitations."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-agent-experience-desktop-evolution/research/parallel-detail-navigation.md", "reason": "Actual route/blocker/portal/shot/link boundaries, confirmed owner decisions and modal-source limitations."}
 {"file": ".trellis/tasks/archive/2026-10/10-15-agent-parallel-details/research/reading-guide.md", "reason": "Required explicit full reads of canonical large component/state/quality specs; do not rely on truncated injection."}
 {"file": ".trellis/spec/frontend/agent-business-details.md", "reason": "Current no-drawer owned query/draft/editor/focus contract."}
 {"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Quiet detail transitions and actionable recovery; no internal narration."}

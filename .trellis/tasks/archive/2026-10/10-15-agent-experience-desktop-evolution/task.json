@@ -59,7 +59,7 @@
     "nextAction": "No remaining development task. Owner performs final checks; E12-E15 are cancelled and their unused planning directories removed.",
     "carriedAcceptance": {
       "E09": {
-        "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",
+        "record": "../10-15-agent-installable-skills/task.json",
         "state": "handed-off-to-user",
         "items": [
           "full regression and formal quality/application build",
@@ -71,7 +71,7 @@
         "owner": "user"
       },
       "E10": {
-        "record": "../archive/2026-10/10-15-agent-mcp-integration/task.json",
+        "record": "../10-15-agent-mcp-integration/task.json",
         "state": "handed-off-to-user",
         "sourceEvidence": "Stage 1/2 native fixtures, Stage 3 actual Agent/E07 integration, Stage 4 integrated232 + SDKChromium24 + retainedUI12; source evidence is not installed proof",
         "items": [
@@ -86,7 +86,7 @@
         "owner": "user"
       },
       "E11": {
-        "record": "../archive/2026-10/10-15-agent-background-host/task.json",
+        "record": "../10-15-agent-background-host/task.json",
         "state": "handed-off-to-user",
         "items": [
           "full formal quality/regression/whole-app builds and affected TSX aggregate discovery",

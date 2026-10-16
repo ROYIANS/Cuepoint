@@ -4,8 +4,8 @@
 {"file": ".trellis/spec/agent-providers/library/protocols.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/capability-comparison.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
-{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/host-integration-review.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-desktop-agent-capability-research/research/capability-comparison.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-desktop-agent-capability-research/research/host-integration-review.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
 {"file": ".trellis/spec/agent-core/library/capabilities.md", "reason": "Actual E06 public identity/grant semantics; no fabricated Studio grant backend."}
 {"file": ".trellis/spec/frontend/native-product-runtime.md", "reason": "Actual current native schema/transport and stop/drain owners; resolve old migration prose under fresh policy."}
 {"file": ".trellis/spec/frontend/agent-execution-feedback.md", "reason": "Actual phase/Stop semantics and quiet preparation."}

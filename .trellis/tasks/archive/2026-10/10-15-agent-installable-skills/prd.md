@@ -10,7 +10,7 @@ creative workflow instructions remains independent from tool execution authority
 
 ## Status and authorization
 
-Planning under [the evolution epic](../../../10-15-agent-experience-desktop-evolution/prd.md).
+Planning under [the evolution epic](../10-15-agent-experience-desktop-evolution/prd.md).
 On 2026-10-16 the owner accepted the E09 outline: metadata/body/resource separation,
 local-directory installation and management, unchanged execution authority,
 immutable active-run behavior and neutral reusable ownership. The owner approved this concrete PRD/design/implementation plan and requested
@@ -152,7 +152,7 @@ behavior. All three implementation stages are source-complete and have passed th
   [install/storage](./research/install-storage.md),
   [reference comparison](./research/reference-skills.md),
   [format/interaction](./research/format-and-interaction.md).
-- [Original capability comparison](../../../10-15-desktop-agent-capability-research/research/capability-comparison.md).
+- [Original capability comparison](../10-15-desktop-agent-capability-research/research/capability-comparison.md).
 
 ## Source acceptance coverage — 2026-10-16
 

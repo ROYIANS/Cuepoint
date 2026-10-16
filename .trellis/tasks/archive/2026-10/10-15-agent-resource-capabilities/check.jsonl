@@ -4,8 +4,8 @@
 {"file": ".trellis/spec/agent-providers/library/protocols.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
 {"file": ".trellis/spec/frontend/agent-tools.md", "reason": "Preserve current ownership, behavior and executable contracts; refresh scope-specific guidelines before development."}
-{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/capability-comparison.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
-{"file": ".trellis/tasks/10-15-desktop-agent-capability-research/research/host-integration-review.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-desktop-agent-capability-research/research/capability-comparison.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
+{"file": ".trellis/tasks/archive/2026-10/10-15-desktop-agent-capability-research/research/host-integration-review.md", "reason": "Source-backed requirement evidence and known limits; proposed options require this task review."}
 {"file": ".trellis/spec/agent-core/library/index.md", "reason": "Neutral public core ownership, emitted closure and all direct required contracts."}
 {"file": ".trellis/spec/agent-todo/cli/index.md", "reason": "Independent durable consumer ownership and public package imports."}
 {"file": ".trellis/spec/agent-todo/cli/durable-host.md", "reason": "Actual SQLite ownership, exact approval, atomic effects, restart and packed acceptance."}
