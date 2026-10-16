@@ -35,11 +35,30 @@ describe("browser skill directory capture", () => {
         await expect(prepareBrowserSkillImport([root.value, a.value, b.value])).rejects.toThrow("重名");
         const huge = file("portable/references/large.md", "x", 131_073);
         await expect(prepareBrowserSkillImport([root.value, huge.value])).rejects.toThrow("过大");
-        await expect(prepareBrowserSkillImport({length: 1_025})).rejects.toThrow("条目");
+        const many = Array.from({length: 1_025}, (_, index) => file(`portable/references/f${index}.md`, "x"));
+        await expect(prepareBrowserSkillImport([root.value, ...many.map(entry => entry.value)])).rejects.toThrow("条目");
         expect(root.read).not.toHaveBeenCalled(); expect(huge.read).not.toHaveBeenCalled();
     });
+    it("prunes .git, node_modules, scripts and unknown root entries before counting or path validation", async () => {
+        const root = file("portable/SKILL.md", text), reference = file("portable/references/guide.md", "Read me");
+        // 1,500 files that would exceed the entry cap and contain native-invalid names.
+        const vendored = Array.from({length: 1_500}, (_, index) => file(`portable/node_modules/pkg/f${index}.js`, "x"));
+        const git = [file("portable/.git/objects/ab/cd", "x"), file("portable/.git/HEAD", "x")];
+        const invalidNames = [file("portable/scripts/a:b.sh", "x"), file("portable/docs/AUX.md", "x"), file("portable/README.md", "x"),
+            file("portable/References/a.md", "x"), file("portable/references/.cache/a?.md", "x")];
+        const all = [root, reference, ...vendored, ...git, ...invalidNames];
+        const candidate = await prepareBrowserSkillImport(all.map(entry => entry.value));
+        expect(candidate.resources.map(entry => entry.path)).toEqual(["references/guide.md"]);
+        // node_modules, .git, scripts, docs, README.md, References, references/.cache: one entry each.
+        expect(candidate.exclusions.count).toBe(7);
+        expect(candidate.exclusions.paths).toEqual(expect.arrayContaining(["node_modules", ".git", "scripts", "docs", "README.md", "References", "references/.cache"]));
+        for (const entry of [...vendored, ...git, ...invalidNames]) expect(entry.read).not.toHaveBeenCalled();
+    });
+    it("still rejects invalid paths and duplicates inside accepted resource directories", async () => {
+        const root = file("portable/SKILL.md", text), bad = file("portable/assets/a:b.md", "x");
+        await expect(prepareBrowserSkillImport([root.value, bad.value])).rejects.toThrow("无效");
+    });
     it.each([
-        ["portable/References/a.md"],
         ["portable/references/Folder/a.md", "portable/references/folder/b.md"],
         ["portable/references/café/a.md", "portable/references/cafe\u0301/b.md"],
         ["portable/references/leaf.md", "portable/references/leaf.md/nested.md"],

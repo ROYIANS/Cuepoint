@@ -148,6 +148,10 @@ export function InstalledSkillsPanel({open, onOpenChange, controller, returnFocu
                         <input type="checkbox" role="switch" aria-label={`启用 ${entry.metadata.name}`} checked={entry.enabled} disabled={controller.blocked}
                             onChange={event => void controller.toggle(entry, event.target.checked)}/>
                     </div>)}</div>
+                    {controller.notice && <p className="installed-skills-hint" role="status">{controller.notice}</p>}
+                    {controller.retainedHistory > 0 && <div className="installed-skills-actions">
+                        <p className="installed-skills-hint">旧对话保留了 {controller.retainedHistory} 个历史技能版本，占用上限（最多 128 个 / 64 MiB）。</p>
+                        <Button type="button" size="sm" variant="outline" disabled={controller.blocked} onClick={() => void controller.releaseHistory()}>释放历史版本</Button></div>}
                     <p className="installed-skills-hint">技能提供工作说明与文本参考。工具权限、目录访问和付费操作仍按原有规则确认。</p>
                 </>}
             </div>

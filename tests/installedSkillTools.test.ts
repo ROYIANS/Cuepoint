@@ -78,17 +78,23 @@ describe("captured installed skill read tools", () => {
         const {run, descriptor} = await begin();
         const [load, resource] = await record(run, [{name: "load_skill", args: {skillId: descriptor.skillId}},
             {name: "read_skill_resource", args: {skillId: descriptor.skillId, path: "references/a.md", offset: 1, limit: 2}}]);
-        const keys: string[] = [];
-        const reads = interceptStoreTable(db, "deviceSettings", "get", async (_tx, args, next) => {keys.push(String(args[0])); return next();});
+        const allKeys: string[] = [];
+        // The per-conversation activity cursor (E11, agent.thread-activity.<hash>) is read as part of each committed call's
+        // shared transaction. It is accounted for separately and bounded; the skill-selected rows stay exact.
+        const activity = () => allKeys.filter(key => key.startsWith("agent.thread-activity."));
+        const skillKeys = () => allKeys.filter(key => !key.startsWith("agent.thread-activity."));
+        const reads = interceptStoreTable(db, "deviceSettings", "get", async (_tx, args, next) => {allKeys.push(String(args[0])); return next();});
         try {
             const loaded = await execute(load);
             expect(loaded).toMatchObject({version: 1, skillId: descriptor.skillId, revision: descriptor.revision, name: "scene-flow", body: expect.stringContaining("仅在被请求后读取")});
-            expect(keys).toEqual([skillManifestKey(descriptor.revision), skillBodyKey(descriptor.revision)]);
+            expect(skillKeys()).toEqual([skillManifestKey(descriptor.revision), skillBodyKey(descriptor.revision)]);
+            expect(activity().length).toBeLessThanOrEqual(1);
             expect(await db.agentToolCalls.get(load.id)).toMatchObject({status: "completed", result: JSON.stringify(loaded)});
-            keys.length = 0;
+            allKeys.length = 0;
             const page = await execute(resource);
             expect(page).toEqual({version: 1, skillId: descriptor.skillId, revision: descriptor.revision, path: "references/a.md", text: "😀乙", offset: 1, nextOffset: 3, end: false});
-            expect(keys).toEqual([skillManifestKey(descriptor.revision), skillResourceKey(descriptor.revision, 0)]);
+            expect(skillKeys()).toEqual([skillManifestKey(descriptor.revision), skillResourceKey(descriptor.revision, 0)]);
+            expect(activity().length).toBeLessThanOrEqual(1);
             expect(await db.agentToolCalls.get(resource.id)).toMatchObject({status: "completed", result: JSON.stringify(page)});
         } finally {reads.mockRestore();}
     });

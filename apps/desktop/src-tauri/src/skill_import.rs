@@ -385,6 +385,12 @@ impl Capture {
                     self.walk(&path, &logical, check)?;
                 }
             } else if supported_file(&logical) {
+                // A cloud placeholder or other reparse file cannot be read without
+                // recalling it or following an alias; count it instead of aborting.
+                if is_offline_placeholder(&metadata) {
+                    self.exclude(&logical);
+                    continue;
+                }
                 self.read_file(&path, &logical, check)?;
             } else {
                 self.exclude(&logical);
@@ -464,6 +470,26 @@ impl Capture {
         });
         Ok(())
     }
+}
+
+/// Windows cloud placeholders (OneDrive and similar) and non-symlink reparse
+/// files. Always false elsewhere.
+#[cfg(any(windows, test))]
+fn placeholder_attributes(attributes: u32) -> bool {
+    const REPARSE_POINT: u32 = 0x0000_0400;
+    const OFFLINE: u32 = 0x0000_1000;
+    const RECALL_ON_OPEN: u32 = 0x0004_0000;
+    const RECALL_ON_DATA_ACCESS: u32 = 0x0040_0000;
+    attributes & (REPARSE_POINT | OFFLINE | RECALL_ON_OPEN | RECALL_ON_DATA_ACCESS) != 0
+}
+#[cfg(windows)]
+fn is_offline_placeholder(metadata: &fs::Metadata) -> bool {
+    use std::os::windows::fs::MetadataExt;
+    placeholder_attributes(metadata.file_attributes())
+}
+#[cfg(not(windows))]
+fn is_offline_placeholder(_metadata: &fs::Metadata) -> bool {
+    false
 }
 
 fn verify_file(before: &paths::NativeStat, now: &paths::NativeStat) -> Result<()> {
@@ -681,6 +707,22 @@ mod tests {
                 .unwrap(),
             json!({"status":"canceled","operationId":"pick_1"})
         );
+    }
+    #[test]
+    fn skill_import_cloud_placeholder_attributes_are_excluded_not_fatal() {
+        // Windows-only attribute classification; the walk consults it per file.
+        assert!(placeholder_attributes(0x0040_0000 | 0x20)); // recall on data access
+        assert!(placeholder_attributes(0x0004_0000)); // recall on open
+        assert!(placeholder_attributes(0x1000)); // offline
+        assert!(placeholder_attributes(0x400)); // non-symlink reparse file
+        assert!(!placeholder_attributes(0x20)); // archive: ordinary file
+        assert!(!placeholder_attributes(0x80)); // normal
+        // On this host ordinary files are never classified as placeholders.
+        let fixture = Fixture::new();
+        fs::write(fixture.0.join("references/guide.md"), "参考").unwrap();
+        let metadata = fs::symlink_metadata(fixture.0.join("references/guide.md")).unwrap();
+        assert!(!is_offline_placeholder(&metadata) || cfg!(windows));
+        assert_eq!(fixture.capture().unwrap()["files"].as_array().unwrap().len(), 2);
     }
     #[test]
     fn skill_import_requires_root_document() {

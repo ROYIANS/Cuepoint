@@ -3,6 +3,7 @@ import {useProductQueryState} from "../../../platform/product/queries";
 import {createId} from "../../../platform/identity";
 import {StorageError} from "../../../platform/storage/errors";
 import {getInstalledSkillCatalogue} from "../skills/queries/installedSkills";
+import {releaseHistoricalSkillRevisions} from "../skills/commands/history";
 import {installSkill, reconcileSkillMutation, setInstalledSkillEnabled, uninstallSkill, updateInstalledSkill} from "../skills/commands/installations";
 import type {InstalledSkill, SkillCatalogue, SkillImportCandidate, SkillMutationExpectation, SkillMutationReceipt} from "../skills/models/installedSkill";
 
@@ -17,6 +18,7 @@ export function useInstalledSkills() {
     const catalogue = fresh && (!query.value || fresh.revision > query.value.revision) ? fresh : query.value;
     const [pending, setPending] = useState(false);
     const [error, setError] = useState<string>();
+    const [notice, setNotice] = useState<string>();
     const [uncertain, setUncertain] = useState<UncertainMutation>();
     const [optimistic, setOptimistic] = useState<OptimisticToggle>();
     const lock = useRef(false);
@@ -94,7 +96,30 @@ export function useInstalledSkills() {
         finally {lock.current = false; setPending(false);}
     }
 
+    async function releaseHistory() {
+        const value = current.current;
+        if (lock.current || value.uncertain || !value.catalogue || query.error) return;
+        lock.current = true;
+        setPending(true);
+        setError(undefined);
+        setNotice(undefined);
+        try {
+            const result = await releaseHistoricalSkillRevisions();
+            setNotice(result.releasedRevisions
+                ? `已释放 ${result.releasedRevisions} 个历史技能版本，${result.affectedRuns} 次旧执行不再带有这些技能${result.keptRevisions ? `；另有 ${result.keptRevisions} 个版本仍被进行中的执行使用` : ""}。`
+                : "没有可释放的历史版本。");
+            try {setFresh(await getInstalledSkillCatalogue());} catch {setAttempt(value => value + 1);}
+        } catch (cause) {
+            // Single transaction: an unknown commit may or may not have released content. Read back.
+            setError(cause instanceof Error ? cause.message : "释放历史版本失败，请刷新后重试");
+            try {setFresh(await getInstalledSkillCatalogue());} catch {setAttempt(value => value + 1);}
+        } finally {lock.current = false; setPending(false);}
+    }
+
+    const retainedHistory = catalogue ? catalogue.retainedRevisions.length - new Set(catalogue.entries.map(entry => entry.revision)).size : 0;
+
     return {
+        notice, retainedHistory, releaseHistory,
         catalogue, entries, pending, uncertain, error: error ?? query.error?.message,
         blocked: pending || !!uncertain || !catalogue || !!query.error,
         isPending: () => lock.current || !!current.current.uncertain,

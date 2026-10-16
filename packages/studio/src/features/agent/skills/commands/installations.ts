@@ -61,9 +61,9 @@ async function addContent(candidate: SkillImportCandidate, retentions: Map<strin
         await verifyExistingContent(candidate, tx);
         return;
     }
-    if (retentions.size >= SKILL_LIMITS.retainedRevisionCount) throw new Error("技能保留版本已达上限，请先清理相关历史对话");
+    if (retentions.size >= SKILL_LIMITS.retainedRevisionCount) throw new Error("技能保留版本已达上限。可在技能管理中选择“释放历史版本”，或删除相关历史对话");
     const retainedBytes = [...retentions.values()].reduce((sum, retention) => sum + retention.serializedBytes, 0);
-    if (retainedBytes + candidate.serializedBytes > SKILL_LIMITS.retainedBytes) throw new Error("技能保留内容已达容量上限，请先清理相关历史对话");
+    if (retainedBytes + candidate.serializedBytes > SKILL_LIMITS.retainedBytes) throw new Error("技能保留内容已达容量上限。可在技能管理中选择“释放历史版本”，或删除相关历史对话");
     const retention: SkillRetention = {version: 1, revision, currentReferences: 0, runReferences: 0, serializedBytes: candidate.serializedBytes};
     const rows = [
         {key: skillManifestKey(revision), value: candidate.manifest, updatedAt: nowIso()},

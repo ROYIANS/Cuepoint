@@ -14,6 +14,7 @@ import {deleteChatThread} from "@/features/agent/commands/lifecycle";
 import {contextPreviewTables, readAgentContextPreview} from "@/features/agent/commands/agentContextPreview";
 import {getOfferedToolNames, MAX_LOADED_TOOLS} from "@/features/agent/runtime/toolLoading";
 import {prepareSkillImport} from "@/features/agent/skills/runtime/package";
+import {releaseHistoricalSkillRevisions} from "@/features/agent/skills/commands/history";
 import {installSkill, setInstalledSkillEnabled, uninstallSkill, updateInstalledSkill} from "@/features/agent/skills/commands/installations";
 import {getInstalledSkillCatalogue, loadInstalledSkill} from "@/features/agent/skills/queries/installedSkills";
 import {SKILL_CATALOGUE_KEY, skillBodyKey, skillManifestKey, skillRetentionKey} from "@/features/agent/skills/runtime/records";
@@ -258,6 +259,35 @@ describe("run retention across real lifecycle and concurrent boundaries", () => 
         expect(reached).toBe(true); expect(await db.agentRuns.get(run.id)).toBeDefined();
         expect((await retention(installed.revision))?.runReferences).toBe(1); expect(await db.deviceSettings.get(skillBodyKey(installed.revision))).toBeDefined();
         await deleteChatThread(thread.id); expect(await retention(installed.revision)).toBeUndefined();
+    });
+});
+
+describe("releasing historical skill revisions", () => {
+    it("frees only revisions no installed skill uses, strips finished runs' pins, and keeps active ones", async () => {
+        const installed = await install(), done = await createChatThread(), doneRun = await begin(done.id);
+        await finishAgentRun(doneRun.id, "completed");
+        const newer = candidate("NEWER_BODY");
+        await updateInstalledSkill({operationId: "update-for-release", catalogueRevision: 1, skillId: installed.skillId, expectedRevision: installed.revision, candidate: newer});
+        const activeThread = await createChatThread(), activeRun = await begin(activeThread.id);
+        expect(activeRun.installedSkills?.entries[0].revision).toBe(newer.manifest.revision);
+        const older = candidate("MIDDLE_BODY");
+        await updateInstalledSkill({operationId: "update-again", catalogueRevision: 2, skillId: installed.skillId, expectedRevision: newer.manifest.revision, candidate: older});
+        // `newer` is pinned by a still-running run and survives; `installed.revision` is pinned only by a finished run.
+        const result = await releaseHistoricalSkillRevisions();
+        expect(result).toEqual({releasedRevisions: 1, affectedRuns: 1, keptRevisions: 1});
+        expect(await retention(installed.revision)).toBeUndefined();
+        expect(await db.deviceSettings.get(skillManifestKey(installed.revision))).toBeUndefined();
+        expect((await db.agentRuns.get(doneRun.id))?.installedSkills).toEqual({version: 1, entries: []});
+        expect((await retention(newer.manifest.revision))?.runReferences).toBe(1);
+        expect((await retention(older.manifest.revision))?.currentReferences).toBe(1);
+        const catalogue = await getInstalledSkillCatalogue();
+        expect(catalogue.retainedRevisions.sort()).toEqual([newer.manifest.revision, older.manifest.revision].sort());
+        // Deleting the thread of the stripped run still balances all counts.
+        await deleteChatThread(done.id);
+        expect(await releaseHistoricalSkillRevisions()).toEqual({releasedRevisions: 0, affectedRuns: 0, keptRevisions: 1});
+        await finishAgentRun(activeRun.id, "completed");
+        expect(await releaseHistoricalSkillRevisions()).toMatchObject({releasedRevisions: 1, affectedRuns: 1});
+        expect((await getInstalledSkillCatalogue()).retainedRevisions).toEqual([older.manifest.revision]);
     });
 });
 
