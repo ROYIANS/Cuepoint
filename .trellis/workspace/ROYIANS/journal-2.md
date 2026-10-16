@@ -633,3 +633,40 @@ Fixed owner-approved runtime export and uncertain optimistic-toggle findings; in
 ### Next Steps
 
 - Keep E09 source-complete-pending-batch; full app build, aggregate TSX discovery review, packed consumer and actual installed macOS/Windows acceptance remain at epic end.
+
+
+## Session 86: Archive E09 and investigate E10 MCP scope
+<!-- trellis-session: v=2 fp=ff693a5fb20a193e -->
+
+**Date**: 2026-10-16
+**Task**: Archive E09 and investigate E10 MCP scope
+**Package**: studio
+**Branch**: `codex/agent-installable-skills`
+
+### Summary
+
+Owner-authorized E09 archive complete. Deferred acceptance is carried by the parent epic. E10 source/reference/official-protocol investigation recorded; transport scope remains the first owner decision.
+
+### Main Changes
+
+- Archived E09, repaired retained Markdown and JSONL links, and preserved full/packed/installed-platform and TSX discovery acceptance in the parent epic.
+- Updated E10 planning with current integration seams, DeepSeek mechanisms, official protocol/SDK references and staged local/remote transport options.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `96bdeaf3` | chore: archive E09 and retain epic acceptance |
+| `5c7627d3` | docs: investigate E10 MCP scope and host options |
+
+### Testing
+
+- [OK] Task JSON, archive and E10 context-manifest validation, relative Markdown link audit and staged whitespace checks passed; no product code changed or builds run.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Converge E10 first-delivery transport scope with the owner, then initial server/auth/UX and concrete design before task activation.
