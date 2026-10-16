@@ -11,7 +11,6 @@ import {db} from "../../../platform/product/store";
 import {updateChatThread} from "../commands/chat";
 import {deleteChatThread} from "./../commands/lifecycle";
 import {useReferenceDraft} from "./useReferenceDraft";
-import {runBlocksThread} from "../models/agentToolSelection";
 import {TaskBoard} from "./TaskBoard";
 import {TaskInspector} from "./TaskInspector";
 import type {ManualDraftDeparture} from "../../../app/drafts/useManualDraftGuard";
@@ -174,7 +173,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     const viewScope = JSON.stringify([composeScope, view ?? "chat"]);
     if (attachment.current.scope !== viewScope) attachment.current = {scope: viewScope, generation: attachment.current.generation + 1};
     const references = useReferenceDraft(composeScope, projectId);
-    const {snapshot: execution, ownerId, sending, stopping, feedbackSnapshot,
+    const {snapshot: execution, ownerId, sending, stopping,
         attempts: submissionAttempts} = useChatExecutionSession(activeThreadId, composeScope);
     const sendLocked = () => {
         const id = activeThreadId ?? [...agentExecution.attemptsForScope(composeScope)].reverse().find(attempt => attempt.phase === "preparing")?.threadId;
@@ -225,7 +224,6 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     // A failed send whose text returned to the composer is told by the notice, not echoed in the stream.
     const streamAttempts = visibleAttempts.filter(attempt => !(attempt.phase === "failed" && returned.has(attempt.admission.userMessageId)));
     const showHome = !activeThreadId && view !== "tasks" && visibleAttempts.length === 0;
-    const provisionalHome = !activeThreadId && visibleAttempts.length > 0;
     if (presentation.current && activeThreadId && presentation.current.threadId !== activeThreadId) presentation.current = undefined;
     const probingModels = Boolean(selectedConnector && (!catalogMatches || modelCatalog?.status === "loading"));
 
@@ -457,7 +455,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
             >
                 <Empty
                     title="还没有可用的连接"
-                    description="对话需要先配置 OpenAI 兼容连接（Base URL + API Key）。密钥只保存在本机。"
+                    description=""
                 />
                 <Link to="/connectors">
                     <Button type="primary">前往连接</Button>
@@ -468,16 +466,6 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     }
 
     const currentRun = runs?.filter((r) => r.threadId === activeThreadId).at(-1);
-    const showRunStatus = currentRun !== undefined && runBlocksThread(currentRun);
-    const feedbackOwned = sending && (feedbackSnapshot?.threadId === activeThreadId ||
-        (!activeThreadId && provisionalHome));
-    const feedbackOwnsRun = currentRun !== undefined && feedbackSnapshot?.threadId === activeThreadId &&
-        feedbackSnapshot?.runId === currentRun.id;
-    const executionLabel = feedbackOwned ? stopping ? "正在停止…" :
-        feedbackSnapshot?.phase === "waiting_model" ? "正在等待回复…" : undefined : undefined;
-    const executionStatus = executionLabel ?? (showRunStatus && currentRun.status === "running" &&
-        (feedbackOwned ? feedbackSnapshot?.phase === "working" : !feedbackOwnsRun) ?
-        control.compacting ? "正在整理较早的对话…" : "正在执行" : undefined);
     const openTask = async () => {
         if (activeTask) {
             setTaskInspectorOpen(true);
@@ -503,8 +491,7 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
     };
     const taskState = activeTask ? `${TASK_STATE_LABELS[getTaskDisplayState(activeTask, runs)]}${activeTask.plan.length > 0 ? ` · ${activeTask.plan.filter((item) => item.status === "completed").length}/${activeTask.plan.length}` : ""}` : undefined;
     // The stream only carries live status; Stop is the send button. Problems live in one bubble above the composer.
-    const turnStatus = executionStatus ?
-        <div className="agent-turn-status" role="status"><i aria-hidden/>{executionStatus}</div> : undefined;
+    const turnStatus = undefined;
     const readOnlyThread = projectUnavailable || Boolean(activeTask && activeTask.lifecycle !== "open");
     const problem = deriveTurnProblem({
         attempts: visibleAttempts,

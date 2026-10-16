@@ -673,8 +673,8 @@
 .agent-chat-root .agent-topic-marker.is-unread { background: var(--foreground); }
 .agent-chat-root .agent-topic-marker.is-approval { background: #f5a524; box-shadow: 0 0 0 2px rgb(245 165 36 / 25%); }
 .agent-chat-root .agent-topic-marker.is-error { background: transparent; border: 1.5px solid #f87171; box-sizing: border-box; }
-.agent-chat-root .agent-dot-matrix { display: inline-grid; grid-template-columns: repeat(3, 3px); grid-template-rows: repeat(3, 3px); gap: 1px; }
-.agent-chat-root .agent-dot-matrix-dot { width: 3px; height: 3px; background: transparent; }
+.agent-chat-root .agent-dot-matrix { display: inline-grid; grid-template-columns: repeat(3, 2.25px); grid-template-rows: repeat(3, 2.25px); gap: 0.75px; }
+.agent-chat-root .agent-dot-matrix-dot { width: 2.25px; height: 2.25px; background: transparent; }
 .agent-chat-root .agent-dot-matrix-dot.is-on { background: rgb(200 200 200 / 90%); }
 .agent-chat-root .agent-topic-row-trailing { flex: none; position: relative; display: inline-flex; align-items: center; justify-content: flex-end; width: 58px; height: 100%; margin-right: 4px; }
 .agent-chat-root .agent-topic-row-time { color: var(--muted-foreground); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; padding-right: 6px; }

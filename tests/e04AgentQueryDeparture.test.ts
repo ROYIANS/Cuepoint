@@ -132,7 +132,7 @@ describe("actual Agent query observation ownership", () => {
             coverage: [], input: [], policy: DEFAULT_CONTEXT_POLICY, connector: run("A").connector, model: "model",
             content: "", beforeTokens: 1, createdAt: timestamp, updatedAt: timestamp});
         const initial = await mountA();
-        expect(container.textContent).toContain("A private text"); expect(container.textContent).toContain("正在整理较早的对话…");
+        expect(container.textContent).toContain("A private text"); expect(container.textContent).not.toContain("正在整理较早的对话");
         const old = await query(initial[7]); await draw("B");
         const {routed, control, transcript} = await addedThreadReads(8); await publish(routed);
         expect(container.textContent).not.toContain("A private text"); expect(container.textContent).not.toContain("正在执行");
@@ -142,7 +142,7 @@ describe("actual Agent query observation ownership", () => {
         expect(workspace().getAttribute("data-run-state")).toBe("run-B");
         expect(container.textContent).not.toContain("正在整理较早的对话"); expect(router.shouldBlock()).toBe(false);
         await db.agentRuns.update("run-B", {status: "running"}); await publish(control);
-        expect(container.textContent).toContain("正在执行"); expect(container.textContent).not.toContain("正在整理较早的对话");
+        expect(container.textContent).not.toContain("正在执行"); expect(container.textContent).not.toContain("正在整理较早的对话");
     });
     it("keeps home identity explicit and filters every source by the requested topic in the same snapshot", async () => {
         await db.chatMessages.bulkAdd([{id: "msgA", threadId: "A", role: "user", content: "owned", createdAt: timestamp},

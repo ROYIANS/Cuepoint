@@ -35,10 +35,10 @@ import {useMcpManagement} from "../mcp/ui/management";
 import {InstalledSkillMutationNotice} from "./InstalledSkillsPanel";
 
 const PERMISSIONS = [
-    {id: "ask", title: "请求批准", description: "编辑业务数据或使用互联网工具前询问", icon: Hand},
-    {id: "assist", title: "帮我批准", description: "常规操作自动执行，高风险操作和付费生成询问", icon: ShieldCheck},
-    {id: "full", title: "完全访问", description: "自主执行已启用工具，付费生成仍需确认配置", icon: ShieldAlert},
-] satisfies Array<{ id: AgentPermissionMode; title: string; description: string; icon: typeof Hand }>;
+    {id: "ask", title: "请求批准", icon: Hand},
+    {id: "assist", title: "帮我批准", icon: ShieldCheck},
+    {id: "full", title: "完全访问", icon: ShieldAlert},
+] satisfies Array<{ id: AgentPermissionMode; title: string; icon: typeof Hand }>;
 
 function popupRoot(): HTMLElement {
     return document.querySelector<HTMLElement>(".agent-chat-root") ?? document.body;
@@ -56,13 +56,12 @@ function useAgentSettings() {
     const PermissionIcon = selected.icon;
     const enabledSkills = config?.enabledSkillIds ?? AGENT_SKILLS.map((skill) => skill.id);
 
-    const save = async (action: () => Promise<void>, success: string) => {
+    const save = async (action: () => Promise<void>) => {
         if (saveLock.current || !config) return;
         saveLock.current = true;
         setSaving(true);
         try {
             await action();
-            toast.success(success);
         } catch {
             toast.error("保存助手设置失败，请重试");
         } finally {
@@ -97,7 +96,7 @@ export function AgentControls() {
                         className: item.id === "full" ? "agent-permission-full" : undefined,
                         icon: <item.icon size={18} aria-hidden/>,
                         label: <span className="agent-control-option"><span>{item.title}{item.id === mode &&
-                            <Check size={14} aria-hidden/>}</span><small>{item.description}</small></span>,
+                            <Check size={14} aria-hidden/>}</span></span>,
                     })),
                     onClick: ({key}) => {
                         if (key === mode) {
@@ -107,15 +106,10 @@ export function AgentControls() {
                         void save(async () => {
                             await updateGeneralAgentConfig({permissionMode: key as AgentPermissionMode});
                             setPermissionOpen(false);
-                        }, "权限已更新，对新执行生效");
+                        });
                     },
                 }}
-                popupRender={(menu) => <div className="agent-control-panel">
-                    <div className="agent-control-panel-heading">助手权限</div>
-                    {menu}
-                    <p className="agent-control-panel-note"
-                       role="status">{saving ? "正在保存…" : "对新执行生效。普通对话和计划保存无需批准。"}</p>
-                </div>}
+                popupRender={(menu) => <div className="agent-control-panel">{menu}</div>}
             >
                 <Tooltip title={`权限：${selected.title}`} placement="top" getPopupContainer={popupRoot}
                          trigger={["hover", "focus"]}>
@@ -190,7 +184,6 @@ export function ComposerPlusMenu({threadId, projectId, interactionMode, onIntera
     const builtinLock = useRef(false);
     const enabledSkills = builtinOptimistic ?? savedBuiltinSkills;
     const saving = builtinPending || builtinUnknown || installed.pending;
-    const enabledCount = enabledSkills.length + installed.entries.filter(skill => skill.enabled).length;
     const [open, setOpen] = useState(false);
     const [view, setView] = useState<"home" | "skills" | "parameters" | "mcp">("home");
     const mcp = useMcpManagement();
@@ -319,13 +312,13 @@ export function ComposerPlusMenu({threadId, projectId, interactionMode, onIntera
                             }
                             if (key === "memory") {openMemory(); return;}
                             if (key === "skills" || key === "parameters") setView(key);
-                        }}>{item.key === "mode-smart" ? <><Sparkles size={14} className="agent-plus-tint is-smart"/>{plusRow("智能", "可调用已启用的工具和技能")}</>
-                        : item.key === "mode-conversation" ? <><MessagesSquare size={14} className="agent-plus-tint is-chat"/>{plusRow("对话", "只进行普通对话，不调用工具")}</>
+                        }}>{item.key === "mode-smart" ? <><Sparkles size={14} className="agent-plus-tint is-smart"/>{plusRow("智能")}</>
+                        : item.key === "mode-conversation" ? <><MessagesSquare size={14} className="agent-plus-tint is-chat"/>{plusRow("对话")}</>
                         : item.key === "import" ? <><Upload size={14}/>{plusRow("文件")}</>
                         : item.key === "library" ? <><FolderOpen size={14}/>{plusRow("项目资料")}</>
                         : item.key === "memory" ? <><BookOpen size={14}/>{plusRow("项目记忆", undefined, true)}</>
                         : item.key === "parameters" ? <><SlidersHorizontal size={14}/>{plusRow("对话参数", undefined, true)}</>
-                        : item.key === "skills" ? <><Boxes size={14}/>{plusRow("技能", `${enabledCount} 项已启用`, true)}</>
+                        : item.key === "skills" ? <><Boxes size={14}/>{plusRow("技能", undefined, true)}</>
                         : <><Plug size={14}/>{plusRow("MCP", undefined, true)}</>}</button>)}</div>}
             </div> : <div className="agent-control-panel agent-skill-panel">
                 <PlusSheetToolbar onBack={backHome} search={search} onSearch={setSearch} searchRef={searchInput}

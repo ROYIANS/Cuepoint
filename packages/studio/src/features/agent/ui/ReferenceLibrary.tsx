@@ -7,7 +7,7 @@ import {toast} from "sonner";
 import {listProjectReferences, removeProjectReference} from "../../references/commands/references";
 import {registerProjectImage, retryReferenceImport} from "../../references/documents/import";
 import {type ProjectReference, type ReferenceAttachment, referenceAttachment} from "../../references/models/references";
-import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "../../../ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "../../../ui/dialog";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -60,7 +60,6 @@ export function ReferenceLibrary({projectId, open, onOpenChange, selected, onSel
             const reference = await registerProjectImage(projectId, media.id);
             if (reference.status !== "ready") throw new Error(reference.error ?? "图片不可用");
             onSelect(referenceAttachment(reference));
-            toast.success("已附加到消息");
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "附加图片失败");
         } finally {
@@ -96,7 +95,7 @@ export function ReferenceLibrary({projectId, open, onOpenChange, selected, onSel
     }
 
     return <><Dialog open={open} onOpenChange={onOpenChange}><DialogContent
-        className="reference-dialog"><DialogHeader><DialogTitle>项目资料</DialogTitle><DialogDescription>此项目的对话共享资料库。只将你选择的资料附加到当前消息。</DialogDescription></DialogHeader>
+        className="reference-dialog"><DialogHeader><DialogTitle>项目资料</DialogTitle></DialogHeader>
         <div className="reference-library-tabs" aria-label="资料类型">
             <button type="button" aria-pressed={view === "references"} onClick={() => setView("references")}>参考资料
             </button>
@@ -108,11 +107,9 @@ export function ReferenceLibrary({projectId, open, onOpenChange, selected, onSel
                                                                                     onChange={(e) => setQuery(e.target.value)}/></label>
             <button type="button" onClick={onImport}><Upload size={16}/>导入</button>
         </div>
-        <p className="reference-note">图片 ≤10 MB · TXT / MD ≤5 MB · PDF / DOCX ≤20 MB · 每次最多 10 个</p>
         <div className="reference-library-list">
             {view === "images" ? !images ? <p role="status">加载图片…</p> : images.error ?
-                <p role="alert">{images.error}</p> : <><p
-                    className="reference-note">包括上传和生成的图片。点击附加可让当前模型查看原始图片。</p>
+                <p role="alert">{images.error}</p> : <>
                     <div
                         className="reference-image-grid">{images.rows.filter((row) => row.filename.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase())).map((media) =>
                         <ProjectImage key={media.id} media={media} disabled={!!busy}
@@ -120,15 +117,12 @@ export function ReferenceLibrary({projectId, open, onOpenChange, selected, onSel
                     {!images.rows.length && <p className="reference-empty">项目中还没有图片</p>}</> : !result ?
                 <p role="status">加载中…</p> : result.error ? <div role="alert"><p>{result.error}</p>
                     <button type="button" onClick={() => setAttempt((n) => n + 1)}>重试</button>
-                </div> : !rows.length ? <div className="reference-empty"><Upload
-                    size={28}/><strong>{query ? "没有匹配的资料" : "把创作参考放在这里"}</strong>
-                    <p>导入剧本、文档或图片，之后可以在项目的其他对话中复用。</p></div> : rows.map((row) => {
+                </div> : !rows.length ? <div className="reference-empty">{query ? <strong>没有匹配的资料</strong> : <Upload size={28}/>}</div> : rows.map((row) => {
                     const attached = selected.some((item) => item.referenceId === row.id && item.revision === row.revision);
                     const usable = row.status === "ready" || row.status === "partial";
                     return <div className="reference-library-row" key={row.id}>
                         <div><ReferenceSourceLink projectId={projectId}
-                                                  attachment={referenceAttachment(row)}/><small>{row.kind.toUpperCase()} · {(row.size / 1024).toFixed(0)} KB
-                            · {REFERENCE_STATUS_LABELS[row.status]}{row.kind !== "image" && usable ? ` · ${row.coverage.characters.toLocaleString()} 字符` : ""}</small>{row.error &&
+                                                  attachment={referenceAttachment(row)}/><small>{[row.kind.toUpperCase(), `${(row.size / 1024).toFixed(0)} KB`, REFERENCE_STATUS_LABELS[row.status]].filter(Boolean).join(" · ")}</small>{row.error &&
                             <p className="reference-error">{row.error}</p>}{row.warnings.map((warning, i) => <p
                             className="reference-warning" key={i}>{warning}</p>)}</div>
                         <div className="reference-row-actions">{(row.status === "failed" || row.status === "parsing") &&

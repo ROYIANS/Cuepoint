@@ -231,11 +231,10 @@ export function CompactAction({threadId, connector, model, modelMetadata, reason
     const manual = lastRecord?.origin === "manual" && lastRecord.status === "completed" ? lastRecord : undefined;
     const result = manual?.requestBefore !== undefined && manual.requestAfter !== undefined
         ? `${formatTokenCount(manual.requestBefore)} → ${formatTokenCount(manual.requestAfter)}` : undefined;
-    const note = compacting ? "正在压缩…" : result ?? reason;
+    const note = result ?? (compacting ? undefined : reason);
     return <div className="agent-context-footer">
         <div className="agent-context-footer-row">
-            <span className="agent-context-footer-note" role={compacting || result ? "status" : undefined}
-                  title={result ? "压缩前后的请求大小（估算）" : undefined}>{note}</span>
+            <span className="agent-context-footer-note" role={result ? "status" : undefined}>{note}</span>
             <span className="agent-context-footer-actions">
                 {compacting
                     ? <button type="button" className="agent-context-icon-button" onClick={stop} disabled={execution?.stopping}
@@ -265,16 +264,11 @@ function ContextDetails({snapshot, onMemoryOpen}: {
     snapshot: Extract<ReturnType<typeof useContextUsage>, {status: "ready"}>;
     onMemoryOpen?: () => void;
 }) {
-    const {activeRun, capacity, source, policy, budget, selectedCount, lastRecord, projectContext, memorySelection, selectedReferences, toolCount} = snapshot;
+    const {lastRecord, memorySelection} = snapshot;
+    if (!memorySelection && !lastRecord) return null;
     return <div className="agent-context-details">
         <div className="agent-context-details-body">
-            <p>{activeRun ? "当前执行的已保存上下文" : "下次发送，包含当前草稿"} · {toolCount} 个工具</p>
-            <p>{policy.limitHistory ? `历史上限 ${policy.historyMessageCount} 条` : "历史不限条数"} · 已选 {selectedCount} 条</p>
-            {capacity ? <p>上限 {formatTokenCount(capacity)}{source ? ` · ${source}` : ""} · 输出预留 {formatTokenCount(budget.outputReserve)} · 输入预算 {formatTokenCount(budget.inputBudget ?? 0)}</p> : <p>上限未知，可在对话参数中设置本地预算</p>}
-            <p>{budget.source === "reported" ? `基于最近一次实际输入 ${formatTokenCount(budget.reportedTokens ?? 0)}，加新增内容估算` : "按文本长度估算，发送后以供应商用量校准"}</p>
-            {projectContext && <p>项目 {projectContext.name} · 分集 {projectContext.coverage.episodes.included}/{projectContext.coverage.episodes.total} · 资产 {projectContext.coverage.assets.included}/{projectContext.coverage.assets.total}</p>}
             {memorySelection && onMemoryOpen && <button type="button" className="agent-context-memory-link" onClick={onMemoryOpen}><span>项目记忆 · {memorySelection.selectedCount} 条</span><span>查看引用与排除 →</span></button>}
-            {selectedReferences && <p>参考资料 {selectedReferences.references.length} 份，仅含本次准备的范围</p>}
             {lastRecord && <ContextCompactionDetails record={lastRecord}/>}
         </div>
     </div>;
@@ -288,10 +282,10 @@ export function ContextUsagePanel({snapshot, onMemoryOpen, connector, modelMetad
     reasoningEffort?: AgentReasoningEffort;
 }) {
     const [detailsOpen, setDetailsOpen] = useState(false);
-    if (snapshot.status !== "ready" || !("usage" in snapshot)) return <div className="agent-context-panel" role="region" aria-label="上下文用量">
-        <p role={snapshot.error ? "alert" : "status"}>{snapshot.error ?? "正在读取上下文…"}</p>
-    </div>;
-    const {usage, capacity, percent, activeRun, budget, lastRecord, error, model} = snapshot;
+    if (snapshot.status !== "ready" || !("usage" in snapshot)) return snapshot.error ? <div className="agent-context-panel" role="region" aria-label="上下文用量">
+        <p role="alert">{snapshot.error}</p>
+    </div> : null;
+    const {usage, capacity, percent, activeRun, lastRecord, error, model} = snapshot;
     const rows = summarizeContextRows(usage.categories);
     const scale = capacity ?? usage.total;
     return (
@@ -299,7 +293,6 @@ export function ContextUsagePanel({snapshot, onMemoryOpen, connector, modelMetad
             <div className="agent-context-head">
                 <strong>{percent !== undefined ? `已用 ${percentLabel(percent)}` : "已用"}</strong>
                 <span>
-                    {budget.source === "estimated" && <small>估算</small>}
                     <span>≈ {formatTokenCount(usage.total)}{capacity ? ` / ${formatTokenCount(capacity)}` : ""}</span>
                 </span>
             </div>

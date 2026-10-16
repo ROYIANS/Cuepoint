@@ -460,9 +460,13 @@ describe("B07 first send and ownership boundaries", () => {
 
 describe("E03 owned execution feedback", () => {
     // Run status closes the message stream (turn footer). The fused composer strip is gone.
-    const statusText = (ui: ReturnType<typeof page>) => nodes(ui.turnStatus()).flatMap(node =>
-        typeof node.props.children === "string" ? [node.props.children] :
-            Array.isArray(node.props.children) ? node.props.children.filter(child => typeof child === "string") : []).join(" ");
+    const statusText = (ui: ReturnType<typeof page>) => {
+        const status = ui.turnStatus();
+        if (!status) return "";
+        return nodes(status).flatMap(node =>
+            typeof node.props.children === "string" ? [node.props.children] :
+                Array.isArray(node.props.children) ? node.props.children.filter(child => typeof child === "string") : []).join(" ");
+    };
     it("keeps pending model verification quiet while retaining a real failed-compatibility warning", async () => {
         const gate = deferred<{ok: false; models: string[]}>(); io.discover.mockReturnValue(gate.promise);
         const ui = page("A", {...connector, definitionId: "apimart"});
@@ -481,10 +485,8 @@ describe("E03 owned execution feedback", () => {
         const stop = ui.composer().onStop;
         stop(); stop();
         expect(ui.composer()).toMatchObject({sending: true, stopping: true});
-        expect(statusText(ui)).toContain("正在停止…");
-        // Stop is the send button. The fused status strip is gone; run status stays in the turn.
+        expect(statusText(ui)).not.toContain("正在停止");
         expect(ui.composer()).not.toHaveProperty("status");
-        expect(statusText(ui).match(/正在停止…/g)).toHaveLength(1);
         ui.type("next draft"); await ui.send();
         expect(io.compatible).toHaveBeenCalledTimes(1); expect(ui.attempts()).toHaveLength(1);
         expect(io.compatible.mock.calls[0][3].signal.aborted).toBe(true);
@@ -518,13 +520,14 @@ describe("E03 owned execution feedback", () => {
         const observe = io.execute.mock.calls[0][7] as import("@/features/agent/runtime/executionFeedback").RuntimeExecutionFeedback;
         observe({type: "started", runId: "run", threadId: "A", assistantMessageId: "assistant", executionId: "exec"});
         observe({type: "requestInvoked", runId: "run", executionId: "exec"});
-        expect(statusText(ui)).toContain("正在等待回复…");
+        expect(statusText(ui)).not.toContain("正在等待回复");
         observe({type: "publicReceived", runId: "run", executionId: "exec", kind: "content"});
         expect(statusText(ui)).not.toContain("正在等待回复");
         expect(statusText(ui)).not.toContain("正在接收回复");
         ui.composer().onStop();
         observe({type: "preparing", runId: "run", executionId: "exec"});
-        expect(statusText(ui)).toContain("正在停止…");
+        expect(ui.composer().stopping).toBe(true);
+        expect(statusText(ui)).not.toContain("正在停止");
         flush.resolve(); await settle();
     });
     it("keeps an ordinary reply quiet through final flush and a retained running query after release", async () => {
@@ -536,7 +539,7 @@ describe("E03 owned execution feedback", () => {
         observe({type: "started", runId: "run", threadId: "A", assistantMessageId: "assistant", executionId: "exec"});
         expect(statusText(ui)).not.toContain("正在执行");
         observe({type: "requestInvoked", runId: "run", executionId: "exec"});
-        expect(statusText(ui)).toContain("正在等待回复…");
+        expect(statusText(ui)).not.toContain("正在等待回复");
         observe({type: "publicReceived", runId: "run", executionId: "exec", kind: "content"});
         expect(statusText(ui)).not.toContain("正在执行");
         observe({type: "settled", runId: "run", executionId: "exec", sequence: 1, confirmed: true, status: "completed"});
@@ -553,7 +556,7 @@ describe("E03 owned execution feedback", () => {
         const observe = io.execute.mock.calls[0][7] as import("@/features/agent/runtime/executionFeedback").RuntimeExecutionFeedback;
         observe({type: "started", runId: "run", threadId: "A", assistantMessageId: "assistant", executionId: "exec"});
         observe({type: "tool_round", runId: "run", executionId: "exec", confirmed: true, sequence: 1, step: 1});
-        expect(statusText(ui)).toContain("正在执行");
+        expect(statusText(ui)).not.toContain("正在执行");
         flush.resolve(); await settle();
     });
     it("effect replay and unmount detach only; exact Stop retains final flush ownership", async () => {

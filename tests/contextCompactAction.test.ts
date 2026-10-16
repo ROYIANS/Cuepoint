@@ -48,7 +48,7 @@ it("disables with a reason, shows progress with Cancel, reports typed failures a
     }));
     await render();
     await act(async () => button("压缩上下文")!.click());
-    expect(container.textContent).toContain("正在压缩");
+    expect(button("取消压缩")).toBeDefined();
     expect(button("压缩上下文")).toBeUndefined();
     await act(async () => {await requested.promise;});
     await act(async () => button("取消压缩")!.click());

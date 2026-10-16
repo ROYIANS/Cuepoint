@@ -2,23 +2,53 @@ import type {AgentRun} from "../models/agent";
 import type {AgentImageReference, AgentSelectedReferences} from "../../references/models/referenceInput";
 import {useEffect, useRef, useState} from "react";
 import {useProductQuery} from "../../../platform/product/queries";
-import {FileText, ImageIcon, Paperclip, X} from "../../../ui/icons";
+import {FileDoc, FileMd, FilePdf, FileTxt, ImageIcon, Paperclip, X} from "../../../ui/icons";
 import {binaryPreviewMessage, useBinaryPreview} from "../../library/services/media";
 import {getReferenceSource} from "../../references/commands/references";
-import {type ProjectReference, type ReferenceAttachment, referenceLocatorLabel} from "../../references/models/references";
-import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "../../../ui/dialog";
+import {type ProjectReference, type ReferenceAttachment, type ReferenceKind, referenceLocatorLabel} from "../../references/models/references";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "../../../ui/dialog";
 import "./references.css";
 
-export const REFERENCE_STATUS_LABELS: Record<ProjectReference["status"], string> = {
-    parsing: "解析中",
-    ready: "可使用",
+export const REFERENCE_STATUS_LABELS: Partial<Record<ProjectReference["status"], string>> = {
     partial: "部分解析",
     failed: "解析失败",
-    unavailable: "已移除"
+    unavailable: "已移除",
 };
 
-function ReferenceIcon({kind}: { kind?: string }) {
-    return kind === "image" ? <ImageIcon size={16} aria-hidden/> : <FileText size={16} aria-hidden/>;
+const FILE_LOOKS = {
+    pdf: {color: "#e25c5c", Icon: FilePdf},
+    docx: {color: "#4c8dff", Icon: FileDoc},
+    md: {color: "#8b6cff", Icon: FileMd},
+    txt: {color: "#e0a23a", Icon: FileTxt},
+    image: {color: "#3f9d72", Icon: ImageIcon},
+} as const;
+
+function fileLook(filename: string, kind?: ReferenceKind) {
+    const ext = filename.split(".").pop()?.toLowerCase() ?? "";
+    if (kind === "pdf" || ext === "pdf") return FILE_LOOKS.pdf;
+    if (kind === "docx" || ext === "docx") return FILE_LOOKS.docx;
+    if (ext === "md" || ext === "markdown") return FILE_LOOKS.md;
+    if (kind === "image" || ["png", "jpg", "jpeg", "webp", "gif"].includes(ext)) return FILE_LOOKS.image;
+    return FILE_LOOKS.txt;
+}
+
+function FileBadge({filename, kind}: {filename: string; kind?: ReferenceKind}) {
+    const look = fileLook(filename, kind);
+    return <span className="reference-file-badge" style={{background: look.color}} aria-hidden><look.Icon size={18}/></span>;
+}
+
+function useAttachmentFace(projectId: string | undefined, attachment: ReferenceAttachment) {
+    const key = `${projectId ?? ""}/${attachment.referenceId}/${attachment.revision}`;
+    const loaded = useProductQuery(async (db) => {
+        if (!projectId) return {key, filename: undefined as string | undefined, kind: undefined as ReferenceKind | undefined, blob: undefined};
+        const row = await db.projectReferences.get(attachment.referenceId);
+        if (!row || row.projectId !== projectId) return {key, filename: undefined, kind: undefined, blob: undefined};
+        const media = row.kind === "image" ? await db.media.get(row.mediaId) : undefined;
+        return {key, filename: row.filename, kind: row.kind, blob: media?.projectId === projectId ? media.blob : undefined};
+    }, [key]);
+    const face = loaded?.key === key ? loaded : undefined;
+    const preview = useBinaryPreview(face?.kind === "image" ? face.blob : undefined);
+    return {filename: face?.filename, kind: face?.kind, preview};
 }
 
 function SourcePreview({projectId, attachment, chunkIndex}: {
@@ -45,14 +75,12 @@ function SourcePreview({projectId, attachment, chunkIndex}: {
     }, [source, chunkIndex]);
     if (!result) return <p role="status">正在读取资料…</p>;
     if (!source) return <div className="reference-error" role="alert"><p>{result.error}</p>
-        <button type="button" onClick={() => setAttempt((n) => n + 1)}>重新读取</button>
-        <p>历史消息中的引用会保留；不可用的资料无法参与新的请求。</p></div>;
+        <button type="button" onClick={() => setAttempt((n) => n + 1)}>重新读取</button></div>;
     const {reference, chunks} = source;
+    const status = REFERENCE_STATUS_LABELS[reference.status];
     return <>
-        <div className="reference-source-meta"><ReferenceIcon
-            kind={reference.kind}/><strong>{reference.filename}</strong><span>v{reference.revision} · {REFERENCE_STATUS_LABELS[reference.status]}</span>
+        <div className="reference-source-meta"><FileBadge filename={reference.filename} kind={reference.kind}/><strong>{reference.filename}</strong>{status && <span>{status}</span>}
         </div>
-        <p className="reference-note">{reference.kind === "image" ? "原始图片 · 发送后由所选模型读取" : `已提取 ${reference.coverage.characters.toLocaleString()} 字符 · 处理 ${reference.coverage.processedUnits}/${reference.coverage.totalUnits} 个来源单元。这里是提取预览，不代表模型已完整阅读。`}</p>
         {reference.warnings.map((warning, i) => <p className="reference-warning" key={i}>{warning}</p>)}
         {reference.coverage.emptyUnits.length > 0 &&
             <p className="reference-warning">没有可提取文字的单元：{reference.coverage.emptyUnits.join("、")}</p>}
@@ -92,14 +120,34 @@ export function ReferenceSourceLink({projectId, attachment, label, chunkIndex}: 
     const row = loaded?.projectId === projectId && loaded.id === attachment.referenceId && loaded.row?.projectId === projectId ? loaded.row : undefined;
     return <>
         <button type="button" className="reference-source-link" onClick={() => setOpen(true)}
-                title={row?.filename ?? label}><ReferenceIcon
-            kind={row?.kind}/><span>{label ?? row?.filename ?? "参考资料"}</span>{row?.status === "unavailable" &&
+                title={row?.filename ?? label}><FileBadge filename={row?.filename ?? label ?? "参考资料"} kind={row?.kind}/><span>{label ?? row?.filename ?? "参考资料"}</span>{row?.status === "unavailable" &&
             <small>已移除</small>}</button>
         <Dialog open={open} onOpenChange={setOpen}><DialogContent
-            className="reference-dialog"><DialogHeader><DialogTitle>来源资料</DialogTitle><DialogDescription>原始内容与提取结果
-            · 只在发送或工具读取时分享给模型</DialogDescription></DialogHeader>{open &&
+            className="reference-dialog"><DialogHeader><DialogTitle>{row?.filename ?? "来源资料"}</DialogTitle></DialogHeader>{open &&
             <SourcePreview key={`${projectId}/${attachment.referenceId}/${attachment.revision}`} projectId={projectId}
                            attachment={attachment} chunkIndex={chunkIndex}/>}</DialogContent></Dialog></>;
+}
+
+function AttachmentChip({projectId, attachment, onRemove}: {
+    projectId?: string;
+    attachment: ReferenceAttachment;
+    onRemove?: (attachment: ReferenceAttachment) => void;
+}) {
+    const [open, setOpen] = useState(false);
+    const face = useAttachmentFace(projectId, attachment);
+    const filename = face.filename ?? "参考资料";
+    const shown = face.kind === "image" && face.preview.status === "ready";
+    return <span className={`reference-chip${shown ? " is-image" : " is-file"}`}>
+        <button type="button" className="reference-chip-body" title={filename} onClick={() => projectId && setOpen(true)}>
+            {shown ? <img src={face.preview.status === "ready" ? face.preview.url : ""} onError={face.preview.status === "ready" ? face.preview.onError : undefined} alt={filename}/> : <>
+                {face.filename ? <FileBadge filename={filename} kind={face.kind}/> : <Paperclip size={16} aria-hidden/>}
+                <span className="reference-chip-name">{filename}</span>
+            </>}
+        </button>
+        {onRemove && <button type="button" className="reference-chip-remove" aria-label="从消息中移除附件" onClick={() => onRemove(attachment)}><X size={12} aria-hidden/></button>}
+        {projectId && <Dialog open={open} onOpenChange={setOpen}><DialogContent className="reference-dialog"><DialogHeader><DialogTitle>{filename}</DialogTitle></DialogHeader>{open &&
+            <SourcePreview key={`${projectId}/${attachment.referenceId}/${attachment.revision}`} projectId={projectId} attachment={attachment}/>}</DialogContent></Dialog>}
+    </span>;
 }
 
 export function ReferenceAttachments({projectId, attachments, onRemove}: {
@@ -108,12 +156,8 @@ export function ReferenceAttachments({projectId, attachments, onRemove}: {
     onRemove?: (attachment: ReferenceAttachment) => void
 }) {
     if (!attachments.length) return null;
-    return <div className="reference-chips" aria-label="已附加的资料">{attachments.map((attachment) => <span
-        className="reference-chip" key={`${attachment.referenceId}/${attachment.revision}`}>{projectId ?
-        <ReferenceSourceLink projectId={projectId} attachment={attachment}/> : <><Paperclip
-            size={14}/>参考资料</>}{onRemove &&
-        <button type="button" aria-label="从消息中移除附件" title="仅从草稿中移除，项目资料仍保留"
-                onClick={() => onRemove(attachment)}><X size={14}/></button>}</span>)}</div>;
+    return <div className="reference-chips" aria-label="已附加的资料">{attachments.map((attachment) =>
+        <AttachmentChip key={`${attachment.referenceId}/${attachment.revision}`} projectId={projectId} attachment={attachment} onRemove={onRemove}/>)}</div>;
 }
 
 export function ReferenceMessageSources({context, run, content}: {
@@ -136,16 +180,8 @@ export function ReferenceMessageSources({context, run, content}: {
         <div className="reference-chips">{citations.map((citation) => <ReferenceSourceLink
             key={`${citation.referenceId}/${citation.revision}/${citation.chunkIndex}`} projectId={citation.projectId}
             attachment={citation} chunkIndex={citation.chunkIndex}
-            label={`引用 · 片段 ${citation.chunkIndex + 1}`}/>)}</div>}{audits.length > 0 && <details>
-        <summary>请求资料记录 · {audits.length} 次请求</summary>
-        {audits.map((audit) => <section key={audit.step}>
-            <strong>第 {audit.step} 次请求</strong>{audit.inputs.map((input, index) => <div key={index}>
-            <ReferenceAttachments projectId={input.projectId}
-                                  attachments={input.references}/>{input.images?.filter((image) => !image.reference).map((image) =>
-            <ProjectImageSource key={image.mediaId} image={image}/>)}{input.coverage?.map((coverage) => <p
-            className="reference-note"
-            key={`${coverage.referenceId}/${coverage.revision}`}>{coverage.filename} · {coverage.kind === "image" ? input.images?.some((image) => image.reference?.referenceId === coverage.referenceId && image.reference.revision === coverage.revision) ? "本轮图片输入（图像 token 为估算）" : "图片来源记录（本轮不含图片像素）" : `包含 ${coverage.includedChunkIndices.length}/${coverage.totalChunks} 段，${coverage.includedCharacters.toLocaleString()} 字符${coverage.partial ? " · 部分内容" : ""}`}{coverage.warnings.length > 0 ? ` · ${coverage.warnings.join("；")}` : ""}</p>)}
-        </div>)}</section>)}</details>}</div>;
+            label={`引用 · 片段 ${citation.chunkIndex + 1}`}/>)}</div>}{audits.flatMap((audit) => audit.inputs.flatMap((input) => input.images?.filter((image) => !image.reference) ?? [])).map((image) =>
+        <ProjectImageSource key={image.mediaId} image={image}/>)}</div>;
 }
 
 function ProjectImageSource({image}: { image: AgentImageReference }) {
@@ -166,10 +202,9 @@ function ProjectImageSource({image}: { image: AgentImageReference }) {
     const preview = useBinaryPreview(media?.blob);
     return <>
         <button className="reference-source-link" type="button" onClick={() => setOpen(true)}><ImageIcon
-            size={14}/><span>{image.filename} · 本轮图片输入</span></button>
+            size={14}/><span>{image.filename}</span></button>
         <Dialog open={open} onOpenChange={setOpen}><DialogContent
-            className="reference-dialog"><DialogHeader><DialogTitle>{image.filename}</DialogTitle><DialogDescription>为本次请求准备的项目图片；不代表请求已经发出。图像
-            token 用量为估算。</DialogDescription></DialogHeader>
+            className="reference-dialog"><DialogHeader><DialogTitle>{image.filename}</DialogTitle></DialogHeader>
             <div className="reference-preview">{media === undefined ? <p>加载中…</p> : !media ?
                 <p>原始图片已不可用，历史引用记录仍保留。</p> : preview.status === "ready" ?
                     <img src={preview.url} onError={preview.onError} alt={image.filename}/> :

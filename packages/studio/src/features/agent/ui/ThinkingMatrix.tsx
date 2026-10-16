@@ -123,7 +123,7 @@ function useMatrixCells(): boolean[] {
 }
 
 /**
- * Compact (11px) matrix for a ~16px leading cell. Decorative: the owner
+ * Compact (~8px) matrix for a ~16px leading cell. Decorative: the owner
  * supplies the accessible label.
  */
 export function DotMatrixMarker({className}: { className?: string }) {

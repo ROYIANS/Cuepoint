@@ -68,13 +68,13 @@ function ModeSwitch({mode, onChange}: {
                         key: "agent",
                         icon: <InfinityIcon size={16}/>,
                         label: <span className="agent-control-option"><span>Agent {mode === "agent" &&
-                            <Check size={14}/>}</span><small>聊天并调用已启用的工具</small></span>
+                            <Check size={14}/>}</span></span>
                     },
                     {
                         key: "task",
                         icon: <LayoutList size={16}/>,
                         label: <span className="agent-control-option"><span>任务 {mode === "task" &&
-                            <Check size={14}/>}</span><small>围绕目标规划步骤，追踪进度与成果</small></span>
+                            <Check size={14}/>}</span></span>
                     },
                 ],
                 onClick: ({key}) => {
@@ -320,10 +320,9 @@ export function FloatingComposer({
             <Dialog open={!!projectAction && !projectId} onOpenChange={(open) => {
                 if (!open) setProjectAction(undefined);
             }}><DialogContent
-                className="reference-dialog reference-project-dialog"><DialogHeader><DialogTitle>先为资料选择项目</DialogTitle><DialogDescription>{projectLocked ? "当前对话未绑定项目且已开始，请新开一个项目对话导入资料。" : "资料保存在所选项目中；你的消息草稿会保留。"}</DialogDescription></DialogHeader><ProjectPicker
+                className="reference-dialog reference-project-dialog"><DialogHeader><DialogTitle>先为资料选择项目</DialogTitle>{projectLocked && <DialogDescription>当前对话未绑定项目且已开始，请新开一个项目对话导入资料。</DialogDescription>}</DialogHeader><ProjectPicker
                 projects={projects} projectId={projectId} locked={projectLocked} allowClear={false}
-                onChange={onProjectChange}/><p className="reference-note">支持 JPEG / PNG / WebP（10 MB）、TXT / MD（5
-                MB）、PDF / DOCX（20 MB），每次最多 10 个文件。导入仅在本地解析。</p></DialogContent></Dialog>
+                onChange={onProjectChange}/></DialogContent></Dialog>
             </>}
         >
                 <input ref={fileInput} type="file" accept={REFERENCE_ACCEPT} multiple hidden onChange={(event) => {
@@ -335,7 +334,7 @@ export function FloatingComposer({
                     <div className="reference-imports" aria-live="polite">{referenceImports.map((job) => <div
                         key={job.id}>{job.status === "importing" ?
                         <LoaderCircle size={14} className="reference-spinner"/> : <span
-                            aria-hidden>!</span>}<span><strong>{job.filename}</strong><small>{job.error ?? "正在本地导入与解析…"}</small></span>{job.status === "failed" &&
+                            aria-hidden>!</span>}<span><strong>{job.filename}</strong>{job.error && <small>{job.error}</small>}</span>{job.status === "failed" &&
                         <button type="button" aria-label={`重试导入 ${job.filename}`}
                                 onClick={() => onRetryReferenceImport?.(job)}><RotateCcw size={14}/></button>}
                         <button type="button" aria-label={`取消附件 ${job.filename}`}
@@ -347,7 +346,7 @@ export function FloatingComposer({
                     readOnly={listening}
                     value={value}
                     variant="borderless"
-                    placeholder={blocked ? blockedReason ?? "重新打开任务后可继续对话" : projectRequired ? "先选择项目，再描述你想完成的事…" : surface === "home" && chatMode === "task" ? "描述你想完成的事，与助手一起明确需求…" : "提问、创建内容或启动任务"}
+                    placeholder={blocked ? blockedReason ?? "重新打开任务后可继续对话" : "提问、创建内容或启动任务"}
                     autoSize={expanded ? false : {minRows: inline ? 1 : large ? 3 : 2, maxRows: 10}}
                     className="agent-composer-input"
                     aria-label="消息内容"
