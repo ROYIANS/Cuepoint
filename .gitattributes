@@ -7,3 +7,8 @@
 # picking either side (task state lives in task.json, not index.md). See
 # .trellis/spec/cli/backend/directory-structure.md for details.
 .trellis/workspace/*/journal-*.md merge=union
+
+# Pinned upstream notices/build reports are verified byte-for-byte, including
+# their original line endings and final blank lines, on macOS and Windows.
+apps/desktop/media/licenses/* -text whitespace=-blank-at-eof
+apps/desktop/media/provenance/*.configure.txt -text whitespace=cr-at-eol,-blank-at-eof

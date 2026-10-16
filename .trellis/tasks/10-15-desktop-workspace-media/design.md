@@ -39,13 +39,13 @@ Rust enum names may follow existing conventions, but the observable contract is:
 
 ```ts
 pickDirectory({operationId, projectId}): Promise<Canceled | DirectoryGrantSummary>
-scan({grantId, operationId, limits}): Promise<ScanManifestSummary>
+scan({grantId, operationId}): Promise<ScanManifestSummary>
 readScanPage({grantId, scanId, offset, limit}): Promise<ScanPage>
-prepareVideo({grantId, scanId, entryId, expectedRevision, operationId,
-              thumbnail: FixedThumbnailPreset}): Promise<PreparedVideoSummary>
+prepareVideo({grantId, scanId, entryId, expectedRevision, operationId}): Promise<PreparedVideoSummary>
 readOperation({operationId}): Promise<Pending | Prepared | Stopped | Failed | Unknown>
 cancelOperation({operationId}): Promise<Stopping | Stopped | AlreadyTerminal>
 discardPrepared({operationId}): Promise<Discarded | AlreadyAdopted | CleanupPending>
+releaseOperation({operationId}): Promise<Released>
 revokeDirectory({grantId}): Promise<void>
 ```
 
@@ -64,6 +64,16 @@ there is no shell, PATH lookup, URL/protocol input, user executable, raw flag or
 renderer output path. Stdout/stderr are concurrently drained and capped. The output
 must be a verified ordinary PNG with bounded dimensions/bytes and a content hash.
 
+Limits and thumbnail preset are host-owned constants, never renderer-supplied
+overrides. Native replies and the exact envelope are recorded in
+`research/native-implementation-seams.md`. Source grant revocation stops future
+reads and active decoder work. Final adoption of a previously prepared authorized
+copy is separately governed by current durable import intent, project and Stop
+guards. Generic ProductStore commit has no native grant field; it does not claim an
+atomic OS-grant fence. A confirmed commit wins a late Stop. Normal callers release
+terminal operations and revoke the grant; unknown outcomes retain authority/evidence
+for read-only reconciliation.
+
 ## Managed binary adoption and product records
 
 The existing `BinaryStore` prepares and seals the original and thumbnail. A sealed
@@ -81,6 +91,20 @@ image is marked with a closed derivative relation and is hidden from ordinary me
 pickers. The final transaction writes source row, derivative row, provenance, stable
 operation/item receipt and project touch atomically. Stable item IDs make a confirmed
 retry idempotent; an unresolved native/store acknowledgement remains unknown.
+
+The project-owned `desktopMediaImports` table admits a frozen selection and reserved
+source/thumbnail IDs before native effects. Human actors remain human; Agent actors
+must match the real offered call, running run, thread, assistant message, bound
+project and frozen confirmation envelope. Lost admission acknowledgements reconcile
+by reading the stable intent and return no permission to dispatch again. Per-item
+publication joins both media rows and its exact receipt in one ProductStore
+transaction. Unknown intent/publication status cannot transition back to running.
+Project deletion cascades the intent and blocks late resurrection.
+
+Immutable file materials preserve an optional source/derivative snapshot through
+the registered `payload.media[].blob` carrier; this introduces no additional binary
+carrier or old-registry migration. Project packages preserve historical provenance,
+without restoring a live directory grant or import dispatch authority.
 
 Close the derivative relation over `collectMediaIds`, orphan deletion, media picker,
 preview, project copy/reuse, package export/import and any material snapshot that
@@ -114,13 +138,13 @@ tree termination from a post-spawn Job Object assignment; a future tree guarante
 would require assignment before execution and corresponding-host evidence.
 
 The decoder binary is a reviewed, per-target resource with a digest/source manifest.
-Research currently favors Atlas `ffmpeg-8.0.3-build4` as a candidate because its
-three target archives document FFmpeg and ffprobe, but large binaries, unpacked
-hashes, actual execution and license/source materials remain unverified. Shaka
-`n8.1.2-1` is the fallback candidate pending macOS 14 verification. No candidate is
-claimed as shipped until the manifest and startup verification are implemented. The
-existing Linux release matrix stays intact; adding only macOS/Windows resources must
-not make Linux packaging fail.
+The implementation pins Atlas `ffmpeg-8.0.3-build4`, six measured executable hashes,
+nine corresponding-source archive identities, notices and configure reports. Actual
+three-target resource preparation and macOS ARM decoding passed; installed/signing,
+Intel, Windows and macOS14 runtime acceptance remain pending. The upstream Windows
+report does not identify its exact GCC/MSYS2 compiler-runtime source package; this is
+recorded for public-distribution review rather than treated as a completed compliance
+audit. The existing Linux release matrix stays intact and uses `mediaResources: null`.
 
 ## Compatibility and rollback
 

@@ -8,6 +8,7 @@ import {PRODUCT,assetName,getTarget,parseOptions,policyHash,runContext,sha256} f
 import {desktopRoot,nativeTargetDirectory,resolveTools,toolInvocation,TOOL_VERSIONS} from './tool-resolver.mjs';
 import {fileDigest,listedFiles} from './release-artifacts.mjs';
 import {releaseSourceHashes} from './release-source-hashes.mjs';
+import {mediaReleaseIdentity,prepareMediaResources,verifyBundledMedia} from './media-resources.mjs';
 
 const root=resolve(desktopRoot,'../..');
 function git(args) {return execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();}
@@ -35,13 +36,13 @@ async function toolVersion(name,args) {
     const invocation=toolInvocation(name,args);
     return execFileSync(invocation.command,invocation.args,{env:invocation.env,cwd:desktopRoot,encoding:'utf8'}).trim();
 }
-export function releaseBuildArguments(targetId) {
+export function releaseBuildArguments(targetId,mediaConfig) {
     const target=getTarget(targetId);
     // Preserve the intermediate signed Mac .app for the payload receipt while
     // delivering only DMG. Disable installer-type binary rewriting: this lane
     // has no updater and records the built executable hash without claiming
     // installed/extracted payload parity or launching the application.
-    return ['exec','tauri','build','--target',target.triple,'--bundles',target.bundles.join(','),'--features','product-sqlite','--no-binary-patching','--','--locked'];
+    return ['exec','tauri','build','--target',target.triple,'--bundles',target.bundles.join(','),'--features','product-sqlite','--no-binary-patching',...(mediaConfig ? ['--config',mediaConfig] : []),'--','--locked'];
 }
 export async function buildRelease(argv=process.argv.slice(2)) {
     const options=parseOptions(argv,['--target','--output']);
@@ -65,10 +66,19 @@ export async function buildRelease(argv=process.argv.slice(2)) {
     // Never pick a previous bundle. Cargo compilation cache is separate from
     // this freshly created bundle directory; no recursive deletion is needed.
     try {await lstat(bundleRoot);throw new Error('Bundle directory already exists; use a fresh target directory for release packaging');} catch(error) {if (error.code !== 'ENOENT') throw error;}
-    const invocation=toolInvocation('pnpm',releaseBuildArguments(target.id));
+    const media=await prepareMediaResources(target.id);
+    let mediaConfig;
+    if(media.root) {mediaConfig=resolve(evidence,'media-config.json');await writeFile(mediaConfig,JSON.stringify(media.config));}
+    const invocation=toolInvocation('pnpm',releaseBuildArguments(target.id,mediaConfig));
     await run(invocation.command,invocation.args,resolve(evidence,'bundle.log'),{...invocation.env,NO_STRIP:'1'});
     const executable=target.platform === 'darwin' ? resolve(bundleRoot,'macos',`${PRODUCT.name}.app`,'Contents/MacOS',PRODUCT.binary) : resolve(targetDirectory,PRODUCT.binary+(target.platform === 'win32' ? '.exe' : ''));
     const payload=await fileDigest(executable);
+    // A retained Mac .app has an inspectable resource payload. Windows records
+    // the exact verified bundler inputs; installer extraction remains a later
+    // actual-host gate and must not be inferred from successful packaging.
+    const mediaResources=target.platform === 'darwin'
+        ? await verifyBundledMedia(resolve(bundleRoot,'macos',`${PRODUCT.name}.app`,'Contents/Resources'),target.id)
+        : await mediaReleaseIdentity(target.id);
     const assets=[];
     for (const format of target.formats) {
         const extension={dmg:'.dmg',exe:'.exe',appimage:'.AppImage',deb:'.deb'}[format];
@@ -82,7 +92,7 @@ export async function buildRelease(argv=process.argv.slice(2)) {
     }
     const after=await releaseSourceHashes(root);
     if (JSON.stringify(before) !== JSON.stringify(after) || git(['rev-parse','HEAD']) !== context.sourceSha || git(['status','--porcelain','--untracked-files=all'])) throw new Error('Source changed during packaging');
-    const receipt={schema:1,state:'packaged',policyHash:policyHash(),context,target:Object.fromEntries(['id','platform','arch','runner','triple'].map(key=>[key,target[key]])),product:{...PRODUCT,signing:target.signing},tools:{versions:TOOL_VERSIONS,executables:tools.tools,host:{platform:process.platform,arch:process.arch,osRelease:release(),hostname:hostname(),runnerImage:process.env.ImageVersion ?? null}},inputs:{sourceBefore:before,sourceAfter:after},payload:{executableSha256:payload.sha256,frontendFiles,frontendSha256:sha256(JSON.stringify(frontendFiles))},assets,checks:[],evidenceFiles:[]};
+    const receipt={schema:1,state:'packaged',policyHash:policyHash(),context,target:Object.fromEntries(['id','platform','arch','runner','triple'].map(key=>[key,target[key]])),product:{...PRODUCT,signing:target.signing},tools:{versions:TOOL_VERSIONS,executables:tools.tools,host:{platform:process.platform,arch:process.arch,osRelease:release(),hostname:hostname(),runnerImage:process.env.ImageVersion ?? null}},inputs:{sourceBefore:before,sourceAfter:after},payload:{executableSha256:payload.sha256,frontendFiles,frontendSha256:sha256(JSON.stringify(frontendFiles)),mediaResources},assets,checks:[],evidenceFiles:[]};
     await writeFile(resolve(output,'receipt.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});
     console.log(`Packaged ${target.id} at ${relative(root,output)}; no automated tests or runtime acceptance executed`);
     return receipt;

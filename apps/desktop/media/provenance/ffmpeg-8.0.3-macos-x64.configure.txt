@@ -1,0 +1,118 @@
+FFmpeg build report
+===================
+
+FFmpeg version : n8.0.3
+Target         : macos-x64
+Host runner    : Darwin 24.6.0 x86_64
+Build sysroot  : 15.7.9
+Built at (UTC) : 2026-09-21 04:49:28
+License        : LGPL-2.1-or-later (built with --disable-gpl --disable-nonfree --disable-version3)
+
+Pinned dependency versions
+--------------------------
+zlib       v1.3.1     zlib license
+libogg     v1.3.6     BSD-3-Clause
+libvorbis  v1.3.7     BSD-3-Clause
+libopus    v1.6.1     BSD-3-Clause
+libvpx     v1.17.0    BSD-3-Clause
+dav1d      1.5.4      BSD-2-Clause
+libaom     v3.15.0    BSD-2-Clause + AOM Patent License 1.0
+libwebp    v1.6.0     BSD-3-Clause
+
+configure options
+-----------------
+
+  configuration:
+    --prefix=/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix
+    --disable-gpl
+    --disable-nonfree
+    --disable-version3
+    --disable-autodetect
+    --enable-static
+    --disable-shared
+    --enable-ffmpeg
+    --enable-ffprobe
+    --disable-ffplay
+    --disable-doc
+    --disable-debug
+    --enable-runtime-cpudetect
+    --enable-zlib
+    --enable-libopus
+    --enable-libvorbis
+    --enable-libvpx
+    --enable-libdav1d
+    --enable-libaom
+    --enable-libwebp
+    --disable-libx264
+    --disable-libx265
+    --disable-libxvid
+    --disable-libfdk-aac
+    --pkg-config-flags=--static
+    --extra-cflags=-I/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/include
+    --extra-ldflags=-L/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/lib
+    --enable-pthreads
+    --enable-videotoolbox
+    --extra-cflags='-mmacosx-version-min=10.15'
+    --extra-ldflags='-mmacosx-version-min=10.15'
+
+Exiting with exit code 0
+
+ffmpeg -version
+---------------
+ffmpeg version n8.0.3 Copyright (c) 2000-2026 the FFmpeg developers
+built with Apple clang version 17.0.0 (clang-1700.0.13.5)
+configuration: --prefix=/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix --disable-gpl --disable-nonfree --disable-version3 --disable-autodetect --enable-static --disable-shared --enable-ffmpeg --enable-ffprobe --disable-ffplay --disable-doc --disable-debug --enable-runtime-cpudetect --enable-zlib --enable-libopus --enable-libvorbis --enable-libvpx --enable-libdav1d --enable-libaom --enable-libwebp --disable-libx264 --disable-libx265 --disable-libxvid --disable-libfdk-aac --pkg-config-flags=--static --extra-cflags=-I/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/include --extra-ldflags=-L/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/lib --enable-pthreads --enable-videotoolbox --extra-cflags='-mmacosx-version-min=10.15' --extra-ldflags='-mmacosx-version-min=10.15'
+libavutil      60.  8.103 / 60.  8.103
+libavcodec     62. 11.103 / 62. 11.103
+libavformat    62.  3.103 / 62.  3.103
+libavdevice    62.  1.103 / 62.  1.103
+libavfilter    11.  4.103 / 11.  4.103
+libswscale      9.  1.103 /  9.  1.103
+libswresample   6.  1.103 /  6.  1.103
+
+Exiting with exit code 0
+
+ffprobe -version
+----------------
+ffprobe version n8.0.3 Copyright (c) 2007-2026 the FFmpeg developers
+built with Apple clang version 17.0.0 (clang-1700.0.13.5)
+configuration: --prefix=/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix --disable-gpl --disable-nonfree --disable-version3 --disable-autodetect --enable-static --disable-shared --enable-ffmpeg --enable-ffprobe --disable-ffplay --disable-doc --disable-debug --enable-runtime-cpudetect --enable-zlib --enable-libopus --enable-libvorbis --enable-libvpx --enable-libdav1d --enable-libaom --enable-libwebp --disable-libx264 --disable-libx265 --disable-libxvid --disable-libfdk-aac --pkg-config-flags=--static --extra-cflags=-I/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/include --extra-ldflags=-L/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/lib --enable-pthreads --enable-videotoolbox --extra-cflags='-mmacosx-version-min=10.15' --extra-ldflags='-mmacosx-version-min=10.15'
+libavutil      60.  8.103 / 60.  8.103
+libavcodec     62. 11.103 / 62. 11.103
+libavformat    62.  3.103 / 62.  3.103
+libavdevice    62.  1.103 / 62.  1.103
+libavfilter    11.  4.103 / 11.  4.103
+libswscale      9.  1.103 /  9.  1.103
+libswresample   6.  1.103 /  6.  1.103
+
+hardware acceleration
+---------------------
+Hardware acceleration methods:
+videotoolbox
+
+hardware encoders
+-----------------
+ V....D h264_videotoolbox    VideoToolbox H.264 Encoder (codec h264)
+ V....D hevc_videotoolbox    VideoToolbox H.265 Encoder (codec hevc)
+ V....D prores_videotoolbox  VideoToolbox ProRes Encoder (codec prores)
+
+dynamic library dependencies
+----------------------------
+$ ffmpeg
+/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/dist/ffmpeg:
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1351.0.0)
+	/System/Library/Frameworks/VideoToolbox.framework/Versions/A/VideoToolbox (compatibility version 1.0.0, current version 3225.7.1)
+	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 3502.1.255)
+	/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia (compatibility version 1.0.0, current version 3225.7.1)
+	/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo (compatibility version 1.2.0, current version 1.5.0)
+	/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices (compatibility version 1.0.0, current version 1226.0.0)
+
+$ ffprobe
+/Users/runner/work/ffmpeg-static-builds/ffmpeg-static-builds/dist/ffprobe:
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1351.0.0)
+	/System/Library/Frameworks/VideoToolbox.framework/Versions/A/VideoToolbox (compatibility version 1.0.0, current version 3225.7.1)
+	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 3502.1.255)
+	/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia (compatibility version 1.0.0, current version 3225.7.1)
+	/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo (compatibility version 1.2.0, current version 1.5.0)
+	/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices (compatibility version 1.0.0, current version 1226.0.0)
+

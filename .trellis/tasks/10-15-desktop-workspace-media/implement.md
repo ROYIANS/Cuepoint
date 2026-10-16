@@ -14,16 +14,21 @@ installer gate until every source stage is complete.
 
 ## Stage 1 — native grant, scan and operation owner
 
-- [ ] Add native state and closed commands for directory picker, bounded recursive
+- [x] Add native state and closed commands for directory picker, bounded recursive
   scan, paged results, revoke and operation status/cancel.
-- [ ] Add the independent media process owner with frozen-copy input, fixed decoder
+- [x] Add the independent media process owner with frozen-copy input, fixed decoder
   argv, bounded output/logs, macOS process-group cleanup and the chosen Windows
   child/tree promise.
-- [ ] Register normal and isolated/acceptance handlers, ACLs and capabilities without
+- [x] Register normal and isolated/acceptance handlers, ACLs and capabilities without
   broad filesystem or shell permission.
-- [ ] Add focused Rust tests for grant scope, reparse/alias rejection, changed-file
+- [x] Add focused Rust tests for grant scope, reparse/alias rejection, changed-file
   rejection, cancellation/reap state and unsupported Windows volumes.
-- [ ] Check the source changes, fix findings, commit the stage.
+- [x] Check the source changes, fix findings, commit the stage.
+
+Stage 1 source/native checkpoint: desktop-focused Rust tests **13 passed**, one
+explicit-resource fixture ignored in that command; the real bundled FFmpeg fixture
+ran separately and passed. Decoder/release source checks passed. Windows execution
+and system-picker/installed acceptance remain in the final epic batch gate.
 
 ## Stage 2 — managed claims and shared import command
 
@@ -52,10 +57,10 @@ installer gate until every source stage is complete.
 
 ## Stage 4 — decoder resources and host validation
 
-- [ ] Resolve the decoder candidate, obtain reviewable source/license materials and
+- [x] Resolve the decoder candidate, obtain reviewable source/license materials and
   per-target digest manifest; add startup integrity checks and macOS/Windows resource
   mapping while preserving Linux release configuration.
-- [ ] Run only the necessary target-specific source/native tests and a deterministic
+- [x] Run only the necessary target-specific source/native tests and a deterministic
   fixture workflow on available hosts. Record Windows runtime/packaging evidence as
   pending when this macOS host cannot execute it.
 - [ ] Check the complete source closure and update specs with durable contracts.
@@ -69,10 +74,10 @@ Use the machine pnpm path explicitly. During stages, run only affected finite so
 tests and scoped type/lint checks, for example:
 
 ```sh
-/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run --config vitest.studio-source.config.ts <affected-files>
-/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec tsc --project tests/typecheck/tsconfig.studio-agent-source.json --pretty false
+/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec vitest run --config vitest.desktop-media-source.config.ts <affected-files>
+/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec tsc --project tests/typecheck/tsconfig.desktop-media-source.json --pretty false
 /Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm exec eslint <affected-source-files>
-/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node apps/desktop/scripts/tools.mjs cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml <target>
+/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/node apps/desktop/scripts/tools.mjs cargo test --manifest-path /Users/xiaomengdao/WebstormProjects/aifenjing/apps/desktop/src-tauri/Cargo.toml --features desktop desktop_media -- --nocapture
 ```
 
 The exact native command must use the repository tool resolver and a bounded target;

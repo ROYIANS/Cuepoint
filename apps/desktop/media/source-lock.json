@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "sources": [
+    {
+      "name": "ffmpeg",
+      "repository": "https://github.com/FFmpeg/FFmpeg",
+      "tag": "n8.0.3",
+      "commit": "8ae0b34901ba60a802f183ee75a250a9fc3e09a5",
+      "archiveUrl": "https://codeload.github.com/FFmpeg/FFmpeg/tar.gz/8ae0b34901ba60a802f183ee75a250a9fc3e09a5",
+      "licenses": [
+        {
+          "file": "ffmpeg-COPYING.LGPLv2.1",
+          "url": "https://raw.githubusercontent.com/FFmpeg/FFmpeg/8ae0b34901ba60a802f183ee75a250a9fc3e09a5/COPYING.LGPLv2.1",
+          "sha256": "246041b6ecf9bc32d718a62c57877c78b5eb397b6467e74ed7ae2626ab189c30"
+        },
+        {
+          "file": "ffmpeg-LICENSE.md",
+          "url": "https://raw.githubusercontent.com/FFmpeg/FFmpeg/8ae0b34901ba60a802f183ee75a250a9fc3e09a5/LICENSE.md",
+          "sha256": "2e1d16c72fd74e12063776371da757322f8b77589386532f4fd8634bde7de1af"
+        }
+      ],
+      "archiveBytes": 16451382,
+      "archiveSha256": "3822f5dea04f069a90f8b445d00116d6410d1baf8f15d5f750d0626e5d6994f3"
+    },
+    {
+      "name": "zlib",
+      "repository": "https://github.com/madler/zlib",
+      "tag": "v1.3.1",
+      "commit": "51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf",
+      "archiveUrl": "https://codeload.github.com/madler/zlib/tar.gz/51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf",
+      "licenses": [
+        {
+          "file": "zlib-LICENSE",
+          "url": "https://raw.githubusercontent.com/madler/zlib/51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf/LICENSE",
+          "sha256": "845efc77857d485d91fb3e0b884aaa929368c717ae8186b66fe1ed2495753243"
+        }
+      ],
+      "archiveBytes": 1572004,
+      "archiveSha256": "d9e270d46252734aa49770fbc544125391617956266f220bd63216c834f3a522"
+    },
+    {
+      "name": "libogg",
+      "repository": "https://github.com/xiph/ogg",
+      "tag": "v1.3.6",
+      "commit": "be05b13e98b048f0b5a0f5fa8ce514d56db5f822",
+      "archiveUrl": "https://codeload.github.com/xiph/ogg/tar.gz/be05b13e98b048f0b5a0f5fa8ce514d56db5f822",
+      "licenses": [
+        {
+          "file": "libogg-COPYING",
+          "url": "https://raw.githubusercontent.com/xiph/ogg/be05b13e98b048f0b5a0f5fa8ce514d56db5f822/COPYING",
+          "sha256": "d2ab5758336489da61c12cc5bb757da5339c4ae9001f9bb0562b4370249af814"
+        }
+      ],
+      "archiveBytes": 254382,
+      "archiveSha256": "b2ff5c003e5697507169f7d614d64dc4e8bf030c85ad081bec75c164566f8246"
+    },
+    {
+      "name": "libvorbis",
+      "repository": "https://github.com/xiph/vorbis",
+      "tag": "v1.3.7",
+      "commit": "0657aee69dec8508a0011f47f3b69d7538e9d262",
+      "archiveUrl": "https://codeload.github.com/xiph/vorbis/tar.gz/0657aee69dec8508a0011f47f3b69d7538e9d262",
+      "licenses": [
+        {
+          "file": "libvorbis-COPYING",
+          "url": "https://raw.githubusercontent.com/xiph/vorbis/0657aee69dec8508a0011f47f3b69d7538e9d262/COPYING",
+          "sha256": "ec1815db59fcd302846df949d7424876cb2e2dc5ed1606c5fb0b36787b1cf43a"
+        }
+      ],
+      "archiveBytes": 1235008,
+      "archiveSha256": "6ccc3fa4cfd3072f9a772025cc8fd712098d081c00171b09b6627ffced7faa88"
+    },
+    {
+      "name": "libopus",
+      "repository": "https://github.com/xiph/opus",
+      "tag": "v1.6.1",
+      "commit": "22244de5a79bd1d6d623c32e72bf1954b56235be",
+      "archiveUrl": "https://codeload.github.com/xiph/opus/tar.gz/22244de5a79bd1d6d623c32e72bf1954b56235be",
+      "licenses": [
+        {
+          "file": "libopus-COPYING",
+          "url": "https://raw.githubusercontent.com/xiph/opus/22244de5a79bd1d6d623c32e72bf1954b56235be/COPYING",
+          "sha256": "01e1167d54a096d123cf6dfbbeb19587278845c6481d2d66d545669846079551"
+        }
+      ],
+      "archiveBytes": 4888967,
+      "archiveSha256": "3267aa969b2b26542417f57819a5bc25d5079355300307dd2dddc7c704aed418"
+    },
+    {
+      "name": "libvpx",
+      "repository": "https://github.com/webmproject/libvpx",
+      "tag": "v1.17.0",
+      "commit": "6df3ec34557879fff673706f4a1d9fbd0f3a6f0e",
+      "archiveUrl": "https://codeload.github.com/webmproject/libvpx/tar.gz/6df3ec34557879fff673706f4a1d9fbd0f3a6f0e",
+      "licenses": [
+        {
+          "file": "libvpx-LICENSE",
+          "url": "https://raw.githubusercontent.com/webmproject/libvpx/6df3ec34557879fff673706f4a1d9fbd0f3a6f0e/LICENSE",
+          "sha256": "8267348d5af1262c11d1a08de2f5afc77457755f1ac658627dd9acf71011d615"
+        },
+        {
+          "file": "libvpx-PATENTS",
+          "url": "https://raw.githubusercontent.com/webmproject/libvpx/6df3ec34557879fff673706f4a1d9fbd0f3a6f0e/PATENTS",
+          "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c"
+        }
+      ],
+      "archiveBytes": 5675704,
+      "archiveSha256": "073bd6202e4c55c8cb759abbb123aecd4cc8d99f52ba27af790178cfb1108423"
+    },
+    {
+      "name": "libwebp",
+      "repository": "https://github.com/webmproject/libwebp",
+      "tag": "v1.6.0",
+      "commit": "4fa21912338357f89e4fd51cf2368325b59e9bd9",
+      "archiveUrl": "https://codeload.github.com/webmproject/libwebp/tar.gz/4fa21912338357f89e4fd51cf2368325b59e9bd9",
+      "licenses": [
+        {
+          "file": "libwebp-COPYING",
+          "url": "https://raw.githubusercontent.com/webmproject/libwebp/4fa21912338357f89e4fd51cf2368325b59e9bd9/COPYING",
+          "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+        },
+        {
+          "file": "libwebp-PATENTS",
+          "url": "https://raw.githubusercontent.com/webmproject/libwebp/4fa21912338357f89e4fd51cf2368325b59e9bd9/PATENTS",
+          "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c"
+        }
+      ],
+      "archiveBytes": 3834766,
+      "archiveSha256": "923f3382a47a2af185c3240c954cf004428b237bd7317413a95146d01eb4b94b"
+    },
+    {
+      "name": "dav1d",
+      "repository": "https://code.videolan.org/videolan/dav1d",
+      "tag": "1.5.4",
+      "commit": "54706fc6bc0cdecab7e9593974a4039cc038fca7",
+      "archiveUrl": "https://code.videolan.org/videolan/dav1d/-/archive/54706fc6bc0cdecab7e9593974a4039cc038fca7/dav1d-54706fc6bc0cdecab7e9593974a4039cc038fca7.tar.gz",
+      "licenses": [
+        {
+          "file": "dav1d-COPYING",
+          "url": "https://code.videolan.org/videolan/dav1d/-/raw/54706fc6bc0cdecab7e9593974a4039cc038fca7/COPYING",
+          "sha256": "dd92c3c2247c5651606fc23a5e2d6a1ebc5ace9a3e49cbde0e12f05ad1cb1ee5"
+        }
+      ],
+      "archiveBytes": 1751896,
+      "archiveSha256": "9edb11a2108b375cc58370354e705feebc93430bb780130363815c1e1ac0c250"
+    },
+    {
+      "name": "libaom",
+      "repository": "https://aomedia.googlesource.com/aom",
+      "tag": "v3.15.0",
+      "commit": "de4c1d1edc49723a78954d30a83690aa1937422f",
+      "archiveUrl": "https://aomedia.googlesource.com/aom/+archive/de4c1d1edc49723a78954d30a83690aa1937422f.tar.gz",
+      "licenses": [
+        {
+          "file": "libaom-LICENSE",
+          "url": "https://aomedia.googlesource.com/aom/+/de4c1d1edc49723a78954d30a83690aa1937422f/LICENSE?format=TEXT",
+          "sha256": "4764a286d8b2faeaf42f4418e7d7a28d58fc8fd4d00a3d0a7f44b0a4099de7f2"
+        },
+        {
+          "file": "libaom-PATENTS",
+          "url": "https://aomedia.googlesource.com/aom/+/de4c1d1edc49723a78954d30a83690aa1937422f/PATENTS?format=TEXT",
+          "sha256": "661fb8e504744e95587b556b94a58343448300606a41bea8c7a9b97125696e61"
+        }
+      ],
+      "archiveBytes": 6692277,
+      "archiveSha256": "b625df62e994c97dcd7a37d21252d544fa61a956b482e6228673e029d18bba22"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import {cp,lstat,mkdir,readdir,readFile,writeFile} from 'node:fs/promises';
 import {dirname,isAbsolute,join,relative,resolve,sep} from 'node:path';
 import {TARGETS,PRODUCT,WORKFLOW,assetName,getTarget,policyHash,sha256} from './release-policy.mjs';
 import {TOOL_VERSIONS} from './tool-resolver.mjs';
+import {mediaReleaseIdentity} from './media-resources.mjs';
 
 function closed(value,keys,label) {
     if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).sort().join('|') !== [...keys].sort().join('|')) throw new Error(`Invalid closed ${label}`);
@@ -55,7 +56,7 @@ function validateContext(context) {
     if (context.workflow !== WORKFLOW || !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(context.repository) || !/^[a-f0-9]{40}$/.test(context.sourceSha) || !/^\d+\.\d+\.\d+$/.test(context.version) || !/^(?:local|\d+)$/.test(context.runId) || !Number.isSafeInteger(context.attempt) || context.attempt < 1) throw new Error('Invalid source/version/run identity');
     if (!['push','workflow_dispatch','local'].includes(context.event) || !['build-only','draft'].includes(context.mode) || (context.mode === 'draft' ? context.tag !== `desktop-v${context.version}` || context.event !== 'push' : context.tag !== null)) throw new Error('Invalid publication mode');
 }
-function validateReceipt(receipt,expected) {
+async function validateReceipt(receipt,expected) {
     closed(receipt,['schema','state','policyHash','context','target','product','tools','inputs','payload','assets','checks','evidenceFiles'],'receipt');
     if (receipt.schema !== 1 || !['packaged','verified'].includes(receipt.state) || receipt.policyHash !== policyHash()) throw new Error('Incomplete receipt or changed policy');
     const context=receipt.context;
@@ -74,9 +75,10 @@ function validateReceipt(receipt,expected) {
     closed(receipt.inputs,['sourceBefore','sourceAfter'],'inputs');
     hashMap(receipt.inputs.sourceBefore,'source');hashMap(receipt.inputs.sourceAfter,'source');
     if (JSON.stringify(receipt.inputs.sourceBefore) !== JSON.stringify(receipt.inputs.sourceAfter)) throw new Error('Source changed during packaging');
-    closed(receipt.payload,['executableSha256','frontendFiles','frontendSha256'],'payload');
+    closed(receipt.payload,['executableSha256','frontendFiles','frontendSha256','mediaResources'],'payload');
     hashMap(receipt.payload.frontendFiles,'frontend');
     if (!/^[a-f0-9]{64}$/.test(receipt.payload.executableSha256) || receipt.payload.frontendSha256 !== sha256(JSON.stringify(receipt.payload.frontendFiles))) throw new Error('Invalid payload identity');
+    if (JSON.stringify(receipt.payload.mediaResources) !== JSON.stringify(await mediaReleaseIdentity(target.id))) throw new Error('Invalid media resource identity');
     if (!Array.isArray(receipt.assets) || receipt.assets.length !== target.formats.length) throw new Error('Wrong installer count');
     const formats=new Set();
     for (const asset of receipt.assets) {
@@ -110,7 +112,7 @@ export async function verifyTargetDirectory(root,expected) {
     const path=await regularFile(root,'receipt.json');
     if ((await lstat(path)).size > 8388608) throw new Error('Receipt too large');
     const receipt=JSON.parse(await readFile(path,'utf8'));
-    validateReceipt(receipt,expected);
+    await validateReceipt(receipt,expected);
     const required=['receipt.json',...receipt.assets.map(asset=>`assets/${asset.name}`),...receipt.evidenceFiles.map(file=>file.path)].sort();
     if (JSON.stringify(await listedFiles(root)) !== JSON.stringify(required)) throw new Error('Unexpected/missing files in target artifact closure');
     for (const file of [...receipt.assets.map(asset=>({...asset,path:`assets/${asset.name}`})),...receipt.evidenceFiles]) {
@@ -173,7 +175,7 @@ export async function verifyReleaseDirectory(directory) {
     if (manifest.schema !== 1 || manifest.policyHash !== policyHash() || manifest.targets.length !== 4 || manifest.installers.length !== 5) throw new Error('Incomplete release manifest');
     const targets=new Set(),artifactIds=new Set(),expected=[];
     for (const entry of manifest.targets) {
-        closed(entry,['receipt','artifact'],'release target');validateReceipt(entry.receipt,manifest.context);
+        closed(entry,['receipt','artifact'],'release target');await validateReceipt(entry.receipt,manifest.context);
         validateSelection(entry.artifact,entry.receipt,artifactIds);
         if (targets.has(entry.receipt.target.id)) throw new Error('Duplicate release target');targets.add(entry.receipt.target.id);
         if (JSON.stringify(entry.receipt.inputs.sourceBefore) !== JSON.stringify(manifest.targets[0].receipt.inputs.sourceBefore)) throw new Error('Targets use different source inputs');
@@ -211,7 +213,7 @@ export async function copyCheckReports(receiptPath,paths) {
         }
         for (const check of report.checks) receipt.checks.push({...check,evidence:`evidence/${index}/${check.evidence}`});
     }
-    receipt.state='verified';validateReceipt(receipt,receipt.context);
+    receipt.state='verified';await validateReceipt(receipt,receipt.context);
     await writeFile(receiptPath,JSON.stringify(receipt,null,2)+'\n');
     await verifyTargetDirectory(root,receipt.context);
     return receipt;

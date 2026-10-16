@@ -9,6 +9,7 @@ import {collectArtifacts,copyCheckReports,verifyReleaseDirectory,verifyTargetDir
 import {publishDraft} from './publish-draft.mjs';
 import {selectArtifacts} from './select-release-artifacts.mjs';
 import {releaseBuildArguments} from './build-release.mjs';
+import {mediaReleaseIdentity} from './media-resources.mjs';
 
 const context={repository:'ROYIANS/Cuepoint',workflow:WORKFLOW,sourceSha:'a'.repeat(40),event:'push',mode:'draft',tag:'desktop-v0.1.0',runId:'42',attempt:2,version:'0.1.0'};
 const clone=value=>JSON.parse(JSON.stringify(value));
@@ -24,7 +25,7 @@ async function fixture({state='packaged'}={}) {
         const evidence=Buffer.from(JSON.stringify({fixture:true,target:target.id}));
         if (state === 'verified') {await mkdir(join(path,'evidence'));await writeFile(join(path,'evidence/report.json'),evidence);}
         const frontendFiles={'index.html':sha256('normal-root-frontend')};
-        const receipt={schema:1,state,policyHash:policyHash(),context:{...context,attempt:index % 2+1},target:Object.fromEntries(['id','platform','arch','runner','triple'].map(key=>[key,target[key]])),product:{...PRODUCT,signing:target.signing},tools:{versions:TOOL_VERSIONS,executables:{cargo:'/fake/cargo'},host:{platform:target.platform,arch:target.arch}},inputs:{sourceBefore:{'package.json':sha256('source')},sourceAfter:{'package.json':sha256('source')}},payload:{executableSha256:sha256('executable'),frontendFiles,frontendSha256:sha256(JSON.stringify(frontendFiles))},assets,checks:state === 'verified' ? target.requiredChecks.map(name=>({name,status:'passed',evidence:'evidence/report.json'})) : [],evidenceFiles:state === 'verified' ? [{path:'evidence/report.json',bytes:evidence.length,sha256:sha256(evidence)}] : []};
+        const receipt={schema:1,state,policyHash:policyHash(),context:{...context,attempt:index % 2+1},target:Object.fromEntries(['id','platform','arch','runner','triple'].map(key=>[key,target[key]])),product:{...PRODUCT,signing:target.signing},tools:{versions:TOOL_VERSIONS,executables:{cargo:'/fake/cargo'},host:{platform:target.platform,arch:target.arch}},inputs:{sourceBefore:{'package.json':sha256('source')},sourceAfter:{'package.json':sha256('source')}},payload:{executableSha256:sha256('executable'),frontendFiles,frontendSha256:sha256(JSON.stringify(frontendFiles)),mediaResources:await mediaReleaseIdentity(target.id)},assets,checks:state === 'verified' ? target.requiredChecks.map(name=>({name,status:'passed',evidence:'evidence/report.json'})) : [],evidenceFiles:state === 'verified' ? [{path:'evidence/report.json',bytes:evidence.length,sha256:sha256(evidence)}] : []};
         await writeFile(join(path,'receipt.json'),JSON.stringify(receipt));directories.push(path);
         selections.push({id:index+1,name:`desktop-${target.id}-${context.runId}-${receipt.context.attempt}`,target:target.id,attempt:receipt.context.attempt,runId:context.runId});
     }
@@ -117,6 +118,10 @@ for (const [name,mutate] of [
     ['building state',r=>r.state='building'],['invented state',r=>r.state='passed'],
     ['fabricated passed check',r=>r.checks.push({name:'native-tests',status:'passed',evidence:'evidence/fake.json'})],
     ['packaged evidence',r=>r.evidenceFiles.push({path:'evidence/fake.json',bytes:1,sha256:sha256('x')})],
+    ['missing media identity',r=>delete r.payload.mediaResources],
+    ['foreign media target',r=>r.payload.mediaResources.target='windows-x64'],
+    ['changed media decoder hash',r=>r.payload.mediaResources.manifest.executables.ffmpeg.sha256='b'.repeat(64)],
+    ['omitted corresponding source',r=>delete r.payload.mediaResources.files[Object.keys(r.payload.mediaResources.files).find(path=>path.startsWith('sources/'))]],
     ['malformed checks',r=>r.checks={}],['malformed evidence',r=>r.evidenceFiles=null],
 ]) test(`collector rejects ${name}`,async ()=> {
     const f=await fixture();try {await altered(f,0,mutate);await assert.rejects(collectArtifacts(f.directories,f.output,context,f.selections));} finally {await f.cleanup();}

@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {nativeTargetDirectory} from './tool-resolver.mjs';
+import {mediaTarget,prepareMediaResources} from './media-resources.mjs';
 
 const base=fileURLToPath(new URL('../',import.meta.url));
 const acceptance=process.argv.includes('--acceptance');
@@ -27,6 +28,10 @@ async function run(name,args) {
 }
 await run('frontend',[resolve(base,'scripts/build-frontend.mjs'),...(acceptance?['--acceptance']:[])]);
 const args=[resolve(base,'scripts/tools.mjs'),'pnpm','exec','tauri','build','--bundles','app','--features',acceptance?'acceptance':productSqlite?'product-sqlite':'desktop'];
+if(productSqlite) {
+    const media=await prepareMediaResources(mediaTarget());
+    const path=resolve(evidence,'media-config.json');await writeFile(path,JSON.stringify(media.config));args.push('--config',path);
+}
 if(acceptance) {
     const endpoint=process.env.CUEPOINT_STREAM_ENDPOINT;
     if(!endpoint)throw new Error('Reserved loopback endpoint missing');

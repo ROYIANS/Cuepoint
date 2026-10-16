@@ -1,0 +1,157 @@
+FFmpeg build report
+===================
+
+FFmpeg version : n8.0.3
+Target         : win-x64
+Host runner    : MINGW64_NT-10.0-26100 3.6.10-da84778c.x86_64 x86_64
+Build sysroot  : MSYS2
+Built at (UTC) : 2026-09-21 04:54:38
+License        : LGPL-2.1-or-later (built with --disable-gpl --disable-nonfree --disable-version3)
+
+Pinned dependency versions
+--------------------------
+zlib       v1.3.1     zlib license
+libogg     v1.3.6     BSD-3-Clause
+libvorbis  v1.3.7     BSD-3-Clause
+libopus    v1.6.1     BSD-3-Clause
+libvpx     v1.17.0    BSD-3-Clause
+dav1d      1.5.4      BSD-2-Clause
+libaom     v3.15.0    BSD-2-Clause + AOM Patent License 1.0
+libwebp    v1.6.0     BSD-3-Clause
+
+configure options
+-----------------
+
+  configuration:
+    --prefix=/d/a/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix
+    --disable-gpl
+    --disable-nonfree
+    --disable-version3
+    --disable-autodetect
+    --enable-static
+    --disable-shared
+    --enable-ffmpeg
+    --enable-ffprobe
+    --disable-ffplay
+    --disable-doc
+    --disable-debug
+    --enable-runtime-cpudetect
+    --enable-zlib
+    --enable-libopus
+    --enable-libvorbis
+    --enable-libvpx
+    --enable-libdav1d
+    --enable-libaom
+    --enable-libwebp
+    --disable-libx264
+    --disable-libx265
+    --disable-libxvid
+    --disable-libfdk-aac
+    --pkg-config-flags=--static
+    --extra-cflags=-I/d/a/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/include
+    --extra-ldflags=-L/d/a/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/lib
+    --enable-w32threads
+    --disable-pthreads
+    --enable-d3d11va
+    --enable-d3d12va
+    --enable-dxva2
+    --enable-mediafoundation
+    --extra-ldflags='-static -static-libgcc'
+
+Exiting with exit code 0
+
+ffmpeg -version
+---------------
+ffmpeg version n8.0.3 Copyright (c) 2000-2026 the FFmpeg developers
+built with gcc 16.2.0 (Rev3, Built by MSYS2 project)
+configuration: --prefix=/d/a/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix --disable-gpl --disable-nonfree --disable-version3 --disable-autodetect --enable-static --disable-shared --enable-ffmpeg --enable-ffprobe --disable-ffplay --disable-doc --disable-debug --enable-runtime-cpudetect --enable-zlib --enable-libopus --enable-libvorbis --enable-libvpx --enable-libdav1d --enable-libaom --enable-libwebp --disable-libx264 --disable-libx265 --disable-libxvid --disable-libfdk-aac --pkg-config-flags=--static --extra-cflags=-I/d/a/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/include --extra-ldflags=-L/d/a/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/lib --enable-w32threads --disable-pthreads --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation --extra-ldflags='-static -static-libgcc'
+libavutil      60.  8.103 / 60.  8.103
+libavcodec     62. 11.103 / 62. 11.103
+libavformat    62.  3.103 / 62.  3.103
+libavdevice    62.  1.103 / 62.  1.103
+libavfilter    11.  4.103 / 11.  4.103
+libswscale      9.  1.103 /  9.  1.103
+libswresample   6.  1.103 /  6.  1.103
+
+Exiting with exit code 0
+
+ffprobe -version
+----------------
+ffprobe version n8.0.3 Copyright (c) 2007-2026 the FFmpeg developers
+built with gcc 16.2.0 (Rev3, Built by MSYS2 project)
+configuration: --prefix=/d/a/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix --disable-gpl --disable-nonfree --disable-version3 --disable-autodetect --enable-static --disable-shared --enable-ffmpeg --enable-ffprobe --disable-ffplay --disable-doc --disable-debug --enable-runtime-cpudetect --enable-zlib --enable-libopus --enable-libvorbis --enable-libvpx --enable-libdav1d --enable-libaom --enable-libwebp --disable-libx264 --disable-libx265 --disable-libxvid --disable-libfdk-aac --pkg-config-flags=--static --extra-cflags=-I/d/a/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/include --extra-ldflags=-L/d/a/ffmpeg-static-builds/ffmpeg-static-builds/build/prefix/lib --enable-w32threads --disable-pthreads --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation --extra-ldflags='-static -static-libgcc'
+libavutil      60.  8.103 / 60.  8.103
+libavcodec     62. 11.103 / 62. 11.103
+libavformat    62.  3.103 / 62.  3.103
+libavdevice    62.  1.103 / 62.  1.103
+libavfilter    11.  4.103 / 11.  4.103
+libswscale      9.  1.103 /  9.  1.103
+libswresample   6.  1.103 /  6.  1.103
+
+hardware acceleration
+---------------------
+Hardware acceleration methods:
+dxva2
+d3d11va
+d3d12va
+
+hardware encoders
+-----------------
+ V....D av1_mf               AV1 via MediaFoundation (codec av1)
+ V....D h264_mf              H264 via MediaFoundation (codec h264)
+ V....D hevc_mf              HEVC via MediaFoundation (codec hevc)
+ A....D aac_mf               AAC via MediaFoundation (codec aac)
+ A....D ac3_mf               AC3 via MediaFoundation (codec ac3)
+ A....D mp3_mf               MP3 via MediaFoundation (codec mp3)
+
+dynamic library dependencies
+----------------------------
+$ ffmpeg.exe
+	DLL Name: bcrypt.dll
+	DLL Name: GDI32.dll
+	DLL Name: KERNEL32.dll
+	DLL Name: api-ms-win-crt-conio-l1-1-0.dll
+	DLL Name: api-ms-win-crt-convert-l1-1-0.dll
+	DLL Name: api-ms-win-crt-environment-l1-1-0.dll
+	DLL Name: api-ms-win-crt-filesystem-l1-1-0.dll
+	DLL Name: api-ms-win-crt-heap-l1-1-0.dll
+	DLL Name: api-ms-win-crt-locale-l1-1-0.dll
+	DLL Name: api-ms-win-crt-math-l1-1-0.dll
+	DLL Name: api-ms-win-crt-private-l1-1-0.dll
+	DLL Name: api-ms-win-crt-runtime-l1-1-0.dll
+	DLL Name: api-ms-win-crt-stdio-l1-1-0.dll
+	DLL Name: api-ms-win-crt-string-l1-1-0.dll
+	DLL Name: api-ms-win-crt-time-l1-1-0.dll
+	DLL Name: api-ms-win-crt-utility-l1-1-0.dll
+	DLL Name: ole32.dll
+	DLL Name: OLEAUT32.dll
+	DLL Name: SHELL32.dll
+	DLL Name: SHLWAPI.dll
+	DLL Name: USER32.dll
+	DLL Name: AVICAP32.dll
+	DLL Name: WS2_32.dll
+
+$ ffprobe.exe
+	DLL Name: bcrypt.dll
+	DLL Name: GDI32.dll
+	DLL Name: KERNEL32.dll
+	DLL Name: api-ms-win-crt-convert-l1-1-0.dll
+	DLL Name: api-ms-win-crt-environment-l1-1-0.dll
+	DLL Name: api-ms-win-crt-filesystem-l1-1-0.dll
+	DLL Name: api-ms-win-crt-heap-l1-1-0.dll
+	DLL Name: api-ms-win-crt-locale-l1-1-0.dll
+	DLL Name: api-ms-win-crt-math-l1-1-0.dll
+	DLL Name: api-ms-win-crt-private-l1-1-0.dll
+	DLL Name: api-ms-win-crt-runtime-l1-1-0.dll
+	DLL Name: api-ms-win-crt-stdio-l1-1-0.dll
+	DLL Name: api-ms-win-crt-string-l1-1-0.dll
+	DLL Name: api-ms-win-crt-time-l1-1-0.dll
+	DLL Name: api-ms-win-crt-utility-l1-1-0.dll
+	DLL Name: ole32.dll
+	DLL Name: OLEAUT32.dll
+	DLL Name: SHELL32.dll
+	DLL Name: SHLWAPI.dll
+	DLL Name: USER32.dll
+	DLL Name: AVICAP32.dll
+	DLL Name: WS2_32.dll
+

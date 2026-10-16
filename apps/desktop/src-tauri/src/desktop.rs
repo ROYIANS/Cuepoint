@@ -26,6 +26,7 @@ pub struct ProductBridge {
     worker: Mutex<Option<Arc<StorageWorker>>>,
     previews: Arc<crate::product_media::MediaPreviews>,
     media_server: Mutex<Option<crate::product_media::MediaServer>>,
+    local_media: crate::desktop_media::DesktopMedia,
 }
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -78,6 +79,7 @@ fn full_product_worker(
     Ok(worker)
 }
 fn close_product(bridge: &ProductBridge) {
+    bridge.local_media.stop_all();
     bridge.previews.clear();
     if let Ok(mut server) = bridge.media_server.lock() {
         server.take();
@@ -87,6 +89,52 @@ fn close_product(bridge: &ProductBridge) {
     {
         let _ = worker.close();
     }
+}
+#[tauri::command]
+async fn desktop_media_request(
+    window: WebviewWindow,
+    bridge: tauri::State<'_, Arc<ProductBridge>>,
+    request: crate::desktop_media::MediaEnvelope,
+) -> Result<serde_json::Value> {
+    trusted(&window)?;
+    if !cfg!(any(target_os = "macos", target_os = "windows")) {
+        return Err(Error::new(
+            "platform",
+            "Local media is supported on macOS and Windows",
+        ));
+    }
+    let scope = request.scope()?;
+    let bridge = Arc::clone(bridge.inner());
+    tauri::async_runtime::spawn_blocking(move || {
+        let worker = full_product_worker(&window, &bridge, false)?;
+        worker.run_product(crate::ProductJob::Validate(scope.session.clone()))?;
+        if let crate::desktop_media::MediaAction::PickDirectory { operation_id } = request.action {
+            bridge.local_media.pick(&scope, &operation_id, || {
+                select_path(
+                    window
+                        .dialog()
+                        .file()
+                        .set_title("选择要导入的视频素材目录")
+                        .blocking_pick_folder(),
+                )
+            })
+        } else {
+            let staging = window
+                .app_handle()
+                .path()
+                .app_cache_dir()
+                .map_err(|_| Error::new("unavailable", "Application cache directory unavailable"))?
+                .join("media-operations-v1");
+            let resources = window.app_handle().path().resource_dir().map_err(|_| {
+                Error::new("decoderUnavailable", "Application resources unavailable")
+            })?;
+            bridge
+                .local_media
+                .request(&scope, request.action, &worker, &staging, &resources)
+        }
+    })
+    .await
+    .map_err(|_| Error::new("unavailable", "Local media request interrupted"))?
 }
 #[tauri::command]
 async fn product_store_request(
@@ -102,6 +150,7 @@ async fn product_store_request(
     let bridge = Arc::clone(bridge.inner());
     if opening {
         bridge.previews.clear();
+        bridge.local_media.stop_all();
     }
     let event_window = window.clone();
     let result = tauri::async_runtime::spawn_blocking(move || {
@@ -1725,6 +1774,7 @@ pub fn run() {
             {
                 webview.state::<Arc<RuntimeServices>>().saves.close();
                 webview.state::<Arc<ProductBridge>>().previews.clear();
+                webview.state::<Arc<ProductBridge>>().local_media.stop_all();
             }
         })
         .on_permission_request(|window, kind| {
@@ -1745,6 +1795,7 @@ pub fn run() {
         product_binary_request,
         product_binary_read,
         product_binary_write,
+        desktop_media_request,
         product_media_preview,
         product_media_release,
         workspace_cancel,
@@ -1764,6 +1815,7 @@ pub fn run() {
         product_binary_request,
         product_binary_read,
         product_binary_write,
+        desktop_media_request,
         product_media_preview,
         product_media_release,
         workspace_cancel,

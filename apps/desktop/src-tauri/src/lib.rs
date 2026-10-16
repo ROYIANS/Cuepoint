@@ -3,6 +3,12 @@ mod backup;
 mod bundled_origin;
 mod contracts;
 mod database;
+#[cfg(any(feature = "desktop", test))]
+mod desktop_media;
+#[cfg(any(feature = "desktop", test))]
+mod desktop_media_process;
+#[cfg(any(feature = "desktop", test))]
+mod media_decoder;
 #[cfg(feature = "desktop")]
 pub mod desktop;
 mod error;

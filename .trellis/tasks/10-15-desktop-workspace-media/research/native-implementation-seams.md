@@ -118,3 +118,140 @@ Adding a Blob/managed ref under an arbitrary optional metadata property will not
 - Official Rust docs currently identify 1.99.1; repository and inspected compiler pin 1.99.0. Recommendations use APIs stable before 1.99; nightly group APIs are explicitly excluded.
 - Corresponding-host Windows cancellation/identity, real system dialogs, packaged executable resolution and media viewing remain separate actual acceptance. Mac helper/source tests do not establish them.
 - Existing Windows namespace strength remains ProcessRecoveryOnly; no sudden OS/power-loss durability promise was added.
+
+## Implemented native API and focused evidence (2026-10-16)
+
+This section supersedes the research-only "not found" statements above for the
+implemented source layer. It does not establish Windows runtime, packaged dialogs
+or installed-application acceptance.
+
+`desktop_media_request` is registered in both normal/acceptance handler arrays,
+both build ACL arrays and the main capability. Its closed envelope is:
+
+```ts
+{version: 1, session: UUID, workspaceId: UUID, generation: number,
+ projectId: string, action: MediaAction}
+```
+
+The command requires the actual trusted packaged main window and validates the
+current session through the existing `StorageWorker::ProductJob::Validate` before
+dispatch. No reference-workspace job, filesystem/shell plugin or renderer path is
+accepted. Only macOS and Windows enable this command's workflow.
+
+| Closed action `type` | Additional fields | Successful response |
+| --- | --- | --- |
+| `pickDirectory` | `operationId` | `{status:"granted",operationId,grantId,label,limits}` or `{status:"canceled",operationId}` |
+| `scan` | `operationId,grantId` | `{status:"scanned",operationId,grantId,scanId,count,skipped,totalBytes,limits}` |
+| `readScanPage` | `grantId,scanId,offset,limit` | `{status:"scanPage",grantId,scanId,offset,entries,total,nextOffset:number|null}` |
+| `prepareVideo` | `operationId,grantId,scanId,entryId,expectedRevision` | Prepared response below |
+| `readOperation` | `operationId` | Original retained running/terminal response |
+| `cancelOperation` | `operationId` | `{status:"stopping",operationId}` while active, otherwise original terminal response |
+| `discardPrepared` | `operationId` | `{status:"discarded",operationId}` or `{status:"alreadyAdopted",operationId}` for two committed claims |
+| `releaseOperation` | `operationId` | `{status:"released",operationId}` after a releasable terminal outcome |
+| `revokeDirectory` | `grantId` | `{status:"revoked",grantId}`; active operations are signaled and retained separately |
+
+```ts
+type Entry = {entryId: UUID, displayName: string, relativeName: string,
+  mimeType: string, byteLength: number, revision: LowercaseSHA256};
+type Prepared = {status: "prepared", operationId: UUID, grantId: UUID,
+  scanId: UUID, entry: Entry, sourceClaim: BinaryClaim,
+  thumbnailClaim: BinaryClaim, thumbnail: {width: number, height: number,
+    preset: "thumbnail-v1", atSeconds: 0, decoder: "FFmpeg 8.0.3"}};
+type Failure = {status: "failed" | "stopped" | "unknown", operationId: UUID,
+  error: {code: string, message: string}};
+```
+
+The grant stores the actual canonical directory and `(device,inode)` identity;
+directory link count is deliberately excluded because normal directory membership
+can change it. Ordinary source files require one link and freeze identity, size,
+mtime and a real SHA-256. Scan revisions include that hash. Discovered aliases are
+skipped, directory ancestors are rechecked and selected source bytes are copied
+with a second hash check before decoding. Windows retains the existing fixed NTFS
+and ancestor-handle policy; other volumes have no claimed support.
+
+Fixed limits are depth 8, 4,096 directory entries, 256 videos, 512 MiB per video,
+2 GiB total scanned video bytes, page size 100, 8 grants and 2 concurrent native
+operations. A boundary overflow returns a scoped failure rather than a fabricated
+complete manifest. Directory grants expire after 30 minutes without a scoped
+request. Operations have a ten-minute overall check; decoder execution has a
+separate 120-second limit, 8 MiB stdout and 64 KiB stderr. Scan hashing is bounded by
+the same selected directory/video byte limits. The supported extensions are
+MP4/M4V, MOV, MKV/WebM and AVI; extension discovery is not a codec support promise.
+
+`desktop_media_process.rs` launches one verified fixed decoder with a fixed
+argument vector and restricted file/pipe protocols and mov/matroska/webm/avi
+demuxers. It decodes only the privately owned `source.bin`, produces a first-frame
+PNG on stdout, and checks dimensions (at most 640 by 640), complete bounded chunk
+framing, chunk CRCs, IDAT and IEND. macOS/Unix creates a fresh process group and
+signals that group; Windows promises direct decoder child kill-and-wait, not Job
+Object descendant confinement. stdout/stderr are drained concurrently. A wait
+failure is `unknown`, retains its private input and a background child owner, and
+cannot be released or described as stopped. Ordinary cancellation waits for actual
+exit before `stopped` and owned-source cleanup.
+
+Original and PNG claims use only `ProductJob::Binary` Prepare/Write/Seal, in
+262,144-byte chunks. No SQLite store or direct product row writer is added. Failed
+preparation aborts its known unclaimed stages. A prepared result can be released
+only after both existing Binary Availability checks establish committed identity;
+uncommitted preparation must be discarded first, and unknown outcomes stay retained.
+The committed-claim checks use actual product metadata, not file existence.
+
+There are at most 256 retained operation payloads; normal callers must release
+completed picker/scan/item operations and revoke their directory. Release leaves a
+duplicate-start tombstone for 30 minutes, bounded to 4,096 IDs; reaching this bound
+refuses admission until retention expires. No native operation automatically
+restarts. Durable stable import admission remains Studio's responsibility after
+native retention expires. Releasing a scan operation does not remove its grant's
+current manifest. Product reopen, page load and window teardown revoke source
+authority and signal active owners; they do not manufacture a terminal response.
+
+Revocation is currently a source-read/process boundary. Final adoption of already
+prepared claims still uses the existing ProductStore commit, which has no native
+grant field. The Studio service must preserve its durable intent and Stop guards;
+do not claim native grant revocation itself atomically fences generic binary claim
+adoption without an additional reviewed commit gate.
+
+Focused checks run with the explicit Node/tool resolver and actual pinned Rust:
+
+- `cargo test --manifest-path <absolute Cargo.toml> --features desktop desktop_media -- --nocapture`:
+  10 passed, 1 intentionally ignored decoder-resource fixture; actual Tauri handlers
+  and ACLs compiled. Two pre-existing vendored HTTP unused-variable warnings remain.
+- With `CUEPOINT_MEDIA_TEST_RESOURCES=<desktop>/.tools/media/native-fixture`, the
+  explicit ignored `desktop_media::tests::real_fixture_prepares_two_native_claims_and_cleans_snapshot`
+  passed against the real verified Atlas arm64 FFmpeg. It matched the fixture's
+  exact 11,940 bytes/SHA-256, generated PNG, obtained two real BinaryStore claims,
+  removed the frozen input, refused premature release and discarded/released the
+  uncommitted claims.
+- The focused tests also exercise unknown action/path/argv rejection, project
+  scope, source replacement, alias skipping, deterministic order, bounds, actual
+  sleeping child cancellation/deadline, retained manifest after release, repeated
+  normal operation release and replacement-safe temporary cleanup.
+- `rustfmt --edition 2024` ran on the changed owned Rust files. No full Rust suite,
+  application build, package, install or Windows execution ran. The initial
+  non-desktop focused run passed 8 tests with expected non-desktop dead-code
+  warnings; the actual desktop profile is the relevant handler compilation proof.
+
+### Native review follow-up
+
+The first review found that scanning rechecked a discovered directory on entry but
+only rechecked the root grant during each file hash. The scan now shares
+`Grant::check_ancestors` with preparation: it checks the complete captured directory
+chain during directory iteration, before file metadata access, before every hashed
+chunk, after hashing and before publishing the manifest. The real replacement
+regression renames an already entered child directory and moves the original file
+back under a replacement directory, preserving the actual file identity/size/mtime.
+It must fail with `changed` on the first hash check, before reading a content chunk.
+File-only validation would not catch this case.
+
+The process runner also has an internal wait seam for deterministic OS-failure
+regressions. A real sleeping child is killed, an injected first wait failure returns
+`decoderStopUnknown`, and the background owner performs an actual wait/reap. A
+native preparation regression runs this path after creating the actual frozen
+source, verifies the exact retained input bytes, retains `unknown` after Stop and
+refuses release, including after lifecycle revocation. This tests the uncertainty
+boundary without substituting a resolved/rejected promise for actual process work.
+
+After these fixes, the same desktop-focused command passed **13 tests**, with the
+one explicit-resource decode fixture still intentionally ignored in that command.
+The real FFmpeg fixture was run separately again after the prepare-seam change and
+passed. No full suite, package or other-host execution was added.
