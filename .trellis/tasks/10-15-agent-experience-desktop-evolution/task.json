@@ -60,6 +60,6 @@
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "Implement active E08 directory scan → video thumbnails → verified project import on macOS + Windows, approved 2026-10-16. Checkpoint each source stage; retain necessary-only per-stage checks and defer full/native integration/emitted/packed/build gates to batch completion."
+    "nextAction": "E08 source stages committed as 52e584c7/2b00d8e5/ca2da1a5 with necessary source/native checks and independent reviews passed. Retain actual Windows/installed and full build/package/native integration acceptance for the owner-approved epic batch boundary; E08 remains open for those gates. Subsequent independent deliveries retain their own planning/approval contracts."
   }
 }

@@ -110,3 +110,18 @@ E07 supplies foreground job/result ownership and readback. Its selected producer
 ## Current investigation
 
 [Native media boundary investigation](research/native-media-boundary.md) records actual path, managed-binary and product owners plus candidate executable distribution evidence. The platform/backend decisions are now recorded in the task design and research files, and implementation is enabled on the E08 branch. Research files continue to hold source-backed caveats rather than acceptance evidence.
+
+## Source implementation checkpoint (2026-10-16)
+
+Implementation is committed as `52e584c7`, `2b00d8e5` and `ca2da1a5`. The
+authorized-directory workflow, fixed decoder resources, atomic original/thumbnail
+publication, inline library surface and finite Agent group are implemented and
+independently reviewed. [Actual source validation](research/implementation-validation.md)
+records affected tests, strict types, lint, architecture and real macOS fixture
+evidence separately.
+
+The acceptance boxes above remain open because selected criteria include actual
+Windows and installed-host behavior. Per the owner's testing cadence, those and
+full regression/build/package/native integration run at the epic batch boundary.
+This task remains active as source-complete, awaiting those gates; it is not
+archived or represented as full platform acceptance.

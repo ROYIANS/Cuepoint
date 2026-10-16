@@ -29,7 +29,7 @@ deferred installed/other-host acceptance. No full build or package ran.
 - `a542fce1`: activate the approved cross-platform plan.
 - `52e584c7`: native grant/scan/process and pinned decoder resources.
 - `2b00d8e5`: shared atomic import receipts, claims and derivative ownership.
-- The following integration checkpoint contains Studio transport/tools/UI,
+- `ca2da1a5`: Studio transport/tools/UI,
   the expired-grant revocation regression and final source evidence/specs.
 
 ## Necessary checks actually performed

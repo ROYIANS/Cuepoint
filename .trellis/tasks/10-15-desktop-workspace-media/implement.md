@@ -73,7 +73,7 @@ retention and derivative closure findings were fixed before this checkpoint.
   acceptance, and commit this task's final source integration checkpoint. Do not run
   those gates merely because E08 source stages are complete.
 
-Stage 3 source closure: actual ReactDOM interaction, strict transport/tool parsers
+Stage 3 checkpoint: `ca2da1a5`. Source closure: actual ReactDOM interaction, strict transport/tool parsers
 and shared-store workflow regressions passed. Final focused native review passed
 **16 tests** plus one resource-dependent ignored fixture; the real FFmpeg fixture
 ran separately. Whole changed-scope architecture had **669 files**, **2,635 static
