@@ -93,6 +93,15 @@
       "e7a5c8ff",
       "0449ed6f"
     ],
+    "postDeliveryRepairEvidence": {
+      "review": "research/runtime-repair-review.md",
+      "runtime": "Explicit reusable-library rebuild, emitted freshness/public exports and actual Vite/Edge /agent smoke passed; no browser exceptions",
+      "ui": "14 distinct UI cases passed in the finite source profile and independently against real emitted dependencies with a one-run include override",
+      "sourceNoEmit": "passed on final frozen files",
+      "scopedLint": "hook full rules; 0 errors/0 warnings; independently verified",
+      "followUp": "Normal shared Vitest discovery excludes TSX; review aggregate discovery during epic batch quality acceptance",
+      "deferred": "Full app build, isolated emitted declarations/packed consumer and actual installed macOS/Windows acceptance remain pending"
+    },
     "pendingAcceptance": [
       "epic full regression and formal quality/build",
       "emitted declarations and offline packed consumer",

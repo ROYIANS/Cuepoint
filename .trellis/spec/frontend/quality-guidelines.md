@@ -41,6 +41,12 @@ reachable through the real config import, not a dummy entry. Keep the exact
 root configuration in quality input identities. Default test/quality artifact
 freshness and emitted/packed/native gates remain intact and deferred to the
 owner's final batch acceptance; never rebuild implicitly or forge a receipt.
+When the actual running app needs changed public library exports, explicitly
+regenerate its library dependencies and verify the emitted entry/freshness before
+handing the development workspace back. That necessary runtime repair is not a
+full application build or proof of isolated packed-consumer acceptance. Source
+aliases alone cannot establish that a browser using `dist` can load the change;
+see [package boundaries](./monorepo-boundaries.md).
 
 Studio consumers use the separate explicit `vitest.studio-source.config.ts`
 profile and `tests/typecheck/tsconfig.studio-agent-source.json` when those same

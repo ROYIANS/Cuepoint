@@ -78,6 +78,12 @@ Use `/Users/xiaomengdao/.nvm/versions/node/v24.11.0/bin/pnpm` and the matching m
 Node. Do not use bare/runtime pnpm, reinstall the workspace, or run aggregate scripts
 that build all Agent packages just to test a source change.
 
+When changed public exports are consumed by the active development app, explicitly
+run the existing `tooling/build-agent-packages.mjs` with the approved machine Node,
+verify `assertAgentPackageFreshness()` and the real emitted exports, and check the
+running Vite module. This prepares current runtime dependencies; full app builds,
+installer and isolated emitted/packed-consumer acceptance remain deferred below.
+
 During implementation create/register a finite `vitest.installable-skills-source.config.ts`
 and a matching source-only noEmit type profile using the existing exact public
 source export aliases. Add only meaningful affected fixtures to it; use explicit
@@ -131,3 +137,13 @@ Stage 1 was committed as `0c7b8b10`; Stage 2 as `e7a5c8ff`; Stage 3 was committe
 active for the explicitly deferred epic batch and actual-host acceptance.
 No native Windows execution/cross-compilation, actual installed system picker,
 emitted/packed consumer or production packaging result is claimed.
+
+## Post-delivery repair — 2026-10-16
+
+The owner-approved runtime/optimistic-toggle findings are fixed and independently
+checked. Current reusable-library output now exposes the E09 helpers to the
+running browser. Unknown writes preserve the requested checkbox state until
+receipt/list evidence resolves it. See [repair evidence](./research/runtime-repair-review.md)
+for the actual Edge smoke, 14 UI cases under both source and emitted resolution,
+type/lint receipts and the existing aggregate TSX discovery limitation. This
+does not discharge the deferred batch acceptance or archive the task.

@@ -10,6 +10,7 @@ import {AGENT_SKILLS} from "@/features/agent/runtime/skills";
 import {InstalledSkillsPanel} from "@/features/agent/ui/InstalledSkillsPanel";
 import {useInstalledSkills} from "@/features/agent/ui/useInstalledSkills";
 import * as commands from "@/features/agent/skills/commands/installations";
+import * as skillQueries from "@/features/agent/skills/queries/installedSkills";
 import {getInstalledSkillCatalogue} from "@/features/agent/skills/queries/installedSkills";
 import {StorageError} from "@/platform/storage/errors";
 import type {SkillDirectorySnapshot} from "@/platform/runtime/skillImport";
@@ -50,6 +51,13 @@ async function review() {
     await settle(() => expect(button("导入技能").disabled).toBe(false));
     await click("导入技能");
     await settle(() => expect(portal.textContent).toContain("审阅新技能"));
+}
+async function openSkillQuickMenu() {
+    await click("更多选项");
+    await settle(() => expect(globalThis.document.querySelector('[role="menuitem"] .agent-plus-row')).not.toBeNull());
+    const row = [...globalThis.document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find(node => node.textContent?.startsWith("技能"))!;
+    expect(row).toBeTruthy();
+    await act(async () => row.click());
 }
 beforeEach(async () => {
     vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
@@ -143,6 +151,119 @@ describe("installed skill management in the retained workspace", () => {
         expect(button("确认安装").disabled).toBe(true); expect(reconcile).toHaveBeenCalledTimes(2); expect(install).toHaveBeenCalledTimes(1);
         await click("重新查看当前列表"); await settle(() => expect(button("确认安装").disabled).toBe(false));
         expect(install).toHaveBeenCalledTimes(1);
+    });
+    it("retains an uncertain toggle across menu and panel views, failed and unresolved readback, without replay", async () => {
+        await review(); await click("确认安装");
+        await settle(() => expect(portal.textContent).toContain("技能管理"));
+        await act(async () => root.render(<ContextPanelHostProvider target={portal} surfaceWidth={1440} navigationWidth={260}><ComposerPlusMenu/></ContextPanelHostProvider>));
+        await openSkillQuickMenu();
+        const findQuickToggle = () => globalThis.document.querySelector<HTMLButtonElement>('[role="switch"][aria-label="启用 portable"]')!;
+        await settle(() => expect(findQuickToggle()?.disabled).toBe(false));
+        const original = commands.setInstalledSkillEnabled;
+        let input!: Parameters<typeof original>[0];
+        const command = vi.spyOn(commands, "setInstalledSkillEnabled").mockImplementationOnce(async captured => {
+            input = captured;
+            throw new StorageError("unknownCommit", "unknown", "unknown");
+        });
+        await act(async () => findQuickToggle().click());
+        await settle(() => expect(globalThis.document.body.textContent).toContain("保存结果尚未确认"));
+        expect(findQuickToggle().getAttribute("aria-checked")).toBe("true"); expect(findQuickToggle().disabled).toBe(true);
+        await click("更多选项"); await openSkillQuickMenu();
+        expect(findQuickToggle().getAttribute("aria-checked")).toBe("true"); expect(findQuickToggle().disabled).toBe(true);
+        await act(async () => findQuickToggle().click()); expect(command).toHaveBeenCalledTimes(1);
+        await click("管理技能");
+        const findPanelToggle = () => portal.querySelector<HTMLInputElement>('[role="switch"][aria-label="启用 portable"]')!;
+        await settle(() => expect(findPanelToggle()?.checked).toBe(true));
+        expect(findPanelToggle().disabled).toBe(true);
+        const held = deferred<Awaited<ReturnType<typeof commands.reconcileSkillMutation>>>();
+        const reconcile = vi.spyOn(commands, "reconcileSkillMutation").mockImplementationOnce(() => held.promise)
+            .mockRejectedValueOnce(new Error("核对暂时不可用")).mockResolvedValueOnce({status: "unresolved"});
+        await click("核对保存结果");
+        expect(findPanelToggle().checked).toBe(true); expect(button("核对保存结果").disabled).toBe(true);
+        await act(async () => held.resolve({status: "unresolved"}));
+        await settle(() => expect(portal.textContent).toContain("仍无法确认"));
+        expect(findPanelToggle().checked).toBe(true); expect(findPanelToggle().disabled).toBe(true);
+        await click("核对保存结果"); expect(portal.textContent).toContain("核对暂时不可用");
+        expect(findPanelToggle().checked).toBe(true); expect(findPanelToggle().disabled).toBe(true);
+        await click("核对保存结果"); expect(portal.textContent).toContain("仍无法确认");
+        await click("关闭");
+        expect(globalThis.document.querySelector('[role="alertdialog"]')).not.toBeNull();
+        expect([...globalThis.document.querySelectorAll("button")].some(node => node.textContent === "放弃并离开")).toBe(false);
+        await click("继续编辑");
+        // The original write completes later; observing its row alone does not
+        // release the quarantined operation. Only its explicit receipt does.
+        await act(async () => original(input));
+        expect(findPanelToggle().checked).toBe(true); expect(findPanelToggle().disabled).toBe(true);
+        await click("核对保存结果");
+        await settle(() => expect(findPanelToggle().disabled).toBe(false));
+        expect(findPanelToggle().checked).toBe(true); expect(portal.querySelector('[role="alert"]')).toBeNull();
+        expect(command).toHaveBeenCalledTimes(1); expect(reconcile).toHaveBeenCalledTimes(4);
+    });
+    it.each(["acknowledged", "reconciled"] as const)("keeps a %s toggle visible after readback fails, then yields to a newer catalogue", async confirmation => {
+        await review(); await click("确认安装");
+        await settle(() => expect(portal.textContent).toContain("技能管理"));
+        const before = await getInstalledSkillCatalogue(), originalRead = skillQueries.getInstalledSkillCatalogue;
+        const originalWrite = commands.setInstalledSkillEnabled;
+        // Keep the previously observed snapshot while the post-commit direct
+        // read fails. Actual observation reads still retain their dependencies.
+        const read = vi.spyOn(skillQueries, "getInstalledSkillCatalogue").mockImplementation(async store => {
+            if (!store) throw new Error("列表暂时不可用");
+            await originalRead(store);
+            return before;
+        });
+        const command = vi.spyOn(commands, "setInstalledSkillEnabled").mockImplementationOnce(async input => {
+            const receipt = await originalWrite(input);
+            if (confirmation === "reconciled") throw new StorageError("unknownCommit", "reply lost", "unknown");
+            return receipt;
+        });
+        const toggle = portal.querySelector<HTMLInputElement>('[role="switch"]')!;
+        await act(async () => toggle.click());
+        if (confirmation === "reconciled") {
+            await settle(() => expect(portal.textContent).toContain("保存结果尚未确认"));
+            expect(toggle.checked).toBe(true); expect(toggle.disabled).toBe(true);
+            await click("核对保存结果");
+        }
+        await settle(() => expect(toggle.disabled).toBe(false));
+        expect(toggle.checked).toBe(true); expect(command).toHaveBeenCalledTimes(1);
+        expect(portal.querySelector('[role="alert"]')).toBeNull();
+        await click("关闭"); await click("管理技能");
+        const reopened = portal.querySelector<HTMLInputElement>('[role="switch"]')!;
+        expect(reopened.checked).toBe(true); expect(reopened.disabled).toBe(false);
+        read.mockRestore();
+        const current = await originalRead(), skill = current.entries[0];
+        await act(async () => originalWrite({operationId: "newer-toggle", catalogueRevision: current.revision,
+            skillId: skill.skillId, expectedRevision: skill.revision, enabled: false}));
+        await settle(() => expect(reopened.checked).toBe(false));
+        expect(reopened.disabled).toBe(false); expect(command).toHaveBeenCalledTimes(1);
+    });
+    it("retains a conflicting toggle until an explicit current-list acknowledgement succeeds", async () => {
+        await review(); await click("确认安装");
+        await settle(() => expect(portal.textContent).toContain("技能管理"));
+        const originalWrite = commands.setInstalledSkillEnabled;
+        const command = vi.spyOn(commands, "setInstalledSkillEnabled").mockRejectedValueOnce(new StorageError("unknownCommit", "unknown", "unknown"));
+        const toggle = portal.querySelector<HTMLInputElement>('[role="switch"]')!;
+        await act(async () => toggle.click());
+        await settle(() => expect(portal.textContent).toContain("保存结果尚未确认"));
+        const current = await getInstalledSkillCatalogue(), skill = current.entries[0];
+        await act(async () => originalWrite({operationId: "conflicting-toggle", catalogueRevision: current.revision,
+            skillId: skill.skillId, expectedRevision: skill.revision, enabled: false}));
+        await click("核对保存结果"); await settle(() => expect(portal.textContent).toContain("其他操作已改变"));
+        expect(toggle.checked).toBe(true); expect(toggle.disabled).toBe(true);
+        const originalRead = skillQueries.getInstalledSkillCatalogue;
+        const read = vi.spyOn(skillQueries, "getInstalledSkillCatalogue").mockImplementation(async store => {
+            if (!store) throw new Error("当前列表读取失败");
+            return originalRead(store);
+        });
+        await click("重新查看当前列表"); await settle(() => expect(portal.textContent).toContain("当前列表读取失败"));
+        expect(toggle.checked).toBe(true); expect(toggle.disabled).toBe(true);
+        read.mockRestore();
+        await click("重新查看当前列表");
+        await settle(() => expect(toggle.disabled).toBe(false));
+        expect(toggle.checked).toBe(false); expect(portal.querySelector('[role="alert"]')).toBeNull();
+        expect(command).toHaveBeenCalledTimes(1);
+        await act(async () => toggle.click());
+        await settle(() => expect(toggle.checked && !toggle.disabled).toBe(true));
+        expect(command).toHaveBeenCalledTimes(2);
     });
     it("keeps existing management available when browser directory selection is unsupported", async () => {
         runtime.native = false;

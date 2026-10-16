@@ -7,7 +7,7 @@ import {installSkill, reconcileSkillMutation, setInstalledSkillEnabled, uninstal
 import type {InstalledSkill, SkillCatalogue, SkillImportCandidate, SkillMutationExpectation, SkillMutationReceipt} from "../skills/models/installedSkill";
 
 type UncertainMutation = SkillMutationExpectation & {readonly conflicted: boolean; readonly done?: () => void};
-type OptimisticToggle = {readonly skillId: string; readonly enabled: boolean};
+type OptimisticToggle = {readonly skillId: string; readonly enabled: boolean; readonly catalogueRevision?: number};
 
 /** One owner spans quick switches and the retained panel, including uncertainty. */
 export function useInstalledSkills() {
@@ -22,7 +22,10 @@ export function useInstalledSkills() {
     const lock = useRef(false);
     const current = useRef({catalogue, uncertain});
     current.current = {catalogue, uncertain};
-    const entries = catalogue?.entries.map(entry => optimistic?.skillId === entry.skillId ? {...entry, enabled: optimistic.enabled} : entry) ?? [];
+    // Uncertain intent stays visible until reconciliation. A confirmed toggle
+    // yields to a catalogue that has reached its receipt, even if readback failed.
+    const toggle = optimistic && (optimistic.catalogueRevision === undefined || !catalogue || catalogue.revision < optimistic.catalogueRevision) ? optimistic : undefined;
+    const entries = catalogue?.entries.map(entry => toggle?.skillId === entry.skillId ? {...entry, enabled: toggle.enabled} : entry) ?? [];
 
     async function refresh() {
         if (lock.current) return;
@@ -32,7 +35,10 @@ export function useInstalledSkills() {
             setFresh(await getInstalledSkillCatalogue());
             // Only an explicit acknowledgement of a reported conflicting writer
             // releases that intent. An unresolved readback is never a rollback.
-            if (current.current.uncertain?.conflicted) setUncertain(undefined);
+            if (current.current.uncertain?.conflicted) {
+                setUncertain(undefined);
+                setOptimistic(undefined);
+            }
             setError(undefined);
             setAttempt(value => value + 1);
         } catch (cause) {setError(cause instanceof Error ? cause.message : "技能列表读取失败，请重试");}
@@ -48,7 +54,8 @@ export function useInstalledSkills() {
         setError(undefined);
         setOptimistic(toggle);
         try {
-            await action(expected);
+            const receipt = await action(expected);
+            setOptimistic(value => value && {...value, catalogueRevision: receipt.catalogueRevision});
             // Acknowledged success remains success even if the follow-up read fails.
             done?.();
             try {setFresh(await getInstalledSkillCatalogue());}
@@ -59,8 +66,11 @@ export function useInstalledSkills() {
                 current.current = {...current.current, uncertain: intent};
                 setUncertain(intent);
                 setError("保存结果尚未确认，请先核对；不要重复提交。");
-            } else setError(cause instanceof Error ? cause.message : "技能设置保存失败，请重试");
-        } finally {lock.current = false; setPending(false); setOptimistic(undefined);}
+            } else {
+                setOptimistic(undefined);
+                setError(cause instanceof Error ? cause.message : "技能设置保存失败，请重试");
+            }
+        } finally {lock.current = false; setPending(false);}
     }
 
     async function reconcile() {
@@ -71,6 +81,7 @@ export function useInstalledSkills() {
         try {
             const result = await reconcileSkillMutation(intent);
             if (result.status === "committed") {
+                setOptimistic(value => value && {...value, catalogueRevision: result.receipt.catalogueRevision});
                 intent.done?.();
                 setUncertain(undefined);
                 setError(undefined);

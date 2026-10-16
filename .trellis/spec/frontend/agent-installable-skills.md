@@ -244,9 +244,16 @@ counts. The panel uses escaped text/resource buttons, not active package HTML or
 automatic external fetches. A resource button resolves only a manifest member.
 
 Known save failures preserve the selected candidate and roll back only the
-owner's optimistic toggle. Unknown installed-skill saves quarantine the original operation;
-closing/reopening the panel cannot make it replayable. Readback is explicit;
-`unresolved` stays blocked. Ordinary success updates the visible list quietly.
+owner's optimistic toggle. Unknown installed-skill saves quarantine the original operation
+and preserve the captured toggle value; neither a rejected/unresolved receipt read
+nor closing/reopening the menu can restore the old checkbox without rollback
+proof. Readback is explicit; `unresolved` stays blocked. A committed receipt binds
+the optimistic value to its `catalogueRevision`: keep that value while an older
+list is visible, including when the follow-up list read fails, then let a list at
+or beyond that revision supply the value. A conflicting receipt keeps the intent
+and quarantine until the explicit current-list acknowledgement successfully
+reads the catalogue; a failed acknowledgement preserves both. Ordinary success
+updates the visible list quietly.
 Review replacement/close uses existing draft-departure guards; accepted pending
 storage cannot be discarded as if it were canceled. Narrow layout retains chat
 and returns through `返回对话`; the same detail subtree survives docking changes.
@@ -269,8 +276,9 @@ this lock. Known failures alone restore the saved state and unlock the control.
 | Accepted source identity changes or text/path/count/byte boundary exceeded | Reject whole candidate before publication |
 | Browser unsupported capability | Explain available import route; retained management still works |
 | Storage known failure | Keep review and actionable error; enable deliberate retry |
-| Storage unknown/unresolved | Block mutation and departure; expose receipt readback |
-| Other writer supersedes an uncertain receipt | Report conflict and require explicit current-list acknowledgement |
+| Storage unknown/unresolved or receipt read fails | Preserve captured toggle; block mutation and departure; expose receipt readback |
+| Receipt confirms commit but list read fails | Preserve toggle until catalogue reaches receipt revision; never roll back a confirmed write |
+| Other writer supersedes an uncertain receipt | Preserve intent and report conflict; release only after successful explicit current-list acknowledgement |
 | Dirty review or another guarded panel owns departure | Existing confirmation/arbitration decides; do not drop draft or stop chat |
 
 ### 5. Good / Base / Bad Cases
@@ -289,6 +297,12 @@ closed decoder and verify session/identity/limit closure. Browser fixtures asser
 excluded file readers are never called. Actual ReactDOM tests hold picker/storage
 promises and exercise quiet success, failure recovery, unknown quarantine,
 wide/narrow retained nodes, focus return and departure guards.
+Installed-toggle cases must hold unresolved/failed receipt reads, reopen the
+quick menu and transfer to the retained panel without replay or checkbox
+rollback. Cover direct acknowledgement and receipt confirmation followed by a
+failed list read, adoption of a newer catalogue, and conflict acknowledgement
+whose first list read fails. Assert the requested checkbox value and mutation
+count throughout, not only the final alert text.
 
 These fixtures do not establish actual macOS/Windows system chooser or installed
 webview behavior. Their acceptance remains at the owner's epic-end batch gate.

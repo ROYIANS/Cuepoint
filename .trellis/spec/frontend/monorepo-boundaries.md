@@ -44,6 +44,16 @@ file or package-public execution API.
   alias, expose a private module or mark every package file reachable. Validate
   the export/source/artifact relationship and bind consumed artifacts to input
   identities; a warm `dist` directory alone cannot prove a cold build works.
+- When a running browser consumes a changed reusable package, regenerate its
+  emitted dependencies with the approved machine Node running
+  `tooling/build-agent-packages.mjs`, then call `assertAgentPackageFreshness()`
+  and check the changed runtime exports through the real package entry. Vite's
+  startup freshness assertion does not rerun for every later library edit.
+  Necessary source-only tests may stay narrow, but do not leave the development
+  server consuming stale `dist` after introducing a new public export. This
+  dependency preparation is separate from the deferred production app build,
+  installer and isolated packed-consumer acceptance; do not add production
+  source aliases, commit generated `dist`, or forge a receipt to avoid it.
 - Build reusable packages in declared dependency order and clean their output
   before compilation. Capture all source files, package manifest/tsconfig,
   lockfile, builder/capture/workspace policy implementations, exact public-source
