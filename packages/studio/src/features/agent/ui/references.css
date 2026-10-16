@@ -106,14 +106,10 @@
     color: white;
 }
 
-.reference-note, .reference-send-note {
+.reference-note {
     color: var(--muted-foreground);
     font-size: 12px;
     line-height: 1.6;
-}
-
-.reference-send-note {
-    padding: 0 16px 8px;
 }
 
 .reference-error, .reference-warning {

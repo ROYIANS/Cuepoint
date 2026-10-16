@@ -1,0 +1,217 @@
+/* Detached cards sit 8px above the composer. The frame below is only the draft. */
+.agent-chat-root .agent-composer-cards:empty {
+    display: none;
+    margin: 0;
+}
+
+.agent-chat-root .agent-composer-cards {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    margin: 0 0 8px;
+}
+
+.agent-chat-root .agent-composer-card {
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-elevated);
+    box-shadow: 0 8px 28px rgb(0 0 0 / 28%);
+    color: var(--foreground);
+    font-size: 13px;
+    line-height: 20px;
+    animation: agent-composer-card-in 140ms ease-out;
+}
+
+.agent-chat-root .agent-composer-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 24px;
+    margin-bottom: 4px;
+    color: var(--muted-foreground);
+    font-size: 13px;
+}
+
+.agent-chat-root .agent-composer-card-head strong {
+    min-width: 0;
+    overflow: hidden;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.agent-chat-root .agent-composer-card-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.agent-chat-root .agent-composer-card-detail,
+.agent-chat-root .agent-attention-read-error {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-size: 13px;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.agent-chat-root .agent-composer-card-rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.agent-chat-root .agent-composer-card-rows button {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    width: 100%;
+    min-height: 28px;
+    padding: 2px 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+}
+
+.agent-chat-root .agent-composer-card-rows button:hover strong {
+    color: var(--foreground);
+}
+
+.agent-chat-root .agent-composer-card-dot,
+.agent-chat-root .agent-composer-card-pill-dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: currentColor;
+}
+
+.agent-chat-root .agent-composer-card-rows .agent-composer-card-dot {
+    align-self: center;
+    color: var(--foreground);
+}
+
+.agent-chat-root .agent-composer-card-rows strong {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--foreground);
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.agent-chat-root .agent-composer-card-rows span {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.agent-chat-root .agent-composer-card-close {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--muted-foreground);
+    cursor: pointer;
+}
+
+.agent-chat-root .agent-composer-card-action {
+    flex: none;
+    min-height: 28px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--foreground);
+    color: var(--background);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.agent-chat-root .agent-composer-card-close:hover,
+.agent-chat-root .agent-composer-card-action:hover,
+.agent-chat-root .agent-composer-card-pills button:hover {
+    opacity: .85;
+}
+
+.agent-chat-root .agent-composer-card-close:focus-visible,
+.agent-chat-root .agent-composer-card-action:focus-visible,
+.agent-chat-root .agent-composer-card-rows button:focus-visible,
+.agent-chat-root .agent-composer-card-pills button:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.agent-chat-root .agent-composer-card-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.agent-chat-root .agent-composer-card-pills button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 180px;
+    min-height: 26px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--surface-elevated);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 16%);
+    color: var(--muted-foreground);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.agent-chat-root .agent-composer-card-pills button span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.agent-chat-root .agent-composer-card-pills button[aria-selected="true"] {
+    background: var(--surface-selected);
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+@keyframes agent-composer-card-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .agent-chat-root .agent-composer-card {
+        animation: none;
+    }
+}

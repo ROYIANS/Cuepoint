@@ -18,7 +18,7 @@ beforeEach(() => {
 afterEach(async () => {
     await act(async () => root.unmount()); container.remove(); vi.unstubAllGlobals();
 });
-const button = (label: string) => [...container.querySelectorAll("button")].find(item => item.textContent === label) as HTMLButtonElement | undefined;
+const button = (label: string) => [...container.querySelectorAll("button")].find(item => item.getAttribute("aria-label") === label || item.textContent === label) as HTMLButtonElement | undefined;
 async function settle() {await act(async () => {await new Promise(resolve => setTimeout(resolve, 30));});}
 
 it("disables with a reason, shows progress with Cancel, reports typed failures and the before → after result", async () => {
@@ -29,12 +29,12 @@ it("disables with a reason, shows progress with Cancel, reports typed failures a
         h(CompactAction, {threadId: thread.id, connector, model: "unknown-model", ...props})));
 
     await render({blocked: "执行中或待确认，结束后可整理"});
-    expect(button("压缩")!.disabled).toBe(true);
+    expect(button("压缩上下文")!.disabled).toBe(true);
     expect(container.textContent).toContain("执行中或待确认");
 
     // Nothing to compact: a typed failure appears as an alert, not a toast or success.
     await render();
-    await act(async () => button("压缩")!.click());
+    await act(async () => button("压缩上下文")!.click());
     await settle();
     expect(container.querySelector('[role="alert"]')?.textContent).toBe("没有更多可整理的完整对话。");
 
@@ -47,13 +47,13 @@ it("disables with a reason, shows progress with Cancel, reports typed failures a
         return gate.promise;
     }));
     await render();
-    await act(async () => button("压缩")!.click());
+    await act(async () => button("压缩上下文")!.click());
     expect(container.textContent).toContain("正在压缩");
-    expect(button("压缩")).toBeUndefined();
+    expect(button("压缩上下文")).toBeUndefined();
     await act(async () => {await requested.promise;});
-    await act(async () => button("取消")!.click());
+    await act(async () => button("取消压缩")!.click());
     await settle();
-    expect(button("压缩")).toBeDefined();
+    expect(button("压缩上下文")).toBeDefined();
     expect(container.querySelector('[role="alert"]')).toBeNull();
     expect((await db.contextCompactions.toArray())[0].status).toBe("interrupted");
 

@@ -1,8 +1,9 @@
 import {useNavigate} from "@tanstack/react-router";
 import {ContextParameters} from "./ContextParameters";
-import {useEffect, useRef, useState} from "react";
+import {createPortal} from "react-dom";
+import {type RefObject, useEffect, useRef, useState} from "react";
 import {useProductQuery} from "../../../platform/product/queries";
-import {Dropdown, Input, Switch, Tooltip} from "antd";
+import {Dropdown, Input, Switch, Tooltip, type InputRef} from "antd";
 import {
     ArrowLeft,
     BookOpen,
@@ -10,22 +11,27 @@ import {
     Check,
     ChevronDown,
     ChevronRight,
+    CircleHelp,
+    ExternalLink,
     FolderOpen,
     Hand,
+    MessagesSquare,
     Plus,
     Plug,
-    Search,
     ShieldAlert,
     ShieldCheck,
     SlidersHorizontal,
+    Sparkles,
     Upload
 } from "../../../ui/icons";
 import {toast} from "sonner";
 import {type AgentPermissionMode, GENERAL_AGENT_ID} from "../models/agent";
+import type {AgentInteractionMode} from "./composerTypes";
 import {getGeneralAgentConfig, updateGeneralAgentConfig} from "../commands/agentSettings";
 import {AGENT_SKILLS} from "../runtime/skills";
 import {StorageError} from "../../../platform/storage/errors";
 import {useInstalledSkills} from "./useInstalledSkills";
+import {useMcpManagement} from "../mcp/ui/management";
 import {InstalledSkillMutationNotice} from "./InstalledSkillsPanel";
 
 const PERMISSIONS = [
@@ -126,11 +132,41 @@ export function AgentControls() {
     );
 }
 
-export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
+function Hint({text}: {text: string}) {
+    return <Tooltip title={text}><button type="button" className="agent-plus-hint" aria-label={text} onClick={event => event.stopPropagation()}><CircleHelp size={13} aria-hidden/></button></Tooltip>;
+}
+
+function plusRow(title: string, hint?: string, nested = false) {
+    return <span className="agent-plus-row"><span className="agent-plus-copy"><strong>{title}</strong>{hint ? <small>{hint}</small> : null}</span>{nested ? <ChevronRight size={14} aria-hidden/> : null}</span>;
+}
+
+function PlusSheetToolbar({onBack, search, onSearch, searchRef, placeholder, manage, onManage}: {
+    onBack: () => void;
+    search: string;
+    onSearch: (value: string) => void;
+    searchRef?: RefObject<InputRef | null>;
+    placeholder: string;
+    manage?: string;
+    onManage?: () => void;
+}) {
+    return <div className="agent-sheet-toolbar">
+        <button type="button" className="agent-skill-back" aria-label="返回" onClick={onBack}><ArrowLeft size={16} aria-hidden/></button>
+        <div className="agent-skill-search"><Input variant="borderless" ref={searchRef} value={search}
+                                                   onChange={event => onSearch(event.target.value)}
+                                                   placeholder={placeholder} aria-label={placeholder} allowClear/></div>
+        {manage && onManage ? <button type="button" className="agent-sheet-manage" onClick={onManage}>{manage}<ExternalLink size={13} aria-hidden/></button> : null}
+    </div>;
+}
+
+export function ComposerPlusMenu({threadId, projectId, interactionMode, onInteractionModeChange, onImport, onLibrary, sheetHost, onOpenChange}: {
     threadId?: string;
     projectId?: string;
+    interactionMode?: AgentInteractionMode;
+    onInteractionModeChange?: (mode: AgentInteractionMode) => void;
     onImport?: () => void;
-    onLibrary?: () => void
+    onLibrary?: () => void;
+    sheetHost?: RefObject<HTMLDivElement | null>;
+    onOpenChange?: (open: boolean) => void;
 }) {
     const navigate = useNavigate();
     const project = useProductQuery(async (db) => projectId ? (await db.projects.get(projectId)) ?? null : null, [projectId]);
@@ -156,7 +192,8 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
     const saving = builtinPending || builtinUnknown || installed.pending;
     const enabledCount = enabledSkills.length + installed.entries.filter(skill => skill.enabled).length;
     const [open, setOpen] = useState(false);
-    const [view, setView] = useState<"home" | "skills" | "parameters">("home");
+    const [view, setView] = useState<"home" | "skills" | "parameters" | "mcp">("home");
+    const mcp = useMcpManagement();
     const [search, setSearch] = useState("");
     const searchInput = useRef<import("antd").InputRef>(null);
     const panelRef = useRef<HTMLDivElement>(null);
@@ -182,6 +219,9 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
             document.removeEventListener("keydown", escape, true);
         };
     }, [open]);
+    useEffect(() => {
+        onOpenChange?.(open);
+    }, [open, onOpenChange]);
     useEffect(() => {
         if (open && !triggerRef.current?.closest("[inert]")) searchInput.current?.focus();
     }, [open, view]);
@@ -210,88 +250,37 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
         }
     }
 
-    return <><Dropdown
-        trigger={["click"]}
-        placement="topLeft"
-        getPopupContainer={popupRoot}
-        open={open}
-        onOpenChange={(next, info) => {
-            if (info.source !== "trigger") return;
-            setOpen(next);
-            if (next) {
-                setView("home");
-                setSearch("");
-            }
-        }}
-        autoFocus
-        menu={{
-            className: "agent-composer-menu",
-            items: view === "home" ? [
-                {key: "mcp", icon: <Plug size={16}/>, label: <span className="agent-plus-row">MCP 连接<span>外部工具与资源<ChevronRight size={14}/></span></span>},
-                {
-                    key: "import",
-                    icon: <Upload size={16}/>,
-                    label: <span className="agent-plus-row">导入资料<span>图片与文档</span></span>
-                },
-                {
-                    key: "library",
-                    icon: <FolderOpen size={16}/>,
-                    label: <span className="agent-plus-row">项目资料<span>复用参考文件</span></span>
-                },
-                ...(project ? [{
-                    key: "memory",
-                    icon: <BookOpen size={16}/>,
-                    label: <span className="agent-plus-row">项目记忆<span>规范与经验<ChevronRight
-                        size={14}/></span></span>
-                }] : []),
-                {
-                    key: "parameters",
-                    icon: <SlidersHorizontal size={16}/>,
-                    label: <span className="agent-plus-row">对话参数<span>历史与压缩<ChevronRight
-                        size={14}/></span></span>
-                },
-                {
-                    key: "skills",
-                    icon: <Boxes size={16}/>,
-                    label: <span className="agent-plus-row">技能<span>{enabledCount} 项已启用<ChevronRight
-                        size={14}/></span></span>
-                },
-            ] : [],
-            onClick: ({key}) => {
-                if (key === "mcp") {openSettings("mcp"); return;}
-                if (key === "import" || key === "library") {
-                    setOpen(false);
-                    if (key === "import") onImport?.(); else onLibrary?.();
-                    return;
-                }
-                if (key === "memory") {
-                    openMemory();
-                    return;
-                }
-                if (key === "skills" || key === "parameters") {
-                    setView(key);
-                    return;
-                }
-                setOpen(false);
-            },
-        }}
-        popupRender={(menu) => <div ref={panelRef}>{view === "parameters" ?
-            <ContextParameters threadId={threadId} onBack={() => {
-                setView("home");
-                setSearch("");
-            }}/> : view === "home" ? <div className="agent-control-panel">
-                <div className="agent-skill-search"><Input variant="borderless" ref={searchInput}
-                                                           prefix={<Search size={14}/>} value={search}
+    const toggle = () => {
+        setOpen(next => {
+            if (!next) {setView("home"); setSearch("");}
+            return !next;
+        });
+    };
+    const mcpEntries = (mcp.state.catalogue?.entries ?? []).filter(row => row.label.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
+    const backHome = () => {setView("home"); setSearch("");};
+    const panel = <div ref={panelRef} className="agent-composer-sheet agent-plus-sheet">{view === "parameters" ?
+            <ContextParameters threadId={threadId} onBack={backHome} search={search} onSearch={setSearch} searchRef={searchInput}/> : view === "mcp" ? <div className="agent-control-panel">
+                <PlusSheetToolbar onBack={backHome} search={search} onSearch={setSearch} searchRef={searchInput}
+                                  placeholder="搜索 MCP…" manage="管理" onManage={() => openSettings("mcp")}/>
+                <div className="agent-skill-list">
+                    {mcpEntries.map(row => <div className="agent-skill-row" key={row.serverId}>
+                        <span>{row.label}</span>
+                        <Switch size="small" checked={row.enabled} disabled={Boolean(mcp.state.pending)} aria-label={row.label}
+                                onChange={checked => void mcp.owner?.toggle(row, checked)}/>
+                    </div>)}
+                    {!mcpEntries.length && <p className="agent-control-panel-note">{mcp.state.error ?? "暂无连接"}</p>}
+                </div>
+            </div> : view === "home" ? <div className="agent-control-panel">
+                <div className="agent-skill-search"><Input variant="borderless" ref={searchInput} value={search}
                                                            onChange={(event) => setSearch(event.target.value)}
                                                            placeholder="搜索技能与操作…" aria-label="搜索技能与操作"
                                                            allowClear/></div>
-                <div className="agent-control-panel-heading">创作能力</div>
                 {search.trim() ?
-                    <div className="agent-skill-list">{/mcp|连接|外部|工具|资源/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => openSettings("mcp")}><Plug size={16}/>MCP 连接<ChevronRight size={14}/></button>}{/导入|上传|图片|文档|文件|upload|import/i.test(search) &&
+                    <div className="agent-skill-list">{/mcp|连接|外部|工具|资源/i.test(search) && <button type="button" className="agent-plus-search-result" onClick={() => {setView("mcp"); void mcp.owner?.refresh();}}><Plug size={14}/>MCP<ChevronRight size={14}/></button>}{/导入|上传|图片|文档|文件|upload|import/i.test(search) &&
                         <button type="button" className="agent-plus-search-result" onClick={() => {
                             setOpen(false);
                             onImport?.();
-                        }}><Upload size={16}/>导入资料</button>}{/资料|项目|文件|library|reference/i.test(search) &&
+                        }}><Upload size={16}/>文件</button>}{/资料|项目|文件|library|reference/i.test(search) &&
                         <button type="button" className="agent-plus-search-result" onClick={() => {
                             setOpen(false);
                             onLibrary?.();
@@ -310,48 +299,60 @@ export function ComposerPlusMenu({threadId, projectId, onImport, onLibrary}: {
                         <p className="agent-control-panel-note">没有匹配的技能或操作</p> : null}
                         {installedMatches.map(skill => <button key={skill.skillId} type="button" className="agent-plus-search-result" onClick={() => setView("skills")}>
                             <Boxes size={16}/><span className="agent-control-option"><span>{skill.metadata.name}</span><small>{skill.metadata.description}</small></span><ChevronRight size={14}/></button>)}
-                    </div> : menu}
-                <p className="agent-control-panel-note">图片 ≤10 MB · TXT / MD ≤5 MB · PDF / DOCX ≤20 MB<br/>每次最多 10
-                    个，导入仅在本地解析。</p>
+                    </div> : <div className="agent-plus-list" role="menu">{[
+                        {key: "mode-smart"}, {key: "mode-conversation"}, {key: "divider"}, {key: "import"}, {key: "library"},
+                        ...(project ? [{key: "memory"}] : []), {key: "parameters"}, {key: "skills"}, {key: "mcp"},
+                    ].map(item => item.key === "divider" ? <hr key="divider" className="agent-plus-rule"/> : <button key={item.key} type="button" role="menuitem"
+                        aria-current={item.key === (interactionMode === "conversation" ? "mode-conversation" : "mode-smart") ? "true" : undefined}
+                        onClick={() => {
+                            const key = item.key;
+                            if (key === "mode-smart" || key === "mode-conversation") {
+                                onInteractionModeChange?.(key === "mode-smart" ? "smart" : "conversation");
+                                setOpen(false);
+                                return;
+                            }
+                            if (key === "mcp") {setView("mcp"); void mcp.owner?.refresh(); return;}
+                            if (key === "import" || key === "library") {
+                                setOpen(false);
+                                if (key === "import") onImport?.(); else onLibrary?.();
+                                return;
+                            }
+                            if (key === "memory") {openMemory(); return;}
+                            if (key === "skills" || key === "parameters") setView(key);
+                        }}>{item.key === "mode-smart" ? <><Sparkles size={14} className="agent-plus-tint is-smart"/>{plusRow("智能", "可调用已启用的工具和技能")}</>
+                        : item.key === "mode-conversation" ? <><MessagesSquare size={14} className="agent-plus-tint is-chat"/>{plusRow("对话", "只进行普通对话，不调用工具")}</>
+                        : item.key === "import" ? <><Upload size={14}/>{plusRow("文件")}</>
+                        : item.key === "library" ? <><FolderOpen size={14}/>{plusRow("项目资料")}</>
+                        : item.key === "memory" ? <><BookOpen size={14}/>{plusRow("项目记忆", undefined, true)}</>
+                        : item.key === "parameters" ? <><SlidersHorizontal size={14}/>{plusRow("对话参数", undefined, true)}</>
+                        : item.key === "skills" ? <><Boxes size={14}/>{plusRow("技能", `${enabledCount} 项已启用`, true)}</>
+                        : <><Plug size={14}/>{plusRow("MCP", undefined, true)}</>}</button>)}</div>}
             </div> : <div className="agent-control-panel agent-skill-panel">
-                <div className="agent-skill-heading">
-                    <button type="button" className="agent-skill-back" aria-label="返回更多选项"
-                            onClick={() => setView("home")}><ArrowLeft size={16}/>技能
-                    </button>
-                    <span>{enabledCount} 项已启用</span>
-                </div>
-                <div className="agent-skill-search"><Input variant="borderless" ref={searchInput}
-                                                           prefix={<Search size={14}/>} value={search}
-                                                           onChange={(event) => setSearch(event.target.value)}
-                                                           placeholder="搜索技能…" aria-label="搜索技能" allowClear/>
-                </div>
+                <PlusSheetToolbar onBack={backHome} search={search} onSearch={setSearch} searchRef={searchInput}
+                                  placeholder="搜索技能…" manage="管理" onManage={() => openSettings("skills")}/>
                 <div className="agent-skill-list">
-                    {skills.length > 0 && <p className="agent-installed-skills-heading">内置能力</p>}
                     {skills.map((skill) => <div className="agent-skill-row" key={skill.id}>
-                        <span
-                            className="agent-control-option"><span>{skill.name}</span><small>{skill.description}</small></span>
+                        <span className="agent-plus-copy"><strong>{skill.name}</strong><Hint text={skill.description}/></span>
                         <Switch size="small" checked={enabledSkills.includes(skill.id)} disabled={saving || !config}
                                 aria-label={skill.name} onChange={checked => void toggleSkill(skill.id, checked)}/>
                     </div>)}
-                    {installedMatches.length > 0 && <p className="agent-installed-skills-heading">已安装技能</p>}
                     {installedMatches.map(skill => <div className="agent-skill-row" key={skill.skillId}>
-                        <span className="agent-control-option"><span>{skill.metadata.name}</span><small>{skill.metadata.description}</small></span>
+                        <span className="agent-plus-copy"><strong>{skill.metadata.name}</strong><Hint text={skill.metadata.description}/></span>
                         <Switch size="small" checked={skill.enabled} disabled={saving || installed.blocked} aria-label={`启用 ${skill.metadata.name}`}
                             onChange={checked => void installed.toggle(skill, checked)}/>
                     </div>)}
                     {!skills.length && !installedMatches.length && <p className="agent-control-panel-note">没有匹配的技能</p>}
+                    {builtinError && <p className="agent-control-panel-note" role="alert">{builtinError}</p>}
+                    <InstalledSkillMutationNotice controller={installed}/>
                 </div>
-                {builtinError && <p className="agent-control-panel-note" role="alert">{builtinError}</p>}
-                <InstalledSkillMutationNotice controller={installed}/>
-                <button type="button" className="agent-skill-manage" onClick={() => openSettings("skills")}>管理技能<ChevronRight size={14}/></button>
-                <p className="agent-control-panel-note">对新执行生效，已开始的执行保留原设置。</p>
-            </div>}</div>}
-    >
+            </div>}</div>;
+    return <>
+        {open ? (sheetHost?.current ? createPortal(panel, sheetHost.current) : panel) : null}
         <Tooltip title="更多选项" open={open ? false : undefined} placement="top" getPopupContainer={popupRoot}
                  trigger={["hover", "focus"]}>
             <button ref={triggerRef} type="button" className="agent-chip agent-control agent-control-icon"
-                    aria-label="更多选项" aria-haspopup="menu" aria-expanded={open}><Plus size={18} aria-hidden/>
+                    aria-label="更多选项" aria-haspopup="menu" aria-expanded={open} onClick={toggle}><Plus size={18} aria-hidden/>
             </button>
         </Tooltip>
-    </Dropdown></>;
+    </>;
 }

@@ -1,58 +1,15 @@
-import {useProductQuery} from "../../../platform/product/queries";
-import {ArrowUpRight, CircleAlert} from "../../../ui/icons";
+import {ComposerCards} from "./ComposerCards";
+import {useComposerAttention} from "./composerAttention";
 import type {AgentTask} from "../models/agent";
-import {selectActivityAttention} from "../runtime/activityAttention";
-import {getTaskDisplayState} from "../runtime/taskState";
-import {useAgentActivityNavigation} from "./AgentActivityNavigation";
-import "./composerAttention.css";
 
+/** One decision at a time from the existing approval/confirmation queue. */
 export function AgentComposerAttention({threadId, task, projectUnavailable, onOpenTask}: {
     threadId: string;
     task?: AgentTask;
     projectUnavailable: boolean;
     onOpenTask: () => void;
 }) {
-    const {reveal} = useAgentActivityNavigation();
-    const state = useProductQuery(async (db) => {
-        try {
-            const [calls, batches, items, jobs, tasks, runs, messages] = await Promise.all([
-                db.agentToolCalls.where("threadId").equals(threadId).toArray(),
-                db.agentGenerationBatches.where("threadId").equals(threadId).toArray(),
-                db.agentGenerationBatchItems.where("threadId").equals(threadId).toArray(),
-                db.agentGenerationJobs.where("threadId").equals(threadId).toArray(),
-                db.agentTasks.where("threadId").equals(threadId).toArray(),
-                db.agentRuns.where("threadId").equals(threadId).toArray(),
-                db.chatMessages.where("threadId").equals(threadId).toArray(),
-            ]);
-            return {threadId, calls, batches, items, jobs, tasks, runs, messages};
-        } catch {
-            return {threadId, error: true as const};
-        }
-    }, [threadId]);
-    if (!state || state.threadId !== threadId) return null;
-    if ("error" in state) return <p className="agent-attention-read-error"
-                                    role="alert">待办读取失败，请刷新后检查执行记录。</p>;
-    const attention = selectActivityAttention({...state, projectUnavailable});
-    const taskReview = !projectUnavailable && task?.threadId === threadId && task.lifecycle === "open" && getTaskDisplayState(task, state.runs) === "review";
-    const count = attention.length + (taskReview ? 1 : 0);
-    if (!count) return null;
-    return <section className="agent-composer-attention" aria-label="待你处理">
-        <div className="agent-attention-heading" role="status"><CircleAlert size={14}
-                                                                            aria-hidden/><strong>需要你处理</strong>{count > 1 &&
-            <span>{count} 项</span>}</div>
-        <ul className="agent-attention-list">
-            {attention.map(item => <li key={item.id}>
-                <div className="agent-attention-copy"><strong>{item.label}</strong><span
-                    title={item.detail}>{item.detail}</span></div>
-                <button type="button" onClick={() => reveal(item.target)}
-                        aria-label={`${item.action}：${item.detail}`}>{item.action}<ArrowUpRight size={12} aria-hidden/>
-                </button>
-            </li>)}
-            {taskReview && <li>
-                <div className="agent-attention-copy"><strong>任务待你验收</strong><span
-                    title={task.title}>{task.title}</span></div>
-                <button type="button" onClick={onOpenTask}>查看并验收<ArrowUpRight size={12} aria-hidden/></button>
-            </li>}
-        </ul>
-    </section>;
+    const view = useComposerAttention({threadId, task, projectUnavailable, onOpenTask});
+    if (view.status === "loading") return null;
+    return <ComposerCards decisions={view.items} decisionError={view.status === "error"}/>;
 }

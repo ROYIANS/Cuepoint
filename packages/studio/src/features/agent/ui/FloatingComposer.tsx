@@ -12,17 +12,16 @@ import {
     Infinity as InfinityIcon,
     LayoutList,
     LoaderCircle,
-    MessagesSquare,
     Mic,
     Minimize2,
     RotateCcw,
-    Sparkles,
     X
 } from "../../../ui/icons";
-import {type ComponentRef, useEffect, useRef, useState} from "react";
+import {type ComponentRef, cloneElement, isValidElement, type ReactElement, useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
 import type {ChatSurfaceMode, ComposerProps} from "./composerTypes";
 import {ModelSelectTrigger, SendCircleButton} from "./ModelSelectTrigger";
+import {ComposerCardHost, ComposerSurface} from "./ComposerCards";
 import "./composerControls.css";
 
 function popupRoot(): HTMLElement {
@@ -94,47 +93,6 @@ function ModeSwitch({mode, onChange}: {
     );
 }
 
-function InteractionModeSwitch({mode, onChange}: {
-    mode: ComposerProps["interactionMode"];
-    onChange: ComposerProps["onInteractionModeChange"];
-}) {
-    const [open, setOpen] = useState(false);
-    const smart = mode === "smart";
-    return (
-        <Dropdown trigger={["click"]} placement="topLeft" getPopupContainer={popupRoot} open={open}
-                  onOpenChange={setOpen}
-                  menu={{
-                      className: "agent-composer-menu",
-                      selectedKeys: [mode],
-                      items: [
-                          {
-                              key: "smart",
-                              icon: <Sparkles size={16}/>,
-                              label: <span className="agent-control-option"><span>智能模式 {smart &&
-                                  <Check size={14}/>}</span><small>可调用已启用的工具和技能</small></span>
-                          },
-                          {
-                              key: "conversation",
-                              icon: <MessagesSquare size={16}/>,
-                              label: <span className="agent-control-option"><span>对话模式 {!smart &&
-                                  <Check size={14}/>}</span><small>仅进行普通对话，不调用工具</small></span>
-                          },
-                      ],
-                      onClick: ({key}) => {
-                          onChange(key as ComposerProps["interactionMode"]);
-                          setOpen(false);
-                      },
-                  }}
-        >
-            <button type="button" className="agent-chip agent-control" aria-label={smart ? "智能模式" : "对话模式"}
-                    aria-haspopup="menu" aria-expanded={open}>
-                {smart ? <Sparkles size={16} aria-hidden/> : <MessagesSquare size={16} aria-hidden/>}
-                <span>{smart ? "智能" : "对话"}</span><ChevronDown size={12} aria-hidden/>
-            </button>
-        </Dropdown>
-    );
-}
-
 /**
  * Floating composer — left Agent/任务, right model (with connector inside) + send.
  */
@@ -178,8 +136,8 @@ export function FloatingComposer({
                                      onInteractionModeChange,
                                      large,
                                      contextUsage,
-                                     status,
                                      notice,
+                                     attention,
                                      surface = "home",
                                      expanded = false,
                                      onExpandedChange,
@@ -190,6 +148,15 @@ export function FloatingComposer({
 }) {
     const canSend = (Boolean(value.trim()) || attachments.length > 0) && referenceImports.length === 0 && !blocked && !sending && !projectRequired && !modelPolicy.incompatibleModels.includes(model.trim());
     const [libraryOpen, setLibraryOpen] = useState(false);
+    const [plusOpen, setPlusOpen] = useState(false);
+    const sheetHost = useRef<HTMLDivElement>(null);
+    // One row until the draft needs more room: a newline, a long draft, or attachments.
+    const needsRows = value.includes("\n") || value.length > 72 || attachments.length > 0 || referenceImports.length > 0 || Boolean(modelWarning);
+    const [grown, setGrown] = useState(false);
+    useEffect(() => {
+        if (needsRows) setGrown(true);
+        else if (!value) setGrown(false);
+    }, [needsRows, value]);
     const [projectAction, setProjectAction] = useState<"import" | "library" | File[]>();
     const fileInput = useRef<HTMLInputElement>(null);
     const [dragging, setDragging] = useState(false);
@@ -244,6 +211,7 @@ export function FloatingComposer({
     const speechRef = useRef<SpeechRecognitionLike | null>(null);
     const speechBaseRef = useRef("");
     const detail = surface === "detail";
+    const inline = detail && !expanded && !needsRows && !grown;
 
     useEffect(() => {
         if (!expanded) return;
@@ -313,32 +281,51 @@ export function FloatingComposer({
     };
 
     return (
-        <div className={`agent-composer-stack${expanded ? " is-expanded" : ""}`}>
-            {notice ? <div className="agent-composer-notice-slot">{notice}</div> : null}
-            {status ? <div className="agent-composer-status">{status}</div> : null}
-            <div className={`agent-composer agent-composer-refined${dragging ? " reference-dragging" : ""}`}
-                 onDragOver={(event) => {
+        <ComposerSurface
+            stackClassName={[expanded ? "is-expanded" : "", plusOpen ? "is-plus-open" : ""].filter(Boolean).join(" ") || undefined}
+            above={<><div ref={sheetHost} className="agent-composer-sheets"/><ComposerCardHost notice={notice} attention={attention}/></>}
+            frameClassName={`agent-composer agent-composer-refined${dragging ? " reference-dragging" : ""}${inline ? " is-inline" : ""}`}
+            frameProps={{
+                 onDragOver: (event) => {
                      if (event.dataTransfer.types.includes("Files")) {
                          event.preventDefault();
                          setDragging(true);
                      }
-                 }}
-                 onDragLeave={(event) => {
+                 },
+                 onDragLeave: (event) => {
                      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDragging(false);
-                 }}
-                 onDrop={(event) => {
+                 },
+                 onDrop: (event) => {
                      if (!event.dataTransfer.types.includes("Files")) return;
                      event.preventDefault();
                      setDragging(false);
                      filesSelected(Array.from(event.dataTransfer.files));
-                 }}
-                 onPaste={(event) => {
+                 },
+                 onPaste: (event) => {
                      const images = Array.from(event.clipboardData.items).filter((item) => item.kind === "file" && item.type.startsWith("image/")).map((item) => item.getAsFile()).filter((file): file is File => !!file);
                      if (images.length) {
                          if (!event.clipboardData.getData("text/plain")) event.preventDefault();
                          filesSelected(images);
                      }
-                 }}>
+                 },
+            }}
+            after={<>
+            {detail ? <div className="agent-composer-controlbar">
+                <div className="agent-composer-cluster agent-composer-permissions"><AgentControls/>{isValidElement(contextUsage) ? cloneElement(contextUsage as ReactElement<{sheetHost?: typeof sheetHost}>, {sheetHost}) : contextUsage}</div>
+            </div> : null}
+            {projectId &&
+                <ReferenceLibrary key={scope} projectId={projectId} open={libraryOpen} onOpenChange={setLibraryOpen}
+                                  selected={attachments} onSelect={(attachment) => onAttachReference?.(attachment)}
+                                  onImport={() => fileInput.current?.click()}/>}
+            <Dialog open={!!projectAction && !projectId} onOpenChange={(open) => {
+                if (!open) setProjectAction(undefined);
+            }}><DialogContent
+                className="reference-dialog reference-project-dialog"><DialogHeader><DialogTitle>先为资料选择项目</DialogTitle><DialogDescription>{projectLocked ? "当前对话未绑定项目且已开始，请新开一个项目对话导入资料。" : "资料保存在所选项目中；你的消息草稿会保留。"}</DialogDescription></DialogHeader><ProjectPicker
+                projects={projects} projectId={projectId} locked={projectLocked} allowClear={false}
+                onChange={onProjectChange}/><p className="reference-note">支持 JPEG / PNG / WebP（10 MB）、TXT / MD（5
+                MB）、PDF / DOCX（20 MB），每次最多 10 个文件。导入仅在本地解析。</p></DialogContent></Dialog>
+            </>}
+        >
                 <input ref={fileInput} type="file" accept={REFERENCE_ACCEPT} multiple hidden onChange={(event) => {
                     filesSelected(Array.from(event.target.files ?? []));
                     event.target.value = "";
@@ -354,8 +341,6 @@ export function FloatingComposer({
                         <button type="button" aria-label={`取消附件 ${job.filename}`}
                                 onClick={() => onCancelReferenceImport?.(job.id)}><X size={14}/></button>
                     </div>)}</div>}
-                {attachments.length > 0 &&
-                    <p className="reference-send-note">发送后，所选图片及文档提取文字将分享给当前模型；超长内容按上下文预算读取。</p>}
                 {dragging && <div className="reference-drop-hint">松开以导入参考资料</div>}
                 <Input.TextArea
                     ref={inputRef}
@@ -363,7 +348,7 @@ export function FloatingComposer({
                     value={value}
                     variant="borderless"
                     placeholder={blocked ? blockedReason ?? "重新打开任务后可继续对话" : projectRequired ? "先选择项目，再描述你想完成的事…" : surface === "home" && chatMode === "task" ? "描述你想完成的事，与助手一起明确需求…" : "提问、创建内容或启动任务"}
-                    autoSize={expanded ? false : {minRows: large ? 3 : 2, maxRows: 10}}
+                    autoSize={expanded ? false : {minRows: inline ? 1 : large ? 3 : 2, maxRows: 10}}
                     className="agent-composer-input"
                     aria-label="消息内容"
                     onChange={(event) => onChange(event.target.value)}
@@ -395,15 +380,18 @@ export function FloatingComposer({
                 }}>{modelWarning}</div> : null}
                 <div className="agent-composer-footer">
                     <div className="agent-composer-cluster">
-                        <div className="agent-composer-scope"><ProjectPicker projects={projects} projectId={projectId}
+                        {!detail && <div className="agent-composer-scope"><ProjectPicker projects={projects} projectId={projectId}
                                                                              required={projectRequired}
                                                                              locked={projectLocked}
                                                                              onChange={onProjectChange}/>
-                            {!detail && <ModeSwitch mode={chatMode} onChange={onChatModeChange}/>}</div>
+                            <ModeSwitch mode={chatMode} onChange={onChatModeChange}/></div>}
                         <ComposerPlusMenu threadId={threadId} projectId={projectId}
+                                          interactionMode={interactionMode}
+                                          onInteractionModeChange={onInteractionModeChange}
                                           onImport={() => openReferenceAction("import")}
-                                          onLibrary={() => openReferenceAction("library")}/>
-                        {detail ? <button type="button" className="agent-chip agent-control agent-control-icon"
+                                          onLibrary={() => openReferenceAction("library")}
+                                          sheetHost={sheetHost} onOpenChange={setPlusOpen}/>
+                        {detail && !inline ? <button type="button" className="agent-chip agent-control agent-control-icon"
                                           aria-label={expanded ? "退出全屏编辑" : "展开编辑器"}
                                           aria-expanded={expanded}
                                           onClick={() => onExpandedChange?.(!expanded)}>
@@ -474,24 +462,6 @@ export function FloatingComposer({
                         </div>
                     </div>
                 </div>
-            </div>
-            {detail ? <div className="agent-composer-controlbar">
-                <div className="agent-composer-cluster">
-                    <InteractionModeSwitch mode={interactionMode} onChange={onInteractionModeChange}/>
-                </div>
-                <div className="agent-composer-cluster agent-composer-permissions"><AgentControls/>{contextUsage}</div>
-            </div> : null}
-            {projectId &&
-                <ReferenceLibrary key={scope} projectId={projectId} open={libraryOpen} onOpenChange={setLibraryOpen}
-                                  selected={attachments} onSelect={(attachment) => onAttachReference?.(attachment)}
-                                  onImport={() => fileInput.current?.click()}/>}
-            <Dialog open={!!projectAction && !projectId} onOpenChange={(open) => {
-                if (!open) setProjectAction(undefined);
-            }}><DialogContent
-                className="reference-dialog reference-project-dialog"><DialogHeader><DialogTitle>先为资料选择项目</DialogTitle><DialogDescription>{projectLocked ? "当前对话未绑定项目且已开始，请新开一个项目对话导入资料。" : "资料保存在所选项目中；你的消息草稿会保留。"}</DialogDescription></DialogHeader><ProjectPicker
-                projects={projects} projectId={projectId} locked={projectLocked} allowClear={false}
-                onChange={onProjectChange}/><p className="reference-note">支持 JPEG / PNG / WebP（10 MB）、TXT / MD（5
-                MB）、PDF / DOCX（20 MB），每次最多 10 个文件。导入仅在本地解析。</p></DialogContent></Dialog>
-        </div>
+        </ComposerSurface>
     );
 }

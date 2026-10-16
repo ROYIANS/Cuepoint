@@ -147,15 +147,116 @@
     min-width: 0;
 }
 
-.agent-chat-root .agent-composer-status {
-    margin: 0 8px -8px;
-    padding: 8px 12px 16px !important;
+.agent-chat-root .agent-composer-sheets:empty {
+    display: none;
+}
+
+.agent-chat-root .agent-composer-sheets {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+}
+
+.agent-chat-root .agent-composer-sheet {
+    width: 100%;
+    box-sizing: border-box;
     border: 1px solid var(--border);
-    border-bottom: none;
-    border-radius: 12px 12px 0 0;
-    background: var(--surface-panel);
+    border-radius: 14px;
+    background: var(--surface-elevated);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 18%);
+}
+
+.agent-chat-root .agent-context-sheet {
+    order: 0;
+    padding: 14px 16px;
+}
+
+.agent-chat-root .agent-plus-sheet {
+    order: 1;
+    padding: 6px 4px 8px;
+}
+
+.agent-chat-root .agent-plus-sheet .agent-control-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: min(420px, 62dvh);
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.agent-chat-root .agent-plus-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.agent-chat-root .agent-plus-list button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 30px;
+    padding: 3px 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--foreground);
+    font-size: 13px;
+    text-align: start;
+    cursor: pointer;
+}
+
+.agent-chat-root .agent-plus-list button:hover {
+    background: rgb(255 255 255 / 5%);
+}
+
+.agent-chat-root .agent-plus-rule {
+    height: 1px;
+    margin: 4px 10px;
+    border: 0;
+    background: var(--border);
+}
+
+.agent-chat-root .agent-plus-hint {
+    display: inline-flex;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: var(--muted-foreground);
-    font-size: 12px;
+    cursor: help;
+}
+
+.agent-chat-root .agent-plus-tint.is-smart { color: #d4a017; }
+.agent-chat-root .agent-plus-tint.is-chat { color: #3f9d72; }
+
+/* Opening the plus sheet hides the kind pills so the sheet sits directly on the composer. */
+.agent-chat-root .agent-composer-stack.is-plus-open .agent-composer-card-pills {
+    display: none;
+}
+
+.agent-chat-root .agent-composer-sheets {
+    margin-bottom: 8px;
+}
+
+.agent-chat-root .agent-composer-sheets:empty {
+    margin-bottom: 0;
+}
+
+.agent-chat-root .agent-context-sheet .agent-context-panel {
+    width: 100%;
+}
+
+.agent-chat-root .agent-plus-sheet .agent-skill-search .ant-input,
+.agent-chat-root .agent-plus-sheet .agent-skill-search .ant-input-affix-wrapper,
+.agent-chat-root .agent-plus-sheet .agent-skill-search .ant-input:focus {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
 }
 
 .agent-chat-root .agent-composer-controlbar {
@@ -283,17 +384,63 @@
 .agent-chat-root .agent-plus-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    min-height: 20px;
+    gap: 8px;
+    min-width: 0;
+    min-height: 22px;
 }
 
-.agent-chat-root .agent-plus-row > span {
+.agent-chat-root .agent-plus-copy {
     display: flex;
+    flex: 1 1 auto;
+    align-items: baseline;
     gap: 8px;
-    align-items: center;
+    min-width: 0;
+}
+
+.agent-chat-root .agent-plus-copy strong {
+    flex: none;
+    font-weight: 500;
+}
+
+.agent-chat-root .agent-plus-copy small {
+    min-width: 0;
+    overflow: hidden;
     color: var(--muted-foreground);
     font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.agent-chat-root .agent-sheet-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: none;
+    min-width: 0;
+    padding: 2px 6px 4px !important;
+}
+
+.agent-chat-root .agent-sheet-toolbar .agent-skill-search {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0 !important;
+}
+
+.agent-chat-root .agent-sheet-manage {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px !important;
+    border: 0;
+    background: transparent;
+    color: var(--muted-foreground);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.agent-chat-root .agent-sheet-manage:hover {
+    color: var(--foreground);
 }
 
 .agent-chat-root .agent-skill-heading {
@@ -308,8 +455,11 @@
 .agent-chat-root .agent-skill-back {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 4px !important;
+    justify-content: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    padding: 0 !important;
     border: none;
     border-radius: 6px;
     background: transparent;
@@ -331,17 +481,24 @@
     overflow-y: auto;
 }
 
+.agent-chat-root .agent-plus-sheet .agent-skill-list,
+.agent-chat-root .agent-plus-sheet .agent-parameter-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+    overflow-y: auto;
+}
+
 .agent-chat-root .agent-skill-row {
     display: flex;
     gap: 16px;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    padding: 10px 12px !important;
+    padding: 6px 10px !important;
 }
 
 .agent-chat-root .agent-skill-row .ant-switch {
     flex: none;
-    margin-top: 2px;
 }
 
 @media (max-width: 380px) {
@@ -354,6 +511,10 @@
 .agent-chat-root .agent-model-settings-anchor {
     min-width: 0;
     display: inline-flex;
+}
+
+.agent-chat-root .agent-model-chip {
+    max-width: min(420px, 46vw);
 }
 
 .agent-chat-root .agent-model-setting-label {
@@ -654,4 +815,55 @@
     .agent-chat-root .agent-composer-footer .agent-model-settings-anchor {
         flex: 0 1 auto;
     }
+}
+
+.agent-chat-root .agent-plus-sheet .agent-control-panel.agent-parameters {
+    width: 100%;
+    max-height: min(420px, 62dvh);
+    overflow: hidden;
+}
+
+
+/* Composer shape: one pill row while the draft is short, a 20px card once it grows. */
+.agent-chat-root .agent-composer-stack .agent-control-icon,
+.agent-chat-root .agent-composer-stack .agent-send-menu-trigger {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.agent-chat-root .agent-composer-stack .agent-composer-send-group .agent-send-menu-trigger {
+    width: 22px;
+}
+
+.agent-chat-root .agent-composer.is-inline {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px !important;
+    border-radius: 999px;
+}
+
+.agent-chat-root .agent-composer.is-inline .agent-composer-footer,
+.agent-chat-root .agent-composer.is-inline .agent-composer-cluster {
+    display: contents;
+}
+
+.agent-chat-root .agent-composer.is-inline .agent-composer-cluster > * {
+    order: 0;
+}
+
+.agent-chat-root .agent-composer.is-inline .agent-composer-cluster-right > * {
+    order: 2;
+}
+
+.agent-chat-root .agent-composer.is-inline textarea.agent-composer-input {
+    flex: 1 1 auto;
+    order: 1;
+    min-width: 0;
+    height: 24px !important;
+    padding: 0 6px !important;
+    line-height: 24px;
+    overflow: hidden;
 }

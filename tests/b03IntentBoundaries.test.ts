@@ -29,7 +29,7 @@ vi.mock("@/platform/product/queries", () => {
     const read = () => {const host = runtime.active!; return host.results[host.queryIndex++];};
     return {useProductQuery: read, useProductQueryState: () => ({value: read(), error: null})};
 });
-vi.mock("antd", () => ({Switch: () => null, InputNumber: () => null}));
+vi.mock("antd", () => ({Switch: () => null, InputNumber: () => null, Input: () => null}));
 vi.mock("@tanstack/react-router", () => ({Link: () => null, useBlocker: () => ({status: "idle"})}));
 vi.mock("@dnd-kit/core", () => ({DndContext: () => null, PointerSensor: {}, KeyboardSensor: {}, closestCenter: {}, useSensor: vi.fn(), useSensors: () => []}));
 vi.mock("@dnd-kit/sortable", () => ({SortableContext: () => null, sortableKeyboardCoordinates: {}, verticalListSortingStrategy: {}, useSortable: () => ({setNodeRef: vi.fn()})}));

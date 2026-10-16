@@ -1,11 +1,13 @@
 import type {KeyboardEvent} from "react";
 import {CircleAlert, X} from "../../../ui/icons";
 import type {TurnProblem, TurnProblemActionKind} from "../models/turnProblem";
+import "./composerCards.css";
 import "./composerNotice.css";
 
 /**
- * The single bubble for an unsent / interrupted / failed / stopped turn, attached above the composer.
- * Short reason left, one primary action right, close. Approvals and confirmations stay in their own queue.
+ * The single problem card for an unsent / interrupted / failed / stopped turn.
+ * It sits above the composer as its own surface: short reason, one primary action, close.
+ * Approvals and confirmations stay on their own decision card.
  */
 export function ComposerNotice({problem, busy, onAction, onDismiss}: {
     problem: TurnProblem;
@@ -19,8 +21,8 @@ export function ComposerNotice({problem, busy, onAction, onDismiss}: {
         event.stopPropagation();
         onDismiss(problem);
     };
-    return <div className="agent-composer-notice" data-kind={problem.kind} role={urgent && !problem.pending ? "alert" : "status"}
-                onKeyDown={close}>
+    return <div className="agent-composer-card agent-composer-notice" id="agent-composer-card-problem" data-kind={problem.kind}
+                role={urgent && !problem.pending ? "alert" : "status"} onKeyDown={close}>
         <CircleAlert size={14} aria-hidden/>
         <span className="agent-composer-notice-reason" title={problem.detail}>{problem.reason}</span>
         {problem.secondary && <button type="button" className="agent-composer-notice-secondary" disabled={busy}

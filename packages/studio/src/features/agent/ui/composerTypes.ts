@@ -1,7 +1,7 @@
 import type {ReferenceAttachment} from "../../references/models/references";
 import type {ReferenceImportDraft} from "../models/chatDraft";
 import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
-import type {AgentInteractionMode, AgentReasoningEffort} from "../models/agent";
+import type {AgentInteractionMode, AgentReasoningEffort, AgentTask} from "../models/agent";
 import type {ReactNode} from "react";
 import type {ConnectorConfig} from "../../settings/models/connector";
 import type {Id} from "../../../platform/identity";
@@ -52,7 +52,13 @@ export type ComposerProps = {
     onInteractionModeChange: (mode: AgentInteractionMode) => void;
     large?: boolean;
     contextUsage?: ReactNode;
-    status?: ReactNode;
-    /** The single turn-problem bubble, attached above the approval queue. */
+    /** Problem card, rendered above the composer frame. */
     notice?: ReactNode;
+    /** Approval/confirmation queue for the decision card. Omitted on the home composer. */
+    attention?: {
+        threadId: string;
+        task?: AgentTask;
+        projectUnavailable: boolean;
+        onOpenTask: () => void;
+    };
 };

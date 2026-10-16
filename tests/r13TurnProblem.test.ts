@@ -6,6 +6,7 @@ import {createRoot, type Root} from "react-dom/client";
 import {deriveTurnProblem, describeProblemReason, type TurnProblem} from "@/features/agent/models/turnProblem";
 import type {ChatSubmissionAttempt} from "@/features/agent/models/chatSubmissionAttempt";
 import {ComposerNotice} from "@/features/agent/ui/ComposerNotice";
+import {ComposerCards, ComposerSurface} from "@/features/agent/ui/ComposerCards";
 
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -99,5 +100,38 @@ describe("ComposerNotice", () => {
     it("disables actions while the owner is busy", async () => {
         await act(async () => root.render(h(ComposerNotice, {problem: problem(), busy: true, onAction: vi.fn(), onDismiss: vi.fn()})));
         expect(container.querySelector<HTMLButtonElement>(".agent-composer-notice-action")?.disabled).toBe(true);
+    });
+    it("keeps the notice outside the composer frame, above it", async () => {
+        const item = problem();
+        await act(async () => root.render(h("div", {className: "agent-chat-root"}, h(ComposerSurface, {
+            frameClassName: "agent-composer",
+            above: h(ComposerCards, {
+                decisions: [], problem: h(ComposerNotice, {problem: item, busy: false, onAction: vi.fn(), onDismiss: vi.fn()}),
+                problemId: item.id, problemLabel: item.reason,
+            }),
+        }, h("textarea", {"aria-label": "消息内容"})))));
+        const frame = container.querySelector(".agent-composer")!;
+        const notice = container.querySelector(".agent-composer-notice")!;
+        expect(frame.contains(notice)).toBe(false);
+        expect(notice.compareDocumentPosition(frame) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+        expect(notice.closest(".agent-composer-stack")?.firstElementChild?.contains(notice)).toBe(true);
+        expect(notice.textContent).not.toContain("需要你处理");
+        expect(notice.textContent).not.toContain("进度已保存");
+    });
+    it("shows one card and kind pills when a decision and a problem both exist", async () => {
+        const item = problem({reason: "消息未发送", kind: "unsent", action: {kind: "retry-send", label: "重试"}});
+        await act(async () => root.render(h(ComposerCards, {
+            decisions: [{id: "d1", title: "待批准", detail: "修改镜头", action: "查看", onAction: vi.fn()}],
+            problem: h(ComposerNotice, {problem: item, busy: false, onAction: vi.fn(), onDismiss: vi.fn()}),
+            problemId: item.id, problemLabel: item.reason,
+        })));
+        expect(container.querySelectorAll(".agent-composer-card, .agent-composer-notice")).toHaveLength(1);
+        expect(container.querySelector(".agent-composer-notice")).not.toBeNull();
+        expect(container.textContent).not.toContain("个进行中");
+        const pills = [...container.querySelectorAll<HTMLButtonElement>("[role=tab]")];
+        expect(pills.map(pill => pill.textContent)).toEqual(["待批准", "消息未发送"]);
+        await act(async () => pills[0].click());
+        expect(container.querySelector(".agent-composer-card-action")?.textContent).toBe("查看");
+        expect(container.querySelector(".agent-composer-notice")).toBeNull();
     });
 });

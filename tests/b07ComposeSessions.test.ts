@@ -213,13 +213,13 @@ describe("B07 actual compose callbacks", () => {
         expect(ui.composer().attachments).toEqual([{referenceId: "refA", revision: 1}]);
         ui.select("B"); expect(ui.composer().value).toBe("draft B");
     });
-    it("failed new-topic creation preserves unsent old text and references", async () => {
+    it("new topic returns home without creating a thread and keeps the previous draft", async () => {
         const ui = page("A"); ui.type("unsent"); ui.attach("refA");
-        io.create.mockRejectedValue(new Error("creation failed"));
         (ui.surface().props.onNewTopic as () => void)(); await settle();
-        expect(ui.composer().value).toBe("unsent"); expect(ui.composer().attachments).toHaveLength(1);
-        // Creation failures go through showError: a friendly title plus the 查看详情 action, never swallowed.
-        expect(toast.error).toHaveBeenCalledWith("创建对话失败", expect.objectContaining({action: expect.objectContaining({label: "查看详情"})}));
+        expect(io.create).not.toHaveBeenCalled();
+        expect(io.navigate).toHaveBeenCalledWith({to: "/agent"});
+        expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
+        ui.select("A"); expect(ui.composer().value).toBe("unsent"); expect(ui.composer().attachments).toHaveLength(1);
     });
     it("a late begin cannot clear edited-then-reverted text", async () => {
         const ui = page("A"); ui.type("same"); const gate = deferred<{id: string}>(); io.begin.mockReturnValue(gate.promise);
@@ -399,11 +399,14 @@ describe("B07 first send and ownership boundaries", () => {
         expect(ui.owned().map(attempt => attempt.submitted.text)).toEqual(["something else"]);
         expect(ui.problem()).toBeUndefined();
     });
-    it("new topic success preserves old unsent draft and new topic starts empty", async () => {
-        const ui = page("A"); ui.type("old unsent"); ui.attach("refA"); const created = thread("new-topic"); ui.threads.push(created);
-        io.create.mockResolvedValue(created); (ui.surface().props.onNewTopic as () => void)(); await settle();
-        expect(ui.composer().value).toBe(""); expect(ui.composer().attachments).toEqual([]);
-        ui.select("A"); expect(ui.composer().value).toBe("old unsent"); expect(ui.composer().attachments).toHaveLength(1);
+    it("a project shortcut opens the home composer with that project selected", async () => {
+        const ui = page("A"); ui.type("old unsent");
+        (ui.surface().props.onNewTopicInProject as (id: string) => void)("p"); await settle();
+        expect(io.create).not.toHaveBeenCalled();
+        expect(io.navigate).toHaveBeenCalledWith({to: "/agent"});
+        expect(ui.composer().projectId).toBe("p");
+        expect(ui.composer().value).toBe("");
+        ui.select("A"); expect(ui.composer().value).toBe("old unsent");
     });
     it("home project selection keeps independent text and attachments", async () => {
         const ui = page(); ui.composer().onProjectChange("p"); ui.type("project p"); ui.attach("p-ref");
@@ -456,7 +459,7 @@ describe("B07 first send and ownership boundaries", () => {
 });
 
 describe("E03 owned execution feedback", () => {
-    // Run status closes the message stream (turn footer); the composer strip only holds the attached queue.
+    // Run status closes the message stream (turn footer). The fused composer strip is gone.
     const statusText = (ui: ReturnType<typeof page>) => nodes(ui.turnStatus()).flatMap(node =>
         typeof node.props.children === "string" ? [node.props.children] :
             Array.isArray(node.props.children) ? node.props.children.filter(child => typeof child === "string") : []).join(" ");
@@ -479,8 +482,8 @@ describe("E03 owned execution feedback", () => {
         stop(); stop();
         expect(ui.composer()).toMatchObject({sending: true, stopping: true});
         expect(statusText(ui)).toContain("正在停止…");
-        // Stop is the send button; the composer strip carries no run status.
-        expect(nodes(ui.composer().status).some(node => node.type === "button")).toBe(false);
+        // Stop is the send button. The fused status strip is gone; run status stays in the turn.
+        expect(ui.composer()).not.toHaveProperty("status");
         expect(statusText(ui).match(/正在停止…/g)).toHaveLength(1);
         ui.type("next draft"); await ui.send();
         expect(io.compatible).toHaveBeenCalledTimes(1); expect(ui.attempts()).toHaveLength(1);

@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Studio quality gate"}
+{"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "No leftover status copy"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Tests and ownership"}
+{"file": ".trellis/tasks/10-16-composer-chat-copy/prd.md", "reason": "Acceptance criteria"}

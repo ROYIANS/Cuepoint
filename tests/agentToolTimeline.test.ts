@@ -253,9 +253,29 @@ describe("composer attention", () => {
             })));
         });
         expect(text()).toContain("待批准");
+        expect(text()).not.toContain("需要你处理");
+        expect(text()).not.toContain("进度已保存");
         expect(buttons("批准")).toHaveLength(0);
         expect(buttons("拒绝")).toHaveLength(0);
-        await act(async () => container.querySelector<HTMLButtonElement>(".agent-attention-list button")!.click());
+        expect(buttons("允许")).toHaveLength(0);
+        await act(async () => container.querySelector<HTMLButtonElement>(".agent-composer-card-action")!.click());
         expect(seen).toMatchObject({runId: "r1", callId: "c1"});
+    });
+
+    it("shows one decision at a time", async () => {
+        attentionCalls = [
+            call("c1", {status: "awaiting_approval", effect: "write", name: "shot_update", title: "修改镜头"}),
+            call("c2", {status: "awaiting_approval", effect: "write", name: "shot_update", title: "修改角色"}),
+        ];
+        await act(async () => {
+            root.render(h(AgentActivityNavigationProvider, {threadId: "t1"}, h(AgentComposerAttention, {
+                threadId: "t1", projectUnavailable: false, onOpenTask: vi.fn(),
+            })));
+        });
+        expect(container.querySelectorAll(".agent-composer-card")).toHaveLength(1);
+        expect(container.querySelectorAll(".agent-composer-card-action")).toHaveLength(1);
+        expect(text()).toContain("修改镜头");
+        expect(text()).not.toContain("修改角色");
+        expect(text()).not.toContain("需要你处理");
     });
 });

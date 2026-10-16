@@ -5,9 +5,9 @@
 .agent-chat-root .agent-composer {
     box-sizing: border-box;
     overflow: visible;
-    padding: 16px 16px 12px !important;
+    padding: 14px 16px 10px !important;
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 20px;
     background: var(--surface-panel);
 }
 
@@ -187,6 +187,7 @@
 
 .agent-chat-root .agent-effort-segments {
     display: flex;
+    flex-wrap: wrap;
     gap: 2px;
     padding: 2px;
     border-radius: 8px;

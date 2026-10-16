@@ -55,3 +55,21 @@ Introduce `--text-secondary`/size tokens for tool rows (about 12-13px vs body 14
 - Model: `turnProblem = {kind: 'unsent'|'interrupted'|'failed'|'stopped', reason, action}` derived from the E02 submission attempt state and the run outcome; one per thread, latest wins; `dismissed` stored per problem id in memory (not persisted).
 - Component: `ComposerNotice` (icon, one-line reason, primary button, close) rendered at the top of the composer card attachment area, below it the approval/confirmation queue stays a separate list. Replaces `turnStatus` error row, SubmissionMessage inline text, the corner error text and the 'needs attention: interrupted' card.
 - Actions map to existing behaviours: unsent -> retry (admission re-read as in E02), interrupted -> continue (existing continuation), failed -> retry/regenerate. 'Restore draft' disappears: the unsent text is back in the composer.
+
+## Composer cards (owner, 2026-10-16)
+
+Replaces the fused status bar (`ours-composer-notice.png`). Target: `cursor-agents-card.png`, `cursor-canvas-card.png`.
+
+The composer box holds only the draft, attachments, and footer controls. A decision, a result, or a failure is a separate card 8px above it: own radius, own surface, own shadow, one close control. At most one card is visible. When two or more card kinds exist, a row of small pills sits between the card and the composer. With nothing to show, the area above the composer is empty. Running work stays in the sidebar and the stop button.
+
+| Kind | Header | Body | Action |
+| --- | --- | --- | --- |
+| Decision | the action name, e.g. tool approval | one muted line naming the target | one button: 允许 or 查看 |
+| Result | the artifact title | two muted lines of preview | 打开, bottom right |
+| Problem | none | one short reason | 重试 or 继续 |
+
+No "needs attention", "progress saved", or stacked banners. Pending approvals stay a decision card, not mixed into the problem card.
+
+## Plus secondary sheets
+
+Skills / MCP / parameters share one toolbar (back + search + optional 管理 link). No titles. One inner scroller. Remaining composer/chat copy lives in child `10-16-composer-chat-copy`.

@@ -9,7 +9,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding: 17px 16px;
+    padding: 10px 12px;
 }
 
 .agent-parameter-row label {
@@ -251,7 +251,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 8px;
 }
 
 .agent-chat-root .agent-context-footer-note {
@@ -261,17 +261,33 @@
     font-variant-numeric: tabular-nums;
 }
 
-.agent-chat-root .agent-context-footer button {
+.agent-chat-root .agent-context-footer-actions {
+    display: inline-flex;
     flex: none;
-    padding: 4px 12px !important;
-    border-radius: 8px;
-    background: var(--accent);
-    color: var(--foreground);
-    font-size: 13px;
+    gap: 2px;
+}
+
+.agent-chat-root .agent-context-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0 !important;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted-foreground);
     cursor: pointer;
 }
 
-.agent-chat-root .agent-context-footer button:disabled {
+.agent-chat-root .agent-context-icon-button:hover,
+.agent-chat-root .agent-context-icon-button[aria-expanded="true"] {
+    background: rgb(255 255 255 / 7%);
+    color: var(--foreground);
+}
+
+.agent-chat-root .agent-context-icon-button:disabled {
     opacity: 0.5;
     cursor: default;
 }

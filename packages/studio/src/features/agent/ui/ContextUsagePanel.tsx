@@ -18,13 +18,15 @@ import {continuationExtraTokens} from "../runtime/contextCompaction";
 import type {ChatModelMetadata} from "../../settings/models/modelMetadata";
 import type {ContextCompaction} from "../models/context";
 import type {ConnectorConfig} from "../../settings/models/connector";
-import {useEffect, useMemo, useState, useSyncExternalStore} from "react";
+import {createPortal} from "react-dom";
+import {type RefObject, useEffect, useMemo, useRef, useState, useSyncExternalStore} from "react";
 import {contextPreviewIdentity, prepareAgentContextPreview, readPreparedAgentContextPreview, type ContextPreviewRead} from "../commands/agentContextPreview";
 import {useProductQuery} from "../../../platform/product/queries";
 import * as Popover from "@radix-ui/react-popover";
 import {mcpRuntimeOwner} from "../mcp/runtime/owner";
 import {estimateContextUsage, formatTokenCount, summarizeContextRows,} from "../runtime/contextUsage";
 import {popupCollisionPadding} from "../../../ui/popupCollision";
+import {Info, Minimize2, X} from "../../../ui/icons";
 
 const EMPTY_ATTACHMENTS: ReferenceAttachment[] = [];
 
@@ -193,7 +195,9 @@ function useContextUsage(props: ContextProps) {
 }
 
 /** One footer action: compress now, with progress, Cancel and a one-line request-level result. */
-export function CompactAction({threadId, connector, model, modelMetadata, reasoningEffort, blocked, lastRecord}: {
+export function CompactAction({threadId, connector, model, modelMetadata, reasoningEffort, blocked, lastRecord, detailsOpen, onToggleDetails}: {
+    detailsOpen?: boolean;
+    onToggleDetails?: () => void;
     threadId?: string;
     connector?: ConnectorConfig;
     model: string;
@@ -232,9 +236,15 @@ export function CompactAction({threadId, connector, model, modelMetadata, reason
         <div className="agent-context-footer-row">
             <span className="agent-context-footer-note" role={compacting || result ? "status" : undefined}
                   title={result ? "压缩前后的请求大小（估算）" : undefined}>{note}</span>
-            {compacting
-                ? <button type="button" onClick={stop} disabled={execution?.stopping}>{execution?.stopping ? "正在取消…" : "取消"}</button>
-                : <button type="button" onClick={start} disabled={!!reason} title={reason}>压缩</button>}
+            <span className="agent-context-footer-actions">
+                {compacting
+                    ? <button type="button" className="agent-context-icon-button" onClick={stop} disabled={execution?.stopping}
+                              aria-label={execution?.stopping ? "正在取消…" : "取消压缩"} title={execution?.stopping ? "正在取消…" : "取消压缩"}><X size={14} aria-hidden/></button>
+                    : <button type="button" className="agent-context-icon-button" onClick={start} disabled={!!reason}
+                              aria-label="压缩上下文" title={reason ?? "压缩上下文"}><Minimize2 size={14} aria-hidden/></button>}
+                {onToggleDetails ? <button type="button" className="agent-context-icon-button" onClick={onToggleDetails}
+                                           aria-label="详情" aria-expanded={detailsOpen} title="详情"><Info size={14} aria-hidden/></button> : null}
+            </span>
         </div>
         {message && !compacting && <p role="alert">{message}</p>}
     </div>;
@@ -256,8 +266,7 @@ function ContextDetails({snapshot, onMemoryOpen}: {
     onMemoryOpen?: () => void;
 }) {
     const {activeRun, capacity, source, policy, budget, selectedCount, lastRecord, projectContext, memorySelection, selectedReferences, toolCount} = snapshot;
-    return <details className="agent-context-details">
-        <summary>详情</summary>
+    return <div className="agent-context-details">
         <div className="agent-context-details-body">
             <p>{activeRun ? "当前执行的已保存上下文" : "下次发送，包含当前草稿"} · {toolCount} 个工具</p>
             <p>{policy.limitHistory ? `历史上限 ${policy.historyMessageCount} 条` : "历史不限条数"} · 已选 {selectedCount} 条</p>
@@ -268,7 +277,7 @@ function ContextDetails({snapshot, onMemoryOpen}: {
             {selectedReferences && <p>参考资料 {selectedReferences.references.length} 份，仅含本次准备的范围</p>}
             {lastRecord && <ContextCompactionDetails record={lastRecord}/>}
         </div>
-    </details>;
+    </div>;
 }
 
 export function ContextUsagePanel({snapshot, onMemoryOpen, connector, modelMetadata, reasoningEffort}: {
@@ -278,6 +287,7 @@ export function ContextUsagePanel({snapshot, onMemoryOpen, connector, modelMetad
     modelMetadata?: ChatModelMetadata;
     reasoningEffort?: AgentReasoningEffort;
 }) {
+    const [detailsOpen, setDetailsOpen] = useState(false);
     if (snapshot.status !== "ready" || !("usage" in snapshot)) return <div className="agent-context-panel" role="region" aria-label="上下文用量">
         <p role={snapshot.error ? "alert" : "status"}>{snapshot.error ?? "正在读取上下文…"}</p>
     </div>;
@@ -307,8 +317,9 @@ export function ContextUsagePanel({snapshot, onMemoryOpen, connector, modelMetad
             <CompactAction threadId={snapshot.threadId} connector={connector} model={model}
                            modelMetadata={modelMetadata} reasoningEffort={reasoningEffort}
                            blocked={activeRun ? "执行中，结束后可压缩" : !snapshot.available ? "当前范围不可用" : undefined}
-                           lastRecord={lastRecord}/>
-            <ContextDetails snapshot={snapshot} onMemoryOpen={onMemoryOpen}/>
+                           lastRecord={lastRecord} detailsOpen={detailsOpen}
+                           onToggleDetails={() => setDetailsOpen(open => !open)}/>
+            {detailsOpen ? <ContextDetails snapshot={snapshot} onMemoryOpen={onMemoryOpen}/> : null}
         </div>
     );
 }
@@ -316,15 +327,77 @@ export function ContextUsagePanel({snapshot, onMemoryOpen, connector, modelMetad
 export function ContextUsageTrigger({
                                         open,
                                         onOpenChange,
+                                        sheetHost,
                                         ...props
-                                    }: ContextProps & { open: boolean; onOpenChange: (open: boolean) => void }) {
+                                    }: ContextProps & {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    /** When set, the breakdown is a full-width card above the composer instead of a floating popover. */
+    sheetHost?: RefObject<HTMLDivElement | null>;
+}) {
     const snapshot = useContextUsage(props);
     const ready = snapshot.status === "ready" && "usage" in snapshot ? snapshot : undefined;
     const {percent, usage, capacity, memorySelection, activeRun} = ready ?? {};
     const [memoryOpen, setMemoryOpen] = useState(false);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const sheetRef = useRef<HTMLDivElement>(null);
+    const docked = Boolean(sheetHost);
+    useEffect(() => {
+        if (!open || !docked) return;
+        const dismiss = (event: PointerEvent) => {
+            const target = event.target;
+            if (!(target instanceof Node)) return;
+            if (sheetRef.current?.contains(target) || triggerRef.current?.contains(target)) return;
+            onOpenChange(false);
+        };
+        const escape = (event: KeyboardEvent) => {
+            if (event.key !== "Escape") return;
+            event.preventDefault();
+            onOpenChange(false);
+            triggerRef.current?.focus();
+        };
+        document.addEventListener("pointerdown", dismiss, true);
+        document.addEventListener("keydown", escape, true);
+        return () => {
+            document.removeEventListener("pointerdown", dismiss, true);
+            document.removeEventListener("keydown", escape, true);
+        };
+    }, [open, docked, onOpenChange]);
+    const panel = <ContextUsagePanel
+        snapshot={snapshot}
+        connector={props.connector}
+        modelMetadata={props.modelMetadata?.[props.model]}
+        reasoningEffort={props.reasoningEffort}
+        onMemoryOpen={() => {
+            onOpenChange(false);
+            setMemoryOpen(true);
+        }}
+    />;
+    const sheet = open && docked && sheetHost?.current ? createPortal(
+        <div ref={sheetRef} className="agent-composer-sheet agent-context-sheet" aria-label="上下文明细">{panel}</div>,
+        sheetHost.current,
+    ) : null;
     return (
         <>
-            <Popover.Root open={open} onOpenChange={onOpenChange}>
+            {sheet}
+            {docked ? <button
+                ref={triggerRef}
+                type="button"
+                className="agent-chip agent-control-icon agent-context-trigger"
+                aria-label="上下文明细"
+                aria-expanded={open}
+                title={capacity && usage ? `上下文预计占用 ${((usage.total / capacity) * 100).toFixed(1)}%` : "上下文明细"}
+                onClick={() => onOpenChange(!open)}
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
+                    <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeOpacity=".3" strokeWidth="3"/>
+                    {percent !== undefined ? (
+                        <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="3"
+                                strokeDasharray={`${Math.max(0.5, (percent / 100) * 50.265)} 50.265`}
+                                transform="rotate(-90 12 12)"/>
+                    ) : <circle cx="12" cy="4" r="2" fill="currentColor"/>}
+                </svg>
+            </button> : <Popover.Root open={open} onOpenChange={onOpenChange}>
                 <Popover.Trigger asChild>
                     <button
                         type="button"
@@ -386,7 +459,7 @@ export function ContextUsageTrigger({
                         />
                     </Popover.Content>
                 </Popover.Portal>
-            </Popover.Root>
+            </Popover.Root>}
             <MemoryContextDetails
                 open={memoryOpen}
                 onOpenChange={setMemoryOpen}

@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Studio frontend checklist before composer UI edits"}
+{"file": ".trellis/spec/frontend/interaction-feedback.md", "reason": "Quiet success; no decorative status lines"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Shared control contracts for plus sheets"}
+{"file": ".trellis/tasks/10-16-ui-ux-overhaul/prd.md", "reason": "Parent R2/R11 still apply"}
+{"file": ".trellis/tasks/10-16-composer-chat-copy/prd.md", "reason": "This child's requirements"}
+{"file": ".trellis/tasks/10-16-composer-chat-copy/design.md", "reason": "Toolbar and scroller contract"}

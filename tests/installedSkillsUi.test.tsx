@@ -169,7 +169,7 @@ describe("installed skill management in the retained workspace", () => {
         expect(findQuickToggle().getAttribute("aria-checked")).toBe("true"); expect(findQuickToggle().disabled).toBe(true);
         await act(async () => findQuickToggle().click()); expect(command).toHaveBeenCalledTimes(1);
         navigate.mockClear();
-        await click("管理技能");
+        await click("管理");
         expect(navigate).toHaveBeenCalledExactlyOnceWith({to: "/settings", search: {section: "skills"}});
         expect(globalThis.document.querySelector("[data-installed-skills]")).toBeNull();
     });

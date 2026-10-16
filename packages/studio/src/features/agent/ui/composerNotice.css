@@ -1,31 +1,14 @@
-/* One bubble above the composer; the approval queue below it stays separate. */
-.agent-chat-root .agent-composer-notice-slot:empty {
-    display: none;
-}
-
-.agent-chat-root .agent-composer-notice-slot {
-    flex-shrink: 0;
-    margin: 0 8px -1px;
-}
-
+/* Detached problem card: full radius, own surface. The queue is a separate card. */
 .agent-chat-root .agent-composer-notice {
     display: flex;
     align-items: center;
     gap: 8px;
     min-width: 0;
-    min-height: 36px;
-    padding: 4px 6px 4px 12px;
-    border: 1px solid var(--border);
-    border-radius: 10px 10px 0 0;
-    background: var(--muted);
-    color: var(--muted-foreground);
-    font-size: 12px;
-    line-height: 20px;
-    animation: agent-composer-notice-in 140ms ease-out;
 }
 
 .agent-chat-root .agent-composer-notice[data-kind="failed"] > svg,
 .agent-chat-root .agent-composer-notice[data-kind="unsent"] > svg {
+    flex: none;
     color: var(--destructive, #e5484d);
 }
 
@@ -42,7 +25,8 @@
     flex: none;
     min-height: 28px;
     padding: 0 10px;
-    border-radius: 6px;
+    border: 0;
+    border-radius: 999px;
     font-size: 12px;
     cursor: pointer;
 }
@@ -54,6 +38,7 @@
 
 .agent-chat-root .agent-composer-notice-secondary {
     color: var(--muted-foreground);
+    background: transparent;
     text-decoration: underline;
     text-underline-offset: 3px;
 }
@@ -64,6 +49,8 @@
     justify-content: center;
     width: 28px;
     padding: 0 !important;
+    border-radius: 6px;
+    background: transparent;
     color: var(--muted-foreground);
 }
 
@@ -79,21 +66,4 @@
 .agent-chat-root .agent-composer-notice button:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
-}
-
-@keyframes agent-composer-notice-in {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
-    to {
-        opacity: 1;
-        transform: none;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .agent-chat-root .agent-composer-notice {
-        animation: none;
-    }
 }

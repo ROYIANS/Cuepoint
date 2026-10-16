@@ -99,11 +99,11 @@ describe("model + effort popover", () => {
         const chip = document.body.querySelector(".agent-model-chip");
         expect(chip?.textContent).toContain("低");
     });
-    it("uses a slider when more than four levels exist", async () => {
+    it("keeps segmented buttons when more than four levels exist", async () => {
         await mount("gpt-5.6-luna", "high");
-        const slider = document.body.querySelector<HTMLInputElement>('input[type="range"]');
-        expect(slider).not.toBeNull();
-        expect(slider?.getAttribute("aria-valuetext")).toBe("高");
+        const control = document.body.querySelector('[data-testid="reasoning-effort"]');
+        expect(document.body.querySelector('input[type="range"]')).toBeNull();
+        expect([...control!.querySelectorAll('[role="radio"]')].map(item => item.textContent)).toContain("高");
     });
     it("marks the selected model separately from the previewed one and has no effort control for non-reasoning models", async () => {
         const {onModel} = await mount("plain-x", undefined);

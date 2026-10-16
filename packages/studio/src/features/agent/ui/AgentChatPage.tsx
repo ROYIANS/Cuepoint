@@ -8,7 +8,7 @@ import {agentExecution} from "../runtime/agentExecution";
 import {chatDrafts} from "../runtime/chatDraftStore";
 import {useThreadControl} from "../queries/threadReading";
 import {db} from "../../../platform/product/store";
-import {createChatThread, updateChatThread} from "../commands/chat";
+import {updateChatThread} from "../commands/chat";
 import {deleteChatThread} from "./../commands/lifecycle";
 import {useReferenceDraft} from "./useReferenceDraft";
 import {runBlocksThread} from "../models/agentToolSelection";
@@ -16,7 +16,6 @@ import {TaskBoard} from "./TaskBoard";
 import {TaskInspector} from "./TaskInspector";
 import type {ManualDraftDeparture} from "../../../app/drafts/useManualDraftGuard";
 import {AgentActivityNavigationProvider} from "./AgentActivityNavigation";
-import {AgentComposerAttention} from "./AgentComposerAttention";
 import {createAgentTaskForThread} from "../commands/agentTasks";
 import {getTaskDisplayState, TASK_STATE_LABELS} from "../runtime/taskState";
 import type {AgentRun} from "../models/agent";
@@ -280,16 +279,13 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         };
     }, [discoveryId, discoveryDefinitionId, discoveryBaseUrl, discoveryApiKey]);
 
-    const createTopic = useCallback((projectOverride?: Id) => leaveTask(() => {
+    const openHomeComposer = useCallback((project?: Id) => leaveTask(() => {
         if (deleteLock.current) return;
-        const generation = attachment.current.generation;
-        void createChatThread({connectorId: selectedConnector?.id, model: modelValue || undefined,
-            projectId: projectOverride ?? projectId, taskMode}).then(thread => {
-            if (mounted.current && attachment.current.generation === generation) void navigate({to: "/agent/$threadId", params: {threadId: thread.id}});
-        }).catch((cause: unknown) => showError({title: "创建对话失败", cause, actionName: "create-thread"}));
-    }), [navigate, selectedConnector?.id, modelValue, projectId, taskMode, leaveTask]);
-    const handleNewTopic = useCallback(() => createTopic(), [createTopic]);
-    const handleNewTopicInProject = useCallback((id: Id) => createTopic(id), [createTopic]);
+        setComposerProjectId(project);
+        if (activeThreadId || view === "tasks") void navigate({to: "/agent"});
+    }), [leaveTask, setComposerProjectId, activeThreadId, view, navigate]);
+    const handleNewTopic = useCallback(() => openHomeComposer(), [openHomeComposer]);
+    const handleNewTopicInProject = useCallback((id: Id) => openHomeComposer(id), [openHomeComposer]);
 
     const handleRenameThread = useCallback((thread: ChatThread) => {
         setRenameTarget(thread);
@@ -572,10 +568,12 @@ function AgentChatInner({threadId, view}: { threadId?: Id; view?: "tasks" }) {
         blockedReason: projectUnavailable ? "无法继续此对话" : undefined,
         notice: shownProblem ? <ComposerNotice problem={shownProblem} busy={sending}
                                                onAction={handleProblemAction} onDismiss={dismissProblem}/> : undefined,
-        // The strip holds only the composer-attached approval/confirmation queue.
-        status: activeThreadId ? <AgentComposerAttention threadId={activeThreadId}
-                                        task={activeTask} projectUnavailable={projectUnavailable}
-                                        onOpenTask={() => setTaskInspectorOpen(true)}/> : undefined,
+        attention: activeThreadId ? {
+            threadId: activeThreadId,
+            task: activeTask,
+            projectUnavailable,
+            onOpenTask: () => setTaskInspectorOpen(true),
+        } : undefined,
         contextUsage: <ContextUsageTrigger attachments={references.attachments} projectId={projectId}
                                            threadId={activeThreadId} interactionMode={interactionMode}
                                            draft={draft}
