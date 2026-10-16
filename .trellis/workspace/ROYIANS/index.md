@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-2.md`
-- **Total Sessions**: 88
+- **Total Sessions**: 89
 - **Last Active**: 2026-10-16
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-2.md` | ~756 | Active |
+| `journal-2.md` | ~794 | Active |
 | `journal-1.md` | ~1968 | Archived |
 <!-- @@@/auto:active-documents -->
 
@@ -30,6 +30,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 89 | 2026-10-16 | 取消 E12–E15 并归档 Agent 能力演进任务 | `74726841`, `5077d93d` | `codex/agent-background-host` |
 | 88 | 2026-10-16 | E11 retained background execution and stable conversation reentry | `7f602119`, `fe4fcb59`, `59701819`, `7fb1b3c0` | `codex/agent-background-host` |
 | 87 | 2026-10-16 | E10 MCP四阶段源码交付与归档 | `45bffe3c`, `9d2d2de6`, `80513428`, `bc492b38` | `codex/agent-mcp-integration` |
 | 86 | 2026-10-16 | Archive E09 and investigate E10 MCP scope | `96bdeaf3`, `5c7627d3` | `codex/agent-installable-skills` |

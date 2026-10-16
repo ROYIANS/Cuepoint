@@ -754,3 +754,41 @@ Completed four reviewed E11 source stages; fixed exact completed-background atte
 
 - E12 planning candidate remains subject to its concrete scope/design review; real provider seconds-level latency was not reproduced by controlled transport.
 - Parent epic retains full regression/formal quality/build/package, Windows/WebView2 and signed installed both-OS acceptance, footprint and unexplained earlier native probe exit.
+
+
+## Session 89: 取消 E12–E15 并归档 Agent 能力演进任务
+<!-- trellis-session: v=2 fp=cbd53208c10d31f2 -->
+
+**Date**: 2026-10-16
+**Task**: 取消 E12–E15 并归档 Agent 能力演进任务
+**Package**: studio
+**Branch**: `codex/agent-background-host`
+
+### Summary
+
+按用户要求移除 E12–E15 四个未开发规划任务；归档总任务、已完成调研和 E08 源码交付。最终回归、构建、打包与双平台安装态验收交由用户，保留未执行项。
+
+### Main Changes
+
+- 删除 E12 子 Agent 委派、E13 程序化编排、E14 定时跟进、E15 浏览器/电脑操作评估的 16 个规划文件，并从父任务 children 中移除；记录取消而非交付。
+- 归档 agent-experience-desktop-evolution、desktop-agent-capability-research、desktop-workspace-media；保留规范、调研结论、已交付任务及验收局限。
+- 修正归档链接、上下文清单和最终验收记录路径；Trellis 活动任务为零。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `74726841` | chore(trellis): cancel E12-E15 and hand final checks to owner |
+| `5077d93d` | docs(trellis): repair archived evolution links and context paths |
+
+### Testing
+
+- [OK] 仅检查任务元数据、归档关系、78 个本地链接、318 条上下文引用及 git diff --check；三个归档任务 context validate 通过，保留现有大规范注入长度警告。未运行产品测试、构建、打包或最终验收。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 最终检查由用户完成；E12–E15 取消，无后续开发任务。
