@@ -16,11 +16,12 @@ Backlog/planning under [Agent experience and desktop evolution](../10-15-agent-e
 
 ## Confirmed background
 
-- On 2026-10-16 the owner authorized archiving E09 and moving to the next delivery. E10 is the next roadmap item and is now in requirement/technical investigation; its specific scope is still to converge.
+- On 2026-10-16 the owner authorized archiving E09 and moving to the next delivery. E10 is the next roadmap item and is now in requirement/technical investigation.
+- The owner subsequently selected both local stdio and remote Streamable HTTP for the first E10 delivery, with macOS and Windows desktop support. Deliver the two transports in reviewed stages within this task; neither transport is deferred to a later task.
 - Current production has no general MCP connection/registration entry. Reuse E06 bindings/grants and E07 result/ledger owners, while retaining one Agent loop and product store.
 - Local stdio and remote Streamable HTTP have distinct process/network lifecycles. Both are protocol/SDK options; a Node sidecar or E11 background runtime is not already selected.
 - Dynamic external tools must fit the existing 36-tool/two-group discovery budget and exact offered-definition/approval identity. Installing an E09 skill does not enable external servers.
-- The owner's Windows/macOS direction and stage-commit/necessary-check cadence remain the baseline. Browser capability and initial transport/auth coverage must be made explicit in this task.
+- The owner's stage-commit/necessary-check cadence remains the baseline. Browser capability, initial real-server acceptance and authentication coverage remain to converge.
 
 ## Dependencies and order
 
@@ -32,7 +33,7 @@ Tree position does not enforce these dependencies. If a dependency is deliberate
 ## Requirements
 
 - E10-R1: Evaluate protocol SDK adoption separately from importing Cordis plugins or a complete Harness worker.
-- E10-R2: Define supported transports, server configuration/credentials, namespaces, schema validation, generation identity and disconnect/reconnect cleanup.
+- E10-R2: Support both desktop local stdio and remote Streamable HTTP on macOS/Windows. Define server configuration/credentials, namespaces, schema validation, generation identity and disconnect/reconnect cleanup for each transport.
 - E10-R3: All external calls share resource checks, approval, cancellation, output limits and truthful unknown-effect handling.
 - E10-R4: Keep process environment scrubbing distinct from actual filesystem/network confinement.
 
@@ -41,6 +42,7 @@ Tree position does not enforce these dependencies. If a dependency is deliberate
 - [ ] E10-AC1: A selected test server exposes tools/resources and calls reach the unified policy/result flow.
 - [ ] E10-AC2: Reconnect/uninstall drains old ownership and cannot retarget an outstanding approval or orphan a process.
 - [ ] E10-AC3: Lost replies and cancellation never authorize automatic repetition of unknown external effects.
+- [ ] E10-AC4: Both local stdio and remote Streamable HTTP expose selected tools/resources through the same policy/result pipeline. macOS/Windows source and actual installed acceptance are recorded distinctly; per-stage checks stay scoped and installed/full-build acceptance follows the epic-end cadence.
 
 ## Boundaries
 
@@ -50,9 +52,9 @@ Tree position does not enforce these dependencies. If a dependency is deliberate
 
 ## Decisions to converge before implementation
 
-- First: local stdio plus remote Streamable HTTP, remote first, or local first. Recommendation: both desktop transports across macOS/Windows, delivered in stages; owner selection pending.
+- Next: whether the initial remote authentication scope includes browser-based OAuth login as well as unauthenticated/manual-credential connections. Recommendation: include OAuth login for a more complete remote connection experience; owner selection pending. Current product has manually supplied API keys, not an existing OAuth client.
 - Initial server/use-case acceptance and browser availability.
-- Credential/auth subset, installation trust and server/tool permission presentation.
+- Credential storage, installation trust and server/tool permission presentation.
 
 Keep this task planning until product choices converge and concrete design,
 implementation/validation plan and context manifests are reviewed. The initial

@@ -72,17 +72,42 @@ Checked primary sources on 2026-10-16:
 | Remote Streamable HTTP first | Connect external API/tool services without starting a local server process | Local installed-app MCP servers wait for another stage; authentication/URL policy still required |
 | Desktop local stdio first | Prioritize installed applications and local tooling | Remote services wait; requires explicit process configuration and termination behavior |
 
-Recommendation: support both desktop transport types across macOS/Windows,
-delivered in stages under one task. This fits the owner's broader desktop goal
-without assuming a Node sidecar or a new background runtime. This is a proposal,
-not the owner's selection. Browser availability must be specified truthfully
-after this scope choice; browsers cannot spawn stdio processes, and remote
+Owner decision on 2026-10-16: **support both desktop transport types across
+macOS/Windows**, delivered in stages under one task. The owner answered “都支持”
+to the explicit local-plus-remote scope question. This confirms the first row,
+without choosing a Node sidecar or a new background runtime. Browser availability
+still needs an explicit scope: browsers cannot spawn stdio processes, and remote
 compatibility also depends on endpoint/auth/CORS behavior.
+
+## Authentication investigation after the transport decision
+
+`packages/studio/src/features/settings/models/connector.ts:3` describes global
+BYOK model connectors excluded from project ZIPs; `commands/connectors.ts:29`
+saves user-supplied API keys through the existing ProductStore. These inspected
+owners do not provide an OAuth browser-return or token-refresh flow. Do not
+describe them as an OS keychain or infer encrypted secret storage from their
+local-only product scope. MCP credentials require an explicitly designed owner
+and must never enter model context, routine diagnostics or project exports.
+
+Checked [official MCP authorization](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
+on 2026-10-16: authorization is optional; its HTTP authorization specification
+uses OAuth, while stdio credentials come from the process environment instead.
+Supporting HTTP transport alone therefore does not establish OAuth login
+support. A manual token/header connection and a browser-login connection are
+different user workflows. OAuth also requires discovery/registration, guarded
+browser return and token lifecycle design; no such implementation was tested.
+
+Next owner decision: include OAuth browser login in the initial remote scope,
+or initially offer unauthenticated/manual-token connections and defer login.
+Recommendation: include OAuth for a more complete remote connection experience,
+with the extra login/token lifecycle work split into a reviewed stage. This is
+not yet selected. Specific auth extensions and credential storage remain to be
+designed against the selected SDK and actual server acceptance target.
 
 ## Remaining decisions and necessary validation shape
 
-The first question is transport scope. Then converge initial real-server/use-case
-acceptance, credential/auth subset and explicit server/tool enablement UX. Keep
+Transport scope is confirmed. Next converge authentication coverage, initial
+real-server/use-case acceptance and explicit server/tool enablement UX. Keep
 the existing quiet UI, shared right-side workspace and unsaved-edit guards.
 Do not manufacture defaults for these product choices from current source alone.
 

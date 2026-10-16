@@ -60,7 +60,7 @@
     "testingPolicy": "necessary affected tests per task; full integration/build/packaging once after the batch",
     "stageCommitPolicy": "owner authorized automatic commit after each stage then continue on 2026-10-15",
     "sequentialExecutionAuthorized": true,
-    "nextAction": "Owner authorized E09 source-delivery archive and next delivery on 2026-10-16. E10 MCP integration is in requirement/technical investigation; converge transport/server scope and concrete design before activation. Preserve E09 full/emitted/packed and actual installed macOS+Windows acceptance at epic end, plus E08's separate pending acceptance.",
+    "nextAction": "Owner authorized E09 source-delivery archive and next delivery on 2026-10-16, then confirmed E10 desktop stdio plus remote Streamable HTTP across macOS/Windows. Converge authentication/server scope and concrete design before activation. Preserve E09 full/emitted/packed and actual installed macOS+Windows acceptance at epic end, plus E08's separate pending acceptance.",
     "carriedAcceptance": {
       "E09": {
         "record": "../archive/2026-10/10-15-agent-installable-skills/task.json",
