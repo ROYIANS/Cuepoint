@@ -166,6 +166,13 @@
       "publicTypes": []
     },
     {
+      "file": "packages/studio/src/features/agent/ui/HeroLogo.tsx",
+      "target": "packages/studio/src/features/agent/ui/HeroLogo.tsx",
+      "owner": "features/agent",
+      "public": false,
+      "publicTypes": []
+    },
+    {
       "original": "packages/studio/src/components/agent/LobeChatTheme.tsx",
       "file": "packages/studio/src/features/agent/ui/LobeChatTheme.tsx",
       "target": "packages/studio/src/features/agent/ui/LobeChatTheme.tsx",
