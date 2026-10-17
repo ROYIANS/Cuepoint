@@ -9,6 +9,9 @@ both and no theme switching exists. Replace assets together with the `?v=` query
 - `logo.webp`: 1024 × 1024 lossless colour mark with alpha (`LOGO_SRC`): top bar,
   sidebar, agent avatar, About page.
 - `logo-16.png`, `logo-32.png`, `logo-48.png`: bare colour mark, transparent, for favicons.
+- `logo-loop.mp4`: 360 × 360, 24 fps, 5.2 s, H.264, no audio track (`LOGO_LOOP_SRC`). Home hero hover
+  animation; opens on the `logo.webp` composition, holds its last frame. Opaque pure-black background,
+  removed in CSS with `mix-blend-mode: lighten` (dark surface only; a light theme needs an alpha WebM).
 - `favicon.ico`: 16, 32 and 48 px for legacy browsers.
 - `apple-touch-icon.png`: 180 × 180 opaque cream tile with the colour mark.
 - `og-card.png`: 1200 × 630 social card, cream `#F4F0E8`, centred mark, no text.

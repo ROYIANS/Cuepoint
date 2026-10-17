@@ -5,3 +5,5 @@ export const PRODUCT_TAGLINE =
     "本地优先的影视创作工作室：项目、分镜、资产与交付，密钥只留在本机。";
 export const GITHUB_URL = "https://github.com/ROYIANS/Cuepoint";
 export const LOGO_SRC = "/brand/logo.webp?v=20261017";
+/** Hero hover animation; opens on the same composition as LOGO_SRC and holds its last frame. */
+export const LOGO_LOOP_SRC = "/brand/logo-loop.mp4?v=20261017";

@@ -55,7 +55,7 @@ describe("brand assets", () => {
     it("has the expected file set", () => {
         expect(readdirSync(brandDir).sort()).toEqual([
             "README.md", "apple-touch-icon.png", "favicon.ico", "logo-16.png", "logo-32.png", "logo-48.png",
-            "logo.webp", "og-card.png", "sponsor-wechat.jpg",
+            "logo-loop.mp4", "logo.webp", "og-card.png", "sponsor-wechat.jpg",
         ]);
     });
 
@@ -72,6 +72,21 @@ describe("brand assets", () => {
         expect([card.width, card.height]).toEqual([1200, 630]);
         expect(icoSizes(read("favicon.ico"))).toEqual([16, 32, 48]);
         expect(statSync(join(brandDir, "logo.webp")).size).toBeGreaterThan(1000);
+    });
+
+    it("ships a lightweight hero animation with no audio track", () => {
+        const buf = read("logo-loop.mp4");
+        expect(buf.subarray(4, 8).toString("ascii")).toBe("ftyp");
+        expect(buf.includes(Buffer.from("soun", "ascii"))).toBe(false);
+        expect(buf.includes(Buffer.from("avc1", "ascii"))).toBe(true);
+        // 120 CSS px at up to 3x only needs 360 device pixels.
+        const tkhd = buf.indexOf(Buffer.from("tkhd", "ascii"));
+        expect(tkhd).toBeGreaterThan(0);
+        // Width and height are the last 8 bytes of the tkhd box (16.16 fixed point).
+        const boxEnd = tkhd + buf.readUInt32BE(tkhd - 4) - 4;
+        expect(buf.readUInt32BE(boxEnd - 8) / 0x10000).toBe(360);
+        expect(buf.readUInt32BE(boxEnd - 4) / 0x10000).toBe(360);
+        expect(statSync(join(brandDir, "logo-loop.mp4")).size).toBeLessThan(200 * 1024);
     });
 
     it("keeps no reference to the retired lockup or 256 px icon", () => {

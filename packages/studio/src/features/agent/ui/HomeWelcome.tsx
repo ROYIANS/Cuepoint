@@ -5,6 +5,7 @@ import {Avatar, Text} from "@lobehub/ui";
 import type {ComposerProps} from "./composerTypes";
 import {FloatingComposer} from "./FloatingComposer";
 import {AgentHeader} from "./AgentHeader";
+import {HeroLogo} from "./HeroLogo";
 import {useAgentTopicNavigation} from "./AgentTopicNavigation";
 import {formatRelative} from "./timeGroups";
 import type {ChatThread} from "../models/chat";
@@ -49,8 +50,7 @@ export function HomeWelcome({
             <div className="agent-home">
                 <div className="agent-home-inner">
                     <div className="agent-home-hero">
-                        <Avatar className="agent-home-logo" avatar={LOGO_SRC} background="transparent"
-                                shape="square" size={48}/>
+                        <HeroLogo/>
                         <h1 className="agent-home-title">
                             创作助手
                         </h1>

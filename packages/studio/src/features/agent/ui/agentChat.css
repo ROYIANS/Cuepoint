@@ -313,6 +313,50 @@
     text-align: center;
 }
 
+/* Hero mark: static logo, brand animation on hover. The clip has an opaque
+   black background, so `lighten` against the surface (#101010) drops it. While
+   playing the static logo fades out, otherwise lighten would keep both layers. */
+.agent-chat-root .agent-home-logo-wrap {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.agent-chat-root .agent-home-logo-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 200ms ease;
+}
+
+.agent-chat-root .agent-home-logo-wrap.is-active .agent-home-logo-image {
+    opacity: 0;
+}
+
+.agent-chat-root .agent-home-logo-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: lighten;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+}
+
+.agent-chat-root .agent-home-logo-video.is-active {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .agent-chat-root .agent-home-logo-image,
+    .agent-chat-root .agent-home-logo-video {
+        transition: none;
+    }
+}
+
 .agent-chat-root .agent-home-title {
     margin: 0;
     max-width: 100%;
