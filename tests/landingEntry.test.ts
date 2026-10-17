@@ -76,7 +76,7 @@ describe("apps/site/landing.html", () => {
         expect(meta("link[rel=canonical]")).toBe("https://cue.vidorra.life/");
         expect(meta("meta[name=theme-color]")).toBe("#101010");
         expect(meta("meta[name=description]")).toBeTruthy();
-        expect(meta("meta[property='og:image']")).toMatch(/^https:\/\/cue\.vidorra\.life\/brand\/logo-lockup\.webp/);
+        expect(meta("meta[property='og:image']")).toMatch(/^https:\/\/cue\.vidorra\.life\/brand\/og-card\.png/);
         expect(meta("meta[name='twitter:card']")).toBe("summary_large_image");
         const ld = JSON.parse(documentFromHtml.querySelector("script[type='application/ld+json']")!.textContent!) as Record<string, unknown>;
         expect(ld["@type"]).toBe("SoftwareApplication");

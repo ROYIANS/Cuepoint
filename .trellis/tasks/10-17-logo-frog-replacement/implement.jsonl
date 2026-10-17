@@ -1,0 +1,9 @@
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Change policy: what a change must update (specs, tests, evidence)"}
+{"file": ".trellis/spec/frontend/native-workspace.md", "reason": "Native bundle icon contract that this task rewrites"}
+{"file": ".trellis/spec/frontend/desktop-distribution.md", "reason": "Desktop packaging and icon acceptance expectations"}
+{"file": ".trellis/spec/distribution/library/index.md", "reason": "packages/distribution brand constants and public assets"}
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Studio UI conventions for AppFrame, AboutPage and agent avatar consumers"}
+{"file": ".trellis/spec/site/frontend/index.md", "reason": "Landing page head and og:image conventions"}
+{"file": ".trellis/spec/web/frontend/index.md", "reason": "Web app index.html conventions"}
+{"file": ".trellis/spec/desktop/runtime/index.md", "reason": "Desktop runtime package and icon generation boundaries"}
+{"file": ".trellis/tasks/10-17-logo-frog-replacement/research/asset-pack-readme.md", "reason": "Asset pack contents, palette, verification evidence and limits"}

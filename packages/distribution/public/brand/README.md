@@ -1,22 +1,27 @@
 # Cuepoint brand assets
 
-Approved artwork updated on 2026-09-22. Preserve the supplied alpha channel,
-star, spectral mountain, and reflection; do not reconstruct the mark.
+Frog-hat mark (black stencil disc with the character cut out), approved 2026-10-17.
+The colour mark works on light and dark surfaces, so in-app placements use it on
+both and no theme switching exists. Replace assets together with the `?v=` query in
+`packages/distribution/src/brand.ts` and the icon links in `apps/web/index.html`,
+`apps/desktop/index.html` and `apps/site/landing.html`.
 
-- `logo.webp`: 1024 × 1024 symbol for application branding and agent avatars.
-- `logo-16.png`, `logo-32.png`, `logo-256.png`: square PNG favicon variants.
-- `logo-lockup.webp`: 1254 × 1254 artwork with the Chinese and English names,
-  used on the About page and reserved for larger brand placements. Use the
-  symbol for small UI placements.
-- `sponsor-wechat.jpg`: user-supplied 1152 × 1152 appreciation-code artwork,
-  preserved without modification. The About page displays it in a dialog and
-  offers the original image for download; do not redraw or alter the code.
+- `logo.webp`: 1024 × 1024 lossless colour mark with alpha (`LOGO_SRC`): top bar,
+  sidebar, agent avatar, About page.
+- `logo-16.png`, `logo-32.png`, `logo-48.png`: bare colour mark, transparent, for favicons.
+- `favicon.ico`: 16, 32 and 48 px for legacy browsers.
+- `apple-touch-icon.png`: 180 × 180 opaque cream tile with the colour mark.
+- `og-card.png`: 1200 × 630 social card, cream `#F4F0E8`, centred mark, no text.
+- `sponsor-wechat.jpg`: user-supplied 1152 × 1152 appreciation code, preserved without
+  modification; the About page shows it in a dialog and offers the original for download.
 
-WebP assets use quality 95. The supplied 1254 × 1254 symbol is resized to
-1024 × 1024 with Lanczos before deriving the PNG variants. All assets preserve
-the supplied alpha channel and original framing. The About page places the
-lockup on black to keep its partially transparent dark background uniform.
+Palette (proposal, not a ratified brand palette): ink `#111111`, frog green `#7FB53B`,
+cream `#FFF1D6`, light tile `#F4F0E8`.
 
-Application references live in `packages/distribution/src/brand.ts`; browser icon declarations
-live in `apps/web/index.html`. Update their version query together when replacing the
-artwork so browsers request the new assets.
+Provenance: generated from the owner-approved asset pack v7. The source stencil, build
+and trace scripts and preview sheets are kept in
+`.trellis/tasks/10-17-logo-frog-replacement/research/`. Caveats: the source is an
+AI-generated bitmap (copyright unreviewed); vector tracing is automatic, not a designer
+master; 16 px is a plain downsample. There is no text lockup for this mark.
+
+The native desktop icon is a separate asset owned by `apps/desktop/assets/`.

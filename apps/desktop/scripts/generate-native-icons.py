@@ -17,8 +17,9 @@ from PIL import Image, __version__ as pillow_version
 PACKAGE = Path(__file__).resolve().parent.parent
 ROOT = PACKAGE.parent.parent
 TARGET = PACKAGE / "src-tauri" / "icons"
-SOURCE = ROOT / "packages" / "distribution" / "public" / "brand" / "logo.webp"
-BACKGROUND = (12, 12, 12, 255)
+SOURCE = PACKAGE / "assets" / "app-icon-cream-1024.png"
+BRAND_DIR = ROOT / "packages" / "distribution" / "public" / "brand"
+BACKGROUND = (244, 240, 232, 255)
 PNG_SIZES = {"16x16.png": 16, "32x32.png": 32, "64x64.png": 64, "128x128.png": 128,
              "128x128@2x.png": 256, "icon.png": 512}
 DESKTOP_FILES = (*PNG_SIZES, "icon.icns", "icon.ico")
@@ -30,15 +31,18 @@ def sha256(path):
 
 
 def web_hashes():
-    paths = sorted(path for path in SOURCE.parent.iterdir() if path.is_file())
+    paths = sorted(path for path in BRAND_DIR.iterdir() if path.is_file())
     return {path.relative_to(ROOT).as_posix(): sha256(path) for path in [*paths, ROOT / "apps" / "web" / "index.html"]}
 
 
 def opaque_source():
-    with Image.open(SOURCE) as artwork:
-        if artwork.size != (1024, 1024):
-            raise ValueError("Expected the approved 1024x1024 brand symbol; do not upscale a favicon")
-        return Image.alpha_composite(Image.new("RGBA", artwork.size, BACKGROUND), artwork.convert("RGBA"))
+    with Image.open(SOURCE) as tile:
+        if tile.size != (1024, 1024):
+            raise ValueError("Expected the approved 1024x1024 opaque icon tile; do not upscale a favicon")
+        pixels = tile.convert("RGBA")
+    if pixels.getchannel("A").getextrema() != (255, 255):
+        raise ValueError("The approved icon tile must be fully opaque; it is used without compositing")
+    return pixels
 
 
 def png_bytes(image):
@@ -56,8 +60,9 @@ def image_check(image, label, size):
         raise ValueError(f"{label}: expected every pixel opaque, found alpha range {alpha_range}")
     corners = [rgba.getpixel(point) for point in [(0, 0), (size - 1, 0), (0, size - 1), (size - 1, size - 1)]]
     if any(pixel != BACKGROUND for pixel in corners):
-        raise ValueError(f"{label}: corners differ from #0c0c0c: {corners}")
-    if rgba.getchannel("R").getextrema()[1] <= 12:
+        raise ValueError(f"{label}: corners differ from cream #f4f0e8: {corners}")
+    # The mark has black ink on the cream tile; a blank tile has no dark pixels.
+    if rgba.getchannel("R").getextrema()[0] >= 100:
         raise ValueError(f"{label}: logo artwork is absent")
     return {"size": size, "alphaRange": list(alpha_range), "corners": [list(pixel) for pixel in corners]}
 
@@ -124,7 +129,7 @@ def inspect(directory):
             pngs[name] = image_check(image, name, size)
     with Image.open(directory / "source.png") as saved_source:
         if saved_source.convert("RGBA").tobytes() != opaque_source().tobytes():
-            raise ValueError("Native source changes approved logo pixels/framing beyond alpha compositing")
+            raise ValueError("Native source changes approved logo pixels/framing from the approved opaque tile")
     return {"png": pngs, "icns": icns_check(directory / "icon.icns"), "ico": ico_check(directory / "icon.ico")}
 
 
@@ -155,8 +160,8 @@ def generate(pnpm):
         if before != web_hashes():
             raise ValueError("Web branding changed during native icon generation")
         manifest = {"format": "cuepoint.native-icons.v1", "source": SOURCE.relative_to(ROOT).as_posix(),
-                    "sourceSha256": sha256(SOURCE), "sourceSize": [1024, 1024], "background": "#0c0c0c",
-                    "composition": "Pillow Image.alpha_composite; no resize, crop, or reconstruction",
+                    "sourceSha256": sha256(SOURCE), "sourceSize": [1024, 1024], "background": "#f4f0e8",
+                    "composition": "approved opaque tile copied as-is; no resize, crop, or composite",
                     "generator": {"pillow": pillow_version, "tauriCli": TAURI_VERSION,
                                   "icnsOrdering": "ascending member tag (CLI hash-map iteration normalized)",
                                   "icnsMembers": "original repository modern PNG set ic07..ic14; legacy small entries omitted"},
@@ -173,7 +178,7 @@ def generate(pnpm):
 def check(bundle=None):
     manifest = json.loads((TARGET / "provenance.json").read_text())
     if manifest["sourceSha256"] != sha256(SOURCE):
-        raise ValueError("Original logo source differs from native generation provenance")
+        raise ValueError("Approved icon tile differs from native generation provenance")
     if manifest["files"] != {name: sha256(TARGET / name) for name in ["source.png", *DESKTOP_FILES]}:
         raise ValueError("Native icon artifact hashes differ from the generation provenance")
     if (TARGET / "source.png").read_bytes() != png_bytes(opaque_source()):

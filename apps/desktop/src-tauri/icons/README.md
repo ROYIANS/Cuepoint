@@ -1,10 +1,11 @@
 # Native application icons
 
-These resources are derived from the approved 1024×1024 symbol at
-`public/brand/logo.webp`. Native `source.png` alpha-composites those original
-pixels over the shared navigation surface `#0c0c0c`. Its canvas is fully opaque;
-the original framing, center, star, spectral mountain and reflection remain
-unchanged. Web logo assets and favicon declarations keep their original alpha.
+These resources are derived from the committed, owner-approved opaque tile
+`apps/desktop/assets/app-icon-cream-1024.png`: 1024×1024, fully opaque, full-bleed
+cream `#F4F0E8` with the colour frog mark. Native `source.png` carries those exact
+pixels (re-encoded as PNG); the generator does not resize, crop, composite or
+redraw them. The Web logo (`public/brand/logo.webp`) is a separate transparent
+asset and is not a native input; Web branding is never edited to fix the native tile.
 
 The bundle already references `icon.png` and `icon.icns` in `tauri.conf.json`.
 The PNG is the Tauri standard 512×512 output. Additional PNGs cover 16, 32, 64, 128
@@ -24,8 +25,8 @@ python3 apps/desktop/scripts/generate-native-icons.py --check
 
 If the system Python has no Pillow, use an existing Python environment that
 provides the recorded Pillow version. Regeneration adds no runtime dependency
-to the product. The script composes at 1024 pixels without upscaling a favicon,
-runs the pinned CLI in a temporary directory, validates the complete desktop
+to the product. The script validates the tile at 1024 pixels without upscaling a
+favicon, runs the pinned CLI in a temporary directory, validates the complete desktop
 set, then installs only those reviewed resources. ICNS member order is sorted
 by tag because the CLI uses hash-map iteration; member image bytes are retained
 unchanged. ICNS retains the repository's original modern PNG member set (`ic07`–`ic14`, 32–1024 physical pixels,
@@ -36,13 +37,13 @@ also reproduces with Apple's own iconset compiler. The retained PNG members
 match on both decoders. Independent 16/32-pixel PNG and ICO sizes remain present.
 These two steps make repeated generation byte-for-byte reproducible.
 
-`provenance.json` records original source, generator versions, source/artifact
+`provenance.json` records the source tile, generator versions, source/artifact
 SHA-256 values and every Web brand file plus `index.html` hashes. Read-only
-`--check` verifies source pixel equivalence, all PNG pixels' alpha, all four
-corner colors, all ICNS PNG members, every ICO size, and the recorded native
-artifact/original source hashes. Broader Web hashes are reported as generation
-evidence; unrelated later sponsor/README/favicon edits do not fail the icon
-artifact check.
+`--check` verifies source pixel equality with the committed tile, all PNG pixels'
+alpha, all four corner colors, that dark mark ink is present, all ICNS PNG members,
+every ICO size, and the recorded native artifact/source hashes. Broader Web hashes
+are reported as generation evidence; unrelated later sponsor/README/favicon edits
+do not fail the icon artifact check.
 
 After building an application, verify the resource selected by its real
 `Info.plist` (replace the path with the app produced by the build):
@@ -53,6 +54,6 @@ python3 apps/desktop/scripts/generate-native-icons.py --check \
 ```
 
 The packaged ICNS must exactly match this generated artifact, with every pixel
-opaque and each corner `[12, 12, 12, 255]`. Finder/Dock presentation still needs
+opaque and each corner `[244, 240, 232, 255]`. Finder/Dock presentation still needs
 a visual check after packaging; pixel/resource checks alone do not prove how
 the operating system displays an installed application.

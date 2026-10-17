@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "../../../ui/dialog";
-import {GITHUB_URL, LOGO_LOCKUP_SRC, PRODUCT_NAME_EN, PRODUCT_NAME_ZH, PRODUCT_TAGLINE,} from "@cuepoint/distribution/brand";
+import {GITHUB_URL, LOGO_SRC, PRODUCT_NAME_EN, PRODUCT_NAME_ZH, PRODUCT_TAGLINE,} from "@cuepoint/distribution/brand";
 import {isTauriRuntime} from "../../../platform/runtime/runtimeIdentity";
 import {downloadBlob, isPublishedSaveError} from "../../../platform/runtime/runtimeSave";
 
@@ -48,11 +48,13 @@ export function AboutPage() {
     return (
         <PageContent mode="document">
             <PageHeader title={`关于${PRODUCT_NAME_ZH}`}/>
-            <img
-                src={LOGO_LOCKUP_SRC}
-                alt={`${PRODUCT_NAME_ZH} ${PRODUCT_NAME_EN}`}
-                className="mt-6 w-[min(72vw,24rem)] max-w-full rounded-md bg-black object-contain"
-            />
+            <div className="mt-6 flex items-center gap-4">
+                <img src={LOGO_SRC} alt="" className="size-20 object-contain"/>
+                <div>
+                    <div className="font-display text-foreground text-3xl leading-tight">{PRODUCT_NAME_ZH}</div>
+                    <div className="text-muted-foreground text-base">{PRODUCT_NAME_EN}</div>
+                </div>
+            </div>
             <p className="text-muted-foreground mt-4 max-w-xl text-sm leading-[22px]">{PRODUCT_TAGLINE}</p>
 
             <a

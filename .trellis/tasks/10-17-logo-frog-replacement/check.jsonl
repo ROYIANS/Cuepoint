@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/guides/development-change-policy.md", "reason": "Check that specs, tests and evidence were updated"}
+{"file": ".trellis/spec/frontend/native-workspace.md", "reason": "Verify the rewritten native icon contract matches the script"}
+{"file": ".trellis/spec/frontend/desktop-distribution.md", "reason": "Packaging and icon acceptance expectations"}
+{"file": ".trellis/spec/distribution/library/index.md", "reason": "Brand package contract"}
+{"file": ".trellis/spec/studio/frontend/index.md", "reason": "Studio UI conventions"}
+{"file": ".trellis/spec/site/frontend/index.md", "reason": "Landing page conventions"}
+{"file": ".trellis/tasks/10-17-logo-frog-replacement/research/asset-pack-readme.md", "reason": "Source of truth for the shipped assets and their known limits"}

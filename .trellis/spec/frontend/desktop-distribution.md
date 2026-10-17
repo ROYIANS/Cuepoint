@@ -90,7 +90,7 @@ See [released upgrades](./native-product-runtime.md#workspace-registry-identity-
 
 Normal product identity is Cuepoint / `dev.cuepoint.prototype.offline` /
 `cuepoint-prototype`, profile normal, storage sqlite, features product-sqlite.
-Visible branding retains the dark PNG/ICO/ICNS assets. Versions in root package,
+Visible branding retains the committed cream-tile PNG/ICO/ICNS assets. Versions in root package,
 desktop package, Cargo and Tauri config must match a numeric three-part version;
 a tag must be `desktop-v<that version>`. Mac minimum is14, ad-hoc signing and no
 notarization; Windows is unsigned; Ubuntu22.04 is the Linux build baseline.

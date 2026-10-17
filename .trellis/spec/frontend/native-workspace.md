@@ -128,24 +128,29 @@ await navigator.mediaDevices.getUserMedia({audio: deviceId ? {deviceId: {exact: 
 ## Native bundle icon
 
 Native icon generation is an asset contract, not a change to the shared Web
-artwork. `apps/desktop/scripts/generate-native-icons.py` composites the existing
-1024-pixel `public/brand/logo.webp` directly over opaque `#0c0c0c`, without cropping,
-resizing or reconstructing the source mark. It uses the installed pinned Tauri
-CLI and installs only desktop PNG, ICO and ICNS resources. The ICNS preserves the
-repository's eight modern PNG member types (`ic07`–`ic14`); independently verify
-macOS decoding rather than accepting one image library's interpretation.
+artwork. The source is the dedicated committed opaque tile
+`apps/desktop/assets/app-icon-cream-1024.png`: 1024 pixels, fully opaque,
+full-bleed cream `#F4F0E8` with the colour frog mark. The Web logo is a
+transparent stencil (black ink) and would vanish on a dark tile, so it is not a
+native input and is never composited. `apps/desktop/scripts/generate-native-icons.py`
+validates the tile, copies its pixels unmodified (no crop, resize, composite or
+reconstruction), uses the installed pinned Tauri CLI and installs only desktop
+PNG, ICO and ICNS resources. The ICNS preserves the repository's eight modern
+PNG member types (`ic07`-`ic14`); independently verify macOS decoding rather than
+accepting one image library's interpretation.
 
 Run the script with a Python runtime containing Pillow and the explicitly
-approved local pnpm path. `--check` is read-only and verifies source composition,
-every PNG/ICNS/ICO alpha range and corner RGB, and provenance hashes. `--check
---bundle /absolute/path/Application.app` resolves `CFBundleIconFile` from the
-actual built app and requires its icon bytes to match the tracked ICNS. Web
-brand hashes recorded during generation are evidence, not permanent constraints
-on unrelated future Web artwork edits.
+approved local pnpm path. `--check` is read-only and verifies source equality
+with the committed tile, every PNG/ICNS/ICO alpha range and corner RGB, artwork
+presence and provenance hashes. `--check --bundle /absolute/path/Application.app`
+resolves `CFBundleIconFile` from the actual built app and requires its icon bytes
+to match the tracked ICNS. Web brand hashes recorded during generation are
+evidence, not permanent constraints on unrelated future Web artwork edits.
 
-Required assertions: all pixels have alpha 255; all corners are `[12,12,12,255]`;
-the 1024-pixel source equals the original artwork's alpha composition; rerunning
-generation produces identical native bytes; the packaged icon matches. A
-transparent or differently colored member is a failed gate even if a larger
-member looks correct. Replacing the Web logo to fix the native tile is wrong;
-regenerating the native resources and checking the actual bundle is correct.
+Required assertions: all pixels have alpha 255; all corners are `[244,240,232,255]`;
+dark mark ink is present (a blank tile fails); `source.png` has the committed
+tile's pixels; rerunning generation produces identical native bytes; the packaged
+icon matches. A transparent or differently colored member is a failed gate even
+if a larger member looks correct. Replacing the Web logo to fix the native tile is
+wrong; changing the tile asset deliberately, regenerating the native resources and
+checking the actual bundle is correct.
