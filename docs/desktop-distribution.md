@@ -5,7 +5,9 @@ and Agent as the browser. Normal desktop packaging selects `product-sqlite`: all
 ProductStore tables live in the application workspace's SQLite database, and
 imported media is copied into managed files. The browser keeps a separate
 IndexedDB adapter. Desktop and browser profiles do not synchronize automatically.
-No historical data migration is part of this delivery.
+Released native workspaces retain their data through automatic additive registry
+upgrades. Existing table definitions must remain compatible; incompatible changes
+require a separately designed data migration. This does not import browser data.
 
 ## Initial installer matrix
 
@@ -23,7 +25,7 @@ application icons are reused. The internal bundle identifier remains
 `dev.cuepoint.prototype.offline`; the executable remains `cuepoint-prototype`.
 Changing visible branding must not create a new data profile.
 
-The current source version is `0.1.4`. Root package, desktop package, Cargo and
+The current source version is `0.1.5`. Root package, desktop package, Cargo and
 Tauri versions must agree. Distribution tags use `desktop-vMAJOR.MINOR.PATCH`
 with that exact source version. The separate container workflow retains its
 existing `v*` tags.

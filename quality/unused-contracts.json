@@ -353,7 +353,7 @@
       "evidence": [
         {
           "file": "apps/desktop/package.json",
-          "sha256": "251d8ffe1573edc4c03b3f0a9fd875c46f49b6f8f06a783e0a7c1b203cb3f5e7"
+          "sha256": "3658fa1e644ccf187c7bd45203e541bc38ec367a73c036112dc965fa9ae67dbc"
         },
         {
           "file": "apps/desktop/scripts/build-app.mjs",
