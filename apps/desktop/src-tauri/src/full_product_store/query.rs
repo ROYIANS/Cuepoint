@@ -100,11 +100,20 @@ pub fn index_values(
     key: &str,
     value: Option<&Value>,
 ) -> Result<serde_json::Map<String, Value>> {
+    if value.is_none() {
+        return Ok(serde_json::Map::new());
+    }
+    index_values_for_table(registry::table(table)?, key, value)
+}
+pub(super) fn index_values_for_table(
+    definition: &registry::Table,
+    key: &str,
+    value: Option<&Value>,
+) -> Result<serde_json::Map<String, Value>> {
     let mut result = serde_json::Map::new();
     let Some(value) = value else {
         return Ok(result);
     };
-    let definition = registry::table(table)?;
     result.insert(
         definition.key_path.clone(),
         serde_json::to_value(Key::String {
@@ -134,7 +143,13 @@ pub struct Projection {
     pub unique: bool,
 }
 pub fn projections(table: &str, key: &str, value: &Value) -> Result<Vec<Projection>> {
-    let definition = registry::table(table)?;
+    projections_for_table(registry::table(table)?, key, value)
+}
+pub(super) fn projections_for_table(
+    definition: &registry::Table,
+    key: &str,
+    value: &Value,
+) -> Result<Vec<Projection>> {
     let mut result = vec![Projection {
         index: "$primary".into(),
         ordered: ordered(&Key::String {

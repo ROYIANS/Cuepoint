@@ -63,11 +63,17 @@ for their publication, quotas and lifecycle scopes. Table 53, `desktopMediaImpor
 stores project-owned intent, frozen selection and import receipts; see
 [granted desktop media import](./desktop-media-import.md) for its admission,
 prepared-claim publication and Stop/unknown contracts. Table counts in shared tests
-derive from `schema.json`; the Rust registry assertion is the one hand-maintained
-count (53). Adding a table changes the registry hash. Fresh development does not
-authorize a new historical transition; preserve the already named 49-to-50
-recipe's target without expanding it to the current registry. Incompatible native workspaces remain
-rejected. Immutable version tables use
+derive from `schema.json`; native identity is enforced by a persisted raw registry
+snapshot and its hash, without a second hand-maintained table count that can panic
+on upgrade. Adding a table changes the registry hash. Released desktop workspaces
+must retain the automatic additive upgrade contract and immutable legacy snapshots in
+[native registry compatibility](./native-product-runtime.md#workspace-registry-identity-and-released-upgrades).
+Pure additions derive from old/new definitions, including consecutive future or
+development registries, without editing a target hash or migration recipe. Legacy
+workspaces without a snapshot need a known release hash; valid self-describing
+workspaces do not need a history entry. Missing/corrupt metadata, unknown legacy
+hashes and incompatible definitions remain rejected. The fresh development default
+does not override this released-data contract. Immutable version tables use
 their declared `versionId`, rather than an invented universal `id`.
 
 Existing business commands accept an optional final `ProductStore`. A `StoreTx`

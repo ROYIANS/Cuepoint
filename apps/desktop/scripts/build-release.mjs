@@ -9,10 +9,12 @@ import {desktopRoot,nativeTargetDirectory,resolveTools,toolInvocation,TOOL_VERSI
 import {fileDigest,listedFiles} from './release-artifacts.mjs';
 import {releaseSourceHashes} from './release-source-hashes.mjs';
 import {mediaReleaseIdentity,prepareMediaResources,verifyBundledMedia} from './media-resources.mjs';
+import {checkRegistryCompatibility} from './storage-compatibility.mjs';
 
 const root=resolve(desktopRoot,'../..');
 function git(args) {return execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();}
 export async function sourceVersion() {
+    await checkRegistryCompatibility(root);
     const [pkg,desktop,config,cargo]=await Promise.all(['package.json','apps/desktop/package.json','apps/desktop/src-tauri/tauri.conf.json','apps/desktop/src-tauri/Cargo.toml'].map(path=>readFile(resolve(root,path),'utf8')));
     const version=JSON.parse(pkg).version;
     const cargoVersion=/^version\s*=\s*"([^"]+)"/m.exec(cargo)?.[1];

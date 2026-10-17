@@ -3,6 +3,7 @@
 pub mod protocol;
 mod query;
 mod registry;
+mod registry_migrations;
 use crate::{Error, Hooks, Result, database, paths, product_binary, workspace::Boundary};
 use protocol::*;
 use rusqlite::{Connection, OptionalExtension, params};
@@ -17,6 +18,7 @@ use std::{
 };
 
 const SCHEMA: u32 = 1;
+const REGISTRY_SCHEMA: &str = "CREATE TABLE product_registry (singleton INTEGER PRIMARY KEY CHECK(singleton=1), schema_json TEXT NOT NULL)";
 const TTL: Duration = Duration::from_secs(120);
 const TABLES: &[(&str, &str)] = &[
     (
@@ -203,6 +205,11 @@ impl FullProductStore {
                 db.execute_batch(sql)?;
             }
             db.execute_batch(product_binary::BINARY_SCHEMA)?;
+            db.execute_batch(REGISTRY_SCHEMA)?;
+            db.execute(
+                "INSERT INTO product_registry VALUES (1,?)",
+                [registry::REGISTRY_JSON],
+            )?;
             db.execute(
                 "INSERT INTO product_workspace VALUES (?,?,?,0)",
                 params![id, SCHEMA, digest(registry::REGISTRY_JSON.as_bytes())],
@@ -214,18 +221,14 @@ impl FullProductStore {
             db.execute_batch("COMMIT")?;
             paths::namespace_checkpoint(&root.join(".local"))?;
         }
-        let (id, schema, mut registry_hash): (String, u32, String) = db.query_row(
+        let (id, schema, registry_hash): (String, u32, String) = db.query_row(
             "SELECT id,schema,registry_hash FROM product_workspace",
             [],
             |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
         )?;
         registry::uuid(&id)?;
-        if schema == SCHEMA {
-            registry_hash = migrate_registry(&db, registry_hash)?;
-        }
         if schema != SCHEMA
             || db.pragma_query_value::<u32, _>(None, "user_version", |r| r.get(0))? != SCHEMA
-            || registry_hash != digest(registry::REGISTRY_JSON.as_bytes())
         {
             return Err(Error::new(
                 "schema",
@@ -242,6 +245,7 @@ impl FullProductStore {
                 "Product workspace completion marker mismatch",
             ));
         }
+        registry_migrations::migrate_registry(&db, &registry_hash, &hooks)?;
         validate_open(&db)?;
         let boundary = Boundary::capture_paths(&root, &db_path, &writer_path)?;
         product_binary::recover(&root, &db, &id)?;
@@ -1371,52 +1375,11 @@ fn string_chunk(text: &str, offset: usize, length: usize) -> Result<Value> {
     }
     Ok(json!({"payload":&text[offset..end],"offset":end,"end":end==text.len()}))
 }
-// Registry hash of workspaces created by desktop-v0.1.0 and v0.1.1: the 49 tables before
-// `deviceSettings` was added. The SQL tables are fixed, so a new registry table only needs a
-// `product_tables` row; any other hash or table set is left to the schema check to reject.
-const LEGACY_REGISTRY_HASH: &str =
-    "a3405d1995059418dc36f69a9ff547c53ebe1c500a4aa64da642be4c6585af85";
-const LEGACY_REGISTRY_TARGET_HASH: &str =
-    "3c897189ef6f71517c55c86b5d24b7f9cd0e1cfd88d1b916b46345662187eff0";
-const LEGACY_REGISTRY_ADDED: &[&str] = &["deviceSettings"];
-fn migrate_registry(db: &Connection, stored: String) -> Result<String> {
-    let current = digest(registry::REGISTRY_JSON.as_bytes());
-    if stored != LEGACY_REGISTRY_HASH || current != LEGACY_REGISTRY_TARGET_HASH {
-        return Ok(stored);
-    }
-    let actual: BTreeSet<String> = db
-        .prepare("SELECT name FROM product_tables")?
-        .query_map([], |r| r.get(0))?
-        .collect::<std::result::Result<_, _>>()?;
-    let expected: BTreeSet<String> = registry::tables()
-        .keys()
-        .filter(|name| !LEGACY_REGISTRY_ADDED.contains(&name.as_str()))
-        .cloned()
-        .collect();
-    if actual != expected {
-        return Ok(stored);
-    }
-    db.execute_batch("BEGIN IMMEDIATE")?;
-    let upgraded = (|| -> Result<()> {
-        for name in LEGACY_REGISTRY_ADDED {
-            db.execute("INSERT INTO product_tables VALUES (?,0)", [*name])?;
-        }
-        db.execute(
-            "UPDATE product_workspace SET registry_hash=?",
-            [current.as_str()],
-        )?;
-        Ok(())
-    })();
-    match upgraded {
-        Ok(()) => db.execute_batch("COMMIT")?,
-        Err(error) => {
-            let _ = db.execute_batch("ROLLBACK");
-            return Err(error);
-        }
-    }
-    Ok(current)
-}
 fn validate_open(db: &Connection) -> Result<()> {
+    validate_open_for_registry(db, registry::REGISTRY_JSON, true)
+}
+fn validate_open_for_registry(db: &Connection, raw: &str, has_snapshot: bool) -> Result<()> {
+    let registry = registry::parse(raw)?;
     let integrity: String = db.query_row("PRAGMA integrity_check", [], |r| r.get(0))?;
     if integrity != "ok" {
         return Err(Error::new("corrupt", "Product SQLite integrity failed"));
@@ -1429,7 +1392,7 @@ fn validate_open(db: &Connection) -> Result<()> {
         .prepare("SELECT name FROM product_tables")?
         .query_map([], |r| r.get(0))?
         .collect::<std::result::Result<_, _>>()?;
-    if actual != registry::tables().keys().cloned().collect() {
+    if actual != registry.tables.keys().cloned().collect() {
         return Err(Error::new("schema", "Product table registry mismatch"));
     }
     let expected = Connection::open_in_memory()?;
@@ -1437,6 +1400,15 @@ fn validate_open(db: &Connection) -> Result<()> {
         expected.execute_batch(sql)?;
     }
     expected.execute_batch(product_binary::BINARY_SCHEMA)?;
+    if has_snapshot {
+        expected.execute_batch(REGISTRY_SCHEMA)?;
+        if registry_migrations::stored_snapshot(db)? != raw {
+            return Err(Error::new(
+                "corrupt",
+                "Persisted registry snapshot mismatch",
+            ));
+        }
+    }
     let schema = |db: &Connection| -> Result<BTreeSet<(String, String, String)>> {
         Ok(db
             .prepare("SELECT type,name,sql FROM sqlite_master WHERE sql IS NOT NULL ORDER BY name")?
@@ -1446,13 +1418,24 @@ fn validate_open(db: &Connection) -> Result<()> {
     if schema(db)? != schema(&expected)? {
         return Err(Error::new("schema", "Unexpected product SQLite schema"));
     }
+    let (workspace, schema_version, stored): (String, u32, String) = db.query_row(
+        "SELECT id,schema,registry_hash FROM product_workspace",
+        [],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+    )?;
+    registry::uuid(&workspace)?;
+    if schema_version != SCHEMA
+        || db.pragma_query_value::<u32, _>(None, "user_version", |row| row.get(0))? != SCHEMA
+        || stored != digest(raw.as_bytes())
+    {
+        return Err(Error::new("schema", "Product registry identity mismatch"));
+    }
     let sequence: i64 = db.query_row("SELECT change_sequence FROM product_workspace", [], |r| {
         r.get(0)
     })?;
     if !(0..=9_007_199_254_740_991).contains(&sequence) {
         return Err(Error::new("corrupt", "Invalid storage sequence"));
     }
-    let workspace: String = db.query_row("SELECT id FROM product_workspace", [], |r| r.get(0))?;
     let bad_epoch: i64 = db.query_row(
         "SELECT count(*) FROM product_tables WHERE epoch<0 OR epoch>?",
         [sequence],
@@ -1480,7 +1463,11 @@ fn validate_open(db: &Connection) -> Result<()> {
     for row in rows {
         let (table, key, payload, primary_sort, record_revision) = row?;
         let value: Value = serde_json::from_str(&payload)?;
-        if registry::primary(&value, &table)? != key {
+        let definition = registry
+            .tables
+            .get(&table)
+            .ok_or_else(|| Error::new("corrupt", "Unknown persisted product table"))?;
+        if registry::primary_for_table(&value, definition)? != key {
             return Err(Error::new("corrupt", "Persisted product key mismatch"));
         }
         if primary_sort
@@ -1496,7 +1483,7 @@ fn validate_open(db: &Connection) -> Result<()> {
                 "Persisted primary/revision projection mismatch",
             ));
         }
-        let expected = query::projections(&table, &key, &value)?;
+        let expected = query::projections_for_table(definition, &key, &value)?;
         let actual: BTreeSet<(String, Vec<u8>)> = db
             .prepare(
                 "SELECT index_name,sort_key FROM product_indexes WHERE table_name=? AND row_key=?",
@@ -1565,12 +1552,21 @@ fn validate_open(db: &Connection) -> Result<()> {
                     || Some(receipt.fingerprint) != fingerprint
                     || receipt.change_sequence > sequence as u64
                     || receipt.change_sequence == 0
-                    || receipt.tables.iter().any(|t| registry::table(t).is_err())
+                    || receipt
+                        .tables
+                        .iter()
+                        .any(|t| !registry.tables.contains_key(t))
                 {
                     return Err(Error::new("corrupt", "Invalid committed operation receipt"));
                 }
             }
             _ => return Err(Error::new("corrupt", "Invalid durable operation status")),
+        }
+    }
+    let mut changes = db.prepare("SELECT DISTINCT table_name FROM product_changes")?;
+    for table in changes.query_map([], |row| row.get::<_, String>(0))? {
+        if !registry.tables.contains_key(&table?) {
+            return Err(Error::new("corrupt", "Unknown persisted change table"));
         }
     }
     let errors: i64 = db.query_row("SELECT count(*) FROM pragma_foreign_key_check", [], |r| {

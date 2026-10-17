@@ -89,7 +89,7 @@
 - [ ] `/p/$projectId` dispatches by kind; video story/shots/produce live under `/p/$projectId/e/$episodeId`; non-video projects never run episode repair
 - [ ] Shot queries and create/delete use `episodeId`, not the whole project table
 - [ ] Delivery exports filter by both project and episode and wait for live queries to load
-- [ ] Shot `status` defaults to draft; filters live on `Episode.shotFilters` (empty arrays = all); fresh native startup performs no old-data migration
+- [ ] Shot `status` defaults to draft; filters live on `Episode.shotFilters` (empty arrays = all); normal desktop startup preserves [released workspace upgrades](./native-product-runtime.md#workspace-registry-identity-and-released-upgrades)
 - [ ] Browser and actual Rust SQLite core/business gates cover current tables, registered tools, binary carriers and uncertainty without callback/provider replay; isolated packaged acceptance precedes normal owner activation
 - [ ] Agent stream does not `scrollIntoView({ behavior: "smooth" })` on a sentinel; history message items memo by content/status/reasoning/reasoningDurationMs
 

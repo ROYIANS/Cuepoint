@@ -361,7 +361,7 @@
         },
         {
           "file": "apps/desktop/scripts/build-release.mjs",
-          "sha256": "0a496fbc85edc0469b36f36bb69ce6ac44ac912582cba857830ee9f084dfe48f"
+          "sha256": "23d53eb27739420f1dbd113acae4595fccd25c71220e826cf48e1f3c1c3130bb"
         },
         {
           "file": "apps/desktop/scripts/tool-resolver.mjs",

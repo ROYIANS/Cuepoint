@@ -1,0 +1,28 @@
+{
+  "format": 1,
+  "registries": [
+    {
+      "file": "desktop-v0.1.0.json",
+      "sha256": "a3405d1995059418dc36f69a9ff547c53ebe1c500a4aa64da642be4c6585af85",
+      "releases": [
+        "desktop-v0.1.0",
+        "desktop-v0.1.1"
+      ]
+    },
+    {
+      "file": "desktop-v0.1.2.json",
+      "sha256": "3c897189ef6f71517c55c86b5d24b7f9cd0e1cfd88d1b916b46345662187eff0",
+      "releases": [
+        "desktop-v0.1.2",
+        "desktop-v0.1.3"
+      ]
+    },
+    {
+      "file": "desktop-v0.1.4.json",
+      "sha256": "bb3a9483a600127ff43aeab1062830b616c1ad5b39b162dfa9520ab792154d52",
+      "releases": [
+        "desktop-v0.1.4"
+      ]
+    }
+  ]
+}

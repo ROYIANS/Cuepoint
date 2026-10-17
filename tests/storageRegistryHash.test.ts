@@ -1,15 +1,11 @@
-import {createHash} from "node:crypto";
-import {readFileSync} from "node:fs";
 import {describe,expect,it} from "vitest";
+import {checkRegistryCompatibility} from "../apps/desktop/scripts/storage-compatibility.mjs";
 
-// Current registry identity is intentionally reviewed. Fresh-development changes
-// update this pin and all actual owners; they do not authorize a new migration.
-// The named 49-to-50 recipe remains restricted to its original target hash.
-const PINNED_REGISTRY_HASH="bb3a9483a600127ff43aeab1062830b616c1ad5b39b162dfa9520ab792154d52";
-
-describe("table registry hash",()=>{
-    it("matches the reviewed current registry identity",()=>{
-        const bytes=readFileSync(new URL("../packages/studio/src/platform/storage/schema.json",import.meta.url));
-        expect(createHash("sha256").update(bytes).digest("hex")).toBe(PINNED_REGISTRY_HASH);
+describe("released native registry compatibility",()=>{
+    it("retains verified additive compatibility for every legacy release",async ()=>{
+        const result=await checkRegistryCompatibility();
+        expect(result.releases).toEqual(expect.arrayContaining([
+            "desktop-v0.1.0","desktop-v0.1.1","desktop-v0.1.2","desktop-v0.1.3","desktop-v0.1.4",
+        ]));
     });
 });

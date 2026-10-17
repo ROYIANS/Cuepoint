@@ -10,6 +10,21 @@ The rule applies to browser storage, the native SQLite workspace, project files,
 
 When a task names a compatibility requirement, record the exact source version, affected records/files, preservation rules, rollback behavior and acceptance tests in that task's PRD and design. Keep the compatibility boundary limited to the named requirement; do not generalize it to every historical shape.
 
+## Released desktop data exception
+
+The user explicitly required reliable upgrades preserving installed data on
+2026-10-17 after repeated startup failures. Shipped native workspace registries
+are persistent user data, not disposable development fixtures. Preserve the
+[released upgrade contract](../frontend/native-product-runtime.md#workspace-registry-identity-and-released-upgrades),
+its immutable release snapshots and migration/regression gate when changing the
+current registry. This ongoing requirement authorizes the documented legacy
+bootstrap and automatic additive upgrades from validated persisted registry
+snapshots, including successive future/development additions. It does not
+authorize accepting unknown formats, clearing user
+data, importing browser databases or inventing aliases for abandoned prototypes.
+The source versions, preservation rules, rollback and acceptance scope are recorded
+in that contract because this session explicitly declined a Trellis task.
+
 ## Current source contracts still apply
 
 Fresh development does not authorize removing active product behavior or current contracts without a task decision. Preserve code that the current product and tests still use. The exception is specifically for historical local data and legacy compatibility work that has not been requested.

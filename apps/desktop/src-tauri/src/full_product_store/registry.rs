@@ -7,14 +7,14 @@ use std::{
     sync::OnceLock,
 };
 
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub struct Index {
     pub name: String,
     pub key_paths: Vec<String>,
     pub unique: bool,
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub struct Table {
     pub key_path: String,
@@ -23,27 +23,71 @@ pub struct Table {
 }
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
-struct Registry {
-    version: u32,
-    tables: BTreeMap<String, Table>,
+pub(super) struct Registry {
+    pub version: u32,
+    #[serde(deserialize_with = "unique_tables")]
+    pub tables: BTreeMap<String, Table>,
 }
-pub const REGISTRY_JSON: &str = include_str!("../../../../../packages/studio/src/platform/storage/schema.json");
+fn unique_tables<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> std::result::Result<BTreeMap<String, Table>, D::Error> {
+    struct Tables;
+    impl<'de> serde::de::Visitor<'de> for Tables {
+        type Value = BTreeMap<String, Table>;
+        fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            formatter.write_str("unique product table definitions")
+        }
+        fn visit_map<M: serde::de::MapAccess<'de>>(
+            self,
+            mut map: M,
+        ) -> std::result::Result<Self::Value, M::Error> {
+            let mut tables = BTreeMap::new();
+            while let Some((name, table)) = map.next_entry::<String, Table>()? {
+                if tables.insert(name, table).is_some() {
+                    return Err(serde::de::Error::custom(
+                        "Duplicate product table definition",
+                    ));
+                }
+            }
+            Ok(tables)
+        }
+    }
+    deserializer.deserialize_map(Tables)
+}
+pub(super) fn parse(raw: &str) -> Result<Registry> {
+    let registry: Registry = serde_json::from_str(raw)
+        .map_err(|error| Error::new("schema", format!("Invalid product registry: {error}")))?;
+    let path = |value: &str| !value.is_empty() && value.split('.').all(|part| !part.is_empty());
+    if registry.version != 1 || registry.tables.is_empty() {
+        return Err(Error::new(
+            "schema",
+            "Unsupported or empty product registry",
+        ));
+    }
+    for (name, table) in &registry.tables {
+        let mut indexes = BTreeSet::new();
+        if name.is_empty()
+            || !path(&table.key_path)
+            || !matches!(table.scope.as_str(), "content" | "device" | "mixed")
+            || table.indexes.iter().any(|index| {
+                index.name.is_empty()
+                    || index.name == "$primary"
+                    || !indexes.insert(index.name.as_str())
+                    || index.key_paths.is_empty()
+                    || index.key_paths.iter().any(|value| !path(value))
+            })
+        {
+            return Err(Error::new("schema", "Invalid product table definition"));
+        }
+    }
+    Ok(registry)
+}
+pub const REGISTRY_JSON: &str =
+    include_str!("../../../../../packages/studio/src/platform/storage/schema.json");
 pub fn tables() -> &'static BTreeMap<String, Table> {
     static REGISTRY: OnceLock<Registry> = OnceLock::new();
     &REGISTRY
-        .get_or_init(|| {
-            let value: Registry =
-                serde_json::from_str(REGISTRY_JSON).expect("Bundled table registry");
-            assert_eq!(value.version, 1);
-            assert_eq!(value.tables.len(), 53);
-            assert!(
-                value
-                    .tables
-                    .values()
-                    .all(|t| matches!(t.scope.as_str(), "content" | "device" | "mixed"))
-            );
-            value
-        })
+        .get_or_init(|| parse(REGISTRY_JSON).expect("Bundled table registry"))
         .tables
 }
 pub fn table(name: &str) -> Result<&'static Table> {
@@ -178,8 +222,11 @@ pub fn field<'a>(value: &'a Value, path: &str) -> Option<&'a Value> {
     Some(current)
 }
 pub fn primary(value: &Value, table_name: &str) -> Result<String> {
+    primary_for_table(value, table(table_name)?)
+}
+pub(super) fn primary_for_table(value: &Value, definition: &Table) -> Result<String> {
     encoded(value, 0)?;
-    let node = field(value, &table(table_name)?.key_path)
+    let node = field(value, &definition.key_path)
         .and_then(Value::as_array)
         .ok_or_else(|| Error::new("invalid", "Missing encoded primary key"))?;
     let text = match node.first().and_then(Value::as_str) {

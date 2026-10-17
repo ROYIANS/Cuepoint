@@ -76,6 +76,18 @@ prerequisite while retaining Node22. Follow the executable cold-test contract
 in [Quality Guidelines](./quality-guidelines.md); downstream native matrix
 setup, warm ignored output and skipped native assertions are insufficient.
 
+`sourceVersion()` also executes the released-storage compatibility preflight
+(`scripts/storage-compatibility.mjs`) before prepare emits its build matrix or
+packaging begins. It validates immutable raw legacy registry snapshots, strict
+native JSON definitions and their additive compatibility with the current source.
+Pure additions need no registered target, handwritten hash or table recipe.
+This is source compatibility validation against the catalogued sources; it does
+not prove compatibility against later releases absent from that catalog, run tests
+or claim runtime acceptance. Retain immutable release snapshots when extending the
+release gate's historical coverage. The native build includes the same directory via
+`build.rs`, avoiding a second manually maintained file list or table count.
+See [released upgrades](./native-product-runtime.md#workspace-registry-identity-and-released-upgrades).
+
 Normal product identity is Cuepoint / `dev.cuepoint.prototype.offline` /
 `cuepoint-prototype`, profile normal, storage sqlite, features product-sqlite.
 Visible branding retains the dark PNG/ICO/ICNS assets. Versions in root package,

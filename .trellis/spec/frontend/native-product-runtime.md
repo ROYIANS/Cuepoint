@@ -497,34 +497,91 @@ survival. Wrong: manufacture a zero inode, ignore a flush error or erase an
 unproven stage during cancel. Correct: retain real identity/provenance, keep
 published status truthful and refuse ambiguous recovery.
 
-## Workspace registry identity and explicit compatibility
+## Workspace registry identity and released upgrades
 
-`schema.json` (`packages/studio/src/platform/storage/schema.json`) is bundled into the Rust registry and its SHA-256 is
-stored in `product_workspace.registry_hash` when a workspace is created. An installed workspace only
-opens while that hash matches the running build or an explicitly supported
-historical transition succeeds. A changed current registry is a different
-workspace schema. The default [fresh-development policy](../guides/development-change-policy.md)
-requires fresh fixtures and does not authorize adding a new migration solely
-because a local workspace stores an earlier hash.
+`schema.json` (`packages/studio/src/platform/storage/schema.json`) is bundled into
+Rust. Its raw-byte SHA-256 is stored in `product_workspace.registry_hash`.
+Released native workspaces are persistent user data. The explicit user requirement
+of 2026-10-17 is to preserve upgrades from every shipped desktop registry; the
+[fresh-development default](../guides/development-change-policy.md) must not be
+used to remove this contract or replace its regression tests with rejection tests.
 
-- Adding a table requires synchronized current schema JSON/TypeScript,
-  table registration, browser fresh-store version/declarations, transaction and
-  lifecycle scopes, and intentionally reviewed current registry/hash fixtures.
-  A pinned hash is an identity check, not automatic approval for compatibility.
-- Preserve the existing explicitly scoped 49-to-50 transition in
-  `apps/desktop/src-tauri/src/full_product_store/mod.rs` (`migrate_registry`)
-  according to its named source/target registry. Do not silently reinterpret
-  its old source constant as permission to migrate into every later registry.
-  Any additional transition requires a recorded source version, preservation
-  rules, rollback and acceptance scope in the owning task.
-- SQL tables in Rust are generic. An explicitly authorized additive transition
-  can add a `product_tables` row and the named target hash in one
-  `BEGIN IMMEDIATE` transaction; this mechanism does not itself authorize a
-  transition to the current registry.
-- `tests/storageRegistryHash.test.ts` pins the reviewed current hash. A hash
-  change must be reviewed and synchronized with actual owners in the same
-  change. Only an explicitly requested compatibility exception requires a new
-  previous-hash migration; otherwise incompatible workspaces remain rejected.
-- Shipped hashes: `a3405d19…` (desktop-v0.1.0/v0.1.1, 49 tables), `3c897189…` (desktop-v0.1.2, 50 tables).
-- Bridge messages keep the Rust error code (`原生存储连接失败（schema）`). Codes outside the known
-  storage set are fixed Rust literals, never user data.
+The repeated startup incident on 2026-10-17 was change propagation plus a
+compatibility policy/test gap: 0.1.3 repaired 49-to-50, but 0.1.4 added three
+registry tables while the recipe still required the old 50-table target hash.
+A test explicitly rejected 49-to-53, and updating only the current hash pin
+could pass without any upgrade path. Do not restore that rejection expectation;
+release compatibility must be exercised against the actual historical sources.
+
+Immutable legacy bootstrap evidence lives in
+`apps/desktop/src-tauri/src/full_product_store/registry-history/`:
+
+| Source releases | Tables | Original SHA-256 prefix | Additions to current 53 |
+| --- | --- | --- | --- |
+| desktop-v0.1.0 / v0.1.1 | 49 | `a3405d19` | deviceSettings, agentJobs, agentJobResultChunks, desktopMediaImports |
+| desktop-v0.1.2 / v0.1.3 | 50 | `3c897189` | agentJobs, agentJobResultChunks, desktopMediaImports |
+| desktop-v0.1.4 | 53 | `bb3a9483` | none |
+
+The JSON snapshots retain exact release-tag bytes. `catalog.json` records only
+files, complete hashes and release identities; it must not contain a current
+`target` or per-source `addTables` recipes. The raw current registry determines
+the target hash and additions derive from a strict old/new definition comparison.
+Native `build.rs` includes the snapshot directory without another manual file list.
+
+Every newly created or upgraded workspace stores its exact raw registry in the
+one-row SQL metadata table `product_registry(singleton, schema_json)`, alongside
+`product_workspace.registry_hash`. This is storage metadata, not a business table
+in `schema.json`. When metadata exists, its exact hash, strict registry shape,
+physical SQL definition and singleton row are authoritative. Missing rows,
+malformed JSON, duplicate keys, an empty registry or a hash mismatch must reject;
+do not fall back to a historical snapshot. Only legacy databases without that SQL
+table bootstrap from the immutable snapshots by exact known hash. An unknown
+legacy hash still rejects. Once bootstrapped, future and development registries
+can upgrade using their own persisted definitions without new catalog entries.
+
+The behavior gap and change boundary are the native workspace opener, registry
+parser, source-parameterized integrity validator, migration regressions, immutable
+legacy history and release source preflight. Before migration, verify the source
+identity/table set, schema/user_version/ready marker and full source integrity,
+physical DDL, rows, primary/index projections, changes, receipts and binary
+references against that source registry. Every old table must remain present
+with exactly the same keyPath, scope and ordered index definitions/unique flags.
+Only missing current table names may be added; SQL storage, binary schema, record
+codec and query/index encoding stay unchanged.
+
+Use one `BEGIN IMMEDIATE` for source validation, metadata bootstrap/update,
+new `product_tables` rows at epoch zero and the new hash. Run the same full
+validator against the target registry before COMMIT. Errors and interrupted
+transactions roll back metadata, table rows and identity together. Preserve
+workspace ID, sequence, old table epochs, record bytes/revisions, projections,
+operation receipts and managed assets. Reopen validates without migrating again.
+No clearing, reset, export/import replacement, browser migration or downgrade is
+authorized. Updating a live database's metadata requires the matching new binary;
+an older installed binary does not understand the additional SQL metadata table.
+
+Adding a table still requires synchronized schema JSON/TypeScript, browser fresh
+schema/version, lifecycle and transaction scopes. It does not require a migration
+hash, target recipe, native count pin or release snapshot for runtime admission.
+Formatting-only registry changes also update raw identity automatically. Changed
+or removed keys, indexes, unique flags, scopes or tables require a separately
+designed data migration; this automatic additive path must reject them.
+
+`tests/storageRegistryHash.test.ts`, native migration regressions and
+`scripts/storage-compatibility.test.mjs` check this contract. The shared preflight
+runs from `sourceVersion()` before release matrix output or packaging. It blocks
+modified legacy snapshots, malformed definitions and incompatibility with the
+catalogued sources. It does not cover later released table definitions absent
+from that catalog; add their immutable snapshots to extend release-time coverage.
+The runtime still validates every workspace's own full source registry.
+
+Acceptance includes 49/50/53 legacy bootstrap, unchanged-catalog successive
+53-to-54-to-55 upgrades, records/indexes/receipts in the first future table,
+formatting-only identity changes, reopen, failure rollback/retry, corrupt metadata
+and bad source rejection. The actual prepare CLI must accept an added table with
+an unchanged catalog and refuse incompatible legacy definitions before any matrix
+output. A current-hash pin alone does not prove upgrade compatibility. Actual
+user-data checks run on a backup/copy before any repair.
+
+Bridge messages retain the native storage error code, for example
+`原生存储连接失败（schema）`; do not diagnose this as an operating-system failure
+without checking the stored registry identity.

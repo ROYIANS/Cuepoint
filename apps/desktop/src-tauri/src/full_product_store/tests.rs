@@ -37,9 +37,23 @@ fn row(id: &str, properties: Vec<(&str, Value)>) -> Value {
     encoded(p)
 }
 fn finish(store: &mut FullProductStore, handle: &Value, mutations: Vec<Value>) -> Result<Value> {
-    let payload = mutations
+    finish_entries(
+        store,
+        handle,
+        mutations
+            .into_iter()
+            .map(|mutation| json!({"kind":"mutation","mutation":mutation}))
+            .collect(),
+    )
+}
+fn finish_entries(
+    store: &mut FullProductStore,
+    handle: &Value,
+    entries: Vec<Value>,
+) -> Result<Value> {
+    let payload = entries
         .into_iter()
-        .map(|m| serde_json::to_string(&json!({"kind":"mutation","mutation":m})).unwrap() + "\n")
+        .map(|entry| serde_json::to_string(&entry).unwrap() + "\n")
         .collect::<String>();
     let mut sha = Sha256::new();
     sha.update(b"cuepoint-batch-v1\n");
@@ -746,64 +760,838 @@ fn encoded_metadata_envelopes_are_bounded_even_for_control_heavy_chunks() {
     dispose(store);
 }
 
-fn downgrade_to_legacy_registry(root: &std::path::Path, extra_missing: Option<&str>) {
-    let db = rusqlite::Connection::open(root.join(".local/state.sqlite")).unwrap();
-    db.execute("DELETE FROM product_tables WHERE name IN ('deviceSettings','agentJobs','agentJobResultChunks','desktopMediaImports')", [])
-        .unwrap();
-    if let Some(name) = extra_missing {
-        db.execute("DELETE FROM product_tables WHERE name=?", [name])
-            .unwrap();
+fn registry_catalog() -> Value {
+    serde_json::from_str(registry_migrations::CATALOG_JSON).unwrap()
+}
+fn downgrade_registry(root: &std::path::Path, source: usize) {
+    let catalog = registry_catalog();
+    let entry = &catalog["registries"][source];
+    let raw = registry_migrations::SNAPSHOTS
+        .iter()
+        .find(|(file, _)| *file == entry["file"].as_str().unwrap())
+        .unwrap()
+        .1;
+    let tables = registry::parse(raw).unwrap().tables;
+    let db = Connection::open(root.join(".local/state.sqlite")).unwrap();
+    for name in registry::tables()
+        .keys()
+        .filter(|name| !tables.contains_key(*name))
+    {
+        assert_eq!(
+            db.execute("DELETE FROM product_tables WHERE name=?", [name])
+                .unwrap(),
+            1
+        );
     }
+    db.execute_batch("DROP TABLE product_registry").unwrap();
     db.execute(
         "UPDATE product_workspace SET registry_hash=?",
-        ["a3405d1995059418dc36f69a9ff547c53ebe1c500a4aa64da642be4c6585af85"],
+        [entry["sha256"].as_str().unwrap()],
     )
     .unwrap();
 }
-#[test]
-fn legacy_49_registry_is_not_silently_migrated_to_current_53() {
+fn released_fixture(source: usize) -> (PathBuf, Value, Value) {
     let mut store = fixture(Hooks::default());
+    let value = row(
+        "p",
+        vec![
+            ("kind", json!(["str", "film"])),
+            ("updatedAt", json!(["num", 17])),
+            ("clear", json!(["undef"])),
+        ],
+    );
+    let h = begin(&mut store, &["projects"]);
+    let receipt = finish(&mut store, &h, vec![put("projects", "p", value.clone())]).unwrap();
     let root = store.root.clone();
     store.close().unwrap();
     drop(store);
-    downgrade_to_legacy_registry(&root, None);
-    let error = FullProductStore::open(root.clone(), false, Hooks::default())
-        .err()
+    downgrade_registry(&root, source);
+    fs::write(
+        root.join("assets/preserved.bin"),
+        b"original managed asset bytes",
+    )
+    .unwrap();
+    (root, value, receipt)
+}
+type DatabaseState = BTreeMap<String, Vec<Vec<rusqlite::types::Value>>>;
+fn database_state(root: &std::path::Path) -> DatabaseState {
+    let db = Connection::open(root.join(".local/state.sqlite")).unwrap();
+    let names: Vec<String> = db
+        .prepare("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+        .unwrap()
+        .query_map([], |row| row.get(0))
+        .unwrap()
+        .collect::<std::result::Result<_, _>>()
         .unwrap();
-    assert_eq!(error.code, "schema");
-    let db = rusqlite::Connection::open(root.join(".local/state.sqlite")).unwrap();
-    let (rows, device, hash): (i64, i64, String) = db.query_row(
-        "SELECT (SELECT count(*) FROM product_tables),(SELECT count(*) FROM product_tables WHERE name='deviceSettings'),(SELECT registry_hash FROM product_workspace)", [],
-        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
-    ).unwrap();
-    assert_eq!(rows, 49);
-    assert_eq!(device, 0);
-    assert_eq!(hash, LEGACY_REGISTRY_HASH);
-    drop(db);
-    std::fs::remove_dir_all(root).unwrap();
+    let mut queries = names
+        .into_iter()
+        .map(|name| {
+            let sql = format!("SELECT * FROM \"{name}\" ORDER BY rowid");
+            (name, sql)
+        })
+        .collect::<Vec<_>>();
+    queries.push((
+        "#schema".into(),
+        "SELECT type,name,sql FROM sqlite_master ORDER BY type,name".into(),
+    ));
+    queries.push(("#user_version".into(), "PRAGMA user_version".into()));
+    queries
+        .into_iter()
+        .map(|(name, sql)| {
+            let mut statement = db.prepare(&sql).unwrap();
+            let columns = statement.column_count();
+            let rows = statement
+                .query_map([], |row| {
+                    (0..columns)
+                        .map(|column| row.get::<_, rusqlite::types::Value>(column))
+                        .collect::<rusqlite::Result<Vec<_>>>()
+                })
+                .unwrap()
+                .collect::<std::result::Result<_, _>>()
+                .unwrap();
+            (name, rows)
+        })
+        .collect()
+}
+fn transitioned_state(mut state: DatabaseState, target: &str) -> DatabaseState {
+    use rusqlite::types::Value::{Integer, Text};
+    state.get_mut("product_workspace").unwrap()[0][2] = Text(digest(target.as_bytes()));
+    let present: BTreeSet<String> = state["product_tables"]
+        .iter()
+        .map(|row| match &row[0] {
+            Text(name) => name.clone(),
+            _ => panic!("table name"),
+        })
+        .collect();
+    for name in registry::parse(target)
+        .unwrap()
+        .tables
+        .keys()
+        .filter(|name| !present.contains(*name))
+    {
+        state
+            .get_mut("product_tables")
+            .unwrap()
+            .push(vec![Text(name.clone()), Integer(0)]);
+    }
+    if !state.contains_key("product_registry") {
+        let rows = state.get_mut("#schema").unwrap();
+        rows.push(vec![
+            Text("table".into()),
+            Text("product_registry".into()),
+            Text(REGISTRY_SCHEMA.into()),
+        ]);
+        rows.sort_by_key(|row| format!("{:?}{:?}", row[0], row[1]));
+    }
+    state.insert(
+        "product_registry".into(),
+        vec![vec![Integer(1), Text(target.into())]],
+    );
+    state
+}
+fn upgraded_state(state: DatabaseState, _source: usize) -> DatabaseState {
+    transitioned_state(state, registry::REGISTRY_JSON)
 }
 #[test]
-fn legacy_registry_with_other_differences_is_still_rejected() {
-    let mut store = fixture(Hooks::default());
-    let root = store.root.clone();
-    store.close().unwrap();
-    drop(store);
-    downgrade_to_legacy_registry(&root, Some("projects"));
-    let error = FullProductStore::open(root.clone(), false, Hooks::default())
-        .err()
-        .unwrap();
-    assert_eq!(error.code, "schema");
-    let db = rusqlite::Connection::open(root.join(".local/state.sqlite")).unwrap();
-    let rows: i64 = db
-        .query_row(
-            "SELECT count(*) FROM product_tables WHERE name='deviceSettings'",
-            [],
-            |r| r.get(0),
+fn every_released_registry_upgrades_directly_preserving_all_durable_state_and_reopens_without_migration()
+ {
+    for source in [0, 1, 2] {
+        let (root, value, receipt) = released_fixture(source);
+        let before = database_state(&root);
+        let mut store = FullProductStore::open(root.clone(), false, Hooks::default()).unwrap();
+        assert_eq!(database_state(&root), upgraded_state(before, source));
+        assert_eq!(
+            fs::read(root.join("assets/preserved.bin")).unwrap(),
+            b"original managed asset bytes"
+        );
+        assert_eq!(
+            store.sequence().unwrap(),
+            receipt["changeSequence"].as_u64().unwrap()
+        );
+        let h = begin(&mut store, &["projects"]);
+        assert_eq!(get(&mut store, &h, "projects", "p")["row"]["value"], value);
+        let page = scan(&mut store, &h, "projects", Some("kind")).unwrap();
+        assert_eq!(page["rows"].as_array().unwrap().len(), 1);
+        assert_eq!(page["rows"][0]["row"]["key"], "p");
+        call(&mut store, "abort", h).unwrap();
+        let status = call(
+            &mut store,
+            "status",
+            json!({"operationId":receipt["operationId"],"fingerprint":receipt["fingerprint"]}),
         )
         .unwrap();
-    assert_eq!(rows, 0);
-    drop(db);
-    fs::remove_dir_all(&root).unwrap();
+        assert_eq!(status, receipt);
+        store.close().unwrap();
+        drop(store);
+        let after = database_state(&root);
+        let store = FullProductStore::open(
+            root.clone(),
+            false,
+            Hooks::new(|point| {
+                if point == "product-registry-precommit" {
+                    Err(Error::new(
+                        "test",
+                        "A current registry must not migrate twice",
+                    ))
+                } else {
+                    Ok(())
+                }
+            }),
+        )
+        .unwrap();
+        assert_eq!(database_state(&root), after);
+        dispose(store);
+    }
+}
+#[test]
+fn registry_upgrade_precommit_failure_rolls_back_every_change_and_can_retry() {
+    use std::sync::{
+        Arc,
+        atomic::{AtomicUsize, Ordering},
+    };
+    for source in [0, 1, 2] {
+        let (root, _, _) = released_fixture(source);
+        let before = database_state(&root);
+        let reached = Arc::new(AtomicUsize::new(0));
+        let count = reached.clone();
+        let error = FullProductStore::open(
+            root.clone(),
+            false,
+            Hooks::new(move |point| {
+                if point == "product-registry-precommit" {
+                    count.fetch_add(1, Ordering::SeqCst);
+                    Err(Error::new("test", "Injected registry precommit failure"))
+                } else {
+                    Ok(())
+                }
+            }),
+        )
+        .err()
+        .unwrap();
+        assert_eq!(error.code, "test");
+        assert_eq!(reached.load(Ordering::SeqCst), 1);
+        assert_eq!(database_state(&root), before);
+        let store = FullProductStore::open(root.clone(), false, Hooks::default()).unwrap();
+        assert_eq!(database_state(&root), upgraded_state(before, source));
+        assert_eq!(
+            fs::read(root.join("assets/preserved.bin")).unwrap(),
+            b"original managed asset bytes"
+        );
+        dispose(store);
+    }
+}
+#[test]
+fn released_registry_bootstrap_preserves_claimed_managed_bytes_and_binary_rows() {
+    use product_binary::{BinaryReply, BinaryRequest};
+    for source in [0, 1, 2] {
+        let mut store = fixture(Hooks::default());
+        let bytes = b"managed bytes must survive additive upgrades";
+        let stage_id = match store
+            .run_binary(
+                BinaryRequest::Prepare {
+                    byte_length: bytes.len() as u64,
+                    mime_type: "application/octet-stream".into(),
+                },
+                || Ok(()),
+            )
+            .unwrap()
+        {
+            BinaryReply::Prepared { stage_id, .. } => stage_id,
+            _ => panic!("prepared binary"),
+        };
+        store
+            .run_binary(
+                BinaryRequest::Write {
+                    stage_id: stage_id.clone(),
+                    offset: 0,
+                    bytes: bytes.to_vec(),
+                },
+                || Ok(()),
+            )
+            .unwrap();
+        let claim = match store
+            .run_binary(
+                BinaryRequest::Seal {
+                    stage_id,
+                    content_hash: digest(bytes),
+                },
+                || Ok(()),
+            )
+            .unwrap()
+        {
+            BinaryReply::Sealed { claim } => claim,
+            _ => panic!("sealed binary"),
+        };
+        let reference = claim.reference.clone();
+        let h = begin(&mut store, &["media"]);
+        let value = row("m", vec![("blob", json!(["binary", reference]))]);
+        finish_entries(
+            &mut store,
+            &h,
+            vec![
+                json!({"kind":"mutation","mutation":put("media","m",value)}),
+                json!({"kind":"claim","claim":claim}),
+            ],
+        )
+        .unwrap();
+        let root = store.root.clone();
+        store.close().unwrap();
+        drop(store);
+        downgrade_registry(&root, source);
+        let before = database_state(&root);
+        let mut store = FullProductStore::open(root.clone(), false, Hooks::default()).unwrap();
+        assert_eq!(
+            database_state(&root),
+            transitioned_state(before, registry::REGISTRY_JSON)
+        );
+        let lease_id = match store
+            .run_binary(BinaryRequest::ReadStart { reference }, || Ok(()))
+            .unwrap()
+        {
+            BinaryReply::ReadReady { lease_id, .. } => lease_id,
+            _ => panic!("verified managed read"),
+        };
+        match store
+            .run_binary(
+                BinaryRequest::ReadChunk {
+                    lease_id: lease_id.clone(),
+                    offset: 0,
+                    byte_length: bytes.len(),
+                },
+                || Ok(()),
+            )
+            .unwrap()
+        {
+            BinaryReply::Bytes {
+                bytes: actual,
+                end: true,
+                ..
+            } => assert_eq!(actual, bytes),
+            _ => panic!("complete managed bytes"),
+        }
+        store
+            .run_binary(
+                BinaryRequest::ReadVerify {
+                    lease_id: lease_id.clone(),
+                },
+                || Ok(()),
+            )
+            .unwrap();
+        store
+            .run_binary(BinaryRequest::ReadClose { lease_id }, || Ok(()))
+            .unwrap();
+        dispose(store);
+    }
+}
+#[test]
+fn invalid_released_workspaces_are_rejected_without_publishing_registry_changes() {
+    for source in [0, 1, 2] {
+        for fault in [
+            "schema",
+            "user_version",
+            "marker",
+            "ddl",
+            "index",
+            "unknown",
+            "malformed",
+            "missing",
+            "extra",
+            "orphan",
+            "receipt_table",
+            "change_table",
+        ] {
+            let (root, _, _) = released_fixture(source);
+            let db = Connection::open(root.join(".local/state.sqlite")).unwrap();
+            match fault {
+                "schema" => {
+                    db.execute("UPDATE product_workspace SET schema=2", [])
+                        .unwrap();
+                }
+                "user_version" => db.pragma_update(None, "user_version", 2).unwrap(),
+                "marker" => {
+                    let path = root.join("workspace.ready.json");
+                    let mut marker: Value =
+                        serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
+                    marker["workspaceId"] = json!(uuid::Uuid::new_v4().to_string());
+                    fs::write(path, serde_json::to_vec(&marker).unwrap()).unwrap();
+                }
+                "ddl" => db
+                    .execute_batch("ALTER TABLE product_prepared ADD COLUMN unexpected TEXT")
+                    .unwrap(),
+                "index" => {
+                    assert_eq!(db.execute("DELETE FROM product_indexes WHERE table_name='projects' AND index_name='kind'", []).unwrap(), 1);
+                }
+                "unknown" => {
+                    db.execute(
+                        "UPDATE product_workspace SET registry_hash=?",
+                        ["0".repeat(64)],
+                    )
+                    .unwrap();
+                }
+                "malformed" => {
+                    db.execute(
+                        "UPDATE product_workspace SET registry_hash='not-a-registry-hash'",
+                        [],
+                    )
+                    .unwrap();
+                }
+                "orphan" => {
+                    db.pragma_update(None, "foreign_keys", false).unwrap();
+                    db.execute(
+                        "INSERT INTO product_revisions VALUES ('futureOne','orphan',1)",
+                        [],
+                    )
+                    .unwrap();
+                    assert_eq!(
+                        db.query_row("SELECT count(*) FROM pragma_foreign_key_check", [], |row| {
+                            row.get::<_, i64>(0)
+                        })
+                        .unwrap(),
+                        1
+                    );
+                }
+                "receipt_table" => {
+                    let text: String = db
+                        .query_row(
+                            "SELECT receipt FROM product_operations WHERE status='committed'",
+                            [],
+                            |row| row.get(0),
+                        )
+                        .unwrap();
+                    let mut receipt: Value = serde_json::from_str(&text).unwrap();
+                    receipt["tables"] = json!(["futureOne"]);
+                    db.execute(
+                        "UPDATE product_operations SET receipt=? WHERE status='committed'",
+                        [receipt.to_string()],
+                    )
+                    .unwrap();
+                }
+                "change_table" => {
+                    assert_eq!(
+                        db.execute("UPDATE product_changes SET table_name='futureOne'", [])
+                            .unwrap(),
+                        1
+                    );
+                }
+                "missing" => {
+                    db.execute("DELETE FROM product_tables WHERE name='shots'", [])
+                        .unwrap();
+                }
+                "extra" => {
+                    db.execute("INSERT INTO product_tables VALUES ('unexpected',0)", [])
+                        .unwrap();
+                }
+                _ => unreachable!(),
+            }
+            drop(db);
+            let before = database_state(&root);
+            let marker = fs::read(root.join("workspace.ready.json")).unwrap();
+            let error = FullProductStore::open(root.clone(), false, Hooks::default())
+                .err()
+                .unwrap();
+            assert!(
+                matches!(error.code, "schema" | "incomplete" | "corrupt"),
+                "{fault}: {error}"
+            );
+            assert_eq!(database_state(&root), before, "{fault}");
+            assert_eq!(fs::read(root.join("workspace.ready.json")).unwrap(), marker);
+            fs::remove_dir_all(root).unwrap();
+        }
+    }
+}
+fn future_registry(raw: &str, name: &str) -> String {
+    let mut registry: Value = serde_json::from_str(raw).unwrap();
+    assert!(registry["tables"].get(name).is_none());
+    registry["tables"][name] = json!({"keyPath":"entryId","scope":"mixed","indexes":[
+        {"name":"ownerId","keyPaths":["ownerId"],"unique":false},
+        {"name":"ownerName","keyPaths":["ownerId","name"],"unique":true}
+    ]});
+    serde_json::to_string_pretty(&registry).unwrap()
+}
+fn migration_fixture() -> (PathBuf, Connection) {
+    let mut store = fixture(Hooks::default());
+    let root = store.root.clone();
+    let h = begin(&mut store, &["projects"]);
+    finish(
+        &mut store,
+        &h,
+        vec![put(
+            "projects",
+            "original",
+            row("original", vec![("kind", json!(["str", "film"]))]),
+        )],
+    )
+    .unwrap();
+    store.close().unwrap();
+    drop(store);
+    let db = database::connect(&root.join(".local/state.sqlite"), false, false).unwrap();
+    (root, db)
+}
+fn migrate_to(db: &Connection, target: &str, hooks: &Hooks) -> Result<()> {
+    let stored: String =
+        db.query_row("SELECT registry_hash FROM product_workspace", [], |row| {
+            row.get(0)
+        })?;
+    registry_migrations::migrate_registry_to(db, &stored, target, hooks)
+}
+fn insert_future_record(db: &mut Connection, raw: &str) -> Value {
+    let registry = registry::parse(raw).unwrap();
+    let definition = &registry.tables["futureOne"];
+    let value = encoded(vec![
+        ("entryId", json!(["str", "future-record"])),
+        ("ownerId", json!(["str", "owner"])),
+        ("name", json!(["str", "retained"])),
+        ("clear", json!(["undef"])),
+    ]);
+    let key = registry::primary_for_table(&value, definition).unwrap();
+    let operation = uuid::Uuid::new_v4().to_string();
+    let sequence: i64 = db
+        .query_row(
+            "SELECT change_sequence+1 FROM product_workspace",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    let receipt = json!({"status":"committed","operationId":operation,"fingerprint":digest(b"future-record"),"changeSequence":sequence,"tables":["futureOne"]});
+    let transaction = db.transaction().unwrap();
+    transaction
+        .execute(
+            "INSERT INTO product_records VALUES (?,?,?,?,?)",
+            params![
+                "futureOne",
+                key,
+                query::ordered(&Key::String {
+                    value: WireText::from_internal(&key).unwrap()
+                })
+                .unwrap(),
+                value.to_string(),
+                sequence
+            ],
+        )
+        .unwrap();
+    transaction
+        .execute(
+            "INSERT INTO product_revisions VALUES (?,?,?)",
+            params!["futureOne", key, sequence],
+        )
+        .unwrap();
+    for projection in query::projections_for_table(definition, &key, &value).unwrap() {
+        transaction
+            .execute(
+                "INSERT INTO product_indexes VALUES (?,?,?,?)",
+                params!["futureOne", projection.index, key, projection.ordered],
+            )
+            .unwrap();
+        if projection.unique {
+            transaction
+                .execute(
+                    "INSERT INTO product_unique_indexes VALUES (?,?,?,?)",
+                    params!["futureOne", projection.index, projection.ordered, key],
+                )
+                .unwrap();
+        }
+    }
+    transaction
+        .execute(
+            "INSERT INTO product_changes VALUES (?,0,?,?,?,?)",
+            params![
+                sequence,
+                "futureOne",
+                key,
+                "{}",
+                serde_json::to_string(
+                    &query::index_values_for_table(definition, &key, Some(&value)).unwrap()
+                )
+                .unwrap()
+            ],
+        )
+        .unwrap();
+    transaction
+        .execute(
+            "INSERT INTO product_operations VALUES (?,?,'committed',?)",
+            params![
+                operation,
+                receipt["fingerprint"].as_str().unwrap(),
+                receipt.to_string()
+            ],
+        )
+        .unwrap();
+    transaction
+        .execute(
+            "UPDATE product_tables SET epoch=? WHERE name='futureOne'",
+            [sequence],
+        )
+        .unwrap();
+    transaction
+        .execute("UPDATE product_workspace SET change_sequence=?", [sequence])
+        .unwrap();
+    transaction.commit().unwrap();
+    validate_open_for_registry(db, raw, true).unwrap();
+    value
+}
+#[test]
+fn automatic_registry_additions_are_transitive_without_catalog_edits_and_preserve_future_records() {
+    let (root, mut db) = migration_fixture();
+    let first = future_registry(registry::REGISTRY_JSON, "futureOne");
+    let second = future_registry(&first, "futureTwo");
+    for future in [&first, &second] {
+        assert!(
+            registry_catalog()["registries"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .all(|entry| entry["sha256"] != digest(future.as_bytes()))
+        );
+    }
+    let before = database_state(&root);
+    migrate_to(&db, &first, &Hooks::default()).unwrap();
+    assert_eq!(database_state(&root), transitioned_state(before, &first));
+    let value = insert_future_record(&mut db, &first);
+    let before = database_state(&root);
+    // Reopen the actual SQLite connection; the next source is an unregistered development hash.
+    db.close().unwrap();
+    let db = database::connect(&root.join(".local/state.sqlite"), false, false).unwrap();
+    migrate_to(&db, &second, &Hooks::default()).unwrap();
+    assert_eq!(database_state(&root), transitioned_state(before, &second));
+    let payload: String = db
+        .query_row(
+            "SELECT payload FROM product_records WHERE table_name='futureOne'",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert_eq!(serde_json::from_str::<Value>(&payload).unwrap(), value);
+    let unique: i64 = db.query_row("SELECT count(*) FROM product_unique_indexes WHERE table_name='futureOne' AND index_name='ownerName'", [], |row| row.get(0)).unwrap();
+    assert_eq!(unique, 1);
+    let before = database_state(&root);
+    migrate_to(
+        &db,
+        &second,
+        &Hooks::new(|point| {
+            assert_ne!(
+                point, "product-registry-precommit",
+                "A persisted current snapshot must be a no-op"
+            );
+            Ok(())
+        }),
+    )
+    .unwrap();
+    assert_eq!(database_state(&root), before);
+    // Raw formatting changes identity but preserve every definition and all business state.
+    let formatted = format!("{second}\n");
+    migrate_to(&db, &formatted, &Hooks::default()).unwrap();
+    assert_eq!(
+        database_state(&root),
+        transitioned_state(before, &formatted)
+    );
+    db.close().unwrap();
+    fs::remove_dir_all(root).unwrap();
+}
+#[test]
+fn automatic_registry_upgrade_failure_rolls_back_metadata_and_additions_then_retries() {
+    use std::sync::{
+        Arc,
+        atomic::{AtomicUsize, Ordering},
+    };
+    let (root, mut db) = migration_fixture();
+    let first = future_registry(registry::REGISTRY_JSON, "futureOne");
+    let second = future_registry(&first, "futureTwo");
+    for target in [&first, &second] {
+        let before = database_state(&root);
+        let reached = Arc::new(AtomicUsize::new(0));
+        let count = reached.clone();
+        let error = migrate_to(
+            &db,
+            target,
+            &Hooks::new(move |point| {
+                if point == "product-registry-precommit" {
+                    count.fetch_add(1, Ordering::SeqCst);
+                    Err(Error::new("test", "Interrupted additive registry upgrade"))
+                } else {
+                    Ok(())
+                }
+            }),
+        )
+        .unwrap_err();
+        assert_eq!(error.code, "test");
+        assert_eq!(reached.load(Ordering::SeqCst), 1);
+        assert_eq!(database_state(&root), before);
+        migrate_to(&db, target, &Hooks::default()).unwrap();
+        assert_eq!(database_state(&root), transitioned_state(before, target));
+        if target == &first {
+            insert_future_record(&mut db, &first);
+        }
+    }
+    db.close().unwrap();
+    fs::remove_dir_all(root).unwrap();
+}
+#[test]
+fn changed_or_removed_future_definitions_and_invalid_future_data_do_not_write() {
+    let (root, mut db) = migration_fixture();
+    let first = future_registry(registry::REGISTRY_JSON, "futureOne");
+    migrate_to(&db, &first, &Hooks::default()).unwrap();
+    insert_future_record(&mut db, &first);
+    for change in [
+        "delete",
+        "primary",
+        "scope",
+        "index",
+        "unique",
+        "remove_index",
+    ] {
+        let mut target: Value = serde_json::from_str(&first).unwrap();
+        match change {
+            "delete" => {
+                target["tables"]
+                    .as_object_mut()
+                    .unwrap()
+                    .remove("futureOne");
+            }
+            "primary" => target["tables"]["futureOne"]["keyPath"] = json!("otherId"),
+            "scope" => target["tables"]["futureOne"]["scope"] = json!("content"),
+            "index" => {
+                target["tables"]["futureOne"]["indexes"][0]["keyPaths"] = json!(["otherOwner"])
+            }
+            "unique" => target["tables"]["futureOne"]["indexes"][0]["unique"] = json!(true),
+            "remove_index" => {
+                target["tables"]["futureOne"]["indexes"]
+                    .as_array_mut()
+                    .unwrap()
+                    .pop();
+            }
+            _ => unreachable!(),
+        }
+        let before = database_state(&root);
+        assert_eq!(
+            migrate_to(&db, &target.to_string(), &Hooks::default())
+                .unwrap_err()
+                .code,
+            "schema"
+        );
+        assert_eq!(database_state(&root), before, "{change}");
+    }
+    db.execute(
+        "DELETE FROM product_indexes WHERE table_name='futureOne' AND index_name='ownerId'",
+        [],
+    )
+    .unwrap();
+    let before = database_state(&root);
+    let second = future_registry(&first, "futureTwo");
+    assert_eq!(
+        migrate_to(&db, &second, &Hooks::default())
+            .unwrap_err()
+            .code,
+        "corrupt"
+    );
+    assert_eq!(database_state(&root), before);
+    db.close().unwrap();
+    fs::remove_dir_all(root).unwrap();
+}
+#[test]
+fn authoritative_registry_metadata_corruption_never_falls_back_to_historical_identity() {
+    for fault in [
+        "tampered",
+        "empty",
+        "multiple",
+        "blank",
+        "scope",
+        "duplicate",
+        "missing_snapshot_unknown",
+    ] {
+        let (root, db) = migration_fixture();
+        match fault {
+            "tampered" => {
+                db.execute(
+                    "UPDATE product_registry SET schema_json=schema_json || ' '",
+                    [],
+                )
+                .unwrap();
+            }
+            "empty" => {
+                db.execute("DELETE FROM product_registry", []).unwrap();
+            }
+            "multiple" => {
+                db.pragma_update(None, "ignore_check_constraints", true)
+                    .unwrap();
+                db.execute(
+                    "INSERT INTO product_registry VALUES (2,?)",
+                    [registry::REGISTRY_JSON],
+                )
+                .unwrap();
+                db.pragma_update(None, "ignore_check_constraints", false)
+                    .unwrap();
+            }
+            "missing_snapshot_unknown" => {
+                db.execute_batch("DROP TABLE product_registry").unwrap();
+                db.execute(
+                    "UPDATE product_workspace SET registry_hash=?",
+                    ["0".repeat(64)],
+                )
+                .unwrap();
+            }
+            "blank" | "scope" | "duplicate" => {
+                let raw = match fault {
+                    "blank" => String::from("{\"version\":1,\"tables\":{}}"),
+                    "scope" => {
+                        let mut source: Value =
+                            serde_json::from_str(registry::REGISTRY_JSON).unwrap();
+                        source["tables"]["projects"]["scope"] = json!("arbitrary");
+                        source.to_string()
+                    }
+                    "duplicate" => String::from(
+                        "{\"version\":1,\"tables\":{\"x\":{\"keyPath\":\"id\",\"scope\":\"content\",\"indexes\":[]},\"x\":{\"keyPath\":\"id\",\"scope\":\"content\",\"indexes\":[]}}}",
+                    ),
+                    _ => unreachable!(),
+                };
+                db.execute("UPDATE product_registry SET schema_json=?", [&raw])
+                    .unwrap();
+                db.execute(
+                    "UPDATE product_workspace SET registry_hash=?",
+                    [digest(raw.as_bytes())],
+                )
+                .unwrap();
+            }
+            _ => unreachable!(),
+        }
+        let before = database_state(&root);
+        assert!(
+            migrate_to(&db, registry::REGISTRY_JSON, &Hooks::default()).is_err(),
+            "{fault}"
+        );
+        assert_eq!(database_state(&root), before, "{fault}");
+        db.close().unwrap();
+        fs::remove_dir_all(root).unwrap();
+    }
+}
+
+#[test]
+fn registry_catalog_requires_exact_history_but_no_current_target_or_addition_recipe() {
+    use registry_migrations::{CATALOG_JSON, SNAPSHOTS, validate_catalog};
+    assert!(validate_catalog(CATALOG_JSON, registry::REGISTRY_JSON, SNAPSHOTS).is_ok());
+    let current = future_registry(registry::REGISTRY_JSON, "futureOne");
+    assert!(validate_catalog(CATALOG_JSON, &current, SNAPSHOTS).is_ok());
+    assert!(validate_catalog(CATALOG_JSON, registry::REGISTRY_JSON, &SNAPSHOTS[..2]).is_err());
+    let mut catalog = registry_catalog();
+    catalog["registries"].as_array_mut().unwrap().pop();
+    assert!(validate_catalog(&catalog.to_string(), registry::REGISTRY_JSON, SNAPSHOTS).is_err());
+    let modified = format!("{}\n", SNAPSHOTS[0].1);
+    let mut snapshots = SNAPSHOTS.to_vec();
+    snapshots[0].1 = &modified;
+    let error = validate_catalog(CATALOG_JSON, registry::REGISTRY_JSON, &snapshots)
+        .err()
+        .unwrap();
+    assert!(error.message.contains("hash mismatch"));
+    let mut source: Value = serde_json::from_str(SNAPSHOTS[0].1).unwrap();
+    source["tables"]["projects"]["scope"] = json!("mixed");
+    let modified = source.to_string();
+    let mut snapshots = SNAPSHOTS.to_vec();
+    snapshots[0].1 = &modified;
+    let mut catalog = registry_catalog();
+    catalog["registries"][0]["sha256"] = json!(digest(modified.as_bytes()));
+    let error = validate_catalog(&catalog.to_string(), registry::REGISTRY_JSON, &snapshots)
+        .err()
+        .unwrap();
+    assert!(error.message.contains("definition is incompatible"));
 }
 
 #[test]
